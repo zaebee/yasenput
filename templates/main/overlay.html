@@ -1,0 +1,11 @@
+
+<div id="overlay">
+    {% include 'main/overlay/detailtour.html' %}
+    {% if user.is_authenticated %}
+        {% include 'main/overlay/addpoint.html' %}
+        {% include 'main/overlay/saveroute.html' %}
+        {% include 'main/overlay/routefrom.html' %}
+    {% else %}
+        {% include 'main/overlay/auth.html' %}
+    {% endif %}
+</div>

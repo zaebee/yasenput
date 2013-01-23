@@ -1,0 +1,110 @@
+<div class="popup" id="popup-add-place">
+    <h3>Добавление места</h3>
+
+    <div class="map-add-place">
+        <div class="map" id="addmap" style="width:900px;height:390px;">
+
+        </div>
+
+        <div class="hint-specify-place">Указать место<br>на карте</div>
+        <div class="map-shadow-top"></div>
+        <div class="map-shadow-left"></div>
+        <div class="map-shadow-right"></div>
+    </div>
+
+          <fieldset>
+            <div class="fl">
+                <dl><!-- ap- add place -->
+                    <dt><label for="ap-name">Название</label></dt>
+                    <dd><input type="text" value="Поиск по сочетанию букв" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;" id="ap-name"></dd>
+						
+					<dt><label for="ap-type-place">Тип места</label></dt>
+					<dd>
+						<div class="ajax-select">
+							<div class="arrow-input"><i></i></div>
+							
+							<input type="text" value="Поиск по сочетанию букв" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;" id="ap-type-place">
+							
+							<div class="drop-select">
+                                {% for typepoint in typepoints %}
+                                    {% if forloop.first %}<ul>{% endif %}
+                                        <li data-type-id="{{ typepoint.id }}">{{ typepoint.name }}</li>
+                                    {% if typepoint.ul and not forloop.last %}</ul><ul>{% endif %}
+                                    {% if forloop.last %}</ul>{% endif %}
+                                {% endfor %}
+							</div>
+						</div>
+					</dd>
+						
+                    <dt><label for="">Добавление фото</label></dt>
+                    <dd>
+
+                            <div class="custom-file-field">
+                                <div class="file-button">
+                                    <form action="#" method="post">
+                                        <input type="file" name="imgs">
+                                    </form>
+                                    <span class="txt-button">Обзор</span>
+                                </div>
+                                <input type="text" class="file-name" readonly>
+                                <button class="delete-file">&nbsp;</button>
+                            </div>
+
+                        <small class="hint-file">не более 15 Мб</small>
+
+                        <a href="#" class="a-add-more-photo">добавить еще фото</a>
+                    </dd>
+
+                    <dt><label>Координаты</label></dt>
+                    <dd>
+                        <small class="hint-coord">широта</small>
+                        <input type="text" id="ap-coords-latitude">
+                        <small class="hint-coord">долгота</small>
+                        <input type="text" id="ap-coords-longitude">
+                        <a href="#" id='ap-coords-locate'>определить мои координаты</a>
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="fr">
+                <dl>
+                    <dt><label for="ap-desc">Описание</label></dt>
+                    <dd><textarea cols="40" rows="7" id="ap-desc"></textarea></dd>
+
+                    <dt><label for="ap-section">Раздел</label></dt>
+                    <dd>
+                        {% for categ in categories %}
+                            <label class="custom-checkbox" data-categories-id="{{ categ.id }}">
+                                <input type="checkbox">
+                                {{ categ.name }}
+                            </label>
+                            <br>
+                        {% endfor %}
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="clear"></div>
+
+            <input type="submit" value="Добавить место" class="a-want" id="a-add-point">
+            <input type="submit" value="Сохранить" class="a-want" id="a-edit-point" style="display: none;">
+        </fieldset>
+
+    <footer>
+        <div class="share">
+
+        </div>
+    </footer>
+</div>
+
+<script type="text/template" id="progress-image">
+    <div class="progress">
+        <span class="p-photo-name">Photo.jpg</span>
+
+        <div class="progress-bar">
+            <div class="progress-value" style="width:0%">&nbsp;</div>
+        </div>
+
+        <span class="file-size">3/10 МБ</span>
+    </div>
+</script>

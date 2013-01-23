@@ -1,0 +1,31 @@
+<!doctype html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="keywords" content="{% block keywords %}{% endblock %}">
+        <meta name="description" content="{% block description %}{% endblock %}">
+
+        <title>{% block title %}{% endblock %}</title>
+
+        {% block preload_css %}
+        {% endblock %}
+            <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css">
+        {% block postload_css %}
+        {% endblock %}
+
+        {% block preload_js %}
+        {% endblock %}
+            <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+            <script data-main='{{ STATIC_URL }}js/app/config' src="{{ STATIC_URL }}js/libs/require.js"></script>
+        {% block postload_js %}
+        {% endblock %}
+
+    </head>
+
+    <body>
+        <div id="wrap">
+            {% block wrap %}{% endblock %}
+        </div>
+        {% block footer %}{% endblock %}
+        {% block overlay %}{% endblock %}
+    </body>
+</html>

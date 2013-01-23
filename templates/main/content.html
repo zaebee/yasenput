@@ -1,0 +1,140 @@
+{% block postload_js %}
+    <!--<script src="{{ STATIC_URL }}js/yamap2.js"></script>-->
+{% endblock %}
+
+{% block content %}
+    {% include 'includes/yamap.html' %}
+    <div id="content">
+    {% csrf_token %}
+    <section class="maps">
+{#        <a href="#" class="fr a-add-place">#}
+{#                    <span>#}
+{#                        Добавить место#}
+{#                    </span>#}
+{#        </a>#}
+{##}
+{#        <ul class="tabs-maps">#}
+{#                {% for categ in categories %}#}
+{#                    <li {% if forloop.first %} class="active" {% endif %}  >#}
+{#                        <a href="#!/categories/{{ categ.name }}">{{ categ.name }}</a>#}
+{#                    </li>#}
+{#                {% endfor %}#}
+{#                <li>#}
+{#                    <a href="#!/categories/">События</a>#}
+{#                </li>#}
+{#        </ul>#}
+
+        <div class="content-maps">
+            <div class="item-map">
+                <!--<a href="#" class="a-hide">Свернуть</a>-->
+                <div class="map" id="mainmap"></div>
+{#                <div class="selects">#}
+{#                    <select id="select1">#}
+{#                        {% for area in areas %}#}
+{#                            <option value="{{ area.id }}">{{ area.name }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+{##}
+{#                    <select id="select2">#}
+{#                        {% for region in regions %}#}
+{#                            <option value="{{ region.id }}">{{ region.name }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+{#                </div>#}
+                <div class="map-buttons">
+                    <a href="#" id="route_save">Сохранить</a><a href="#" id="route_clear">Очистить карту</a><a href="#" id="route_print">Распечатать</a>
+                </div>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+            {% include 'includes/bmenu_auth.html' %}
+        {% else %}
+            {% include 'includes/bmenu.html' %}
+        {% endif %}
+    </section>
+
+    <section class="index-column">
+    <menu class="tabs-content">
+        <a href="#!/new" id="menu-new" class="active">
+            <span>Новые</span>
+        </a>
+
+        <a href="#!/popular" id="menu-pop">
+            <span>Популярные</span>
+        </a>
+    </menu>
+
+    <!-- sc - slide-column -->
+    <!-- Templates -->
+    <script type="text/template" id="point-template">
+        <article class="sc-item" data-point-id="<%- id %>">
+            <a class="close" href="#" <% if(!$('#tab-want').hasClass('active')){print ('style="display:none"')} %>></a>
+            <div class="sc-body">
+                <a href="#" class="photo">
+                            <img src="<%- imgs[0].thumbnail208 %>" alt="" width="208">
+                </a>
+                <h3>
+                    <a href="#">
+                        <%- name %>
+                    </a>
+                </h3>
+
+                <p><%- description.substring(0,150) %>&hellip;</p>
+                {% if user.is_authenticated %}
+                    <a href="#" class="a-add-to-path" <% if(!$('#tab-want').hasClass('active')){print ('style="display:none"')} %>>Добавить в маршрут</a>
+                    <a href="#" class="a-edit" <% if(!$('#tab-mypoints').hasClass('active')){print ('style="display:none"')} %>>Редактировать</a>
+                    <a href="#" class="a-want-visit" <% if((currentvisit==1) || (!$('#tab-point').hasClass('active'))){print ('style="display:none"')} %> >Хочу посетить</a>
+                {% endif %}
+            </div>
+            <footer>
+                <span class="like"><%- likes %></span>
+                <span class="label"><%- visits %></span>
+
+            </footer>
+            <div class="user" style="margin-top: 0px; padding: 5px 10px;">
+                <img src="{{ MEDIA_URL }}<%- author.avatar %>" alt="" class="user-avatar" width="30" height="30">
+                <div class="user-name"><%- author.first_name %> <%- author.last_name %></div>
+            </div>
+        </article>
+    </script>
+
+    <script type="text/template" id="route-template">
+        <article class="sc-item white-block">
+            <div class="sc-body">
+                <a href="#" class="photo">
+                    <img src="{{ MEDIA_URL }}<%- points[0].imgs[0].img %>" alt="" width="208">
+                </a>
+                <a href="#" class="photo">
+                    <img src="{{ MEDIA_URL }}<%- points[1].imgs[0].img %>" alt="" width="208">
+                </a>
+                <h3>
+                    <a href="#">
+                        <%- name %>
+                    </a>
+                </h3>
+                <p><%- description %>&hellip;</p>
+                {% if user.is_authenticated %}
+                    <a href="#" class="a-want-visit" style="display:none">Хочу посетить</a>
+
+                {% endif %}
+            </div>
+
+            <footer>
+                <span class="like"><%- likes %></span>
+                <span class="label"><%- visits %></span>
+            </footer>
+            <div class="user" style="margin-top: 0px; padding: 5px 10px;">
+                <img src="{{ MEDIA_URL }}<%- author.avatar %>" alt="" class="user-avatar" width="30" height="30">
+                <div class="user-name"><%- author.first_name %> <%- author.last_name %></div>
+            </div>
+        </article>
+    </script>
+
+    <div id="slide-colums">
+    </div>
+        <nav id="page-nav">
+            <a href="points/2"></a>
+        </nav>
+    </section>
+    </div>
+{% endblock %}

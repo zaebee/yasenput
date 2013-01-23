@@ -1,0 +1,25 @@
+{% for point in points %}
+    <article class="sc-item">
+        <div class="sc-body">
+            <a href="#" class="photo">
+                {% for img in point.imgs.all %}
+                    {% if forloop.first %}
+                        <img src="{{ MEDIA_URL }}{{ img.img }}" alt="" width="208" height="164">
+                    {% endif %}
+                {% endfor %}
+            </a>
+            <h3>
+                <a href="#">
+                    {{ point.name }}
+                </a>
+            </h3>
+
+            <p>{{ point.description }}&hellip;</p>
+        </div>
+
+        <footer>
+            <span class="like">{{ point.likes }}</span>
+            <span class="label">{{ point.visits }}</span>
+        </footer>
+    </article>
+{% endfor %}

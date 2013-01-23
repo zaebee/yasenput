@@ -1,0 +1,52 @@
+{% block content %}
+    <div class="row">
+        <div class="span4 lastnews">
+            <div class="row">
+                <div class="span5">
+                    <h5 class="type1">Последние новости сайта</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    {% for news in last_news %}
+                        {% include "news/includes/news_little.html" %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style type="text/css">
+        .new-list {
+            border-collapse:separate;
+            border-spacing: 10px;
+        }
+        .new-list tr {
+            vertical-align: top;
+        }
+    </style>
+    {% load thumbnail %}
+
+    <div class="row">
+        <div class="span12 content">
+            <table class="new-list">
+                {% for n in news %}
+                    <tr>
+                        <td>
+                            {% thumbnail n.image "78x78" crop="center 90%" as im %}
+                                <img src="{{ im.url }}" alt="{{ n.name }}">
+                            {% empty %}
+                                <img src="http://placehold.it/78x78&text=News">
+                            {% endthumbnail %}
+                        </td>
+                        <td>
+                            {{ n.pub_date|date:"d M Y" }}<br />
+                            <a href="{% url news_detail n.pk %}">{{ n.name }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div class="clearfix"></div>
+        </div><!-- //content -->
+    </div>
+{% endblock %}

@@ -1,0 +1,8 @@
+<menu class="tabs-places user-tabs-places">
+    <a href="#!/points" class="active" id="tab-point">Места</a>
+    <a href="#!/routes" id="tab-route">Маршруты</a>
+    <a href="#!/want" id="tab-want">Хочу посетить</a>
+    <a href="#!/myroutes" id="tab-myroutes">Мои маршруты</a>
+    <a href="#!/mypoints" id="tab-mypoints" class="last">Я добавил</a>
+    <div class="count-want-visit" {% if countvisitpoints == 0 %}style="display: none;" {% endif %}>{{ countvisitpoints }}</div>
+</menu>

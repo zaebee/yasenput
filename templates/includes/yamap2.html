@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    ymaps.ready(init);
+    var myMap;
+    function init(){
+        myMap = new ymaps.Map ("mainmap", {
+            center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
+            zoom: 12
+        });
+        myMap.controls.add('zoomControl').add('typeSelector');
+        var pointCollection = new ymaps.GeoObjectCollection();
+    {% for point in points %}
+        //myMap.geoObjects.add(
+        pointCollection.add(
+                new ymaps.Placemark(
+                        [{{ point.latitude }}, {{ point.longitude }}],
+                        //[59.224007, 39.882850],
+                        {
+                            balloonContentHeader: '<b>{{ point.name }}</b>',
+                            balloonContentBody: '{{ point.description }} <br />',
+                            balloonContentFooter: 'Вологодская область, Вологда'
+                        },
+                        {
+                            iconImageHref: 'assets/icons/ico-church.png', // картинка иконки
+                            iconImageSize: [44, 74], // размеры картинки
+                            iconImageOffset: [-22, -74], // смещение картинки
+                            draggable: true
+                        }
+                )
+        );
+
+    {% endfor %}
+        myMap.geoObjects.add(pointCollection);
+        //myMap.setBounds(pointCollection.getBounds());
+    }
+</script>

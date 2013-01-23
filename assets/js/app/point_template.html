@@ -1,0 +1,19 @@
+<article class="sc-item">
+    <div class="sc-body">
+        <a href="#" class="photo">
+            <img src="{{ MEDIA_URL }}<%- img %>" alt="" width="208" height="164">
+        </a>
+        <h3>
+            <a href="#">
+                <%- name %>
+            </a>
+        </h3>
+
+        <p><%- description %>&hellip;</p>
+    </div>
+
+    <footer>
+        <span class="like"><%- likes %></span>
+        <span class="label"><%- visits %></span>
+    </footer>
+</article>
