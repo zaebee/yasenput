@@ -12,6 +12,12 @@ jQuery(function($){
 		cuSel(params);
 	}
 
+    $('.nonav').on('click',function(e){
+        e.preventDefault();
+        var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
+        Backbone.history.navigate(href.attr, true);
+    })
+
     $(window).scroll(function(){
         //var pos = $('.tabs-places.user-tabs-places').position();
         if($(window).scrollTop() >= 417){

@@ -35,12 +35,12 @@
             </a>
             <ul class="tabs-maps">
                 {% for categ in categories %}
-                    <li {% if forloop.first %} class="active" {% endif %}  >
-                        <a href="#!/categories/{{ categ.name }}">{{ categ.name }}</a>
+                    <li {% if forloop.first %} class="active nonav" {% endif %}  >
+                        <a class="nonav" href="categories/{{ categ.name }}">{{ categ.name }}</a>
                     </li>
                 {% endfor %}
                 <li>
-                    <a href="#!/categories/">События</a>
+                    <a href="categories/">События</a>
                 </li>
             </ul>
 

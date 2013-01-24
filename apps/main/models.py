@@ -5,14 +5,13 @@ from django.contrib.auth.models import User, UserManager
 from django.dispatch import receiver
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-#from social_auth.signals import pre_update
 from django.db.models.signals import post_save
 from django.db import models
 from sorl.thumbnail import ImageField
 from urllib2 import urlopen
 import uuid
 import os.path
-from wadofstuff.django import serializers
+from taggit.managers import TaggableManager
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 class Person(User):
@@ -112,6 +111,7 @@ class Points(models.Model):
     created = models.DateTimeField('Создан',auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null = True, serialize=True)
+    tags = TaggableManager()
     def _likes(self):
         return self.likeusers.count()
     def _visits(self):

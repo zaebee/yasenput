@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'social_auth',
     'sorl.thumbnail',
+    'taggit',
     #'grappelli.dashboard',
     #'grappelli',
     'apps.main',
