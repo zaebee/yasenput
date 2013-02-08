@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^980945eec96d.html$', 'apps.main.views.yapdd'),
     url(r'', include('social_auth.urls')),
     url(r'', include('apps.main.urls')),
+    url(r'^comments/', include('django.contrib.comments.urls')),
     # url(r'^YasenPut/', include('YasenPut.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

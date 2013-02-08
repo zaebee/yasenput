@@ -186,7 +186,7 @@ def points(request, page):
     #json_serializer.serialize(points)
     #return render_to_response(template_name, {'points':points},context_instance=RequestContext(request))
     #return HttpResponse(json.serialize(points, use_natural_keys=True), mimetype="application/json")
-    return HttpResponse(json.serialize(points, relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail208','thumbnail325',)},'type':{}}), mimetype="application/json")
+    return HttpResponse(json.serialize(points, relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
     #return HttpResponse(points[0].likes, mimetype="application/json")
 
 def point(request):

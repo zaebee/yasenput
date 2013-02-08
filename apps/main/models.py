@@ -2,13 +2,9 @@
 __author__ = 'art'
 
 from django.contrib.auth.models import User, UserManager
-from django.dispatch import receiver
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.db.models.signals import post_save
 from django.db import models
 from sorl.thumbnail import ImageField
-from urllib2 import urlopen
 import uuid
 import os.path
 from taggit.managers import TaggableManager
@@ -81,6 +77,7 @@ class Photos(models.Model):
         verbose_name_plural = u'Фотографии'
     name = models.CharField(max_length=255)
     img = models.ImageField(max_length=255, upload_to=make_upload_path)
+    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_users_likes', serialize=True)
     def natural_key(self):
         return (self.img.name)
     def __unicode__(self):
@@ -88,8 +85,8 @@ class Photos(models.Model):
     def thumbnail80(self):
         im = get_thumbnail(self.img, '80')
         return im.url
-    def thumbnail208(self):
-        im = get_thumbnail(self.img, '208')
+    def thumbnail207(self):
+        im = get_thumbnail(self.img, '207')
         return im.url
     def thumbnail325(self):
         im = get_thumbnail(self.img, 'x325')
@@ -106,12 +103,12 @@ class Points(models.Model):
     categories = models.ManyToManyField(Categories, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
+    address = models.TextField('Адрес')
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
     created = models.DateTimeField('Создан',auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null = True, serialize=True)
-    tags = TaggableManager()
     def _likes(self):
         return self.likeusers.count()
     def _visits(self):
@@ -145,6 +142,17 @@ class Routes(models.Model):
     visits = property(_visits)
     def __unicode__(self):
         return self.name
+
+class Events(models.Model):
+    class Meta:
+        verbose_name = u'События'
+        verbose_name_plural = u'События'
+    dt_start = models.DateTimeField('Начало')
+    dt_end = models.DateTimeField('Окончание')
+    point = models.ForeignKey(Points, unique=False)
+    author = models.ForeignKey(Person, unique=False)
+#class
+
 
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
