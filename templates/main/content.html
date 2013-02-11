@@ -53,29 +53,30 @@
 							</span>
                 </div>
             </div>
-
             <div class="comments">
                 <ul>
+                    <% _.each(comments, function(itm){ %>
                     <li>
                         <img src="<%- comments.author.avatar %>" alt="" class="avatar" width="30" height="30">
                         <div class="body-comment">
-                            <div class="author-comment"><%- comments.author.first_name %> <%- comments.author.last_name %></div>
-
-                            <p><%- comments.txt %></p>
+                            <div class="author-comment"><%- itm.author.first_name %> <%- itm.author.last_name %></div>
+                            <p><%- itm.txt %></p>
                         </div>
                     </li>
+                    <% }) %>
                 </ul>
-
-                <form action="#" class="add-comment">
-                    <img src="{{ user.person.avatar.url|default:"null" }}" alt="" class="avatar" width="30" height="30">
-
-                    <div class="toggle-area">
-                        <label>Комментировать</label>
-                        <textarea rows="3" cols="25"></textarea>
-                        <input type="submit" value="ok">
-                    </div>
-                </form>
+                {% if user.is_authenticated %}
+                    <form action="#" class="add-comment">
+                        <img src="{{ user.person.avatar.url|default:"null" }}" alt="" class="avatar" width="30" height="30">
+                        <div class="toggle-area">
+                            <label>Комментировать</label>
+                            <textarea rows="3" cols="25"></textarea>
+                            <input type="submit" value="ok">
+                        </div>
+                    </form>
+                {% endif %}
             </div>
+
         </article>
 
     </script>

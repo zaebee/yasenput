@@ -365,7 +365,7 @@ jQuery(function($){
 		});
 	}
 	
-	$(".content .item textarea").focus(function(){
+/*	$(".content .item textarea").focus(function(){
 		var me = $(this);
 		
 		me.closest(".toggle-area").addClass("focus");
@@ -387,7 +387,7 @@ jQuery(function($){
 		if($(this).val().toString().length == 0){
 			$(this).parent().find("label").show();
 		}
-	});
+	});*/
 	
 	if($(".calendar").length && $(".calendar").is(":visible")){
 		var cuselParams = {

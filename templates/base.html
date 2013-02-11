@@ -16,12 +16,16 @@
         {% block preload_js %}
         {% endblock %}
           <script src="{{ STATIC_URL }}js/libs/jquery-1.6.1.min.js"></script>
+          <script src="{{ STATIC_URL }}js/libs/jquery-ui-1.10.0.custom.min.js"></script>
           <script src="{{ STATIC_URL }}js/libs/modernizr-2.6.2.js"></script>
           <script src="{{ STATIC_URL }}js/libs/jquery.masonry.min.js"></script>
           <script src="{{ STATIC_URL }}js/libs/jquery.mousewheel.js"></script>
           <script src="{{ STATIC_URL }}js/libs/cusel-min-2.5.js"></script>
           <script src="{{ STATIC_URL }}js/libs/jScrollPane.js"></script>
+          <script src="{{ STATIC_URL }}js/libs/underscore-min.js"></script>
+          <script src="{{ STATIC_URL }}js/libs/backbone-min.js"></script>
           <script src="{{ STATIC_URL }}js/script.js"></script>
+          <script src="{{ STATIC_URL }}js/app/app.js"></script>
           <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
     {% block postload_js %}
         {% endblock %}

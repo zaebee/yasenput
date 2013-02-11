@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^want', 'apps.main.views.index'),
     url(r'^myroutes', 'apps.main.views.index'),
     url(r'^mypoints', 'apps.main.views.index'),
+    url(r'^tag', 'apps.main.views.index'),
 
 )

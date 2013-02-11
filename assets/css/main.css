@@ -174,9 +174,9 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .a-comment:hover{background-position:-32px -75px;}
 .a-comment.marked{background-position:-32px -111px;}
 .a-comment.marked:hover{background-position:-32px -147px;}
-	.content .item .a-want{position:absolute; left:3px; top:4px}
-	.content .item .a-like{position:absolute; right:34px; top:4px}
-	.content .item .a-comment{position:absolute; right:3px; top:4px}
+	.content .item .a-want{position:absolute; left:3px; top:4px;display: none}
+	.content .item .a-like{position:absolute; right:34px; top:4px;display: none}
+	.content .item .a-comment{position:absolute; right:3px; top:4px;display: none}
 	.content .item .comments{background:url(../images/bg.jpg); border-top:solid 1px #ccd8cc; padding:6px 11px; display:none}
 	.comments .avatar, .comments .add-comment{margin:0 10px 0 0}
 	.comments .body-comment{overflow:hidden; color:#888}
