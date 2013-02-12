@@ -37,221 +37,247 @@
 
 
 jQuery(function($){
-	var textField = $(".text-field");
-	
-	setWidthInput(textField);
-	
-	$(window).resize(function(){
-		setWidthInput(textField);
-	});
-	
-	$(".label-add").click(function(e){
-		if($(e.target).closest("#header").length){
-			$(".drop-search").show().find(".selected").removeClass("selected");
-			$(this).hide();
-			textField.show();
-			$(".search input[type=text]").focus();
-		}
-	});
-	
-	$(".label-fields").click(function(e){
-		if($(e.target).closest("#header").length){
-			$(".drop-search").show().find(".selected").removeClass("selected");
-			$("#header .label-add").hide();
-			textField.show();
-			$(".search input[type=text]").focus();
-		}
-	});
-	
-	var tmplLabel = '<div class="label {clsName}">\
+	var multySearch = {
+		tmplLabel: '<div class="label {clsName}">\
 					{text}\
 						<button class="remove-label"></button>\
-					</div>';
-	
-	$(".search input[type=text]").focus(function(){
-		$(".drop-search").show().find(".selected").removeClass("selected");
-		$("#header .label-add").hide();
+					</div>', //мини-шаблон для вставки лейблов
 		
-		$(".search input[type=text]").unbind("keydown").bind("keydown", function(e){
-			var me = $(this);
+		setWidthInput: function(){//установить ширину для инпута
+			var w1 = $(this.p.labelField).width() - 6,
+				w2 = 0,
+				t = 0;
 			
-			setTimeout(function(){
-				findMatch((""+me.val()).toLowerCase());
-			}, 0);
-		});
-		
-		setWidthInput(textField);
-	});
-	
-	function findMatch(txt){
-		var str = new RegExp(txt);
-		
-		$(".drop-search ul a").each(function(){
-			var action = str.test($(this).text().toLowerCase()) ? 'removeClass' : 'addClass';
-			
-			if(!txt) action = 'addClass';
-			
-			$(this).parent()[action]('hidden');
-		});
-	}
-	
-	function selectDropLi(dir){
-		var li = $(".drop-search li:visible:has(a)").filter(function(){
-			var n = $(".toggle-panel").hasClass("open-panel") ? 20 : 5;
-			if(!$(".drop-search .toggle-panel").hasClass("open-panel")){
-				return $(this).parent().find("li:visible").index(this) > n ? false : true;
-			}
-			
-			return true;
-		}),
-			indexSelected;
-		
-		if(li.filter(".selected").length){
-			indexSelected = li.index(li.filter(".selected"));
-			
-			if(indexSelected < li.length-1){
-				if(dir == 1){
-					li.filter(".selected:first").removeClass("selected");
-					li.eq(indexSelected+1).addClass("selected");
+			$(this.p.labelField).children(".label:visible").each(function(i){
+				var offset = $(this).offset();
+				if(offset.top != t){
+					t = offset.top;
+					w2 = 0;
+					w2 += $(this).outerWidth(true);
 				} else {
+					w2 += $(this).outerWidth(true);
+				}
+			});
+			
+			$(this.p.searchInput).width(w1 - w2 - 4);
+		},
+		
+		showDropField: function(){ // показать выпадайку
+			$(this.p.dropRoot).show().find(".selected").removeClass("selected");
+			$(this.p.labelAdd).hide();
+			$(this.p.searchInput).show();
+			$("input[type=text]", $(this.p.searchInput)).focus();
+			this.setWidthInput();
+		},
+		
+		hideDropField: function(){
+			var me = this;
+			
+			$(me.p.dropRoot).hide();
+			$("input[type=text]", $(me.p.searchInput)).val("").blur();
+			$(me.p.labelAdd).show();
+			$(me.p.searchInput).hide();
+			setTimeout(function(){
+				me.setWidthInput();
+			},0);
+		},
+		
+		onFocusInput: function(me, self){
+			$(document).bind("keydown.focus", function(e){
+				setTimeout(function(){
+					if(e.which != 38 && e.which != 40 && e.which != 13 && e.which != 27){
+						self.findMatch((""+me.val()).toLowerCase());
+					}
+				}, 0);
+			});
+			
+			self.setWidthInput();
+		},
+		
+		findMatch: function(txt){
+			var str = new RegExp(txt);
+			
+			$("a", $(this.p.dropRoot)).each(function(){
+				var action = str.test($(this).text().toLowerCase()) ? 'removeClass' : 'addClass';
+				
+				if(!txt) action = 'addClass';
+				
+				$(this).parent()[action]('hidden');
+			});
+		},
+		
+		selectDropLi: function(dir){
+			var me = this;
+			
+			$("li.selected:hidden", $(this.p.dropRoot)).removeClass("selected");
+			
+			var li = $("li:visible:has(a)", $(this.p.dropRoot)).filter(function(){
+				if($(me.p.dropRoot).closest("#header").length){
+					if($(this).closest(".item-labels").length){
+						var offset = $(me.p.dropRoot).offset().top+$(me.p.dropRoot).outerHeight();
+						
+						if($(this).offset().top < offset){
+							return true;
+						}
+						
+						if($(this).hasClass("selected")) $(this).removeClass("selected");
+						return false;
+					} else {
+						var n = $(".toggle-panel").hasClass("open-panel") ? 10 : 5;
+						if(!$(".drop-search .toggle-panel").hasClass("open-panel")){
+							return $(this).parent().find("li:visible").index(this) > n ? false : true;
+						}
+					}
+				} 
+				
+				return true;
+			}),
+				indexSelected;
+			
+			if(li.filter(".selected").length){
+				indexSelected = li.index(li.filter(".selected"));
+				
+				if(indexSelected < li.length-1){
+					if(dir == 1){
+						li.filter(".selected:first").removeClass("selected");
+						li.eq(indexSelected+1).addClass("selected");
+					} else {
+						li.filter(".selected:first").removeClass("selected");
+						li.eq(indexSelected-1).addClass("selected");
+					}
+				} else {
+					
 					li.filter(".selected:first").removeClass("selected");
-					li.eq(indexSelected-1).addClass("selected");
+					
+					if(dir == 1){
+						li.eq(0).addClass("selected");
+					} else {
+						li.eq(indexSelected-1).addClass("selected");
+					}
 				}
 			} else {
-				
-				li.filter(".selected:first").removeClass("selected");
-				
 				if(dir == 1){
 					li.eq(0).addClass("selected");
 				} else {
-					li.eq(indexSelected-1).addClass("selected");
+					li.last().addClass("selected");
 				}
 			}
-		} else {
-			if(dir == 1){
-				li.eq(0).addClass("selected");
-			} else {
-				li.last().addClass("selected");
-			}
-		}
-	}
-	
-	function setWidthInput(elem){
-		var w1 = $(".search").width() - 46,
-			w2 = 0;
+		},
 		
-		var t = 0;
-		$(".search .label-fields .label:visible").each(function(i){
-			var offset = $(this).offset();
-			if(offset.top != t){
-				t = offset.top;
-				w2 = 0;
-				w2 += $(this).outerWidth(true);
-			} else {
-				w2 += $(this).outerWidth(true);
-			}
-		});
-		
-		elem.width(w1 - w2 - 4);
-	}
-	
-	$(document).unbind("keydown.search").bind("keydown.search", function(e){
-		if($(".drop-search").is(":visible")){
+		onKeyDown: function(e, self){
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
 					
-					if($(".drop-search .selected").length){
-						$(".drop-search .selected a").click();
+					if($(".selected", $(self.p.dropRoot)).length){
+						$(".selected a", $(self.p.dropRoot)).click();
 					} else {
-						$(".drop-search").hide();
+						$(self.p.dropRoot).hide();
 					}
 					
 					break;
 				case 27:
 					setTimeout(function(){
-						$(".search input[type=text]").val("").blur();
-						$(".drop-search").find("li.hidden").removeClass("hidden");
-						$(".drop-search").hide();
-						$("#header .label-add").show();
-						textField.hide();
-						setTimeout(function(){
-							setWidthInput(textField);
-						},0);
+						self.hideDropField();
 					}, 0);
 					break;
 				case 38:
 					e.preventDefault();
-					selectDropLi(-1);
+					self.selectDropLi(-1);
 					break;
 				case 40:
 					e.preventDefault();
-					selectDropLi(1);
+					self.selectDropLi(1);
 					break;
 			}
+		},
+		
+		onClickDrop: function(me, self){
+			var clsName = '';
+			
+			if(me.closest(".item-place").length){
+				clsName = ' label-place';
+			} else if (me.closest(".item-name").length){
+				clsName = ' label-name';
+			} else if (me.closest(".item-users").length){
+				clsName = ' label-user';
+			}
+			
+			$(self.p.labelAdd).show();
+			
+			var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', me.text());
+			$(label).insertBefore($(self.p.labelAdd));
+			
+			self.hideDropField();
+		},
+		
+		init: function(params){
+			var me = this;
+			me.p = params;
+			
+			me.setWidthInput();
+			
+			$(window).resize(function(){
+				me.setWidthInput();
+			});
+			
+			$(this.p.labelAdd).click(function(){
+				me.showDropField();
+			});
+			
+			$(this.p.labelField).click(function(e){
+				if(e.target == this)
+					me.showDropField();
+			});
+			
+			$("input[type=text]", $(this.p.searchInput)).focus(function(){
+				me.onFocusInput($(this), me);
+			});
+			
+			$(document).bind("keydown.findMatch", function(e){
+				if($(me.p.dropRoot).is(":visible")){
+					me.onKeyDown(e, me);
+				}
+			});
+			
+			$("a", me.p.dropRoot).click(function(e){
+				e.preventDefault();
+				
+				me.onClickDrop($(this), me);
+			});
+			
+			$(document).click(function(e){
+				if($(me.p.dropRoot).is(":visible") && !$(e.target).closest(me.p.root).length){
+					me.hideDropField();
+				}
+			});
 		}
+	};
+	
+	var searchAuth = $.extend({}, multySearch);
+	var searchHeader = $.extend({}, multySearch);
+	
+	searchAuth.init({
+		searchInput: $("#p-labels .selected-labels .text-field"),
+		labelField : $("#p-labels .selected-labels"),
+		dropRoot   : $(".drop-labels-field"),
+		labelAdd   : $("#p-labels .label-add"),
+		root       : $("#p-labels .drop-labels")
 	});
 	
-	$("html, body").click(function(e){
-		if($(".drop-search").is(":visible") && !$(e.target).closest("#header .search").length){
-			$(".drop-search").hide();
-			$(".search input[type=text]").val("").blur();
-			$("#header .label-add").show();
-			textField.hide();
-			setTimeout(function(){
-				setWidthInput(textField);
-			},0);
-		}
+	searchHeader.init({
+		searchInput: $("#header .text-field"),
+		labelField : $("#header .label-fields"),
+		dropRoot   : $(".drop-search"),
+		labelAdd   : $("#header .label-add"),
+		root       : $("#header .search")
 	});
 	
-	$(".drop-search").bind("click", function(e){
+	$(".drop-search").click(function(e){
 		e.stopImmediatePropagation();
 	});
 	
-	$(".clear-input").click(function(e){
-		e.preventDefault();
-		
-		$(".label-fields .label").not(".label-add").remove();
-		$(".label-fields input[type=text]").val("");
-		$(".drop-search .selected").removeClass("selected");
-		$("#header .label-add").show();
-		$(".drop-search").hide();
-		$(".search input[type=text]").val("").blur();
-		textField.hide();
-		
-		setTimeout(function(){
-			setWidthInput(textField);
-		},0);
-	});
-	
-	$(".drop-search li a").click(function(e){
-		e.preventDefault();
-		
-		var me = $(this),
-			clsName = '';
-		
-		if(me.closest(".item-place").length){
-			clsName = ' label-place';
-		} else if (me.closest(".item-name").length){
-			clsName = ' label-name';
-		} else if (me.closest(".item-users").length){
-			clsName = ' label-user';
-		}
-		
-		$("#header .label-add").show();
-		
-		var label = tmplLabel.replace('{clsName}', clsName).replace('{text}', me.text());
-		$(label).insertBefore(".label-fields .label-add");
-		
-		$(".drop-search").hide();
-		$(".search input[type=text]").val("").blur();
-		textField.hide();
-		setTimeout(function(){
-			setWidthInput(textField);
-		},0);
-	});
-	
-	$(".label-fields").delegate(".remove-label", "click", function(){
+	$(".label-fields").delegate(".remove-label", "click", function(e){
 		$(this).parents(".label").remove();
 	});
 	
@@ -367,10 +393,10 @@ jQuery(function($){
 	
 /*	$(".content .item textarea").focus(function(){
 		var me = $(this);
-		
+
 		me.closest(".toggle-area").addClass("focus");
 		$('.content .items').masonry("reload");
-		
+
 		$(document).unbind("keydown.areaComment").bind("keydown.areaComment", function(){
 			setTimeout(function(){
 				if(me.val().toString().length > 0){
@@ -383,7 +409,7 @@ jQuery(function($){
 	}).blur(function(){
 		$(this).closest(".toggle-area").removeClass("focus");
 		$('.content .items').masonry("reload");
-		
+
 		if($(this).val().toString().length == 0){
 			$(this).parent().find("label").show();
 		}
@@ -419,10 +445,13 @@ jQuery(function($){
 		});
 	}
 	
-	function onFocusDropInput(input){
+	function onFocusDropInput(input, withMatch){
 		var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
+		$(input).closest(".input-line").css("z-index", 2134);
 		
+		//$(input).val("");
 		$dropResult.show();
+		$(".hover", $dropResult).removeClass("hover");
 		
 		$(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
 			var next;
@@ -449,25 +478,75 @@ jQuery(function($){
 				}
 			} else if (e.which == 13){
 				if($dropResult.is(":visible") && $(".hover", $dropResult).length){
-					if($(input).closest(".drop-filter").hasClass("select-labels")){ //установить метку в попапе Добавить место
-						var dropRoot = $(input).closest(".drop-filter");
-						
-						$(".label-add", dropRoot).show();
-						$(tmplLabel.replace("{text}", $(".hover", $dropResult).text())).insertBefore($(".label-add", dropRoot));
-						$("input[type=text]", dropRoot).blur().hide();
+					input.val($(".hover", $dropResult).text());
+					var dropRoot = $(input).closest(".drop-filter");
+					
+					if(withMatch == true){
+						if((""+input.val()) == $(".hover", $dropResult).text()){
+							//если текст совпадает, то выбрать его
+							
+						} else {
+							$(input).val("Событие не найдено");
+							$(".not-found-event").slideDown(100);
+						}
 					} else {
-						//установить значение в инпут в попапе
-						input.val($(".hover", $dropResult).text());
+						if($(input).closest(".drop-filter").hasClass("select-labels")){ //установить метку в попапе Добавить место
+							
+							$(".label-add", dropRoot).show();
+							$(multySearch.tmplLabel.replace("{text}", $(".hover", $dropResult).text())).insertBefore($(".label-add", dropRoot));
+							$("input[type=text]", dropRoot).blur().hide();
+						} else {
+							//установить значение в инпут в попапе
+							input.val($(".hover", $dropResult).text());
+						}
 					}
 					
+					
 					$dropResult.hide();
+					$(input).closest(".input-line").css("z-index", 1);
+					input.blur();
 					
 					//временно вернуть фолс для тестов
 					return false;
+				} else if($dropResult.is(":visible")){
+					if(withMatch == true){
+						var flag = false; // если был введен текст и нажат Enter, то проверить, есть ли такой текст в выпадающем списке, если нет, то закрыть и предложить выбрать место
+						
+						$("li", $dropResult).each(function(){
+							if($(this).text().toLowerCase() == (""+input.val()).toLowerCase()){
+								flag = true;
+							}
+						});
+						
+						if(flag){
+							//если текст совпадает, то закрыть выпадающий список и запустить поиск
+							$dropResult.hide();
+							$(input).closest(".input-line").css("z-index", 1);
+							input.blur();
+							$(".not-found-event").slideUp(200);
+						} else {
+							$(input).val("Событие не найдено");
+							$dropResult.hide();
+							$(input).closest(".input-line").css("z-index", 1);
+							input.blur();
+							$(".not-found-event").slideDown(200);
+						}
+					}
 				}
 			}
 			
 			if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
+		});
+		
+		$(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
+			if($dropResult.is(":visible")){
+				setTimeout(function(){
+					$dropResult.hide();
+					if(input[0].value == ''){
+						input.val(input[0].defaultValue);
+					}
+				}, 100);
+			}
 		});
 	}
 	
@@ -498,6 +577,8 @@ jQuery(function($){
 		$("#popups .viewport").scrollTop(Math.abs(scrollTop));
 	}
 	
+	var mapComplaintPlace, myComplaintPlaceCollection, myMapPopup, myMapPopupPlace, myMapPopupEvent;
+	
 	$("body")
 		.delegate(".custom-checkbox", "click", function(){
 			var me = $(this);
@@ -516,10 +597,22 @@ jQuery(function($){
 		.delegate(".pop-labels .label", "click", function(e){
 			e.preventDefault(); //выбрать в  Популярных метках в попапе Что тебе интересно
 			
-			if($(this).hasClass("selected")) return;
-			$(this).addClass("selected");
+			var labelsField = $(this).closest(".p-body").find(".select-labels .labels");
 			
-			$($(this).clone(true)).append('<button type="button" class="remove-label"></button>').prependTo('.p-labels .selected-labels');
+			if($(this).closest("#p-add-place").length || $(this).closest("#p-add-event").length){
+				if($(this).hasClass("selected")) return;
+				$(this).addClass("selected");
+				
+				$(this).closest(".p-body").find(".labels input[type=text]").hide();
+				$(this).closest(".p-body").find(".label-add").show();
+				
+				$($(this).clone()).append('<button type="button" class="remove-label"></button>').prependTo(labelsField);
+			} else if($(this).closest("#p-labels").length){
+				if($(this).hasClass("selected")) return;
+				$(this).addClass("selected");
+				
+				$($(this).clone(true)).append('<button type="button" class="remove-label"></button>').prependTo('.p-labels .selected-labels');
+			}
 		})
 		.delegate(".popup .remove-label", "click", function(e){
 			e.preventDefault(); //удалить в  Популярных метках в попапе Что тебе интересно
@@ -531,7 +624,7 @@ jQuery(function($){
 			e.preventDefault(); //очистить в  Популярных метках в попапе Что тебе интересно
 			
 			var parent = $(this).closest(".popup");
-			parent.find(".p-labels .label").remove();
+			parent.find(".selected-labels .label").not(".label-add").remove();
 			parent.find(".pop-labels .selected").removeClass("selected");
 		})
 		.delegate(".p-close", "click", function(e){
@@ -543,6 +636,10 @@ jQuery(function($){
 				$("#complaint-place").hide();
 			} else if($(e.target).closest("#complaint-comment").length){
 				$("#complaint-comment").hide();
+			} else if($(e.target).closest("#confirm-remove-comment").length){
+				$("#confirm-remove-comment").hide();
+			} else if($(e.target).closest("#complaint-photo").length){
+				$("#complaint-photo").hide();
 			} else {
 				popups.close({
 					elem: $("#popups"),
@@ -559,44 +656,63 @@ jQuery(function($){
 			}
 		})
 		.delegate(".drop-filter input[type=text]", "focus", function(){
-			onFocusDropInput($(this)); //выпадающий живой поиск в попапе
+			var bool = $(this).closest(".drop-filter").hasClass("search-matches") ? true : false;
+			onFocusDropInput($(this), bool); //выпадающий живой поиск в попапе
 		})
-		.delegate(".drop-filter input[type=text]", "blur", function(){
-			//var me = $(this);
+		.delegate(".select-labels input[type=text]", "blur", function(){
+			var me = $(this);
 			
-			//setTimeout(function(){//закрыть живой поиск в попапе
-			//	me.closest(".drop-filter").find(".drop-results").hide();
-			//}, 0);
+			setTimeout(function(){//закрыть живой поиск в попапе
+				me.closest(".input-line").css("z-index", 1);
+				me.closest(".input-line").find(".drop-results").hide();
+			}, 0);
 		})
-		.delegate(".labels #input-add-labels", "focus", function(){
+		.delegate(".drop-filter .labels", "click", function(e){
 			// показать живой поиск в попапе Добавить место
-			$(this).closest(".select-labels").find(".drop-results").show();
+			if(e.target == this || $(e.target).hasClass("label-add") ||  $(e.target).closest(".label-add").length){
+				$(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
+			}
 		})
-		.delegate(".drop-results li", "click", function(){
-			//  живой поиск в попапе Добавить место
+		.delegate(".drop-results li", "mousedown", function(){
+			// живой поиск в попапе Добавить место
 			
 			if($(this).hasClass("label")){
 				var dropRoot = $(this).closest(".drop-filter");
 				
 				$(".label-add", dropRoot).show();
-				$(tmplLabel.replace("{text}", $(this).text()).replace("{clsName}", "")).insertBefore($(".label-add", dropRoot));
+				$(multySearch.tmplLabel.replace("{text}", $(this).text()).replace("{clsName}", "")).insertBefore($(".label-add", dropRoot));
 				$(this).closest(".drop-results").hide().find(".hover").removeClass("hover");
 				$("input[type=text]", dropRoot).blur().hide();
 			} else {
-				$(this).closest(".drop-results").hide();
 				$(this).closest(".drop-filter").find("input:[type=text]").val($(this).text()).blur();
+				$(this).closest(".drop-results").hide();
 			}
+		})
+		.delegate("#add-new-place", "focus", function(){
+			$(this).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");
+			$(this).val("");
 		})
 		.delegate(".remove-photo", "click", function(e){
 			e.preventDefault(); //показать окно подтверждения удаления фотки
 			
 			var left = $(this).offset().left - 150,
-				top = $(this).offset().top - 170;
+				top = $(this).offset().top - 30;
 			
 			$("#confirm-remove-photo").data("elemForRemove", $(this).closest(".item-photo")).css({
 				left: left,
 				top: top
 			}).show();
+		})
+		.delegate("#confirm-remove-comment .a-no", "click", function(e){
+			e.preventDefault();//отказ удаления фотки
+			
+			$("#confirm-remove-comment").hide();
+		})
+		.delegate("#confirm-remove-comment .a-yes", "click", function(e){
+			e.preventDefault();//подтверждение удаления комментария, нужный код после добавить
+			
+			//$($("#confirm-remove-photo").data("elemForRemove")).remove();
+			//$("#confirm-remove-photo").hide();
 		})
 		.delegate("#confirm-remove-photo .a-no", "click", function(e){
 			e.preventDefault();//отказ удаления фотки
@@ -604,10 +720,10 @@ jQuery(function($){
 			$("#confirm-remove-photo").hide();
 		})
 		.delegate("#confirm-remove-photo .a-yes", "click", function(e){
-			e.preventDefault();//подтверждение удаления фотки
+			e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
 			
-			$($("#confirm-remove-photo").data("elemForRemove")).remove();
-			$("#confirm-remove-photo").hide();
+			//$($("#confirm-remove-photo").data("elemForRemove")).remove();
+			//$("#confirm-remove-photo").hide();
 		})
 		.delegate("a[data-tooltip]", "mouseenter" , function(){
 			//показ маленьких подсказок на черном фоне
@@ -617,10 +733,11 @@ jQuery(function($){
 				height = $(this).height();
 			
 			if(!$("#tooltip").length){
-				$('<div id="tooltip"></div>').appendTo("body").hide();
+				$('<div id="tooltip"><div class="body"></div></div>').appendTo("body").hide();
 			}
 			
-			$('#tooltip').html(txt).css({
+			$('#tooltip .body').html(txt);
+			$('#tooltip').css({
 				display:"block",
 				visibility: "hidden"
 			});
@@ -646,6 +763,18 @@ jQuery(function($){
 				};
 			
 			$("#complaint-place").css(params).show();
+			
+			if(!mapComplaintPlace){
+				
+				mapComplaintPlace = new ymaps.Map('map-place-complaint', {
+					center: [38.043392000000004, 48.30851300000994], 
+					zoom: 11
+				});
+				
+				if(!myComplaintPlaceCollection){
+					myComplaintPlaceCollection = new ymaps.GeoObjectCollection();
+				}
+			}
 		})
 		.delegate(".a-complaint-comment", "click", function(e){
 			e.preventDefault();//показать попап для жалобы на comment
@@ -656,6 +785,16 @@ jQuery(function($){
 				};
 				
 			$("#complaint-comment").css(params).show();
+		})
+		.delegate(".complaint-photo", "click", function(e){
+			e.preventDefault();//показать попап для жалобы на comment
+			
+			var params = {
+					left: e.pageX - 166,
+					top : $("#popups .viewport").scrollTop() + e.pageY - 100 - $(window).scrollTop()
+				};
+				
+			$("#complaint-photo").css(params).show();
 		})
 		.delegate(".popup .toggle-block .a-toggle", "click", function(e){
 			e.preventDefault(); // показать-скрыть скрытые блоки в попапе
@@ -684,7 +823,7 @@ jQuery(function($){
 		.delegate(".bp-photo", "click", function(e){
 			e.preventDefault(); //смена фотки в слайдере при клике на большую фотку
 			
-			var items   = $(this).closest(".p-gallery").find(".item-photo:visible").not(".load-photo"),
+			var items = $(this).closest(".p-gallery").find(".item-photo:visible").not(".load-photo"),
 				current = items.filter(".current"),
 				next = items.index(current) < items.length-1 ? items.eq(items.index(current)+1) : items.eq(0);
 			
@@ -696,7 +835,7 @@ jQuery(function($){
 		.delegate(".popup .toggle-area textarea", "blur", function(){
 			$(this).closest(".toggle-area").removeClass("focus");
 		})
-		.delegate(".content .item .photo img", "click", function(e){
+/*		.delegate(".content .item .photo img", "click", function(e){
 			e.preventDefault(); //показ основного попапа
 			
 			$("#popups .scroll-box").scrollTop(0);
@@ -722,8 +861,6 @@ jQuery(function($){
 								scrollArrows: true
 							};
 							
-							var myMapPopup1;
-							
 							$(".p-tabs").simpleTabs({
 								afterChange: function(self, id){
 									if($(".calendar").length && $(".calendar").is(":visible")){
@@ -731,8 +868,22 @@ jQuery(function($){
 									}
 									
 									if(id == 'tab-map'){
-										if (!myMapPopup1) {
-											myMapPopup1 = new ymaps.Map('popup-map-1', {
+										if (!myMapPopup) {
+											myMapPopup = new ymaps.Map('popup-map-1', {
+												center: [38.043392000000004, 48.30851300000994], 
+												zoom: 11
+											});
+										}
+									} else if (id == 'tab-map-place'){
+										if (!myMapPopupPlace) {
+											myMapPopupPlace = new ymaps.Map('popup-map-place', {
+												center: [38.043392000000004, 48.30851300000994], 
+												zoom: 11
+											});
+										}
+									} else if (id == 'tab-map-event'){
+										if (!myMapPopupEvent) {
+											myMapPopupEvent = new ymaps.Map('popup-map-event', {
 												center: [38.043392000000004, 48.30851300000994], 
 												zoom: 11
 											});
@@ -751,12 +902,33 @@ jQuery(function($){
 					$("body").css("overflow", "hidden");
 				}
 			});
-		})
+		})*/
 		.delegate(".content .item .a-comment", "click", function(e){
 			e.preventDefault();
 			
 			$(this).closest(".item").find(".comments").show().find("textarea").focus();
 			//$("html, body").scrollTop($(window).scrollTop()+250);
+		})
+		.delegate("#tab-map .m-ico-group .m-ico", "click", function(e){
+			e.preventDefault();
+			
+			$("#near-objects").slideDown(200);
+		})
+		.delegate(".not-found-event .btn-place", "click", function(e){
+			e.preventDefault();
+			
+			$("#p-add-event").hide();
+			$("#p-add-place").show();
+		})
+		.delegate(".a-remove-comment", "click", function(e){
+			e.preventDefault();
+			
+			var params = {
+				left: $(this).offset().left - 150,
+				top : $(this).offset().top - 30
+			};
+			
+			$("#confirm-remove-comment").data("elemForRemove", $(this).closest(".item-comment")).css(params).show();
 		});
 	
 	var popups = {
@@ -821,7 +993,27 @@ jQuery(function($){
 								buttonImageOnly: true
 							});
 							
-							$(".p-tabs").simpleTabs();
+							var myMapPopupPlace, myMapPopupEvent;
+							
+							$(".p-tabs").simpleTabs({
+								afterChange: function(self, id){
+									if (id == 'tab-map-place'){
+										if (!myMapPopupPlace) {
+											myMapPopupPlace = new ymaps.Map('popup-map-place', {
+												center: [38.043392000000004, 48.30851300000994], 
+												zoom: 11
+											});
+										}
+									} else if (id == 'tab-map-event'){
+										if (!myMapPopupEvent) {
+											myMapPopupEvent = new ymaps.Map('popup-map-event', {
+												center: [38.043392000000004, 48.30851300000994], 
+												zoom: 11
+											});
+										}
+									}
+								}
+							});
 						}
 					});
 				},
@@ -835,23 +1027,30 @@ jQuery(function($){
 	
 	$("#popups .scroll-box").click(function(e){
 		if(e.target == this){
-			
-			$("#confirm-remove-photo").hide();
-			$("#complaint-place").hide();
-			$("#complaint-comment").hide();
-			
-			popups.close({
-				elem: $("#popups"),
-				speed: 0,
-				callbackBefore: function(){
-					popups.close({
-						elem: $("#overlay")
-					});
-				},
-				callbackAfter: function(){
-					$("body").css("overflow", "visible");
-				}
-			});
+			if($("#confirm-remove-photo").is(":visible")){
+				$("#confirm-remove-photo").hide();
+			} else if($("#complaint-place").is(":visible")){
+				$("#complaint-place").hide();
+			} else if($("#complaint-photo").is(":visible")){
+				$("#complaint-photo").hide();
+			} else if($("#complaint-comment").is(":visible")){
+				$("#complaint-comment").hide();
+			} else if($("#confirm-remove-comment").is(":visible")){
+				$("#confirm-remove-comment").hide();
+			} else {
+				popups.close({
+					elem: $("#popups"),
+					speed: 0,
+					callbackBefore: function(){
+						popups.close({
+							elem: $("#overlay")
+						});
+					},
+					callbackAfter: function(){
+						$("body").css("overflow", "visible");
+					}
+				});
+			}
 		}
 	});
 	
@@ -877,14 +1076,6 @@ jQuery(function($){
 	$(window).resize(function(){
 		setWidthItems($(window).width(), itemsBlock);
 		setPositionMenu(menuTop);
-	});
-	
-	$("#popups .viewport").scroll(function(){
-		if($("#popups .viewport").scrollTop() > 96){
-			$("#right-panel").addClass("fixed");
-		} else {
-			$("#right-panel").removeClass("fixed");
-		}
 	});
 	
 	//temp code, must be removed!!!

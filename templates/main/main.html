@@ -7,13 +7,21 @@
     {% block header %}
         {% include 'main/header.html' %}
     {% endblock %}
+
     {% block mainmap %}
         {% include 'main/mainmap.html' %}
     {% endblock %}
+
     {% block content %}{% endblock %}
     {% include 'main/content.html' %}
+
+    {% block footer %}
+        {% include 'main/footer.html' %}
+    {% endblock %}
 {% endblock %}
 
-{% block footer %}
-    {% include 'main/footer.html' %}
+{% block popups %}
+    {% include 'includes/popups.html' %}
+    {% include 'includes/confirm-remove-comment.html' %}
+    {% include 'includes/confirm-remove-photo.html' %}
 {% endblock %}

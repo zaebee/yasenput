@@ -28,7 +28,78 @@ $(function(){
             'mouseenter .photo':"hoverImgIn",
             'mouseleave .photo':"hoverImgOut",
             'focus .content .item textarea':"focusComment",
-            'blur .content .item textarea':"blurComment"
+            'click .content .item label':"focusComment",
+            'blur .content .item textarea':"blurComment",
+            'blur .content .item label':"blurComment",
+            'click .photo img':"detailPlace"
+        },
+        detailPlace:function(e){
+            e.preventDefault(); //показ основного попапа
+
+            $("#popups .scroll-box").scrollTop(0);
+
+            popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            $("input.calendar").datepicker({
+                                dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                                dateFormat: "dd.mm.yy",
+                                showOn: "button",
+                                buttonImage: "images/calendar.gif",
+                                buttonImageOnly: true
+                            });
+
+                            var cuselParams = {
+                                changedEl: ".calendar select",
+                                visRows  : 5,
+                                scrollArrows: true
+                            };
+
+                            $(".p-tabs").simpleTabs({
+                                afterChange: function(self, id){
+                                    if($(".calendar").length && $(".calendar").is(":visible")){
+                                        cuSel(cuselParams);
+                                    }
+
+                                    if(id == 'tab-map'){
+                                        if (!myMapPopup) {
+                                            myMapPopup = new ymaps.Map('popup-map-1', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-place'){
+                                        if (!myMapPopupPlace) {
+                                            myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-event'){
+                                        if (!myMapPopupEvent) {
+                                            myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                            if($(".calendar").length && $(".calendar").is(":visible")){
+                                cuSel(cuselParams);
+                            }
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                }
+            });
         },
         render:function(){
             var self = this;
@@ -66,12 +137,13 @@ $(function(){
             $(this.el).find('.a-like').hide();
             $(this.el).find('.a-comment').hide();
         },
-        focusComment:function(me){
+        focusComment:function(){
             var me = $(this.el).find('textarea');
             //console.log(me);
             me.closest(".toggle-area").addClass("focus");
             $('.content .items').masonry("reload");
             $(document).unbind("keydown.areaComment").bind("keydown.areaComment", function(){
+                console.log('jjl');
                 setTimeout(function(){
                     if(me.val().toString().length > 0){
                         me.parent().find("label").hide();
@@ -82,11 +154,12 @@ $(function(){
             });
         },
         blurComment:function(){
-            $(this.el).closest(".toggle-area").removeClass("focus");
+            var me = $(this.el).find('textarea');
+            $(me).focus();
+            $(me).closest(".toggle-area").removeClass("focus");
             $('.content .items').masonry("reload");
-
-            if($(this.el).val().toString().length == 0){
-                $(this.el).parent().find("label").show();
+            if($(me).val().toString().length == 0){
+                $(me).parent().find("label").show();
             }
         }
     });
