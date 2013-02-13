@@ -425,15 +425,15 @@ jQuery(function($){
 		cuSel(cuselParams);
 	}
 	
-	function toggleCheckbox(label){
+/*	function toggleCheckbox(label){
 		if($("input[type=checkbox]", label).is(":checked")){
 			label.addClass("checked");
 		} else {
 			label.removeClass("checked");
 		}
-	}
+	}*/
 	
-	function toggleRadio(label){
+/*	function toggleRadio(label){
 		var name = label.find("input[type=radio]").attr("name");
 		
 		$("input[name="+name+"]").each(function(){
@@ -443,7 +443,7 @@ jQuery(function($){
 				$(this).closest("label").removeClass("checked");
 			}
 		});
-	}
+	}*/
 	
 	function onFocusDropInput(input, withMatch){
 		var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
@@ -579,22 +579,22 @@ jQuery(function($){
 	
 	var mapComplaintPlace, myComplaintPlaceCollection, myMapPopup, myMapPopupPlace, myMapPopupEvent;
 	
-	$("body")
-		.delegate(".custom-checkbox", "click", function(){
+//	$("body")
+/*		.delegate(".custom-checkbox", "click", function(){
 			var me = $(this);
 			
 			setTimeout(function(){
 				toggleCheckbox(me);
 			}, 0);
-		})
-		.delegate(".custom-radio", "click", function(){
+		})*/
+/*		.delegate(".custom-radio", "click", function(){
 			var me = $(this);
 			
 			setTimeout(function(){
 				toggleRadio(me);
 			}, 0);
-		})
-		.delegate(".pop-labels .label", "click", function(e){
+		})*/
+/*		.delegate(".pop-labels .label", "click", function(e){
 			e.preventDefault(); //выбрать в  Популярных метках в попапе Что тебе интересно
 			
 			var labelsField = $(this).closest(".p-body").find(".select-labels .labels");
@@ -613,21 +613,21 @@ jQuery(function($){
 				
 				$($(this).clone(true)).append('<button type="button" class="remove-label"></button>').prependTo('.p-labels .selected-labels');
 			}
-		})
-		.delegate(".popup .remove-label", "click", function(e){
+		})*/
+/*		.delegate(".popup .remove-label", "click", function(e){
 			e.preventDefault(); //удалить в  Популярных метках в попапе Что тебе интересно
 			
 			$(this).closest(".popup").find(".selected:contains("+$(this).closest(".label").text()+")").removeClass("selected");
 			$(this).closest(".label").remove();
-		})
-		.delegate(".clear-selected", "click", function(e){
+		})*/
+/*		.delegate(".clear-selected", "click", function(e){
 			e.preventDefault(); //очистить в  Популярных метках в попапе Что тебе интересно
 			
 			var parent = $(this).closest(".popup");
 			parent.find(".selected-labels .label").not(".label-add").remove();
 			parent.find(".pop-labels .selected").removeClass("selected");
-		})
-		.delegate(".p-close", "click", function(e){
+		})*/
+/*		.delegate(".p-close", "click", function(e){
 			e.preventDefault();
 			
 			if($(e.target).closest("#confirm-remove-photo").length){
@@ -654,26 +654,26 @@ jQuery(function($){
 					}
 				});
 			}
-		})
-		.delegate(".drop-filter input[type=text]", "focus", function(){
-			var bool = $(this).closest(".drop-filter").hasClass("search-matches") ? true : false;
-			onFocusDropInput($(this), bool); //выпадающий живой поиск в попапе
-		})
-		.delegate(".select-labels input[type=text]", "blur", function(){
+		})*/
+/*		.delegate(".drop-filter input[type=text]", "focus", function(){
+     var bool = $(this).closest(".drop-filter").hasClass("search-matches") ? true : false;
+     onFocusDropInput($(this), bool); //выпадающий живой поиск в попапе
+     })*/
+/*		.delegate(".select-labels input[type=text]", "blur", function(){
 			var me = $(this);
 			
 			setTimeout(function(){//закрыть живой поиск в попапе
 				me.closest(".input-line").css("z-index", 1);
 				me.closest(".input-line").find(".drop-results").hide();
 			}, 0);
-		})
-		.delegate(".drop-filter .labels", "click", function(e){
+		})*/
+/*		.delegate(".drop-filter .labels", "click", function(e){
 			// показать живой поиск в попапе Добавить место
 			if(e.target == this || $(e.target).hasClass("label-add") ||  $(e.target).closest(".label-add").length){
 				$(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
 			}
-		})
-		.delegate(".drop-results li", "mousedown", function(){
+		})*/
+/*		.delegate(".drop-results li", "mousedown", function(){
 			// живой поиск в попапе Добавить место
 			
 			if($(this).hasClass("label")){
@@ -687,12 +687,12 @@ jQuery(function($){
 				$(this).closest(".drop-filter").find("input:[type=text]").val($(this).text()).blur();
 				$(this).closest(".drop-results").hide();
 			}
-		})
-		.delegate("#add-new-place", "focus", function(){
+		})*/
+/*		.delegate("#add-new-place", "focus", function(){
 			$(this).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");
 			$(this).val("");
-		})
-		.delegate(".remove-photo", "click", function(e){
+		})*/
+/*		.delegate(".remove-photo", "click", function(e){
 			e.preventDefault(); //показать окно подтверждения удаления фотки
 			
 			var left = $(this).offset().left - 150,
@@ -702,30 +702,30 @@ jQuery(function($){
 				left: left,
 				top: top
 			}).show();
-		})
-		.delegate("#confirm-remove-comment .a-no", "click", function(e){
+		})*/
+/*		.delegate("#confirm-remove-comment .a-no", "click", function(e){
 			e.preventDefault();//отказ удаления фотки
 			
 			$("#confirm-remove-comment").hide();
-		})
-		.delegate("#confirm-remove-comment .a-yes", "click", function(e){
+		})*/
+/*		.delegate("#confirm-remove-comment .a-yes", "click", function(e){
 			e.preventDefault();//подтверждение удаления комментария, нужный код после добавить
 			
 			//$($("#confirm-remove-photo").data("elemForRemove")).remove();
 			//$("#confirm-remove-photo").hide();
-		})
-		.delegate("#confirm-remove-photo .a-no", "click", function(e){
+		})*/
+/*		.delegate("#confirm-remove-photo .a-no", "click", function(e){
 			e.preventDefault();//отказ удаления фотки
 			
 			$("#confirm-remove-photo").hide();
-		})
-		.delegate("#confirm-remove-photo .a-yes", "click", function(e){
+		})*/
+/*		.delegate("#confirm-remove-photo .a-yes", "click", function(e){
 			e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
 			
 			//$($("#confirm-remove-photo").data("elemForRemove")).remove();
 			//$("#confirm-remove-photo").hide();
-		})
-		.delegate("a[data-tooltip]", "mouseenter" , function(){
+		})*/
+/*		.delegate("a[data-tooltip]", "mouseenter" , function(){
 			//показ маленьких подсказок на черном фоне
 			var txt = $(this).data("tooltip"),
 				offset = $(this).offset(),
@@ -750,11 +750,11 @@ jQuery(function($){
 				left: offset.left + width/2 - w/2,
 				top : offset.top + height+2
 			}).fadeIn(200);
-		})
-		.delegate("a[data-tooltip]", "mouseleave", function(){
+		})*/
+/*		.delegate("a[data-tooltip]", "mouseleave", function(){
 			$('#tooltip').fadeOut(200);
-		})
-		.delegate(".a-complaint", "click", function(e){
+		})*/
+/*		.delegate(".a-complaint", "click", function(e){
 			e.preventDefault();//показать попап для жалобы на местo
 			
 			var params = {
@@ -775,8 +775,8 @@ jQuery(function($){
 					myComplaintPlaceCollection = new ymaps.GeoObjectCollection();
 				}
 			}
-		})
-		.delegate(".a-complaint-comment", "click", function(e){
+		})*/
+/*		.delegate(".a-complaint-comment", "click", function(e){
 			e.preventDefault();//показать попап для жалобы на comment
 			
 			var params = {
@@ -785,8 +785,8 @@ jQuery(function($){
 				};
 				
 			$("#complaint-comment").css(params).show();
-		})
-		.delegate(".complaint-photo", "click", function(e){
+		})*/
+/*		.delegate(".complaint-photo", "click", function(e){
 			e.preventDefault();//показать попап для жалобы на comment
 			
 			var params = {
@@ -795,8 +795,8 @@ jQuery(function($){
 				};
 				
 			$("#complaint-photo").css(params).show();
-		})
-		.delegate(".popup .toggle-block .a-toggle", "click", function(e){
+		})*/
+/*		.delegate(".popup .toggle-block .a-toggle", "click", function(e){
 			e.preventDefault(); // показать-скрыть скрытые блоки в попапе
 			
 			if($(this).hasClass("is-open")){
@@ -814,13 +814,13 @@ jQuery(function($){
 			} else {
 				parent.find(".hidden-content").toggle();
 			}
-		})
-		.delegate(".p-gallery .item-photo", "click", function(e){
+		})*/
+/*		.delegate(".p-gallery .item-photo", "click", function(e){
 			e.preventDefault(); //показать главную фотку в попапе по клику на превьюшку
 			
 			if(e.target.tagName != 'BUTTON' && !$(this).hasClass("load-photo")) changeBigPhoto($(this));
-		})
-		.delegate(".bp-photo", "click", function(e){
+		})*/
+/*		.delegate(".bp-photo", "click", function(e){
 			e.preventDefault(); //смена фотки в слайдере при клике на большую фотку
 			
 			var items = $(this).closest(".p-gallery").find(".item-photo:visible").not(".load-photo"),
@@ -828,13 +828,13 @@ jQuery(function($){
 				next = items.index(current) < items.length-1 ? items.eq(items.index(current)+1) : items.eq(0);
 			
 			next.click();
-		})
-		.delegate(".popup .toggle-area textarea", "focus", function(){
+		})*/
+/*		.delegate(".popup .toggle-area textarea", "focus", function(){
 			$(this).closest(".toggle-area").addClass("focus");
-		})
-		.delegate(".popup .toggle-area textarea", "blur", function(){
+		})*/
+/*		.delegate(".popup .toggle-area textarea", "blur", function(){
 			$(this).closest(".toggle-area").removeClass("focus");
-		})
+		})*/
 /*		.delegate(".content .item .photo img", "click", function(e){
 			e.preventDefault(); //показ основного попапа
 			
@@ -903,24 +903,24 @@ jQuery(function($){
 				}
 			});
 		})*/
-		.delegate(".content .item .a-comment", "click", function(e){
+/*		.delegate(".content .item .a-comment", "click", function(e){
 			e.preventDefault();
 			
 			$(this).closest(".item").find(".comments").show().find("textarea").focus();
 			//$("html, body").scrollTop($(window).scrollTop()+250);
-		})
-		.delegate("#tab-map .m-ico-group .m-ico", "click", function(e){
+		})*/
+/*		.delegate("#tab-map .m-ico-group .m-ico", "click", function(e){
 			e.preventDefault();
 			
 			$("#near-objects").slideDown(200);
-		})
-		.delegate(".not-found-event .btn-place", "click", function(e){
+		})*/
+/*		.delegate(".not-found-event .btn-place", "click", function(e){
 			e.preventDefault();
-			
-			$("#p-add-event").hide();
-			$("#p-add-place").show();
-		})
-		.delegate(".a-remove-comment", "click", function(e){
+
+            $("#p-add-event").hide();
+            $("#p-add-place").show();
+		})*/
+/*		.delegate(".a-remove-comment", "click", function(e){
 			e.preventDefault();
 			
 			var params = {
@@ -929,27 +929,31 @@ jQuery(function($){
 			};
 			
 			$("#confirm-remove-comment").data("elemForRemove", $(this).closest(".item-comment")).css(params).show();
-		});
-	
-	var popups = {
-		open: function(params){
-			var callbackBefore = params.callbackBefore || function(){},
-				callbackAfter = params.callbackAfter || function(){};
-			
-			callbackBefore();
-			$(params.elem).show();
-			callbackAfter();
-		},
-		
-		close: function(params){
-			var callbackBefore = params.callbackBefore || function(){},
-				callbackAfter = params.callbackAfter || function(){};
-			
-			callbackBefore();
-			$(params.elem).hide();
-			callbackAfter();
-		}
-	};
+		});*/
+
+/*    var popups = {
+        open: function (params) {
+            var callbackBefore = params.callbackBefore || function () {
+                },
+                callbackAfter = params.callbackAfter || function () {
+                };
+
+            callbackBefore();
+            $(params.elem).show();
+            callbackAfter();
+        },
+
+        close: function (params) {
+            var callbackBefore = params.callbackBefore || function () {
+                },
+                callbackAfter = params.callbackAfter || function () {
+                };
+
+            callbackBefore();
+            $(params.elem).hide();
+            callbackAfter();
+        }
+    };*/
 	
 	if($(".private").length || $(".a-enter").length){
 		$(".private .a-edit, #header .a-enter").click(function(e){
@@ -1038,11 +1042,11 @@ jQuery(function($){
 			} else if($("#confirm-remove-comment").is(":visible")){
 				$("#confirm-remove-comment").hide();
 			} else {
-				popups.close({
+                window.YPApp.popups.close({
 					elem: $("#popups"),
 					speed: 0,
 					callbackBefore: function(){
-						popups.close({
+                        window.YPApp.popups.close({
 							elem: $("#overlay")
 						});
 					},
