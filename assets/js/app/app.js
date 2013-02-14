@@ -30,10 +30,13 @@ $(function(){
             'focus .content .item textarea':"focusComment",
             'click .content .item label':"focusComment",
             'blur .content .item textarea':"blurComment",
-            'blur .content .item label':"blurComment",
-            'click .photo img':"detailPlace"
+            'blur .content .item label':"blurComment"
+            //'click .photo img':"detailPlace"
+            //'click .photo img':function(){
+            //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
+            //}
         },
-        detailPlace:function(e){
+/*        detailPlace:function(e){
             e.preventDefault(); //показ основного попапа
 
             $("#popups .scroll-box").scrollTop(0);
@@ -46,6 +49,8 @@ $(function(){
                 myMapPopupPlace:undefined,
                 myMapPopupEvent:undefined,
                 callbackAfter: function(){
+
+                    var self = this;
                     window.YPApp.popups.open({
                         elem: $("#popups"),
                         callbackAfter: function(){
@@ -65,28 +70,28 @@ $(function(){
                             };
 
                             $(".p-tabs").simpleTabs({
-                                afterChange: function(self, id){
+                                afterChange: function(me, id){
                                     if($(".calendar").length && $(".calendar").is(":visible")){
                                         cuSel(cuselParams);
                                     }
 
                                     if(id == 'tab-map'){
-                                        if (!myMapPopup) {
-                                            myMapPopup = new ymaps.Map('popup-map-1', {
+                                        if (!self.myMapPopup) {
+                                            self.myMapPopup = new ymaps.Map('popup-map-1', {
                                                 center: [38.043392000000004, 48.30851300000994],
                                                 zoom: 11
                                             });
                                         }
                                     } else if (id == 'tab-map-place'){
-                                        if (!myMapPopupPlace) {
-                                            myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                        if (!self.myMapPopupPlace) {
+                                            self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
                                                 center: [38.043392000000004, 48.30851300000994],
                                                 zoom: 11
                                             });
                                         }
                                     } else if (id == 'tab-map-event'){
-                                        if (!myMapPopupEvent) {
-                                            myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                        if (!self.myMapPopupEvent) {
+                                            self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
                                                 center: [38.043392000000004, 48.30851300000994],
                                                 zoom: 11
                                             });
@@ -105,7 +110,7 @@ $(function(){
                     $("body").css("overflow", "hidden");
                 }
             });
-        },
+        },*/
         render:function(){
             var self = this;
             var content = self.template(self.model.toJSON());
@@ -114,6 +119,10 @@ $(function(){
         },
         initialize: function() {
             var self = this;
+            //Point.bind("detailplace", self.detailPlace, self);
+            //console.log('sdasad')
+            //Points.bind("detailpoint", this.detailpoint);
+
             if(!$('#tab-want').hasClass('active')){
                 var placemark = new ymaps.Placemark(
                     [ self.model.get('latitude'), self.model.get('longitude')],
@@ -210,6 +219,7 @@ $(function(){
         initialize: function() {
             Points.bind('change', this.onListChange, this);
             Points.on("add", this.addPoint, this);
+            //Points.on("detailPoint", this.addPoint, this);
         },
         clear: function(){
             var self = this;
@@ -534,6 +544,81 @@ $(function(){
                 $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
             }
         },
+        detailPlace:function(e){
+            e.preventDefault(); //показ основного попапа
+
+            $("#popups .scroll-box").scrollTop(0);
+
+            this.open({
+                elem: $("#overlay"),
+                mapComplaintPlace:undefined,
+                myComplaintPlaceCollection:undefined,
+                myMapPopup:undefined,
+                myMapPopupPlace:undefined,
+                myMapPopupEvent:undefined,
+                callbackAfter: function(){
+
+                    var self = this;
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            $("input.calendar").datepicker({
+                                dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                                dateFormat: "dd.mm.yy",
+                                showOn: "button",
+                                buttonImage: "images/calendar.gif",
+                                buttonImageOnly: true
+                            });
+
+                            var cuselParams = {
+                                changedEl: ".calendar select",
+                                visRows  : 5,
+                                scrollArrows: true
+                            };
+
+                            $(".p-tabs").simpleTabs({
+                                afterChange: function(me, id){
+                                    if($(".calendar").length && $(".calendar").is(":visible")){
+                                        cuSel(cuselParams);
+                                    }
+
+                                    if(id == 'tab-map'){
+                                        if (!self.myMapPopup) {
+                                            self.myMapPopup = new ymaps.Map('popup-map-1', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-place'){
+                                        if (!self.myMapPopupPlace) {
+                                            self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-event'){
+                                        if (!self.myMapPopupEvent) {
+                                            self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                            if($(".calendar").length && $(".calendar").is(":visible")){
+                                cuSel(cuselParams);
+                            }
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                }
+            });
+        },
         popups: {
             open: function (params) {
                 var callbackBefore = params.callbackBefore || function () {
@@ -608,12 +693,23 @@ $(function(){
     Router = Backbone.Router.extend({
         routes:{
             "":"main",
+            "detailpoint/:point":"detailPoint",
             "tag/*tag(/z/:point)":"test"
         },
         main:function(){
             window.App.setCollection(Points);
             window.App.render();
             return false;
+        },
+        detailPoint:function(point){
+            alert(point);
+            //PointView.detailPlace(point);
+            //PointView.detailPlace();
+            console.log(PointView);
+            Points.get(point).trigger('detailplace');
+            //Points.get(point).trigger()
+            //console.log(Points.get(point).;
+            //Points.view.detailPlace();
         }
     });
     window.router = new Router();
@@ -630,4 +726,9 @@ $(function(){
         Backbone.history.start({pushState: true});
     }
 
+    $('.nonav').live('click',function(e){
+        e.preventDefault();
+        var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
+        Backbone.history.navigate(href.attr, true);
+    })
 });
