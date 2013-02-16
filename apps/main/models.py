@@ -7,7 +7,6 @@ from django.db import models
 from sorl.thumbnail import ImageField
 import uuid
 import os.path
-from taggit.managers import TaggableManager
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 class Person(User):

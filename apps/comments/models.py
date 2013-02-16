@@ -5,6 +5,10 @@ from apps.main.models import Person
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+COMMENT_ALLOWED_MODELS = (
+    ('0','main.Points'),
+)
+
 class Comments(models.Model):
     class Meta:
         verbose_name = u'Комментарии'
