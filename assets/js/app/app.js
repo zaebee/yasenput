@@ -30,8 +30,8 @@ $(function(){
             'focus .content .item textarea':"focusComment",
             'click .content .item label':"focusComment",
             'blur .content .item textarea':"blurComment",
-            'blur .content .item label':"blurComment"
-            //'click .photo img':"detailPlace"
+            'blur .content .item label':"blurComment",
+            'click .photo img':"detailPlace"
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
             //}
@@ -120,8 +120,8 @@ $(function(){
         initialize: function() {
             var self = this;
             //Point.bind("detailplace", self.detailPlace, self);
-            //console.log('sdasad')
-            //Points.bind("detailpoint", this.detailpoint);
+            console.log('initialize PointView')
+            Point.bind("detailPlace", self.detailPlace);
 
             if(!$('#tab-want').hasClass('active')){
                 var placemark = new ymaps.Placemark(
@@ -174,6 +174,9 @@ $(function(){
             if($(me).val().toString().length == 0){
                 $(me).parent().find("label").show();
             }
+        },
+        detailPlace:function (){
+            alert('Собака!')
         }
     });
 
@@ -196,6 +199,8 @@ $(function(){
             //self.setURL();
             self.fetch(options);
         }
+
+
     });
     var Points = new PointList;
     /* ----------------- Model route---------------- */
@@ -219,7 +224,10 @@ $(function(){
         initialize: function() {
             Points.bind('change', this.onListChange, this);
             Points.on("add", this.addPoint, this);
-            //Points.on("detailPoint", this.addPoint, this);
+            //Points.on("detailpoint", this.detailpoint(var point), this);
+            Points.on("detailpoint", function(point){
+                console.log(point)
+            }, this);
         },
         clear: function(){
             var self = this;
@@ -247,6 +255,10 @@ $(function(){
                 self.$el.append(pin.render().el);
             }, this);
             return self.el;
+        },
+        detailpoint:function(point){
+            //console.log(Points.get(point).id)
+            console.log(Points)
         }
     });
     window.App = new AppView();
@@ -557,7 +569,6 @@ $(function(){
                 myMapPopupPlace:undefined,
                 myMapPopupEvent:undefined,
                 callbackAfter: function(){
-
                     var self = this;
                     window.YPApp.popups.open({
                         elem: $("#popups"),
@@ -685,6 +696,10 @@ $(function(){
             var scrollTop = q - ($(window).height() - h)/2;
 
             $("#popups .viewport").scrollTop(Math.abs(scrollTop));
+        },
+        pppp:function(point){
+            //Points.get(point).trigger('detailPlace');
+            //Points.get(point).trigger('detailPlace');
         }
     });
     window.YPApp = new YPApp();
@@ -702,14 +717,10 @@ $(function(){
             return false;
         },
         detailPoint:function(point){
-            alert(point);
-            //PointView.detailPlace(point);
-            //PointView.detailPlace();
-            console.log(PointView);
-            Points.get(point).trigger('detailplace');
-            //Points.get(point).trigger()
-            //console.log(Points.get(point).;
-            //Points.view.detailPlace();
+            console.log('router detailPoint');
+            window.App.setCollection(Points);
+            window.App.render();
+            window.YPApp.pppp(point);
         }
     });
     window.router = new Router();
