@@ -24,13 +24,20 @@ $(function(){
     /* -------------------- View point-------------------- */
     var PointView = Backbone.View.extend({
         template: _.template($('#point-template').html()),
+        templateComment: _.template('<li><img src="<%- avatar %>" alt="" class="avatar" width="30" height="30">' +
+                                    '<div class="body-comment">' +
+                                    '<div class="author-comment"><%- author %></div>' +
+                                    '<p><%- comment %></p></div></li>'),
         events: {
             'mouseenter .photo':"hoverImgIn",
             'mouseleave .photo':"hoverImgOut",
-            'focus .content .item textarea':"focusComment",
-            'click .content .item label':"focusComment",
-            'blur .content .item textarea':"blurComment",
-            'blur .content .item label':"blurComment",
+            'focus textarea':"focusComment",
+            'click label':function(){
+                this.$el.find('textarea').focus();
+            },
+            'submit .add-comment':"addComment",
+            'blur textarea':"blurComment",
+            'blur label':"blurComment",
             'click .photo img':"detailPlace"
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
@@ -120,7 +127,12 @@ $(function(){
         initialize: function() {
             var self = this;
             //Point.bind("detailplace", self.detailPlace, self);
-            console.log('initialize PointView')
+            console.log('initialize PointView');
+/*            self.$el.find('[type="submit"]').live('click',
+                function(){
+                    alert('!');
+                }
+            );*/
             Point.bind("detailPlace", self.detailPlace);
 
             if(!$('#tab-want').hasClass('active')){
@@ -166,18 +178,44 @@ $(function(){
                 }, 0);
             });
         },
+        addComment:function (e){
+            e.preventDefault();
+            var self = this;
+            if(self.$el.find('.add-comment textarea').val().toString() != 0){
+
+                $.ajax({
+                    type: "POST",
+                    url: "comments/add",
+                    crossDomain: false,
+                    dataType:'json',
+                    data: {
+                        object_id: self.model.get('id'),
+                        type:12
+                    },
+                    success: function(data) {
+                        self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
+                        self.$el.find('.add-comment textarea').val('');
+                    },
+                    error: function (request, status, error) {
+                        alert(status);
+                    }
+                });
+            }
+            self.$el.find('.add-comment textarea').blur();
+        },
         blurComment:function(){
+            console.log('blurComment');
             var me = $(this.el).find('textarea');
-            $(me).focus();
-            $(me).closest(".toggle-area").removeClass("focus");
-            $('.content .items').masonry("reload");
             if($(me).val().toString().length == 0){
                 $(me).parent().find("label").show();
+                this.$el.find(".toggle-area").removeClass("focus");
             }
+            $('.content .items').masonry("reload");
         },
         detailPlace:function (){
             alert('Собака!')
         }
+
     });
 
     /* ----------------- Collection point---------------- */

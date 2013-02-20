@@ -85,7 +85,7 @@ def addpoint(request):
         f = AddPointForm(request.POST )
         if f.is_valid():
             point = f.save(commit=False)
-            point.author = Person.objects.get(username = request.user)
+            point.author = Person.objects.get(username=request.user)
             categories = request.POST.getlist('categories[]')
             point.save()
             for categ in categories:

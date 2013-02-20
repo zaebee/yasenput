@@ -40,8 +40,8 @@ class CommentList(CommentBaseView):
         object_type = self.get_object_type()
         comments = Comments.objects.filter(content_type=object_type, object_id=object_id)
         json = YpSerialiser()
-        return HttpResponse(json.serialize(comments, excludes=("object_id","content_type"),
-                                                     relations={'author':{'fields':(
+        return HttpResponse(json.serialize(comments, excludes=("object_id", "content_type"),
+                                                     relations={'author': {'fields': (
                                                         'first_name',
                                                         'last_name',
                                                         'avatar'
@@ -50,7 +50,7 @@ class CommentList(CommentBaseView):
 class CommentAdd(CommentBaseView):
     http_method_names = ('post',)
 
-    def post(self,request):
+    def post(self, request):
         json = YpSerialiser()
         if request.POST:
             form = CommentForm(request.POST)
@@ -58,10 +58,10 @@ class CommentAdd(CommentBaseView):
                 comment = form.save(commit=False)
                 comment.author = request.user.get_profile()
                 comment.save()
-                return HttpResponse(json.serialize([comment], excludes=("object_id","content_type"),
+                return HttpResponse(json.serialize([comment], excludes=("object_id", "content_type"),
                                                                 relations={
-                                                                    'author':{
-                                                                        'fields':('first_name','last_name','avatar')
+                                                                    'author': {
+                                                                        'fields': ('first_name', 'last_name', 'avatar')
                                                                     }
                                                                 }),
                                     mimetype="application/json")

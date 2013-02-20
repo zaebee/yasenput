@@ -6,7 +6,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
 COMMENT_ALLOWED_MODELS = (
-    ('0','main.Points'),
+    ('12', 'main.Points'),
 )
 
 class Comments(models.Model):
