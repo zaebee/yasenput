@@ -5,6 +5,9 @@ from apps.main.models import Person
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+REPORT_ALLOWED_MODELS = (
+    ('12', 'main.Points'),
+)
 
 class TypeReports(models.Model):
     class Meta:
@@ -17,7 +20,7 @@ class Reports(models.Model):
         verbose_name = u'Отзывы'
         verbose_name_plural = u'Отзывы'
     type = models.ForeignKey(TypeReports)
-    feeedback = models.TextField('Отзыв')
+    feedback = models.TextField('Отзыв')
     content_type = models.ForeignKey(ContentType, blank=True, null=True, verbose_name="Type")
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
