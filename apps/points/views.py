@@ -43,6 +43,15 @@ class PointsBaseView(View):
         return object_type
 
 
+class OnePoint(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get("id")
+        point = get_object_or_404(MainModels.Points, pk=id)
+        print point
+        json = YpSerialiser()
+        return HttpResponse(json.serialize([point], relations={'type':{}} ), mimetype="application/json")
 
 class PointsList(PointsBaseView):
     http_method_names = ('get',)
