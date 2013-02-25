@@ -3,7 +3,8 @@ __author__ = 'art'
 
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
-from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Photos, Points, TypePoints, Routes, Person
+from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Photos, Points, TypePoints, Routes, Person, Events
+from apps.comments.models import Comments
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
 from django.http import HttpResponse
@@ -63,9 +64,15 @@ def index(request):
     heads  = HeadDescriptions.objects.all()
     categories  = Categories.objects.all()
     countvisitpoints  = 0
+    count_liked_objects = 0
+    count_commented_objects = 0
     if request.user.is_authenticated():
         user = User.objects.get(username = request.user)
         countvisitpoints  = Points.objects.filter(visitusers__id = user.id).count()
+        count_liked_objects  = (Points.objects.filter(likeusers__id = user.id).count() +
+                                Photos.objects.filter(likeusers__id = user.id).count() +
+                                Events.objects.filter(likeusers__id = user.id).count());
+        count_commented_objects  = Comments.objects.filter(author__id = user.id).count();
     regions  = Regions.objects.all()
     typepoints  = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
@@ -75,7 +82,14 @@ def index(request):
         else:
             typepoints[i].ul = False
 
-    return render_to_response(template_name, {'areas': areas, 'heads':heads, 'categories':categories, 'countvisitpoints':countvisitpoints, 'regions':regions, 'typepoints':typepoints, 'VKONTAKTE_APP_ID':settings.VKONTAKTE_APP_ID},context_instance=RequestContext(request))
+    return render_to_response(template_name, 
+                              {'areas': areas, 'heads':heads, 'categories':categories, 
+                               'countvisitpoints':countvisitpoints, 'regions':regions,
+                               'count_liked_objects': count_liked_objects,
+                               'count_commented_objects': count_commented_objects, 
+                               'typepoints':typepoints, 
+                               'VKONTAKTE_APP_ID':settings.VKONTAKTE_APP_ID}, 
+                              context_instance=RequestContext(request))
     #return HttpResponse('Index Page')
 
 def addpoint(request):
