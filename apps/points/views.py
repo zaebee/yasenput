@@ -3,12 +3,14 @@ from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
 from apps.reports import models as ReportsModels
 from apps.tags import models as TagsModels
+from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 import urllib
@@ -118,7 +120,15 @@ class PointAdd(PointsBaseView):
     
     
 class PointDel(PointsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request):
-        pk = request.POST.get('id')
+    def get(self, request):
+        form = forms.IdForm(request.POST)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            point = get_object_or_404(MainModels.Points, pk=id)
+            
+            CommentsModels.Comments.objects(content_object=point).delete()
+            point.delete()
+            return JsonHTTPResponse({"id":id, "status":"Ошибка удаления"})
+        return JsonHTTPResponse({"id":0, "status":"Ошибка удаления"})   
