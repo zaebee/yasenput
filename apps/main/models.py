@@ -192,6 +192,7 @@ class Events(models.Model):
     dt_start = models.DateTimeField('Начало')
     dt_end = models.DateTimeField('Окончание')
     point = models.ForeignKey(Points, unique=False)
+    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     author = models.ForeignKey(Person, unique=False)
 
 #class
