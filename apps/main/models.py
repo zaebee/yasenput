@@ -126,7 +126,7 @@ class Points(models.Model):
     name = models.CharField('Название', max_length=255)
     longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
     latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
-    description = models.TextField('Описание', null=True, default=0)
+    #description = models.TextField('Описание', null=True, default=0)
     categories = models.ManyToManyField(Categories, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
