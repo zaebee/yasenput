@@ -67,7 +67,7 @@
                 </ul>
                 {% if user.is_authenticated %}
                     <form action="#" class="add-comment">
-                        <img src="{{ user.person.avatar.url|default:"null" }}" alt="" class="avatar" width="30" height="30">
+                        <img src="{% if user.person.avatar %}{{ user.person.avatar.url|default:"null" }}{% else %}null{% endif %}" alt="" class="avatar" width="30" height="30">
                         <div class="toggle-area">
                             <label>Комментировать</label>
                             <textarea rows="3" cols="25"></textarea>
