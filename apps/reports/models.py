@@ -14,6 +14,9 @@ class TypeReports(models.Model):
         verbose_name = u'Тип отзыва'
         verbose_name_plural = u'Тип отзыва'
     name = models.TextField('Тип', null = True, default=0)
+    
+    def __unicode__(self):
+        return self.name
 
 class Reports(models.Model):
     class Meta:
