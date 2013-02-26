@@ -24,6 +24,7 @@ def SerializeHTTPResponse(json):
 
 
 class PointsBaseView(View):
+    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -31,8 +32,7 @@ class PointsBaseView(View):
             raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
 
-    def get_object_type(self):
-        type = self.request.REQUEST.get('type')
+    def get_object_type(self, type):
         if type not in self.COMMENT_ALLOWED_MODELS_DICT:
             raise Http404
         app_name, model_name = self.COMMENT_ALLOWED_MODELS_DICT[type].split('.')
@@ -49,11 +49,11 @@ class OnePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         id = kwargs.get("id")
         point = get_object_or_404(MainModels.Points, pk=id)
-        print point
         json = YpSerialiser()
         return HttpResponse(json.serialize([point], relations={'type':{}} ), mimetype="application/json")
 
 class PointsList(View):
+    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
 
     def dispatch(self, request, *args, **kwargs):
@@ -62,63 +62,114 @@ class PointsList(View):
         return super(PointsList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        COUNT_ELEMENTS = 2
+        params = request.GET
         
-        page = kwargs.get("page", 1) or 1;
+        COUNT_ELEMENTS = 2
+        status = 2
+        errors = []
+        
+        page = kwargs.get("page", 1) or 1
+        
         limit = COUNT_ELEMENTS*int(page)
         offset = (int(page)-1)*COUNT_ELEMENTS
         
-        form = forms.FiltersForm(request.GET)
+        form = forms.FiltersForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects;
-            
-            #person    
-            #if request.user.is_authenticated:
-            #    person = MainModels.Person.objects.get(username=request.user)
-            
-            user = form.cleaned_data.get("user", None)
+                       
+            user = form.cleaned_data.get("user")
             if user:
                 pointsreq = pointsreq.filter(author__username__icontains=user)            
             
-            name = form.cleaned_data.get("name", None)
+            coord_left = params.get("coord_left")
+            if coord_left:
+                try:
+                    coord_left = json.loads(coord_left)
+                except:
+                    status = 1
+                    errors.append("некорректно задана левая точка на карте для фильтра")
+                else:
+                    ln = coord_left.get("ln")
+                    lt = coord_left.get("lt")
+                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
+                        pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)    
+                    
+            coord_right = params.get("coord_right")
+            if coord_right:
+                try:
+                    coord_right = json.loads(coord_right)
+                except:
+                    status = 1
+                    errors.append("некорректно задана правая точка на карте для фильтра")
+                else:
+                    ln = coord_right.get("ln")
+                    lt = coord_right.get("lt")
+                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
+                        pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)               
+            
+            name = form.cleaned_data.get("name")
             if name:
-                print name
                 pointsreq = pointsreq.filter(name__icontains=name)
             
-            address = form.cleaned_data.get("address", None)
+            address = form.cleaned_data.get("address")
             if address:
                 pointsreq = pointsreq.filter(address__icontains=address)
                               
-            categ = form.cleaned_data.get("categ", None)    
+            categ = form.cleaned_data.get("categ")    
             if categ:
-                pointsreq  = pointsreq.filter(categories__name__icontains = urllib.unquote(categ))
+                pointsreq = pointsreq.filter(categories__name__icontains=categ)
             
-            content = form.cleaned_data.get("content", None) or 'new'    
+            tags = params.get("tags")
+            if tags:
+                try:
+                    tags = json.loads(tags)
+                except:
+                    status = 1
+                    errors.append("некорректно задана правая точка на карте для фильтра")
+                else:
+                    object_type = ContentType.objects.get_for_model(MainModels.Points).id
+                    pointsreq = pointsreq.extra(where=['main_points.id in (select object_id from tags_tags where content_type_id=%s and name in (%s))' % (object_type, ",".join(map(lambda x: "'%s'" % x, tags)))])
+            
+            content = form.cleaned_data.get("content") or 'new'    
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+                
+            if request.user.is_authenticated():
+                user = MainModels.User.objects.get(username = request.user)
+                pointsreq  = pointsreq.extra(
+                        select={
+                            'currentvisit': 'SELECT COUNT(*) FROM main_points_visitusers WHERE main_points_visitusers.points_id = main_points.id and main_points_visitusers.user_id = '+str(user.id)
+                        }
+                    )
+            else:
+                pointsreq  = pointsreq.extra(
+                    select={
+                        'currentvisit': 'SELECT 0 '
+                    }
+                )                
+                
             points  = pointsreq[offset:limit].all()
-            #print points.query
-            #json = serializers.serialize("json", points)
-        
-            #objects = list(serializers.deserialize("json", json))
-            #json = serializers.get_serializer("json")()
-            json = YpSerialiser()
-            #json_serializer.serialize(points)
-            #return render_to_response(template_name, {'points':points},context_instance=RequestContext(request))
-            #return HttpResponse(json.serialize(points, use_natural_keys=True), mimetype="application/json")
-            return HttpResponse(json.serialize(points, relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+            
+            YpJson = YpSerialiser()
+            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
         else:
-            return JsonHTTPResponse({"status": "некорректный фильтр"})
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+
 
 class PointAdd(PointsBaseView):
     http_method_names = ('get',)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
+
+        status = 2
+        errors = []
         
-        t = u"Ошибка добавления"
         params = request.GET
         form = forms.AddPointForm(params)
         if form.is_valid():
@@ -128,10 +179,17 @@ class PointAdd(PointsBaseView):
             point.author = person
             point.save()
             
-            categories = params.getlist("categories[]")
-            for categ in categories:
-                point.categories.add(MainModels.Categories.objects.get(id=categ))
-                    
+            categories = params.get("categories")
+            if categories:
+                try:
+                    categories = json.loads(categories)
+                except:
+                    status = 1
+                    errors.append("некорректно заданы категории")
+                else:
+                    for categ in categories:
+                        point.categories.add(MainModels.Categories.objects.get(id=categ))
+
             # todo сохранение с изображениями
             #images = request.POST.getlist('imgs[]')
             #for img in images:
@@ -142,40 +200,52 @@ class PointAdd(PointsBaseView):
             reports = params.get('feedbacks', None)
             if reports:
                 try:
-                    reports = json.loads(reports);
+                    reports = json.loads(reports)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы отзывы")
+                else:
                     for report in reports:
                         if report.get("type", None) and report.get("feedback", None):
                             report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
                             if report_type.count() > 0:
-                                feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
-                                feedback.save()    
-                except:
-                    pass
+                                try:
+                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
+                                    feedback.save()
+                                except:
+                                    import sys
+                                    status = 1
+                                    message = "ошибка добавления отзыва"
+                                    if message not in errors: errors.appen(message)
                 
-            tags = params.getlist("tags[]", [])
+            tags = params.get("tags")
             if tags:
-                for tag in tags:
-                    if tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.filter(id=tag)
-                    else:
-                        new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if new_tag.count() == 0:
-                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                try:
+                    tags = json.loads(tags)    
+                except:
+                    status = 1
+                    errors.append("некорректно заданы метки")
+                else:
+                    for tag in tags:
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        else:
+                            new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
                 
-            return JsonHTTPResponse({"id": point.id, "status": "0"});
+            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)});
         else:
-            print form.errors
             e = form.errors
             for er in e:
-                print e[er]
-                t = t + ', '+ er +':'+e[er][0]
-        return JsonHTTPResponse({"id": 0, "status": t});           
+                errors.append(er +':'+e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});           
     
     
 class PointDel(PointsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request):
+    def post(self, request):
         form = forms.IdForm(request.POST)
         if form.is_valid():
             id = form.cleaned_data["id"]
