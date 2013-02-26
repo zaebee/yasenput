@@ -53,27 +53,71 @@ class OnePoint(PointsBaseView):
         json = YpSerialiser()
         return HttpResponse(json.serialize([point], relations={'type':{}} ), mimetype="application/json")
 
-class PointsList(PointsBaseView):
+class PointsList(View):
     http_method_names = ('get',)
 
-    def get(self, request):
-        object_id = request.GET.get('object_id')
-        object_type = self.get_object_type()
-        """
-        comments = Comments.objects.filter(content_type=object_type, object_id=object_id)
-        json = YpSerialiser()
-        return HttpResponse(json.serialize(comments, excludes=("object_id", "content_type"),
-                                                     relations={'author': {'fields': (
-                                                        'first_name',
-                                                        'last_name',
-                                                        'avatar'
-                                                     )}}), mimetype="application/json")
-        """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(PointsList, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        COUNT_ELEMENTS = 2
+        
+        page = kwargs.get("page", 1) or 1;
+        limit = COUNT_ELEMENTS*int(page)
+        offset = (int(page)-1)*COUNT_ELEMENTS
+        
+        form = forms.FiltersForm(request.GET)
+        if form.is_valid():
+            pointsreq = MainModels.Points.objects;
+            
+            #person    
+            #if request.user.is_authenticated:
+            #    person = MainModels.Person.objects.get(username=request.user)
+            
+            user = form.cleaned_data.get("user", None)
+            if user:
+                pointsreq = pointsreq.filter(author__username__icontains=user)            
+            
+            name = form.cleaned_data.get("name", None)
+            if name:
+                print name
+                pointsreq = pointsreq.filter(name__icontains=name)
+            
+            address = form.cleaned_data.get("address", None)
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=address)
+                              
+            categ = form.cleaned_data.get("categ", None)    
+            if categ:
+                pointsreq  = pointsreq.filter(categories__name__icontains = urllib.unquote(categ))
+            
+            content = form.cleaned_data.get("content", None) or 'new'    
+            if content == 'new':
+                pointsreq  = pointsreq.order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+            points  = pointsreq[offset:limit].all()
+            #print points.query
+            #json = serializers.serialize("json", points)
+        
+            #objects = list(serializers.deserialize("json", json))
+            #json = serializers.get_serializer("json")()
+            json = YpSerialiser()
+            #json_serializer.serialize(points)
+            #return render_to_response(template_name, {'points':points},context_instance=RequestContext(request))
+            #return HttpResponse(json.serialize(points, use_natural_keys=True), mimetype="application/json")
+            return HttpResponse(json.serialize(points, relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+        else:
+            return JsonHTTPResponse({"status": "некорректный фильтр"})
 
 class PointAdd(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request):
+        DEFAULT_LEVEL = 2
+        
         t = u"Ошибка добавления"
         params = request.GET
         form = forms.AddPointForm(params)
@@ -116,7 +160,7 @@ class PointAdd(PointsBaseView):
                     else:
                         new_tag = TagsModels.Tags.objects.filter(name=tag)
                     if new_tag.count() == 0:
-                        new_tag = TagsModels.Tags.objects.create(name=tag, level=1, author=person, content_object=point)
+                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
                 
             return JsonHTTPResponse({"id": point.id, "status": "0"});
         else:
