@@ -191,9 +191,13 @@ class Events(models.Model):
 
     dt_start = models.DateTimeField('Начало')
     dt_end = models.DateTimeField('Окончание')
+    name = models.CharField('Название', max_length=255)
     point = models.ForeignKey(Points, unique=False)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     author = models.ForeignKey(Person, unique=False)
+    
+    def __unicode__(self):
+        return self.name    
 
 #class
 
