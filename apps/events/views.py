@@ -1,0 +1,192 @@
+# -*- coding: utf-8 -*-
+from django.views.generic.base import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
+from django.utils import simplejson
+from apps.events import forms
+from apps.main import models as MainModels
+from apps.reports import models as ReportsModels
+from apps.tags import models as TagsModels
+from apps.comments import models as CommentsModels
+from apps.serializers.json import Serializer as YpSerialiser
+from django.db.models import Count
+import json
+
+def JsonHTTPResponse(json):
+        return HttpResponse(simplejson.dumps(json), mimetype="application/json")
+    
+def SerializeHTTPResponse(json):
+        return HttpResponse(json.serialize(json), mimetype="application/json")
+
+
+class EventsBaseView(View):
+    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(EventsBaseView, self).dispatch(request, *args, **kwargs)
+
+
+class OneEvent(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get("id")
+        event = get_object_or_404(MainModels.Events, pk=id)
+        json = YpSerialiser()
+        return HttpResponse(json.serialize([event]), mimetype="application/json")
+
+class EventsList(View):
+    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+    http_method_names = ('get',)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(EventsList, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        params = request.GET
+        
+        COUNT_ELEMENTS = 2
+        status = 2
+        errors = []
+        
+        page = kwargs.get("page", 1) or 1
+        
+        limit = COUNT_ELEMENTS*int(page)
+        offset = (int(page)-1)*COUNT_ELEMENTS
+        
+        form = forms.FiltersForm(params)
+        if form.is_valid():
+            pointsreq = MainModels.Events.objects;
+                       
+            user = form.cleaned_data.get("user")
+            if user:
+                pointsreq = pointsreq.filter(author__id_icontains=user)            
+            
+            coord_left = params.get("coord_left")
+            if coord_left:
+                try:
+                    coord_left = json.loads(coord_left)
+                except:
+                    status = 1
+                    errors.append("некорректно задана левая точка на карте для фильтра")
+                else:
+                    ln = coord_left.get("ln")
+                    lt = coord_left.get("lt")
+                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
+                        pointsreq = pointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)    
+                    
+            coord_right = params.get("coord_right")
+            if coord_right:
+                try:
+                    coord_right = json.loads(coord_right)
+                except:
+                    status = 1
+                    errors.append("некорректно задана правая точка на карте для фильтра")
+                else:
+                    ln = coord_right.get("ln")
+                    lt = coord_right.get("lt")
+                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
+                        pointsreq = pointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)               
+            
+            name = form.cleaned_data.get("name")
+            if name:
+                pointsreq = pointsreq.filter(name__icontains=name)
+                                         
+            tags = params.get("tags")
+            if tags:
+                try:
+                    tags = json.loads(tags)
+                except:
+                    status = 1
+                    errors.append("некорректно задана правая точка на карте для фильтра")
+                else:
+                    object_type = ContentType.objects.get_for_model(MainModels.Events).id
+                    pointsreq = pointsreq.extra(where=['main_events.id in (select object_id from tags_tags where content_type_id=%s and name in (%s))' % (object_type, ",".join(map(lambda x: "'%s'" % x, tags)))])
+            
+            pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')            
+                
+            points  = pointsreq[offset:limit].all()
+            
+            YpJson = YpSerialiser()
+            return HttpResponse(YpJson.serialize(points, relations={'point':{}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)}}), mimetype="application/json")
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+
+
+class EventAdd(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        DEFAULT_LEVEL = 2
+        
+        status = 2
+        errors = []
+        
+        params = request.GET
+        form = forms.AddEventForm(params)
+        if form.is_valid():
+            event = form.save(commit=False)
+            
+            person = MainModels.Person.objects.get(username=request.user)
+            event.author = person
+            event.save()
+                
+            # todo сохранение с изображениями
+            #images = request.POST.getlist('imgs[]')
+            #for img in images:
+            #    event.imgs.add(MainModels.Photos.objects.get(id=img))
+                       
+            reports = params.get('feedbacks', None)
+            if reports:
+                try:
+                    reports = json.loads(reports)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы отзывы")
+                else:
+                    for report in reports:
+                        if report.get("type", None) and report.get("feedback", None):
+                            report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
+                            if report_type.count() > 0:
+                                try:
+                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
+                                    feedback.save()
+                                except:
+                                    import sys
+                                    status = 1
+                                    message = "ошибка добавления отзыва"
+                                    if message not in errors: errors.appen(message)
+                
+            tags = params.get("tags")
+            if tags:
+                try:
+                    tags = json.loads(tags)    
+                except:
+                    status = 1
+                    errors.append("некорректно заданы метки")
+                else:
+                    for tag in tags:
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        else:
+                            new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
+
+            return JsonHTTPResponse({"id": event.id, "status": status, "txt": ""})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})           
