@@ -9,6 +9,9 @@ class FiltersForm(forms.Form):
     name = forms.IntegerField(required=False)
     user = forms.IntegerField(required=False)
 
+class SearchForm(forms.Form):
+    s = forms.CharField(max_length=255, required=False)
+
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)
     
