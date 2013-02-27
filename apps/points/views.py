@@ -52,6 +52,38 @@ class OnePoint(PointsBaseView):
         json = YpSerialiser()
         return HttpResponse(json.serialize([point], relations={'type':{}} ), mimetype="application/json")
 
+class PointsSearch(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        params = request.GET
+        COUNT_ELEMENTS = 5
+        status = 2
+        errors = []
+               
+        limit = COUNT_ELEMENTS
+        offset = 0
+        
+        form = forms.SearchForm(params)
+        if form.is_valid():
+            pointsreq = MainModels.Points.objects;           
+            
+            name = form.cleaned_data.get("s")
+            if name:
+                pointsreq = pointsreq.filter(name__icontains=name)
+
+            points  = pointsreq.order_by("name")[offset:limit]
+            
+            YpJson = YpSerialiser()
+            return HttpResponse(YpJson.serialize(points, fields=("name")), mimetype="application/json")
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+
+                        
+
 class PointsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
@@ -64,7 +96,7 @@ class PointsList(View):
     def get(self, request, *args, **kwargs):
         params = request.GET
         
-        COUNT_ELEMENTS = 2
+        COUNT_ELEMENTS = 10
         status = 2
         errors = []
         
