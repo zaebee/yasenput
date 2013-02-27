@@ -4,13 +4,13 @@ from django import forms
 
 
 class FiltersForm(forms.Form):
-    categ = forms.CharField(max_length=255, required=False)
+    categ = forms.IntegerField(required=False)
     name = forms.CharField(max_length=255, required=False)
+    # todo сделать проверку регулярным выражением
     content = forms.CharField(max_length=255, required=False)
     tag = forms.CharField(max_length=255, required=False)
     coord = forms.TextInput()
-    address = forms.CharField(max_length=255, required=False)
-    user = forms.CharField(max_length=255, required=False)
+    user = forms.IntegerField(required=False)
 
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)

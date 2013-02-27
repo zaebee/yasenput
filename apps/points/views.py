@@ -79,7 +79,7 @@ class PointsList(View):
                        
             user = form.cleaned_data.get("user")
             if user:
-                pointsreq = pointsreq.filter(author__username__icontains=user)            
+                pointsreq = pointsreq.filter(author__id__icontains=user)            
             
             coord_left = params.get("coord_left")
             if coord_left:
@@ -110,14 +110,10 @@ class PointsList(View):
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
-            
-            address = form.cleaned_data.get("address")
-            if address:
-                pointsreq = pointsreq.filter(address__icontains=address)
                               
             categ = form.cleaned_data.get("categ")    
             if categ:
-                pointsreq = pointsreq.filter(categories__name__icontains=categ)
+                pointsreq = pointsreq.filter(categories__id__icontains=categ)
             
             tags = params.get("tags")
             if tags:
