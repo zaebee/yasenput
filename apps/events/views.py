@@ -141,8 +141,14 @@ class EventsList(View):
                 else:
                     object_type = ContentType.objects.get_for_model(MainModels.Events).id
                     pointsreq = pointsreq.extra(where=['main_events.id in (select events_id from main_events_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
+            
+            content = form.cleaned_data.get("content") or 'new'    
+            if content == 'new':
+                pointsreq  = pointsreq.order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+          
 
-            pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')            
                 
             points  = pointsreq[offset:limit].all()
             
