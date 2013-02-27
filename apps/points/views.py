@@ -43,14 +43,37 @@ class PointsBaseView(View):
         return object_type
 
 
+class LikePoint(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            print form.cleaned_data
+            id = form.cleaned_data["id"]
+            try:
+                point = get_object_or_404(MainModels.Points, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                point.likeusers.add(person)
+                point.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
+
+
 class OnePoint(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
-        id = kwargs.get("id")
-        point = get_object_or_404(MainModels.Points, pk=id)
-        json = YpSerialiser()
-        return HttpResponse(json.serialize([point], relations={'type':{}} ), mimetype="application/json")
+        point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
+        YpJson = YpSerialiser()
+        return HttpResponse(YpJson.serialize([point], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+
 
 class PointsSearch(PointsBaseView):
     http_method_names = ('get',)
@@ -58,7 +81,6 @@ class PointsSearch(PointsBaseView):
     def get(self, request, *args, **kwargs):
         params = request.GET
         COUNT_ELEMENTS = 5
-        status = 2
         errors = []
                
         limit = COUNT_ELEMENTS

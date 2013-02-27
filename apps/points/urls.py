@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^list/*((?P<page>\d+)/*)*$', views.PointsList.as_view()),
     url(r'^add/*$', views.PointAdd.as_view()),
     url(r'^search/*$', views.PointsSearch.as_view()),
+    url(r'^like/*$', views.LikePoint.as_view()),
     #url(r'^delete$', 'apps.points.views.delete'),
     
 )
