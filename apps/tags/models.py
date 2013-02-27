@@ -13,7 +13,7 @@ class Tags(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     level = models.PositiveIntegerField()
-    name = models.CharField('Название', max_length=255)
+    name = models.CharField('Название', max_length=255, unique=True)
     mapicons = models.ImageField(verbose_name='Иконка на карте', max_length=255, upload_to='mapicons')
     icons = models.ImageField(verbose_name='Иконка', max_length=255, upload_to='icons')
     style = models.CharField(verbose_name='Стиль', max_length=255, null=True)

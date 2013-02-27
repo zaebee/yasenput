@@ -109,14 +109,14 @@ class EventsList(View):
                     errors.append("некорректно задана правая точка на карте для фильтра")
                 else:
                     object_type = ContentType.objects.get_for_model(MainModels.Events).id
-                    pointsreq = pointsreq.extra(where=['main_events.id in (select object_id from tags_tags where content_type_id=%s and name in (%s))' % (object_type, ",".join(map(lambda x: "'%s'" % x, tags)))])
-            
+                    pointsreq = pointsreq.extra(where=['main_events.id in (select events_id from main_events_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
+
             pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')            
                 
             points  = pointsreq[offset:limit].all()
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, relations={'point':{}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)}}), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, relations={'point':{}, 'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)}}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
@@ -183,7 +183,8 @@ class EventAdd(EventsBaseView):
                             new_tag = TagsModels.Tags.objects.filter(name=tag)
                         if new_tag.count() == 0:
                             new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
-
+                        else: new_tag = new_tag[0]
+                        event.tags.add(new_tag)
             return JsonHTTPResponse({"id": event.id, "status": status, "txt": ""})
         else:
             e = form.errors

@@ -16,7 +16,7 @@ class IdForm(forms.Form):
 class AddEventForm(ModelForm):
     class Meta:
         model = Events
-        exclude = ('author')
+        exclude = ('author', 'tags')
 
 
 class EditEventForm(ModelForm):

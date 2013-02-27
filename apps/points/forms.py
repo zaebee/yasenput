@@ -9,7 +9,7 @@ class FiltersForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     # todo сделать проверку регулярным выражением
     content = forms.CharField(max_length=255, required=False)
-    tag = forms.CharField(max_length=255, required=False)
+    tags = forms.CharField(max_length=255, required=False)
     coord = forms.TextInput()
     user = forms.IntegerField(required=False)
 
@@ -20,7 +20,7 @@ class IdForm(forms.Form):
 class AddPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author','visits','likes', 'categories' )
+        exclude = ('author','visits','likes', 'categories', 'tags' )
 
 class EditPointForm(ModelForm):
     class Meta:
