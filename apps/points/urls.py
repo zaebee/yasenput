@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^add/*$', views.PointAdd.as_view()),
     url(r'^search/*$', views.PointsSearch.as_view()),
     url(r'^like/*$', views.LikePoint.as_view()),
+    url(r'^visit/*$', views.WantVisitPoint.as_view()),
     #url(r'^delete$', 'apps.points.views.delete'),
     
 )

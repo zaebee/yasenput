@@ -65,6 +65,28 @@ class LikePoint(PointsBaseView):
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
 
+class WantVisitPoint(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            try:
+                point = get_object_or_404(MainModels.Points, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                point.visitusers.add(person)
+                point.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления хочу посетить место"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
+
+
 class OnePoint(PointsBaseView):
     http_method_names = ('get',)
 
