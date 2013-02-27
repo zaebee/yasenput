@@ -49,7 +49,6 @@ class LikePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         form = forms.IdForm(request.GET)
         if form.is_valid():
-            print form.cleaned_data
             id = form.cleaned_data["id"]
             try:
                 point = get_object_or_404(MainModels.Points, pk=id)

@@ -32,14 +32,36 @@ class EventsBaseView(View):
         return super(EventsBaseView, self).dispatch(request, *args, **kwargs)
 
 
+class LikeEvent(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            try:
+                events = get_object_or_404(MainModels.Events, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                events.likeusers.add(person)
+                events.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка события"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
+
+
 class OneEvent(EventsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
         id = kwargs.get("id")
         event = get_object_or_404(MainModels.Events, pk=id)
-        json = YpSerialiser()
-        return HttpResponse(json.serialize([event]), mimetype="application/json")
+        YpJson = YpSerialiser()
+        return HttpResponse(YpJson.serialize([event], relations={'point':{}, 'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)}}), mimetype="application/json")
 
 
 class EventsSearch(EventsBaseView):
