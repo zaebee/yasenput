@@ -199,7 +199,7 @@ class Events(models.Model):
     point = models.ForeignKey(Points, unique=False)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
-    visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
+    visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
     author = models.ForeignKey(Person, unique=False)
     
     def __unicode__(self):
