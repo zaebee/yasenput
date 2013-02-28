@@ -200,6 +200,8 @@ class Events(models.Model):
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
     
     def __unicode__(self):
