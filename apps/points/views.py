@@ -43,6 +43,31 @@ class PointsBaseView(View):
         return object_type
 
 
+class FolowPoint(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            try:
+                point = get_object_or_404(MainModels.Points, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                if MainModels.Points.objects.filter(id=id, folowers__id=person.id).count() > 0:
+                    point.folowers.remove(person)
+                else:
+                    point.folowers.add(person)
+                point.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
+
+
 class LikePoint(PointsBaseView):
     http_method_names = ('get',)
 
