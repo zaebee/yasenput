@@ -115,7 +115,16 @@ class PointsSearch(PointsBaseView):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
-            points  = pointsreq.order_by("name")[offset:limit]
+
+            content = form.cleaned_data.get("content") 
+            if content == 'new':
+                pointsreq  = pointsreq.order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+            else:   
+                pointsreq  = pointsreq.order_by("name")
+                
+            points = pointsreq[offset:limit]
             
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(points, fields=("name")), mimetype="application/json")
