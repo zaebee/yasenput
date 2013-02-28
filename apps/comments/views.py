@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic.base import View
+from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
@@ -32,13 +33,22 @@ class CommentBaseView(View):
         return object_type
 
 
-class CommentList(CommentBaseView):
+class CommentList(MultipleObjectMixin, CommentBaseView):
     http_method_names = ('get',)
+    paginate_by = 20
+
+    def get_queryset(self):
+        object_id = self.request.GET.get('object_id')
+        object_type = self.get_object_type()
+        return Comments.objects.filter(content_type=object_type, object_id=object_id)
 
     def get(self, request):
-        object_id = request.GET.get('object_id')
-        object_type = self.get_object_type()
-        comments = Comments.objects.filter(content_type=object_type, object_id=object_id)
+        queryset = self.get_queryset()
+        page_size = self.get_paginate_by(queryset)
+        if page_size:
+            paginator, page, comments, is_paginated = self.paginate_queryset(queryset, page_size)
+        else:
+            comments = []
         json = YpSerialiser()
         return HttpResponse(json.serialize(comments, excludes=("object_id", "content_type"),
                                                      relations={'author': {'fields': (
