@@ -53,7 +53,10 @@ class LikePoint(PointsBaseView):
             try:
                 point = get_object_or_404(MainModels.Points, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                point.likeusers.add(person)
+                if MainModels.Points.objects.filter(id=id, likeusers__id=person.id).count() > 0:
+                    point.likeusers.remove(person)
+                else:
+                    point.likeusers.add(person)
                 point.save()
             except:
                 import sys
@@ -75,7 +78,10 @@ class WantVisitPoint(PointsBaseView):
             try:
                 point = get_object_or_404(MainModels.Points, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                point.visitusers.add(person)
+                if MainModels.Points.objects.filter(id=id, visitusers__id=person.id).count() > 0:
+                    point.visitusers.remove(person)
+                else:
+                    point.visitusers.add(person)
                 point.save()
             except:
                 import sys

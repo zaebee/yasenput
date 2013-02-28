@@ -42,7 +42,10 @@ class LikeEvent(EventsBaseView):
             try:
                 events = get_object_or_404(MainModels.Events, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                events.likeusers.add(person)
+                if MainModels.Events.objects.filter(id=id, likeusers__id=person.id).count() > 0:
+                    events.likeusers.remove(person)
+                else:
+                    events.likeusers.add(person)
                 events.save()
             except:
                 import sys
@@ -64,7 +67,10 @@ class WantVisitEvent(EventsBaseView):
             try:
                 events = get_object_or_404(MainModels.Events, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                events.visitusers.add(person)
+                if MainModels.Events.objects.filter(id=id, visitusers__id=person.id).count() > 0:
+                    events.visitusers.remove(person)
+                else:
+                    events.visitusers.add(person)
                 events.save()
             except:
                 import sys
