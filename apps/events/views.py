@@ -105,7 +105,15 @@ class EventsSearch(EventsBaseView):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
-            events  = pointsreq.order_by("name")[offset:limit]
+            content = form.cleaned_data.get("content") 
+            if content == 'new':
+                pointsreq  = pointsreq.order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+            else:   
+                pointsreq  = pointsreq.order_by("name")
+                
+            events = pointsreq[offset:limit]
             
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(events, fields=("name")), mimetype="application/json")
