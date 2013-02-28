@@ -312,8 +312,93 @@ class PointAdd(PointsBaseView):
             for er in e:
                 errors.append(er +':'+e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});           
-    
-    
+
+
+class PointEdit(PointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        DEFAULT_LEVEL = 2
+
+        status = 2
+        errors = []
+        
+        params = request.GET
+        form = forms.IdForm(params)
+        if not form.is_valid():
+            return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места"})
+        
+        form = forms.AddPointForm(params, instance=MainModels.Points.objects.get(pk=form.cleaned_data['id']))
+        if form.is_valid():
+            point = form.save()
+            person = MainModels.Person.objects.get(username=request.user)
+            
+            categories = params.get("categories")
+            if categories:
+                try:
+                    categories = json.loads(categories)
+                except:
+                    status = 1
+                    errors.append("некорректно заданы категории")
+                else:
+                    for categ in categories:
+                        if MainModels.Points.objects.filter(id=point.id, categories__id=categ).count() == 0:
+                            point.categories.add(MainModels.Categories.objects.get(id=categ))
+
+            # todo сохранение с изображениями
+            #images = request.POST.getlist('imgs[]')
+            #for img in images:
+            #    point.imgs.add(MainModels.Photos.objects.get(id=img))
+            
+            point.save()
+            
+            reports = params.get('feedbacks', None)
+            if reports:
+                try:
+                    reports = json.loads(reports)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы отзывы")
+                else:
+                    for report in reports:
+                        if report.get("type", None) and report.get("feedback", None):
+                            report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
+                            if report_type.count() > 0:
+                                try:
+                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
+                                    feedback.save()
+                                except:
+                                    import sys
+                                    status = 1
+                                    message = "ошибка добавления отзыва"
+                                    if message not in errors: errors.appen(message)
+                
+            tags = params.get("tags")
+            if tags:
+                try:
+                    tags = json.loads(tags)    
+                except:
+                    status = 1
+                    errors.append("некорректно заданы метки")
+                else:
+                    for tag in tags:
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        else:
+                            new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                        else: new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+                    point.save()
+            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)});
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});  
+
+
 class PointDel(PointsBaseView):
     http_method_names = ('post',)
 

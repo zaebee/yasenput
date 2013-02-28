@@ -28,4 +28,4 @@ class AddPointForm(ModelForm):
 class EditPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author','visits','likes','imgs' )
+        exclude = ('author','visits','likes', 'categories', 'tags','imgs' )
