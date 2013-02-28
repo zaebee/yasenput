@@ -70,8 +70,8 @@ MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets'))
 STATICFILES_DIRS = (
-#    os.path.normpath(os.path.join(STATIC_ROOT, '')),
-    'd:/dev/djcode/YasenPut/assets/',
+    os.path.normpath(os.path.join(STATIC_ROOT, '')),
+#    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets/'
 
@@ -143,6 +143,8 @@ INSTALLED_APPS = (
     'apps.comments',
     'apps.tags',
     'apps.reports',
+    'apps.points',
+    'apps.events',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

@@ -20,4 +20,64 @@
     </div>
     </div>
 {% include 'main/templates.html' %}
+    <!-- Templates -->
+    <script type="text/template" id="point-template">
+        <article class="item" data-point-id="<%- id %>">
+            <div class="photo">
+                {% if user.is_authenticated %}
+                <a href="#" class="a-want">Хочу посетить</a>
+                <a href="#" class="a-like" title="Нравится">&nbsp;</a>
+                <a href="#" class="a-comment" title="Комментировать">&nbsp;</a>
+                {% endif %}
+                <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
+            </div>
+
+            <div class="body">
+                <h3><%- name %></h3>
+                <p><%- address %></p>
+
+                <div class="stats">
+							<span>
+								<span class="ico-want-small"></span>
+								<%- visits %>
+							</span>
+
+							<span>
+								<span class="ico-like-small"></span>
+								<%- likes %>
+							</span>
+
+							<span>
+								<span class="ico-comment-small"></span>
+								<%- comments %>
+							</span>
+                </div>
+            </div>
+            <div class="comments">
+                <ul>
+                    <% _.each(comments, function(itm){ %>
+                    <li>
+                        <img src="<%- comments.author.avatar %>" alt="" class="avatar" width="30" height="30">
+                        <div class="body-comment">
+                            <div class="author-comment"><%- itm.author.first_name %> <%- itm.author.last_name %></div>
+                            <p><%- itm.txt %></p>
+                        </div>
+                    </li>
+                    <% }) %>
+                </ul>
+                {% if user.is_authenticated %}
+                    <form action="#" class="add-comment">
+                        <img src="{% if user.person.avatar %}{{ user.person.avatar.url|default:"null" }}{% else %}null{% endif %}" alt="" class="avatar" width="30" height="30">
+                        <div class="toggle-area">
+                            <label>Комментировать</label>
+                            <textarea rows="3" cols="25"></textarea>
+                            <input type="submit" value="ok">
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+
+        </article>
+
+    </script>
 {% endblock %}

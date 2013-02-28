@@ -120,6 +120,7 @@ class Photos(models.Model):
 
 
 class Points(models.Model):
+    from apps.tags.models import Tags
     class Meta:
         verbose_name = u'Точки'
         verbose_name_plural = u'Точки'
@@ -127,8 +128,9 @@ class Points(models.Model):
     name = models.CharField('Название', max_length=255)
     longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
     latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
-    description = models.TextField('Описание', null=True, default=0)
+    #description = models.TextField('Описание', null=True, default=0)
     categories = models.ManyToManyField(Categories, null=True, blank=True)
+    tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
     address = models.TextField('Адрес')
@@ -187,14 +189,23 @@ class Routes(models.Model):
 
 
 class Events(models.Model):
+    from apps.tags.models import Tags
+
     class Meta:
         verbose_name = u'События'
         verbose_name_plural = u'События'
 
     dt_start = models.DateTimeField('Начало')
     dt_end = models.DateTimeField('Окончание')
+    name = models.CharField('Название', max_length=255)
     point = models.ForeignKey(Points, unique=False)
+    tags = models.ManyToManyField(Tags, null=True, blank=True)
+    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
+    visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
     author = models.ForeignKey(Person, unique=False)
+    
+    def __unicode__(self):
+        return self.name    
 
 #class
 
