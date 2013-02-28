@@ -1,0 +1,1116 @@
+
+<!-- Templates -->
+<script type="text/template" id="point-template">
+    <article class="item" data-point-id="<%- id %>">
+        <div class="photo">
+            {% if user.is_authenticated %}
+                <a href="#" class="a-want">Хочу посетить</a>
+                <a href="#" class="a-like" title="Нравится">&nbsp;</a>
+                <a href="#" class="a-comment" title="Комментировать">&nbsp;</a>
+            {% endif %}
+            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
+        </div>
+
+        <div class="body">
+            <h3><%- name %></h3>
+            <p><%- address %></p>
+
+            <div class="stats">
+							<span>
+								<span class="ico-want-small"></span>
+								<%- visits %>
+							</span>
+
+							<span>
+								<span class="ico-like-small"></span>
+								<%- likes %>
+							</span>
+
+							<span>
+								<span class="ico-comment-small"></span>
+								<%- likes %>
+							</span>
+            </div>
+        </div>
+        <div class="comments">
+            <ul>
+                <% _.each(comments, function(itm){ %>
+                <li>
+                    <img src="{{ MEDIA_URL }}<%- itm.author.avatar %>" alt="" class="avatar" width="30" height="30">
+                    <div class="body-comment">
+                        <div class="author-comment"><%- itm.author.first_name %> <%- itm.author.last_name %></div>
+                        <p><%- itm.txt %></p>
+                    </div>
+                </li>
+                <% }) %>
+            </ul>
+            {% if user.is_authenticated %}
+                <form action="#" class="add-comment">
+                    <img src="{{ user.person.avatar.url|default:"null" }}" alt="" class="avatar" width="30" height="30">
+                    <div class="toggle-area">
+                        <label>Комментировать</label>
+                        <textarea rows="3" cols="25"></textarea>
+                        <input type="submit" value="ok">
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+    </article>
+
+</script>
+
+<script type="text/template" id="point-detail">
+    <div class="popup" id="p-common">
+        <div class="clearfix p-body">
+            <header>
+                <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
+
+                <!--<div class="event-date">1―5 января</div>-->
+
+                <h2>Софийский собор</h2>
+                <div class="addr"><%- address %></div>
+
+                <div class="stats">
+                                        <span>
+                                            <span class="ico-want-small"></span>
+                                            <%- visits %>
+                                        </span>
+
+                                        <span>
+                                            <span class="ico-like-small"></span>
+                                            <%- likes %>
+                                        </span>
+
+                                        <span>
+                                            <span class="ico-comment-small"></span>
+                                            <%- comments %>
+                                        </span>
+                </div>
+            </header>
+
+            <div class="wide-box">
+                <div class="p-tabs">
+                    <a href="#" data-target="tab-photo" class="active">Фотография</a>
+                    <a href="#" data-target="tab-map">На карте</a>
+                    <a href="#" data-target="tab-desc">Описание</a>
+                    <a href="#" data-target="tab-events">События</a>
+
+                    <div class="shadow"></div>
+                </div>
+
+                <div class="tabs-content">
+                <div id="tab-photo">
+                    <div class="tabs-inside"><!-- tp- tab photo -->
+                        <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
+                        <a href="#" data-target="tp-tab-my">новые</a>
+                        <a href="#" data-target="tp-tab-new">мои</a>
+                    </div>
+
+                <div class="tabs-content">
+                <div class="toggle-block">
+                <div class="clearfix p-gallery">
+                    <% _.each(imgs, function(itm){ %>
+                        <div class="item-photo ">
+                            <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="itm.likes" data-avatar="<%- itm.author.avatar %>">
+                                <img src="<%= itm.thumbnail130 %>" alt="" width="130" height="130">
+                            </a>
+                            <button class="remove-photo"></button>
+                        </div>
+                    <% }) %>
+                    <div class="item-photo current">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="5" data-avatar="temp/ava-small.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+                        <button class="remove-photo"></button>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Миля Зеленая" data-count-likes="14" data-avatar="temp/ava-small.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="remove-photo"></button>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Товарищ SinteZ" data-count-likes="87" data-avatar="temp/ava-small.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="complaint-photo"></button>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Речной сторож" data-count-likes="99" data-avatar="temp/ava-small.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="complaint-photo"></button>
+                    </div>
+
+                    <div id="big-photo">
+                        <div class="bp-photo">
+                            <img src="temp/img-560x420.jpg" alt="">
+
+                            <div class="bp-add-like">
+                                <img src="temp/ava-small.jpg" alt="" width="22" height="22" class="avatar">
+                                <span class="bp-name">Андрей Коротков</span>
+                                <a href="#" class="a-like"></a>
+                                <span class="count-like">5</span>
+                            </div>
+                        </div>
+
+                        <div class="bp-comments">
+                            <div class="toggle-block">
+                                <div  class="item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="comment-body">
+                                        <div class="comment-author">Андрей Коротков</div>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                        <div class="comment-date">20.02.2013</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                    </div>
+                                </div>
+
+                                <div  class="item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="comment-body">
+                                        <div class="comment-author">Андрей Коротков</div>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                        <div class="comment-date">20.02.2013</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                                    </div>
+                                </div>
+
+                                <div class="hidden-content">
+                                    <div  class="item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="comment-body">
+                                            <div class="comment-author">Андрей Коротков</div>
+
+                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                            <div class="comment-date">20.02.2013</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment"></a>
+                                        </div>
+                                    </div>
+
+                                    <div  class="item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="comment-body">
+                                            <div class="comment-author">Андрей Коротков</div>
+
+                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                            <div class="comment-date">20.02.2013</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                        </div>
+                                    </div>
+
+                                    <div  class="item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="comment-body">
+                                            <div class="comment-author">Андрей Коротков</div>
+
+                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                            <div class="comment-date">20.02.2013</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment"></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="add-comment">
+                                    <form action="#">
+                                        <div class="ac-block">
+                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                            <div class="ac-body">
+                                                <div class="toggle-area">
+                                                    <textarea rows="3" cols="40"></textarea>
+                                                    <input type="submit" value=" ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <a href="#" class="a-toggle">все комментарии <span>&darr;</span></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="2" data-avatar="temp/avatar.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="complaint-photo"></button>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Елена Ленина" data-count-likes="11" data-avatar="temp/avatar.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="complaint-photo"></button>
+                    </div>
+
+                    <div class="item-photo">
+                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Серафима" data-count-likes="25" data-avatar="temp/avatar.jpg">
+                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                        </a>
+
+                        <button class="complaint-photo"></button>
+                    </div>
+
+                    <div class="item-photo load-photo">
+                        <input type="file">
+                    </div>
+
+                    <div class="hidden-content">
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Миля Зеленая" data-count-likes="14" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="remove-photo"></button>
+                        </div>
+
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Товарищ SinteZ" data-count-likes="87" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="complaint-photo"></button>
+                        </div>
+
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Речной сторож" data-count-likes="99" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="complaint-photo"></button>
+                        </div>
+
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="2" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="complaint-photo"></button>
+                        </div>
+
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Елена Ленина" data-count-likes="11" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="complaint-photo"></button>
+                        </div>
+
+                        <div class="item-photo">
+                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Серафима" data-count-likes="25" data-avatar="temp/avatar.jpg">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                            </a>
+
+                            <button class="complaint-photo"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="a-toggle">все фотографии <span>&darr;</span></a>
+                </div>
+                </div>
+                </div>
+
+                <div id="tab-map">
+                    <div class="map">
+                        <div id="popup-map-1" style="width:560px; height:510px"></div>
+                        <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
+
+                        <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
+
+                        <div class="m-ico-group">
+                            <a href="#">
+                                <span class="m-ico m-hotel"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-cafe"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-restoran"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-turism"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-azs"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-active-rest"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-sto"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-commerc"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-hunting"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-events"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-shop"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-fishing"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-monument"></span>
+                            </a>
+
+                            <a href="#">
+                                <span class="m-ico m-church"></span>
+                            </a>
+                        </div>
+
+                        <div class="placemark" style="top:35%">
+                            <span class="m-ico m-hotel"></span>
+                        </div>
+
+                        <div class="placemark placemark-wide" style="top:65%">
+                            <span class="m-ico m-commerc"></span>
+                            <span class="num">32</span>
+                        </div>
+                    </div>
+
+                    <div id="near-objects">
+                        <h4 class="title-block">Ближайшие гостинницы</h4>
+
+                        <ol>
+                            <li>
+                                <h5>Место номер один</h5>
+                                <p>Краткое описание места и того, что здесь находится</p>
+                            </li>
+
+                            <li>
+                                <h5>Место номер два</h5>
+                                <p>Краткое описание места и того, что здесь находится</p>
+                            </li>
+
+                            <li>
+                                <h5>Место номер три</h5>
+                                <p>Краткое описание места и того, что здесь находится</p>
+                            </li>
+
+                            <li>
+                                <h5>Место номер четыре</h5>
+                                <p>Краткое описание места и того, что здесь находится</p>
+                            </li>
+
+                            <li>
+                                <h5>Место номер пять</h5>
+                                <p>Краткое описание места и того, что здесь находится</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!--<form action="#">
+                        <div class="clearfix p-photos">
+                            <div class="item-photo">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                <button class="remove-photo"></button>
+                            </div>
+
+                            <div class="item-photo photo-loading">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                <button class="remove-photo"></button>
+
+                                <div class="load-status">
+                                    <div class="progress-loading">
+                                        <div class="value" style="width:33%"></div>
+                                    </div>
+                                    33%
+                                </div>
+                            </div>
+
+                            <div class="item-photo photo-loading">
+                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                <button class="remove-photo"></button>
+
+                                <div class="load-status">
+                                    <div class="progress-loading">
+                                        <div class="value" style="width:56%"></div>
+                                    </div>
+                                    56%
+                                </div>
+                            </div>
+
+                            <div class="item-photo load-photo">
+                                <input type="file">
+                            </div>
+                        </div>
+                    </form>-->
+                </div>
+
+                <div id="tab-desc">
+                    <div class="toggle-block">
+                        <ul class="ul-desc">
+                            <li class="item-comment">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Андрей Коротков</a>
+
+                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                    <div class="desc-date">12.02.2032</div>
+                                </div>
+
+                                <div class="action">
+                                    <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                                </div>
+                            </li>
+
+                            <li class="even item-comment">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Андрей Коротков</a>
+
+                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                    <div class="desc-date">12.02.2032</div>
+                                </div>
+
+                                <div class="action">
+                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                </div>
+                            </li>
+
+                            <li class="item-comment">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Андрей Коротков</a>
+
+                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                    <div class="desc-date">12.02.2032</div>
+                                </div>
+
+                                <div class="action">
+                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                </div>
+                            </li>
+
+                            <li class="even item-comment">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Андрей Коротков</a>
+
+                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                    <div class="desc-date">12.02.2032</div>
+                                </div>
+
+                                <div class="action">
+                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="hidden-content">
+                            <ul class="ul-desc">
+                                <li class="item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Андрей Коротков</a>
+
+                                        <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                        <div class="desc-date">12.02.2032</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                    </div>
+                                </li>
+
+                                <li class="even item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Андрей Коротков</a>
+
+                                        <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                        <div class="desc-date">12.02.2032</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                    </div>
+                                </li>
+
+                                <li class="item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Андрей Коротков</a>
+
+                                        <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                        <div class="desc-date">12.02.2032</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                    </div>
+                                </li>
+
+                                <li class="even item-comment">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Андрей Коротков</a>
+
+                                        <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                        <div class="desc-date">12.02.2032</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <a href="#" class="a-toggle">Все описания <span>&darr;</span></a>
+                    </div>
+
+                    <div class="add-comment">
+                        <form action="#">
+                            <div class="ac-block">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="ac-body">
+                                    <div class="toggle-area">
+                                        <textarea rows="3" cols="40"></textarea>
+                                        <input type="submit" value=" ">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="tab-events">
+                <div class="calendar">
+                    <select id="c-year-2">
+                        <option value="1">2013</option>
+                        <option value="2">2012</option>
+                        <option value="3">2011</option>
+                        <option value="4">2010</option>
+                    </select>
+
+                    <select id="c-month-2">
+                        <option value="1">Январь</option>
+                        <option value="2">Февраль</option>
+                        <option value="3">Март</option>
+                        <option value="4">Апрель</option>
+                        <option value="5">Май</option>
+                        <option value="6">Июнь</option>
+                        <option value="7">Июль</option>
+                        <option value="8">Август</option>
+                        <option value="9">Сентябрь</option>
+                        <option value="10">Октябрь</option>
+                        <option value="11">Ноябрь</option>
+                        <option value="12">Декабрь</option>
+                    </select>
+
+                    <ul class="c-days">
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#" class="active">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">6</a></li>
+                        <li><a href="#">7</a></li>
+                        <li><span>8</span></li>
+                        <li><span>9</span></li>
+                        <li><a href="#">10</a></li>
+                        <li><a href="#">11</a></li>
+                        <li><a href="#">12</a></li>
+                        <li><a href="#">13</a></li>
+                        <li><a href="#">14</a></li>
+                        <li><a href="#">15</a></li>
+                        <li><a href="#">16</a></li>
+                        <li><a href="#">17</a></li>
+                        <li><span>18</span></li>
+                        <li><a href="#">19</a></li>
+                        <li><a href="#">20</a></li>
+                        <li><a href="#">21</a></li>
+                        <li><a href="#">22</a></li>
+                        <li><a href="#">23</a></li>
+                        <li><a href="#">24</a></li>
+                        <li><a href="#">25</a></li>
+                        <li><a href="#">26</a></li>
+                        <li><a href="#">27</a></li>
+                        <li><a href="#">28</a></li>
+                        <li><a href="#">29</a></li>
+                        <li><a href="#">30</a></li>
+                        <li><span>31</span></li>
+                        <li><a href="#"></a></li>
+                    </ul>
+                </div>
+
+                <div class="toggle-block">
+                <ul class="event-list">
+                    <li>
+                        <a href="#" class="fl photo">
+                            <img src="temp/img-1.jpg" alt="">
+                        </a>
+
+                        <div class="body">
+                            <time datetime="2013-02-06">1-6 февраля</time>
+
+                            <h3><a href="#">IT Форум 2013</a></h3>
+                            <div class="addr">Вологодская область, Вологда</div>
+                            <div class="stats">
+                                                                    <span>
+                                                                        <span class="ico-want-small"></span>
+                                                                        15
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-like-small"></span>
+                                                                        23
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-comment-small"></span>
+                                                                        2
+                                                                    </span>
+                            </div>
+
+                            <div class="short-desc">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                    <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="even">
+                        <a href="#" class="fl photo">
+                            <img src="temp/img-2.jpg" alt="">
+                        </a>
+
+                        <div class="body">
+                            <time datetime="2013-02-06">1-6 февраля</time>
+
+                            <h3><a href="#">IT Форум 2013</a></h3>
+                            <div class="addr">Вологодская область, Вологда</div>
+                            <div class="stats">
+                                                                    <span>
+                                                                        <span class="ico-want-small"></span>
+                                                                        15
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-like-small"></span>
+                                                                        23
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-comment-small"></span>
+                                                                        2
+                                                                    </span>
+                            </div>
+
+                            <div class="short-desc">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                    <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="#" class="fl photo">
+                            <img src="temp/img-1.jpg" alt="">
+                        </a>
+
+                        <div class="body">
+                            <time datetime="2013-02-06">1-6 февраля</time>
+
+                            <h3><a href="#">IT Форум 2013</a></h3>
+                            <div class="addr">Вологодская область, Вологда</div>
+                            <div class="stats">
+                                                                    <span>
+                                                                        <span class="ico-want-small"></span>
+                                                                        15
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-like-small"></span>
+                                                                        23
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-comment-small"></span>
+                                                                        2
+                                                                    </span>
+                            </div>
+
+                            <div class="short-desc">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                    <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="even">
+                        <a href="#" class="fl photo">
+                            <img src="temp/img-2.jpg" alt="">
+                        </a>
+
+                        <div class="body">
+                            <time datetime="2013-02-06">1-6 февраля</time>
+
+                            <h3><a href="#">IT Форум 2013</a></h3>
+                            <div class="addr">Вологодская область, Вологда</div>
+                            <div class="stats">
+                                                                    <span>
+                                                                        <span class="ico-want-small"></span>
+                                                                        15
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-like-small"></span>
+                                                                        23
+                                                                    </span>
+
+                                                                    <span>
+                                                                        <span class="ico-comment-small"></span>
+                                                                        2
+                                                                    </span>
+                            </div>
+
+                            <div class="short-desc">
+                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                <div class="body">
+                                    <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                    <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="hidden-content">
+                    <ul class="event-list">
+                        <li>
+                            <a href="#" class="fl photo">
+                                <img src="temp/img-1.jpg" alt="">
+                            </a>
+
+                            <div class="body">
+                                <time datetime="2013-02-06">1-6 февраля</time>
+
+                                <h3><a href="#">IT Форум 2013</a></h3>
+                                <div class="addr">Вологодская область, Вологда</div>
+                                <div class="stats">
+                                                                        <span>
+                                                                            <span class="ico-want-small"></span>
+                                                                            15
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-like-small"></span>
+                                                                            23
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-comment-small"></span>
+                                                                            2
+                                                                        </span>
+                                </div>
+
+                                <div class="short-desc">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="even">
+                            <a href="#" class="fl photo">
+                                <img src="temp/img-2.jpg" alt="">
+                            </a>
+
+                            <div class="body">
+                                <time datetime="2013-02-06">1-6 февраля</time>
+
+                                <h3><a href="#">IT Форум 2013</a></h3>
+                                <div class="addr">Вологодская область, Вологда</div>
+                                <div class="stats">
+                                                                        <span>
+                                                                            <span class="ico-want-small"></span>
+                                                                            15
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-like-small"></span>
+                                                                            23
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-comment-small"></span>
+                                                                            2
+                                                                        </span>
+                                </div>
+
+                                <div class="short-desc">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <a href="#" class="fl photo">
+                                <img src="temp/img-1.jpg" alt="">
+                            </a>
+
+                            <div class="body">
+                                <time datetime="2013-02-06">1-6 февраля</time>
+
+                                <h3><a href="#">IT Форум 2013</a></h3>
+                                <div class="addr">Вологодская область, Вологда</div>
+                                <div class="stats">
+                                                                        <span>
+                                                                            <span class="ico-want-small"></span>
+                                                                            15
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-like-small"></span>
+                                                                            23
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-comment-small"></span>
+                                                                            2
+                                                                        </span>
+                                </div>
+
+                                <div class="short-desc">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="even">
+                            <a href="#" class="fl photo">
+                                <img src="temp/img-2.jpg" alt="">
+                            </a>
+
+                            <div class="body">
+                                <time datetime="2013-02-06">1-6 февраля</time>
+
+                                <h3><a href="#">IT Форум 2013</a></h3>
+                                <div class="addr">Вологодская область, Вологда</div>
+                                <div class="stats">
+                                                                        <span>
+                                                                            <span class="ico-want-small"></span>
+                                                                            15
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-like-small"></span>
+                                                                            23
+                                                                        </span>
+
+                                                                        <span>
+                                                                            <span class="ico-comment-small"></span>
+                                                                            2
+                                                                        </span>
+                                </div>
+
+                                <div class="short-desc">
+                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                    <div class="body">
+                                        <a href="#" class="a-author">Товарищ SinteZ</a>
+
+                                        <p>Наряду с храмом Покрова на Рву в Москве</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="#" class="a-toggle">все события <span>&darr;</span></a>
+                </div>
+
+                <a href="#" class="btn btn-event"><b>+</b> Событие</a>
+                </div>
+                </div>
+
+                <div class="tabs-content p-common-content">
+                    <section class="p-block peoples">
+                        <h4 class="title-block">Это место хотят посетить</h4>
+
+                        <div class="clearfix toggle-block">
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+
+                            <div class="clearfix hidden-content">
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                            </div>
+
+                            <a href="#" class="a-toggle">все пользователи <span>&darr;</span></a>
+                        </div>
+                    </section>
+
+                    <section class="p-block event-labels">
+                        <h4 class="title-block">Метки</h4>
+
+                        <div class="body">
+                            <div class="label label-place">Вологда</div>
+                            <div class="label label-name">Вологда</div>
+                            <div class="label label-user">Вологда</div>
+                            <div class="label">Вологда</div>
+                            <div class="label label-place">Вологда</div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <footer>
+                <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
+
+                <div class="stats">
+                                        <span>
+                                            <span class="ico-want-small"></span>
+                                            <%- visits %>
+                                        </span>
+
+                                        <span>
+                                            <span class="ico-like-small"></span>
+                                            <%- likes %>
+                                        </span>
+
+                                        <span>
+                                            <span class="ico-comment-small"></span>
+                                            <%- comments %>
+                                        </span>
+                </div>
+            </footer>
+        </div>
+
+        <aside id="right-panel">
+            <a href="#" class="a-btn a-visit a-btn-marked">Хочу посетить</a>
+            <a href="#" class="a-btn a-add-path">Создать маршрут</a>
+            <a href="#" class="a-btn a-edit">Редактировать</a>
+            <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
+            <div class="aside-social">
+                <img src="temp/social-2.png" alt="">
+            </div>
+        </aside>
+    </div>
+</script>

@@ -3,7 +3,8 @@ __author__ = 'art'
 
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
-from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Photos, Points, TypePoints, Routes, Person
+from apps.main.models import Areas, Regions, HeadDescriptions, Categories, Photos, Points, TypePoints, Routes, Person
+from apps.comments.models import Comments
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
 from django.http import HttpResponse
@@ -66,8 +67,8 @@ def index(request):
     if request.user.is_authenticated():
         user = User.objects.get(username = request.user)
         countvisitpoints  = Points.objects.filter(visitusers__id = user.id).count()
-    regions  = Regions.objects.all()
-    typepoints  = TypePoints.objects.all()
+    regions = Regions.objects.all()
+    typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
     for i in range(len(typepoints)):
         if (i%int(cnt)+1) == int(cnt):
@@ -75,7 +76,7 @@ def index(request):
         else:
             typepoints[i].ul = False
 
-    return render_to_response(template_name, {'areas': areas, 'heads':heads, 'categories':categories, 'countvisitpoints':countvisitpoints, 'regions':regions, 'typepoints':typepoints, 'VKONTAKTE_APP_ID':settings.VKONTAKTE_APP_ID},context_instance=RequestContext(request))
+    return render_to_response(template_name, {'areas': areas, 'heads': heads, 'categories': categories, 'countvisitpoints': countvisitpoints, 'regions': regions, 'typepoints': typepoints, 'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID}, context_instance=RequestContext(request))
     #return HttpResponse('Index Page')
 
 def addpoint(request):
@@ -145,38 +146,43 @@ def loginauth(request):
 
 def points(request, page):
     #todo Сделать проверку на ajax
-    limit = 15*int(page)
-    offset = (int(page)-1)*15
-    pointsreq = Points.objects;
+    limit = 15 * int(page)
+    offset = (int(page) - 1) * 15
+    pointsreq = Points.objects
     if request.user.is_authenticated():
-        user = User.objects.get(username = request.user)
-        pointsreq  = pointsreq.extra(
-                select={
-                    'currentvisit': 'SELECT COUNT(*) FROM main_points_visitusers WHERE main_points_visitusers.points_id = main_points.id and main_points_visitusers.user_id = '+str(user.id)
-                }
-            )
+        user = User.objects.get(username=request.user)
+        pointsreq = pointsreq.extra(
+            select={
+                'currentvisit': 'SELECT COUNT(*) FROM main_points_visitusers WHERE main_points_visitusers.points_id = main_points.id and main_points_visitusers.user_id = ' + str(user.id)
+            }
+        )
     else:
-        pointsreq  = pointsreq.extra(
+        pointsreq = pointsreq.extra(
             select={
                 'currentvisit': 'SELECT 0 '
             }
         )
+    # pointsreq = pointsreq.extra(
+    #     select={
+    #         Comments.objects.filter(content_type=12, object_id=pointsreq.)
+    #     }
+    # )
+
     if 'kind' in request.GET and request.user.is_authenticated():
         if request.GET['kind'] == '1':
-            user = User.objects.get(username = request.user)
-            pointsreq = pointsreq.filter(visitusers__id = user.id)
+            user = User.objects.get(username=request.user)
+            pointsreq = pointsreq.filter(visitusers__id=user.id)
         elif request.GET['kind'] == '2':
-            user = User.objects.get(username = request.user)
-            pointsreq = pointsreq.filter(author = user.id)
-
-    if(request.GET['categ']):
-        pointsreq  = pointsreq.filter(categories__name__contains = urllib.unquote(request.GET['categ']))
-    if(request.GET['content']):
-        if(request.GET['content']=='new'):
-            pointsreq  = pointsreq.order_by('-created')[offset:limit].all()
+            user = User.objects.get(username=request.user)
+            pointsreq = pointsreq.filter(author=user.id)
+    if request.GET['categ']:
+        pointsreq = pointsreq.filter(categories__name__contains=urllib.unquote(request.GET['categ']))
+    if request.GET['content']:
+        if 'new' == request.GET['content']:
+            pointsreq = pointsreq.order_by('-created')[offset:limit].all()
         else:
-            pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')[offset:limit].all()
-    points  = pointsreq[offset:limit].all()
+            pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')[offset:limit].all()
+    points = pointsreq[offset:limit].all()
     #print points.query
     #json = serializers.serialize("json", points)
 
@@ -186,7 +192,7 @@ def points(request, page):
     #json_serializer.serialize(points)
     #return render_to_response(template_name, {'points':points},context_instance=RequestContext(request))
     #return HttpResponse(json.serialize(points, use_natural_keys=True), mimetype="application/json")
-    return HttpResponse(json.serialize(points, relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+    return HttpResponse(json.serialize(points, relations={'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail325',)}, 'tags': {}, 'comments': {'relations': ('author',)}}, extras=('comments')), mimetype="application/json")
     #return HttpResponse(points[0].likes, mimetype="application/json")
 
 def point(request):
@@ -196,7 +202,7 @@ def point(request):
         if 'point' in request.POST:
             point = Points.objects.filter(id=request.POST['point'])
             json = YpSerialiser()
-            return HttpResponse(json.serialize(point, relations={'type':{}} ), mimetype="application/json")
+            return HttpResponse(json.serialize(point, relations={'type': {}}), mimetype="application/json")
         else:
             return HttpResponse('{"r":"0"}', mimetype="application/json")
 
@@ -207,7 +213,7 @@ def routes(request, page):
     routesreq = Routes.objects;
     if request.user.is_authenticated():
         user = User.objects.get(username = request.user)
-        routesreq  = routesreq.extra(
+        routesreq = routesreq.extra(
             select={
                 'currentvisit': 'SELECT COUNT(*) FROM main_routes_visitusers WHERE main_routes_visitusers.routes_id = main_routes.id and main_routes_visitusers.routes_id = '+str(user.id)
             }

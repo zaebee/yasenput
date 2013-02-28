@@ -8,7 +8,8 @@ from sorl.thumbnail import ImageField
 import uuid
 import os.path
 from sorl.thumbnail.shortcuts import get_thumbnail
-
+from django.contrib.contenttypes import generic
+from apps.comments.models import Comments
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
@@ -137,6 +138,7 @@ class Points(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null=True, serialize=True)
+    comments = generic.GenericRelation(Comments)
 
     def _likes(self):
         return self.likeusers.count()
@@ -145,7 +147,7 @@ class Points(models.Model):
         return self.visitusers.count()
 
     def natural_key(self):
-        return (self.imgs.natural_key())
+        return (self.imgs.natural_key(), self.comments.natural_key())
 
     likes = property(_likes)
     visits = property(_visits)

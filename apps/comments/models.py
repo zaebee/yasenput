@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 from django.db import models
-from apps.main.models import Person
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
@@ -16,5 +15,8 @@ class Comments(models.Model):
     content_type = models.ForeignKey(ContentType, blank=True, null=True, verbose_name="Type")
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    author = models.ForeignKey(Person, unique=False)
+    author = models.ForeignKey('main.Person', unique=False)
     txt = models.TextField('Текст комментариев')
+
+    def natural_key(self):
+        return (self.txt)

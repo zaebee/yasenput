@@ -38,7 +38,9 @@ $(function(){
             'submit .add-comment':"addComment",
             'blur textarea':"blurComment",
             'blur label':"blurComment",
-            'click .photo img':"detailPlace"
+            'click .photo img':"detailPlace",
+            'click .a-want':"wantvisit",
+            'click .a-like':"likepoint"
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
             //}
@@ -190,11 +192,15 @@ $(function(){
                     dataType:'json',
                     data: {
                         object_id: self.model.get('id'),
-                        type:12
+                        type:12,
+                        txt:self.$el.find('.add-comment textarea').val()
                     },
                     success: function(data) {
                         self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
                         self.$el.find('.add-comment textarea').val('');
+                        var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
+                        self.$el.find('.ico-comment-small').parent().contents().last().remove();
+                        self.$el.find('.ico-comment-small').parent().append(cm+1);
                     },
                     error: function (request, status, error) {
                         alert(status);
@@ -212,10 +218,176 @@ $(function(){
             }
             $('.content .items').masonry("reload");
         },
-        detailPlace:function (){
-            alert('Собака!')
-        }
+        detailPlace:function(e){
+            e.preventDefault(); //показ основного попапа
 
+            $("#popups .scroll-box").scrollTop(0);
+
+            this.open({
+                elem: $("#overlay"),
+                mapComplaintPlace:undefined,
+                myComplaintPlaceCollection:undefined,
+                myMapPopup:undefined,
+                myMapPopupPlace:undefined,
+                myMapPopupEvent:undefined,
+                callbackAfter: function(){
+                    var self = this;
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            $("input.calendar").datepicker({
+                                dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                                dateFormat: "dd.mm.yy",
+                                showOn: "button",
+                                buttonImage: "images/calendar.gif",
+                                buttonImageOnly: true
+                            });
+
+                            var cuselParams = {
+                                changedEl: ".calendar select",
+                                visRows  : 5,
+                                scrollArrows: true
+                            };
+
+                            $(".p-tabs").simpleTabs({
+                                afterChange: function(me, id){
+                                    if($(".calendar").length && $(".calendar").is(":visible")){
+                                        cuSel(cuselParams);
+                                    }
+
+                                    if(id == 'tab-map'){
+                                        if (!self.myMapPopup) {
+                                            self.myMapPopup = new ymaps.Map('popup-map-1', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-place'){
+                                        if (!self.myMapPopupPlace) {
+                                            self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    } else if (id == 'tab-map-event'){
+                                        if (!self.myMapPopupEvent) {
+                                            self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                                center: [38.043392000000004, 48.30851300000994],
+                                                zoom: 11
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                            if($(".calendar").length && $(".calendar").is(":visible")){
+                                cuSel(cuselParams);
+                            }
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                }
+            });
+        },
+        wantvisit:function(e){
+            var self = e.currentTarget;
+            var me = this;
+            e.preventDefault();
+            if ($(self).hasClass('marked')){
+
+                $.ajax({
+                    type: "POST",
+                    url: "wantvisit/yes",
+                    crossDomain: false,
+                    dataType:'json',
+                    data: {
+                        id: me.model.get('id')
+                    },
+                    success: function(data) {
+                         $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1-1);
+                         $(self).removeClass('marked');
+                         var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                         me.$el.find('.ico-want-small').parent().contents().last().remove();
+                         me.$el.find('.ico-want-small').parent().append(wv-1);
+                    },
+                    error: function (request, status, error) {
+                        alert(status);
+                    }
+                });
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "wantvisit/no",
+                    crossDomain: false,
+                    dataType:'json',
+                    data: {
+                        id: me.model.get('id')
+                    },
+                    success: function(data) {
+                         $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1+1);
+                         $(self).addClass('marked')
+                         var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                         me.$el.find('.ico-want-small').parent().contents().last().remove();
+                         me.$el.find('.ico-want-small').parent().append(wv+1);
+                    },
+                    error: function (request, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+        },
+        likepoint:function(e){
+            var self = e.currentTarget;
+            var me = this;
+            e.preventDefault();
+            if ($(self).hasClass('marked')){
+
+                $.ajax({
+                    type: "POST",
+                    url: "likepoint/yes",
+                    crossDomain: false,
+                    dataType:'json',
+                    data: {
+                        id: me.model.get('id')
+                    },
+                    success: function(data) {
+                        $(self).removeClass('marked');
+                        var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                        me.$el.find('.ico-like-small').parent().contents().last().remove();
+                        me.$el.find('.ico-like-small').parent().append(lp-1);
+                    },
+                    error: function (request, status, error) {
+                        alert(status);
+                    }
+                });
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "userlike/no",
+                    crossDomain: false,
+                    dataType:'json',
+                    data: {
+                        id: me.model.get('id')
+                    },
+                    success: function(data) {
+
+                        $(self).addClass('marked')
+                        var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                        me.$el.find('.ico-like-small').parent().contents().last().remove();
+                        me.$el.find('.ico-like-small').parent().append(lp+1);
+                    },
+                    error: function (request, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+        }
     });
 
     /* ----------------- Collection point---------------- */
