@@ -4,7 +4,10 @@ import sys
 import os.path
 from os import path
 
-
+try:
+    from .settings_local import *
+except:
+    pass
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -70,7 +73,7 @@ MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets'))
 STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(STATIC_ROOT, '')),
+   os.path.normpath(os.path.join(STATIC_ROOT, '')),
 #    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets/'

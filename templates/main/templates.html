@@ -34,15 +34,15 @@
         </div>
         <div class="comments">
             <ul>
-                <% _.each(comments, function(itm){ %>
-                <li>
-                    <img src="{{ MEDIA_URL }}<%- itm.author.avatar %>" alt="" class="avatar" width="30" height="30">
-                    <div class="body-comment">
-                        <div class="author-comment"><%- itm.author.first_name %> <%- itm.author.last_name %></div>
-                        <p><%- itm.txt %></p>
-                    </div>
-                </li>
-                <% }) %>
+{#                <% _.each(comments, function(itm){ %>#}
+{#                <li>#}
+{#                    <img src="{{ MEDIA_URL }}<%- itm.author.avatar %>" alt="" class="avatar" width="30" height="30">#}
+{#                    <div class="body-comment">#}
+{#                        <div class="author-comment"><%- itm.author.first_name %> <%- itm.author.last_name %></div>#}
+{#                        <p><%- itm.txt %></p>#}
+{#                    </div>#}
+{#                </li>#}
+{#                <% }) %>#}
             </ul>
             {% if user.is_authenticated %}
                 <form action="#" class="add-comment">
