@@ -32,6 +32,31 @@ class EventsBaseView(View):
         return super(EventsBaseView, self).dispatch(request, *args, **kwargs)
 
 
+class FolowEvent(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            try:
+                events = get_object_or_404(MainModels.Events, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                if MainModels.Events.objects.filter(id=id, folowers__id=person.id).count() > 0:
+                    events.folowers.remove(person)
+                else:
+                    events.folowers.add(person)
+                events.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка события"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
+
+
 class LikeEvent(EventsBaseView):
     http_method_names = ('get',)
 

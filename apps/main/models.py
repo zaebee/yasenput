@@ -136,7 +136,7 @@ class Points(models.Model):
     folowers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_folowers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
-    wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
+    #wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null=True, serialize=True)
