@@ -25,4 +25,4 @@ class AddEventForm(ModelForm):
 class EditEventForm(ModelForm):
     class Meta:
         model = Events
-        exclude = ('author','imgs' )
+        exclude = ('author', 'tags', 'imgs' )
