@@ -11,6 +11,7 @@ class FiltersForm(forms.Form):
 
 class SearchForm(forms.Form):
     s = forms.CharField(max_length=255, required=False)
+    content = forms.CharField(max_length=255, required=False)
 
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)
@@ -25,4 +26,4 @@ class AddEventForm(ModelForm):
 class EditEventForm(ModelForm):
     class Meta:
         model = Events
-        exclude = ('author','imgs' )
+        exclude = ('author', 'tags', 'imgs' )

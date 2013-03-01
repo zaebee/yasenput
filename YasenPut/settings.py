@@ -149,6 +149,8 @@ INSTALLED_APPS = (
     'apps.points',
     'apps.events',
     'apps.photos',
+    'apps.news',
+    'apps.persons',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

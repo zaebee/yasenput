@@ -28,3 +28,5 @@ class Reports(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     author = models.ForeignKey(Person, unique=False)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
