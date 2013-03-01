@@ -32,6 +32,31 @@ class EventsBaseView(View):
         return super(EventsBaseView, self).dispatch(request, *args, **kwargs)
 
 
+class FolowEvent(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data["id"]
+            try:
+                events = get_object_or_404(MainModels.Events, pk=id)
+                person = MainModels.Person.objects.get(username=request.user)
+                if MainModels.Events.objects.filter(id=id, folowers__id=person.id).count() > 0:
+                    events.folowers.remove(person)
+                else:
+                    events.folowers.add(person)
+                events.save()
+            except:
+                import sys
+                print sys.exc_info()
+                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка события"})
+            else: 
+                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
+
+
 class LikeEvent(EventsBaseView):
     http_method_names = ('get',)
 
@@ -42,7 +67,10 @@ class LikeEvent(EventsBaseView):
             try:
                 events = get_object_or_404(MainModels.Events, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                events.likeusers.add(person)
+                if MainModels.Events.objects.filter(id=id, likeusers__id=person.id).count() > 0:
+                    events.likeusers.remove(person)
+                else:
+                    events.likeusers.add(person)
                 events.save()
             except:
                 import sys
@@ -64,7 +92,10 @@ class WantVisitEvent(EventsBaseView):
             try:
                 events = get_object_or_404(MainModels.Events, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                events.visitusers.add(person)
+                if MainModels.Events.objects.filter(id=id, visitusers__id=person.id).count() > 0:
+                    events.visitusers.remove(person)
+                else:
+                    events.visitusers.add(person)
                 events.save()
             except:
                 import sys
@@ -105,7 +136,15 @@ class EventsSearch(EventsBaseView):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
-            events  = pointsreq.order_by("name")[offset:limit]
+            content = form.cleaned_data.get("content") 
+            if content == 'new':
+                pointsreq  = pointsreq.order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+            else:   
+                pointsreq  = pointsreq.order_by("name")
+                
+            events = pointsreq[offset:limit]
             
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(events, fields=("name")), mimetype="application/json")
@@ -222,6 +261,77 @@ class EventAdd(EventsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             event.author = person
             event.save()
+                
+            # todo сохранение с изображениями
+            #images = request.POST.getlist('imgs[]')
+            #for img in images:
+            #    event.imgs.add(MainModels.Photos.objects.get(id=img))
+                       
+            reports = params.get('feedbacks', None)
+            if reports:
+                try:
+                    reports = json.loads(reports)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы отзывы")
+                else:
+                    for report in reports:
+                        if report.get("type", None) and report.get("feedback", None):
+                            report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
+                            if report_type.count() > 0:
+                                try:
+                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
+                                    feedback.save()
+                                except:
+                                    import sys
+                                    status = 1
+                                    message = "ошибка добавления отзыва"
+                                    if message not in errors: errors.appen(message)
+                
+            tags = params.get("tags")
+            if tags:
+                try:
+                    tags = json.loads(tags)    
+                except:
+                    status = 1
+                    errors.append("некорректно заданы метки")
+                else:
+                    for tag in tags:
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        else:
+                            new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
+                        else: new_tag = new_tag[0]
+                        event.tags.add(new_tag)
+            return JsonHTTPResponse({"id": event.id, "status": status, "txt": ""})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er +':'+e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})           
+
+
+class EventEdit(EventsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        DEFAULT_LEVEL = 2
+        
+        status = 2
+        errors = []
+        
+        params = request.GET
+        form = forms.IdForm(params)
+        if not form.is_valid():
+            return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id события"})
+        
+        form = forms.AddEventForm(params, instance=MainModels.Events.objects.get(pk=form.cleaned_data['id']))
+        if form.is_valid():
+            event = form.save()
+            
+            person = MainModels.Person.objects.get(username=request.user)
                 
             # todo сохранение с изображениями
             #images = request.POST.getlist('imgs[]')

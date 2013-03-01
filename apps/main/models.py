@@ -14,6 +14,7 @@ from apps.comments.models import Comments
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
     avatar = ImageField(upload_to='avatar', verbose_name=u'Аватарка', blank=True, null=True)
+    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='person_users_folowers', serialize=True)
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
@@ -99,6 +100,8 @@ class Photos(models.Model):
     name = models.CharField(max_length=255)
     img = models.ImageField(max_length=255, upload_to=make_upload_path)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_users_likes', serialize=True)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
 
     def natural_key(self):
         return (self.img.name)
@@ -134,9 +137,10 @@ class Points(models.Model):
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
     address = models.TextField('Адрес')
+    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_folowers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
-    wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
+    #wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null=True, serialize=True)
@@ -200,8 +204,11 @@ class Events(models.Model):
     name = models.CharField('Название', max_length=255)
     point = models.ForeignKey(Points, unique=False)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
+    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_folowers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
     
     def __unicode__(self):
