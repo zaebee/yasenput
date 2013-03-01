@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'', include('apps.main.urls')),
     url(r'^comments/', include('apps.comments.urls')),
     url(r'^reports/', include('apps.reports.urls')),
+    url(r'^photos/', include('apps.photos.urls')),
     #url(r'^comments/', include('django.contrib.comments.urls')),
     # url(r'^YasenPut/', include('YasenPut.foo.urls')),
 

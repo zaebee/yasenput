@@ -22,6 +22,8 @@ class Serializer(base.Serializer):
         self.relations = None
         self.extras = None
         self.use_natural_keys = None
+        self.limit = None
+        self.order_by = None
         super(Serializer, self).__init__(*args, **kwargs)
 
     def serialize(self, queryset, **options):
@@ -40,9 +42,10 @@ class Serializer(base.Serializer):
         self.relations = options.pop("relations", [])
         self.extras = options.pop("extras", [])
         self.use_natural_keys = options.pop("use_natural_keys", False)
+        self.limit = options.pop("limit", None)
 
         self.start_serialization()
-        for obj in queryset:
+        for obj in queryset[:self.limit]:
             self.start_object(obj)
             for field in obj._meta.fields:
                 attname = field.attname

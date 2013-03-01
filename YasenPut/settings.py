@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'apps.comments',
     'apps.tags',
     'apps.reports',
+    'apps.photos',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
