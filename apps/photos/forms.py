@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from .models import Reports, REPORT_ALLOWED_MODELS
+from .models import Photos, PHOTOS_ALLOWED_MODELS
 
-class ReportForm(forms.ModelForm):
+class PhotosForm(forms.ModelForm):
     object_id = forms.IntegerField()
-    object_type = forms.ChoiceField(choices=REPORT_ALLOWED_MODELS)
+    object_type = forms.ChoiceField(choices=PHOTOS_ALLOWED_MODELS)
 
     class Meta:
-        model = Reports
-        exclude = ('author')
+        model = Photos
+        exclude = ('author','likeusers',)
 
     def clean(self):
-        cleaned_data = super(ReportForm, self).clean()
+        cleaned_data = super(PhotosForm, self).clean()
         object_id = cleaned_data.get('object_id')
-        object_type = dict(REPORT_ALLOWED_MODELS).get(cleaned_data.get('object_type'))
+        object_type = dict(PHOTOS_ALLOWED_MODELS).get(cleaned_data.get('object_type'))
         if object_id and object_type:
             app_name, model_name = object_type.split('.')
             try:

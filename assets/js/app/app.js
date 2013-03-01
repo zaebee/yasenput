@@ -299,19 +299,23 @@ $(function(){
             if ($(self).hasClass('marked')){
 
                 $.ajax({
-                    type: "POST",
-                    url: "wantvisit/yes",
+                    type: "GET",
+                    url: "points/visit",
                     crossDomain: false,
                     dataType:'json',
                     data: {
                         id: me.model.get('id')
                     },
                     success: function(data) {
-                         $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1-1);
-                         $(self).removeClass('marked');
-                         var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                         me.$el.find('.ico-want-small').parent().contents().last().remove();
-                         me.$el.find('.ico-want-small').parent().append(wv-1);
+                        if (data.status == 2){
+                             $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1-1);
+                             $(self).removeClass('marked');
+                             var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                             me.$el.find('.ico-want-small').parent().contents().last().remove();
+                             me.$el.find('.ico-want-small').parent().append(wv-1);
+                        }else{
+                            alert(data.txt);
+                        }
                     },
                     error: function (request, status, error) {
                         alert(status);
@@ -319,19 +323,23 @@ $(function(){
                 });
             }else{
                 $.ajax({
-                    type: "POST",
-                    url: "wantvisit/no",
+                    type: "GET",
+                    url: "points/visit",
                     crossDomain: false,
                     dataType:'json',
                     data: {
                         id: me.model.get('id')
                     },
                     success: function(data) {
-                         $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1+1);
-                         $(self).addClass('marked')
-                         var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                         me.$el.find('.ico-want-small').parent().contents().last().remove();
-                         me.$el.find('.ico-want-small').parent().append(wv+1);
+                        if (data.status == 2){
+                             $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1+1);
+                             $(self).addClass('marked')
+                             var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                             me.$el.find('.ico-want-small').parent().contents().last().remove();
+                             me.$el.find('.ico-want-small').parent().append(wv+1);
+                        }else{
+                            alert(data.txt);
+                        }
                     },
                     error: function (request, status, error) {
                         alert(status);
@@ -348,17 +356,21 @@ $(function(){
 
                 $.ajax({
                     type: "POST",
-                    url: "likepoint/yes",
+                    url: "point/like",
                     crossDomain: false,
                     dataType:'json',
                     data: {
                         id: me.model.get('id')
                     },
                     success: function(data) {
-                        $(self).removeClass('marked');
-                        var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                        me.$el.find('.ico-like-small').parent().contents().last().remove();
-                        me.$el.find('.ico-like-small').parent().append(lp-1);
+                        if (data.status == 2){
+                            $(self).removeClass('marked');
+                            var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                            me.$el.find('.ico-like-small').parent().contents().last().remove();
+                            me.$el.find('.ico-like-small').parent().append(lp-1);
+                        }else{
+                            alert(data.txt);
+                        }
                     },
                     error: function (request, status, error) {
                         alert(status);
@@ -366,19 +378,22 @@ $(function(){
                 });
             }else{
                 $.ajax({
-                    type: "POST",
-                    url: "userlike/no",
+                    type: "GET",
+                    url: "points/like",
                     crossDomain: false,
                     dataType:'json',
                     data: {
                         id: me.model.get('id')
                     },
                     success: function(data) {
-
-                        $(self).addClass('marked')
-                        var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                        me.$el.find('.ico-like-small').parent().contents().last().remove();
-                        me.$el.find('.ico-like-small').parent().append(lp+1);
+                        if (data.status == 2){
+                            $(self).addClass('marked')
+                            var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+                            me.$el.find('.ico-like-small').parent().contents().last().remove();
+                            me.$el.find('.ico-like-small').parent().append(lp+1);
+                        }else{
+                            alert(data.txt);
+                        }
                     },
                     error: function (request, status, error) {
                         alert(status);

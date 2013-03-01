@@ -109,7 +109,7 @@ class PointsSearch(PointsBaseView):
         
         form = forms.SearchForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Points.objects;           
+            pointsreq = MainModels.Points.objects
             
             name = form.cleaned_data.get("s")
             if name:

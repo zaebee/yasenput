@@ -101,6 +101,27 @@ jQuery(function($){
 		},
 		
 		showDropField: function(){ // показать выпадайку
+            $('.drop-search ul.item.item-name li').not('.item-title').remove();
+            $('.drop-search ul.item.item-name').append('<li>Загрузка ...</li>')
+            $.ajax({
+                type: "GET",
+                url: "points/search",
+                crossDomain: false,
+                dataType:'json',
+                data: {
+                    s: $("input[type=text]", $(this.p.searchInput)).val()
+                },
+                success: function(data) {
+                    $('.drop-search ul.item.item-name li').not('.item-title').remove();
+                    _.each(data, function(itm){
+                        $('.drop-search ul.item.item-name').append('<li><a href="#">'+itm.name+'</a></li>')
+                    });
+                },
+                error: function (request, status, error) {
+                    alert(status);
+                    $('.drop-search ul.item.item-name li').not('.item-title').remove();
+                }
+            });
 			$(this.p.dropRoot).show().find(".selected").removeClass("selected");
 			$(this.p.labelAdd).hide();
 			$(this.p.searchInput).show();
@@ -321,7 +342,7 @@ jQuery(function($){
 	
 	$(".drop-search ul").hover(function(){
 		var me = $(this);
-		
+
 		me.stop().animate({
 			width: "58%",
 			left : me.index()*14+"%"

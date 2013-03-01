@@ -24,7 +24,7 @@ class CommentForm(forms.ModelForm):
             else:
                 try:
                     object=object_type.get_object_for_this_type(pk=object_id)
-                except object_type.DoesNotExist:
+                except:
                     self._errors["object_id"] = self.error_class([u'Неверный id объекта'])
                 else:
                     cleaned_data['content_type'] = object_type
