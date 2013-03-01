@@ -99,6 +99,8 @@ class Photos(models.Model):
     name = models.CharField(max_length=255)
     img = models.ImageField(max_length=255, upload_to=make_upload_path)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_users_likes', serialize=True)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
 
     def natural_key(self):
         return (self.img.name)

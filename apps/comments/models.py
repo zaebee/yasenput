@@ -18,3 +18,5 @@ class Comments(models.Model):
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     author = models.ForeignKey(Person, unique=False)
     txt = models.TextField('Текст комментариев')
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)

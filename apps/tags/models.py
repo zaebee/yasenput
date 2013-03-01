@@ -19,6 +19,8 @@ class Tags(models.Model):
     style = models.CharField(verbose_name='Стиль', max_length=255, null=True)
     onmainmap = models.BooleanField(verbose_name='Выводить на карту', default=False)
     author = models.ForeignKey(Person, unique=False)
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
     
     def __unicode__(self):
         return self.name
