@@ -24,14 +24,14 @@ def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
 
-class PointsBaseView(View):
+class PersonsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
             raise Http404
-        return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
+        return super(PersonsBaseView, self).dispatch(request, *args, **kwargs)
 
     def get_object_type(self, type):
         if type not in self.COMMENT_ALLOWED_MODELS_DICT:
@@ -44,7 +44,7 @@ class PointsBaseView(View):
         return object_type
 
 
-class FollowPerson(PointsBaseView):
+class FollowPerson(PersonsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +69,7 @@ class FollowPerson(PointsBaseView):
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
 
-class SearchPerson(PointsBaseView):
+class SearchPerson(PersonsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -100,10 +100,42 @@ class SearchPerson(PointsBaseView):
             points = pointsreq[offset:limit]
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, fields=("username", "first_name", "last_name")), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, 
+                                                 fields=("username", "first_name", "last_name")), 
+                                mimetype="application/json")
         else:
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
 
+
+class PersonAccount(PersonsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        person = MainModels.Person.objects.filter(username=request.user).extra(
+                select={"liked_points": "select count(*) from main_points_likeusers where user_id=main_person.user_id",
+                        "liked_events": "select count(*) from main_events_likeusers where user_id=main_person.user_id",
+                        "liked_photos": "select count(*) from photos_photos_likeusers where user_id=main_person.user_id",
+                        
+                        "added_points": "select count(*) from main_points where author_id=main_person.user_id",
+                        "added_events": "select count(*) from main_events where author_id=main_person.user_id",
+                        "added_photos": "select count(*) from photos_photos where author_id=main_person.user_id",
+                        
+                        "want_visit_points": "select count(*) from main_points_visitusers where user_id=main_person.user_id",
+                        "want_visit_events": "select count(*) from main_events_visitusers where user_id=main_person.user_id",
+                        
+                        "person_followers": "select count(*) from main_person_followers where user_id=main_person.user_id",
+                        }
+            )
+        
+        YpJson = YpSerialiser()
+        return HttpResponse(YpJson.serialize(person, 
+                                             extras=["liked_points", "liked_events", "liked_photod",
+                                                     "added_points", "added_events", "added_photos",
+                                                     "want_visit_points", "want_visit_events", 
+                                                     "person_followers"
+                                                     ], 
+                                             fields=("username", "first_name", "last_name")),
+                            mimetype="application/json")
