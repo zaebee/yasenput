@@ -10,6 +10,7 @@ from apps.points import forms
 from apps.main import models as MainModels
 from apps.reports import models as ReportsModels
 from apps.tags import models as TagsModels
+from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
@@ -300,10 +301,21 @@ class PointAdd(PointsBaseView):
                     for categ in categories:
                         point.categories.add(MainModels.Categories.objects.get(id=categ))
 
-            # todo сохранение с изображениями
-            #images = request.POST.getlist('imgs[]')
-            #for img in images:
-            #    point.imgs.add(MainModels.Photos.objects.get(id=img))
+            images = params.get('imgs', None)
+            if images:
+                try:
+                    images = json.loads(images)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы изображения")
+                else:
+                    for image in images:
+                        try:
+                            point.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                        except:
+                            status = 1
+                            message = "ошибка добавления изображения"
+                            if message not in errors: errors.appen(message)
             
             point.save()
             
@@ -323,7 +335,6 @@ class PointAdd(PointsBaseView):
                                     feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
                                     feedback.save()
                                 except:
-                                    import sys
                                     status = 1
                                     message = "ошибка добавления отзыва"
                                     if message not in errors: errors.appen(message)
@@ -385,10 +396,21 @@ class PointEdit(PointsBaseView):
                         if MainModels.Points.objects.filter(id=point.id, categories__id=categ).count() == 0:
                             point.categories.add(MainModels.Categories.objects.get(id=categ))
 
-            # todo сохранение с изображениями
-            #images = request.POST.getlist('imgs[]')
-            #for img in images:
-            #    point.imgs.add(MainModels.Photos.objects.get(id=img))
+            images = params.get('imgs', None)
+            if images:
+                try:
+                    images = json.loads(images)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы изображения")
+                else:
+                    for image in images:
+                        try:
+                            point.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                        except:
+                            status = 1
+                            message = "ошибка добавления изображения"
+                            if message not in errors: errors.appen(message)
             
             point.save()
             

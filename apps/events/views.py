@@ -10,6 +10,7 @@ from apps.events import forms
 from apps.main import models as MainModels
 from apps.reports import models as ReportsModels
 from apps.tags import models as TagsModels
+from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
@@ -262,10 +263,21 @@ class EventAdd(EventsBaseView):
             event.author = person
             event.save()
                 
-            # todo сохранение с изображениями
-            #images = request.POST.getlist('imgs[]')
-            #for img in images:
-            #    event.imgs.add(MainModels.Photos.objects.get(id=img))
+            images = params.get('imgs', None)
+            if images:
+                try:
+                    images = json.loads(images)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы изображения")
+                else:
+                    for image in images:
+                        try:
+                            event.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                        except:
+                            status = 1
+                            message = "ошибка добавления изображения"
+                            if message not in errors: errors.appen(message)
                        
             reports = params.get('feedbacks', None)
             if reports:
@@ -333,10 +345,21 @@ class EventEdit(EventsBaseView):
             
             person = MainModels.Person.objects.get(username=request.user)
                 
-            # todo сохранение с изображениями
-            #images = request.POST.getlist('imgs[]')
-            #for img in images:
-            #    event.imgs.add(MainModels.Photos.objects.get(id=img))
+            images = params.get('imgs', None)
+            if images:
+                try:
+                    images = json.loads(images)  
+                except:
+                    status = 1
+                    errors.append("некорректно заданы изображения")
+                else:
+                    for image in images:
+                        try:
+                            event.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                        except:
+                            status = 1
+                            message = "ошибка добавления изображения"
+                            if message not in errors: errors.appen(message)
                        
             reports = params.get('feedbacks', None)
             if reports:
