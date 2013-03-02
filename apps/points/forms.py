@@ -24,9 +24,9 @@ class IdForm(forms.Form):
 class AddPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author','visits','likes', 'categories', 'tags' )
+        exclude = ('author','visits','likes', 'categories', 'tags', 'feedbacks', 'imgs' )
 
 class EditPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author','visits','likes', 'categories', 'tags','imgs' )
+        exclude = ('author','visits','likes', 'categories', 'tags','imgs', 'feedbacks' )

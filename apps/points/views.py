@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
-from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
@@ -14,7 +13,6 @@ from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
-import urllib
 import json
 
 def JsonHTTPResponse(json):
@@ -33,16 +31,6 @@ class PointsBaseView(View):
             raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
 
-    def get_object_type(self, type):
-        if type not in self.COMMENT_ALLOWED_MODELS_DICT:
-            raise Http404
-        app_name, model_name = self.COMMENT_ALLOWED_MODELS_DICT[type].split('.')
-        try:
-            object_type = ContentType.objects.get(app_label=app_name, model=model_name)
-        except ContentType.DoesNotExist:
-            raise Http404
-        return object_type
-
 
 class FollowPoint(PointsBaseView):
     http_method_names = ('get',)
@@ -50,21 +38,19 @@ class FollowPoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         form = forms.IdForm(request.GET)
         if form.is_valid():
-            id = form.cleaned_data["id"]
+            pk = form.cleaned_data["id"]
             try:
-                point = get_object_or_404(MainModels.Points, pk=id)
+                point = get_object_or_404(MainModels.Points, pk=pk)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Points.objects.filter(id=id, followers__id=person.id).count() > 0:
+                if MainModels.Points.objects.filter(id=pk, followers__id=person.id).count() > 0:
                     point.followers.remove(person)
                 else:
                     point.followers.add(person)
                 point.save()
             except:
-                import sys
-                print sys.exc_info()
-                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
             else: 
-                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
@@ -75,21 +61,19 @@ class LikePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         form = forms.IdForm(request.GET)
         if form.is_valid():
-            id = form.cleaned_data["id"]
+            pk = form.cleaned_data["id"]
             try:
-                point = get_object_or_404(MainModels.Points, pk=id)
+                point = get_object_or_404(MainModels.Points, pk=pk)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Points.objects.filter(id=id, likeusers__id=person.id).count() > 0:
+                if MainModels.Points.objects.filter(id=pk, likeusers__id=person.id).count() > 0:
                     point.likeusers.remove(person)
                 else:
                     point.likeusers.add(person)
                 point.save()
             except:
-                import sys
-                print sys.exc_info()
-                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
             else: 
-                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
@@ -100,36 +84,45 @@ class WantVisitPoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         form = forms.IdForm(request.GET)
         if form.is_valid():
-            id = form.cleaned_data["id"]
+            pk = form.cleaned_data["id"]
             try:
-                point = get_object_or_404(MainModels.Points, pk=id)
+                point = get_object_or_404(MainModels.Points, pk=pk)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Points.objects.filter(id=id, visitusers__id=person.id).count() > 0:
+                if MainModels.Points.objects.filter(id=pk, visitusers__id=person.id).count() > 0:
                     point.visitusers.remove(person)
                 else:
                     point.visitusers.add(person)
                 point.save()
             except:
-                import sys
-                print sys.exc_info()
-                return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры добавления хочу посетить место"})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления хочу посетить место"})
             else: 
-                return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
 
-class OnePoint(PointsBaseView):
+class OnePoint(View):
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(OnePoint, self).dispatch(request, *args, **kwargs)
+    
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
         YpJson = YpSerialiser()
-        return HttpResponse(YpJson.serialize([point], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+        return HttpResponse(YpJson.serialize([point], relations={'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
 
 
-class PointsSearch(PointsBaseView):
+class PointsSearch(View):
     http_method_names = ('get',)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(PointsSearch, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         params = request.GET
@@ -165,8 +158,7 @@ class PointsSearch(PointsBaseView):
             for er in e:
                 errors.append(er +':'+e[er][0])
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
-
-                        
+        
 
 class PointsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
@@ -239,7 +231,8 @@ class PointsList(View):
                     status = 1
                     errors.append("некорректно задана правая точка на карте для фильтра")
                 else:
-                    pointsreq = pointsreq.extra(where=['main_points.id in (select points_id from main_points_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
+                    if len(tags) > 0:
+                        pointsreq = pointsreq.extra(where=['main_points.id in (select points_id from main_points_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
             
             content = form.cleaned_data.get("content") or 'new'    
             if content == 'new':
@@ -264,7 +257,7 @@ class PointsList(View):
             points  = pointsreq[offset:limit].all()
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
@@ -334,10 +327,12 @@ class PointAdd(PointsBaseView):
                                 try:
                                     feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
                                     feedback.save()
+                                    point.feedbacks.add(feedback)
                                 except:
                                     status = 1
                                     message = "ошибка добавления отзыва"
                                     if message not in errors: errors.appen(message)
+                    point.save()
                 
             tags = params.get("tags")
             if tags:
@@ -429,11 +424,12 @@ class PointEdit(PointsBaseView):
                                 try:
                                     feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
                                     feedback.save()
+                                    point.feedbacks.add(feedback)
                                 except:
-                                    import sys
                                     status = 1
                                     message = "ошибка добавления отзыва"
                                     if message not in errors: errors.appen(message)
+                    point.save()
                 
             tags = params.get("tags")
             if tags:
@@ -467,10 +463,10 @@ class PointDel(PointsBaseView):
     def post(self, request):
         form = forms.IdForm(request.POST)
         if form.is_valid():
-            id = form.cleaned_data["id"]
-            point = get_object_or_404(MainModels.Points, pk=id)
+            pk = form.cleaned_data["id"]
+            point = get_object_or_404(MainModels.Points, pk=pk)
             
             CommentsModels.Comments.objects(content_object=point).delete()
             point.delete()
-            return JsonHTTPResponse({"id":id, "status":"Ошибка удаления"})
+            return JsonHTTPResponse({"id":pk, "status":"Ошибка удаления"})
         return JsonHTTPResponse({"id":0, "status":"Ошибка удаления"})   

@@ -127,6 +127,7 @@ class Photos(models.Model):
 class Points(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
+    from apps.reports.models import Reports
     
     class Meta:
         verbose_name = u'Точки'
@@ -148,6 +149,7 @@ class Points(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null=True, serialize=True)
+    feedbacks = models.ManyToManyField(Reports, null=True, blank=True)
     comments = generic.GenericRelation(Comments)
 
     def _likes(self):
