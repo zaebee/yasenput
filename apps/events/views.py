@@ -32,7 +32,7 @@ class EventsBaseView(View):
         return super(EventsBaseView, self).dispatch(request, *args, **kwargs)
 
 
-class FolowEvent(EventsBaseView):
+class FollowEvent(EventsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -42,10 +42,10 @@ class FolowEvent(EventsBaseView):
             try:
                 events = get_object_or_404(MainModels.Events, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Events.objects.filter(id=id, folowers__id=person.id).count() > 0:
-                    events.folowers.remove(person)
+                if MainModels.Events.objects.filter(id=id, followers__id=person.id).count() > 0:
+                    events.followers.remove(person)
                 else:
-                    events.folowers.add(person)
+                    events.followers.add(person)
                 events.save()
             except:
                 import sys

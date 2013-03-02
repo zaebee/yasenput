@@ -43,7 +43,7 @@ class PointsBaseView(View):
         return object_type
 
 
-class FolowPoint(PointsBaseView):
+class FollowPoint(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -53,10 +53,10 @@ class FolowPoint(PointsBaseView):
             try:
                 point = get_object_or_404(MainModels.Points, pk=id)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Points.objects.filter(id=id, folowers__id=person.id).count() > 0:
-                    point.folowers.remove(person)
+                if MainModels.Points.objects.filter(id=id, followers__id=person.id).count() > 0:
+                    point.followers.remove(person)
                 else:
-                    point.folowers.add(person)
+                    point.followers.add(person)
                 point.save()
             except:
                 import sys
