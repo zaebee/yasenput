@@ -92,6 +92,7 @@ def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
 
 
+"""
 class Photos(models.Model):
     class Meta:
         verbose_name = u'Фотографии'
@@ -120,10 +121,13 @@ class Photos(models.Model):
     def thumbnail325(self):
         im = get_thumbnail(self.img, 'x325')
         return im.url
+"""
 
 
 class Points(models.Model):
     from apps.tags.models import Tags
+    from apps.photos.models import Photos
+    
     class Meta:
         verbose_name = u'Точки'
         verbose_name_plural = u'Точки'
@@ -194,6 +198,7 @@ class Routes(models.Model):
 
 class Events(models.Model):
     from apps.tags.models import Tags
+    from apps.photos.models import Photos
 
     class Meta:
         verbose_name = u'События'
@@ -204,6 +209,7 @@ class Events(models.Model):
     name = models.CharField('Название', max_length=255)
     point = models.ForeignKey(Points, unique=False)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
+    imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)

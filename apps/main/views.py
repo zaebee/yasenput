@@ -3,8 +3,9 @@ __author__ = 'art'
 
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
-from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Photos, Points, TypePoints, Routes, Person, Events
+from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
 from apps.comments.models import Comments
+from apps.photos.models import Photos
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
 from django.http import HttpResponse
