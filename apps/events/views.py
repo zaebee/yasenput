@@ -223,7 +223,7 @@ class EventsList(View):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
                                          
-            tags = params.get("tags")
+            tags = form.cleaned_data.get("tags")
             if tags:
                 try:
                     tags = json.loads(tags)
@@ -269,61 +269,63 @@ class EventAdd(EventsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             event.author = person
             event.save()
-                
-            images = params.get('imgs', None)
-            if images:
-                try:
-                    images = json.loads(images)  
-                except:
-                    status = 1
-                    errors.append("некорректно заданы изображения")
-                else:
-                    for image in images:
-                        try:
-                            event.imgs.add(PhotosModels.Photos.objects.get(id=image))
-                        except:
-                            status = 1
-                            message = "ошибка добавления изображения"
-                            if message not in errors: errors.appen(message)
-                       
-            reports = params.get('feedbacks', None)
-            if reports:
-                try:
-                    reports = json.loads(reports)  
-                except:
-                    status = 1
-                    errors.append("некорректно заданы отзывы")
-                else:
-                    for report in reports:
-                        if report.get("type", None) and report.get("feedback", None):
-                            report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
-                            if report_type.count() > 0:
-                                try:
-                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
-                                    feedback.save()
-                                except:
-                                    import sys
-                                    status = 1
-                                    message = "ошибка добавления отзыва"
-                                    if message not in errors: errors.appen(message)
-                
-            tags = params.get("tags")
-            if tags:
-                try:
-                    tags = json.loads(tags)    
-                except:
-                    status = 1
-                    errors.append("некорректно заданы метки")
-                else:
-                    for tag in tags:
-                        if tag.isdigit():
-                            new_tag = TagsModels.Tags.objects.filter(id=tag)
-                        else:
-                            new_tag = TagsModels.Tags.objects.filter(name=tag)
-                        if new_tag.count() == 0:
-                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
-                        else: new_tag = new_tag[0]
-                        event.tags.add(new_tag)
+                      
+            params_form = forms.AddIdsForm(params)
+            if params_form.is_valid():
+                images = params_form.cleaned_data.get('imgs', None)
+                if images:
+                    try:
+                        images = json.loads(images)  
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы изображения")
+                    else:
+                        for image in images:
+                            try:
+                                event.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                            except:
+                                status = 1
+                                message = "ошибка добавления изображения"
+                                if message not in errors: errors.appen(message)
+                           
+                reports = params_form.cleaned_data.get('feedbacks', None)
+                if reports:
+                    try:
+                        reports = json.loads(reports)  
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы отзывы")
+                    else:
+                        for report in reports:
+                            if report.get("type", None) and report.get("feedback", None):
+                                report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
+                                if report_type.count() > 0:
+                                    try:
+                                        feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
+                                        feedback.save()
+                                    except:
+                                        import sys
+                                        status = 1
+                                        message = "ошибка добавления отзыва"
+                                        if message not in errors: errors.appen(message)
+                    
+                tags = params_form.cleaned_data.get("tags")
+                if tags:
+                    try:
+                        tags = json.loads(tags)    
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы метки")
+                    else:
+                        for tag in tags:
+                            if tag.isdigit():
+                                new_tag = TagsModels.Tags.objects.filter(id=tag)
+                            else:
+                                new_tag = TagsModels.Tags.objects.filter(name=tag)
+                            if new_tag.count() == 0:
+                                new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
+                            else: new_tag = new_tag[0]
+                            event.tags.add(new_tag)
             return JsonHTTPResponse({"id": event.id, "status": status, "txt": ""})
         else:
             e = form.errors
@@ -352,60 +354,65 @@ class EventEdit(EventsBaseView):
             
             person = MainModels.Person.objects.get(username=request.user)
                 
-            images = params.get('imgs', None)
-            if images:
-                try:
-                    images = json.loads(images)  
-                except:
-                    status = 1
-                    errors.append("некорректно заданы изображения")
-                else:
-                    for image in images:
-                        try:
-                            event.imgs.add(PhotosModels.Photos.objects.get(id=image))
-                        except:
-                            status = 1
-                            message = "ошибка добавления изображения"
-                            if message not in errors: errors.appen(message)
-                       
-            reports = params.get('feedbacks', None)
-            if reports:
-                try:
-                    reports = json.loads(reports)  
-                except:
-                    status = 1
-                    errors.append("некорректно заданы отзывы")
-                else:
-                    for report in reports:
-                        if report.get("type", None) and report.get("feedback", None):
-                            report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
-                            if report_type.count() > 0:
-                                try:
-                                    feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
-                                    feedback.save()
-                                except:
-                                    import sys
-                                    status = 1
-                                    message = "ошибка добавления отзыва"
-                                    if message not in errors: errors.appen(message)
-                
-            tags = params.get("tags")
-            if tags:
-                try:
-                    tags = json.loads(tags)    
-                except:
-                    status = 1
-                    errors.append("некорректно заданы метки")
-                else:
-                    for tag in tags:
-                        if tag.isdigit():
-                            new_tag = TagsModels.Tags.objects.filter(id=tag)
-                        else:
-                            new_tag = TagsModels.Tags.objects.filter(name=tag)
-                        if new_tag.count() == 0:
-                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
-                        else: new_tag = new_tag[0]
-                        event.tags.add(new_tag)
+                        
+            params_form = forms.AddIdsForm(params)
+            if params_form.is_valid():
+                images = params_form.cleaned_data.get('imgs', None)
+                if images:
+                    try:
+                        images = json.loads(images)  
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы изображения")
+                    else:
+                        for image in images:
+                            try:
+                                event.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                            except:
+                                status = 1
+                                message = "ошибка добавления изображения"
+                                if message not in errors: errors.appen(message)
+                           
+                reports = params_form.cleaned_data.get('feedbacks', None)
+                if reports:
+                    try:
+                        reports = json.loads(reports)  
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы отзывы")
+                    else:
+                        for report in reports:
+                            if report.get("type", None) and report.get("feedback", None):
+                                report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
+                                if report_type.count() > 0:
+                                    try:
+                                        feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=event)
+                                        feedback.save()
+                                    except:
+                                        import sys
+                                        status = 1
+                                        message = "ошибка добавления отзыва"
+                                        if message not in errors: errors.appen(message)
+                    
+                tags = params_form.cleaned_data.get("tags")
+                if tags:
+                    try:
+                        tags = json.loads(tags)    
+                    except:
+                        status = 1
+                        errors.append("некорректно заданы метки")
+                    else:
+                        for tag in tags:
+                            if tag.isdigit():
+                                new_tag = TagsModels.Tags.objects.filter(id=tag)
+                            else:
+                                new_tag = TagsModels.Tags.objects.filter(name=tag)
+                            if new_tag.count() == 0:
+                                new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=event)
+                            else: new_tag = new_tag[0]
+                            event.tags.add(new_tag)
+            else:
+                print params_form.errors
             return JsonHTTPResponse({"id": event.id, "status": status, "txt": ""})
         else:
             e = form.errors
