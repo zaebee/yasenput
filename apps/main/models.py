@@ -121,6 +121,9 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, 'x325')
         return im.url
 
+    def thumbnail130x130(self):
+        im = get_thumbnail(self.img, '130x130', crop="center center")
+        return im.url
 
 class Points(models.Model):
     from apps.tags.models import Tags

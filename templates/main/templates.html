@@ -60,15 +60,16 @@
 
 </script>
 
-<script type="text/template" id="point-detail">
+<script type="text/template" id="point-detail" data-point-id="<%=id%>">
     <div class="popup" id="p-common">
         <div class="clearfix p-body">
             <header>
+                {% if user.is_authenticated %}
                 <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
-
+                {% endif %}
                 <!--<div class="event-date">1―5 января</div>-->
 
-                <h2>Софийский собор</h2>
+                <h2><%- name %></h2>
                 <div class="addr"><%- address %></div>
 
                 <div class="stats">
@@ -107,246 +108,145 @@
                         <a href="#" data-target="tp-tab-new">мои</a>
                     </div>
 
-                <div class="tabs-content">
-                <div class="toggle-block">
-                <div class="clearfix p-gallery">
-                    <% _.each(imgs, function(itm){ %>
-                        <div class="item-photo ">
-                            <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="itm.likes" data-avatar="<%- itm.author.avatar %>">
-                                <img src="<%= itm.thumbnail130 %>" alt="" width="130" height="130">
-                            </a>
-                            <button class="remove-photo"></button>
-                        </div>
-                    <% }) %>
-                    <div class="item-photo current">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="5" data-avatar="temp/ava-small.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-                        <button class="remove-photo"></button>
-                    </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Миля Зеленая" data-count-likes="14" data-avatar="temp/ava-small.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="remove-photo"></button>
-                    </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Товарищ SinteZ" data-count-likes="87" data-avatar="temp/ava-small.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="complaint-photo"></button>
-                    </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Речной сторож" data-count-likes="99" data-avatar="temp/ava-small.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="complaint-photo"></button>
-                    </div>
-
-                    <div id="big-photo">
-                        <div class="bp-photo">
-                            <img src="temp/img-560x420.jpg" alt="">
-
-                            <div class="bp-add-like">
-                                <img src="temp/ava-small.jpg" alt="" width="22" height="22" class="avatar">
-                                <span class="bp-name">Андрей Коротков</span>
-                                <a href="#" class="a-like"></a>
-                                <span class="count-like">5</span>
-                            </div>
-                        </div>
-
-                        <div class="bp-comments">
-                            <div class="toggle-block">
-                                <div  class="item-comment">
-                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                    <div class="comment-body">
-                                        <div class="comment-author">Андрей Коротков</div>
-
-                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                        <div class="comment-date">20.02.2013</div>
+                    <div class="tabs-content">
+                        <div class="toggle-block">
+                            <div class="clearfix p-gallery">
+                                <% _.each(imgs, function(itm, index){ %>
+                                    <div class="item-photo <% if(index == 0){ print ('current') }%>">
+                                        <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="itm.likes" data-avatar="<%- itm.author.avatar %>">
+                                            <img src="<%= itm.thumbnail130 %>" alt="" width="130" height="130">
+                                        </a>
+                                        <button class="remove-photo"></button>
+                                        <button class="complaint-photo"></button>
                                     </div>
+                                <% if(index == 0){ %>
+                                    <div id="big-photo">
+                                    <div class="bp-photo">
+                                        <img src="temp/img-560x420.jpg" alt="">
 
-                                    <div class="action">
-                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                    </div>
-                                </div>
-
-                                <div  class="item-comment">
-                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                    <div class="comment-body">
-                                        <div class="comment-author">Андрей Коротков</div>
-
-                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                        <div class="comment-date">20.02.2013</div>
-                                    </div>
-
-                                    <div class="action">
-                                        <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-                                    </div>
-                                </div>
-
-                                <div class="hidden-content">
-                                    <div  class="item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="comment-body">
-                                            <div class="comment-author">Андрей Коротков</div>
-
-                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                            <div class="comment-date">20.02.2013</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment"></a>
+                                        <div class="bp-add-like">
+                                            <img src="temp/ava-small.jpg" alt="" width="22" height="22" class="avatar">
+                                            <span class="bp-name">Андрей Коротков</span>
+                                            <a href="#" class="a-like"></a>
+                                            <span class="count-like">5</span>
                                         </div>
                                     </div>
 
-                                    <div  class="item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+                                    <div class="bp-comments">
+                                        <div class="toggle-block">
+                                            <div  class="item-comment">
+                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
 
-                                        <div class="comment-body">
-                                            <div class="comment-author">Андрей Коротков</div>
+                                                <div class="comment-body">
+                                                    <div class="comment-author">Андрей Коротков</div>
 
-                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+                                                    <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
 
-                                            <div class="comment-date">20.02.2013</div>
-                                        </div>
+                                                    <div class="comment-date">20.02.2013</div>
+                                                </div>
 
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                        </div>
-                                    </div>
-
-                                    <div  class="item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="comment-body">
-                                            <div class="comment-author">Андрей Коротков</div>
-
-                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                            <div class="comment-date">20.02.2013</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment"></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="add-comment">
-                                    <form action="#">
-                                        <div class="ac-block">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="ac-body">
-                                                <div class="toggle-area">
-                                                    <textarea rows="3" cols="40"></textarea>
-                                                    <input type="submit" value=" ">
+                                                <div class="action">
+                                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
                                                 </div>
                                             </div>
+
+                                            <div  class="item-comment">
+                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                <div class="comment-body">
+                                                    <div class="comment-author">Андрей Коротков</div>
+
+                                                    <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                    <div class="comment-date">20.02.2013</div>
+                                                </div>
+
+                                                <div class="action">
+                                                    <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                                                </div>
+                                            </div>
+
+                                            <div class="hidden-content">
+                                                <div  class="item-comment">
+                                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                    <div class="comment-body">
+                                                        <div class="comment-author">Андрей Коротков</div>
+
+                                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                        <div class="comment-date">20.02.2013</div>
+                                                    </div>
+
+                                                    <div class="action">
+                                                        <a href="#" class="a-complaint-comment"></a>
+                                                    </div>
+                                                </div>
+
+                                                <div  class="item-comment">
+                                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                    <div class="comment-body">
+                                                        <div class="comment-author">Андрей Коротков</div>
+
+                                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                        <div class="comment-date">20.02.2013</div>
+                                                    </div>
+
+                                                    <div class="action">
+                                                        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                                    </div>
+                                                </div>
+
+                                                <div  class="item-comment">
+                                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                    <div class="comment-body">
+                                                        <div class="comment-author">Андрей Коротков</div>
+
+                                                        <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                        <div class="comment-date">20.02.2013</div>
+                                                    </div>
+
+                                                    <div class="action">
+                                                        <a href="#" class="a-complaint-comment"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="add-comment">
+                                                <form action="#">
+                                                    <div class="ac-block">
+                                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                        <div class="ac-body">
+                                                            <div class="toggle-area">
+                                                                <textarea rows="3" cols="40"></textarea>
+                                                                <input type="submit" value=" ">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <a href="#" class="a-toggle">ещё комментарии <span>&darr;</span></a>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-
-                                <a href="#" class="a-toggle">все комментарии <span>&darr;</span></a>
+                                <% } %>
+                                <% }) %>
+                                {% if user.is_authenticated %}
+                                    <div class="item-photo load-photo">
+                                        <input type="file">
+                                    </div>
+                                {% endif %}
                             </div>
+
+                            <a href="#" class="a-toggle">ещё фотографии <span>&darr;</span></a>
                         </div>
                     </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="2" data-avatar="temp/avatar.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="complaint-photo"></button>
-                    </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Елена Ленина" data-count-likes="11" data-avatar="temp/avatar.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="complaint-photo"></button>
-                    </div>
-
-                    <div class="item-photo">
-                        <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Серафима" data-count-likes="25" data-avatar="temp/avatar.jpg">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                        </a>
-
-                        <button class="complaint-photo"></button>
-                    </div>
-
-                    <div class="item-photo load-photo">
-                        <input type="file">
-                    </div>
-
-                    <div class="hidden-content">
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Миля Зеленая" data-count-likes="14" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="remove-photo"></button>
-                        </div>
-
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Товарищ SinteZ" data-count-likes="87" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="complaint-photo"></button>
-                        </div>
-
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Речной сторож" data-count-likes="99" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="complaint-photo"></button>
-                        </div>
-
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Andrew Korotkoff" data-count-likes="2" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="complaint-photo"></button>
-                        </div>
-
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Елена Ленина" data-count-likes="11" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="complaint-photo"></button>
-                        </div>
-
-                        <div class="item-photo">
-                            <a href="temp/img-560x420.jpg" data-src-big="temp/img-560x420.jpg" data-author="Серафима" data-count-likes="25" data-avatar="temp/avatar.jpg">
-                                <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            </a>
-
-                            <button class="complaint-photo"></button>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="#" class="a-toggle">все фотографии <span>&darr;</span></a>
-                </div>
-                </div>
                 </div>
 
                 <div id="tab-map">
@@ -1071,19 +971,18 @@
                         <h4 class="title-block">Метки</h4>
 
                         <div class="body">
-                            <div class="label label-place">Вологда</div>
-                            <div class="label label-name">Вологда</div>
-                            <div class="label label-user">Вологда</div>
-                            <div class="label">Вологда</div>
-                            <div class="label label-place">Вологда</div>
+                            <% _.each(comments, function(itm, index){ %>
+                                <div class="label"><%= itm.name %></div>
+                            <% }) %>
                         </div>
                     </section>
                 </div>
             </div>
 
             <footer>
-                <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
-
+                {% if user.is_authenticated %}
+                    <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
+                {% endif %}
                 <div class="stats">
                                         <span>
                                             <span class="ico-want-small"></span>
@@ -1104,12 +1003,12 @@
         </div>
 
         <aside id="right-panel">
-            <a href="#" class="a-btn a-visit a-btn-marked">Хочу посетить</a>
-            <a href="#" class="a-btn a-add-path">Создать маршрут</a>
-            <a href="#" class="a-btn a-edit">Редактировать</a>
+            <a href="#" class="a-btn a-visit <% if(currentvisit == 1){ print ('a-btn-marked') }%>">Хочу посетить</a>
+{#            <a href="#" class="a-btn a-add-path">Создать маршрут</a>#}
+{#            <a href="#" class="a-btn a-edit">Редактировать</a>#}
             <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
             <div class="aside-social">
-                <img src="temp/social-2.png" alt="">
+{#                <img src="temp/social-2.png" alt="">#}
             </div>
         </aside>
     </div>

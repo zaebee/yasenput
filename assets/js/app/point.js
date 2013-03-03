@@ -256,7 +256,7 @@ $(function(){
 
         },
         setURL:function(){
-            this.url = '/ajpoints/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
+            this.url = '/ajpoints/list/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
         },
         reload: function(){
             var self = this;

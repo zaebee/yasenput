@@ -89,6 +89,7 @@ def index(request):
                                'typepoints':typepoints, 
                                'VKONTAKTE_APP_ID':settings.VKONTAKTE_APP_ID}, 
                               context_instance=RequestContext(request))
+
     #return HttpResponse('Index Page')
 
 def addpoint(request):

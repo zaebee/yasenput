@@ -190,7 +190,7 @@ class PointsList(View):
         
         form = forms.FiltersForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Points.objects;
+            pointsreq = MainModels.Points.objects
                        
             user = form.cleaned_data.get("user")
             if user:
@@ -206,9 +206,11 @@ class PointsList(View):
                 else:
                     ln = coord_left.get("ln")
                     lt = coord_left.get("lt")
-                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)    
-                    
+                    if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
+                        pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
+                    else:
+                        status = 1
+                        errors.append("некорректно задана левая точка на карте для фильтра")
             coord_right = params.get("coord_right")
             if coord_right:
                 try:
@@ -219,7 +221,7 @@ class PointsList(View):
                 else:
                     ln = coord_right.get("ln")
                     lt = coord_right.get("lt")
-                    if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
+                    if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)               
             
             name = form.cleaned_data.get("name")
@@ -263,12 +265,12 @@ class PointsList(View):
             points  = pointsreq[offset:limit].all()
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail325', 'thumbnail130x130'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}, 'comments': {'fields': ('txt', 'created', 'author'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
 
 
 class PointAdd(PointsBaseView):
@@ -326,7 +328,7 @@ class PointAdd(PointsBaseView):
                                     import sys
                                     status = 1
                                     message = "ошибка добавления отзыва"
-                                    if message not in errors: errors.appen(message)
+                                    if message not in errors: errors.append(message)
                 
             tags = params.get("tags")
             if tags:
@@ -346,12 +348,12 @@ class PointAdd(PointsBaseView):
                         else: new_tag = new_tag[0]
                         point.tags.add(new_tag)
                     point.save()
-            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)});
+            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)})
         else:
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});           
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})
 
 
 class PointEdit(PointsBaseView):
@@ -436,7 +438,7 @@ class PointEdit(PointsBaseView):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});  
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});
 
 
 class PointDel(PointsBaseView):
