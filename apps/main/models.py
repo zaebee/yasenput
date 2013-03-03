@@ -14,7 +14,7 @@ from apps.comments.models import Comments
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
     avatar = ImageField(upload_to='avatar', verbose_name=u'Аватарка', blank=True, null=True)
-    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='person_users_folowers', serialize=True)
+    followers = models.ManyToManyField(User, null=True, blank=True, related_name='person_users_followers', serialize=True)
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
@@ -92,6 +92,7 @@ def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
 
 
+"""
 class Photos(models.Model):
     class Meta:
         verbose_name = u'Фотографии'
@@ -121,12 +122,16 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, 'x325')
         return im.url
 
+
     def thumbnail130x130(self):
         im = get_thumbnail(self.img, '130x130', crop="center center")
         return im.url
-
+"""
 class Points(models.Model):
     from apps.tags.models import Tags
+    from apps.photos.models import Photos
+    from apps.reports.models import Reports
+    
     class Meta:
         verbose_name = u'Точки'
         verbose_name_plural = u'Точки'
@@ -140,13 +145,14 @@ class Points(models.Model):
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
     address = models.TextField('Адрес')
-    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_folowers', serialize=True)
+    followers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
     #wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, null=True, serialize=True)
+    feedbacks = models.ManyToManyField(Reports, null=True, blank=True)
     comments = generic.GenericRelation(Comments)
 
     def _likes(self):
@@ -197,6 +203,7 @@ class Routes(models.Model):
 
 class Events(models.Model):
     from apps.tags.models import Tags
+    from apps.photos.models import Photos
 
     class Meta:
         verbose_name = u'События'
@@ -207,7 +214,8 @@ class Events(models.Model):
     name = models.CharField('Название', max_length=255)
     point = models.ForeignKey(Points, unique=False)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
-    folowers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_folowers', serialize=True)
+    imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
+    followers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
