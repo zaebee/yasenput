@@ -20,10 +20,6 @@ class Photos(models.Model):
     class Meta:
         verbose_name = u'Фотографии'
         verbose_name_plural = u'Фотографии'
-    content_type = models.ForeignKey(ContentType, blank=True, null=True, verbose_name="Type")
-    object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
-    name = models.CharField(max_length=255)
     img = models.ImageField(max_length=255, upload_to=make_upload_path)
     author = models.ForeignKey(Person, unique=False)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_like_users', serialize=True)

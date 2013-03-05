@@ -268,7 +268,7 @@ class PointsList(View):
 
 
 class PointAdd(PointsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
     def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
@@ -276,7 +276,7 @@ class PointAdd(PointsBaseView):
         status = 2
         errors = []
         
-        params = request.GET
+        params = request.POST
         form = forms.AddPointForm(params)
         if form.is_valid():
             point = form.save(commit=False)

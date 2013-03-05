@@ -74,15 +74,15 @@ class PhotosAdd(PhotosBaseView):
             photo = form.save(commit=False)
             photo.author = request.user.get_profile()
             photo.save()
-            return HttpResponse(json.serialize([photo], excludes=("object_id", "content_type", "img"),
-                                                            extras=('thumbnail130x130','img_url'),
+            return HttpResponse(json.serialize([photo], excludes=("img"),
+                                                            extras=('thumbnail130x130', 'img_url'),
                                                             relations={
                                                                 'author': {
                                                                     'fields': ('first_name', 'last_name', 'avatar')
                                                                 }
                                                             }),
                                 mimetype="application/json")
-        return HttpResponse(simplejson.dumps({'id':0,'status':form._errors}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id': 0, 'status': form._errors}), mimetype="application/json")
 
 class PhotosDel(PhotosBaseView):
     http_method_names = ('post',)
@@ -96,7 +96,7 @@ class PhotosDel(PhotosBaseView):
             status = u'Указаный объект не найден'
         else:
             photo.delete()
-        return HttpResponse(simplejson.dumps({'id':pk, 'status':status}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id': pk, 'status': status}), mimetype="application/json")
 
 
 class PhotosLike(PhotosBaseView):

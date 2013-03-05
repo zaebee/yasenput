@@ -127,7 +127,7 @@ jQuery(function($){
             $('.drop-search ul.item.item-users').append('<li>Загрузка ...</li>');
             $.ajax({
                 type: "GET",
-                url: "persons/search",
+                url: "users/search",
                 crossDomain: false,
                 dataType:'json',
                 data: {
@@ -1078,61 +1078,61 @@ jQuery(function($){
 		});
 	}
 	
-	if($(".top-panel .btn-place").length || $(".top-panel .btn-event").length){
-		$(".top-panel .btn-place, .top-panel .btn-event").click(function(e){
-			e.preventDefault();
-			
-			var id = $(this).hasClass("btn-place") ? "p-add-place" 
-				: ($(this).hasClass("btn-event") ? "p-add-event" : "");
-			
-			
-			popups.open({
-				elem: $("#overlay"),
-				callbackAfter: function(){
-					$("body").css("overflow", "hidden");
-					popups.open({
-						elem: $("#popups"),
-						callbackAfter: function(){
-							$("input.calendar").datepicker({
-								dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-								monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-								dateFormat: "dd.mm.yy",
-								showOn: "button",
-								buttonImage: "images/calendar.gif",
-								buttonImageOnly: true
-							});
-							
-							var myMapPopupPlace, myMapPopupEvent;
-							
-							$(".p-tabs").simpleTabs({
-								afterChange: function(self, id){
-									if (id == 'tab-map-place'){
-										if (!myMapPopupPlace) {
-											myMapPopupPlace = new ymaps.Map('popup-map-place', {
-												center: [38.043392000000004, 48.30851300000994], 
-												zoom: 11
-											});
-										}
-									} else if (id == 'tab-map-event'){
-										if (!myMapPopupEvent) {
-											myMapPopupEvent = new ymaps.Map('popup-map-event', {
-												center: [38.043392000000004, 48.30851300000994], 
-												zoom: 11
-											});
-										}
-									}
-								}
-							});
-						}
-					});
-				},
-				callbackBefore: function(){
-					$("body").css("overflow", "hidden");
-					$("#"+id).css("display", "block").siblings().css("display", "none");
-				}
-			});
-		});
-	}
+//	if($(".top-panel .btn-place").length || $(".top-panel .btn-event").length){
+//		$(".top-panel .btn-place, .top-panel .btn-event").click(function(e){
+//			e.preventDefault();
+//
+//			var id = $(this).hasClass("btn-place") ? "p-add-place"
+//				: ($(this).hasClass("btn-event") ? "p-add-event" : "");
+//
+//
+//            window.YPApp.popups.open({
+//				elem: $("#overlay"),
+//				callbackAfter: function(){
+//					$("body").css("overflow", "hidden");
+//                    window.YPApp.popups.open({
+//						elem: $("#popups"),
+//						callbackAfter: function(){
+//							$("input.calendar").datepicker({
+//								dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+//								monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+//								dateFormat: "dd.mm.yy",
+//								showOn: "button",
+//								buttonImage: "images/calendar.gif",
+//								buttonImageOnly: true
+//							});
+//
+//							var myMapPopupPlace, myMapPopupEvent;
+//
+//							$(".p-tabs").simpleTabs({
+//								afterChange: function(self, id){
+//									if (id == 'tab-map-place'){
+//										if (!myMapPopupPlace) {
+//											myMapPopupPlace = new ymaps.Map('popup-map-place', {
+//												center: [38.043392000000004, 48.30851300000994],
+//												zoom: 11
+//											});
+//										}
+//									} else if (id == 'tab-map-event'){
+//										if (!myMapPopupEvent) {
+//											myMapPopupEvent = new ymaps.Map('popup-map-event', {
+//												center: [38.043392000000004, 48.30851300000994],
+//												zoom: 11
+//											});
+//										}
+//									}
+//								}
+//							});
+//						}
+//					});
+//				},
+//				callbackBefore: function(){
+//					$("body").css("overflow", "hidden");
+//					$("#"+id).css("display", "block").siblings().css("display", "none");
+//				}
+//			});
+//		});
+//	}
 	
 	$("#popups .scroll-box").click(function(e){
 		if(e.target == this){

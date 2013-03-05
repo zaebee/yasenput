@@ -148,7 +148,8 @@ $(function(){
             e.preventDefault(); //показ основного попапа
             console.log('Основной попап')
             var detcontent = this.template_det(this.model.toJSON());
-            $("#overlay").append(detcontent);
+            $("#popups").remove();
+            $("#overlay").after(detcontent);
 
             $("#popups .scroll-box").scrollTop(0);
             window.YPApp.popups.open({
@@ -185,21 +186,21 @@ $(function(){
                                     if(id == 'tab-map'){
                                         if (!self.myMapPopup) {
                                             self.myMapPopup = new ymaps.Map('popup-map-1', {
-                                                center: [38.043392000000004, 48.30851300000994],
+                                                center: window.YPApp.mapCoords,
                                                 zoom: 11
                                             });
                                         }
                                     } else if (id == 'tab-map-place'){
                                         if (!self.myMapPopupPlace) {
                                             self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
-                                                center: [38.043392000000004, 48.30851300000994],
+                                                center: window.YPApp.mapCoords,
                                                 zoom: 11
                                             });
                                         }
                                     } else if (id == 'tab-map-event'){
                                         if (!self.myMapPopupEvent) {
                                             self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
-                                                center: [38.043392000000004, 48.30851300000994],
+                                                center: window.YPApp.mapCoords,
                                                 zoom: 11
                                             });
                                         }
@@ -422,6 +423,8 @@ $(function(){
 
     var YPApp = Backbone.View.extend({
         el:$("body"),
+        mapCoords:[],
+        templateAdd: _.template($('#point-add-template').html()),
         events:{
             "click .custom-checkbox":function(e){
                 var self = e.currentTarget;
@@ -483,11 +486,11 @@ $(function(){
                 } else if($(e.target).closest("#complaint-photo").length){
                     $("#complaint-photo").hide();
                 } else {
-                    popups.close({
+                    window.YPApp.popups.close({
                         elem: $("#popups"),
                         speed: 0,
                         callbackBefore: function(){
-                            popups.close({
+                            window.YPApp.popups.close({
                                 elem: $("#overlay")
                             });
                         },
@@ -709,6 +712,162 @@ $(function(){
                     top : $(self).offset().top - 30
                 };
                 $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
+            },
+            "click .top-panel .btn-place, .top-panel .btn-event":function(e){
+                e.preventDefault();
+                var self = e.currentTarget;
+                var addPoint = this.templateAdd();
+                $("#popups").remove();
+                $("#overlay").after(addPoint);
+
+                var id = $(self).hasClass("btn-place") ? "p-add-place"
+                    : ($(self).hasClass("btn-event") ? "p-add-event" : "");
+
+                window.YPApp.popups.open({
+                    elem: $("#overlay"),
+                    callbackAfter: function(){
+                        $("body").css("overflow", "hidden");
+                        window.YPApp.popups.open({
+                            elem: $("#popups"),
+                            callbackAfter: function(){
+                                $("input.calendar").datepicker({
+                                    dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                                    dateFormat: "dd.mm.yy",
+                                    showOn: "button",
+                                    buttonImage: "images/calendar.gif",
+                                    buttonImageOnly: true
+                                });
+
+                                var myMapPopupPlace, myMapPopupEvent;
+
+                                $(".p-tabs").simpleTabs({
+                                    afterChange: function(self, id){
+                                        if (id == 'tab-map-place'){
+                                            if (!myMapPopupPlace) {
+                                                myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                                    center: window.YPApp.mapCoords,
+                                                    zoom: 11
+                                                });
+                                                myMapPopupPlace.events.add('click', function (e) {
+                                                    myMapPopupPlace.geoObjects.each(function (geoObject) {
+                                                        if (geoObject.properties.get('id') == 'map-point') {
+                                                            myMapPopupPlace.geoObjects.remove(geoObject)
+                                                            return false;
+                                                        }
+                                                    });
+                                                    var coords = e.get('coordPosition');
+                                                    var placemark = new ymaps.Placemark(coords, {
+                                                        id:'map-point'
+                                                    }, {
+                                                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                                                        iconImageSize: [32, 36], // размеры картинки
+                                                        iconImageOffset: [-16, -38] // смещение картинки
+                                                    });
+                                                    myMapPopupPlace.geoObjects.add(placemark);
+                                                });
+                                            }
+                                        } else if (id == 'tab-map-event'){
+                                            if (!myMapPopupEvent) {
+                                                myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                                    center: window.YPApp.mapCoords,
+                                                    zoom: 11
+                                                });
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    callbackBefore: function(){
+                        $("body").css("overflow", "hidden");
+                        $("#"+id).css("display", "block").siblings().css("display", "none");
+                    }
+                });
+            },
+            "change #p-add-place input:file":function (e){
+                if (e.target.files.length == 0){
+                    return;
+                }
+                e.preventDefault();
+                var self = e.currentTarget;
+
+                var template = _.template($('#progress-image').html())
+                var progress = $(template());
+                $('#p-add-place .item-photo.load-photo').before(progress);
+                console.log(progress.find('.load-status'));
+                $(self).parents('form').ajaxSubmit({
+                    url: "photos/add",
+                    type: "POST",
+                    dataType:  'json',
+                    data: {
+                        object_type:12
+                    },
+                    clearForm: false,
+                    success: function(data) {
+                        progress.find('button').before('<div class="load-status"><img src="images/ajax-loader3.gif" alt=""></div>');
+                        if (data.i != 0){
+                            console.log('Номер id:',data[0].thumbnail130x130);
+                            progress.find('.value').css(
+                                {'width' : '100%'}
+                            );
+                            progress.find('.progress-count').text('100 %');
+                            progress.find('.load-status').remove();
+                            progress.removeClass('photo-loading');
+
+                            progress.find('img').attr('src',data[0].thumbnail130x130);
+                            progress.find('.load-status').remove();
+                        }
+                    },
+                    clearForm: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        window.alert(textStatus);
+                        if (window.console) {
+                            console.log('error', arguments);
+                        }
+                        return true;
+                    },
+                    beforeSend: function() {
+                        progress.find('.value').css(
+                            {'width' : '0%'}
+                        )
+                        progress.find('.progress-count').text('0 %')
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        progress.find('.value').css(
+                            {'width' : percentComplete+'%'}
+                        )
+                        progress.find('.progress-count').text(percentComplete+' %');
+                    }
+                });
+            },
+            "click #a-add-point":function(){
+                $.ajax ({
+                    target: "#divToUpdate",
+                    url: "addpoint",
+                    type: "POST",
+                    data: {
+                        name: $('#p-add-place-name').val(),
+                        latitude: $('#ap-coords-latitude').val(),
+                        longitude: $('#ap-coords-longitude').val(),
+                        description: $('#ap-desc').val(),
+//                        type:window.App.pointType,
+//                        imgs:window.App.imgs
+                    },
+                    dataType:'json',
+                    success: (function(data) {
+                        if(data.r == 1){
+                            $(".popup").filter(":visible").fadeOut(150, function(){
+                                $("#overlay").fadeOut(200,function(){
+                                    window.router.navigate("#!/mypoints", {trigger: true, replace: true});
+                                });
+                            });
+                        }else{
+                            alert('Ошибка добавления!')
+                        }
+                    })
+                });
             }
         },
         popups: {
@@ -733,7 +892,6 @@ $(function(){
                 callbackAfter();
             }
         },
-        templatePointDetail: _.template($('#point-detail').html()),
         toggleCheckbox: function (label) {
             if ($("input[type=checkbox]", label).is(":checked")) {
                 label.addClass("checked");
@@ -778,6 +936,110 @@ $(function(){
 
             $("#popups .viewport").scrollTop(Math.abs(scrollTop));
         },
+        onFocusDropInput: function (input, withMatch){
+            var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
+            $(input).closest(".input-line").css("z-index", 2134);
+
+            //$(input).val("");
+            $dropResult.show();
+            $(".hover", $dropResult).removeClass("hover");
+
+            $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
+                var next;
+
+                if(e.which == 38){
+                    if($(".hover", $dropResult).length){
+                        if($(".hover", $dropResult).prev().length){
+                            next = $(".hover", $dropResult).prev();
+                        } else {
+                            next = $("li:last", $dropResult);
+                        }
+                    } else {
+                        next = $("li:last", $dropResult);
+                    }
+                } else if(e.which == 40){
+                    if($(".hover", $dropResult).length){
+                        if($(".hover", $dropResult).next().length){
+                            next = $(".hover", $dropResult).next();
+                        } else {
+                            next = $("li:first", $dropResult);
+                        }
+                    } else {
+                        next = $("li:first", $dropResult);
+                    }
+                } else if (e.which == 13){
+                    if($dropResult.is(":visible") && $(".hover", $dropResult).length){
+                        input.val($(".hover", $dropResult).text());
+                        var dropRoot = $(input).closest(".drop-filter");
+
+                        if(withMatch == true){
+                            if((""+input.val()) == $(".hover", $dropResult).text()){
+                                //если текст совпадает, то выбрать его
+
+                            } else {
+                                $(input).val("Событие не найдено");
+                                $(".not-found-event").slideDown(100);
+                            }
+                        } else {
+                            if($(input).closest(".drop-filter").hasClass("select-labels")){ //установить метку в попапе Добавить место
+
+                                $(".label-add", dropRoot).show();
+                                $(multySearch.tmplLabel.replace("{text}", $(".hover", $dropResult).text())).insertBefore($(".label-add", dropRoot));
+                                $("input[type=text]", dropRoot).blur().hide();
+                            } else {
+                                //установить значение в инпут в попапе
+                                input.val($(".hover", $dropResult).text());
+                            }
+                        }
+
+
+                        $dropResult.hide();
+                        $(input).closest(".input-line").css("z-index", 1);
+                        input.blur();
+
+                        //временно вернуть фолс для тестов
+                        return false;
+                    } else if($dropResult.is(":visible")){
+                        if(withMatch == true){
+                            var flag = false; // если был введен текст и нажат Enter, то проверить, есть ли такой текст в выпадающем списке, если нет, то закрыть и предложить выбрать место
+
+                            $("li", $dropResult).each(function(){
+                                if($(this).text().toLowerCase() == (""+input.val()).toLowerCase()){
+                                    flag = true;
+                                }
+                            });
+
+                            if(flag){
+                                //если текст совпадает, то закрыть выпадающий список и запустить поиск
+                                $dropResult.hide();
+                                $(input).closest(".input-line").css("z-index", 1);
+                                input.blur();
+                                $(".not-found-event").slideUp(200);
+                            } else {
+                                $(input).val("Событие не найдено");
+                                $dropResult.hide();
+                                $(input).closest(".input-line").css("z-index", 1);
+                                input.blur();
+                                $(".not-found-event").slideDown(200);
+                            }
+                        }
+                    }
+                }
+
+                    if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
+                });
+
+                $(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
+                    if($dropResult.is(":visible")){
+                        setTimeout(function(){
+                            $dropResult.hide();
+                            if(input[0].value == ''){
+                                input.val(input[0].defaultValue);
+                            }
+                        }, 100);
+                    }
+                });
+        },
         pppp:function(point){
             console.log('Заглушка')
         },
@@ -788,6 +1050,32 @@ $(function(){
                 right:'{"ln":  '+ bounds[1][1] +',  "lt": '+ bounds[1][0] +' }'
             };
             return coords;
+        },
+        getAdressbyPoint:function(coords){
+            ymaps.geocode(coords).then(function (res) {
+                var labels = [];
+                res.geoObjects.each(function (obj) {
+                    if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
+                        labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+                    }
+                    if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'province'){
+                        labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine'));
+                    }
+                    if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'area'){
+                        labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName'));
+                    }
+                    if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName')){
+                        labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName'));
+                    }
+                    if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName')){
+                        labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'));
+                    }
+                });
+                $.each(labels, function(index, value){
+                    $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
+                })
+            });
+            return 
         }
     });
     window.YPApp = new YPApp();
@@ -802,7 +1090,6 @@ $(function(){
         main:function(){
             window.App.setCollection(Points);
             window.App.render();
-
             return false;
         },
         detailPoint:function(point){
@@ -819,9 +1106,11 @@ $(function(){
     ymaps.ready(init);
     function init(){
         pointCollection = new ymaps.GeoObjectCollection();
+        window.YPApp.mapCoords = [ymaps.geolocation.latitude, ymaps.geolocation.longitude];
         window.myMap = new ymaps.Map ("mainmap", {
-            center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
+            center: window.YPApp.mapCoords,
             //center: [60.759943,46.318655],
+            //center: [59.366972,38.788037],
             zoom: 10
         });
         myMap.controls.add('zoomControl').add('typeSelector').add('searchControl');
