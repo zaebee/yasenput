@@ -72,7 +72,7 @@ $(function(){
                         balloonContentFooter: 'Вологодская область, Вологда'
                     },
                     {
-                        iconImageHref: 'assets/media/'+self.model.get('type').img, // картинка иконки
+                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
                         iconImageSize: [22, 37], // размеры картинки
                         iconImageOffset: [-11, -37], // смещение картинки
                         draggable: false
@@ -422,6 +422,10 @@ $(function(){
     /* -----------------   main Application   ---------------- */
 
     var YPApp = Backbone.View.extend({
+        addPointState:{
+            coords:[],
+            imgs:[]
+        },
         el:$("body"),
         mapCoords:[],
         templateAdd: _.template($('#point-add-template').html()),
@@ -765,6 +769,17 @@ $(function(){
                                                         iconImageOffset: [-16, -38] // смещение картинки
                                                     });
                                                     myMapPopupPlace.geoObjects.add(placemark);
+                                                    var labels = [];
+                                                    ymaps.geocode(coords).then(function (res) {
+                                                        var i = true;
+                                                        res.geoObjects.each(function (obj) {
+                                                            if (i)
+                                                            $('#add-new-place').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+                                                            i = false;
+                                                        });
+
+                                                    });
+                                                    window.YPApp.addPointState.coords = coords;
                                                 });
                                             }
                                         } else if (id == 'tab-map-event'){
@@ -809,6 +824,7 @@ $(function(){
                         progress.find('button').before('<div class="load-status"><img src="images/ajax-loader3.gif" alt=""></div>');
                         if (data.i != 0){
                             console.log('Номер id:',data[0].thumbnail130x130);
+                            window.YPApp.addPointState.imgs.push(data[0].id);
                             progress.find('.value').css(
                                 {'width' : '100%'}
                             );
@@ -849,11 +865,10 @@ $(function(){
                     type: "POST",
                     data: {
                         name: $('#p-add-place-name').val(),
-                        latitude: $('#ap-coords-latitude').val(),
-                        longitude: $('#ap-coords-longitude').val(),
-                        description: $('#ap-desc').val(),
-//                        type:window.App.pointType,
-//                        imgs:window.App.imgs
+                        address: $('#add-new-place').val(),
+                        latitude: window.YPApp.addPointState.coords[0],
+                        longitude: window.YPApp.addPointState.coords[1],
+                        imgs:window.YPApp.addPointState.imgs
                     },
                     dataType:'json',
                     success: (function(data) {
@@ -1040,9 +1055,6 @@ $(function(){
                     }
                 });
         },
-        pppp:function(point){
-            console.log('Заглушка')
-        },
         mapBounds:function(){
             var bounds = myMap.getBounds();
             var coords = {
@@ -1051,9 +1063,10 @@ $(function(){
             };
             return coords;
         },
-        getAdressbyPoint:function(coords){
+        getAdressByPoint:function(coords){
+            var labels = new Array();
             ymaps.geocode(coords).then(function (res) {
-                var labels = [];
+                console.log(labels);
                 res.geoObjects.each(function (obj) {
                     if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
                         labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
@@ -1071,11 +1084,10 @@ $(function(){
                         labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'));
                     }
                 });
-                $.each(labels, function(index, value){
-                    $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
-                })
+                console.log('Labels0:',labels);
             });
-            return 
+            console.log('Labels1:',labels);
+            return labels;
         }
     });
     window.YPApp = new YPApp();
@@ -1115,8 +1127,9 @@ $(function(){
         });
         myMap.controls.add('zoomControl').add('typeSelector').add('searchControl');
         coords = myMap.getCenter();
+        var labels = [];
         ymaps.geocode(coords).then(function (res) {
-            var labels = [];
+            console.log(labels);
             res.geoObjects.each(function (obj) {
                 if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));

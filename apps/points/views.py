@@ -259,7 +259,7 @@ class PointsList(View):
             points  = pointsreq[offset:limit].all()
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail325', 'thumbnail130x130'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}, 'comments': {'fields': ('txt', 'created', 'author'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}}), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}, 'comments': {'fields': ('txt', 'created', 'author'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
