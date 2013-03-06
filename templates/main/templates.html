@@ -116,22 +116,29 @@
                                     <div class="clearfix p-gallery">
                                         <% _.each(imgs, function(itm, index){ %>
                                             <div class="item-photo <% if(index == 0){ print ('current') }%>">
-                                                <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="itm.likes" data-avatar="<%- itm.author.avatar %>">
+                                                <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="<%- itm.likeusers %>" data-avatar="{{ MEDIA_URL }}<%- itm.author.avatar %>">
                                                     <img src="<%= itm.thumbnail130x130 %>" alt="" width="130" height="130">
                                                 </a>
                                                 <button class="remove-photo"></button>
                                                 <button class="complaint-photo"></button>
                                             </div>
-                                        <% if(index == 0){ %>
+                                        {% if user.is_authenticated %}
+                                            <% if(((imgs.length < 4) && ((imgs.length-1) == index)) || ((imgs.length-1) == index)){ %>
+                                                <div class="item-photo load-photo">
+                                                    <input type="file">
+                                                </div>
+                                            <% } %>
+                                        {% endif %}
+                                        <% if(((imgs.length < 5) && ((imgs.length-1) == index)) || (index == 3)){ %>
                                             <div id="big-photo">
                                             <div class="bp-photo">
-                                                <img src="<%= itm.thumbnail560 %>" alt="">
+                                                <img src="<%= imgs[0].thumbnail560 %>" alt="">
 
                                                 <div class="bp-add-like">
-                                                    <img src="temp/ava-small.jpg" alt="" width="22" height="22" class="avatar">
-                                                    <span class="bp-name"><%- itm.author.first_name %> <%- itm.author.last_name %></span>
+                                                    <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
+                                                    <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
                                                     <a href="#" class="a-like"></a>
-                                                    <span class="count-like">5</span>
+                                                    <span class="count-like"><%- imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
 
@@ -240,11 +247,6 @@
                                         </div>
                                         <% } %>
                                         <% }) %>
-                                        {% if user.is_authenticated %}
-                                            <div class="item-photo load-photo">
-                                                <input type="file">
-                                            </div>
-                                        {% endif %}
                                     </div>
 
                                     <a href="#" class="a-toggle">ещё фотографии <span>&darr;</span></a>

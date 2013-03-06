@@ -470,7 +470,6 @@ $(function(){
             "click .clear-selected":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault(); //очистить в  Популярных метках в попапе Что тебе интересно
-
                 var parent = $(self).closest(".popup");
                 parent.find(".selected-labels .label").not(".label-add").remove();
                 parent.find(".pop-labels .selected").removeClass("selected");
@@ -507,7 +506,7 @@ $(function(){
             "focus .drop-filter input[type=text]":function (e) {
                 var self = e.currentTarget;
                 var bool = $(self).closest(".drop-filter").hasClass("search-matches") ? true : false;
-                onFocusDropInput($(self), bool); //выпадающий живой поиск в попапе
+                this.onFocusDropInput($(self), bool); //выпадающий живой поиск в попапе
             },
             "blur .select-labels input[type=text]":function (e) {
                 var self = e.currentTarget;
@@ -529,6 +528,7 @@ $(function(){
 
                 if($(self).hasClass("label")){
                     var dropRoot = $(self).closest(".drop-filter");
+
                     $(".label-add", dropRoot).show();
                     $(multySearch.tmplLabel.replace("{text}", $(self).text()).replace("{clsName}", "")).insertBefore($(".label-add", dropRoot));
                     $(self).closest(".drop-results").hide().find(".hover").removeClass("hover");
@@ -883,6 +883,32 @@ $(function(){
                         }
                     })
                 });
+            },
+            "keyup #p-add-place-name2":function(e){
+                //e.preventDefault();
+                var self = e.currentTarget;
+                if ($(self).val().length > 0){
+                    var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                    console.log('Хуякс');
+                    $dropResult.find('li').remove();
+                    $.ajax({
+                        type: "GET",
+                        url: "points/search",
+                        crossDomain: false,
+                        dataType:'json',
+                        data: {
+                            s:  $(self).val()
+                        },
+                        success: function(data) {
+                            _.each(data, function(itm){
+                                $dropResult.append('<li data-point-id='+itm.id+'>'+itm.name+'</li>')
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert(status);
+                        }
+                    });
+                }
             }
         },
         popups: {
@@ -953,15 +979,13 @@ $(function(){
         },
         onFocusDropInput: function (input, withMatch){
             var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
-            $(input).closest(".input-line").css("z-index", 2134);
 
-            //$(input).val("");
+            $(input).closest(".input-line").css("z-index", 2134);
             $dropResult.show();
             $(".hover", $dropResult).removeClass("hover");
-
             $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
                 var next;
-
+                console.log(next)
                 if(e.which == 38){
                     if($(".hover", $dropResult).length){
                         if($(".hover", $dropResult).prev().length){
@@ -1006,8 +1030,25 @@ $(function(){
                                 input.val($(".hover", $dropResult).text());
                             }
                         }
-
-
+                        if($('#p-add-place-name').val().length == 0){
+                            $.ajax({
+                                type: "GET",
+                                url: "points/search",
+                                crossDomain: false,
+                                dataType:'json',
+                                data: {
+                                    s:  $('#p-add-place-name').val()
+                                },
+                                success: function(data) {
+                                    _.each(data, function(itm){
+                                        $dropResult.append('<li>'+itm.name+'2</li>')
+                                    });
+                                },
+                                error: function (request, status, error) {
+                                    alert(status);
+                                }
+                            });
+                        }
                         $dropResult.hide();
                         $(input).closest(".input-line").css("z-index", 1);
                         input.blur();
