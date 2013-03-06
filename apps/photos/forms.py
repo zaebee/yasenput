@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.contrib.contenttypes.models import ContentType
-from .models import Photos, PHOTOS_ALLOWED_MODELS
+from .models import Photos
 
 class PhotosForm(forms.ModelForm):
     class Meta:
