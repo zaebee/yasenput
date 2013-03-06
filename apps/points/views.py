@@ -157,7 +157,7 @@ class PointsSearch(View):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
         
 
 class PointsList(View):
