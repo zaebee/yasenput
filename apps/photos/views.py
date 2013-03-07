@@ -61,6 +61,8 @@ class PhotosAdd(PhotosBaseView):
     model = None
 
     def get_object(self):
+        if self.model is None:
+            return None
         pk = self.args[0]
         return get_object_or_404(self.model,pk=pk)
 
@@ -72,7 +74,8 @@ class PhotosAdd(PhotosBaseView):
             photo = form.save(commit=False)
             photo.author = request.user.get_profile()
             photo.save()
-            object.imgs.add(photo)
+            if object:
+                object.imgs.add(photo)
             return HttpResponse(json.serialize([photo], excludes=("img"),
                                                             extras=('thumbnail130x130', 'img_url'),
                                                             relations={
