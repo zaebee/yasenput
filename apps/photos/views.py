@@ -88,7 +88,7 @@ class PhotosDetail(PhotosBaseView):
 
     def get(self, request):
         pk = request.GET.get('id')
-        photo = get_object_or_404(Photos,pk=pk)
+        photo = get_object_or_404(Photos, pk=pk)
         json = YpSerialiser()
         return HttpResponse(json.serialize([photo], excludes=("img"),
                                                     extras=('thumbnail130x130', 'img_url'),

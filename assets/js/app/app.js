@@ -985,7 +985,7 @@ $(function(){
             $(".hover", $dropResult).removeClass("hover");
             $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
                 var next;
-                console.log(next)
+                //console.log(next)
                 if(e.which == 38){
                     if($(".hover", $dropResult).length){
                         if($(".hover", $dropResult).prev().length){
@@ -1030,25 +1030,6 @@ $(function(){
                                 input.val($(".hover", $dropResult).text());
                             }
                         }
-                        if($('#p-add-place-name').val().length == 0){
-                            $.ajax({
-                                type: "GET",
-                                url: "points/search",
-                                crossDomain: false,
-                                dataType:'json',
-                                data: {
-                                    s:  $('#p-add-place-name').val()
-                                },
-                                success: function(data) {
-                                    _.each(data, function(itm){
-                                        $dropResult.append('<li>'+itm.name+'2</li>')
-                                    });
-                                },
-                                error: function (request, status, error) {
-                                    alert(status);
-                                }
-                            });
-                        }
                         $dropResult.hide();
                         $(input).closest(".input-line").css("z-index", 1);
                         input.blur();
@@ -1081,10 +1062,32 @@ $(function(){
                         }
                     }
                 }
-
                     if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
                 });
 
+            $(document).unbind("keyup.onFocusDropInput").bind("keyup.onFocusDropInput", function(e){
+
+                if($('#p-add-place-name').val().length > 0){
+                    $.ajax({
+                        type: "GET",
+                        url: "points/search",
+                        crossDomain: false,
+                        dataType:'json',
+                        data: {
+                            s:  $('#p-add-place-name').val()
+                        },
+                        success: function(data) {
+                            $dropResult.find('li').remove();
+                            _.each(data, function(itm){
+                                $dropResult.append('<li>'+itm.name+'3</li>')
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert(status);
+                        }
+                    });
+                }
+            });
                 $(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
                     if($dropResult.is(":visible")){
                         setTimeout(function(){
