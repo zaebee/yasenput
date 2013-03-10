@@ -5,7 +5,7 @@ from django import forms
 
 
 class IdsForm(forms.Form):
-    tags = forms.RegexField(max_length=1024, regex=r'^[[\d+,*]+]$',
+    tags = forms.RegexField(max_length=1024, regex=r'^\[[[\d+,*]+]\]$',
                            help_text = "Для ввода возможны только цифры и ','.",
                            error_messages = {'invalid': "Для ввода возможны только цифры и ','."},
                            required=False)
@@ -19,10 +19,15 @@ class IdsForm(forms.Form):
                            required=False)
 
 class AddIdsForm(IdsForm):
-    tags = forms.RegexField(max_length=1024, regex=r'^\[((\d+|(\"|\')[\w ]+(\"|\')),*)+\]$',
+    tags = forms.RegexField(max_length=1024, regex=r'^.*$',
                            help_text = "Для ввода возможны только буквы, цифры и ' '.",
                            error_messages = {'invalid': "Для ввода возможны только буквы, цифры и ' '."},
                            required=False)
+
+    # tags = forms.RegexField(max_length=1024, regex=r'^\[((\d+|(\"|\')[\w ]+(\"|\')),*)+\]$',
+    #                        help_text = "Для ввода возможны только буквы, цифры и ' '.",
+    #                        error_messages = {'invalid': "Для ввода возможны только буквы, цифры и ' '."},
+    #                        required=False)
 
 class FiltersForm(IdsForm):
     categ = forms.IntegerField(required=False)

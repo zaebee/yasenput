@@ -17,14 +17,14 @@ import json
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
-    
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
 
 class PointsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-    
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -49,7 +49,7 @@ class FollowPoint(PointsBaseView):
                 point.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
@@ -72,7 +72,7 @@ class LikePoint(PointsBaseView):
                 point.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
@@ -95,19 +95,19 @@ class WantVisitPoint(PointsBaseView):
                 point.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления хочу посетить место"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
 
 
 class OnePoint(View):
-    
+
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
             raise Http404
         return super(OnePoint, self).dispatch(request, *args, **kwargs)
-    
+
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -128,29 +128,29 @@ class PointsSearch(View):
         params = request.GET
         COUNT_ELEMENTS = 5
         errors = []
-               
+
         limit = COUNT_ELEMENTS
         offset = 0
-        
+
         form = forms.SearchForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects
-            
+
             name = form.cleaned_data.get("s")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
 
-            content = form.cleaned_data.get("content") 
+            content = form.cleaned_data.get("content")
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
-            else:   
+            else:
                 pointsreq  = pointsreq.order_by("name")
-                
+
             points = pointsreq[offset:limit]
-            
+
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(points, fields=("name")), mimetype="application/json")
         else:
@@ -158,7 +158,7 @@ class PointsSearch(View):
             for er in e:
                 errors.append(er +':'+e[er][0])
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
-        
+
 
 class PointsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
@@ -171,24 +171,24 @@ class PointsList(View):
 
     def get(self, request, *args, **kwargs):
         params = request.GET
-        
+
         COUNT_ELEMENTS = 10
         status = 2
         errors = []
-        
+
         page = kwargs.get("page", 1) or 1
-        
+
         limit = COUNT_ELEMENTS*int(page)
         offset = (int(page)-1)*COUNT_ELEMENTS
-        
+
         form = forms.FiltersForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects
-                       
+
             user = form.cleaned_data.get("user")
             if user:
-                pointsreq = pointsreq.filter(author__id__icontains=user)            
-            
+                pointsreq = pointsreq.filter(author__id__icontains=user)
+
             coord_left = params.get("coord_left")
             if coord_left:
                 try:
@@ -215,16 +215,16 @@ class PointsList(View):
                     ln = coord_right.get("ln")
                     lt = coord_right.get("lt")
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)               
-            
+                        pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
+
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
-                              
-            categ = form.cleaned_data.get("categ")    
+
+            categ = form.cleaned_data.get("categ")
             if categ:
                 pointsreq = pointsreq.filter(categories__id__icontains=categ)
-            
+
             tags = form.cleaned_data.get("tags")
             if tags:
                 try:
@@ -235,13 +235,13 @@ class PointsList(View):
                 else:
                     if len(tags) > 0:
                         pointsreq = pointsreq.extra(where=['main_points.id in (select points_id from main_points_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
-            
-            content = form.cleaned_data.get("content") or 'new'    
+
+            content = form.cleaned_data.get("content") or 'new'
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-                
+
             if request.user.is_authenticated():
                 user = MainModels.User.objects.get(username = request.user)
                 pointsreq  = pointsreq.extra(
@@ -255,9 +255,9 @@ class PointsList(View):
                         'currentvisit': 'SELECT 0 '
                     }
                 )
-                
+
             points  = pointsreq[offset:limit].all()
-            
+
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}, 'comments': {'fields': ('txt', 'created', 'author'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}}), mimetype="application/json")
         else:
@@ -270,21 +270,21 @@ class PointsList(View):
 class PointAdd(PointsBaseView):
     http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
         status = 2
         errors = []
-        
+
         params = request.POST
         form = forms.AddPointForm(params)
         if form.is_valid():
             point = form.save(commit=False)
-            
+
             person = MainModels.Person.objects.get(username=request.user)
             point.author = person
             point.save()
-            
+
             categories = params.get("categories")
             if categories:
                 try:
@@ -301,7 +301,7 @@ class PointAdd(PointsBaseView):
                 images = params_form.cleaned_data.get('imgs', None)
                 if images:
                     try:
-                        images = json.loads(images)  
+                        images = json.loads(images)
                     except:
                         status = 1
                         errors.append("некорректно заданы изображения")
@@ -312,14 +312,14 @@ class PointAdd(PointsBaseView):
                             except:
                                 status = 1
                                 message = "ошибка добавления изображения"
-                                if message not in errors: errors.appen(message)
-                
+                                if message not in errors: errors.append(message)
+
                 point.save()
-                
+
                 reports = params_form.cleaned_data.get('feedbacks', None)
                 if reports:
                     try:
-                        reports = json.loads(reports)  
+                        reports = json.loads(reports)
                     except:
                         status = 1
                         errors.append("некорректно заданы отзывы")
@@ -335,13 +335,13 @@ class PointAdd(PointsBaseView):
                                     except:
                                         status = 1
                                         message = "ошибка добавления отзыва"
-                                        if message not in errors: errors.appen(message)
+                                        if message not in errors: errors.append(message)
                         point.save()
-                    
+
                 tags = params_form.cleaned_data.get("tags")
                 if tags:
                     try:
-                        tags = json.loads(tags)    
+                        tags = json.loads(tags)
                     except:
                         status = 1
                         errors.append("некорректно заданы метки")
@@ -353,14 +353,14 @@ class PointAdd(PointsBaseView):
                                 new_tag = TagsModels.Tags.objects.filter(name=tag)
                             if new_tag.count() == 0:
                                 new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
-                            else: new_tag = new_tag[0]
+                            else:new_tag = new_tag[0]
                             point.tags.add(new_tag)
                         point.save()
-            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)});
+            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)})
         else:
             e = form.errors
             for er in e:
-                errors.append(er +':'+e[er][0])
+                errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})
 
 
@@ -372,17 +372,17 @@ class PointEdit(PointsBaseView):
 
         status = 2
         errors = []
-        
+
         params = request.GET
         form = forms.IdForm(params)
         if not form.is_valid():
             return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места"})
-        
+
         form = forms.AddPointForm(params, instance=MainModels.Points.objects.get(pk=form.cleaned_data['id']))
         if form.is_valid():
             point = form.save()
             person = MainModels.Person.objects.get(username=request.user)
-            
+
             categories = params.get("categories")
             if categories:
                 try:
@@ -401,7 +401,7 @@ class PointEdit(PointsBaseView):
                 images = params_form.cleaned_data.get('imgs', None)
                 if images:
                     try:
-                        images = json.loads(images)  
+                        images = json.loads(images)
                     except:
                         status = 1
                         errors.append("некорректно заданы изображения")
@@ -412,14 +412,14 @@ class PointEdit(PointsBaseView):
                             except:
                                 status = 1
                                 message = "ошибка добавления изображения"
-                                if message not in errors: errors.appen(message)
-                
+                                if message not in errors: errors.append(message)
+
                 point.save()
-                
+
                 reports = params_form.cleaned_data.get('feedbacks', None)
                 if reports:
                     try:
-                        reports = json.loads(reports)  
+                        reports = json.loads(reports)
                     except:
                         status = 1
                         errors.append("некорректно заданы отзывы")
@@ -435,14 +435,14 @@ class PointEdit(PointsBaseView):
                                     except:
                                         status = 1
                                         message = "ошибка добавления отзыва"
-                                        if message not in errors: errors.appen(message)
+                                        if message not in errors: errors.append(message)
                         point.save()
-                    
+
                 tags = params_form.cleaned_data.get("tags")
                 if tags:
                     try:
                         print tags
-                        tags = json.loads(tags)    
+                        tags = json.loads(tags)
                     except:
                         status = 1
                         errors.append("некорректно заданы метки")
@@ -477,8 +477,8 @@ class PointDel(PointsBaseView):
         if form.is_valid():
             pk = form.cleaned_data["id"]
             point = get_object_or_404(MainModels.Points, pk=pk)
-            
+
             CommentsModels.Comments.objects(content_object=point).delete()
             point.delete()
             return JsonHTTPResponse({"id":pk, "status":"Ошибка удаления"})
-        return JsonHTTPResponse({"id":0, "status":"Ошибка удаления"})   
+        return JsonHTTPResponse({"id":0, "status":"Ошибка удаления"})
