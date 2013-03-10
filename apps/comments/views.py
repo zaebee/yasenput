@@ -74,7 +74,7 @@ class CommentAdd(CommentBaseView):
                                                                 }
                                                             }),
                                 mimetype="application/json")
-        return HttpResponse(simplejson.dumps({'id':0,'status':form._errors}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id': 0, 'status': form._errors}), mimetype="application/json")
 
 class CommentDel(CommentBaseView):
     http_method_names = ('post',)
@@ -82,10 +82,12 @@ class CommentDel(CommentBaseView):
     def post(self, request):
         pk = request.POST.get('id')
         status = 0
+        txt = ''
         try:
             comment = Comments.objects.get(pk=pk, author=request.user.get_profile())
         except Comments.DoesNotExist:
-            status = u'Указаный объект не найден'
+            txt = u'Указаный объект не найден'
+            status = 1
         else:
             comment.delete()
-        return HttpResponse(simplejson.dumps({'id':pk, 'status':status}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id':pk, 'txt':txt, 'status':status}), mimetype="application/json")

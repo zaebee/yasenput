@@ -251,7 +251,7 @@ def routes(request, page):
             routesreq  = routesreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')[offset:limit].all()
     routes  = routesreq[offset:limit].all()
     json = YpSerialiser()
-    return HttpResponse(json.serialize(routes, relations={'author':{'fields':('first_name','last_name','avatar')},'points':{'relations':{'imgs':{'extras':('thumbnail80','thumbnail325',)},'author':{'fields':('first_name','last_name','avatar')}}}}), mimetype="application/json")
+    return HttpResponse(json.serialize(routes, relations={'author': {'fields': ('first_name', 'last_name', 'avatar')},'points': {'relations': {'imgs':{'extras':('thumbnail80', 'thumbnail325',)}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}}}}), mimetype="application/json")
 
 def wantvisit(request):
     #todo Сделать проверку на ajax

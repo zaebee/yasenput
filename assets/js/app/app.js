@@ -4,6 +4,39 @@ $(function(){
     window.page = 1;
     window.content = 'new';
     window.category = 'Туризм';
+    //
+    var methodMap = {
+        'create': 'POST',
+        'update': 'PUT',
+        'patch':  'PATCH',
+        'delete': 'DELETE',
+        'read':   'GET'
+    };
+    PointComment = Backbone.Model.extend({
+        url: '/comments',
+        // emulateHTTP: true,
+        sync:  function(method, model, options) {
+            console.log('Sync!');
+            console.log(options);
+            options.type = 'POST';
+            switch (method) {
+                case "read":
+                    options.url = model.url + '/'
+                    break;
+                case "create":
+                    options.url = model.url + '/add'
+                    break;
+                case "update":
+                    options.url = model.url + '/'
+                    break;
+                case "delete":
+                    options.url = model.url + '/del'
+            };
+            return Backbone.sync(method, model, options);
+        }
+    });
+    window.pointComment = new PointComment();
+    // 
     /* -------------------- Model point---------------- */
     var Point = Backbone.Model.extend({
         defaults: function() {
@@ -41,7 +74,8 @@ $(function(){
             'blur label':"blurComment",
             'click .a-photo':"detailPlace",
             'click .a-want':"wantvisit",
-            'click .a-like':"likepoint"
+            'click .a-like':"likepoint",
+           
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
             //}
@@ -109,13 +143,28 @@ $(function(){
         addComment:function (e){
             e.preventDefault();
             var self = this;
-            if(self.$el.find('.add-comment textarea').val().toString() != 0){
+            if( $.trim( $(e.currentTarget).find('textarea').val() ).length > 0 ) {
+                console.log('send!');
+                object_id = self.model.get('id');
+                type = 12;
+                txt = self.$el.find('.add-comment textarea').val();
+
+                console.log('object_id: ', object_id);
+                console.log('type: ', type);
+                console.log('txt: ', txt);
+                data = {
+                    object_id: object_id,
+                    type: type,
+                    txt: txt
+                };
+                data = JSON.stringify( data );
 
                 $.ajax({
                     type: "POST",
                     url: "comments/add",
                     crossDomain: false,
                     dataType:'json',
+                    data: data,
                     data: {
                         object_id: self.model.get('id'),
                         type:12,
@@ -132,6 +181,7 @@ $(function(){
                         alert(status);
                     }
                 });
+
             }
             self.$el.find('.add-comment textarea').blur();
         },
@@ -354,7 +404,7 @@ $(function(){
                 },
                 success: function(){
                    // myMap.geoObjects.add(pointCollection);
-                    self.trigger('change');
+                    // self.trigger('change');
                 }
             });
             self.setURL();
@@ -362,6 +412,7 @@ $(function(){
         }
     });
     var Points = new PointList;
+    window.Points = Points;
     /* ----------------- Model route---------------- */
     var Route = Backbone.Model.extend({
 
@@ -380,8 +431,10 @@ $(function(){
     var AppView = Backbone.View.extend({
         el: $("#tab-new"),
         collection:Points,
+        deferred: $.Deferred(),
         initialize: function() {
-            Points.bind('change', this.onListChange, this);
+            // Points.bind('change', this.onListChange, this);
+            Points.bind('reset', this.onListChange, this);
             Points.on("add", this.addPoint, this);
             //Points.on("detailpoint", this.detailpoint(var point), this);
             Points.on("detailpoint", function(point){
@@ -410,11 +463,21 @@ $(function(){
         onListChange: function(){
             var self = this;
             console.log('onListChange trigger');
-            _(this.collection.models).each(function( item ) {
+            this.collection.each(function( item ) {
                 var pin = new self.collection.view({model:item});
                 self.$el.append(pin.render().el);
-            }, this);
-            return self.el;
+            });
+            console.log('render complete!');
+            this.deferred.resolve();
+            // return self.el;
+            return self;
+
+            // var fragments = '';
+            // this.collection.each(function(item) {
+            //     var pin = new self.collection.view({model:item});
+            //     fragments += $(pin.render().el).html();
+            // });
+            // this.$el.append(fragments);
         }
     });
     window.App = new AppView();
@@ -429,6 +492,28 @@ $(function(){
         el:$("body"),
         mapCoords:[],
         templateAdd: _.template($('#point-add-template').html()),
+        popups: {
+            open: function (params) {
+                var callbackBefore = params.callbackBefore || function () {
+                    },
+                    callbackAfter = params.callbackAfter || function () {
+                    };
+
+                callbackBefore();
+                $(params.elem).show();
+                callbackAfter();
+            },
+            close: function (params) {
+                var callbackBefore = params.callbackBefore || function () {
+                    },
+                    callbackAfter = params.callbackAfter || function () {
+                    };
+
+                callbackBefore();
+                $(params.elem).hide();
+                callbackAfter();
+            }
+        },
         events:{
             "click .custom-checkbox":function(e){
                 var self = e.currentTarget;
@@ -538,11 +623,11 @@ $(function(){
                     $(self).closest(".drop-results").hide();
                 }
             },
-            "focus #add-new-place":function (e) {
-                var self = e.currentTarget;
-                $(self).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");
-                $(self).val("");
-            },
+//            "focus #add-new-place":function (e) {
+//                var self = e.currentTarget;
+//                $(self).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");
+//                $(self).val("");
+//            },
             "click .remove-photo":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault(); //показать окно подтверждения удаления фотки
@@ -811,7 +896,6 @@ $(function(){
                 var template = _.template($('#progress-image').html())
                 var progress = $(template());
                 $('#p-add-place .item-photo.load-photo').before(progress);
-                console.log(progress.find('.load-status'));
                 $(self).parents('form').ajaxSubmit({
                     url: "photos/add",
                     type: "POST",
@@ -859,23 +943,27 @@ $(function(){
                 });
             },
             "click #a-add-point":function(){
+                var tags = [];
+                tags.push('лыжи');
+                tags.push('сноуборд');
                 $.ajax ({
                     target: "#divToUpdate",
-                    url: "addpoint",
+                    url: "points/add",
                     type: "POST",
                     data: {
                         name: $('#p-add-place-name').val(),
                         address: $('#add-new-place').val(),
                         latitude: window.YPApp.addPointState.coords[0],
                         longitude: window.YPApp.addPointState.coords[1],
-                        imgs:window.YPApp.addPointState.imgs
+                        imgs:window.YPApp.addPointState.imgs,
+                        tags:tags
                     },
                     dataType:'json',
                     success: (function(data) {
                         if(data.r == 1){
                             $(".popup").filter(":visible").fadeOut(150, function(){
                                 $("#overlay").fadeOut(200,function(){
-                                    window.router.navigate("#!/mypoints", {trigger: true, replace: true});
+                                    //window.router.navigate("", {trigger: true, replace: true});
                                 });
                             });
                         }else{
@@ -884,12 +972,11 @@ $(function(){
                     })
                 });
             },
-            "keyup #p-add-place-name2":function(e){
+            "keyup #p-add-place-name":function(e){
                 //e.preventDefault();
                 var self = e.currentTarget;
                 if ($(self).val().length > 0){
                     var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
-                    console.log('Хуякс');
                     $dropResult.find('li').remove();
                     $.ajax({
                         type: "GET",
@@ -909,30 +996,95 @@ $(function(){
                         }
                     });
                 }
-            }
-        },
-        popups: {
-            open: function (params) {
-                var callbackBefore = params.callbackBefore || function () {
-                    },
-                    callbackAfter = params.callbackAfter || function () {
-                    };
-
-                callbackBefore();
-                $(params.elem).show();
-                callbackAfter();
             },
-            close: function (params) {
-                var callbackBefore = params.callbackBefore || function () {
-                    },
-                    callbackAfter = params.callbackAfter || function () {
-                    };
+            "keyup #add-new-place":function(e){
+                //e.preventDefault();
+                var self = e.currentTarget;
+                if ($(self).val().length > 0){
+                    var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                    ymaps.geocode($(self).val())
+                        .then(function (res) {
+                            var results = [];
+                            $dropResult.find('li').remove();
+                            res.geoObjects.each(function (geoObject) {
+                                var props = geoObject.properties,
+                                    text = props.get('text'),
+                                    name = props.get('name'),
+                                    description = props.get('description'),
+                                // tags = props.get('metaDataProperty.PSearchObjectMetaData.Tags', [])
+                                    tags = $.map(props.get('metaDataProperty.PSearchObjectMetaData') &&
+                                        props.get('metaDataProperty.PSearchObjectMetaData.Tags') || [], function (t) { return t.tag });
+                                console.log(text,name,description,tags);
+                                results.push(
+                                    text || [name, description]
+                                        .concat(tags)
+                                        .filter(Boolean)
+                                        .join(', ')
+                                );
+                            });
 
-                callbackBefore();
-                $(params.elem).hide();
-                callbackAfter();
+                            _.each(results, function(itm){
+                                $dropResult.append('<li>'+itm+'</li>')
+                            });
+                        });
+                }
+            },
+            "keyup #input-add-labels":function(e){
+                var self = e.currentTarget;
+                if ($(self).val().length > 0){
+                    var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                    $dropResult.find('li').remove();
+                    $.ajax({
+                        type: "GET",
+                        url: "tags/search",
+                        crossDomain: false,
+                        dataType:'json',
+                        data: {
+                            s:  $(self).val()
+                        },
+                        success: function(data) {
+                            _.each(data, function(itm){
+                                $dropResult.append('<li data-point-id='+itm.id+'>'+itm.name+'</li>')
+                            });
+                        },
+                        error: function (request, status, error) {
+                            alert(status);
+                        }
+                    });
+                }
+            },
+            "click #popups .scroll-box": function(e){
+                self = this;
+                if( e.target == $(self.el).find('#popups .scroll-box').get(0) ){
+                    if($("#confirm-remove-photo").is(":visible")){
+                        $("#confirm-remove-photo").hide();
+                    } else if($("#complaint-place").is(":visible")){
+                        $("#complaint-place").hide();
+                    } else if($("#complaint-photo").is(":visible")){
+                        $("#complaint-photo").hide();
+                    } else if($("#complaint-comment").is(":visible")){
+                        $("#complaint-comment").hide();
+                    } else if($("#confirm-remove-comment").is(":visible")){
+                        $("#confirm-remove-comment").hide();
+                    } else {
+                        self.popups.close({
+                            elem: $("#popups"),
+                            speed: 0,
+                            callbackBefore: function(){
+                                self.popups.close({
+                                    elem: $("#overlay")
+                                });
+                            },
+                            callbackAfter: function(){
+                                $("body").css("overflow", "visible");
+                                router.navigate('/');
+                            }
+                        });
+                    }
+                }
             }
         },
+        
         toggleCheckbox: function (label) {
             if ($("input[type=checkbox]", label).is(":checked")) {
                 label.addClass("checked");
@@ -978,6 +1130,7 @@ $(function(){
             $("#popups .viewport").scrollTop(Math.abs(scrollTop));
         },
         onFocusDropInput: function (input, withMatch){
+            console.log(input);
             var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
 
             $(input).closest(".input-line").css("z-index", 2134);
@@ -985,7 +1138,7 @@ $(function(){
             $(".hover", $dropResult).removeClass("hover");
             $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
                 var next;
-                console.log(next)
+                //console.log(next)
                 if(e.which == 38){
                     if($(".hover", $dropResult).length){
                         if($(".hover", $dropResult).prev().length){
@@ -1030,25 +1183,6 @@ $(function(){
                                 input.val($(".hover", $dropResult).text());
                             }
                         }
-                        if($('#p-add-place-name').val().length == 0){
-                            $.ajax({
-                                type: "GET",
-                                url: "points/search",
-                                crossDomain: false,
-                                dataType:'json',
-                                data: {
-                                    s:  $('#p-add-place-name').val()
-                                },
-                                success: function(data) {
-                                    _.each(data, function(itm){
-                                        $dropResult.append('<li>'+itm.name+'2</li>')
-                                    });
-                                },
-                                error: function (request, status, error) {
-                                    alert(status);
-                                }
-                            });
-                        }
                         $dropResult.hide();
                         $(input).closest(".input-line").css("z-index", 1);
                         input.blur();
@@ -1081,10 +1215,8 @@ $(function(){
                         }
                     }
                 }
-
                     if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
                 });
-
                 $(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
                     if($dropResult.is(":visible")){
                         setTimeout(function(){
@@ -1147,6 +1279,11 @@ $(function(){
         },
         detailPoint:function(point){
             console.log('router detailPoint');
+            this.main();
+            App.deferred.then(function(){
+                console.log('in router render complete');
+                $(App.el).find('.item[data-point-id="'+point+'"]').find('.a-photo').click();
+            });
             //window.App.setCollection(Points);
             //window.App.render();
             //window.YPApp.pppp(point);

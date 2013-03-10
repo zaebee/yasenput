@@ -3,15 +3,9 @@ __author__ = 'art'
 import uuid
 import os.path
 from django.db import models
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from sorl.thumbnail.shortcuts import get_thumbnail
 from apps.main.models import Person
-
-PHOTOS_ALLOWED_MODELS = (
-    ('12', 'main.Points'),
-)
 
 def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
