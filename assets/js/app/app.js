@@ -5,37 +5,53 @@ $(function(){
     window.content = 'new';
     window.category = 'Туризм';
     //
-    var methodMap = {
-        'create': 'POST',
-        'update': 'PUT',
-        'patch':  'PATCH',
-        'delete': 'DELETE',
-        'read':   'GET'
-    };
     PointComment = Backbone.Model.extend({
         url: '/comments',
         // emulateHTTP: true,
         sync:  function(method, model, options) {
             console.log('Sync!');
             console.log(options);
-            options.type = 'POST';
-            switch (method) {
-                case "read":
-                    options.url = model.url + '/'
-                    break;
-                case "create":
-                    options.url = model.url + '/add'
-                    break;
-                case "update":
-                    options.url = model.url + '/'
-                    break;
-                case "delete":
-                    options.url = model.url + '/del'
-            };
-            return Backbone.sync(method, model, options);
-        }
+
+            // if(method == 'create'){
+            //     return $.ajax({
+            //         type:         'POST',
+            //         contentType:  'application/x-www-form-urlencoded',
+            //         beforeSend:   function(xhr) {
+            //         xhr.setRequestHeader('X-HTTP-Method-Override', 'POST');
+            //     },
+            //         dataType:     'json',
+            //         url:          '/index?id=' + this.get('id') + '&email=' + this.get('email')
+            //     });
+            // } else {
+                switch (method) {
+                    case "read":
+                        options.url = model.url + '/'
+                        options.type = 'GET';
+                        break;
+                    case "create":
+                        options.url = model.url + '/add'
+                        console.log('model: ', model);
+                        options.data = 'object_id='+model.get('object_id')+'&object_type=12&txt='+encodeURI(model.get('txt'));
+                        options.type = 'POST';
+                        break;
+                    case "update":
+                        options.url = model.url + '/'
+                        break;
+                    case "delete":
+                        options.url = model.url + '/del'
+                        options.type = 'POST';
+                };
+                return Backbone.sync(method, model, options);
+            }
+        // }
     });
     window.pointComment = new PointComment();
+
+    PointComments = Backbone.Collection.extend({
+        url: '/comments',
+        model: PointComment,
+    });
+    window.pointComments = new PointComments({model: window.pointComment})
     // 
     /* -------------------- Model point---------------- */
     var Point = Backbone.Model.extend({
@@ -74,7 +90,8 @@ $(function(){
             'blur label':"blurComment",
             'click .a-photo':"detailPlace",
             'click .a-want':"wantvisit",
-            'click .a-like':"likepoint",
+            'click .a-like':"likepoint"
+           
            
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
@@ -115,6 +132,15 @@ $(function(){
                 pointCollection.add(placemark);
             }
         },
+        // showPointComments: function(event) {
+        //     var self = event.currentTarget;
+        //     event.preventDefault();
+        //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+        //     console.log('point id: ', pointId);
+        //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
+        //     console.log('this', this);
+        //     this.collection.fetchPointComments()
+        // },
         hoverImgIn:function(){
             $(this.el).find('.a-want').show();
             $(this.el).find('.a-like').show();
@@ -146,41 +172,44 @@ $(function(){
             if( $.trim( $(e.currentTarget).find('textarea').val() ).length > 0 ) {
                 console.log('send!');
                 object_id = self.model.get('id');
-                type = 12;
                 txt = self.$el.find('.add-comment textarea').val();
 
                 console.log('object_id: ', object_id);
-                console.log('type: ', type);
                 console.log('txt: ', txt);
                 data = {
                     object_id: object_id,
-                    type: type,
                     txt: txt
                 };
                 data = JSON.stringify( data );
 
-                $.ajax({
-                    type: "POST",
-                    url: "comments/add",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: data,
-                    data: {
-                        object_id: self.model.get('id'),
-                        type:12,
-                        txt:self.$el.find('.add-comment textarea').val()
-                    },
-                    success: function(data) {
-                        self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
-                        self.$el.find('.add-comment textarea').val('');
-                        var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
-                        self.$el.find('.ico-comment-small').parent().contents().last().remove();
-                        self.$el.find('.ico-comment-small').parent().append(cm+1);
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
+                self.model.get('pointComments').create({
+                    object_id: object_id,
+                    txt: txt
                 });
+
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "comments/add",
+                //     crossDomain: false,
+                //     dataType:'json',
+                //     // data: data,
+                //     data: {
+                //         object_id: self.model.get('id'),
+                //         object_type:12,
+                //         txt:self.$el.find('.add-comment textarea').val()
+                //     },
+                //     success: function(data) {
+                //         self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
+                //         self.$el.find('.add-comment textarea').val('');
+                //         var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
+                //         self.$el.find('.ico-comment-small').parent().contents().last().remove();
+                //         self.$el.find('.ico-comment-small').parent().append(cm+1);
+                //     },
+                //     error: function (request, status, error) {
+                //         alert(status);
+                //     }
+                // });
 
             }
             self.$el.find('.add-comment textarea').blur();
@@ -409,6 +438,23 @@ $(function(){
             });
             self.setURL();
             self.fetch(options);
+        },
+        fetchPointComments: function(point){
+            self = this;
+            pointComments = new window.PointComments();
+            point.set({pointComments: pointComments});
+            pointComments.fetch({
+                data: {
+                    object_id: point.get('id'),
+                    object_type: 12
+                },
+                success: function(collection, response, options){
+                    console.log('fetchPointComments '+point.get('id')+' success');
+                    self.trigger('fetchPointComments', point);
+                } 
+            });
+
+            console.log('fetch the comments!');
         }
     });
     var Points = new PointList;
@@ -432,7 +478,12 @@ $(function(){
         el: $("#tab-new"),
         collection:Points,
         deferred: $.Deferred(),
+        template_pointComment: _.template( $('#point-comment-template').html() ),
+        events: {
+            'click .a-comment': 'showPointComments',
+        },
         initialize: function() {
+            _.bindAll(this, 'showPointComments');
             // Points.bind('change', this.onListChange, this);
             Points.bind('reset', this.onListChange, this);
             Points.on("add", this.addPoint, this);
@@ -440,6 +491,8 @@ $(function(){
             Points.on("detailpoint", function(point){
                 console.log(point)
             }, this);
+            this.collection.bind('fetchPointComments', this.renderPointComments, this);
+
         },
         clear: function(){
             var self = this;
@@ -478,6 +531,36 @@ $(function(){
             //     fragments += $(pin.render().el).html();
             // });
             // this.$el.append(fragments);
+        },
+        showPointComments: function(event) {
+            var self = event.currentTarget;
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            console.log('point id: ', pointId);
+            $(self).closest(".item").find(".comments").show().find("textarea").focus();
+            console.log('this', this);
+            point = this.collection.get(pointId);
+            console.log('point: ', point);
+            if (point.get('pointComments') != undefined) {
+                console.log('show the comments');
+            } else {
+                console.log('we havent comments yet');
+                this.collection.fetchPointComments(point);                
+            }
+
+            // this.collection.fetchPointComments()
+        },
+        renderPointComments: function(point){
+            self = this;
+            itemElem = this.$el.find('.item[data-point-id="'+point.get('id')+'"]');
+            commentsPlace = itemElem.find('.comments>ul');
+            console.log('point: ', point);
+
+            fragments = '';
+            point.get('pointComments').each(function(comment){
+                fragments += self.template_pointComment( comment.toJSON() )
+            });
+            commentsPlace.append(fragments);
         }
     });
     window.App = new AppView();
@@ -774,13 +857,15 @@ $(function(){
                 var self = e.currentTarget;
                 $(self).closest(".toggle-area").addClass("focus");
             },
-            "click .content .item .a-comment":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();
+            // "click .content .item .a-comment":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();
+            //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            //     console.log('point id: ', pointId);
+            //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
 
-                $(self).closest(".item").find(".comments").show().find("textarea").focus();
-                //$("html, body").scrollTop($(window).scrollTop()+250);
-            },
+            //     //$("html, body").scrollTop($(window).scrollTop()+250);
+            // },
             "click #tab-map .m-ico-group .m-ico":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault();
