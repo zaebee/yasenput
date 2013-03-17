@@ -19,7 +19,7 @@ class Photos(models.Model):
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_like_users', serialize=True)
 
     def __unicode__(self):
-        return self.name
+        return self.img.path
 
     def thumbnail80(self):
         im = get_thumbnail(self.img, '80')
