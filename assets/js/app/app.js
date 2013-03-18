@@ -4,23 +4,62 @@ $(function(){
     window.page = 1;
     window.content = 'new';
     window.category = 'Туризм';
-    /* -------------------- Model point---------------- */
-    var Point = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                likes:0,
-                visits:0,
-                description:'...',
-                img:'',
-                name:'...',
-                address:'...',
-                comments:0
-            };
-        },
-        initialize: function() {
+    //
+    // PointComment = Backbone.Model.extend({
+    //     url: '/comments',
+    //     // emulateHTTP: true,
+    //     sync:  function(method, model, options) {
+    //         console.log('Sync!');
+    //         console.log(options);
+    //             switch (method) {
+    //                 case "read":
+    //                     options.url = model.url + '/'
+    //                     options.type = 'GET';
+    //                     break;
+    //                 case "create":
+    //                     options.url = model.url + '/add'
+    //                     console.log('model: ', model);
+    //                     options.data = 'object_id='+model.get('object_id')+'&object_type=12&txt='+encodeURI(model.get('txt'));
+    //                     options.type = 'POST';
+    //                     break;
+    //                 case "update":
+    //                     options.url = model.url + '/'
+    //                     break;
+    //                 case "delete":
+    //                     options.url = model.url + '/del'
+    //                     options.type = 'POST';
+    //             };
+    //             return Backbone.sync(method, model, options);
+    //         }
+    //     // }
+    // });
+    // window.pointComment = new PointComment();
 
-        }
-    });
+    // PointComments = Backbone.Collection.extend({
+    //     url: '/comments',
+    //     model: PointComment,
+    // });
+    // window.pointComments = new PointComments({model: window.pointComment})
+    // 
+    /* -------------------- Model point---------------- */
+  //   var Point = Backbone.Model.extend({
+  //       defaults: function() {
+  //           return {
+		// author:'...',
+		// visits:0,
+  //               likes:0,
+  //               description:'...',
+  //               imgs:'',
+  //               name:'...',
+  //               address:'...',
+		// tags:0,
+  //               feedbacks:0
+  //           };
+  //       },
+  //       initialize: function() {
+
+  //       }
+  //   });
     /* -------------------- View point-------------------- */
     var PointView = Backbone.View.extend({
         template: _.template($('#point-template').html()),
@@ -30,8 +69,6 @@ $(function(){
                                     '<div class="author-comment"><%- author %></div>' +
                                     '<p><%- comment %></p></div></li>'),
         events: {
-            'mouseenter .photo':"hoverImgIn",
-            'mouseleave .photo':"hoverImgOut",
             'focus textarea':"focusComment",
             'click label':function(){
                 this.$el.find('textarea').focus();
@@ -42,6 +79,8 @@ $(function(){
             'click .a-photo':"detailPlace",
             'click .a-want':"wantvisit",
             'click .a-like':"likepoint"
+           
+           
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
             //}
@@ -81,16 +120,15 @@ $(function(){
                 pointCollection.add(placemark);
             }
         },
-        hoverImgIn:function(){
-            $(this.el).find('.a-want').show();
-            $(this.el).find('.a-like').show();
-            $(this.el).find('.a-comment').show();
-        },
-        hoverImgOut:function(){
-            $(this.el).find('.a-want').hide();
-            $(this.el).find('.a-like').hide();
-            $(this.el).find('.a-comment').hide();
-        },
+        // showPointComments: function(event) {
+        //     var self = event.currentTarget;
+        //     event.preventDefault();
+        //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+        //     console.log('point id: ', pointId);
+        //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
+        //     console.log('this', this);
+        //     this.collection.fetchPointComments()
+        // },
         focusComment:function(){
             //console.log(x.target);
             var me = $(this.el).find('textarea');
@@ -109,29 +147,48 @@ $(function(){
         addComment:function (e){
             e.preventDefault();
             var self = this;
-            if(self.$el.find('.add-comment textarea').val().toString() != 0){
+            if( $.trim( $(e.currentTarget).find('textarea').val() ).length > 0 ) {
+                console.log('send!');
+                object_id = self.model.get('id');
+                txt = self.$el.find('.add-comment textarea').val();
 
-                $.ajax({
-                    type: "POST",
-                    url: "comments/add",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: {
-                        object_id: self.model.get('id'),
-                        type:12,
-                        txt:self.$el.find('.add-comment textarea').val()
-                    },
-                    success: function(data) {
-                        self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
-                        self.$el.find('.add-comment textarea').val('');
-                        var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
-                        self.$el.find('.ico-comment-small').parent().contents().last().remove();
-                        self.$el.find('.ico-comment-small').parent().append(cm+1);
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
+                console.log('object_id: ', object_id);
+                console.log('txt: ', txt);
+                data = {
+                    object_id: object_id,
+                    txt: txt
+                };
+                data = JSON.stringify( data );
+
+                self.model.get('pointComments').create({
+                    object_id: object_id,
+                    txt: txt
                 });
+
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "comments/add",
+                //     crossDomain: false,
+                //     dataType:'json',
+                //     // data: data,
+                //     data: {
+                //         object_id: self.model.get('id'),
+                //         object_type:12,
+                //         txt:self.$el.find('.add-comment textarea').val()
+                //     },
+                //     success: function(data) {
+                //         self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
+                //         self.$el.find('.add-comment textarea').val('');
+                //         var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
+                //         self.$el.find('.ico-comment-small').parent().contents().last().remove();
+                //         self.$el.find('.ico-comment-small').parent().append(cm+1);
+                //     },
+                //     error: function (request, status, error) {
+                //         alert(status);
+                //     }
+                // });
+
             }
             self.$el.find('.add-comment textarea').blur();
         },
@@ -333,91 +390,158 @@ $(function(){
     });
 
     /* ----------------- Collection point---------------- */
-    PointList = Backbone.Collection.extend({
-        model: Point,
-        view:PointView,
-        url:'/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.mapBounds,
-        mapCoords:function(){
-            //return window.YPApp.mapCoords();
-            //return window.myMap.getBounds();
-            return 'dgdg';
-        },
-        setURL:function(){
-            console.log(window.YPApp.mapBounds());
-            this.url = '/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.YPApp.mapBounds().left+'&coord_right='+window.YPApp.mapBounds().right
-        },
-        reload: function(){
-            var self = this;
-            var options = ({
-                error:function(){
-                    console.log('Ошибка обновления записей!');
-                },
-                success: function(){
-                   // myMap.geoObjects.add(pointCollection);
-                    self.trigger('change');
-                }
-            });
-            self.setURL();
-            self.fetch(options);
-        }
-    });
-    var Points = new PointList;
+    // PointList = Backbone.Collection.extend({
+    //     model: Point,
+    //     view:PointView,
+    //     url:'/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.mapBounds,
+    //     mapCoords:function(){
+    //         //return window.YPApp.mapCoords();
+    //         //return window.myMap.getBounds();
+    //         return 'dgdg';
+    //     },
+    //     setURL:function(){
+    //         console.log(window.YPApp.mapBounds());
+    //         this.url = '/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.YPApp.mapBounds().left+'&coord_right='+window.YPApp.mapBounds().right
+    //     },
+    //     reload: function(){
+    //         var self = this;
+    //         var options = ({
+    //             error:function(){
+    //                 console.log('Ошибка обновления записей!');
+    //             },
+    //             success: function(){
+    //                // myMap.geoObjects.add(pointCollection);
+    //                 // self.trigger('change');
+    //             }
+    //         });
+    //         self.setURL();
+    //         self.fetch(options);
+    //     },
+    //     fetchPointComments: function(point){
+    //         self = this;
+    //         pointComments = new window.PointComments();
+    //         point.set({pointComments: pointComments});
+    //         pointComments.fetch({
+    //             data: {
+    //                 object_id: point.get('id'),
+    //                 object_type: 12
+    //             },
+    //             success: function(collection, response, options){
+    //                 console.log('fetchPointComments '+point.get('id')+' success');
+    //                 self.trigger('fetchPointComments', point);
+    //             } 
+    //         });
+
+    //         console.log('fetch the comments!');
+    //     }
+    // });
+    // var Points = new PointList;
+    // window.Points = Points;
     /* ----------------- Model route---------------- */
-    var Route = Backbone.Model.extend({
+    // var Route = Backbone.Model.extend({
 
-    });
-    /* -------------------- View route-------------------- */
-    var RouteView = Backbone.View.extend({
+    // });
+    // /* -------------------- View route-------------------- */
+    // var RouteView = Backbone.View.extend({
 
-    });
+    // });
 
-    /* ----------------- Collection route---------------- */
-    var Routes = Backbone.Collection.extend({
+    // /* ----------------- Collection route---------------- */
+    // var Routes = Backbone.Collection.extend({
 
-    });
+    // });
 
     /* -----------------   AppView   ---------------- */
-    var AppView = Backbone.View.extend({
-        el: $("#tab-new"),
-        collection:Points,
-        initialize: function() {
-            Points.bind('change', this.onListChange, this);
-            Points.on("add", this.addPoint, this);
-            //Points.on("detailpoint", this.detailpoint(var point), this);
-            Points.on("detailpoint", function(point){
-                console.log(point)
-            }, this);
-        },
-        clear: function(){
-            var self = this;
-            self.$el.empty();
-            return self.el;
-        },
-        render: function() {
-            var self = this;
-            self.clear();
-            console.log(self.collection);
-            self.collection.reload();
-        },
-        setCollection:function(collection){
-            console.log('collection');
-            var self = this;
-            if(collection != undefined){
-                self.collection = collection;
-            };
-            collection.setURL;
-        },
-        onListChange: function(){
-            var self = this;
-            console.log('onListChange trigger');
-            _(this.collection.models).each(function( item ) {
-                var pin = new self.collection.view({model:item});
-                self.$el.append(pin.render().el);
-            }, this);
-            return self.el;
-        }
-    });
-    window.App = new AppView();
+    // var AppView = Backbone.View.extend({
+    //     el: $("#tab-new"),
+    //     collection:Points,
+    //     deferred: $.Deferred(),
+    //     template_pointComment: _.template( $('#point-comment-template').html() ),
+    //     events: {
+    //         'click .a-comment': 'showPointComments',
+    //     },
+    //     initialize: function() {
+    //         _.bindAll(this, 'showPointComments');
+    //         // Points.bind('change', this.onListChange, this);
+    //         Points.bind('reset', this.onListChange, this);
+    //         Points.on("add", this.addPoint, this);
+    //         //Points.on("detailpoint", this.detailpoint(var point), this);
+    //         Points.on("detailpoint", function(point){
+    //             console.log(point)
+    //         }, this);
+    //         this.collection.bind('fetchPointComments', this.renderPointComments, this);
+
+    //     },
+    //     clear: function(){
+    //         var self = this;
+    //         self.$el.empty();
+    //         return self.el;
+    //     },
+    //     render: function() {
+    //         var self = this;
+    //         self.clear();
+    //         console.log(self.collection);
+    //         self.collection.reload();
+    //     },
+    //     setCollection:function(collection){
+    //         console.log('collection');
+    //         var self = this;
+    //         if(collection != undefined){
+    //             self.collection = collection;
+    //         };
+    //         collection.setURL;
+    //     },
+    //     onListChange: function(){
+    //         var self = this;
+    //         console.log('onListChange trigger');
+    //         this.collection.each(function( item ) {
+    //             var pin = new self.collection.view({model:item});
+    //             self.$el.append(pin.render().el);
+    //         });
+    //         console.log('render complete!');
+    //         this.deferred.resolve();
+    //         // return self.el;
+    //         return self;
+
+    //         // var fragments = '';
+    //         // this.collection.each(function(item) {
+    //         //     var pin = new self.collection.view({model:item});
+    //         //     fragments += $(pin.render().el).html();
+    //         // });
+    //         // this.$el.append(fragments);
+    //     },
+    //     showPointComments: function(event) {
+    //         var self = event.currentTarget;
+    //         event.preventDefault();
+    //         pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+    //         console.log('point id: ', pointId);
+    //         $(self).closest(".item").find(".comments").show().find("textarea").focus();
+    //         console.log('this', this);
+    //         point = this.collection.get(pointId);
+    //         console.log('point: ', point);
+    //         if (point.get('pointComments') != undefined) {
+    //             console.log('show the comments');
+    //         } else {
+    //             console.log('we havent comments yet');
+    //             this.collection.fetchPointComments(point);                
+    //         }
+
+    //         // this.collection.fetchPointComments()
+    //     },
+    //     renderPointComments: function(point){
+    //         self = this;
+    //         itemElem = this.$el.find('.item[data-point-id="'+point.get('id')+'"]');
+    //         commentsPlace = itemElem.find('.comments>ul');
+    //         console.log('point: ', point);
+
+    //         fragments = '';
+    //         point.get('pointComments').each(function(comment){
+    //             fragments += self.template_pointComment( comment.toJSON() )
+    //         });
+    //         commentsPlace.append(fragments);
+    //     }
+    // });
+    // window.App = new AppView();
 
     /* -----------------   main Application   ---------------- */
 
@@ -429,6 +553,28 @@ $(function(){
         el:$("body"),
         mapCoords:[],
         templateAdd: _.template($('#point-add-template').html()),
+        popups: {
+            open: function (params) {
+                var callbackBefore = params.callbackBefore || function () {
+                    },
+                    callbackAfter = params.callbackAfter || function () {
+                    };
+
+                callbackBefore();
+                $(params.elem).show();
+                callbackAfter();
+            },
+            close: function (params) {
+                var callbackBefore = params.callbackBefore || function () {
+                    },
+                    callbackAfter = params.callbackAfter || function () {
+                    };
+
+                callbackBefore();
+                $(params.elem).hide();
+                callbackAfter();
+            }
+        },
         events:{
             "click .custom-checkbox":function(e){
                 var self = e.currentTarget;
@@ -689,13 +835,15 @@ $(function(){
                 var self = e.currentTarget;
                 $(self).closest(".toggle-area").addClass("focus");
             },
-            "click .content .item .a-comment":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();
+            // "click .content .item .a-comment":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();
+            //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            //     console.log('point id: ', pointId);
+            //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
 
-                $(self).closest(".item").find(".comments").show().find("textarea").focus();
-                //$("html, body").scrollTop($(window).scrollTop()+250);
-            },
+            //     //$("html, body").scrollTop($(window).scrollTop()+250);
+            // },
             "click #tab-map .m-ico-group .m-ico":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault();
@@ -967,30 +1115,39 @@ $(function(){
                         }
                     });
                 }
-            }
-        },
-        popups: {
-            open: function (params) {
-                var callbackBefore = params.callbackBefore || function () {
-                    },
-                    callbackAfter = params.callbackAfter || function () {
-                    };
-
-                callbackBefore();
-                $(params.elem).show();
-                callbackAfter();
             },
-            close: function (params) {
-                var callbackBefore = params.callbackBefore || function () {
-                    },
-                    callbackAfter = params.callbackAfter || function () {
-                    };
-
-                callbackBefore();
-                $(params.elem).hide();
-                callbackAfter();
+            "click #popups .scroll-box": function(e){
+                self = this;
+                if( e.target == $(self.el).find('#popups .scroll-box').get(0) ){
+                    if($("#confirm-remove-photo").is(":visible")){
+                        $("#confirm-remove-photo").hide();
+                    } else if($("#complaint-place").is(":visible")){
+                        $("#complaint-place").hide();
+                    } else if($("#complaint-photo").is(":visible")){
+                        $("#complaint-photo").hide();
+                    } else if($("#complaint-comment").is(":visible")){
+                        $("#complaint-comment").hide();
+                    } else if($("#confirm-remove-comment").is(":visible")){
+                        $("#confirm-remove-comment").hide();
+                    } else {
+                        self.popups.close({
+                            elem: $("#popups"),
+                            speed: 0,
+                            callbackBefore: function(){
+                                self.popups.close({
+                                    elem: $("#overlay")
+                                });
+                            },
+                            callbackAfter: function(){
+                                $("body").css("overflow", "visible");
+                                router.navigate('/');
+                            }
+                        });
+                    }
+                }
             }
         },
+        
         toggleCheckbox: function (label) {
             if ($("input[type=checkbox]", label).is(":checked")) {
                 label.addClass("checked");
@@ -1171,69 +1328,74 @@ $(function(){
     });
     window.YPApp = new YPApp();
 
-    var Router;
-    Router = Backbone.Router.extend({
-        routes:{
-            "":"main",
-            "detailpoint/:point":"detailPoint",
-            "tag/*tag(/z/:point)":"test"
-        },
-        main:function(){
-            window.App.setCollection(Points);
-            window.App.render();
-            return false;
-        },
-        detailPoint:function(point){
-            console.log('router detailPoint');
-            //window.App.setCollection(Points);
-            //window.App.render();
-            //window.YPApp.pppp(point);
-            //return false;
-        }
-    });
-    window.router = new Router();
+    // var Router;
+    // Router = Backbone.Router.extend({
+    //     routes:{
+    //         "":"main",
+    //         "detailpoint/:point":"detailPoint",
+    //         "tag/*tag(/z/:point)":"test"
+    //     },
+    //     main:function(){
+    //         window.App.setCollection(Points);
+    //         window.App.render();
+    //         return false;
+    //     },
+    //     detailPoint:function(point){
+    //         console.log('router detailPoint');
+    //         this.main();
+    //         App.deferred.then(function(){
+    //             console.log('in router render complete');
+    //             $(App.el).find('.item[data-point-id="'+point+'"]').find('.a-photo').click();
+    //         });
+    //         //window.App.setCollection(Points);
+    //         //window.App.render();
+    //         //window.YPApp.pppp(point);
+    //         //return false;
+    //     }
+    // });
+    // window.router = new Router();
 
 ////// Карты
-    ymaps.ready(init);
-    function init(){
-        pointCollection = new ymaps.GeoObjectCollection();
-        window.YPApp.mapCoords = [ymaps.geolocation.latitude, ymaps.geolocation.longitude];
-        window.myMap = new ymaps.Map ("mainmap", {
-            center: window.YPApp.mapCoords,
-            //center: [60.759943,46.318655],
-            //center: [59.366972,38.788037],
-            zoom: 10
-        });
-        myMap.controls.add('zoomControl').add('typeSelector').add('searchControl');
-        coords = myMap.getCenter();
-        var labels = [];
-        ymaps.geocode(coords).then(function (res) {
-            console.log(labels);
-            res.geoObjects.each(function (obj) {
-                if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
-                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
-                }
-                if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'province'){
-                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine'));
-                }
-                if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'area'){
-                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName'));
-                }
-                if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName')){
-                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName'));
-                }
-                if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName')){
-                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'));
-                }
-            });
-            $.each(labels, function(index, value){
-                $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
-            })
-        });
-        window.mapBounds = myMap.getBounds()
-        console.log(window.mapBounds);
-        Backbone.history.start({pushState: true});
-    }
+    // ymaps.ready(init);
+    // function init(){
+    //     pointCollection = new ymaps.GeoObjectCollection();
+    //     window.YPApp.mapCoords = [ymaps.geolocation.latitude, ymaps.geolocation.longitude];
+    //     window.myMap = new ymaps.Map ("mainmap", {
+    //         center: window.YPApp.mapCoords,
+    //         //center: [60.759943,46.318655],
+    //         //center: [59.366972,38.788037],
+    //         zoom: 10
+    //     });
+    //     myMap.controls.add('zoomControl').add('typeSelector').add('searchControl');
+    //     coords = myMap.getCenter();
+    //     var labels = [];
+    //     ymaps.geocode(coords).then(function (res) {
+    //         console.log(labels);
+    //         res.geoObjects.each(function (obj) {
+    //             if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
+    //                 labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+    //             }
+    //             if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'province'){
+    //                 labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine'));
+    //             }
+    //             if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'area'){
+    //                 labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName'));
+    //             }
+    //             if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName')){
+    //                 labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName'));
+    //             }
+    //             if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName')){
+    //                 labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'));
+    //             }
+    //         });
+    //         $.each(labels, function(index, value){
+    //             $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
+    //         })
+    //     });
+    //     window.mapBounds = myMap.getBounds()
+    //     console.log(window.mapBounds);
+    //     Backbone.history.start({pushState: true});
+    // }
 
     $('.nonav').live('click',function(e){
         e.preventDefault();

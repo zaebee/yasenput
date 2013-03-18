@@ -157,8 +157,13 @@ class PointsSearch(View):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
+# <<<<<<< HEAD
+#             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
+        
+# =======
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
 
+# >>>>>>> 1a8ba8a1a3d47d3aa1472808312920e035dbcc8a
 
 class PointsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
@@ -298,22 +303,24 @@ class PointAdd(PointsBaseView):
 
             params_form = forms.AddIdsForm(params)
             if params_form.is_valid():
-                images = params_form.cleaned_data.get('imgs', None)
-                if images:
-                    try:
-                        images = json.loads(images)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы изображения")
-                    else:
-                        for image in images:
-                            try:
-                                point.imgs.add(PhotosModels.Photos.objects.get(id=image))
-                            except:
-                                status = 1
-                                message = "ошибка добавления изображения"
-                                if message not in errors: errors.append(message)
-
+                # images = params_form.cleaned_data.get('imgs', None)
+                # if images:
+                #     try:
+                #         images = json.loads(images)
+                #     except:
+                #         status = 1
+                #         errors.append("некорректно заданы изображения")
+                #     else:
+                #         for image in images:
+                #             try:
+                #                 point.imgs.add(PhotosModels.Photos.objects.get(id=image))
+                #             except:
+                #                 status = 1
+                #                 message = "ошибка добавления изображения"
+                #                 if message not in errors: errors.append(message)
+                images = request.POST.getlist('imgs[]')
+                for img in images:
+                    point.imgs.add(PhotosModels.Photos.objects.get(id=img))
                 point.save()
 
                 reports = params_form.cleaned_data.get('feedbacks', None)

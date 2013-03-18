@@ -12,7 +12,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Artem Ushakov', 'artushakov@gmail.com'),
+# ('Artem Ushakov', 'artushakov@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -73,8 +73,8 @@ MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets'))
 STATICFILES_DIRS = (
-   os.path.normpath(os.path.join(STATIC_ROOT, '')),
-#    'd:/dev/djcode/YasenPut/assets/',
+    os.path.normpath(os.path.join(STATIC_ROOT, '')),
+    #    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets/'
 
@@ -92,7 +92,7 @@ SECRET_KEY = 'li)-cqic6#r#pfkc+y5)x%mdb^jl$e4z-n@f3vzyj#34$ti3$a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -126,7 +126,7 @@ ROOT_URLCONF = 'YasenPut.urls'
 WSGI_APPLICATION = 'YasenPut.wsgi.application'
 
 TEMPLATE_DIRS = (
-                    os.path.normpath(os.path.join(SITE_ROOT, 'templates')),
+    os.path.normpath(os.path.join(SITE_ROOT, 'templates')),
 )
 
 INSTALLED_APPS = (
@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'apps.photos',
     'apps.news',
     'apps.persons',
+    'apps.collections',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -198,7 +199,7 @@ AUTHENTICATION_BACKENDS = (
     'social_auth.backends.contrib.vkontakte.VKontakteOAuth2Backend',
     'social_auth.backends.contrib.odnoklassniki.OdnoklassnikiBackend',
     'django.contrib.auth.backends.ModelBackend',
-    )
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -206,16 +207,16 @@ AUTHENTICATION_BACKENDS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 SOCIAL_AUTH_PIPELINE = (
-#    'social_auth.backends.pipeline.social.social_auth_user',
-#    'social_auth.backends.pipeline.associate.associate_by_email',
-#    'social_auth.backends.pipeline.misc.save_status_to_session',
-##    'apps.main.pipeline.redirect_to_form',
-##    'apps.main.pipeline.username',
-#    'social_auth.backends.pipeline.user.create_user',
-#    'social_auth.backends.pipeline.social.associate_user',
-#    'social_auth.backends.pipeline.social.load_extra_data',
-#    'social_auth.backends.pipeline.user.update_user_details',
-#    'social_auth.backends.pipeline.misc.save_status_to_session',
+    #    'social_auth.backends.pipeline.social.social_auth_user',
+    #    'social_auth.backends.pipeline.associate.associate_by_email',
+    #    'social_auth.backends.pipeline.misc.save_status_to_session',
+    ##    'apps.main.pipeline.redirect_to_form',
+    ##    'apps.main.pipeline.username',
+    #    'social_auth.backends.pipeline.user.create_user',
+    #    'social_auth.backends.pipeline.social.associate_user',
+    #    'social_auth.backends.pipeline.social.load_extra_data',
+    #    'social_auth.backends.pipeline.user.update_user_details',
+    #    'social_auth.backends.pipeline.misc.save_status_to_session',
     'social_auth.backends.pipeline.social.social_auth_user',
     #'social_auth.backends.pipeline.associate.associate_by_email',
     'social_auth.backends.pipeline.user.get_username',
@@ -224,7 +225,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.load_extra_data',
     'social_auth.backends.pipeline.user.update_user_details',
     'apps.main.pipeline.get_user_avatar'
-    )
+)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -245,8 +246,8 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-        },
-    }
+            },
+        }
 }
 try:
     from .settings_local import *
