@@ -204,7 +204,7 @@ class CollectionEdit(CollectionsBaseView):
     def post(self, request, *args, **kwargs):
         errors = []
 
-        params = request.GET
+        params = request.POST
         form = forms.IdForm(params)
         if not form.is_valid():
             return JsonHTTPResponse({"status": 0, "id": "1", "txt": "Ожидается id коллекции"})
