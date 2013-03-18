@@ -8,13 +8,15 @@ $(function(){
     var Point = Backbone.Model.extend({
         defaults: function() {
             return {
+		author:'...',
+		visits:0,
                 likes:0,
-                visits:0,
                 description:'...',
-                img:'',
+                imgs:'',
                 name:'...',
                 address:'...',
-                comments:0
+		tags:0,
+                feedbacks:0
             };
         },
         initialize: function() {
