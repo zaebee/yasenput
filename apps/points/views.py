@@ -157,8 +157,13 @@ class PointsSearch(View):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
+# <<<<<<< HEAD
+#             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
+        
+# =======
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
 
+# >>>>>>> 1a8ba8a1a3d47d3aa1472808312920e035dbcc8a
 
 class PointsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)

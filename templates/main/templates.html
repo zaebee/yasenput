@@ -60,6 +60,18 @@
 
 </script>
 
+
+<script type="text/template" id="point-comment-template">
+    <li>
+        <img src="<%=author.avatar%>" alt="" class="avatar" width="29" height="30">
+        <div class="body-comment">
+            <div class="author-comment"><%=author.first_name%> <%=author.last_name%></div>
+            <p><%=txt%></p>
+        </div>
+    </li>
+</script>
+
+
 <script type="text/template" id="point-detail" data-point-id="<%=id%>">
 <div id="popups">
     <div class="viewport">
