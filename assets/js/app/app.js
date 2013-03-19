@@ -40,7 +40,7 @@ $(function(){
     //     model: PointComment,
     // });
     // window.pointComments = new PointComments({model: window.pointComment})
-    // 
+    //
     /* -------------------- Model point---------------- */
   //   var Point = Backbone.Model.extend({
   //       defaults: function() {

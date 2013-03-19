@@ -20,11 +20,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'yasenput',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'yasenput', # Or path to database file if using sqlite3.
+        'USER': 'root', # Not used with sqlite3.
+        'PASSWORD': 'root', # Not used with sqlite3.
+        'HOST': '127.0.0.1', # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -68,14 +68,25 @@ SITE_NAME = path.basename(path.realpath(path.curdir))
 SITE_ROOT = os.path.join(path.realpath(path.pardir), SITE_NAME)
 
 MEDIA_URL = '/assets/media/'
-MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
+#MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
+MEDIA_ROOT = '/home/roman/www/static/media'
 
 STATIC_URL = '/assets/'
-STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets'))
+#STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets'))
+STATIC_ROOT = '/home/roman/www/static'
+# noinspection PyPackageRequirements
+
+
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(STATIC_ROOT, '')),
     #    'd:/dev/djcode/YasenPut/assets/',
 )
+# STATICFILES_DIRS = (
+    # '/home/roman/www/yasenput/assets/',
+    # os.path.normpath(os.path.join(STATIC_ROOT, '')),
+    # os.path.join(STATIC_ROOT, ''))
+    # 'd:/dev/djcode/YasenPut/assets/'
+# )
 STATICFILES_URL = '/assets/'
 
 # List of finder classes that know how to find static files in
@@ -166,12 +177,12 @@ SERIALIZATION_MODULES = {
 #VK.com
 VKONTAKTE_APP_ID = '3252137'
 VKONTAKTE_APP_SECRET = 'C7lHtirBTryT1j3lKeGF'
-VK_EXTRA_SCOPE = ['friends','wall','offline']
+VK_EXTRA_SCOPE = ['friends', 'wall', 'offline']
 #VK_EXTRA_SCOPE = ['friends','wall','offline']
 VK_APP_ID = VKONTAKTE_APP_ID
 VK_API_SECRET = VKONTAKTE_APP_SECRET
 #VKONTAKTE_APP_AUTH={'key':'iframe_app_secret_key', 'user_mode': 2, 'id':'iframe_app_id'}
-VKONTAKTE_APP_AUTH                = None
+VKONTAKTE_APP_AUTH = None
 #SOCIAL_AUTH_USER_MODEL = 'apps.main.Person'
 #AUTH_PROFILE_MODULE =
 #AUTH_USER_MODEL = 'apps.main.Person'
@@ -179,16 +190,16 @@ VKONTAKTE_APP_AUTH                = None
 #AUTH_USER_MODEL = 'main.Person'
 AUTH_PROFILE_MODULE = 'main.Person'
 #SOCIAL_AUTH_USER_MODEL           = 'main.Person'
-SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
+SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 
 LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_CREATE_USERS          = True
+SOCIAL_AUTH_CREATE_USERS = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
-SOCIAL_AUTH_DEFAULT_USERNAME      = 'socialauth_user'
-SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
-LOGIN_ERROR_URL                   = '/login/error/'
-SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
+SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
+LOGIN_ERROR_URL = '/login/error/'
+SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 
 SOCIAL_AUTH_ENABLED_BACKENDS = ('vkontakte-oauth2',)
 VKONTAKTE_OAUTH2_EXTRA_SCOPE = ''
