@@ -19,17 +19,36 @@ $(function(){
         model: Point,
         // view:PointView,
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
+        initialize: function(){
+            this.bind('reset', this.render, this);
+        },
         setURL: function(){
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
         	bounds = myMap.getBounds();
-        	this.coord_left = JSON.stringify( {"ln": bounds[0][0], "lt": bounds[0][1]} );
-        	this.coord_right = JSON.stringify( {"ln": bounds[1][0], "lt": bounds[1][1]} );
+        	this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
+        	this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
         	this.url = '/points/list/'+this.page +
         				'?content='+this.content+
         				'&coord_left='+this.coord_left+
         				'&coord_right='+this.coord_right;
         	return this;
+        },
+        render: function(){
+            var self = this;
+            console.log('render points');
+            console.log('this: ', this.toJSON());
+            console.log('window.PointView: ', window.PointView);
+          
+            // this.each(function( item ) {
+            //     var pin = new self.view({model:item});
+            //     self.$el.append(pin.render().el);
+            // });
+
+            // console.log('render complete!');
+            // this.deferred.resolve();
+            // return self.el;
+            return self;
         },
         mapCoords:function(){
             //return window.YPApp.mapCoords();

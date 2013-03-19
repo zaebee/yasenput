@@ -10,6 +10,7 @@ $(function(){
             console.log('Rounter: main');
             myMap.ready.then(function(){
                 console.log('Router: myMapReady!');
+                points.setURL().fetch();
             });
             // points.fetch();
             // window.App.setCollection(Points);
