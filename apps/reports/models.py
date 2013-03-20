@@ -11,8 +11,8 @@ REPORT_ALLOWED_MODELS = (
 
 class TypeReports(models.Model):
     class Meta:
-        verbose_name = u'Тип отзыва'
-        verbose_name_plural = u'Тип отзыва'
+        verbose_name = u'Типы жалоб'
+        verbose_name_plural = u'Тип жалобы'
     name = models.TextField('Тип', null = True, default=0)
     
     def __unicode__(self):
@@ -20,10 +20,10 @@ class TypeReports(models.Model):
 
 class Reports(models.Model):
     class Meta:
-        verbose_name = u'Отзывы'
-        verbose_name_plural = u'Отзывы'
+        verbose_name = u'Жалобы'
+        verbose_name_plural = u'Жалоба'
     type = models.ForeignKey(TypeReports)
-    feedback = models.TextField('Отзыв')
+    feedback = models.TextField('Жалоба')
     content_type = models.ForeignKey(ContentType, blank=True, null=True, verbose_name="Type")
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
