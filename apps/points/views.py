@@ -56,10 +56,10 @@ class FollowPoint(PointsBaseView):
 
 
 class LikePoint(PointsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
-        form = forms.IdForm(request.GET)
+    def post(self, request, *args, **kwargs):
+        form = forms.IdForm(request.POST)
         if form.is_valid():
             pk = form.cleaned_data["id"]
             try:
@@ -71,11 +71,11 @@ class LikePoint(PointsBaseView):
                     point.likeusers.add(person)
                 point.save()
             except:
-                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+                return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
             else:
-                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": ""})
         else:
-            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
+            return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
 
 class WantVisitPoint(PointsBaseView):

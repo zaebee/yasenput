@@ -161,9 +161,15 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.content .item{width:229px; background:#fff; margin:0 0 12px; padding-top:11px}
 	.no-boxshadow .content .item{width:227px; border:solid 1px #cfd9ce}
 	.boxshadow .content .item{-moz-box-shadow:0 1px 2px rgba(0, 0, 0, .42); -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, .42); box-shadow:0 1px 2px rgba(0, 0, 0, .42)}
+	.content .item .photo .a-like,
+	.content .item .photo .a-collection,
+	.content .item .photo .a-edit-new{display: none}
 	.content .item .photo{display:block; position:relative; width:207px; margin:0 11px 12px}
 	.content .item .photo:hover{-moz-box-shadow:0 3px 4px rgba(0, 0, 0, .15); -webkit-box-shadow:0 3px 4px rgba(0, 0, 0, .15); box-shadow:0 3px 4px rgba(0, 0, 0, .15)}
-		.content .item .photo img{display:block}
+	.content .item .photo:hover .a-like,
+	.content .item .photo:hover .a-collection,
+	.content .item .photo:hover .a-edit-new{display: block}
+	.content .item .photo img{display:block}
 	.content .item time{position:relative; width:82px; height:19px; line-height:16px; padding:0 0 0 16px; left:-16px; color:#fff; background-position:-299px -153px}
 .a-want{width:117px; height:27px; text-align:center; line-height:24px; color:#fff; text-decoration:none; background-position:-71px -39px; font-size:13.5px; display:inline-block; .display:inline; .zoom:1; vertical-align:top}
 .a-want:hover{background-position:-71px -75px; color:#fff}
@@ -419,12 +425,23 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.p-tabs a.active:after{content:""; position:absolute; left:50%; top:100%; margin:0 0 0 -4px; width:14px; height:8px; font-size:0; background-position:-286px -288px;}
 
 .popup .input-line{position:relative; padding:0 0 13px}
+.popup .input-line:first-child{z-index: 50;}
+
 .popup .input-line.calendar-line{margin-top:-5px}
 .popup .input-line.submit-line{padding-bottom:0}
-.popup .input-line:hover{z-index:22}
+/*.popup .input-line:hover{z-index:22}*/
+.popup .input-line:hover{z-index:55}
 .input-line .required{color:#aabda8; font-size:24px; position:absolute; right:-12px; top:0; font-weight:bold}
 .input-line .required.fill{color:#71a46b}
 .input-line input[type=text]{width:527px; display:block; padding:3px 10px; font:13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif; color:#666; border:solid 1px #c4cec3; height:18px}
+.input-line input[type=text].validation-error{
+	background-color: #FFE4E4;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FFE4E4), to(#fff)); 	
+	background-image: -moz-linear-gradient(top, #FFE4E4, #fff); 
+	background-image: -o-linear-gradient(top, #FFE4E4, #fff); 	
+	background-image: -webkit-linear-gradient(top, #FFE4E4, #fff);  
+	background-image: linear-gradient(to bottom, #FFE4E4, #fff);
+}
 
 #p-add-place, #p-common, #p-add-event{width:590px}
 #p-common{position:relative}
@@ -437,6 +454,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 #tab-map-place, #tab-map-event{padding-bottom:12px}
 
+/*.drop-filter{position:relative;}*/
 .drop-filter{position:relative; z-index:23}
 .drop-filter .drop-results{position:absolute; left:0; top:100%; background:#fff; border:solid 1px #c4cec3; width:547px; margin:0; font-size:13px; margin:-1px 0 0; display:none}
 	.drop-filter .drop-results li{padding:4px 10px; cursor:pointer}
@@ -632,7 +650,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .yp-title{cursor:pointer; background:url(../images/sprite.png) -297px -687px no-repeat; padding:0 0 0 23px; width:41px; height:22px; line-height:22px; color:#fff; float:left}
 .yp-info{height:18px; width:100%; color:#fff; padding:4px 0 0; display:none}
 .no-rgba.yp-info{background:url(../images/overlay-black.png)}
-.rgba .yp-info{background:rgba(0, 0, 0, .4)}
+.rgba .yp-info{cursor:pointer; background:rgba(0, 0, 0, .4)}
 	.yp-info i{display:inline-block; .display:inline; .zoom:1; vertical-align:middle; height:16px; background-image:url(../images/sprite.png); margin:0 2px 0 0}
 	.yp-info i:first-child{margin-left:10px}
 	.yp-info small{margin:0 5px 0 0}

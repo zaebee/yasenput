@@ -1,4 +1,142 @@
-var pointCollection;
+// var pointCollection;
+window.currentPointPopup = {}; // какой попап сейчас открыт (добавление / просмотр / редактирование точки)
+jQuery(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
+(function(){
+    $.fn.simpleTabs = function(params){ // переключалка табов
+        var opt = $.extend({
+            attrTarget  : "data-target",
+            beforeChange: function(){},
+            afterChange : function(){}
+        }, params);
+        
+        return $(this).each(function(i){
+            var self = $(this);
+
+            console.log('this: ', this);
+            
+            if(self.data("simpleTabs")) return;
+            self.data("simpleTabs", "simpleTabs");
+            
+            if($(".active", this).length){
+                toggleBlock($(".active", this).attr(opt.attrTarget));
+            }else{
+                $(this).children(":first").addClass("active");
+                toggleBlock($(".active", this).attr(opt.attrTarget));
+            }
+            
+            function toggleBlock(id){
+                opt.beforeChange(self, $(".active", self).attr(opt.attrTarget));
+                $("#"+id).css("display", "block").siblings().css("display", "none");
+                opt.afterChange(self, id);
+            }
+            
+            $("a", this).click(function(e){
+                e.preventDefault();
+                
+                toggleBlock($(this).attr(opt.attrTarget));
+                $(this).addClass("active").siblings().removeClass("active");
+            });
+        });
+    }
+})(jQuery);
+
+// корректный скрол
+$(window).scroll(function(){ //  главная карта
+    var scrollTop = $(window).scrollTop(),
+        top = scrollTop <= 370 ? scrollTop : 370;
+    
+    if(!$(".main-map").hasClass("is-open")){
+        $(".main-map").css("top", -top);
+        
+        if(scrollTop >= 370){
+            if(!$(".main-map").hasClass("hide-map")){
+                $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
+                
+                $(".main-map .m-ico-group").hide();
+            }
+        } else {
+            $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
+            
+            $(".main-map .m-ico-group").show();
+        }
+    }
+});
+
+//показ маленьких подсказок на черном фоне
+$("body").delegate("[data-tooltip]", "mouseenter" , function(){
+    var txt = $(this).data("tooltip"),
+        offset = $(this).offset(),
+        width = $(this).width(),
+        height = $(this).height();
+    
+    if(!$("#tooltip").length){
+        $('<div id="tooltip"><span class="arrow"></span><div class="body"></div></div>').appendTo("body").hide();
+    }
+    
+    $('#tooltip .body').html(txt);
+    $('#tooltip').css({
+        display:"block",
+        visibility: "hidden"
+    });
+    
+    var w = $('#tooltip').outerWidth(),
+        left = offset.left + width/2 - w/2,
+        top = offset.top + height+2;
+    
+    left = left < 0 ? 0 : (left > $(window).width()-w ? $(window).width()-w : left);
+    
+    $('#tooltip').css({
+        display:"none",
+        visibility: "visible",
+        left: left,
+        top : top
+    }).fadeIn(100);
+    
+    $('#tooltip .arrow').css({
+        left: offset.left + (width/2 - 5),
+        top : top-$(window).scrollTop()
+    });
+})
+.delegate("a[data-tooltip]", "mouseleave", function(){
+    $('#tooltip').fadeOut(100);
+});
+
 $(function(){
 
     window.page = 1;
@@ -61,333 +199,333 @@ $(function(){
   //       }
   //   });
     /* -------------------- View point-------------------- */
-    var PointView = Backbone.View.extend({
-        template: _.template($('#point-template').html()),
-        template_det: _.template($('#point-detail').html()),
-        templateComment: _.template('<li><img src="<%- avatar %>" alt="" class="avatar" width="30" height="30">' +
-                                    '<div class="body-comment">' +
-                                    '<div class="author-comment"><%- author %></div>' +
-                                    '<p><%- comment %></p></div></li>'),
-        events: {
-            'focus textarea':"focusComment",
-            'click label':function(){
-                this.$el.find('textarea').focus();
-            },
-            'submit .add-comment':"addComment",
-            'blur textarea':"blurComment",
-            'blur label':"blurComment",
-            'click .a-photo':"detailPlace",
-            'click .a-want':"wantvisit",
-            'click .a-like':"likepoint"
+//     var PointView = Backbone.View.extend({
+//         template: _.template($('#point-template').html()),
+//         template_det: _.template($('#point-detail').html()),
+//         templateComment: _.template('<li><img src="<%- avatar %>" alt="" class="avatar" width="30" height="30">' +
+//                                     '<div class="body-comment">' +
+//                                     '<div class="author-comment"><%- author %></div>' +
+//                                     '<p><%- comment %></p></div></li>'),
+//         events: {
+//             'focus textarea':"focusComment",
+//             'click label':function(){
+//                 this.$el.find('textarea').focus();
+//             },
+//             'submit .add-comment':"addComment",
+//             'blur textarea':"blurComment",
+//             'blur label':"blurComment",
+//             'click .a-photo':"detailPlace",
+//             'click .a-want':"wantvisit",
+//             'click .a-like':"likepoint"
            
            
-            //'click .photo img':function(){
-            //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
-            //}
-        },
-        render:function(){
-            var self = this;
-            var content = self.template(self.model.toJSON());
-            self.$el.html(content);
-            return self;
-        },
-        initialize: function() {
-            var self = this;
-            //Point.bind("detailplace", self.detailPlace, self);
-            console.log('initialize PointView');
-/*            self.$el.find('[type="submit"]').live('click',
-                function(){
-                    alert('!');
-                }
-            );*/
-            Point.bind("detailPlace", self.detailPlace);
+//             //'click .photo img':function(){
+//             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
+//             //}
+//         },
+//         render:function(){
+//             var self = this;
+//             var content = self.template(self.model.toJSON());
+//             self.$el.html(content);
+//             return self;
+//         },
+//         initialize: function() {
+//             var self = this;
+//             //Point.bind("detailplace", self.detailPlace, self);
+//             console.log('initialize PointView');
+// /*            self.$el.find('[type="submit"]').live('click',
+//                 function(){
+//                     alert('!');
+//                 }
+//             );*/
+//             Point.bind("detailPlace", self.detailPlace);
 
-            if(!$('#tab-want').hasClass('active')){
-                var placemark = new ymaps.Placemark(
-                    [ self.model.get('latitude'), self.model.get('longitude')],
-                    {
-                        balloonContentHeader: '<b>'+ self.model.get('name') +'</b>',
-                        balloonContentBody:  self.model.get('description') +'<br />',
-                        balloonContentFooter: 'Вологодская область, Вологда'
-                    },
-                    {
-                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
-                        iconImageSize: [22, 37], // размеры картинки
-                        iconImageOffset: [-11, -37], // смещение картинки
-                        draggable: false
-                    }
-                )
-                pointCollection.add(placemark);
-            }
-        },
-        // showPointComments: function(event) {
-        //     var self = event.currentTarget;
-        //     event.preventDefault();
-        //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
-        //     console.log('point id: ', pointId);
-        //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
-        //     console.log('this', this);
-        //     this.collection.fetchPointComments()
-        // },
-        focusComment:function(){
-            //console.log(x.target);
-            var me = $(this.el).find('textarea');
-            me.closest(".toggle-area").addClass("focus");
-            $('.content .items').masonry("reload");
-            $(document).unbind("keydown.areaComment").bind("keydown.areaComment", function(){
-                setTimeout(function(){
-                    if(me.val().toString().length > 0){
-                        me.parent().find("label").hide();
-                    } else {
-                        me.parent().find("label").show();
-                    }
-                }, 0);
-            });
-        },
-        addComment:function (e){
-            e.preventDefault();
-            var self = this;
-            if( $.trim( $(e.currentTarget).find('textarea').val() ).length > 0 ) {
-                console.log('send!');
-                object_id = self.model.get('id');
-                txt = self.$el.find('.add-comment textarea').val();
+//             if(!$('#tab-want').hasClass('active')){
+//                 var placemark = new ymaps.Placemark(
+//                     [ self.model.get('latitude'), self.model.get('longitude')],
+//                     {
+//                         balloonContentHeader: '<b>'+ self.model.get('name') +'</b>',
+//                         balloonContentBody:  self.model.get('description') +'<br />',
+//                         balloonContentFooter: 'Вологодская область, Вологда'
+//                     },
+//                     {
+//                         iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+//                         iconImageSize: [22, 37], // размеры картинки
+//                         iconImageOffset: [-11, -37], // смещение картинки
+//                         draggable: false
+//                     }
+//                 )
+//                 pointCollection.add(placemark);
+//             }
+//         },
+//         // showPointComments: function(event) {
+//         //     var self = event.currentTarget;
+//         //     event.preventDefault();
+//         //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+//         //     console.log('point id: ', pointId);
+//         //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
+//         //     console.log('this', this);
+//         //     this.collection.fetchPointComments()
+//         // },
+//         focusComment:function(){
+//             //console.log(x.target);
+//             var me = $(this.el).find('textarea');
+//             me.closest(".toggle-area").addClass("focus");
+//             $('.content .items').masonry("reload");
+//             $(document).unbind("keydown.areaComment").bind("keydown.areaComment", function(){
+//                 setTimeout(function(){
+//                     if(me.val().toString().length > 0){
+//                         me.parent().find("label").hide();
+//                     } else {
+//                         me.parent().find("label").show();
+//                     }
+//                 }, 0);
+//             });
+//         },
+//         addComment:function (e){
+//             e.preventDefault();
+//             var self = this;
+//             if( $.trim( $(e.currentTarget).find('textarea').val() ).length > 0 ) {
+//                 console.log('send!');
+//                 object_id = self.model.get('id');
+//                 txt = self.$el.find('.add-comment textarea').val();
 
-                console.log('object_id: ', object_id);
-                console.log('txt: ', txt);
-                data = {
-                    object_id: object_id,
-                    txt: txt
-                };
-                data = JSON.stringify( data );
+//                 console.log('object_id: ', object_id);
+//                 console.log('txt: ', txt);
+//                 data = {
+//                     object_id: object_id,
+//                     txt: txt
+//                 };
+//                 data = JSON.stringify( data );
 
-                self.model.get('pointComments').create({
-                    object_id: object_id,
-                    txt: txt
-                });
+//                 self.model.get('pointComments').create({
+//                     object_id: object_id,
+//                     txt: txt
+//                 });
 
 
-                // $.ajax({
-                //     type: "POST",
-                //     url: "comments/add",
-                //     crossDomain: false,
-                //     dataType:'json',
-                //     // data: data,
-                //     data: {
-                //         object_id: self.model.get('id'),
-                //         object_type:12,
-                //         txt:self.$el.find('.add-comment textarea').val()
-                //     },
-                //     success: function(data) {
-                //         self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
-                //         self.$el.find('.add-comment textarea').val('');
-                //         var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
-                //         self.$el.find('.ico-comment-small').parent().contents().last().remove();
-                //         self.$el.find('.ico-comment-small').parent().append(cm+1);
-                //     },
-                //     error: function (request, status, error) {
-                //         alert(status);
-                //     }
-                // });
+//                 // $.ajax({
+//                 //     type: "POST",
+//                 //     url: "comments/add",
+//                 //     crossDomain: false,
+//                 //     dataType:'json',
+//                 //     // data: data,
+//                 //     data: {
+//                 //         object_id: self.model.get('id'),
+//                 //         object_type:12,
+//                 //         txt:self.$el.find('.add-comment textarea').val()
+//                 //     },
+//                 //     success: function(data) {
+//                 //         self.$el.find('.comments ul').append(self.templateComment({comment: self.$el.find('.add-comment textarea').val(),author: $('.auth.user .user-name a').text(),avatar:self.$el.find('.add-comment img.avatar').attr('src')}))
+//                 //         self.$el.find('.add-comment textarea').val('');
+//                 //         var cm =  self.$el.find('.ico-comment-small').parent().contents().last().text()*1;
+//                 //         self.$el.find('.ico-comment-small').parent().contents().last().remove();
+//                 //         self.$el.find('.ico-comment-small').parent().append(cm+1);
+//                 //     },
+//                 //     error: function (request, status, error) {
+//                 //         alert(status);
+//                 //     }
+//                 // });
 
-            }
-            self.$el.find('.add-comment textarea').blur();
-        },
-        blurComment:function(){
-            console.log('blurComment');
-            var me = $(this.el).find('textarea');
-            if($(me).val().toString().length == 0){
-                $(me).parent().find("label").show();
-                this.$el.find(".toggle-area").removeClass("focus");
-            }
-            $('.content .items').masonry("reload");
-        },
-        detailPlace:function(e){
-            e.preventDefault(); //показ основного попапа
-            console.log('Основной попап')
-            var detcontent = this.template_det(this.model.toJSON());
-            $("#popups").remove();
-            $("#overlay").after(detcontent);
+//             }
+//             self.$el.find('.add-comment textarea').blur();
+//         },
+//         blurComment:function(){
+//             console.log('blurComment');
+//             var me = $(this.el).find('textarea');
+//             if($(me).val().toString().length == 0){
+//                 $(me).parent().find("label").show();
+//                 this.$el.find(".toggle-area").removeClass("focus");
+//             }
+//             $('.content .items').masonry("reload");
+//         },
+//         detailPlace:function(e){
+//             e.preventDefault(); //показ основного попапа
+//             console.log('Основной попап')
+//             var detcontent = this.template_det(this.model.toJSON());
+//             $("#popups").remove();
+//             $("#overlay").after(detcontent);
 
-            $("#popups .scroll-box").scrollTop(0);
-            window.YPApp.popups.open({
-                elem: $("#overlay"),
-                mapComplaintPlace:undefined,
-                myComplaintPlaceCollection:undefined,
-                myMapPopup:undefined,
-                myMapPopupPlace:undefined,
-                myMapPopupEvent:undefined,
-                callbackAfter: function(){
-                    var self = this;
-                    window.YPApp.popups.open({
-                        elem: $("#popups"),
-                        callbackAfter: function(){
-                            $("input.calendar").datepicker({
-                                dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-                                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-                                dateFormat: "dd.mm.yy",
-                                showOn: "button",
-                                buttonImage: "images/calendar.gif",
-                                buttonImageOnly: true
-                            });
-                            var cuselParams = {
-                                changedEl: ".calendar select",
-                                visRows  : 5,
-                                scrollArrows: true
-                            };
-                            $(".p-tabs").simpleTabs({
-                                afterChange: function(me, id){
-                                    if($(".calendar").length && $(".calendar").is(":visible")){
-                                        cuSel(cuselParams);
-                                    }
+//             $("#popups .scroll-box").scrollTop(0);
+//             window.YPApp.popups.open({
+//                 elem: $("#overlay"),
+//                 mapComplaintPlace:undefined,
+//                 myComplaintPlaceCollection:undefined,
+//                 myMapPopup:undefined,
+//                 myMapPopupPlace:undefined,
+//                 myMapPopupEvent:undefined,
+//                 callbackAfter: function(){
+//                     var self = this;
+//                     window.YPApp.popups.open({
+//                         elem: $("#popups"),
+//                         callbackAfter: function(){
+//                             $("input.calendar").datepicker({
+//                                 dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+//                                 monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+//                                 dateFormat: "dd.mm.yy",
+//                                 showOn: "button",
+//                                 buttonImage: "images/calendar.gif",
+//                                 buttonImageOnly: true
+//                             });
+//                             var cuselParams = {
+//                                 changedEl: ".calendar select",
+//                                 visRows  : 5,
+//                                 scrollArrows: true
+//                             };
+//                             $(".p-tabs").simpleTabs({
+//                                 afterChange: function(me, id){
+//                                     if($(".calendar").length && $(".calendar").is(":visible")){
+//                                         cuSel(cuselParams);
+//                                     }
 
-                                    if(id == 'tab-map'){
-                                        if (!self.myMapPopup) {
-                                            self.myMapPopup = new ymaps.Map('popup-map-1', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    } else if (id == 'tab-map-place'){
-                                        if (!self.myMapPopupPlace) {
-                                            self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    } else if (id == 'tab-map-event'){
-                                        if (!self.myMapPopupEvent) {
-                                            self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    }
-                                }
-                            });
+//                                     if(id == 'tab-map'){
+//                                         if (!self.myMapPopup) {
+//                                             self.myMapPopup = new ymaps.Map('popup-map-1', {
+//                                                 center: window.YPApp.mapCoords,
+//                                                 zoom: 11
+//                                             });
+//                                         }
+//                                     } else if (id == 'tab-map-place'){
+//                                         if (!self.myMapPopupPlace) {
+//                                             self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
+//                                                 center: window.YPApp.mapCoords,
+//                                                 zoom: 11
+//                                             });
+//                                         }
+//                                     } else if (id == 'tab-map-event'){
+//                                         if (!self.myMapPopupEvent) {
+//                                             self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
+//                                                 center: window.YPApp.mapCoords,
+//                                                 zoom: 11
+//                                             });
+//                                         }
+//                                     }
+//                                 }
+//                             });
 
-                            if($(".calendar").length && $(".calendar").is(":visible")){
-                                cuSel(cuselParams);
-                            }
-                        }
-                    });
-                },
-                callbackBefore: function(){
-                    $("body").css("overflow", "hidden");
-                }
-            });
-        },
-        wantvisit:function(e){
-            var self = e.currentTarget;
-            var me = this;
-            e.preventDefault();
-            if ($(self).hasClass('marked')){
+//                             if($(".calendar").length && $(".calendar").is(":visible")){
+//                                 cuSel(cuselParams);
+//                             }
+//                         }
+//                     });
+//                 },
+//                 callbackBefore: function(){
+//                     $("body").css("overflow", "hidden");
+//                 }
+//             });
+//         },
+//         wantvisit:function(e){
+//             var self = e.currentTarget;
+//             var me = this;
+//             e.preventDefault();
+//             if ($(self).hasClass('marked')){
 
-                $.ajax({
-                    type: "GET",
-                    url: "points/visit",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: {
-                        id: me.model.get('id')
-                    },
-                    success: function(data) {
-                        if (data.status == 2){
-                             $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1-1);
-                             $(self).removeClass('marked');
-                             var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                             me.$el.find('.ico-want-small').parent().contents().last().remove();
-                             me.$el.find('.ico-want-small').parent().append(wv-1);
-                        }else{
-                            alert(data.txt);
-                        }
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
-                });
-            }else{
-                $.ajax({
-                    type: "GET",
-                    url: "points/visit",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: {
-                        id: me.model.get('id')
-                    },
-                    success: function(data) {
-                        if (data.status == 2){
-                             $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1+1);
-                             $(self).addClass('marked')
-                             var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                             me.$el.find('.ico-want-small').parent().contents().last().remove();
-                             me.$el.find('.ico-want-small').parent().append(wv+1);
-                        }else{
-                            alert(data.txt);
-                        }
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
-                });
+//                 $.ajax({
+//                     type: "GET",
+//                     url: "points/visit",
+//                     crossDomain: false,
+//                     dataType:'json',
+//                     data: {
+//                         id: me.model.get('id')
+//                     },
+//                     success: function(data) {
+//                         if (data.status == 2){
+//                              $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1-1);
+//                              $(self).removeClass('marked');
+//                              var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+//                              me.$el.find('.ico-want-small').parent().contents().last().remove();
+//                              me.$el.find('.ico-want-small').parent().append(wv-1);
+//                         }else{
+//                             alert(data.txt);
+//                         }
+//                     },
+//                     error: function (request, status, error) {
+//                         alert(status);
+//                     }
+//                 });
+//             }else{
+//                 $.ajax({
+//                     type: "GET",
+//                     url: "points/visit",
+//                     crossDomain: false,
+//                     dataType:'json',
+//                     data: {
+//                         id: me.model.get('id')
+//                     },
+//                     success: function(data) {
+//                         if (data.status == 2){
+//                              $('#header').find('.item-want sup').html($('#header').find('.item-want sup').html()*1+1);
+//                              $(self).addClass('marked')
+//                              var wv =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+//                              me.$el.find('.ico-want-small').parent().contents().last().remove();
+//                              me.$el.find('.ico-want-small').parent().append(wv+1);
+//                         }else{
+//                             alert(data.txt);
+//                         }
+//                     },
+//                     error: function (request, status, error) {
+//                         alert(status);
+//                     }
+//                 });
 
-            }
-        },
-        likepoint:function(e){
-            var self = e.currentTarget;
-            var me = this;
-            e.preventDefault();
-            if ($(self).hasClass('marked')){
+//             }
+//         },
+//         likepoint:function(e){
+//             var self = e.currentTarget;
+//             var me = this;
+//             e.preventDefault();
+//             if ($(self).hasClass('marked')){
 
-                $.ajax({
-                    type: "GET",
-                    url: "points/like",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: {
-                        id: me.model.get('id')
-                    },
-                    success: function(data) {
-                        if (data.status == 2){
-                            $(self).removeClass('marked');
-                            var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                            me.$el.find('.ico-like-small').parent().contents().last().remove();
-                            me.$el.find('.ico-like-small').parent().append(lp-1);
-                        }else{
-                            alert(data.txt);
-                        }
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
-                });
-            }else{
-                $.ajax({
-                    type: "GET",
-                    url: "points/like",
-                    crossDomain: false,
-                    dataType:'json',
-                    data: {
-                        id: me.model.get('id')
-                    },
-                    success: function(data) {
-                        if (data.status == 2){
-                            $(self).addClass('marked')
-                            var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-                            me.$el.find('.ico-like-small').parent().contents().last().remove();
-                            me.$el.find('.ico-like-small').parent().append(lp+1);
-                        }else{
-                            alert(data.txt);
-                        }
-                    },
-                    error: function (request, status, error) {
-                        alert(status);
-                    }
-                });
+//                 $.ajax({
+//                     type: "GET",
+//                     url: "points/like",
+//                     crossDomain: false,
+//                     dataType:'json',
+//                     data: {
+//                         id: me.model.get('id')
+//                     },
+//                     success: function(data) {
+//                         if (data.status == 2){
+//                             $(self).removeClass('marked');
+//                             var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+//                             me.$el.find('.ico-like-small').parent().contents().last().remove();
+//                             me.$el.find('.ico-like-small').parent().append(lp-1);
+//                         }else{
+//                             alert(data.txt);
+//                         }
+//                     },
+//                     error: function (request, status, error) {
+//                         alert(status);
+//                     }
+//                 });
+//             }else{
+//                 $.ajax({
+//                     type: "GET",
+//                     url: "points/like",
+//                     crossDomain: false,
+//                     dataType:'json',
+//                     data: {
+//                         id: me.model.get('id')
+//                     },
+//                     success: function(data) {
+//                         if (data.status == 2){
+//                             $(self).addClass('marked')
+//                             var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
+//                             me.$el.find('.ico-like-small').parent().contents().last().remove();
+//                             me.$el.find('.ico-like-small').parent().append(lp+1);
+//                         }else{
+//                             alert(data.txt);
+//                         }
+//                     },
+//                     error: function (request, status, error) {
+//                         alert(status);
+//                     }
+//                 });
 
-            }
+//             }
 
-        }
-    });
+//         }
+//     });
 
     /* ----------------- Collection point---------------- */
     // PointList = Backbone.Collection.extend({
@@ -544,6 +682,25 @@ $(function(){
     // window.App = new AppView();
 
     /* -----------------   main Application   ---------------- */
+    window.popups = { // объект для показа-скрытия попапов
+        open: function(params){
+            var callbackBefore = params.callbackBefore || function(){},
+            callbackAfter = params.callbackAfter || function(){};
+
+            callbackBefore();
+            $(params.elem).show();
+            callbackAfter();
+        },
+        close: function(params){
+            var callbackBefore = params.callbackBefore || function(){},
+            callbackAfter = params.callbackAfter || function(){};
+
+            callbackBefore();
+            $(params.elem).hide();
+            callbackAfter();
+        }
+    };
+
 
     var YPApp = Backbone.View.extend({
         addPointState:{
@@ -657,7 +814,7 @@ $(function(){
             "blur .select-labels input[type=text]":function (e) {
                 var self = e.currentTarget;
                 setTimeout(function(){//закрыть живой поиск в попапе
-                    self.closest(".input-line").css("z-index", 1);
+                    // self.closest(".input-line").css("z-index", 1);
                     self.closest(".input-line").find(".drop-results").hide();
                 }, 0);
             },
@@ -665,7 +822,7 @@ $(function(){
                 var self = e.currentTarget;
                 // показать живой поиск в попапе Добавить место
                 if(e.target == self || $(e.target).hasClass("label-add") ||  $(e.target).closest(".label-add").length){
-                    $(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
+                    // $(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
                 }
             },
             "mousedown .drop-results li":function (e) {
@@ -865,16 +1022,19 @@ $(function(){
                 };
                 $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
             },
-            "click .top-panel .btn-place, .top-panel .btn-event":function(e){
-                e.preventDefault();
-                var self = e.currentTarget;
-                var addPoint = this.templateAdd();
+
+            'click .top-panel .btn-place' : function(event){
+                // event.preventDefault();
+                window.newPoint = new window.Point();
+                createPointView = new window.CreatePointView({model: window.newPoint});
+                window.currentPointPopup = createPointView;
+
+                var self = event.currentTarget;
+                // var addPoint = this.templateAdd();
                 $("#popups").remove();
-                $("#overlay").after(addPoint);
+                $("#overlay").after(createPointView.render().el);
 
-                var id = $(self).hasClass("btn-place") ? "p-add-place"
-                    : ($(self).hasClass("btn-event") ? "p-add-event" : "");
-
+                var id = 'p-add-place';
                 window.YPApp.popups.open({
                     elem: $("#overlay"),
                     callbackAfter: function(){
@@ -882,64 +1042,8 @@ $(function(){
                         window.YPApp.popups.open({
                             elem: $("#popups"),
                             callbackAfter: function(){
-                                $("input.calendar").datepicker({
-                                    dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-                                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-                                    dateFormat: "dd.mm.yy",
-                                    showOn: "button",
-                                    buttonImage: "images/calendar.gif",
-                                    buttonImageOnly: true
-                                });
-
-                                var myMapPopupPlace, myMapPopupEvent;
-
-                                $(".p-tabs").simpleTabs({
-                                    afterChange: function(self, id){
-                                        if (id == 'tab-map-place'){
-                                            if (!myMapPopupPlace) {
-                                                myMapPopupPlace = new ymaps.Map('popup-map-place', {
-                                                    center: window.YPApp.mapCoords,
-                                                    zoom: 11
-                                                });
-                                                myMapPopupPlace.events.add('click', function (e) {
-                                                    myMapPopupPlace.geoObjects.each(function (geoObject) {
-                                                        if (geoObject.properties.get('id') == 'map-point') {
-                                                            myMapPopupPlace.geoObjects.remove(geoObject)
-                                                            return false;
-                                                        }
-                                                    });
-                                                    var coords = e.get('coordPosition');
-                                                    var placemark = new ymaps.Placemark(coords, {
-                                                        id:'map-point'
-                                                    }, {
-                                                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
-                                                        iconImageSize: [32, 36], // размеры картинки
-                                                        iconImageOffset: [-16, -38] // смещение картинки
-                                                    });
-                                                    myMapPopupPlace.geoObjects.add(placemark);
-                                                    var labels = [];
-                                                    ymaps.geocode(coords).then(function (res) {
-                                                        var i = true;
-                                                        res.geoObjects.each(function (obj) {
-                                                            if (i)
-                                                            $('#add-new-place').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
-                                                            i = false;
-                                                        });
-
-                                                    });
-                                                    window.YPApp.addPointState.coords = coords;
-                                                });
-                                            }
-                                        } else if (id == 'tab-map-event'){
-                                            if (!myMapPopupEvent) {
-                                                myMapPopupEvent = new ymaps.Map('popup-map-event', {
-                                                    center: window.YPApp.mapCoords,
-                                                    zoom: 11
-                                                });
-                                            }
-                                        }
-                                    }
-                                });
+                                // console.log('callback after');
+                                // window.newPoint = new Point();
                             }
                         });
                     },
@@ -949,120 +1053,202 @@ $(function(){
                     }
                 });
             },
-            "change #p-add-place input:file":function (e){
-                if (e.target.files.length == 0){
-                    return;
-                }
-                e.preventDefault();
-                var self = e.currentTarget;
+            // "click .top-panel .btn-place, .top-panel .btn-event":function(e){
+            //     e.preventDefault();
 
-                var template = _.template($('#progress-image').html())
-                var progress = $(template());
-                $('#p-add-place .item-photo.load-photo').before(progress);
-                $(self).parents('form').ajaxSubmit({
-                    url: "photos/add",
-                    type: "POST",
-                    dataType:  'json',
-                    data: {
-                        object_type:12
-                    },
-                    clearForm: false,
-                    success: function(data) {
-                        progress.find('button').before('<div class="load-status"><img src="images/ajax-loader3.gif" alt=""></div>');
-                        if (data.i != 0){
-                            console.log('Номер id:',data[0].thumbnail130x130);
-                            window.YPApp.addPointState.imgs.push(data[0].id);
-                            progress.find('.value').css(
-                                {'width' : '100%'}
-                            );
-                            progress.find('.progress-count').text('100 %');
-                            progress.find('.load-status').remove();
-                            progress.removeClass('photo-loading');
+            //     // var self = e.currentTarget;
+            //     // var addPoint = this.templateAdd();
+            //     // $("#popups").remove();
+            //     // $("#overlay").after(addPoint);
 
-                            progress.find('img').attr('src',data[0].thumbnail130x130);
-                            progress.find('.load-status').remove();
-                        }
-                    },
-                    clearForm: false,
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        window.alert(textStatus);
-                        if (window.console) {
-                            console.log('error', arguments);
-                        }
-                        return true;
-                    },
-                    beforeSend: function() {
-                        progress.find('.value').css(
-                            {'width' : '0%'}
-                        )
-                        progress.find('.progress-count').text('0 %')
-                    },
-                    uploadProgress: function(event, position, total, percentComplete) {
-                        progress.find('.value').css(
-                            {'width' : percentComplete+'%'}
-                        )
-                        progress.find('.progress-count').text(percentComplete+' %');
-                    }
-                });
-            },
-            "click #a-add-point":function(){
-                var tags = [];
-                tags.push('лыжи');
-                tags.push('сноуборд');
-                $.ajax ({
-                    target: "#divToUpdate",
-                    url: "points/add",
-                    type: "POST",
-                    data: {
-                        name: $('#p-add-place-name').val(),
-                        address: $('#add-new-place').val(),
-                        latitude: window.YPApp.addPointState.coords[0],
-                        longitude: window.YPApp.addPointState.coords[1],
-                        imgs:window.YPApp.addPointState.imgs,
-                        tags:tags
-                    },
-                    dataType:'json',
-                    success: (function(data) {
-                        if(data.r == 1){
-                            $(".popup").filter(":visible").fadeOut(150, function(){
-                                $("#overlay").fadeOut(200,function(){
-                                    //window.router.navigate("", {trigger: true, replace: true});
-                                });
-                            });
-                        }else{
-                            alert('Ошибка добавления!')
-                        }
-                    })
-                });
-            },
-            "keyup #p-add-place-name":function(e){
-                //e.preventDefault();
-                var self = e.currentTarget;
-                if ($(self).val().length > 0){
-                    var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
-                    $dropResult.find('li').remove();
-                    $.ajax({
-                        type: "GET",
-                        url: "points/search",
-                        crossDomain: false,
-                        dataType:'json',
-                        data: {
-                            s:  $(self).val()
-                        },
-                        success: function(data) {
-                            _.each(data, function(itm){
-                                $dropResult.append('<li data-point-id='+itm.id+'>'+itm.name+'</li>')
-                            });
-                        },
-                        error: function (request, status, error) {
-                            alert(status);
-                        }
-                    });
-                }
-            },
-            "keyup #add-new-place":function(e){
-                //e.preventDefault();
-                var self = e.currentTarget;
+            //     var id = $(self).hasClass("btn-place") ? "p-add-place"
+            //         : ($(self).hasClass("btn-event") ? "p-add-event" : "");
+
+            //     window.YPApp.popups.open({
+            //         elem: $("#overlay"),
+            //         callbackAfter: function(){
+            //             $("body").css("overflow", "hidden");
+            //             window.YPApp.popups.open({
+            //                 elem: $("#popups"),
+            //                 callbackAfter: function(){
+            //                     console.log('callback after');
+            //                     window.newPoint = new Point();
+            //                     // need for events
+            //                     // $("input.calendar").datepicker({
+            //                     //     dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            //                     //     monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            //                     //     dateFormat: "dd.mm.yy",
+            //                     //     showOn: "button",
+            //                     //     buttonImage: "images/calendar.gif",
+            //                     //     buttonImageOnly: true
+            //                     // });
+
+            //                     var myMapPopupPlace, myMapPopupEvent;
+
+                                // $(".p-tabs").simpleTabs({
+                                //     afterChange: function(self, id){
+                                //         if (id == 'tab-map-place'){
+                                //             if (!myMapPopupPlace) {
+                                //                 myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                                //                     center: myMap.getCenter(),
+                                //                     zoom: 11
+                                //                 });
+                                //                 myMapPopupPlace.controls.add('zoomControl')
+                                //                 var placemark = {};
+                                //                 myMapPopupPlace.events.add('click', function (event) {
+                                //                     // убираем ранее поставленную точку, 
+                                //                     myMapPopupPlace.geoObjects.remove(placemark);
+                                //                     // добавляем точку
+                                //                     var coords = event.get('coordPosition');
+                                //                     placemark = new ymaps.Placemark(coords, {
+                                //                             id:'map-point'
+                                //                         }, {
+                                //                             iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                                //                             iconImageSize: [32, 36], // размеры картинки
+                                //                             iconImageOffset: [-16, -38], // смещение картинки
+                                //                     });
+                                //                     myMapPopupPlace.geoObjects.add(placemark);
+                                //                     var labels = [];
+                                //                     ymaps.geocode(coords).then(function (res) {
+                                //                         var i = true;
+                                //                         res.geoObjects.each(function (obj) {
+                                //                             if (i)
+                                //                                 $('#add-new-place').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+                                //                             i = false;
+                                //                         });
+                                //                     });
+                                //                     console.log('coords: ', coords);
+                                //                     longitude = coords[0];
+                                //                     latitude = coords[1];
+                                //                     newPoint.set({'longitude': longitude, 'latitude': latitude});
+                                //                 });
+                                //             }
+                                //         } else if (id == 'tab-map-event'){
+                                //             // needed for add-event
+                                //             // if (!myMapPopupEvent) {
+                                //             //     myMapPopupEvent = new ymaps.Map('popup-map-event', {
+                                //             //         center: window.YPApp.mapCoords,
+                                //             //         zoom: 11
+                                //             //     });
+                                //             // }
+                                //         }
+                                //     }
+                                // });
+            //                 }
+            //             });
+            //         },
+            //         callbackBefore: function(){
+            //             $("body").css("overflow", "hidden");
+            //             $("#"+id).css("display", "block").siblings().css("display", "none");
+            //         }
+            //     });
+            // },
+
+            // photo load
+            // "change #p-add-place input:file":function (e){
+            //     if (e.target.files.length == 0){
+            //         return;
+            //     }
+            //     e.preventDefault();
+            //     var self = e.currentTarget;
+
+            //     var template = _.template($('#progress-image').html())
+            //     var progress = $(template());
+            //     $('#p-add-place .item-photo.load-photo').before(progress);
+            //     $(self).parents('form').ajaxSubmit({
+            //         url: "photos/add",
+            //         type: "POST",
+            //         dataType:  'json',
+            //         data: {
+            //             object_type:12
+            //         },
+            //         clearForm: false,
+            //         success: function(data) {
+            //             progress.find('button').before('<div class="load-status"><img src="images/ajax-loader3.gif" alt=""></div>');
+            //             if (data.i != 0){
+            //                 console.log('Номер id:',data[0].thumbnail130x130);
+            //                 window.YPApp.addPointState.imgs.push(data[0].id);
+            //                 progress.find('.value').css(
+            //                     {'width' : '100%'}
+            //                 );
+            //                 progress.find('.progress-count').text('100 %');
+            //                 progress.find('.load-status').remove();
+            //                 progress.removeClass('photo-loading');
+
+            //                 progress.find('img').attr('src',data[0].thumbnail130x130);
+            //                 progress.find('.load-status').remove();
+            //             }
+            //         },
+            //         clearForm: false,
+            //         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //             window.alert(textStatus);
+            //             if (window.console) {
+            //                 console.log('error', arguments);
+            //             }
+            //             return true;
+            //         },
+            //         beforeSend: function(request) {
+            //             request.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+            //             progress.find('.value').css(
+            //                 {'width' : '0%'}
+            //             )
+            //             progress.find('.progress-count').text('0 %')
+            //         },
+            //         uploadProgress: function(event, position, total, percentComplete) {
+            //             progress.find('.value').css(
+            //                 {'width' : percentComplete+'%'}
+            //             )
+            //             progress.find('.progress-count').text(percentComplete+' %');
+            //         }
+            //     });
+            // },
+            //  end photo load
+
+            // add point
+            // "click #a-add-point":function(){
+            //     var tags = [];
+            //     tags.push('лыжи');
+            //     tags.push('сноуборд');
+            //     $.ajax ({
+            //         target: "#divToUpdate",
+            //         url: "points/add",
+            //         type: "POST",
+            //         data: {
+            //             name: $('#p-add-place-name').val(),
+            //             address: $('#add-new-place').val(),
+            //             latitude: window.YPApp.addPointState.coords[0],
+            //             longitude: window.YPApp.addPointState.coords[1],
+            //             imgs:window.YPApp.addPointState.imgs,
+            //             tags:tags
+            //         },
+            //         dataType:'json',
+            //         success: (function(data) {
+            //             if(data.r == 1){
+            //                 $(".popup").filter(":visible").fadeOut(150, function(){
+            //                     $("#overlay").fadeOut(200,function(){
+            //                         //window.router.navigate("", {trigger: true, replace: true});
+            //                     });
+            //                 });
+            //             }else{
+            //                 alert('Ошибка добавления!')
+            //             }
+            //         })
+            //     });
+            // },
+            // end add point
+
+            // ага, вот эти ребята
+            // "keyup #p-add-place-name":function(event){
+            //     searchStr = $.trim( $(event.currentTarget).val() );
+            //     if(searchStr.length > 0) {
+            //         var $dropResult = $(event.currentTarget).closest(".drop-filter").find(".drop-results");
+            //         $dropResult.find('li').remove();
+            //         newPoint.search(searchStr, $dropResult);
+            //     }               
+            // },
+            "keyup #add-new-place":function(events){
+                //events.preventDefault();
+                var self = events.currentTarget;
                 if ($(self).val().length > 0){
                     var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
                     ymaps.geocode($(self).val())
@@ -1092,6 +1278,7 @@ $(function(){
                         });
                 }
             },
+            // /end ага, вот эти ребята
             "keyup #input-add-labels":function(e){
                 var self = e.currentTarget;
                 if ($(self).val().length > 0){
@@ -1196,7 +1383,7 @@ $(function(){
             console.log(input);
             var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
 
-            $(input).closest(".input-line").css("z-index", 2134);
+            // $(input).closest(".input-line").css("z-index", 2134);
             $dropResult.show();
             $(".hover", $dropResult).removeClass("hover");
             $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
@@ -1247,7 +1434,7 @@ $(function(){
                             }
                         }
                         $dropResult.hide();
-                        $(input).closest(".input-line").css("z-index", 1);
+                        // $(input).closest(".input-line").css("z-index", 1);
                         input.blur();
 
                         //временно вернуть фолс для тестов
@@ -1265,13 +1452,13 @@ $(function(){
                             if(flag){
                                 //если текст совпадает, то закрыть выпадающий список и запустить поиск
                                 $dropResult.hide();
-                                $(input).closest(".input-line").css("z-index", 1);
+                                // $(input).closest(".input-line").css("z-index", 1);
                                 input.blur();
                                 $(".not-found-event").slideUp(200);
                             } else {
                                 $(input).val("Событие не найдено");
                                 $dropResult.hide();
-                                $(input).closest(".input-line").css("z-index", 1);
+                                // $(input).closest(".input-line").css("z-index", 1);
                                 input.blur();
                                 $(".not-found-event").slideDown(200);
                             }

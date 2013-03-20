@@ -6,7 +6,7 @@ $(function(){
         // window.
         myMap = new ymaps.Map ("mainmap", {
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
-            zoom: 10
+            zoom: 10,
         });
         myMap.ready = $.Deferred();
         

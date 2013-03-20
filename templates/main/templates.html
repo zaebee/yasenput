@@ -1,5 +1,7 @@
 
 <!-- Templates -->
+<!-- <% if(isliked) { %> marked <% } %>  -->
+
 <script type="text/template" id="point-template">
     <article class="item item-place" data-point-id="<%- id %>">
         <div class="photo">
@@ -9,12 +11,13 @@
                 <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
             {% endif %}
             <div class="yasen-info">
-                <span class="yp-title">88 ЯПи</span>
+                <span class="yp-title"><%- YPscore %> ЯПи</span>
                 
                 <div class="yp-info">
-                    <i class="yp-like"></i><small>12</small>
-                    <i class="yp-marked"></i><small>37</small>
-                    <i class="yp-place"></i><small>18</small>
+
+                    <i class="yp-like"></i><small><%- likeusers %></small>
+                    <i class="yp-marked"></i><small><%- collectionusers %></small>
+                    <i class="yp-place"></i><small><%- beenusers %></small>
                     <i class="yp-star"></i><small>+15/-3</small>
                 </div>
             </div>
@@ -29,22 +32,6 @@
             <h3><%- name %></h3>
             <p><%- address %></p>
 
-            <div class="stats">
-				<span>
-					<span class="ico-want-small"></span>
-					<%- visits %>
-				</span>
-
-				<span>
-					<span class="ico-like-small"></span>
-					<%- likes %>
-				</span>
-
-				<span>
-					<span class="ico-comment-small"></span>
-					<%- likes %>
-				</span>
-            </div>
         </div>
         <div class="comments">
             <ul>
@@ -1048,6 +1035,12 @@
 </div>
 </script>
 
+ <!--
+<input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" value="Введите названия места" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
+-->
+<!--
+<input type="text" data-key="address" autocomplete="off" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;" value="Введите местоположение (область, район, населённый пункт)" id="add-new-place">
+-->
 {% if user.is_authenticated %}
 <script type="text/template" id="point-add-template">
     <div id="popups">
@@ -1065,7 +1058,10 @@
                             <div class="required">*</div>
 
                             <div class="drop-filter">
-                                <input id="p-add-place-name" type="text" class="search-matches" autocomplete="off" value="Введите названия места" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
+                               
+
+                                <input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" placeholder="Введите название места">
+
                                 <ul class="drop-results">
 
                                 </ul>
@@ -1075,10 +1071,17 @@
                         <div class="input-line">
                             <div class="required">*</div>
                                 <div class="drop-filter">
-                                <input type="text" autocomplete="off" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;" value="Введите местоположение (область, район, населённый пункт)" id="add-new-place">
+                                <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place">
                                 <ul class="drop-results">
-
                                 </ul>
+                            </div>
+                        </div>
+
+                        <div class="input-line">
+                            <div class="required">*</div>
+                            
+                            <div class="drop-filter">
+                                <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc">
                             </div>
                         </div>
 
@@ -1087,7 +1090,6 @@
                                 <a href="#" data-target="tab-photos-place" class="active">Фотографии</a>
                                 <a href="#" data-target="tab-map-place">На карте</a>
                                 <a href="#" data-target="tab-reviews-place">Отзывы</a>
-
                                 <div class="shadow"></div>
                             </div>
 
@@ -1101,11 +1103,11 @@
                                     </div>
                                 </div>
 
-                                <div id="tab-map-place">
+                                <div id="tab-map-place" style="display: none;">
                                     <div id="popup-map-place" style="width:560px; height:510px"></div>
                                 </div>
 
-                                <div id="tab-reviews-place">
+                                <div id="tab-reviews-place" style="display: none;">
                                     <div class="add-comment">
                                         <div class="ac-block">
                                             <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
@@ -1161,210 +1163,220 @@
             </div>
 
 
-            <div class="popup" id="p-add-event">
-            <div class="p-top">
-                <h3>Добавить событие</h3>
+{#            <div class="popup" id="p-add-event">#}
+{#            <div class="p-top">#}
+{#                <h3>Добавить событие</h3>#}
+{##}
+{#                <input type="button" class="p-close" value=" ">#}
+{#            </div>#}
+{##}
+{#            <div class="clearfix p-body">#}
+{#                <form action="#">#}
+{#                    <div class="input-line calendar-line">#}
+{#                        <div class="required">*</div>#}
+{##}
+{#                        <span>Событие начнется:</span>#}
+{##}
+{#                        <div class="wrap-cal">#}
+{#                            <input type="text" value="05.02.2013" class="calendar">#}
+{#                            <span class="ico-cal"></span>#}
+{#                        </div>#}
+{##}
+{#                        <span>закончится:</span>#}
+{#                        <div class="wrap-cal">#}
+{#                            <input type="text" value="05.02.2013" class="calendar">#}
+{#                            <span class="ico-cal"></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line">#}
+{#                        <div class="required">*</div>#}
+{##}
+{#                        <div class="drop-filter">#}
+{#                            <input type="text" value="Софийский собор">#}
+{##}
+{#                            <ul class="drop-results">#}
+{#                                <li>Россия, Вологодская область, г. Вологда</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Конищево</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Каравайцево</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Шеино</li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line">#}
+{#                        <div class="required">*</div>#}
+{##}
+{#                        <div class="drop-filter search-matches">#}
+{#                            <input type="text" value="Россия">#}
+{##}
+{#                            <ul class="drop-results">#}
+{#                                <li>Россия, Вологодская область, г. Вологда</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Конищево</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Каравайцево</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Шеино</li>#}
+{#                                <li>Россия, Вологодская область, г. Лиминский</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Пудега</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Вотопино</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Молочная</li>#}
+{#                                <li>Россия, Вологодская область, г. Заря</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Гридино</li>#}
+{##}
+{#                                <li>Россия, Вологодская область, г. Каравайцево</li>#}
+{##}
+{#                                <li>Тестовый Текст</li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line not-found-event">#}
+{#                        <p>Такого места не найдено. Попробуйте ввести другое название <br>или создайте место для этого события сами <a href="#" class="btn btn-place"><b>+</b> Место</a></p>#}
+{#                    </div>#}
+{##}
+{#                    <div class="wide-box">#}
+{#                        <div class="clearfix p-tabs">#}
+{#                            <a href="#" data-target="tab-photos-event" class="active">Фотографии</a>#}
+{#                            <a href="#" data-target="tab-map-event">На карте</a>#}
+{#                            <a href="#" data-target="tab-reviews-event">Отзывы</a>#}
+{##}
+{#                            <div class="shadow"></div>#}
+{#                        </div>#}
+{##}
+{#                        <div class="clearfix tabs-content">#}
+{#                            <div id="tab-photos-event">#}
+{#                                <div class="clearfix p-photos">#}
+{#                                    <div class="item-photo">#}
+{#                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130" data-src-big="temp/img-130x130.jpg" data-author="Andrew Korotkoff" data-count-likes="5" data-avatar="temp/avatar.jpg">#}
+{#                                        <button class="remove-photo"></button>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="item-photo photo-loading">#}
+{#                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">#}
+{#                                        <button class="remove-photo"></button>#}
+{##}
+{#                                        <div class="load-status">#}
+{#                                            <div class="progress-loading">#}
+{#                                                <div class="value" style="width:33%"></div>#}
+{#                                            </div>#}
+{#                                            33%#}
+{#                                        </div>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="item-photo photo-loading">#}
+{#                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">#}
+{#                                        <button class="remove-photo"></button>#}
+{##}
+{#                                        <div class="load-status">#}
+{#                                            <div class="progress-loading">#}
+{#                                                <div class="value" style="width:33%"></div>#}
+{#                                            </div>#}
+{#                                            33%#}
+{#                                        </div>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="item-photo load-photo">#}
+{#                                        <input type="file">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <div id="tab-map-event">#}
+{#                                <div id="popup-map-event" style="width:560px; height:510px">#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <div id="tab-reviews-event">#}
+{#                                <div class="add-comment">#}
+{#                                    <div class="ac-block">#}
+{#                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">#}
+{##}
+{#                                        <div class="ac-body">#}
+{#                                            <div class="toggle-area">#}
+{#                                                <textarea rows="3" cols="40"></textarea>#}
+{#                                                <input type="submit" value=" ">#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line">#}
+{#                        <div class="drop-filter select-labels">#}
+{#                            <div class="labels">#}
+{#                                <input type="text" value="Метки" id="input-add-labels">#}
+{##}
+{#                                <div class="label label-add" style="display:none">#}
+{#                                    Добавить#}
+{#                                    <span>+</span>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <ul class="drop-results">#}
+{#                                <li class="label">Россия</li><li class="label">Вологодская область</li><li class="label">г. Вологда</li><li class="label">Катание</li><li class="label">Памятник</li><li class="label">Миру мир</li><li class="label">Архитектура</li><li class="label">Коньки</li><li class="label">Марафонский заплыв</li><li class="label">На 700</li><li class="label">мг водки</li><li class="label">и потом лошади</li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line">#}
+{#                        <section class="pop-labels">#}
+{#                            <h4>Популярные метки:</h4>#}
+{##}
+{#                            <div class="labels-field">#}
+{#                                <div class="label label-place">Вологда</div>#}
+{#                                <div class="label label-place">Вологодский край</div>#}
+{#                                <div class="label label-user">SinteZ</div>#}
+{#                                <div class="label">Конный спорт</div>#}
+{#                                <div class="label label-name">Памятник архитектуры</div>#}
+{#                                <div class="label">Сноуборд</div>#}
+{#                                <div class="label label-name">Вологодский край</div>#}
+{#                                <div class="label label-place">Вологда</div>#}
+{#                                <div class="label label-user">SinteZ</div>#}
+{#                                <div class="label label-place">Вологда</div>#}
+{#                                <div class="label label-place">Вологодский край</div>#}
+{#                                <div class="label label-user">SinteZ</div>#}
+{#                                <div class="label">Конный спорт</div>#}
+{#                                <div class="label label-name">Памятник архитектуры</div>#}
+{#                                <div class="label">Сноуборд</div>#}
+{#                                <div class="label label-name">Вологодский край</div>#}
+{#                                <div class="label label-place">Вологда</div>#}
+{#                                <div class="label label-user">SinteZ</div>#}
+{#                            </div>#}
+{#                        </section>#}
+{#                    </div>#}
+{##}
+{#                    <div class="input-line submit-line">#}
+{#                        <input type="submit" value="Добавить" disabled class="a-btn">#}
+{##}
+{#                        <small class="required-desc">Поля со значком * обязательны для заполнения</small>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#            </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+</script>
 
-                <input type="button" class="p-close" value=" ">
-            </div>
-
-            <div class="clearfix p-body">
-                <form action="#">
-                    <div class="input-line calendar-line">
-                        <div class="required">*</div>
-
-                        <span>Событие начнется:</span>
-
-                        <div class="wrap-cal">
-                            <input type="text" value="05.02.2013" class="calendar">
-                            <span class="ico-cal"></span>
-                        </div>
-
-                        <span>закончится:</span>
-                        <div class="wrap-cal">
-                            <input type="text" value="05.02.2013" class="calendar">
-                            <span class="ico-cal"></span>
-                        </div>
-                    </div>
-
-                    <div class="input-line">
-                        <div class="required">*</div>
-
-                        <div class="drop-filter">
-                            <input type="text" value="Софийский собор">
-
-                            <ul class="drop-results">
-                                <li>Россия, Вологодская область, г. Вологда</li>
-
-                                <li>Россия, Вологодская область, г. Конищево</li>
-
-                                <li>Россия, Вологодская область, г. Каравайцево</li>
-
-                                <li>Россия, Вологодская область, г. Шеино</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="input-line">
-                        <div class="required">*</div>
-
-                        <div class="drop-filter search-matches">
-                            <input type="text" value="Россия">
-
-                            <ul class="drop-results">
-                                <li>Россия, Вологодская область, г. Вологда</li>
-
-                                <li>Россия, Вологодская область, г. Конищево</li>
-
-                                <li>Россия, Вологодская область, г. Каравайцево</li>
-
-                                <li>Россия, Вологодская область, г. Шеино</li>
-                                <li>Россия, Вологодская область, г. Лиминский</li>
-
-                                <li>Россия, Вологодская область, г. Пудега</li>
-
-                                <li>Россия, Вологодская область, г. Вотопино</li>
-
-                                <li>Россия, Вологодская область, г. Молочная</li>
-                                <li>Россия, Вологодская область, г. Заря</li>
-
-                                <li>Россия, Вологодская область, г. Гридино</li>
-
-                                <li>Россия, Вологодская область, г. Каравайцево</li>
-
-                                <li>Тестовый Текст</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="input-line not-found-event">
-                        <p>Такого места не найдено. Попробуйте ввести другое название <br>или создайте место для этого события сами <a href="#" class="btn btn-place"><b>+</b> Место</a></p>
-                    </div>
-
-                    <div class="wide-box">
-                        <div class="clearfix p-tabs">
-                            <a href="#" data-target="tab-photos-event" class="active">Фотографии</a>
-                            <a href="#" data-target="tab-map-event">На карте</a>
-                            <a href="#" data-target="tab-reviews-event">Отзывы</a>
-
-                            <div class="shadow"></div>
-                        </div>
-
-                        <div class="clearfix tabs-content">
-                            <div id="tab-photos-event">
-                                <div class="clearfix p-photos">
-                                    <div class="item-photo">
-                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130" data-src-big="temp/img-130x130.jpg" data-author="Andrew Korotkoff" data-count-likes="5" data-avatar="temp/avatar.jpg">
-                                        <button class="remove-photo"></button>
-                                    </div>
-
-                                    <div class="item-photo photo-loading">
-                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                                        <button class="remove-photo"></button>
-
-                                        <div class="load-status">
-                                            <div class="progress-loading">
-                                                <div class="value" style="width:33%"></div>
-                                            </div>
-                                            33%
-                                        </div>
-                                    </div>
-
-                                    <div class="item-photo photo-loading">
-                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                                        <button class="remove-photo"></button>
-
-                                        <div class="load-status">
-                                            <div class="progress-loading">
-                                                <div class="value" style="width:33%"></div>
-                                            </div>
-                                            33%
-                                        </div>
-                                    </div>
-
-                                    <div class="item-photo load-photo">
-                                        <input type="file">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="tab-map-event">
-                                <div id="popup-map-event" style="width:560px; height:510px">
-
-                                </div>
-                            </div>
-
-                            <div id="tab-reviews-event">
-                                <div class="add-comment">
-                                    <div class="ac-block">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="ac-body">
-                                            <div class="toggle-area">
-                                                <textarea rows="3" cols="40"></textarea>
-                                                <input type="submit" value=" ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="input-line">
-                        <div class="drop-filter select-labels">
-                            <div class="labels">
-                                <input type="text" value="Метки" id="input-add-labels">
-
-                                <div class="label label-add" style="display:none">
-                                    Добавить
-                                    <span>+</span>
-                                </div>
-                            </div>
-
-                            <ul class="drop-results">
-                                <li class="label">Россия</li><li class="label">Вологодская область</li><li class="label">г. Вологда</li><li class="label">Катание</li><li class="label">Памятник</li><li class="label">Миру мир</li><li class="label">Архитектура</li><li class="label">Коньки</li><li class="label">Марафонский заплыв</li><li class="label">На 700</li><li class="label">мг водки</li><li class="label">и потом лошади</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="input-line">
-                        <section class="pop-labels">
-                            <h4>Популярные метки:</h4>
-
-                            <div class="labels-field">
-                                <div class="label label-place">Вологда</div>
-                                <div class="label label-place">Вологодский край</div>
-                                <div class="label label-user">SinteZ</div>
-                                <div class="label">Конный спорт</div>
-                                <div class="label label-name">Памятник архитектуры</div>
-                                <div class="label">Сноуборд</div>
-                                <div class="label label-name">Вологодский край</div>
-                                <div class="label label-place">Вологда</div>
-                                <div class="label label-user">SinteZ</div>
-                                <div class="label label-place">Вологда</div>
-                                <div class="label label-place">Вологодский край</div>
-                                <div class="label label-user">SinteZ</div>
-                                <div class="label">Конный спорт</div>
-                                <div class="label label-name">Памятник архитектуры</div>
-                                <div class="label">Сноуборд</div>
-                                <div class="label label-name">Вологодский край</div>
-                                <div class="label label-place">Вологда</div>
-                                <div class="label label-user">SinteZ</div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="input-line submit-line">
-                        <input type="submit" value="Добавить" disabled class="a-btn">
-
-                        <small class="required-desc">Поля со значком * обязательны для заполнения</small>
-                    </div>
-                </form>
-            </div>
-            </div>
-            </div>
-        </div>
+<script type="text/template" id="item-photo">
+    <div class="item-photo">
+        <img src="<%- thumbnail130x130 %>" alt="" width="130" height="130" 
+        data-src-big="<%- img_url %>" 
+        data-author="<%- author.first_name %> <%- author.last_name %>" 
+        data-count-likes="5" data-avatar="<%- author.avatar %> ">
+        <button class="remove-photo"></button>
     </div>
 </script>
 
