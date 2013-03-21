@@ -142,14 +142,14 @@ class CollectionsList(View):
                 pointsreq  = pointsreq.extra(
                         select={
                             'isliked': 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers WHERE collections_collections_likeusers.collections_id = collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id),
-                            'countlikeusers': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
+                            'likes_count': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
                         }
                     )
             else:
                 pointsreq  = pointsreq.extra(
                     select={
                         'isliked': 'SELECT 0 ',
-                        'countlikeusers': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
+                        'likes_count': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
                     }
                 )
 
@@ -157,13 +157,15 @@ class CollectionsList(View):
 
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(collections,
-                                                 extras=["isliked", "countlikeusers"], 
-                                                 fields=('name', 'description', 'likeusers', 'updated', 'points'),
+                                                 extras=["isliked", "likes_count"], 
+                                                 fields=('id', 'name', 'description', 'likeusers', 'updated', 'points', 'author'),
                                                  relations={'points': {'fields': ('id', 'name', 'address', 'author', 'imgs'),
                                                                        'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},
                                                                                      'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130')},                    
                                                                                      }
-                                                                       }
+                                                                       },
+                                                            'author': {'fields': ('id', 'first_name', 'last_name', 'avatar')},
+                                                            'likeusers': {'fields': ('id', 'first_name', 'last_name', 'avatar')}
                                                             }
                                                  ), 
                                 mimetype="application/json")
@@ -175,12 +177,12 @@ class CollectionsList(View):
 
 
 class CollectionAdd(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         errors = []
 
-        params = request.POST
+        params = request.GET
         form = forms.AddCollectionForm(params)
         if form.is_valid():
             collection = form.save(commit=False)
@@ -224,12 +226,12 @@ class CollectionEdit(CollectionsBaseView):
 
 
 class AddPoint(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         errors = []
 
-        params = request.POST
+        params = request.GET
         form = forms.AddPointForm(params)
         if form.is_valid():
             try:
@@ -240,6 +242,7 @@ class AddPoint(CollectionsBaseView):
                 point = get_object_or_404(MainModels.Points, pk=point_pk)
                 collection.points.add(point)
                 collection.save()
+
                 return JsonHTTPResponse({"id": 0, "status": "0", "txt": ""})
             except:
                 return JsonHTTPResponse({"id": 0, "status": "1", "txt": "Ошибка выполнения: " + str(sys.exc_info())})
@@ -251,12 +254,12 @@ class AddPoint(CollectionsBaseView):
 
 
 class RemovePoint(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         errors = []
 
-        params = request.POST
+        params = request.GET
         form = forms.AddPointForm(params)
         if form.is_valid():
             try:
@@ -267,6 +270,7 @@ class RemovePoint(CollectionsBaseView):
                 point = get_object_or_404(MainModels.Points, pk=point_pk)
                 collection.points.remove(point)
                 collection.save()
+
                 return JsonHTTPResponse({"id": 0, "status": "0", "txt": ""})
             except:
                 return JsonHTTPResponse({"id": 0, "status": "1", "txt": "Ошибка выполнения: " + sys.exc_info()})
