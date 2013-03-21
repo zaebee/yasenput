@@ -11,7 +11,11 @@ from apps.reports import models as ReportsModels
 from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
+from apps.collections import models as CollectionsModels
+from apps.descriptions import models as DescriptionsModels
+from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 import json
 
@@ -25,14 +29,69 @@ def SerializeHTTPResponse(json):
 class PointsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
 
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
             raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
+    
+    def getSerializePoints(self, points):
+        YpJson = YpSerialiser()
+        return YpJson.serialize(points, 
+                                fields=['id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags', 
+                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'updated', 'likes_count'],
+                                extras=['name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
+                                        'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
+                                relations={'description': {'fields': ['description', 'id']},
+                                           'tags': {'fields': ['name', 'id', 'level']},
+                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
+                                                     'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                                   'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},}
+                                                                                },
+                                                                   'limit': 5
+                                                                  }
+                                                    }, 
+                                           'comments': {'fields': ['txt', 'created', 'author'], 
+                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                                      },
+                                                        'limit': 5
+                                                        },
+                                           'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                               },
+                                                       'limit': 5
+                                                      }
+                                           })          
+    
+    def getSerializeCollections(self, collections):
+        YpJson = YpSerialiser()
+        return YpJson.serialize(collections, 
+                                fields=['id', 'name', 'description', 'author', 'points', 'likeusers', 'updated', 'likes_count'],
+                                extras=['likes_count', 'isliked'],
+                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
+                                                    'limit': 4
+                                                    }, 
+                                           })          
+    
+    def pointsList(self, points):
+        return HttpResponse(self.getSerializePoints(points), mimetype="application/json")
 
 
-class FollowPoint(PointsBaseView):
+class LoggedPointsBaseView(PointsBaseView):
+    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax:
+            raise Http404
+        return super(LoggedPointsBaseView, self).dispatch(request, *args, **kwargs)
+
+
+class FollowPoint(LoggedPointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -48,15 +107,15 @@ class FollowPoint(PointsBaseView):
                     point.followers.add(person)
                 point.save()
             except:
-                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка месту"})
+                return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
             else:
-                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": ""})
         else:
-            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
-
+            return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)
+
 
     def post(self, request, *args, **kwargs):
         form = forms.IdForm(request.POST)
@@ -78,7 +137,7 @@ class LikePoint(PointsBaseView):
             return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
 
-class WantVisitPoint(PointsBaseView):
+class WantVisitPoint(LoggedPointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -94,35 +153,46 @@ class WantVisitPoint(PointsBaseView):
                     point.visitusers.add(person)
                 point.save()
             except:
-                return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления хочу посетить место"})
+                return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления хочу посетить место"})
             else:
-                return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": ""})
         else:
-            return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
+            return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
 
-class OnePoint(View):
+class BeenThere(LoggedPointsBaseView):
+    http_method_names = ('get',)
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
-            raise Http404
-        return super(OnePoint, self).dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        form = forms.IdForm(request.GET)
+        if form.is_valid():
+            pk = form.cleaned_data["id"]
+            try:
+                point = get_object_or_404(MainModels.Points, pk=pk)
+                person = MainModels.Person.objects.get(username=request.user)
+                if MainModels.Points.objects.filter(id=pk, been__id=person.id).count() > 0:
+                    point.been.remove(person)
+                else:
+                    point.been.add(person)
+                point.save()
+            except:
+                return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления 'я тут был'"})
+            else:
+                return JsonHTTPResponse({"id": pk, "status": 0, "txt": ""})
+        else:
+            return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
+
+class OnePoint(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
-        YpJson = YpSerialiser()
-        return HttpResponse(YpJson.serialize([point], relations={'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
+        return self.pointsList([point])
+    
 
-
-class PointsSearch(View):
+class PointsSearch(PointsBaseView):
     http_method_names = ('get',)
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
-            raise Http404
-        return super(PointsSearch, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         params = request.GET
@@ -152,7 +222,8 @@ class PointsSearch(View):
             points = pointsreq[offset:limit]
 
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, fields=("name")), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(points, fields=('id', 'name'))) 
+ 
         else:
             e = form.errors
             for er in e:
@@ -165,20 +236,14 @@ class PointsSearch(View):
 
 # >>>>>>> 1a8ba8a1a3d47d3aa1472808312920e035dbcc8a
 
-class PointsList(View):
+class PointsList(PointsBaseView):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
-            raise Http404
-        return super(PointsList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         params = request.GET
 
         COUNT_ELEMENTS = 10
-        status = 2
         errors = []
 
         page = kwargs.get("page", 1) or 1
@@ -189,82 +254,123 @@ class PointsList(View):
         form = forms.FiltersForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects
+            copypointsreq = MainModels.PointsByUser.objects
+            collectionsreq = CollectionsModels.Collections.objects
 
             user = form.cleaned_data.get("user")
             if user:
-                pointsreq = pointsreq.filter(author__id__icontains=user)
+                pointsreq = pointsreq.filter(author__id=user)
+                copypointsreq = copypointsreq.filter(author__id=user)
+                collectionsreq = collectionsreq.filter(author__id=user)
 
             coord_left = params.get("coord_left")
             if coord_left:
                 try:
                     coord_left = json.loads(coord_left)
                 except:
-                    status = 1
                     errors.append("некорректно задана левая точка на карте для фильтра")
                 else:
                     ln = coord_left.get("ln")
                     lt = coord_left.get("lt")
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
+                        copypointsreq = copypointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
+                        collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
                     else:
-                        status = 1
                         errors.append("некорректно задана левая точка на карте для фильтра")
             coord_right = params.get("coord_right")
             if coord_right:
                 try:
                     coord_right = json.loads(coord_right)
                 except:
-                    status = 1
                     errors.append("некорректно задана правая точка на карте для фильтра")
                 else:
                     ln = coord_right.get("ln")
                     lt = coord_right.get("lt")
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
+                        copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
+                        collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
 
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
+                copypointsreq = copypointsreq.filter(point__name__icontains=name)
 
-            categ = form.cleaned_data.get("categ")
-            if categ:
-                pointsreq = pointsreq.filter(categories__id__icontains=categ)
-
-            tags = form.cleaned_data.get("tags")
-            if tags:
-                try:
-                    tags = json.loads(tags)
-                except:
-                    status = 1
-                    errors.append("некорректно задана правая точка на карте для фильтра")
-                else:
-                    if len(tags) > 0:
-                        pointsreq = pointsreq.extra(where=['main_points.id in (select points_id from main_points_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
+            tags = params.getlist("tags[]")
+            if tags and len(tags) > 0:
+                pointsreq = pointsreq.filter(tags__in=tags)
+                copypointsreq = copypointsreq.filter(point__tags__in=tags)
+                collectionsreq = collectionsreq.filter(points__tags__in=tags)
 
             content = form.cleaned_data.get("content") or 'new'
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
+                copypointsreq  = copypointsreq.order_by('-created')
+                collectionsreq = collectionsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 
             if request.user.is_authenticated():
                 user = MainModels.User.objects.get(username = request.user)
-                pointsreq  = pointsreq.extra(
-                        select={
-                            'currentvisit': 'SELECT COUNT(*) FROM main_points_visitusers WHERE main_points_visitusers.points_id = main_points.id and main_points_visitusers.user_id = '+str(user.id)
-                        }
-                    )
+                point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.user_id = '+str(user.id)
+                copypoint_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_pointsbyuser_likeusers WHERE main_pointsbyuser_likeusers.pointsbyuser_id = main_pointsbyuser.id and main_pointsbyuser_likeusers.user_id = '+str(user.id)
+                collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
             else:
-                pointsreq  = pointsreq.extra(
-                    select={
-                        'currentvisit': 'SELECT 0 '
-                    }
+                point_isliked = "select 0"      
+                copypoint_isliked = "select 0"
+                collections_isliked = "select 0"
+                
+            pointsreq  = pointsreq.extra(
+                select={'id_point': 'select 0',
+                     'isliked': point_isliked,
+                     'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
+                     'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                     'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
+                     'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                     'collections_counusers': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
+                     }
+                )
+            copypointsreq  = copypointsreq.extra(
+                tables=["main_points"],
+                select={'id_point': 'main_pointsbyuser.point_id',
+                     'name': 'main_points.name',
+                     'address': 'main_points.address',
+                     'wifi': 'main_points.wifi',
+                     'wc': 'main_points.wc',
+                     'invalid': 'main_points.invalid',
+                     'parking': 'main_points.parking',
+                     'longitude': 'main_points.longitude',
+                     'latitude': 'main_points.latitude',
+                     'isliked': copypoint_isliked,
+                     'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
+                     'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
+                     'reviewusersplus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=1',
+                     'reviewusersminus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=0',
+                     'collections_counusers': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
+                     }
+                )
+
+            collectionsreq = collectionsreq.extra(
+                select = {
+                          "isliked": collections_isliked,
+                          "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
+                          }
                 )
 
             points  = pointsreq[offset:limit].all()
-
-            YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, extras=["currentvisit"], relations={'tags': {'fields': ('name', 'id', 'level')}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}, 'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}, 'comments': {'fields': ('txt', 'created', 'author'), 'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},}}}), mimetype="application/json")
+            copypoints  = copypointsreq[offset:limit].all()
+            collections  = collectionsreq[offset:limit].all()
+            
+            allpoints = json.loads(self.getSerializePoints(points))
+            allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
+            allcollections = json.loads(self.getSerializeCollections(collections))
+            
+            allpoints = sorted(allpoints, key=lambda x: (x['likes_count']))[:COUNT_ELEMENTS]
+            
+            return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
@@ -272,16 +378,117 @@ class PointsList(View):
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
 
 
-class PointAdd(PointsBaseView):
-    http_method_names = ('post',)
+class PointAddByUser(LoggedPointsBaseView):
+    http_method_names = ('get')
+    
+    def get(self, request, *args, **kwargs):
+        errors = []
+        params = request.GET
+        
+        point_id = kwargs.get("id", None)
+        if not point_id:
+            form = forms.IdForm(params)
+            if not form.is_valid():
+                return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места для копирования"})
+            else: point_id = form.cleaned_data["id"]
 
-    def post(self, request, *args, **kwargs):
+        originalPoint = get_object_or_404(MainModels.Points, pk=point_id)
+
+        form = forms.ExtendedAddForm(params)
+        if form.is_valid():
+            person = MainModels.Person.objects.get(username=request.user)
+            point = MainModels.PointsByUser.objects.create(author=person, point=originalPoint)
+
+            images = params.getlist('imgs[]')
+            if images:
+                for image in images:
+                    try:
+                        img = PhotosModels.Photos.objects.get(id=image)
+                        point.imgs.add(img)
+                        originalPoint.imgs.add(img)
+                    except:
+                        message = "ошибка добавления изображения"
+                        if message not in errors: errors.append(message)
+            
+            description = form.cleaned_data.get("description", None)
+            if description:
+                description = DescriptionsModels.Descriptions.objects.create(description=description, content_object=point, author=person)
+                point.description = description
+                originalPoint.description = description
+                originalPoint.descriptions.add(description)
+
+            reviews = form.cleaned_data.get('reviews', None)
+            if reviews:
+                try:
+                    reviews = json.loads(reviews)
+                except:
+                    errors.append("некорректно заданы отзывы")
+                else:
+                    for review in reviews:
+                        if review.get("type", None) != None and review.get("feedback", None):
+                            try:
+                                feedback = ReviewsModels.Reviews(rating=review["rating"], review=review["feedback"], author=person, content_object=point)
+                                feedback.save()
+                                point.reviews.add(feedback)
+                                originalPoint.reviews.add(feedback)
+                            except:
+                                message = "ошибка добавления отзыва"
+                                print message
+                                if message not in errors: errors.append(message)
+                
+            point.save()
+            originalPoint.save()
+            if request.user.is_authenticated():
+                isliked_select = "SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_pointsbyuser_likeusers WHERE main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id and main_pointsbyuser_likeusers.user_id="+str(person.id)
+            else:
+                isliked_select = "SELECT 0";
+
+            points = MainModels.PointsByUser.objects.filter(id=point.id).extra(
+                         tables=["main_points"],
+                         select = {
+                             'name': 'main_points.name',
+                             'address': 'main_points.address',
+                             'wifi': 'main_points.wifi',
+                             'wc': 'main_points.wc',
+                             'invalid': 'main_points.invalid',
+                             'parking': 'main_points.parking',
+                             'longitude': 'main_points.longitude',
+                             'latitude': 'main_points.latitude',
+                             #"wc": "select wc from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"wifi": "select wifi from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"invalid": "select invalid from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"parking": "select parking from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"name": "select name from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"address": "select address from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"longitude": "select longitude from main_points where main_points.id=main_pointsbyuser.point_id",
+                             #"latitude": "select latitude from main_points where main_points.id=main_pointsbyuser.point_id",
+                             "reviewusersplus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=1",
+                             "reviewusersminus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=0",
+                             "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
+                             "likes_count": "select count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id",
+                             "collections_count": "select count(*) from collections_collections_points join main_points on collections_collections_points.points_id=main_points.id where main_points.id=main_pointsbyuser.point_id",
+                             "isliked": isliked_select,
+                             "id_point": "select " + str(originalPoint.id)                             
+                         }
+                     )
+            
+            return self.pointsList(points)
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
+
+
+class PointAdd(LoggedPointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
-        status = 2
         errors = []
 
-        params = request.POST
+        params = request.GET.copy()
         form = forms.AddPointForm(params)
         if form.is_valid():
             point = form.save(commit=False)
@@ -290,18 +497,7 @@ class PointAdd(PointsBaseView):
             point.author = person
             point.save()
 
-            categories = params.get("categories")
-            if categories:
-                try:
-                    categories = json.loads(categories)
-                except:
-                    status = 1
-                    errors.append("некорректно заданы категории")
-                else:
-                    for categ in categories:
-                        point.categories.add(MainModels.Categories.objects.get(id=categ))
-
-            params_form = forms.AddIdsForm(params)
+            params_form = forms.ExtendedAddForm(params)
             if params_form.is_valid():
                 # images = params_form.cleaned_data.get('imgs', None)
                 # if images:
@@ -322,62 +518,35 @@ class PointAdd(PointsBaseView):
                 for img in images:
                     point.imgs.add(PhotosModels.Photos.objects.get(id=img))
                 point.save()
-
-                reports = params_form.cleaned_data.get('feedbacks', None)
-                if reports:
-                    try:
-                        reports = json.loads(reports)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы отзывы")
-                    else:
-                        for report in reports:
-                            if report.get("type", None) and report.get("feedback", None):
-                                report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
-                                if report_type.count() > 0:
-                                    try:
-                                        feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
-                                        feedback.save()
-                                        point.feedbacks.add(feedback)
-                                    except:
-                                        status = 1
-                                        message = "ошибка добавления отзыва"
-                                        if message not in errors: errors.append(message)
-                        point.save()
-
-                tags = params_form.cleaned_data.get("tags")
+                tags = params.getlist("tags[]")
                 if tags:
-                    try:
-                        tags = json.loads(tags)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы метки")
-                    else:
-                        for tag in tags:
-                            if tag.isdigit():
-                                new_tag = TagsModels.Tags.objects.filter(id=tag)
-                            else:
-                                new_tag = TagsModels.Tags.objects.filter(name=tag)
-                            if new_tag.count() == 0:
-                                new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
-                            else:new_tag = new_tag[0]
-                            point.tags.add(new_tag)
-                        point.save()
-            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)})
+                    for tag in tags:
+                        new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count == 0 and tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)                            
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                        else:new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+                
+            point.save()
+            
+            # params["id"] = point.id
+            return PointAddByUser().get(request, id=point.id)
         else:
             e = form.errors
             for er in e:
                 errors.append(er + ':' + e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
-class PointEdit(PointsBaseView):
+
+class PointEdit(LoggedPointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
-        status = 2
         errors = []
 
         params = request.GET
@@ -387,96 +556,38 @@ class PointEdit(PointsBaseView):
 
         form = forms.AddPointForm(params, instance=MainModels.Points.objects.get(pk=form.cleaned_data['id']))
         if form.is_valid():
-            point = form.save()
+            point = form.save(commit=False)
+
             person = MainModels.Person.objects.get(username=request.user)
+            point.author = person
+            point.save()
 
-            categories = params.get("categories")
-            if categories:
-                try:
-                    categories = json.loads(categories)
-                except:
-                    status = 1
-                    errors.append("некорректно заданы категории")
-                else:
-                    for categ in categories:
-                        if MainModels.Points.objects.filter(id=point.id, categories__id=categ).count() == 0:
-                            point.categories.add(MainModels.Categories.objects.get(id=categ))
-
-            params_form = forms.AddIdsForm(params)
+            params_form = forms.ExtendedAddForm(params)
             if params_form.is_valid():
-                print params_form.cleaned_data
-                images = params_form.cleaned_data.get('imgs', None)
-                if images:
-                    try:
-                        images = json.loads(images)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы изображения")
-                    else:
-                        for image in images:
-                            try:
-                                point.imgs.add(PhotosModels.Photos.objects.get(id=image))
-                            except:
-                                status = 1
-                                message = "ошибка добавления изображения"
-                                if message not in errors: errors.append(message)
 
-                point.save()
-
-                reports = params_form.cleaned_data.get('feedbacks', None)
-                if reports:
-                    try:
-                        reports = json.loads(reports)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы отзывы")
-                    else:
-                        for report in reports:
-                            if report.get("type", None) and report.get("feedback", None):
-                                report_type = ReportsModels.TypeReports.objects.filter(id=report["type"])
-                                if report_type.count() > 0:
-                                    try:
-                                        feedback = ReportsModels.Reports(type=report_type[0], feedback=report["feedback"], author=person, content_object=point)
-                                        feedback.save()
-                                        point.feedbacks.add(feedback)
-                                    except:
-                                        status = 1
-                                        message = "ошибка добавления отзыва"
-                                        if message not in errors: errors.append(message)
-                        point.save()
-
-                tags = params_form.cleaned_data.get("tags")
+                tags = params.getlist("tags[]")
                 if tags:
-                    try:
-                        print tags
-                        tags = json.loads(tags)
-                    except:
-                        status = 1
-                        errors.append("некорректно заданы метки")
-                    else:
-                        for tag in tags:
-                            print tag
-                            if tag.isdigit():
-                                new_tag = TagsModels.Tags.objects.filter(id=tag)
-                            else:
-                                new_tag = TagsModels.Tags.objects.filter(name=tag)
-                            if new_tag.count() == 0:
-                                new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
-                            else: new_tag = new_tag[0]
-                            print new_tag
-                            point.tags.add(new_tag)
-                        point.save()
-            else:
-                print params_form.errors
-            return JsonHTTPResponse({"id": point.id, "status": status, "txt": ", ".join(errors)});
+                    for tag in tags:
+                        new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count == 0 and tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)                            
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                        else:new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+                
+            point.save()
+            
+            # params["id"] = point.id
+            return self.pointsList([point])
         else:
             e = form.errors
             for er in e:
-                errors.append(er +':'+e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)});
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
-class PointDel(PointsBaseView):
+class PointDel(LoggedPointsBaseView):
     http_method_names = ('post',)
 
     def post(self, request):
@@ -487,5 +598,5 @@ class PointDel(PointsBaseView):
 
             CommentsModels.Comments.objects(content_object=point).delete()
             point.delete()
-            return JsonHTTPResponse({"id":pk, "status":"Ошибка удаления"})
-        return JsonHTTPResponse({"id":0, "status":"Ошибка удаления"})
+            return JsonHTTPResponse({"id":pk, "status": 1, "txt":"Ошибка удаления"})
+        return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})

@@ -61,9 +61,9 @@ class OneCollection(View):
             raise Http404
         return super(OneCollection, self).dispatch(request, *args, **kwargs)
 
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         point = get_object_or_404(CollectionsModels.Collections, pk=kwargs.get("id"))
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize([point], relations={'points': {'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}}), mimetype="application/json")
@@ -142,14 +142,14 @@ class CollectionsList(View):
                 pointsreq  = pointsreq.extra(
                         select={
                             'isliked': 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers WHERE collections_collections_likeusers.collections_id = collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id),
-                            'countlikeusers': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
+                            'likes_count': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
                         }
                     )
             else:
                 pointsreq  = pointsreq.extra(
                     select={
                         'isliked': 'SELECT 0 ',
-                        'countlikeusers': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
+                        'likes_count': 'SELECT count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id',
                     }
                 )
 
@@ -157,13 +157,15 @@ class CollectionsList(View):
 
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(collections,
-                                                 extras=["isliked", "countlikeusers"], 
-                                                 fields=('name', 'description', 'likeusers', 'updated', 'points'),
+                                                 extras=["isliked", "likes_count"],
+                                                 fields=('id', 'name', 'description', 'likeusers', 'updated', 'points', 'author'),
                                                  relations={'points': {'fields': ('id', 'name', 'address', 'author', 'imgs'),
                                                                        'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},
                                                                                      'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130')},                    
                                                                                      }
-                                                                       }
+                                                                       },
+                                                            'author': {'fields': ('id', 'first_name', 'last_name', 'avatar')},
+                                                            'likeusers': {'fields': ('id', 'first_name', 'last_name', 'avatar')}
                                                             }
                                                  ), 
                                 mimetype="application/json")
@@ -203,8 +205,7 @@ class CollectionEdit(CollectionsBaseView):
 
     def post(self, request, *args, **kwargs):
         errors = []
-
-        params = request.GET
+        params = request.POST
         form = forms.IdForm(params)
         if not form.is_valid():
             return JsonHTTPResponse({"status": 0, "id": "1", "txt": "Ожидается id коллекции"})

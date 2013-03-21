@@ -2,7 +2,6 @@
 __author__ = 'art'
 from django.db import models
 from apps.main import models as MainModels
-from apps.reports import models as ReportsModels
 
 COMMENT_ALLOWED_MODELS = (
     ('12', 'main.Points'),

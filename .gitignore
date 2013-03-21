@@ -4,6 +4,7 @@
 settings_local.py
 /.idea/*
 /assets/media/*
+/assets/admin/*
 migrations
 .DS_Store
 ._*
