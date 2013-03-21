@@ -61,6 +61,49 @@
 
 </script>
 
+<script type="text/template" id="collection-template" data-collection-id="<%=id%>">
+    <article class="item item-collection">
+        <div class="photo">
+            {% if user.is_authenticated %}
+            <a href="#" class="a-like" data-tooltip="мне нравится">&nbsp;</a>
+            {% endif %}
+            <div class="yasen-info">
+                <div class="yp-info">
+                    <i class="yp-like"></i><small><%- likeusers %></small>
+                </div>
+            </div>
+
+            <a href="#" class="a-photo"><img src="temp/img-207x313.jpg" alt="" width="207" height="313"></a>
+        </div>
+
+        <ul class="photo-preview">
+            <li>
+                <a href="#">
+                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                </a>
+            </li>
+        </ul>
+
+        <div class="body">
+            <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">
+
+            <h3>Кирилло-Белозерский монастырь</h3>
+            <p>поделился Андрей Коротков</p>
+        </div>
+    </article>
+</script>
 
 <script type="text/template" id="point-comment-template">
     <li>
@@ -1034,6 +1077,7 @@
     </div>
 </div>
 </script>
+
 
  <!--
 <input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" value="Введите названия места" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
