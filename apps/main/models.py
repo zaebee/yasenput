@@ -140,7 +140,8 @@ class Points(models.Model):
     name = models.CharField('Название', max_length=255)
     longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
     latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
-    descriptions = models.ManyToManyField(Descriptions, null=True, blank=True)
+    description = models.ForeignKey(Descriptions, null=True, blank=True, related_name="point_description")
+    descriptions = models.ManyToManyField(Descriptions, null=True, blank=True, related_name="points_descriptions")
     reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
@@ -188,8 +189,8 @@ class PointsByUser(models.Model):
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True) #id изображений, они же попадают в основную точку
     main_img = models.ForeignKey(Photos, null=True, blank=True, related_name="points_main_img")
 
-    followers = models.ManyToManyField(Person, null=True, blank=True, related_name='pointsbyusers_users_followers', serialize=True)
-    likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='pointsbyusers_users_likes', serialize=True)
+    followers = models.ManyToManyField(User, null=True, blank=True, related_name='pointsbyusers_users_followers', serialize=True)
+    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='pointsbyusers_users_likes', serialize=True)
 
     reviews = models.ManyToManyField(Reviews, null=True, blank=True, related_name='pointsbyusers_reviews', serialize=True) #Отзывы, они же попадают в основную точку
 

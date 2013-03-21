@@ -16,7 +16,6 @@ class IdsForm(forms.Form):
 
 
 class FiltersForm(IdsForm):
-    categ = forms.IntegerField(required=False)
     name = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
     user = forms.IntegerField(required=False)
@@ -34,7 +33,7 @@ class IdForm(forms.Form):
 class AddPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
                    'followers', 'visits', 'likes', 'been')
 
 
@@ -46,6 +45,6 @@ class ExtendedAddForm(IdsForm):
 class EditPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
                    'followers', 'visits', 'likes', 'been')
         
