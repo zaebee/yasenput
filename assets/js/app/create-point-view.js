@@ -54,7 +54,7 @@ $(function(){
                                     }, {
                                         iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
                                         iconImageSize: [32, 36], // размеры картинки
-                                        iconImageOffset: [-16, -38], // смещение картинки
+                                        iconImageOffset: [-16, -38] // смещение картинки
                                 });
                                 myMapPopupPlace.geoObjects.add(placemark);
                                 var labels = [];
@@ -221,7 +221,7 @@ $(function(){
         //             }
         //         })
         //     });
-        },
+        }
     });
     window.CreatePointView = CreatePointView;
 });

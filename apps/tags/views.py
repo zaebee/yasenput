@@ -3,16 +3,12 @@ from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404
-from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
 from apps.events import forms
-from apps.main import models as MainModels
 from apps.tags import models as TagsModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
-from django.db.models import Count
-import json
+
 
 RESPONSE_LIMITS = {"search": 5, "list": 15}
 
@@ -47,7 +43,7 @@ class TagsList(TagsBaseView):
         
         form = forms.SearchForm(params)
         if form.is_valid():
-            pointsreq = TagsModels.Tags.objects;           
+            pointsreq = TagsModels.Tags.objects
             
             name = form.cleaned_data.get("s")
             if name:
@@ -64,7 +60,7 @@ class TagsList(TagsBaseView):
                         }
                     ).order_by('-popular2', '-id')
             else:   
-                pointsreq  = pointsreq.order_by("name")
+                pointsreq = pointsreq.order_by("name")
                 
             tags = pointsreq[offset:limit]
             
@@ -74,5 +70,5 @@ class TagsList(TagsBaseView):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
 
