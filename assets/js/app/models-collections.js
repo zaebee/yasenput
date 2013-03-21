@@ -10,6 +10,7 @@ $(function(){
 	  //       name:'...',
 	        address:'',
             name:'',
+            description:'',
 			// tags:0,
 	  //       feedbacks:0
         },
@@ -49,7 +50,14 @@ $(function(){
                 };
                 errors.push(error);
             }
-            // TODO: обязательно должна быть хотя бы одна метка
+            if( $.trim( this.get('description') ) == '' ) {
+                error = {
+                    'field': 'description',
+                    'msg': 'Обязательное поле'
+                };
+                errors.push(error);
+            }
+            // TODO: обязательно должна быть хотя бы одна метка из обязательных меток
             if(errors.length > 0) {
                 return errors;
             }
@@ -278,6 +286,64 @@ $(function(){
                 .replaceWith( this.template(yp_image.toJSON()) );
         }
     });
+
+    Label = Backbone.Model.extend({
+        url: '/tags',        
+    });
+    Labels = Backbone.Collection.extend({
+        url: '/tags',
+        sync:  function(method, model, options) {
+            console.log('Sync Labels!');
+            console.log('method: ', method);
+            console.log('model: ', model);
+            console.log('options: ', options);
+            switch (method) {
+                case "read":
+                    switch (options.action) {
+                        case 'load':
+                            options.url = model.url + '/list';
+                            options.data = 'content='+options.content;
+                            options.type = 'GET';
+                            break;
+                        case 'search':
+                            options.url = model.url + '/search';
+                            options.data = 's='+options.str;
+                            options.type = 'GET';
+                            break;
+                    };
+                    break;
+                case "create":
+                    // options.url = model.url + '/add'
+                    // console.log('model: ', model);
+                    // options.data = 'object_id='+model.get('object_id')+'&object_type=12&txt='+encodeURI(model.get('txt'));
+                    // options.type = 'POST';
+                    // switch (options.action) {
+                    //     case 'search':
+                    //         // console.log('===> create with search!');
+                    //         // options.type = 'GET';
+                    //         // options.url = model.url + '/search';
+                    //         // options.data = 's='+options.searchStr;
+                    //         break;
+                    // };
+                    // break;
+                // case "update":
+                //     options.url = model.url + '/'
+                //     break;
+                // case "delete":
+                //     options.url = model.url + '/del'
+                //     options.type = 'POST';
+            };
+            return Backbone.sync(method, model, options);
+        },
+        load: function(content){
+            this.fetch({action: 'load', content: content});
+        },
+        search: function(str){
+            this.fetch({action: 'search', str: str});
+        }
+    });
+    window.Label = Label;
+    window.Labels = Labels;
 
 	// PointComment = Backbone.Model.extend({
  //        url: '/comments',

@@ -806,18 +806,18 @@ $(function(){
                     });
                 }
             },
-            "focus .drop-filter input[type=text]":function (e) {
-                var self = e.currentTarget;
-                var bool = $(self).closest(".drop-filter").hasClass("search-matches") ? true : false;
-                this.onFocusDropInput($(self), bool); //выпадающий живой поиск в попапе
-            },
-            "blur .select-labels input[type=text]":function (e) {
-                var self = e.currentTarget;
-                setTimeout(function(){//закрыть живой поиск в попапе
-                    // self.closest(".input-line").css("z-index", 1);
-                    self.closest(".input-line").find(".drop-results").hide();
-                }, 0);
-            },
+            // "focus .drop-filter input[type=text]":function (e) {
+            //     var self = e.currentTarget;
+            //     var bool = $(self).closest(".drop-filter").hasClass("search-matches") ? true : false;
+            //     this.onFocusDropInput($(self), bool); //выпадающий живой поиск в попапе
+            // },
+            // "blur .select-labels input[type=text]":function (e) {
+            //     var self = e.currentTarget;
+            //     setTimeout(function(){//закрыть живой поиск в попапе
+            //         // self.closest(".input-line").css("z-index", 1);
+            //         self.closest(".input-line").find(".drop-results").hide();
+            //     }, 0);
+            // },
             "click .drop-filter .labels":function (e) {
                 var self = e.currentTarget;
                 // показать живой поиск в попапе Добавить место
@@ -825,22 +825,22 @@ $(function(){
                     // $(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
                 }
             },
-            "mousedown .drop-results li":function (e) {
-                var self = e.currentTarget;
-                // живой поиск в попапе Добавить место
+            // "mousedown .drop-results li":function (e) {
+            //     var self = e.currentTarget;
+            //     // живой поиск в попапе Добавить место
 
-                if($(self).hasClass("label")){
-                    var dropRoot = $(self).closest(".drop-filter");
+            //     if($(self).hasClass("label")){
+            //         var dropRoot = $(self).closest(".drop-filter");
 
-                    $(".label-add", dropRoot).show();
-                    $(multySearch.tmplLabel.replace("{text}", $(self).text()).replace("{clsName}", "")).insertBefore($(".label-add", dropRoot));
-                    $(self).closest(".drop-results").hide().find(".hover").removeClass("hover");
-                    $("input[type=text]", dropRoot).blur().hide();
-                } else {
-                    $(self).closest(".drop-filter").find("input:[type=text]").val($(self).text()).blur();
-                    $(self).closest(".drop-results").hide();
-                }
-            },
+            //         $(".label-add", dropRoot).show();
+            //         $(multySearch.tmplLabel.replace("{text}", $(self).text()).replace("{clsName}", "")).insertBefore($(".label-add", dropRoot));
+            //         $(self).closest(".drop-results").hide().find(".hover").removeClass("hover");
+            //         $("input[type=text]", dropRoot).blur().hide();
+            //     } else {
+            //         $(self).closest(".drop-filter").find("input:[type=text]").val($(self).text()).blur();
+            //         $(self).closest(".drop-results").hide();
+            //     }
+            // },
 //            "focus #add-new-place":function (e) {
 //                var self = e.currentTarget;
 //                $(self).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");

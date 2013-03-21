@@ -2,6 +2,7 @@ $(function(){
     CreatePointView = Backbone.View.extend({
         template: _.template($('#point-add-template').html()),
         photos_place_selector: '#tab-photos-place>div', // где должны отрисовываться фотки у этой вьюхи
+        addLabels_place_selector: '.add-labels-place',
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'loadImage');
@@ -11,19 +12,25 @@ $(function(){
             'keyup #p-add-place-name': 'searchName',
             'keyup #add-new-place': 'searchLocation',
             
-            'change #p-add-place-name, #add-new-place': 'setValue',
-            // 'change #add-new-place': 'setValue',
+            'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
             'change #p-add-place input:file': 'loadImage',
             'click #a-add-point': 'addNewPoint'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
+
+            // добавляем модуль с тегами
+            labels = new window.Labels();
+            window.labels = labels;
+            addLabelsView = new window.AddLabelsView({collection: labels});
+            window.addLabelsView = addLabelsView;
+            addLabelsView.space = this.el;
+
             var view = this;
             $(this.el).html(content);
+            $(this.el).find('.add-labels-place').replaceWith( addLabelsView.render().el );
             var myMapPopupPlace;
-            console.log('this.$el: ', $(this.el).find('.p-tabs'));
-
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
                     if (id == 'tab-map-place'){

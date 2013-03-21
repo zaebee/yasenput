@@ -1,7 +1,7 @@
 $(function(){
     YPimageView = Backbone.View.extend({
         template: _.template($('#point-add-template').html()),
-        el: $('#tab-photos-place'),
+        // el: $('#tab-photos-place'),
         initialize: function() {
             _.bindAll(this, 'render');
             // _.bindAll(this, 'likepoint');     

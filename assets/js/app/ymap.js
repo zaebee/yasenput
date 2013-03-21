@@ -32,9 +32,9 @@ $(function(){
                 }
             });
             console.log('labels: ', labels);
-            $.each(labels, function(index, value){
-                $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
-            })
+            // $.each(labels, function(index, value){
+            //     $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
+            // })
 
         });
         window.mapBounds = myMap.getBounds()

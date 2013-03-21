@@ -1041,6 +1041,35 @@
 <!--
 <input type="text" data-key="address" autocomplete="off" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;" value="Введите местоположение (область, район, населённый пункт)" id="add-new-place">
 -->
+<!-- 
+<div class="input-line">
+    <div class="drop-filter select-labels">
+        <div class="labels">
+            <input type="text" value="Метки" id="input-add-labels" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
+
+            <div class="label label-add" style="display:none">
+                Добавить
+                <span>+</span>
+            </div>
+        </div>
+
+        <ul class="drop-results">
+
+        </ul>
+    </div>
+</div>
+
+<div class="input-line">
+    <section class="pop-labels">
+        <h4>Популярные метки:</h4>
+
+        <div class="labels-field">
+
+        </div>
+    </section>
+</div>
+ -->
+
 {% if user.is_authenticated %}
 <script type="text/template" id="point-add-template">
     <div id="popups">
@@ -1071,7 +1100,7 @@
                         <div class="input-line">
                             <div class="required">*</div>
                                 <div class="drop-filter">
-                                <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place">
+                                <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
                                 <ul class="drop-results">
                                 </ul>
                             </div>
@@ -1081,7 +1110,7 @@
                             <div class="required">*</div>
                             
                             <div class="drop-filter">
-                                <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc">
+                                <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description">
                             </div>
                         </div>
 
@@ -1126,32 +1155,7 @@
                             </div>
                         </div>
 
-                        <div class="input-line">
-                            <div class="drop-filter select-labels">
-                                <div class="labels">
-                                    <input type="text" value="Метки" id="input-add-labels" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
-
-                                    <div class="label label-add" style="display:none">
-                                        Добавить
-                                        <span>+</span>
-                                    </div>
-                                </div>
-
-                                <ul class="drop-results">
-
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="input-line">
-                            <section class="pop-labels">
-                                <h4>Популярные метки:</h4>
-
-                                <div class="labels-field">
-
-                                </div>
-                            </section>
-                        </div>
+                        <span class="add-labels-place"></span>
 
                         <div class="input-line submit-line">
                             <input type="submit" value="Добавить" class="a-btn" id="a-add-point">
@@ -1392,5 +1396,75 @@
             <span class="progress-count">0%</span>
         </div>
     </div>
+</script>
+
+<script type="text/template" id="add-labels">
+<div class="input-line" style="z-index: 1;">
+    <div class="drop-filter select-labels">
+        <div class="p-labels drop-labels">
+            <div class="clearfix selected-labels" style="">
+                <div class="label label-add" style="display: block;">
+                    Добавить<span>+</span>
+                </div>
+                
+                <span class="text-field" style="display: none;"><input type="text"></span>
+            </div>
+            
+            <input type="button" value=" " class="clear-selected">
+            
+            <ul class="drop-labels-field" style="display: none;">
+                <li class="label">
+                    <a href="#">Где-то тут</a>
+                </li>
+                <li class="label">
+                    <a href="#">товарищ SinteZ</a>
+                </li>
+                <li class="label">
+                    <a href="#">г. Вологда, Вологодская области</a>
+                </li>
+                <li class="label">
+                    <a href="#">Катание на катке</a>
+                </li>
+                <li class="label">
+                    <a href="#">Где-то здесь</a>
+                </li>
+                <li class="label">
+                    <a href="#">товарищ MadveX</a>
+                </li>
+                <li class="label">
+                    <a href="#">г. Вологда, Вологодская области</a>
+                </li>
+                <li class="label">
+                    <a href="#">Сноуборд</a>
+                </li>
+            <li class="drop-not-found">Такой метки не найдено. Создайте новую метку нажав кнопку Enter</li></ul>
+        </div>
+    </div>
+</div>
+
+<div class="input-line">
+    <section class="clearfix pop-labels">
+        <h4>Выберите одну из обязательных меток:</h4>
+        
+        <div class="require-labels">
+            <div class="label label-require" data-require="true">Туризм</div>
+            <div class="label label-require" data-require="true">Охота</div>
+            <div class="label label-require" data-require="true">Рыбалка</div>
+            <div class="label label-require" data-require="true">Активный отдых</div>
+            <div class="label label-require" data-require="true">Гостиница</div>
+            <div class="label label-require" data-require="true">Магазин</div>
+            <div class="label label-require" data-require="true">Кафе</div>
+            <div class="label label-require" data-require="true">Ресторан</div>
+            <div class="label label-require" data-require="true">АЗС</div>
+            <div class="label label-require" data-require="true">СТО</div>
+            <div class="label label-require" data-require="true">Шиномонтаж</div>
+        </div>
+    </section>
+</div>
+</script>
+<script type="text/template" id="label">
+    <li class="label">
+        <a href="#"><%- name %></a>
+    </li>
 </script>
 {% endif %}

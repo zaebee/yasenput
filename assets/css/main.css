@@ -79,7 +79,10 @@ sup{position:relative; font-size:.75em; top:-.5em}
 
 .search{clear:both; background:#fff; position:relative; min-height:18px; border:solid 1px #b9c2b8; padding:3px}
 	body .text-field input[type=text]{position:relative; left:0; width:100%; border:0; background:none; font:13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif; color:#666; top:-1px; height:18px; display:block; padding:0}
-	.text-field{margin:0 0 3px 0; height:18px; min-width:10px; display:none; float:left; position:relative; left:4px}
+	.text-field{margin:0 0 3px 0; height:18px; 
+		min-width:10px; 
+		width: 100%;
+		display:none; float:left; position:relative; left:4px}
 	.search input[type=submit]{position:absolute; right:-1px; top:-1px; border:0; cursor:pointer; width:26px; height:26px; background-position:-301px 0; text-indent:-9999px; .padding:0 0 0 9999px; .text-indent:0}
 	.search input[type=submit]:hover{background-position:-339px 0;}
 	.search input[type=submit]:active{background-position:-376px 0;}
@@ -737,10 +740,43 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #add-new-label{text-align:left; position:absolute; display:none; z-index:12345; left:50%; margin-left:-233px}
 #add-new-label p{font-size:14.5px; color:#333; margin:0 0 20px; font-family: Arial, sans-serif}
 #add-new-label a{margin:0 8px 10px 0; width:130px; height:35px; line-height:15px; font-size:16px}
-	#add-new-label a span{display:table-cell;.display:block; width:130px; height:35px; vertical-align:middle; text-align:center}
+#add-new-label a span{display:table-cell;.display:block; width:130px; height:35px; vertical-align:middle; text-align:center}
 
 
+.require-labels{margin:-3px 0 0 -3px}
+.require-labels .label{margin:3px 0 0 3px}
+.label-require{background:#ffadc9 !important}
 
 
+.drop-filter{position:relative; z-index:23}
+.drop-filter .drop-results{position:absolute; left:0; top:100%; background:#fff; border:solid 1px #c4cec3; width:547px; margin:0; font-size:13px; margin:-1px 0 0; display:none}
+	.drop-filter .drop-results li{padding:4px 10px; cursor:pointer}
+	.drop-filter .drop-results li:hover, .drop-filter .drop-results li.hover{background:#f7fcf7}
+	.drop-filter.select-labels .drop-results{padding:4px 4px 1px 4px; width:539px}
+	.drop-filter.select-labels .drop-results .label{margin:0 3px 3px 0; padding:0 6px; background:#fff !important; color:#666}
+
+.drop-filter .labels{min-height:18px; background:#fff; border:solid 1px #c4cec3; padding:3px 10px 0; background:#fff}
+	.drop-filter .labels .label{margin:0 3px 3px 0}
+.drop-filter.select-labels .drop-results .label:hover, .drop-filter.select-labels .drop-results .label.hover{background:#daa0a7 !important; color:#fff}
+	.drop-filter .labels .title-labels{color:#666; font-size:13px; display:inline-block; .display:inline; .zoom:1; vertical-align:top; height:18px; line-height:18px}
+
+.drop-labels li{
+	display:inline-block;
+	 .display:inline; .zoom:1; vertical-align:top; height:18px; line-height:18px; padding:0 9px; font: 13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif;}
+.drop-labels a{text-decoration:none; color:inherit}
+.drop-labels-field{position:absolute; left:-1px; top:100%; background:#fff; border:solid 1px #c4cec3; 
+	/*width:420px; */
+	width:100%; 
+	padding:3px 0 0 3px; margin-top:1px; display:none; min-height:18px}
+.drop-labels-field .label{margin:0 3px 3px 0; padding:0 9px; cursor:pointer; background:none !important; color:#984D56}
+.drop-labels-field .label.selected, .drop-labels-field .label:hover{background:#daa0a7 !important; color:#fff}
+.drop-labels-field .label-place.selected, .drop-labels-field .label-place:hover{background:#78a8ff !important; color:#fff}
+.drop-labels-field .label-name.selected, .drop-labels-field .label-name:hover{background:#9884b9 !important; color:#fff}
+.drop-labels-field .label-user.selected, .drop-labels-field .label-user:hover{background:#f5c05c !important; color:#fff}
+
+.drop-labels .drop-not-found{
+	display:none; 
+	/*display:block; */
+	font-size:13px; color:#000; font-style:italic;padding:1px 9px 4px}
 
 /**/
