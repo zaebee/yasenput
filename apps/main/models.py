@@ -130,7 +130,8 @@ class Photos(models.Model):
 class Points(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
-    from apps.reports.models import Reports
+    from apps.reviews.models import Reviews
+    from apps.descriptions.models import Descriptions
     
     class Meta:
         verbose_name = u'Точки'
@@ -139,8 +140,8 @@ class Points(models.Model):
     name = models.CharField('Название', max_length=255)
     longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
     latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
-    #description = models.TextField('Описание', null=True, default=0)
-    categories = models.ManyToManyField(Categories, null=True, blank=True)
+    descriptions = models.ManyToManyField(Descriptions, null=True, blank=True)
+    reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
@@ -148,12 +149,16 @@ class Points(models.Model):
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
-    #wasvisitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_wasvisits', serialize=True)
+    been = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_been', serialize=True)
+
+    wifi = models.BooleanField(default=False)
+    wc = models.BooleanField(default=False)
+    invalid = models.BooleanField(default=False)
+    parking = models.BooleanField(default=False)
+    
+    author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
-    author = models.ForeignKey(Person, null=True, serialize=True)
-    feedbacks = models.ManyToManyField(Reports, null=True, blank=True)
-    comments = generic.GenericRelation(Comments)
 
     def _likes(self):
         return self.likeusers.count()
@@ -161,14 +166,36 @@ class Points(models.Model):
     def _visits(self):
         return self.visitusers.count()
 
-    def natural_key(self):
-        return (self.imgs.natural_key(), self.comments.natural_key())
-
     likes = property(_likes)
     visits = property(_visits)
 
     def __unicode__(self):
         return self.name
+
+
+class PointsByUser(models.Model):
+    from apps.photos.models import Photos
+    from apps.reviews.models import Reviews
+    from apps.descriptions.models import Descriptions
+    
+    class Meta:
+        verbose_name = u'Точки глазами пользователя'
+        verbose_name_plural = u'Точки глазами пользователя'
+
+    point = models.ForeignKey(Points, max_length=255)
+
+    description = models.ForeignKey(Descriptions, null=True, blank=True) #Описание, оно же попадает в основную точку. Оно одно, поэтому ForeignKey
+    imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True) #id изображений, они же попадают в основную точку
+    main_img = models.ForeignKey(Photos, null=True, blank=True, related_name="points_main_img")
+
+    followers = models.ManyToManyField(Person, null=True, blank=True, related_name='pointsbyusers_users_followers', serialize=True)
+    likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='pointsbyusers_users_likes', serialize=True)
+
+    reviews = models.ManyToManyField(Reviews, null=True, blank=True, related_name='pointsbyusers_reviews', serialize=True) #Отзывы, они же попадают в основную точку
+
+    author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
+    created = models.DateTimeField('Создан', auto_now_add=True)
+    updated = models.DateTimeField('Изменен', auto_now=True)
 
 
 class Routes(models.Model):
