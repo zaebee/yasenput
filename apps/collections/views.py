@@ -61,9 +61,9 @@ class OneCollection(View):
             raise Http404
         return super(OneCollection, self).dispatch(request, *args, **kwargs)
 
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         point = get_object_or_404(CollectionsModels.Collections, pk=kwargs.get("id"))
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize([point], relations={'points': {'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}}), mimetype="application/json")
@@ -177,12 +177,12 @@ class CollectionsList(View):
 
 
 class CollectionAdd(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         errors = []
 
-        params = request.GET
+        params = request.POST
         form = forms.AddCollectionForm(params)
         if form.is_valid():
             collection = form.save(commit=False)
@@ -226,12 +226,12 @@ class CollectionEdit(CollectionsBaseView):
 
 
 class AddPoint(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         errors = []
 
-        params = request.GET
+        params = request.POST
         form = forms.AddPointForm(params)
         if form.is_valid():
             try:
@@ -254,12 +254,12 @@ class AddPoint(CollectionsBaseView):
 
 
 class RemovePoint(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         errors = []
 
-        params = request.GET
+        params = request.POST
         form = forms.AddPointForm(params)
         if form.is_valid():
             try:
