@@ -8,6 +8,7 @@
 
         {% block preload_css %}
         {% endblock %}
+            <link rel="stylesheet" href="{{ STATIC_URL }}css/main_main.css">
             <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css">
             <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.10.0.custom.css">
         {% block postload_css %}
@@ -33,9 +34,11 @@
 
 {#          <script src="{{ STATIC_URL }}js/app/my-app.js"></script>#}
           <script src="{{ STATIC_URL }}js/app/ymap.js"></script>
-          <script src="{{ STATIC_URL }}js/app/middle-bar.js"></script>
+{#          <script src="{{ STATIC_URL }}js/app/middle-bar.js"></script>#}
           <script src="{{ STATIC_URL }}js/app/models-collections.js"></script>
           <script src="{{ STATIC_URL }}js/app/point-view.js"></script>
+          <script src="{{ STATIC_URL }}js/app/detail-point-view.js"></script>
+          <script src="{{ STATIC_URL }}js/app/browsing-photos-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/addLabels-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/create-point-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/router.js"></script>

@@ -974,11 +974,11 @@ $(function(){
                     parent.find(".hidden-content").toggle();
                 }
             },
-            "click .p-gallery .item-photo":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault(); //показать главную фотку в попапе по клику на превьюшку
-                if(e.target.tagName != 'BUTTON' && !$(self).hasClass("load-photo")) this.changeBigPhoto($(self));
-            },
+            // "click .p-gallery .item-photo":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault(); //показать главную фотку в попапе по клику на превьюшку
+            //     if(e.target.tagName != 'BUTTON' && !$(self).hasClass("load-photo")) this.changeBigPhoto($(self));
+            // },
             "click .bp-photo":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault(); //смена фотки в слайдере при клике на большую фотку
@@ -1007,12 +1007,12 @@ $(function(){
                 e.preventDefault();
                 $("#near-objects").slideDown(200);
             },
-            "click .not-found-event .btn-place":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();
-                $("#p-add-event").hide();
-                $("#p-add-place").show();
-            },
+            // "click .not-found-event .btn-place":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();
+            //     $("#p-add-event").hide();
+            //     $("#p-add-place").show();
+            // },
             "click .a-remove-comment":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault();
@@ -1025,15 +1025,19 @@ $(function(){
             },
 
             'click .top-panel .btn-place' : function(event){
-                // event.preventDefault();
+                event.preventDefault();
                 window.newPoint = new window.Point();
                 createPointView = new window.CreatePointView({model: window.newPoint});
                 window.currentPointPopup = createPointView;
 
+                createPointView.render();
+                $(".scroll-box").find('#'+createPointView.id).remove();            
+                $(".scroll-box").append(createPointView.el);
+
                 var self = event.currentTarget;
-                // var addPoint = this.templateAdd();
-                $("#popups").remove();
-                $("#overlay").after(createPointView.render().el);
+                var addPoint = this.templateAdd();
+                // $("#popups").remove();
+                // $(".scroll-box").append(createPointView.render().el);
 
                 var id = 'p-add-place';
                 window.YPApp.popups.open({
@@ -1354,32 +1358,32 @@ $(function(){
                 }
             });
         },
-        changeBigPhoto:function(root){
-            var data  = $("a", root).data(),
-                parent= root.closest(".p-gallery"),
-                index = parent.find(".item-photo").index(root),
-                big   = $("#big-photo");
+        // changeBigPhoto:function(root){
+        //     var data  = $("a", root).data(),
+        //         parent= root.closest(".p-gallery"),
+        //         index = parent.find(".item-photo").index(root),
+        //         big   = $("#big-photo");
 
-            var eq = (index + (4 - index%4))-1 > parent.find(".item-photo").length-1 ? parent.find(".item-photo").length-1 : (index + (4 - index%4))-1;
+        //     var eq = (index + (4 - index%4))-1 > parent.find(".item-photo").length-1 ? parent.find(".item-photo").length-1 : (index + (4 - index%4))-1;
 
-            big.insertAfter(parent.find(".item-photo").eq(eq));
-            $(".bp-photo img", big).attr("src", data.srcBig); // путь к большой фотке
-            $(".bp-name", big).html(data.author); // имя автора
-            $(".bp-avatar", big).attr("src", data.avatar); // аватарка
-            $(".count-like", big).html(data.countLikes); // аватарка
-            big.show();
+        //     big.insertAfter(parent.find(".item-photo").eq(eq));
+        //     $(".bp-photo img", big).attr("src", data.srcBig); // путь к большой фотке
+        //     $(".bp-name", big).html(data.author); // имя автора
+        //     $(".bp-avatar", big).attr("src", data.avatar); // аватарка
+        //     $(".count-like", big).html(data.countLikes); // аватарка
+        //     big.show();
 
-            // менять комментарии скорее всего нужно динамически, подгружая аяксом
-            parent.find(".current").removeClass("current");
-            root.addClass("current");
+        //     // менять комментарии скорее всего нужно динамически, подгружая аяксом
+        //     parent.find(".current").removeClass("current");
+        //     root.addClass("current");
 
-            var h = $(".bp-photo").height();
-            var q = big.offset().top - $("#popups .scroll-box").offset().top;
-            var w = q - big.offset().top;
-            var scrollTop = q - ($(window).height() - h)/2;
+        //     var h = $(".bp-photo").height();
+        //     var q = big.offset().top - $("#popups .scroll-box").offset().top;
+        //     var w = q - big.offset().top;
+        //     var scrollTop = q - ($(window).height() - h)/2;
 
-            $("#popups .viewport").scrollTop(Math.abs(scrollTop));
-        },
+        //     $("#popups .viewport").scrollTop(Math.abs(scrollTop));
+        // },
         onFocusDropInput: function (input, withMatch){
             console.log(input);
             var $dropResult = $(input).closest(".drop-filter").find(".drop-results");

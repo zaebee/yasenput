@@ -12,7 +12,8 @@ $(function(){
             name:'',
             description:'',
             tags: [],
-            collections_count: 0
+            collections_count: 0,
+            reviews_count: 0
 			// tags:0,
 	  //       feedbacks:0
         },
@@ -30,7 +31,7 @@ $(function(){
 
             // создаём коллекции фоток
             this.set( {photos_create: new window.YPimages()} );
-            this.set( {photos_pop: new window.YPimages()} );
+            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
             this.set( {photos_new: new window.YPimages()} );           
             this.set( {tags: new window.Tags()} );
         },
@@ -203,11 +204,7 @@ $(function(){
         },
         render: function(){
             var self = this;
-            console.log('render points');
-            // console.log('this: ', this.toJSON());
-            // console.log('window.PointView: ', window.PointView);
             this.each(function( item ) {
-                console.log('item: ', item);
                 var pin = new PointView({model:item});
                 self.el.append(pin.render().el);
             });

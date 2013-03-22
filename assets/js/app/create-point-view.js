@@ -1,5 +1,8 @@
 $(function(){
     CreatePointView = Backbone.View.extend({
+        tagName: 'div',
+        id: 'p-add-place',
+        className: 'popup',
         template: _.template($('#point-add-template').html()),
         photos_place_selector: '#tab-photos-place>div', // где должны отрисовываться фотки у этой вьюхи
         addLabels_place_selector: '.add-labels-place',
