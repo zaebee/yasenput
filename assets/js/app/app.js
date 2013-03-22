@@ -1,5 +1,41 @@
 // var pointCollection;
 window.currentPointPopup = {}; // какой попап сейчас открыт (добавление / просмотр / редактирование точки)
+jQuery(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
 (function(){
     $.fn.simpleTabs = function(params){ // переключалка табов
         var opt = $.extend({
@@ -781,6 +817,7 @@ $(function(){
             //         self.closest(".input-line").find(".drop-results").hide();
             //     }, 0);
             // },
+            
             "click .drop-filter .labels":function (e) {
                 var self = e.currentTarget;
                 // показать живой поиск в попапе Добавить место
@@ -788,6 +825,7 @@ $(function(){
                     // $(this).closest(".input-line").css("z-index", 123).find(".drop-results").show();
                 }
             },
+
             // "mousedown .drop-results li":function (e) {
             //     var self = e.currentTarget;
             //     // живой поиск в попапе Добавить место

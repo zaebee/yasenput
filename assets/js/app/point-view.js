@@ -1,7 +1,10 @@
 $(function(){
 /* -------------------- View point-------------------- */
     PointView = Backbone.View.extend({
+
         template: _.template($('#point-template').html()),
+        tagName: 'article',
+        className: 'item item-place',
         template_det: _.template($('#point-detail').html()),
         templateComment: _.template('<li><img src="<%- avatar %>" alt="" class="avatar" width="30" height="30">' +
                                     '<div class="body-comment">' +
@@ -17,7 +20,6 @@ $(function(){
             
 
             // TODO: отрисовка точки на карте
-
             // Point.bind("detailPlace", self.detailPlace);
 
             // if(!$('#tab-want').hasClass('active')){
@@ -53,74 +55,27 @@ $(function(){
         },
         likepoint: function(event){
             console.log('like point: ', this.model.get('id'));
-            this.model.save({}, {'action': 'like'});
-            // var self = e.currentTarget;
-            // var me = this;
-            // e.preventDefault();
-            // if ($(self).hasClass('marked')){
+            view = this;
+            this.model.like({
+                success: function(){
+                    $(view.el).find('.a-like').toggleClass('marked');
+                    if(view.model.get('isliked') == 0) {
+                        view.model.set({'isliked': 1});
+                    } else {
+                        view.model.set({'isliked': 0});
+                    }
+                },
+                error: function(){
 
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "points/like",
-            //         crossDomain: false,
-            //         dataType:'json',
-            //         data: {
-            //             id: me.model.get('id')
-            //         },
-            //         success: function(data) {
-            //             if (data.status == 2){
-            //                 $(self).removeClass('marked');
-            //                 var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-            //                 me.$el.find('.ico-like-small').parent().contents().last().remove();
-            //                 me.$el.find('.ico-like-small').parent().append(lp-1);
-            //             }else{
-            //                 alert(data.txt);
-            //             }
-            //         },
-            //         error: function (request, status, error) {
-            //             alert(status);
-            //         }
-            //     });
-            // }else{
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "points/like",
-            //         crossDomain: false,
-            //         dataType:'json',
-            //         data: {
-            //             id: me.model.get('id')
-            //         },
-            //         success: function(data) {
-            //             if (data.status == 2){
-            //                 $(self).addClass('marked')
-            //                 var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-            //                 me.$el.find('.ico-like-small').parent().contents().last().remove();
-            //                 me.$el.find('.ico-like-small').parent().append(lp+1);
-            //             }else{
-            //                 alert(data.txt);
-            //             }
-            //         },
-            //         error: function (request, status, error) {
-            //             alert(status);
-            //         }
-            //     });
-            // }
+                }
+            });
         },
         render:function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
+            this.$el.attr( 'data-point-id', this.model.get('id') );
             return this;
-        },
-        
-        // showPointComments: function(event) {
-        //     var self = event.currentTarget;
-        //     event.preventDefault();
-        //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
-        //     console.log('point id: ', pointId);
-        //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
-        //     console.log('this', this);
-        //     this.collection.fetchPointComments()
-        // },
+        },       
         detailPlace:function(e){
             e.preventDefault(); //показ основного попапа
             console.log('Основной попап')
@@ -254,6 +209,4 @@ $(function(){
     });
 
 	window.PointView = PointView;
-
-
 });

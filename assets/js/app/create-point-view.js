@@ -10,7 +10,7 @@ $(function(){
         },
         events: {
             'keyup #p-add-place-name': 'searchName',
-            'keyup #add-new-place': 'searchLocation',
+            'keyup #add-new-place-address': 'searchLocation',
             
             'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
@@ -22,6 +22,7 @@ $(function(){
 
             // добавляем модуль с тегами
             labels = new window.Labels();
+            // labels.set({point: this.model});
             window.labels = labels;
             addLabelsView = new window.AddLabelsView({collection: labels});
             window.addLabelsView = addLabelsView;
@@ -62,14 +63,14 @@ $(function(){
                                     var i = true;
                                     res.geoObjects.each(function (obj) {
                                         if (i)
-                                            $('#add-new-place').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+                                            $('#add-new-place-address').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
                                         i = false;
                                     });
-                                    $(view.el).find('#add-new-place').change();
+                                    $(view.el).find('#add-new-place-address').change();
                                 });
                                 // console.log('coords: ', coords);
-                                longitude = coords[0];
-                                latitude = coords[1];
+                                longitude = coords[1];
+                                latitude = coords[0];
                                 newPoint.set({'longitude': longitude, 'latitude': latitude});
                             });
                         }
@@ -99,7 +100,7 @@ $(function(){
         searchLocation: function(event){
             var self = event.currentTarget;
             if ($(self).val().length > 0){
-                var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                var $dropResult = $(self).closest(".drop-filter").find(".drop-results").show();
                 ymaps.geocode($(self).val())
                     .then(function (res) {
                         var results = [];

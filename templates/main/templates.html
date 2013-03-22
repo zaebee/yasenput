@@ -3,10 +3,10 @@
 <!-- <% if(isliked) { %> marked <% } %>  -->
 
 <script type="text/template" id="point-template">
-    <article class="item item-place" data-point-id="<%- id %>">
+{#    <article class="item item-place" data-point-id="<%- id %>">#}
         <div class="photo">
             {% if user.is_authenticated %}
-                <a href="#" class="a-like" data-tooltip="мне нравится">&nbsp;</a>
+                <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
                 <a href="#" class="a-collection" data-tooltip="добавить в коллекцию">В коллекцию</a>
                 <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
             {% endif %}
@@ -15,10 +15,10 @@
                 
                 <div class="yp-info">
 
-                    <i class="yp-like"></i><small><%- likeusers %></small>
-                    <i class="yp-marked"></i><small><%- collectionusers %></small>
-                    <i class="yp-place"></i><small><%- beenusers %></small>
-                    <i class="yp-star"></i><small>+15/-3</small>
+                    <i class="yp-like"></i><small><%- likes_count %></small>
+                    <i class="yp-marked"></i><small><%- collections_count %></small>
+                    <i class="yp-place"></i><small><%- beens_count %></small>
+                    <i class="yp-star"></i><small>+<%- reviewusersplus %>/-<%- reviewusersminus %></small>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
             {% endif %}
         </div>
 
-    </article>
+{#    </article>#}
 
 </script>
 
@@ -1457,30 +1457,30 @@
             <input type="button" value=" " class="clear-selected">
             
             <ul class="drop-labels-field" style="display: none;">
-                <li class="label">
-                    <a href="#">Где-то тут</a>
-                </li>
-                <li class="label">
-                    <a href="#">товарищ SinteZ</a>
-                </li>
-                <li class="label">
-                    <a href="#">г. Вологда, Вологодская области</a>
-                </li>
-                <li class="label">
-                    <a href="#">Катание на катке</a>
-                </li>
-                <li class="label">
-                    <a href="#">Где-то здесь</a>
-                </li>
-                <li class="label">
-                    <a href="#">товарищ MadveX</a>
-                </li>
-                <li class="label">
-                    <a href="#">г. Вологда, Вологодская области</a>
-                </li>
-                <li class="label">
-                    <a href="#">Сноуборд</a>
-                </li>
+{#                <li class="label" data-label-id="1">#}
+{#                    <a href="#">Где-то тут</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="2">#}
+{#                    <a href="#">товарищ SinteZ</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="3">#}
+{#                    <a href="#">г. Вологда, Вологодская области</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="4">#}
+{#                    <a href="#">Катание на катке</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="5">#}
+{#                    <a href="#">Где-то здесь</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="6">#}
+{#                    <a href="#">товарищ MadveX</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="7">#}
+{#                    <a href="#">г. Вологда, Вологодская области</a>#}
+{#                </li>#}
+{#                <li class="label" data-label-id="8">#}
+{#                    <a href="#">Сноуборд</a>#}
+{#                </li>#}
             <li class="drop-not-found">Такой метки не найдено. Создайте новую метку нажав кнопку Enter</li></ul>
         </div>
     </div>
@@ -1491,24 +1491,35 @@
         <h4>Выберите одну из обязательных меток:</h4>
         
         <div class="require-labels">
-            <div class="label label-require" data-require="true">Туризм</div>
-            <div class="label label-require" data-require="true">Охота</div>
-            <div class="label label-require" data-require="true">Рыбалка</div>
-            <div class="label label-require" data-require="true">Активный отдых</div>
-            <div class="label label-require" data-require="true">Гостиница</div>
-            <div class="label label-require" data-require="true">Магазин</div>
-            <div class="label label-require" data-require="true">Кафе</div>
-            <div class="label label-require" data-require="true">Ресторан</div>
-            <div class="label label-require" data-require="true">АЗС</div>
-            <div class="label label-require" data-require="true">СТО</div>
-            <div class="label label-require" data-require="true">Шиномонтаж</div>
+            <div class="label label-require" data-label-id="101" data-require="true">Туризм</div>
+            <div class="label label-require" data-label-id="102" data-require="true">Охота</div>
+            <div class="label label-require" data-label-id="103" data-require="true">Рыбалка</div>
+            <div class="label label-require" data-label-id="104" data-require="true">Активный отдых</div>
+            <div class="label label-require" data-label-id="105" data-require="true">Гостиница</div>
+            <div class="label label-require" data-label-id="106" data-require="true">Магазин</div>
+            <div class="label label-require" data-label-id="107" data-require="true">Кафе</div>
+            <div class="label label-require" data-label-id="108" data-require="true">Ресторан</div>
+            <div class="label label-require" data-label-id="109" data-require="true">АЗС</div>
+            <div class="label label-require" data-label-id="110" data-require="true">СТО</div>
+            <div class="label label-require" data-label-id="111" data-require="true">Шиномонтаж</div>
         </div>
     </section>
 </div>
 </script>
 <script type="text/template" id="label">
-    <li class="label">
+    <li class="label" data-label-id="<%- id %>">
         <a href="#"><%- name %></a>
     </li>
+</script>
+<script type="text/template" id="label-selected">
+    <div class="label <% if(required){ %> label-require <% } %>" data-label-id="<%- id %>" <% if(required){ %> data-required="true" <% } %> >
+        <%- name %>
+    <% if(selected) { %><button class="remove-label"></button><% } %>
+    </div>
+</script>
+<script type="text/template" id="label-required">
+    <div class="label label-require" data-label-id="<%- id %>" data-require="true">
+        <%- name %>
+    </div>
 </script>
 {% endif %}

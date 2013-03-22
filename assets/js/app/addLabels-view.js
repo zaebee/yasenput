@@ -2,22 +2,33 @@ $(function(){
     AddLabelsView = Backbone.View.extend({
         template: _.template($('#add-labels').html()),
         templateLabel: _.template($('#label').html()),
-        labels_place_selector: '.drop-labels-field',
+        templateLabelSelected: _.template($('#label-selected').html()),
+        templateLabelRequired: _.template($('#label-required').html()),
+        labels_add_selector: '.clearfix.selected-labels', // куда добавляются теги
+        labels_place_selector: '.drop-labels-field', // куда отрисовываются теги после загрузки с сервера
+        required_labels: '.require-labels', // где отрисованны обязательные теги
         space : {},
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'renderLabelsList');
             _.bindAll(this, 'showDropList');
+            _.bindAll(this, 'addLabel');
+            _.bindAll(this, 'closeDropList');
+            _.bindAll(this, 'removeSelectedLabel');
             
-            this.bind('clickout', this.clickout);
+            
+            this.bind('clickout', this.closeDropList);
             this.collection.bind('reset', this.renderLabelsList);
         },
         events: {
             'click .drop-labels': 'showDropList',
-            // 'click .label': 'labelClick',
-            'keyup text-field>input': 'doSearch'
+            'click li.label': 'addLabel',
+            'keyup .text-field>input:text': 'doSearch',
+            'click .remove-label': 'removeSelectedLabel',
+            'click .label-require': 'addLabel'
         },
-        clickout: function(){
+        closeDropList: function(){
+            console.log('closeDropList');
             $(this.el).find('.label-add').show();
             $(this.el).find('.text-field').hide();
             $(this.el).find('.drop-labels-field').hide();
@@ -34,30 +45,135 @@ $(function(){
         },
         renderLabelsList: function(){
             console.log('renderLabelsList!');
-            // view = this;
-            // $(view.el).find(view.labels_place_selector).empty();
-            // this.collection.each(function(label){
-            //     $(view.el).find(view.labels_place_selector).append( view.templateLabel( label.toJSON() ) );
-            // });
+            view = this;
+            $(view.el).find(view.labels_place_selector).find('.label').remove();
+            this.collection.each(function(label){
+                $(view.el).find(view.labels_place_selector).append( view.templateLabel( label.toJSON() ) );
+            });
         },
         doSearch: function(event){
-            event.stopPropagation();
-            $(event.currentTarget).focus();
+            console.log('do Search!');
+            view = this;
+            str = $.trim( $(event.currentTarget).val() );
+            console.log('str: ', str);
 
+            switch (event.which) {
+                case 13: // нажали Enter
+                    labelId = 'new_' + _.uniqueId();
+                    label = new window.Label({id: labelId, name: str, isnew: true, selected: true});
+
+                    // view.collection.add(label);
+                    window.newPoint.get('tags').add(label);
+                    $(this.el).find('.clearfix.selected-labels')
+                       .find('.label-add')
+                       .before( this.templateLabelSelected( label.toJSON() ) );
+                    $(event.currentTarget).val('').trigger('click');
+                    $(view.el).find('.drop-not-found').hide();
+                    break;
+                default:
+                    // event.stopPropagation();
+                    
+                    this.collection.search(str, {
+                        success: function(model, response, options){
+                            if(response.length == 0) {
+                                view = $(view.el).find('.drop-not-found').show();
+                            }
+                        },
+                        error: function(model, response, options){
+                            console.log('search ERROR!');
+                        }
+                    });
+                    break;
+            };            
         },
         showDropList: function(event){
             event.stopPropagation();
             $(this.el).find('.label-add').hide();
             $(this.el).find('.text-field').show();
             $(this.el).find('.drop-labels-field').show();
-            $(this.el).find('input').focus();
-            // if(this.collection.length == 0) {
-            //     this.collection.load('popular');
-            // }
+            $(event.currentTarget).find('input:text').focus();
+
+            if(this.collection.length == 0) {
+                this.collection.load('popular');
+            }
         },
-        labelClick: function(){
-            console.log('labelClick');
+        addLabel: function(event){
+
+            event.stopPropagation();
+            labelId = $(event.currentTarget).attr('data-label-id');
+            labelRequired = $(event.currentTarget).attr('data-require');
+            console.log('labelRequired: ', labelRequired);
+            
+            if(labelRequired == 'true') {
+                // console.log('west side');
+                console.log('find exist: ', $(this.el).find(this.labels_add_selector));
+                
+                // $existReqLabel = $(this.el).find(this.labels_add_selector).find('[data-required="true"]');
+                // existLabelId = $existReqLabel.attr('data-label-id');
+                // existLabel =  window.newPoint.get('tags').get(existLabelId);
+                // window.newPoint.get('tags').remove(existLabelId);
+
+                // $(this.el).find(this.required_labels).append( this.templateLabel( existLabel.toJSON() ) );
+
+                // $existReqLabel.find('.remove-label').click();
+                $(this.el).find(this.labels_add_selector).find('[data-required="true"] .remove-label').click();
+                name = $(event.currentTarget).text();
+                label = new window.Label({id: labelId, name: name, required: true});
+            } else {
+                // console.log('east side');
+                label = this.collection.get(labelId);
+                this.collection.remove(labelId)
+            }
+            label.set({selected: true});
+            // console.log('labelRequired: ', labelRequired);
+            window.newPoint.get('tags').add(label);
+            $(this.el).find('.clearfix.selected-labels')
+               .find('.label-add')
+               .before( this.templateLabelSelected( label.toJSON() ) );
+
+            var fullWidth = $(this.el).find(this.labels_add_selector).width();
+            var limit = fullWidth / 2;
+            var width = fullWidth;
+            // TODO: не корректно уменьшается input
+            console.log('fullWidth: ', fullWidth);
+            $(this.el).find(this.labels_add_selector).find('.label[data-label-id]').each(function(){
+                width -= $(this).outerWidth(true);
+            });
+            console.log('fullWidth after: ', width);
+            if( width > limit ) {
+                $(this.el).find('.text-field').width(width);
+            } else {
+                $(this.el).find('.text-field').width(fullWidth);
+            }
+
+            $(event.currentTarget).remove();
+            
+            this.trigger('clickout');
         },
+        addRequiredLabel: function(event){
+            event.stopPropagation();
+        },
+        removeSelectedLabel: function(event){
+            event.stopPropagation();
+            labelId = $(event.currentTarget).closest('.label').attr('data-label-id');
+            $(event.currentTarget).closest('.label').remove();
+
+            label = window.newPoint.get('tags').get(labelId);
+            label.set({selected: false});
+            if (label.get('required') == true){
+                $(this.el).find(this.required_labels).append( this.templateLabelRequired( label.toJSON() ) );
+            } else if(label.get('isnew') != true) {
+                exist = this.collection.get(label.get('id'));
+                console.log('exist: ', exist);
+                if(exist == undefined) {
+                    $(this.el).find(this.labels_place_selector).append( this.templateLabel( label.toJSON() ) );
+                    this.collection.add(label);
+                }
+            }
+
+            window.newPoint.get('tags').remove(labelId);
+
+        }
         // showDropField: function(){ // показать выпадайку
         //     var self = this;
             

@@ -514,7 +514,7 @@ class PointAdd(LoggedPointsBaseView):
                 #                 status = 1
                 #                 message = "ошибка добавления изображения"
                 #                 if message not in errors: errors.append(message)
-                images = request.POST.getlist('imgs[]')
+                images = params.getlist('imgs[]')
                 for img in images:
                     point.imgs.add(PhotosModels.Photos.objects.get(id=img))
                 point.save()
