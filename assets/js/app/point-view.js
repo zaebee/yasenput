@@ -1,23 +1,17 @@
 $(function(){
 /* -------------------- View point-------------------- */
     PointView = Backbone.View.extend({
+        tagName: 'article',
+        className: 'item item-place',
         template: _.template($('#point-template').html()),
-        template_det: _.template($('#point-detail').html()),
-        templateComment: _.template('<li><img src="<%- avatar %>" alt="" class="avatar" width="30" height="30">' +
-                                    '<div class="body-comment">' +
-                                    '<div class="author-comment"><%- author %></div>' +
-                                    '<p><%- comment %></p></div></li>'),
         // photos_place_selector: '#tab-photos-place>div',
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'likepoint');
             var self = this;
             //Point.bind("detailplace", self.detailPlace, self);
-            console.log('initialize PointView');
-            
 
             // TODO: отрисовка точки на карте
-
             // Point.bind("detailPlace", self.detailPlace);
 
             // if(!$('#tab-want').hasClass('active')){
@@ -42,7 +36,7 @@ $(function(){
             'click .yp-title, .yp-info': 'toggleYPinfo',
             'click .a-like': 'likepoint',
             'click .a-photo':"detailPlace",
-            'click .a-want':"wantvisit",
+            // 'click .a-want':"wantvisit",
                       
             //'click .photo img':function(){
             //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
@@ -52,145 +46,58 @@ $(function(){
             $(event.currentTarget).toggle().siblings().toggle();
         },
         likepoint: function(event){
+            event.preventDefault();
             console.log('like point: ', this.model.get('id'));
-            this.model.save({}, {'action': 'like'});
-            // var self = e.currentTarget;
-            // var me = this;
-            // e.preventDefault();
-            // if ($(self).hasClass('marked')){
+            view = this;
+            this.model.like({
+                success: function(){
+                    $(view.el).find('.a-like').toggleClass('marked');
+                    if(view.model.get('isliked') == 0) {
+                        view.model.set({'isliked': 1});
+                    } else {
+                        view.model.set({'isliked': 0});
+                    }
+                },
+                error: function(){
 
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "points/like",
-            //         crossDomain: false,
-            //         dataType:'json',
-            //         data: {
-            //             id: me.model.get('id')
-            //         },
-            //         success: function(data) {
-            //             if (data.status == 2){
-            //                 $(self).removeClass('marked');
-            //                 var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-            //                 me.$el.find('.ico-like-small').parent().contents().last().remove();
-            //                 me.$el.find('.ico-like-small').parent().append(lp-1);
-            //             }else{
-            //                 alert(data.txt);
-            //             }
-            //         },
-            //         error: function (request, status, error) {
-            //             alert(status);
-            //         }
-            //     });
-            // }else{
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "points/like",
-            //         crossDomain: false,
-            //         dataType:'json',
-            //         data: {
-            //             id: me.model.get('id')
-            //         },
-            //         success: function(data) {
-            //             if (data.status == 2){
-            //                 $(self).addClass('marked')
-            //                 var lp =  me.$el.find('.ico-want-small').parent().contents().last().text()*1;
-            //                 me.$el.find('.ico-like-small').parent().contents().last().remove();
-            //                 me.$el.find('.ico-like-small').parent().append(lp+1);
-            //             }else{
-            //                 alert(data.txt);
-            //             }
-            //         },
-            //         error: function (request, status, error) {
-            //             alert(status);
-            //         }
-            //     });
-            // }
+                }
+            });
         },
         render:function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
+            this.$el.attr( 'data-point-id', this.model.get('id') );
             return this;
-        },
-        
-        // showPointComments: function(event) {
-        //     var self = event.currentTarget;
-        //     event.preventDefault();
-        //     pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
-        //     console.log('point id: ', pointId);
-        //     $(self).closest(".item").find(".comments").show().find("textarea").focus();
-        //     console.log('this', this);
-        //     this.collection.fetchPointComments()
-        // },
+        },       
         detailPlace:function(e){
-            e.preventDefault(); //показ основного попапа
-            console.log('Основной попап')
-            var detcontent = this.template_det(this.model.toJSON());
-            $("#popups").remove();
-            $("#overlay").after(detcontent);
-            $("#popups .scroll-box").scrollTop(0);
+            // window.newPoint = new window.Point();
+            detailPointView = new window.DetailPointView( { model: this.model} );
+            detailPointView.render();
+            $(".scroll-box").find('#'+detailPointView.id).remove();            
+            $(".scroll-box").append(detailPointView.el);
+
+            var self = event.currentTarget;
+            // var addPoint = this.templateAdd();
+            // $("#popups").remove();
+            // $("#overlay").after(createPointView.render().el);
+            // $("#overlay").after(detcontent);
+
+            var id = detailPointView.id;
             window.YPApp.popups.open({
                 elem: $("#overlay"),
-                mapComplaintPlace:undefined,
-                myComplaintPlaceCollection:undefined,
-                myMapPopup:undefined,
-                myMapPopupPlace:undefined,
-                myMapPopupEvent:undefined,
                 callbackAfter: function(){
-                    var self = this;
+                    $("body").css("overflow", "hidden");
                     window.YPApp.popups.open({
                         elem: $("#popups"),
                         callbackAfter: function(){
-                            $("input.calendar").datepicker({
-                                dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-                                monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-                                dateFormat: "dd.mm.yy",
-                                showOn: "button",
-                                buttonImage: "images/calendar.gif",
-                                buttonImageOnly: true
-                            });
-                            var cuselParams = {
-                                changedEl: ".calendar select",
-                                visRows  : 5,
-                                scrollArrows: true
-                            };
-                            $(".p-tabs").simpleTabs({
-                                afterChange: function(me, id){
-                                    if($(".calendar").length && $(".calendar").is(":visible")){
-                                        cuSel(cuselParams);
-                                    }
-                                    if(id == 'tab-map'){
-                                        if (!self.myMapPopup) {
-                                            self.myMapPopup = new ymaps.Map('popup-map-1', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    } else if (id == 'tab-map-place'){
-                                        if (!self.myMapPopupPlace) {
-                                            self.myMapPopupPlace = new ymaps.Map('popup-map-place', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    } else if (id == 'tab-map-event'){
-                                        if (!self.myMapPopupEvent) {
-                                            self.myMapPopupEvent = new ymaps.Map('popup-map-event', {
-                                                center: window.YPApp.mapCoords,
-                                                zoom: 11
-                                            });
-                                        }
-                                    }
-                                }
-                            });
-
-                            if($(".calendar").length && $(".calendar").is(":visible")){
-                                cuSel(cuselParams);
-                            }
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
                         }
                     });
                 },
                 callbackBefore: function(){
                     $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
                 }
             });
         },
@@ -254,6 +161,4 @@ $(function(){
     });
 
 	window.PointView = PointView;
-
-
 });

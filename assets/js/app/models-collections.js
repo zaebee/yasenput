@@ -10,27 +10,30 @@ $(function(){
 	  //       name:'...',
 	        address:'',
             name:'',
+            description:'',
+            tags: [],
+            collections_count: 0,
+            reviews_count: 0
 			// tags:0,
 	  //       feedbacks:0
         },
         initialize: function() {
-            console.log('+++ point initialize!');
-            console.log('this: ', this);
+            // console.log('+++ point initialize!');
             // this.bind('invalid', this.validationFailed, this);
             // расчитываем рейтинг точки
-            likeusers = parseInt( this.get('likeusers'), 10);
-            console.log('likeusers: ', likeusers);
-            beenusers = parseInt( this.get('beenusers'), 10);
-            console.log('beenusers: ', beenusers);
-            collectionusers = parseInt( this.get('collectionusers'), 10);
-            console.log('collectionusers: ', collectionusers);
-            // TODO: учитывать положительные и отрицательные отзывы
-            this.set({YPscore: likeusers + beenusers + collectionusers}, {silent: true});
+            likes_count = parseInt( this.get('likes_count'), 10);
+            beens_count = parseInt( this.get('beens_count'), 10);
+            collections_count = parseInt( this.get('collections_count'), 10);
+            reviewusersplus = parseInt( this.get('reviewusersplus'), 10);
+            reviewusersminus = parseInt( this.get('reviewusersminus'), 10);
+
+            this.set( {YPscore: likes_count + beens_count + collections_count + reviewusersplus - reviewusersminus } );
 
             // создаём коллекции фоток
-            this.set( {photos_create: new window.YPimages()}, {silent: true} );
-            this.set( {photos_pop: new window.YPimages()}, {silent: true} );
-            this.set( {photos_new: new window.YPimages()}, {silent: true} );           
+            this.set( {photos_create: new window.YPimages()} );
+            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
+            this.set( {photos_new: new window.YPimages()} );           
+            this.set( {tags: new window.Tags()} );
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
@@ -49,7 +52,14 @@ $(function(){
                 };
                 errors.push(error);
             }
-            // TODO: обязательно должна быть хотя бы одна метка
+            if( $.trim( this.get('description') ) == '' ) {
+                error = {
+                    'field': 'description',
+                    'msg': 'Обязательное поле'
+                };
+                errors.push(error);
+            }
+            // TODO: обязательно должна быть хотя бы одна метка из обязательных меток
             if(errors.length > 0) {
                 return errors;
             }
@@ -68,6 +78,7 @@ $(function(){
             // console.log('method: ', method);
             // console.log('model: ', model);
             // console.log('options: ', options);
+            console.wait = true;
             switch (method) {
                 case "create":
                     switch (options.action) {
@@ -79,10 +90,26 @@ $(function(){
                             break;
                         case 'saveNew':
                             console.log('===> save new point!');
-                            return;
+                            // return;
                             options.type = 'GET';
-                            options.url = model.url + '/search';
-                            options.data = 's='+options.searchStr;
+                            options.url = model.url + '/add';
+                            options.data = 'name='+model.get('name');
+                            options.data += '&address='+model.get('address');
+                            options.data += '&description='+model.get('description');
+
+                            model.get('tags').each(function(tag){
+                                if(tag.get('isnew') != true) {
+                                    options.data += '&tag[]='+tag.get('id');
+                                } else {
+                                    options.data += '&tag[]='+tag.get('name');
+                                }
+                            });
+                            model.get('photos_create').each(function(img){
+                                options.data += '&img[]='+img.get('id');
+                            });
+                            options.data += '&longitude='+model.get('longitude');
+                            options.data += '&latitude='+model.get('latitude');
+                            // options.data = 's='+options.searchStr;
                             break;
                     };
                     break;
@@ -93,6 +120,7 @@ $(function(){
                         case 'like':
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
+                            // options.data = 'point_id='+model.get('point_id');
                             break;
                     };
                     break;
@@ -138,15 +166,24 @@ $(function(){
                 console.log('validation errors:', errors);
                 this.validationFailed(errors);
             }
-        }
+        },
+        like: function(options){
+            options = (options != undefined) ? options : {};
+            options.action = 'like';
+            this.save({}, options);
+        },
     });
     Points = Backbone.Collection.extend({
         model: Point,
         // view:PointView,
         el: $('.content'),
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
+        // ready: $.Deferred(),
         initialize: function(){
             this.bind('reset', this.render, this);
+        },
+        parse: function(response) {
+            return response.points;
         },
         setURL: function(){
         	this.page = (this.page != null) ? this.page : 1;
@@ -167,15 +204,19 @@ $(function(){
         },
         render: function(){
             var self = this;
-            console.log('render points');
-            // console.log('this: ', this.toJSON());
-            // console.log('window.PointView: ', window.PointView);
             this.each(function( item ) {
-                console.log('item: ', item);
                 var pin = new PointView({model:item});
                 self.el.append(pin.render().el);
             });
-
+            // this.ready.resolve();
+            $(this.el).masonry({ 
+                itemSelector: 'article.item',
+                columnWidth: 241 
+            });
+            // $(this.el).mansory({
+            //     itemSelector: '',
+            //     columnWidth: 229
+            // });
             return self;
         },
         // mapCoords:function(){
@@ -278,6 +319,84 @@ $(function(){
                 .replaceWith( this.template(yp_image.toJSON()) );
         }
     });
+
+    Label = Backbone.Model.extend({
+        url: '/tags',    
+        defaults: {
+            required: false,
+            selected: false
+        }    
+    });
+    Labels = Backbone.Collection.extend({
+        model: Label,
+        url: '/tags',
+        sync:  function(method, model, options) {
+            console.log('Sync Labels!');
+            console.log('method: ', method);
+            console.log('model: ', model);
+            console.log('options: ', options);
+            switch (method) {
+                case "read":
+                    switch (options.action) {
+                        case 'load':
+                            options.url = model.url + '/list';
+                            // options.data = 'content='+options.content;
+                            options.url = '/assets/fakedata/labels.json';
+                            options.type = 'GET';
+                            break;
+                        case 'search':
+                            options.url = model.url + '/search';
+                            options.data = 's='+options.str;
+                            options.type = 'GET';
+                            break;
+                    };
+                    break;
+                case "create":
+                    // options.url = model.url + '/add'
+                    // console.log('model: ', model);
+                    // options.data = 'object_id='+model.get('object_id')+'&object_type=12&txt='+encodeURI(model.get('txt'));
+                    // options.type = 'POST';
+                    // switch (options.action) {
+                    //     case 'search':
+                    //         // console.log('===> create with search!');
+                    //         // options.type = 'GET';
+                    //         // options.url = model.url + '/search';
+                    //         // options.data = 's='+options.searchStr;
+                    //         break;
+                    // };
+                    // break;
+                // case "update":
+                //     options.url = model.url + '/'
+                //     break;
+                // case "delete":
+                //     options.url = model.url + '/del'
+                //     options.type = 'POST';
+            };
+            return Backbone.sync(method, model, options);
+        },
+        load: function(content, options){
+            options = (options != undefined) ? options : {};
+            options.action = 'load';
+            options.content = content;
+            this.fetch(options);
+        },
+        search: function(str, options){
+            options = (options != undefined) ? options : {};
+            options.action = 'search';
+            options.str = str;
+            this.fetch(options);
+        }
+    });
+    window.Label = Label;
+    window.Labels = Labels;
+
+
+    Tag = Backbone.Model.extend({});
+    Tags = Backbone.Collection.extend({
+        model: Tag
+    });
+    window.Tag = Tag;
+    window.Tags = Tags;
 
 	// PointComment = Backbone.Model.extend({
  //        url: '/comments',

@@ -1,7 +1,11 @@
 $(function(){
     CreatePointView = Backbone.View.extend({
+        tagName: 'div',
+        id: 'p-add-place',
+        className: 'popup',
         template: _.template($('#point-add-template').html()),
         photos_place_selector: '#tab-photos-place>div', // где должны отрисовываться фотки у этой вьюхи
+        addLabels_place_selector: '.add-labels-place',
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'loadImage');
@@ -9,21 +13,28 @@ $(function(){
         },
         events: {
             'keyup #p-add-place-name': 'searchName',
-            'keyup #add-new-place': 'searchLocation',
+            'keyup #add-new-place-address': 'searchLocation',
             
-            'change #p-add-place-name, #add-new-place': 'setValue',
-            // 'change #add-new-place': 'setValue',
+            'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
             'change #p-add-place input:file': 'loadImage',
             'click #a-add-point': 'addNewPoint'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
+
+            // добавляем модуль с тегами
+            labels = new window.Labels();
+            // labels.set({point: this.model});
+            window.labels = labels;
+            addLabelsView = new window.AddLabelsView({collection: labels});
+            window.addLabelsView = addLabelsView;
+            addLabelsView.space = this.el;
+
             var view = this;
             $(this.el).html(content);
+            $(this.el).find('.add-labels-place').replaceWith( addLabelsView.render().el );
             var myMapPopupPlace;
-            console.log('this.$el: ', $(this.el).find('.p-tabs'));
-
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
                     if (id == 'tab-map-place'){
@@ -55,14 +66,14 @@ $(function(){
                                     var i = true;
                                     res.geoObjects.each(function (obj) {
                                         if (i)
-                                            $('#add-new-place').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
+                                            $('#add-new-place-address').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
                                         i = false;
                                     });
-                                    $(view.el).find('#add-new-place').change();
+                                    $(view.el).find('#add-new-place-address').change();
                                 });
                                 // console.log('coords: ', coords);
-                                longitude = coords[0];
-                                latitude = coords[1];
+                                longitude = coords[1];
+                                latitude = coords[0];
                                 newPoint.set({'longitude': longitude, 'latitude': latitude});
                             });
                         }
@@ -92,7 +103,7 @@ $(function(){
         searchLocation: function(event){
             var self = event.currentTarget;
             if ($(self).val().length > 0){
-                var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                var $dropResult = $(self).closest(".drop-filter").find(".drop-results").show();
                 ymaps.geocode($(self).val())
                     .then(function (res) {
                         var results = [];
