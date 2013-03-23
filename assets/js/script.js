@@ -75,6 +75,7 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 
 
 jQuery(function($){
+    update_multisearch();
 	var multySearch = {
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
