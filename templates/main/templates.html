@@ -1,26 +1,24 @@
 
 <!-- Templates -->
 <!-- <% if(isliked) { %> marked <% } %>  -->
-<script type="text/template" id="multisearch-template">
-    <ul class="item item-place">
-        <li class="item-title">Местоположения <sup><%= places.length %></sup></li>
-        <% _.each(places, function(value){ %> <li><a href="#"><%= value %></li><% }) %>
-    </ul>
+<script type="text/template" id="multisearch-places-template">
+    <li class="item-title">Местоположения <sup><%= data.length %></sup></li>
+    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></li><% }) %>
+</script>
 
-    <ul class="item item-name">
-        <li class="item-title">Название <sup><%= names.length %></sup></li>
-        <% _.each(names, function(value){ %> <li><a href="#"><%= value %></li><% }) %>
-    </ul>
+<script type="text/template" id="multisearch-points-template">
+    <li class="item-title">Название <sup><%= data.length %></sup></li>
+    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></li><% }) %>
+</script>
 
-    <ul class="item item-labels">
-        <li class="item-title">Метки <sup><%= tags.length %></sup></li>
-        <% _.each(tags, function(value){ %> <li><a href="#"><%= value %></li><% }) %>
-    </ul>
+<script type="text/template" id="multisearch-tags-template">
+    <li class="item-title">Метки <sup><%= data.length %></sup></li>
+    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></li><% }) %>
+</script>
 
-    <ul class="item item-users">
-        <li class="item-title">Пользователи <sup><%= users.length %></sup></li>
-        <% _.each(users, function(value){ %> <li><a href="#"><%= value %></li><% }) %>
-    </ul>
+<script type="text/template" id="multisearch-users-template">
+    <li class="item-title">Пользователи <sup><%= data.length %></sup></li>
+    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></li><% }) %>
 </script>
 
 
