@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
+from apps.photos import models as PhotosModels
 
 from apps.serializers.json import Serializer as YpSerialiser
 
@@ -67,6 +68,12 @@ class CommentAdd(CommentBaseView):
             comment = form.save(commit=False)
             comment.author = request.user.get_profile()
             comment.save()
+            
+            object_type_id = ContentType.objects.get(app_label="photos", model="photos").id
+            if object_type_id == form.cleaned_data.get("object_id", 0):
+                photo = PhotosModels.Photos.objects.get(id=form.cleaned_data["object_id"])
+                photo.comments.add(comment)
+                photo.save()
             return HttpResponse(json.serialize([comment], excludes=("object_id", "content_type"),
                                                             relations={
                                                                 'author': {
