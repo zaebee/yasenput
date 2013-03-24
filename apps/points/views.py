@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
-from apps.reports import models as ReportsModels
 from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
@@ -15,7 +14,6 @@ from apps.collections import models as CollectionsModels
 from apps.descriptions import models as DescriptionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 import json
 
@@ -118,13 +116,19 @@ class LikePoint(PointsBaseView):
 
 
     def post(self, request, *args, **kwargs):
-        form = forms.IdForm(request.POST)
+        form = forms.LikePointsForm(request.POST)
         if form.is_valid():
             pk = form.cleaned_data["id"]
             try:
-                point = get_object_or_404(MainModels.Points, pk=pk)
                 person = MainModels.Person.objects.get(username=request.user)
-                if MainModels.Points.objects.filter(id=pk, likeusers__id=person.id).count() > 0:
+                id_point = form.cleaned_data.get("id_point", 0)
+                if id_point:
+                    point = get_object_or_404(MainModels.PointsByUser, pk=pk)                
+                    count = MainModels.PointsByUser.objects.filter(id=pk, likeusers__id=person.id).count()
+                else:
+                    point = get_object_or_404(MainModels.Points, pk=pk)
+                    count = MainModels.Points.objects.filter(id=pk, likeusers__id=person.id).count()
+                if count > 0:
                     point.likeusers.remove(person)
                 else:
                     point.likeusers.add(person)
@@ -228,13 +232,9 @@ class PointsSearch(PointsBaseView):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-# <<<<<<< HEAD
-#             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
-        
-# =======
-            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)});
 
-# >>>>>>> 1a8ba8a1a3d47d3aa1472808312920e035dbcc8a
+            return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
+
 
 class PointsList(PointsBaseView):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
@@ -394,10 +394,13 @@ class PointAddByUser(LoggedPointsBaseView):
 
         originalPoint = get_object_or_404(MainModels.Points, pk=point_id)
 
-        form = forms.ExtendedAddForm(params)
+        form = forms.AddPointByUserForm(params)
         if form.is_valid():
             person = MainModels.Person.objects.get(username=request.user)
-            point = MainModels.PointsByUser.objects.create(author=person, point=originalPoint)
+            point = form.save(commit=False)
+            point.author = person
+            point.point = originalPoint
+            point.save() 
 
             images = params.getlist('imgs[]')
             if images:
@@ -413,7 +416,6 @@ class PointAddByUser(LoggedPointsBaseView):
             description = form.cleaned_data.get("description", None)
             if description:
                 description = DescriptionsModels.Descriptions.objects.create(description=description, content_object=point, author=person)
-                point.description = description
                 originalPoint.description = description
                 originalPoint.descriptions.add(description)
 
@@ -497,41 +499,19 @@ class PointAdd(LoggedPointsBaseView):
             point.author = person
             point.save()
 
-            params_form = forms.ExtendedAddForm(params)
-            if params_form.is_valid():
-                # images = params_form.cleaned_data.get('imgs', None)
-                # if images:
-                #     try:
-                #         images = json.loads(images)
-                #     except:
-                #         status = 1
-                #         errors.append("некорректно заданы изображения")
-                #     else:
-                #         for image in images:
-                #             try:
-                #                 point.imgs.add(PhotosModels.Photos.objects.get(id=image))
-                #             except:
-                #                 status = 1
-                #                 message = "ошибка добавления изображения"
-                #                 if message not in errors: errors.append(message)
-                images = params.getlist('imgs[]')
-                for img in images:
-                    point.imgs.add(PhotosModels.Photos.objects.get(id=img))
-                point.save()
-                tags = params.getlist("tags[]")
-                if tags:
-                    for tag in tags:
-                        new_tag = TagsModels.Tags.objects.filter(name=tag)
-                        if new_tag.count == 0 and tag.isdigit():
-                            new_tag = TagsModels.Tags.objects.filter(id=tag)                            
-                        if new_tag.count() == 0:
-                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
-                        else:new_tag = new_tag[0]
-                        point.tags.add(new_tag)
-                
-            point.save()
+            tags = params.getlist("tags[]")
+            if tags:
+                for tag in tags:
+                    new_tag = TagsModels.Tags.objects.filter(name=tag)
+                    if new_tag.count == 0 and tag.isdigit():
+                        new_tag = TagsModels.Tags.objects.filter(id=tag)                            
+                    if new_tag.count() == 0:
+                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                    else:new_tag = new_tag[0]
+                    point.tags.add(new_tag)
             
-            # params["id"] = point.id
+                point.save()
+            
             return PointAddByUser().get(request, id=point.id)
         else:
             e = form.errors
