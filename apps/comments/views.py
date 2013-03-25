@@ -69,11 +69,14 @@ class CommentAdd(CommentBaseView):
             comment.author = request.user.get_profile()
             comment.save()
             
-            object_type_id = ContentType.objects.get(app_label="photos", model="photos").id
-            if object_type_id == form.cleaned_data.get("object_id", 0):
+            object_type_id = ContentType.objects.get(app_label="photos", model="photos").model
+            if object_type_id == form.cleaned_data.get("content_type", 0).model and form.cleaned_data.get("object_id", 0):
                 photo = PhotosModels.Photos.objects.get(id=form.cleaned_data["object_id"])
                 photo.comments.add(comment)
                 photo.save()
+            else:
+                return HttpResponse(simplejson.dumps({'id': 0, 'status': 2, 'txt': 'комментарий не добавлен к объекту'}), mimetype="application/json")
+            
             return HttpResponse(json.serialize([comment], excludes=("object_id", "content_type"),
                                                             relations={
                                                                 'author': {
