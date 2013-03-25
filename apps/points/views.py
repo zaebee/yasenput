@@ -46,7 +46,8 @@ class PointsBaseView(View):
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},}
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': 5
                                                                                 },
                                                                    'limit': 5
                                                                   }
@@ -435,7 +436,6 @@ class PointAddByUser(LoggedPointsBaseView):
                                 originalPoint.reviews.add(feedback)
                             except:
                                 message = "ошибка добавления отзыва"
-                                print message
                                 if message not in errors: errors.append(message)
                 
             point.save()
@@ -447,6 +447,7 @@ class PointAddByUser(LoggedPointsBaseView):
 
             points = MainModels.PointsByUser.objects.filter(id=point.id).extra(
                          tables=["main_points"],
+                         where=["main_points.id=main_pointsbyuser.point_id"],
                          select = {
                              'name': 'main_points.name',
                              'address': 'main_points.address',
@@ -456,14 +457,6 @@ class PointAddByUser(LoggedPointsBaseView):
                              'parking': 'main_points.parking',
                              'longitude': 'main_points.longitude',
                              'latitude': 'main_points.latitude',
-                             #"wc": "select wc from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"wifi": "select wifi from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"invalid": "select invalid from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"parking": "select parking from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"name": "select name from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"address": "select address from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"longitude": "select longitude from main_points where main_points.id=main_pointsbyuser.point_id",
-                             #"latitude": "select latitude from main_points where main_points.id=main_pointsbyuser.point_id",
                              "reviewusersplus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=1",
                              "reviewusersminus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=0",
                              "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
@@ -506,8 +499,8 @@ class PointAdd(LoggedPointsBaseView):
                     if new_tag.count == 0 and tag.isdigit():
                         new_tag = TagsModels.Tags.objects.filter(id=tag)                            
                     if new_tag.count() == 0:
-                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
-                    else:new_tag = new_tag[0]
+                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
+                    else: new_tag = new_tag[0]
                     point.tags.add(new_tag)
             
                 point.save()
