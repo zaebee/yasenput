@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.forms import ModelForm
-from apps.main.models import Points
+from apps.main.models import Points, PointsByUser
 from django import forms
 
 
@@ -29,6 +29,16 @@ class SearchForm(forms.Form):
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)
     
+    
+class LikePointsForm(IdForm):
+    id_point = forms.IntegerField(required=False)
+    
+
+class AddPointByUserForm(ModelForm):
+    class Meta:
+        model = PointsByUser
+        exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been')
+
     
 class AddPointForm(ModelForm):
     class Meta:
