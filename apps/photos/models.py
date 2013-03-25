@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from sorl.thumbnail.shortcuts import get_thumbnail
 from apps.main.models import Person
+from apps.comments.models import Comments
 
 def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
@@ -16,6 +17,7 @@ class Photos(models.Model):
         verbose_name_plural = u'Фотографии'
     img = models.ImageField(max_length=255, upload_to=make_upload_path)
     author = models.ForeignKey(Person, unique=False)
+    comments = models.ManyToManyField(Comments, null=True, blank=True, related_name="photos_coments", serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_like_users', serialize=True)
 
     def __unicode__(self):

@@ -197,6 +197,9 @@ class PointsByUser(models.Model):
     author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
+    
+    def __unicode__(self):
+        return self.point.name
 
 
 class Routes(models.Model):
