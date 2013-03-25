@@ -1762,4 +1762,92 @@
         </div>
     </div>
 </script>
+
+<script type="text/template" id="new-collection-one-template">
+    <div class="popup" id="new-collection">
+        <div class="p-top">
+            <h3>Новая коллекция</h3>
+            <input type="button" class="p-close" value=" ">
+        </div>
+
+        <div class="p-body">
+            <form action="#">
+                <div class="line">
+                    <label for="input-add-new">Создайте новую коллекцию</label>
+                    <input type="text" placeholder="Введите название коллекции..." id="input-add-new">
+                </div>
+
+                <div class="line">
+                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc">
+                </div>
+
+                <input type="button" value="Создать" class="a-btn a-add-collection">
+
+                <br><br>
+
+                <div class="line">
+                    <label>Выберите из уже созданных коллекций:</label>
+                    <div class="wide-box">
+                        <div class="small-viewport">
+                            <% _.each(collections, function(colltn){ %>
+                            <label class="custom-checkbox" data-id="<%- colltn.id %>">
+                                <input type="checkbox" value="" name="">
+                                colln
+                                <%- colltn.name %>
+                            </label>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="submit" value="Выбрать" class="a-btn">
+            </form>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="new-collection-template">
+    <div class="popup" id="new-collection">
+        <div class="p-top">
+            <h3>Новая коллекция</h3>
+            <input type="button" class="p-close" value=" ">
+        </div>
+
+        <div class="p-body">
+            <form action="#">
+                <div class="line">
+                    <label for="input-add-new">Создайте новую коллекцию</label>
+                    <input type="text" placeholder="Введите название коллекции..." id="input-add-new">
+                </div>
+
+                <div class="line">
+                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc">
+                </div>
+
+                <input type="button" value="Создать" class="a-btn a-add-collection">
+
+                <br><br>
+
+                <div class="line">
+                    <label>Выберите из уже созданных коллекций:</label>
+                    <div class="wide-box">
+                        <div class="small-viewport">
+                            <% _.each(collections, function(colltn){ %>
+                                <label class="custom-checkbox" data-id="<%- colltn.id %>">
+                                    <input type="checkbox" value="" name="">
+                                    colln
+                                    <%- colltn.name %>
+                                </label>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="submit" value="Выбрать" class="a-btn">
+            </form>
+        </div>
+    </div>
+</script>
+
+
 {% endif %}
