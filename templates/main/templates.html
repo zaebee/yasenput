@@ -1312,7 +1312,18 @@
     </div>
     
     <div class="small-icons">
-        <i class="ico-wifi"></i><i class="ico-disabled"></i><i class="ico-p"></i><i class="ico-wc"></i>
+        <% if(wifi == true) { %>
+            <i class="ico-wifi"></i>
+        <% } %>
+        <% if(invalid == true) { %>
+            <i class="ico-disabled"></i>
+        <% } %>
+        <% if(parking == true) { %>
+            <i class="ico-p"></i>
+        <% } %>
+        <% if(wc == true) { %>
+            <i class="ico-wc"></i>
+        <% } %>
     </div>
 </aside>
 </script>
