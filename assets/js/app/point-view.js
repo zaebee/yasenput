@@ -36,6 +36,7 @@ $(function(){
             'click .yp-title, .yp-info': 'toggleYPinfo',
             'click .a-like': 'likepoint',
             'click .a-photo':"detailPlace",
+            'click .a-collection':"addInCollection",
             // 'click .a-want':"wantvisit",
                       
             //'click .photo img':function(){
@@ -157,7 +158,9 @@ $(function(){
 
             }
         },
-        
+        addInCollection:function(e){
+            e.preventDefault();
+        }
     });
 
 	window.PointView = PointView;

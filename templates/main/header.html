@@ -29,7 +29,7 @@
                 </ul>
             </nav>
             {% if user.is_authenticated %}
-            <div class="auth user">
+            <div class="auth user" data-user-id="{{ user.id }}">
                 <img src="{% if user.person.avatar %}{{ user.person.avatar.url|default:"null" }}{% else %}null{% endif %}" alt="" class="avatar" width="30" height="30">
                 <div class="user-body">
                     <div class="user-name"><a href="#">{{ user.first_name }} {{ user.last_name }}</a></div>
