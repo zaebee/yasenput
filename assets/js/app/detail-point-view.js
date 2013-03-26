@@ -3,7 +3,7 @@ $(function(){
         tagName: 'div',
         id: 'p-common',
         className: 'popup',
-        photosPlace: '#tab-photo .tabs-content',
+        photosPlace: '#tab-photo .tabs-content .toggle-block',
         template: _.template($('#point-detail-new').html()),
         initialize: function() {
             _.bindAll(this, 'render');

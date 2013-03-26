@@ -37,7 +37,7 @@ class LikePointsForm(IdForm):
 class AddPointByUserForm(ModelForm):
     class Meta:
         model = PointsByUser
-        exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been')
+        exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been', 'description', 'descriptions')
 
     
 class AddPointForm(ModelForm):

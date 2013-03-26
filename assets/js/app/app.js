@@ -1,5 +1,10 @@
 // var pointCollection;
 window.currentPointPopup = {}; // какой попап сейчас открыт (добавление / просмотр / редактирование точки)
+// узнаём Id текущего пользователся
+$(function(){
+    window.myId = parseInt( $('header').find('.user').attr('data-user-id'), 10);
+});
+
 jQuery(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;
@@ -85,12 +90,12 @@ $(window).scroll(function(){ //  главная карта
         
         if(scrollTop >= 370){
             if(!$(".main-map").hasClass("hide-map")){
-                $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
+                // $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
                 
                 $(".main-map .m-ico-group").hide();
             }
         } else {
-            $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
+            // $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
             
             $(".main-map .m-ico-group").show();
         }
@@ -955,25 +960,25 @@ $(function(){
 
                 $("#complaint-photo").css(params).show();
             },
-            "click .popup .toggle-block .a-toggle":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault(); // показать-скрыть скрытые блоки в попапе
-                if($(self).hasClass("is-open")){
-                    $("span", self).html("&darr;");
-                } else {
-                    $("span", self).html("&uarr;");
-                }
+            // "click .popup .toggle-block .a-toggle":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault(); // показать-скрыть скрытые блоки в попапе
+            //     if($(self).hasClass("is-open")){
+            //         $("span", self).html("&darr;");
+            //     } else {
+            //         $("span", self).html("&uarr;");
+            //     }
 
-                $(self).toggleClass("is-open");
+            //     $(self).toggleClass("is-open");
 
-                var parent = $(self).closest(".toggle-block");
+            //     var parent = $(self).closest(".toggle-block");
 
-                if(parent.find(".toggle-block").length){
-                    parent.find(".hidden-content").not(".bp-comments .hidden-content").toggle();
-                } else {
-                    parent.find(".hidden-content").toggle();
-                }
-            },
+            //     if(parent.find(".toggle-block").length){
+            //         parent.find(".hidden-content").not(".bp-comments .hidden-content").toggle();
+            //     } else {
+            //         parent.find(".hidden-content").toggle();
+            //     }
+            // },
             // "click .p-gallery .item-photo":function (e) {
             //     var self = e.currentTarget;
             //     e.preventDefault(); //показать главную фотку в попапе по клику на превьюшку
