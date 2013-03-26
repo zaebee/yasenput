@@ -13,9 +13,6 @@ class Comments(models.Model):
     class Meta:
         verbose_name = u'Комментарии'
         verbose_name_plural = u'Комментарии'
-    content_type = models.ForeignKey(ContentType, blank=True, null=True, verbose_name="Type")
-    object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
     author = models.ForeignKey('main.Person', unique=False)
     txt = models.TextField('Текст комментариев')
     created = models.DateTimeField('Создан', auto_now_add=True)
