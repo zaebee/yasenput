@@ -434,12 +434,6 @@ class PointAddByUser(LoggedPointsBaseView):
                         message = "ошибка добавления изображения"
                         if message not in errors: errors.append(message)
             
-            description = form.cleaned_data.get("description", None)
-            if description:
-                description = DescriptionsModels.Descriptions.objects.create(description=description, content_object=point, author=person)
-                originalPoint.description = description
-                originalPoint.descriptions.add(description)
-
             reviews = form.cleaned_data.get('reviews', None)
             if reviews:
                 try:
