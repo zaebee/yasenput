@@ -15,6 +15,7 @@ $(function(){
         },
         render:function(){
             var content = this.template(this.model.toJSON());
+            console.log('POINT: ', this.model.toJSON());
             $(this.el).html(content);
 
             browsingPhotos = new window.BrowsingPhotosView({

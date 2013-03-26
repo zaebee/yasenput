@@ -296,7 +296,7 @@
                                                         </form>
                                                     </div>
 
-                                                    <a href="#" class="a-toggle">ещё комментарии <span>&darr;</span></a>
+                                                    <a href="#" class="a-toggle comments">ещё комментарии <span>&darr;</span></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -304,7 +304,7 @@
                                         <% }) %>
                                     </div>
 
-                                    <a href="#" class="a-toggle">ещё фотографии <span>&darr;</span></a>
+                                    <a href="#" class="a-toggle photos">ещё фотографии <span>&darr;</span></a>
                                 </div>
                             </div>
                         </div>
@@ -1286,11 +1286,9 @@
                 <h4 class="title-block">Метки</h4>
                 
                 <div class="body">
-                    <div class="label label-place">Вологда</div>
-                    <div class="label label-name">Вологда</div>
-                    <div class="label label-user">Вологда</div>
-                    <div class="label">Вологда</div>
-                    <div class="label label-place">Вологда</div>
+                    <% _.each(tags, function(tag){ %>
+                        <div class="label"><%- tag.name %></div>
+                    <% }); %>
                 </div>
             </section>
         </div>
@@ -1574,7 +1572,7 @@
            
         </div>
 
-        <a href="#" class="a-toggle">все фотографии <span>↓</span></a>
+        <a href="#" class="a-toggle photos">все фотографии <span>↓</span></a>
     </div>
 </script>
 
@@ -1610,10 +1608,16 @@
 
     <div class="bp-comments">
         <div class="toggle-block a-toggle-up">
-            <a href="#" class="a-toggle">все комментарии <span>↓</span></a>
+            <a href="#" class="a-toggle comments">все комментарии <span>↓</span></a>
             
-            <% _.each(comments, function(comment) { %>
-                <div class="item-comment">
+            <% 
+            count = 1;
+            _.each(comments, function(comment) { %>
+                <div class="item-comment" data-comment-id="<%- comment.id %>"
+                <% if(count > 3) { %>
+                    style="display: none;"
+                <% } %>
+                >
                     <img src="<%- comment.author.avatar %>" alt="" width="29" height="30" class="avatar">
                     
                     <div class="comment-body">
@@ -1632,7 +1636,9 @@
                         <% } %>
                     </div>
                 </div>
-            <% }) %>
+            <% 
+            count++;
+            }) %>
 
             <div class="add-comment">
                 <form action="#">
@@ -1653,23 +1659,23 @@
     </div>
 </script>
 
-<script type="text/template" id="photo-comment">
-    <div class="item-comment">
-        <img src="<%- author.avatar %>" alt="" width="29" height="30" class="avatar">
-        
-        <div class="comment-body">
-            <div class="comment-author"><%- author.first_name %> <%- author.last_name %></div>
-            
-            <p><%- txt %></p>
-            
-            <div class="comment-date"><%- created %></div>
-        </div>
-        
-        <div class="action">
-            <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-        </div>
-    </div>
-</script>
+{#<script type="text/template" id="photo-comment">#}
+{#    <div class="item-comment" data-comment-id="<%- id %>">#}
+{#        <img src="<%- author.avatar %>" alt="" width="29" height="30" class="avatar">#}
+{#        #}
+{#        <div class="comment-body">#}
+{#            <div class="comment-author"><%- author.first_name %> <%- author.last_name %></div>#}
+{#            #}
+{#            <p><%- txt %></p>#}
+{#            #}
+{#            <div class="comment-date"><%- created %></div>#}
+{#        </div>#}
+{#        #}
+{#        <div class="action">#}
+{#            <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>#}
+{#        </div>#}
+{#    </div>#}
+{#</script>#}
 
 <script type="text/template" id="new-collection-one-template">
     <div class="popup" id="new-collection">

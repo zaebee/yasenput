@@ -34,7 +34,7 @@ $(function(){
             this.set( {photos_create: new window.YPimages()} );
             this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
             this.set( {photos_new: new window.YPimages()} );           
-            this.set( {tags: new window.Tags()} );
+            this.set( {tags_collection: new window.Tags()} );
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
@@ -98,7 +98,7 @@ $(function(){
                             options.data += '&address='+model.get('address');
                             options.data += '&description='+model.get('description');
 
-                            model.get('tags').each(function(tag){
+                            model.get('tags_collection').each(function(tag){
                                 if(tag.get('isnew') != true) {
                                     options.data += '&tags[]='+tag.get('id');
                                 } else {
@@ -154,11 +154,13 @@ $(function(){
                     action: 'saveNew', 
                     success: function(model, response, options) {
                         console.log('SUCCESS!');
+                        console.log('model: ', model);
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
                         // });
                     },
                     error: function (model, response, options) {
+                        //  TODO обработка ошибки
                         console.log('ERROR!');
                         alert(status);
                     },
@@ -177,7 +179,7 @@ $(function(){
     Points = Backbone.Collection.extend({
         model: Point,
         // view:PointView,
-        el: $('.content'),
+        el: $('#content section.items'),
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
         // ready: $.Deferred(),
         initialize: function(){
@@ -293,15 +295,25 @@ $(function(){
                 case "update":
                     // options.url = model.url + '/'
                     switch (options.action) {
-                        case 'addComment':
-                            console.log('===> YPimage addComment!');
-                            options.type = 'POST';
-                            options.url = '/comments/add';
-                            options.data = 'object_id='+( model.get('id') );
-                            options.data += '&object_type=23';
-                            // options.data = 'photo='+( model.get('id') );
-                            options.data += '&txt='+options.txt;
-                            break;
+                        // case 'addComment':
+                        //     console.log('===> YPimage addComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/add';
+                        //     options.data = 'object_id='+( model.get('id') );
+                        //     options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     options.data += '&txt='+options.txt;
+                        //     break;
+                        // case 'removeComment':
+                        //     console.log('===> YPimage removeComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/del';
+                        //     options.data = 'id='+( options.commentId );
+                        //     // options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     // options.data += '&txt='+options.txt;
+                        //     break;
+                        
                     };
                     break;
                 // case "delete":
@@ -327,10 +339,29 @@ $(function(){
             return this;
         },
         addComment: function(txt, options){
-            options = {};
-            options.txt = txt;
-            options.action = 'addComment';
-            this.save({}, options);
+            model = this;
+            jqXHR = $.ajax({
+                url: '/comments/add',
+                type: 'POST',
+                data: {
+                    object_id: model.get('id'),
+                    object_type: 23,
+                    txt: txt
+                }
+            });
+            // console.log('addComment: ', jqXHR);
+            return jqXHR;
+        },
+        removeComment: function(commentId, options){
+            jqXHR = $.ajax({
+                url: '/comments/del',
+                type: 'POST',
+                data: {
+                    id: commentId,
+                }
+            });
+            // console.log('removeComment: ', jqXHR);
+            return jqXHR;
         }
     });
     YPimages = Backbone.Collection.extend({

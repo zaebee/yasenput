@@ -17,14 +17,17 @@ $(function(){
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'addComment');
+            _.bindAll(this, 'removeComment');
             
             // _.bindAll(this, 'loadImage');
             // _.bindAll(this, 'likepoint');     
         },
         events: {
             'click .item-photo:not(.current)>a': 'viewImg',
-            'click a.a-toggle': 'togglePhotos',
+            'click a.a-toggle.photos': 'togglePhotos',
+            'click a.a-toggle.comments': 'toggleComments',
             'click input:submit': 'addComment',
+            'click .a-remove-comment': 'removeComment',
         },
         render:function(){
             console.log('browsing photos render! ');
@@ -186,32 +189,88 @@ $(function(){
                     $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').hide();
                 });
                 // если loadPhoto остался внизу
-                var loadPhoto = $(view.el).find(view.downwardPhotos).find('.load-photo');
-                if(loadPhoto.length > 0) {
-                    loadPhoto.appendTo($(view.el).find(view.upwardPhotos));
-                }
+                // var loadPhoto = $(view.el).find(view.downwardPhotos).find('.load-photo');
+                // if(loadPhoto.length > 0) {
+                //     loadPhoto.appendTo($(view.el).find(view.upwardPhotos));
+                // }
+            }
+            $(event.currentTarget).toggleClass('isopen');
+        },
+        toggleComments: function(event){
+            event.preventDefault();
+            // view = this;
+            // раскрываем
+            if(! $(event.currentTarget).hasClass('isopen') ) {
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').show();
+            // скрываем
+            } else {
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').slice(3).hide();
             }
             $(event.currentTarget).toggleClass('isopen');
         },
         addComment: function(event){
             event.preventDefault();
-            console.log('addComment');
+            view = this;
+            // console.log('addComment');
             photoId = parseInt( $(this.el).find(this.bigPhotoPlace).find('.bp-photo').attr('data-photo-id'), 10);
             photo = this.collection.get( photoId );
             txt = $(event.currentTarget).siblings('textarea').val();
 
-            console.log('photoId: ', photoId);
-            console.log('txt: ', txt);
+            // console.log('photoId: ', photoId);
+            // console.log('txt: ', txt);
 
-            photo.addComment(txt, {
-                success: function(model, response, options){
-                    console.log('Success!');
-                    photo.get('comments').push(response[0]);
-                },
-                error: function(){ 
-                    console.log('Error!');
-                }
+            var jqXHR = photo.addComment(txt);
+            jqXHR.then(function(data, textStatus, jqXHR){
+                data[0].ismine = 1;
+                photo.get('comments').push(data[0]);
+                view.redrawBigPhoto(photo.get('id'));
+            }, function(jqXHR, textStatus, errorThrown){
+                // TODO: реакцию на ошибку прописать
+                // console.log('ERRAR!!!');
             });
+        },
+        removeComment: function(event){
+            var self = event.currentTarget;
+            view = this;
+            event.preventDefault();
+
+            var params = {
+                left: $(self).offset().left - 150,
+                top : $(self).offset().top - 30
+            };
+            // var removeCommentConformDeferred = $.Deferred();
+            
+            $("#confirm-remove-comment").find('.a-yes').unbind('click');
+
+            $("#confirm-remove-comment").find('.a-yes').bind('click', function(){
+                $("#confirm-remove-comment").hide();
+
+                var commentElem = $(self).closest('.item-comment');
+                console.log('commentElem: ', commentElem);
+                var commentId = parseInt( commentElem.attr('data-comment-id'), 10);
+                console.log('commentId: ', commentId);
+
+                var photoId = parseInt( $(view.el).find(view.bigPhotoPlace).find('.bp-photo').attr('data-photo-id'), 10);
+                console.log('photoId: ', photoId);
+                
+                var photo = view.collection.get( photoId );
+                console.log('view.collection: ', view.collection);
+                console.log('photo: ', photo);
+
+
+                var jqXHR = photo.removeComment(commentId);
+                jqXHR.then(function(data, textStatus, jqXHR){
+                    console.log('comment SUCCESS!');
+                    $(commentElem).fadeOut('normal', function(){ 
+                        commentElem.remove();
+                    });
+                }, function(jqXHR, textStatus, errorThrown){
+                    // TODO: реакцию на ошибку прописать
+                });
+
+            });
+
+            $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
         }
     });
     window.BrowsingPhotosView = BrowsingPhotosView;
