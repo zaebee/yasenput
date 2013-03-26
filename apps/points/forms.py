@@ -4,7 +4,7 @@ from apps.main.models import Points, PointsByUser
 from django import forms
 
 
-class FiltersForm(ModelForm):
+class FiltersForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
     user = forms.IntegerField(required=False)

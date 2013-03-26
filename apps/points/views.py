@@ -301,7 +301,7 @@ class PointsSearch(PointsBaseView):
 
 
 class PointsList(PointsBaseView):
-    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+    #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
