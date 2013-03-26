@@ -51,7 +51,7 @@
                             Добавить
                             <span>+</span>
                         </div>
-                        <span class="text-field"><input type="text"></span>
+                        <span class="text-field"><input type="text" id="multisearch-text" onInput='update_multisearch()'></span>
                     </div>
                     <button type="button" class="clear-input"></button>
                 </form>
@@ -60,66 +60,20 @@
                     <button class="toggle-panel"></button>
 
                     <div class="inner-wrap">
-                        <ul class="item item-place">
-                            <li class="item-title">Местоположения <sup>15</sup></li>
-                            <li><a href="#">г. Кириллов, Вологодская область, Россия, Белозерский район, дрес,Огненный остров.</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская область, Россия, Белозерский район, дрес,Огненный остров.</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская область, Россия, Белозерский район, дрес,Огненный остров.</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
+                        <ul class="item item-place" id="multisearch-places">
+                            <li class="item-title">Местоположения <sup></sup></li>
                         </ul>
-
-                        <ul class="item item-name">
-                            <li class="item-title">Название <sup>15</sup></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
-                            <li><a href="#">г. Кириллов, Вологодская области</a></li>
+                        <ul class="item item-name" id="multisearch-points">
+                            <li class="item-title">Название <sup></sup></li>
                         </ul>
-
-                        <ul class="item item-labels">
-                            <li class="item-title">Метки <sup>15</sup></li>
-                            <li><a href="#">Катание на санях, лошадях</a></li>
-                            <li><a href="#">Катание на лошадях</a></li>
-                            <li><a href="#">Сноуборд</a></li>
-                            <li><a href="#">Памятник  Горки</a></li>
-                            <li><a href="#">Церковь Архитектурный ансамбль</a></li>
-                            <li><a href="#">Катание на санях, лошадях</a></li>
-                            <li><a href="#">Сноуборд</a></li>
-                            <li><a href="#">Катание на санях, лошадях</a></li>
-                            <li><a href="#">Катание на лошадях</a></li>
-                            <li><a href="#">Сноуборд</a></li>
-                            <li><a href="#">Памятник  Горки</a></li>
-                            <li><a href="#">Церковь Архитектурный ансамбль</a></li>
-                            <li><a href="#">Катание на санях, лошадях</a></li>
-                            <li><a href="#">Сноуборд</a></li>
+                        <ul class="item item-labels" id="multisearch-tags">
+                            <li class="item-title">Метки <sup></sup></li>
                         </ul>
-
-                        <ul class="item item-users">
-                            <li class="item-title">Пользователи <sup>15</sup></li>
-                            <li><a href="#">Каврижкин Живозяка</a></li>
-                            <li><a href="#">Кирилл Ушаков</a></li>
-                            <li><a href="#">Константин Кривопупов</a></li>
-                            <li><a href="#">Кирилл Ушаков</a></li>
-                            <li><a href="#">Константин Кривопупов</a></li>
-                            <li><a href="#">Каврижкин Живозяка</a></li>
-                            <li><a href="#">Кирилл Ушаков</a></li>
-                            <li><a href="#">Константин Кривопупов</a></li>
-                            <li><a href="#">Кирилл Ушаков</a></li>
-                            <li><a href="#">Константин Кривопупов</a></li>
+                        <ul class="item item-users" id="multisearch-users">
+                            <li class="item-title">Пользователи <sup></sup></li>
                         </ul>
                     </div>
+
                 </div>
             </div>
         </div>

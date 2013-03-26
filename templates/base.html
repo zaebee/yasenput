@@ -28,7 +28,7 @@
           <script src="{{ STATIC_URL }}js/libs/underscore-min.js"></script>
           <script src="{{ STATIC_URL }}js/libs/backbone-min.js"></script>
 
-{#          <script src="{{ STATIC_URL }}js/script.js"></script>#}
+          <script src="{{ STATIC_URL }}js/script.js"></script>
 
           <script src="{{ STATIC_URL }}js/app/app.js"></script>
 
@@ -43,8 +43,10 @@
           <script src="{{ STATIC_URL }}js/app/create-point-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/router.js"></script>
 
+          <script src="{{ STATIC_URL }}js/app/multisearch.js"></script>
 
           <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+
     {% block postload_js %}
         {% endblock %}
 {#    <script type="text/javascript">#}
