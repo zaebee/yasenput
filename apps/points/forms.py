@@ -17,22 +17,22 @@ class SearchForm(forms.Form):
 
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)
-    
-    
+
+
 class LikePointsForm(IdForm):
     id_point = forms.IntegerField(required=False)
-    
+
 
 class AddPointByUserForm(ModelForm):
     class Meta:
         model = PointsByUser
         exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been')
 
-    
+
 class AddPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'reviews', 'collections', 'tags', 'imgs',
                    'followers', 'visits', 'likes', 'been')
 
 
@@ -44,6 +44,6 @@ class ExtendedAddForm(ModelForm):
 class EditPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs',
                    'followers', 'visits', 'likes', 'been')
         
