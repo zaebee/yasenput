@@ -4,18 +4,7 @@ from apps.main.models import Points, PointsByUser
 from django import forms
 
 
-class IdsForm(forms.Form):
-#    imgs = forms.RegexField(max_length=1024, regex=r'^[[\d+,*]+]$',
-#                           help_text = "Для ввода возможны только цифры и ','.",
-#                           error_messages = {'invalid': "Для ввода возможны только цифры и ','."},
-#                           required=False)
-    reviews = forms.RegexField(max_length=1024, regex=r'^\[(\{(\'|\")rating(\'|\"): *(0|1){1} *,*(\"|\')feedback(\"|\'): *(\"|\')[^}]+(\"|\')\},* *)+\]$',
-                           help_text = 'Формат ввода [{"rating":<rating value>, "feedback":<feedback text>}]',
-                           error_messages = {'invalid': 'Формат ввода [{"rating":<rating value>, "feedback":<feedback text>}]'},
-                           required=False)
-
-
-class FiltersForm(IdsForm):
+class FiltersForm(ModelForm):
     name = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
     user = forms.IntegerField(required=False)
@@ -47,7 +36,7 @@ class AddPointForm(ModelForm):
                    'followers', 'visits', 'likes', 'been')
 
 
-class ExtendedAddForm(IdsForm):
+class ExtendedAddForm(ModelForm):
     description = forms.CharField(widget=forms.Textarea, required=False)
     main_img = forms.IntegerField(required=False)
 

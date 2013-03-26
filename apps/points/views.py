@@ -434,23 +434,16 @@ class PointAddByUser(LoggedPointsBaseView):
                         message = "ошибка добавления изображения"
                         if message not in errors: errors.append(message)
             
-            reviews = form.cleaned_data.get('reviews', None)
+            reviews = params.getlist('reviews[]', None)
             if reviews:
-                try:
-                    reviews = json.loads(reviews)
-                except:
-                    errors.append("некорректно заданы отзывы")
-                else:
-                    for review in reviews:
-                        if review.get("type", None) != None and review.get("feedback", None):
-                            try:
-                                feedback = ReviewsModels.Reviews(rating=review["rating"], review=review["feedback"], author=person, content_object=point)
-                                feedback.save()
-                                point.reviews.add(feedback)
-                                originalPoint.reviews.add(feedback)
-                            except:
-                                message = "ошибка добавления отзыва"
-                                if message not in errors: errors.append(message)
+                for review in reviews:
+                    try:
+                        feedback = ReviewsModels.Reviews.objects.get(id=review)
+                        point.reviews.add(feedback)
+                        originalPoint.reviews.add(feedback)
+                    except:
+                        message = "ошибка добавления отзыва"
+                        if message not in errors: errors.append(message)
                 
             point.save()
             originalPoint.save()
