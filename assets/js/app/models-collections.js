@@ -180,7 +180,7 @@ $(function(){
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
-        },
+        }
     });
     Points = Backbone.Collection.extend({
         model: Point,

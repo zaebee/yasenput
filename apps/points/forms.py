@@ -4,18 +4,7 @@ from apps.main.models import Points, PointsByUser
 from django import forms
 
 
-class IdsForm(forms.Form):
-#    imgs = forms.RegexField(max_length=1024, regex=r'^[[\d+,*]+]$',
-#                           help_text = "Для ввода возможны только цифры и ','.",
-#                           error_messages = {'invalid': "Для ввода возможны только цифры и ','."},
-#                           required=False)
-    reviews = forms.RegexField(max_length=1024, regex=r'^\[(\{(\'|\")rating(\'|\"): *(0|1){1} *,*(\"|\')feedback(\"|\'): *(\"|\')[^}]+(\"|\')\},* *)+\]$',
-                           help_text = 'Формат ввода [{"rating":<rating value>, "feedback":<feedback text>}]',
-                           error_messages = {'invalid': 'Формат ввода [{"rating":<rating value>, "feedback":<feedback text>}]'},
-                           required=False)
-
-
-class FiltersForm(IdsForm):
+class FiltersForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
     user = forms.IntegerField(required=False)
@@ -28,26 +17,26 @@ class SearchForm(forms.Form):
 
 class IdForm(forms.Form):
     id = forms.IntegerField(required=True)
-    
-    
+
+
 class LikePointsForm(IdForm):
     id_point = forms.IntegerField(required=False)
-    
+
 
 class AddPointByUserForm(ModelForm):
     class Meta:
         model = PointsByUser
-        exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been', 'description', 'descriptions')
+        exclude = ('author', 'point', 'reviews', 'imgs', 'followers', 'visits', 'likes', 'been')
 
-    
+
 class AddPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'reviews', 'collections', 'tags', 'imgs',
                    'followers', 'visits', 'likes', 'been')
 
 
-class ExtendedAddForm(IdsForm):
+class ExtendedAddForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea, required=False)
     main_img = forms.IntegerField(required=False)
 
@@ -55,6 +44,6 @@ class ExtendedAddForm(IdsForm):
 class EditPointForm(ModelForm):
     class Meta:
         model = Points
-        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs', 
+        exclude = ('author', 'description', 'descriptions', 'reviews', 'collections', 'tags', 'imgs',
                    'followers', 'visits', 'likes', 'been')
         

@@ -20,6 +20,27 @@ class PhotosBaseView(View):
             raise Http404
         return super(PhotosBaseView, self).dispatch(request, *args, **kwargs)
 
+    def photoList(self, photos):
+        json = YpSerialiser()
+        return HttpResponse(json.serialize(photos, excludes= ("img",),
+                                                     #extras=('thumbnail130x130','img_url'),
+                                                     relations={'author': {'fields': (
+                                                                    'first_name',
+                                                                    'last_name',
+                                                                    'avatar'
+                                                                     )},
+                                                                'likeusers': {'fields': (
+                                                                    'first_name',
+                                                                    'last_name',
+                                                                    'avatar'
+                                                                    )},
+                                                                'comments': {'fields': ['txt', 'created', 'author'],
+                                                                     'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                     'limit': 5
+                                                                    },
+                                                                }), mimetype="application/json")
+
+
 class PhotosList(MultipleObjectMixin, PhotosBaseView):
     http_method_names = ('get',)
     paginate_by = 20
@@ -41,20 +62,8 @@ class PhotosList(MultipleObjectMixin, PhotosBaseView):
             paginator, page, photos, is_paginated = self.paginate_queryset(queryset, page_size)
         else:
             photos = []
-        json = YpSerialiser()
-        return HttpResponse(json.serialize(photos, excludes= ("img",),
-                                                     extras=('thumbnail130x130','img_url'),
-                                                     relations={'author': {'fields': (
-                                                                    'first_name',
-                                                                    'last_name',
-                                                                    'avatar'
-                                                                     )},
-                                                                'likeusers': {'fields': (
-                                                                    'first_name',
-                                                                    'last_name',
-                                                                    'avatar'
-                                                                    )},
-                                                                }), mimetype="application/json")
+        return self.photoList(photos)
+
 
 class PhotosAdd(PhotosBaseView):
     http_method_names = ('post',)
@@ -77,14 +86,15 @@ class PhotosAdd(PhotosBaseView):
             if object:
                 object.imgs.add(photo)
             return HttpResponse(json.serialize([photo], excludes=("img"),
-                                                            extras=('thumbnail130x130', 'img_url'),
-                                                            relations={
-                                                                'author': {
-                                                                    'fields': ('first_name', 'last_name', 'avatar')
-                                                                }
-                                                            }),
+                                               extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207'),
+                                               relations={
+                                                   'author': {
+                                                       'fields': ('first_name', 'last_name', 'avatar')
+                                                   }
+                                               }),
                                 mimetype="application/json")
         return HttpResponse(simplejson.dumps({'id': 0, 'status': form._errors}), mimetype="application/json")
+
 
 class PhotosDetail(PhotosBaseView):
     http_method_names = ('get',)
@@ -92,15 +102,7 @@ class PhotosDetail(PhotosBaseView):
     def get(self, request):
         pk = request.GET.get('id')
         photo = get_object_or_404(Photos, pk=pk)
-        json = YpSerialiser()
-        return HttpResponse(json.serialize([photo], excludes=("img"),
-                                                    extras=('thumbnail130x130', 'img_url'),
-                                                    relations={
-                                                        'author': {
-                                                            'fields': ('first_name', 'last_name', 'avatar')
-                                                        }
-                                                    }),
-                                                    mimetype="application/json")
+        return self.photoList([photo])
 
 class PhotosDel(PhotosBaseView):
     http_method_names = ('post',)
@@ -122,11 +124,15 @@ class PhotosLike(PhotosBaseView):
 
     def post(self,request):
         pk = request.POST.get('id')
-        status = 0
+        error = ''
         try:
             photo = Photos.objects.get(pk=pk)
         except Photos.DoesNotExist:
-            status = u'Указаный объект не найден'
+            error = u'Указаный объект не найден'
         else:
-            photo.likeusers.add(request.user.get_profile())
-        return HttpResponse(simplejson.dumps({'id':pk, 'status':status}), mimetype="application/json")
+            if photo.likeusers.count() > 0:
+                photo.likeusers.remove(request.user.get_profile())
+            else:
+                photo.likeusers.add(request.user.get_profile())
+            return self.photoList([photo])
+        return HttpResponse(simplejson.dumps({'id': pk, 'status': 1, 'txt': error}), mimetype="application/json")

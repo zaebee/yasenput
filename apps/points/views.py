@@ -11,7 +11,6 @@ from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
-from apps.descriptions import models as DescriptionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
@@ -76,6 +75,65 @@ class PointsBaseView(View):
                                                     }, 
                                            })          
     
+    def getPointsSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.user_id = '+str(user.id)
+        else:
+            point_isliked = "select 0"      
+        args = {"select": {'id_point': 'select 0',
+                 'isliked': point_isliked,
+                 'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
+                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
+                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                 'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
+               }}
+        return args
+            
+    def getPointsByUserSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            copypoint_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_pointsbyuser_likeusers WHERE main_pointsbyuser_likeusers.pointsbyuser_id = main_pointsbyuser.id and main_pointsbyuser_likeusers.user_id = '+str(user.id)
+        else:
+            copypoint_isliked = "select 0"     
+        args = {
+            "tables": ["main_points"],
+            "where": ["main_points.id=main_pointsbyuser.point_id"],
+            "select": {'id_point': 'main_pointsbyuser.point_id',
+                 'name': 'main_points.name',
+                 'address': 'main_points.address',
+                 'wifi': 'main_points.wifi',
+                 'wc': 'main_points.wc',
+                 'invalid': 'main_points.invalid',
+                 'parking': 'main_points.parking',
+                 'longitude': 'main_points.longitude',
+                 'latitude': 'main_points.latitude',
+                 'isliked': copypoint_isliked,
+                 'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
+                 'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
+                 'reviewusersplus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=1',
+                 'reviewusersminus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=0',
+                 'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
+                 }
+            }
+        return args
+
+    def getCollectionsSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
+        else:
+            collections_isliked = "select 0"   
+        args = {"select": {
+                      "isliked": collections_isliked,
+                      "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
+                      }
+            }
+        return args
+
+    
+    
     def pointsList(self, points):
         return HttpResponse(self.getSerializePoints(points), mimetype="application/json")
 
@@ -134,10 +192,14 @@ class LikePoint(PointsBaseView):
                 else:
                     point.likeusers.add(person)
                 point.save()
+                if id_point:                    
+                    point = MainModels.PointsByUser.objects.filter(id=pk).extra(**self.getPointsByUserSelect(request))
+                else:
+                    point = MainModels.Points.objects.filter(id=pk).extra(**self.getPointsSelect(request))
             except:
                 return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
             else:
-                return JsonHTTPResponse({"id": pk, "status": 0, "txt": ""})
+                return self.pointsList(point)
         else:
             return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
@@ -238,7 +300,7 @@ class PointsSearch(PointsBaseView):
 
 
 class PointsList(PointsBaseView):
-    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+    #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -313,57 +375,14 @@ class PointsList(PointsBaseView):
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                 copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                 collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+               
+            pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
+            copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
+            collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
 
-            if request.user.is_authenticated():
-                user = MainModels.User.objects.get(username = request.user)
-                point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.user_id = '+str(user.id)
-                copypoint_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_pointsbyuser_likeusers WHERE main_pointsbyuser_likeusers.pointsbyuser_id = main_pointsbyuser.id and main_pointsbyuser_likeusers.user_id = '+str(user.id)
-                collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
-            else:
-                point_isliked = "select 0"      
-                copypoint_isliked = "select 0"
-                collections_isliked = "select 0"
-                
-            pointsreq  = pointsreq.extra(
-                select={'id_point': 'select 0',
-                     'isliked': point_isliked,
-                     'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
-                     'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                     'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                     'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-                     'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
-                     }
-                )
-            copypointsreq  = copypointsreq.extra(
-                tables=["main_points"],
-                select={'id_point': 'main_pointsbyuser.point_id',
-                     'name': 'main_points.name',
-                     'address': 'main_points.address',
-                     'wifi': 'main_points.wifi',
-                     'wc': 'main_points.wc',
-                     'invalid': 'main_points.invalid',
-                     'parking': 'main_points.parking',
-                     'longitude': 'main_points.longitude',
-                     'latitude': 'main_points.latitude',
-                     'isliked': copypoint_isliked,
-                     'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
-                     'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
-                     'reviewusersplus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=1',
-                     'reviewusersminus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=0',
-                     'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
-                     }
-                )
-
-            collectionsreq = collectionsreq.extra(
-                select = {
-                          "isliked": collections_isliked,
-                          "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
-                          }
-                )
-
-            points  = pointsreq[offset:limit].all()
-            copypoints  = copypointsreq[offset:limit].all()
-            collections  = collectionsreq[offset:limit].all()
+            points = pointsreq[offset:limit].all()
+            copypoints = copypointsreq[offset:limit].all()
+            collections = collectionsreq[offset:limit].all()
             
             allpoints = json.loads(self.getSerializePoints(points))
             allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
@@ -391,7 +410,8 @@ class PointAddByUser(LoggedPointsBaseView):
             form = forms.IdForm(params)
             if not form.is_valid():
                 return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места для копирования"})
-            else: point_id = form.cleaned_data["id"]
+            else:
+                point_id = form.cleaned_data["id"]
 
         originalPoint = get_object_or_404(MainModels.Points, pk=point_id)
 
@@ -414,29 +434,16 @@ class PointAddByUser(LoggedPointsBaseView):
                         message = "ошибка добавления изображения"
                         if message not in errors: errors.append(message)
             
-            description = form.cleaned_data.get("description", None)
-            if description:
-                description = DescriptionsModels.Descriptions.objects.create(description=description, content_object=point, author=person)
-                originalPoint.description = description
-                originalPoint.descriptions.add(description)
-
-            reviews = form.cleaned_data.get('reviews', None)
+            reviews = params.getlist('reviews[]', None)
             if reviews:
-                try:
-                    reviews = json.loads(reviews)
-                except:
-                    errors.append("некорректно заданы отзывы")
-                else:
-                    for review in reviews:
-                        if review.get("type", None) != None and review.get("feedback", None):
-                            try:
-                                feedback = ReviewsModels.Reviews(rating=review["rating"], review=review["feedback"], author=person, content_object=point)
-                                feedback.save()
-                                point.reviews.add(feedback)
-                                originalPoint.reviews.add(feedback)
-                            except:
-                                message = "ошибка добавления отзыва"
-                                if message not in errors: errors.append(message)
+                for review in reviews:
+                    try:
+                        feedback = ReviewsModels.Reviews.objects.get(id=review)
+                        point.reviews.add(feedback)
+                        originalPoint.reviews.add(feedback)
+                    except:
+                        message = "ошибка добавления отзыва"
+                        if message not in errors: errors.append(message)
                 
             point.save()
             originalPoint.save()
@@ -459,10 +466,10 @@ class PointAddByUser(LoggedPointsBaseView):
                              'latitude': 'main_points.latitude',
                              "reviewusersplus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=1",
                              "reviewusersminus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=0",
-                             "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
+                             #"beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
                              "likes_count": "select count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id",
                              "collections_count": "select count(*) from collections_collections_points join main_points on collections_collections_points.points_id=main_points.id where main_points.id=main_pointsbyuser.point_id",
-                             "isliked": isliked_select,
+                             #"isliked": isliked_select,
                              "id_point": "select " + str(originalPoint.id)                             
                          }
                      )
@@ -491,7 +498,13 @@ class PointAdd(LoggedPointsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             point.author = person
             point.save()
-
+            reviews = params.get("reviews")
+            if reviews:
+                reviews = json.load(reviews)
+                for review in reviews:
+                    new_review = ReviewsModels.Reviews.objects.create(name=review.review, author=person, rating=review.rating)
+                    point.reviews.add(new_review)
+                    point.save()
             tags = params.getlist("tags[]")
             if tags:
                 for tag in tags:
@@ -500,7 +513,8 @@ class PointAdd(LoggedPointsBaseView):
                         new_tag = TagsModels.Tags.objects.filter(id=tag)
                     if new_tag.count() == 0:
                         new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
-                    else: new_tag = new_tag[0]
+                    else:
+                        new_tag = new_tag[0]
                     point.tags.add(new_tag)
 
                 point.save()
