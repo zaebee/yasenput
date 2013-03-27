@@ -377,9 +377,9 @@ class PointsList(PointsBaseView):
                 copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                 collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                
-            pointsreq  = pointsreq.extra(self.getPointsSelect(request))
-            copypointsreq  = copypointsreq.extra(self.getPointsByUserSelect(request))
-            collectionsreq = collectionsreq.extra(self.getCollectionsSelect(request))
+            pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
+            copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
+            collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
 
             points  = pointsreq[offset:limit].all()
             copypoints  = copypointsreq[offset:limit].all()

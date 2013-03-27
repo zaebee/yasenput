@@ -4,7 +4,7 @@ from apps.main.models import Points, PointsByUser
 from django import forms
 
 
-class FiltersForm(ModelForm):
+class FiltersForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
     user = forms.IntegerField(required=False)
@@ -36,7 +36,7 @@ class AddPointForm(ModelForm):
                    'followers', 'visits', 'likes', 'been')
 
 
-class ExtendedAddForm(ModelForm):
+class ExtendedAddForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea, required=False)
     main_img = forms.IntegerField(required=False)
 
