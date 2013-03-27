@@ -3,7 +3,7 @@
 <!-- <% if(isliked) { %> marked <% } %>  -->
 <script type="text/template" id="multisearch-places-template">
     <li class="item-title">Местоположения <sup><%= data.length %></sup></li>
-    <% _.each(data, function(geoObject){ %> <li><a href="#"><%= geoObject.properties.get("text") %></a></li><% }) %>
+    <% i=0; _.each(data, function(geoObject){ %> <li><a href="#"><%= geoObject.properties.get("text") %></a><span style="display:none"><%= i %></span></li><% i++ }) %>
 </script>
 
 <script type="text/template" id="multisearch-points-template">

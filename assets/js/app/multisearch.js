@@ -41,6 +41,8 @@ function update_multisearch() {
                     });
                     compiled = multisearch_places_tmpl({data: multisearch_data.places});
                     $("#multisearch-places").html(compiled);
+                    
+                    multySearch.reinit_click();
                 },
                 function (err) {
                 // alert ("error");
