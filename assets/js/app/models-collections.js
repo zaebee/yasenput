@@ -17,6 +17,7 @@ $(function(){
 			// tags:0,
 	  //       feedbacks:0
         },
+        idAttribute: 'id'+'_'+'id_point',
         initialize: function() {
             // console.log('+++ point initialize!');
             // this.bind('invalid', this.validationFailed, this);
@@ -33,7 +34,7 @@ $(function(){
             this.set( {photos_create: new window.YPimages()} );
             this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
             this.set( {photos_new: new window.YPimages()} );           
-            this.set( {tags: new window.Tags()} );
+            this.set( {tags_collection: new window.Tags()} );
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
@@ -97,15 +98,15 @@ $(function(){
                             options.data += '&address='+model.get('address');
                             options.data += '&description='+model.get('description');
 
-                            model.get('tags').each(function(tag){
+                            model.get('tags_collection').each(function(tag){
                                 if(tag.get('isnew') != true) {
-                                    options.data += '&tag[]='+tag.get('id');
+                                    options.data += '&tags[]='+tag.get('id');
                                 } else {
-                                    options.data += '&tag[]='+tag.get('name');
+                                    options.data += '&tags[]='+tag.get('name');
                                 }
                             });
                             model.get('photos_create').each(function(img){
-                                options.data += '&img[]='+img.get('id');
+                                options.data += '&imgs[]='+img.get('id');
                             });
                             options.data += '&longitude='+model.get('longitude');
                             options.data += '&latitude='+model.get('latitude');
@@ -153,11 +154,13 @@ $(function(){
                     action: 'saveNew', 
                     success: function(model, response, options) {
                         console.log('SUCCESS!');
+                        console.log('model: ', model);
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
                         // });
                     },
                     error: function (model, response, options) {
+                        //  TODO обработка ошибки
                         console.log('ERROR!');
                         alert(status);
                     },
@@ -176,7 +179,7 @@ $(function(){
     Points = Backbone.Collection.extend({
         model: Point,
         // view:PointView,
-        el: $('.content'),
+        el: $('#content section.items'),
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
         // ready: $.Deferred(),
         initialize: function(){
@@ -289,14 +292,76 @@ $(function(){
                             break;
                     };
                     break;
-                // case "update":
-                //     options.url = model.url + '/'
-                //     break;
+                case "update":
+                    // options.url = model.url + '/'
+                    switch (options.action) {
+                        // case 'addComment':
+                        //     console.log('===> YPimage addComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/add';
+                        //     options.data = 'object_id='+( model.get('id') );
+                        //     options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     options.data += '&txt='+options.txt;
+                        //     break;
+                        // case 'removeComment':
+                        //     console.log('===> YPimage removeComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/del';
+                        //     options.data = 'id='+( options.commentId );
+                        //     // options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     // options.data += '&txt='+options.txt;
+                        //     break;
+                        
+                    };
+                    break;
                 // case "delete":
                 //     options.url = model.url + '/del'
                 //     options.type = 'POST';
             };
             return Backbone.sync(method, model, options);
+        },
+        initialize: function(){
+            // this.set( {comments: new window.Comments(this.get('comments'))} );
+            if(this.get('author').id == window.myId) {
+                this.set({ismine: 1});
+            } else {
+                this.set({ismine: 0});
+            }
+            _.each( this.get('comments'), function(comment){
+                if(comment.author.id == window.myId) {
+                    comment.ismine = 1;
+                } else {
+                    comment.ismine = 0;
+                }
+            });
+            return this;
+        },
+        addComment: function(txt, options){
+            model = this;
+            jqXHR = $.ajax({
+                url: '/comments/add',
+                type: 'POST',
+                data: {
+                    object_id: model.get('id'),
+                    object_type: 23,
+                    txt: txt
+                }
+            });
+            // console.log('addComment: ', jqXHR);
+            return jqXHR;
+        },
+        removeComment: function(commentId, options){
+            jqXHR = $.ajax({
+                url: '/comments/del',
+                type: 'POST',
+                data: {
+                    id: commentId,
+                }
+            });
+            // console.log('removeComment: ', jqXHR);
+            return jqXHR;
         }
     });
     YPimages = Backbone.Collection.extend({
@@ -319,6 +384,13 @@ $(function(){
                 .replaceWith( this.template(yp_image.toJSON()) );
         }
     });
+
+    Comment = Backbone.Model.extend({});
+    Comments = Backbone.Collection.extend({
+        model: Comment
+    });
+    window.Comment = Comment;
+    window.Comments = Comments;
 
     Label = Backbone.Model.extend({
         url: '/tags',    

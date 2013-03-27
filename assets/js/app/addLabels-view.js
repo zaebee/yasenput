@@ -63,7 +63,7 @@ $(function(){
                     label = new window.Label({id: labelId, name: str, isnew: true, selected: true});
 
                     // view.collection.add(label);
-                    window.newPoint.get('tags').add(label);
+                    window.newPoint.get('tags_collection').add(label);
                     $(this.el).find('.clearfix.selected-labels')
                        .find('.label-add')
                        .before( this.templateLabelSelected( label.toJSON() ) );
@@ -126,7 +126,7 @@ $(function(){
             }
             label.set({selected: true});
             // console.log('labelRequired: ', labelRequired);
-            window.newPoint.get('tags').add(label);
+            window.newPoint.get('tags_collection').add(label);
             $(this.el).find('.clearfix.selected-labels')
                .find('.label-add')
                .before( this.templateLabelSelected( label.toJSON() ) );
@@ -158,7 +158,7 @@ $(function(){
             labelId = $(event.currentTarget).closest('.label').attr('data-label-id');
             $(event.currentTarget).closest('.label').remove();
 
-            label = window.newPoint.get('tags').get(labelId);
+            label = window.newPoint.get('tags_collection').get(labelId);
             label.set({selected: false});
             if (label.get('required') == true){
                 $(this.el).find(this.required_labels).append( this.templateLabelRequired( label.toJSON() ) );
@@ -171,7 +171,7 @@ $(function(){
                 }
             }
 
-            window.newPoint.get('tags').remove(labelId);
+            window.newPoint.get('tags_collection').remove(labelId);
 
         }
         // showDropField: function(){ // показать выпадайку
