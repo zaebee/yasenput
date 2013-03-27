@@ -85,7 +85,14 @@ class PhotosAdd(PhotosBaseView):
             photo.save()
             if object:
                 object.imgs.add(photo)
-            return self.photoList([photo])
+            return HttpResponse(json.serialize([photo], excludes=("img"),
+                                               extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207'),
+                                               relations={
+                                                   'author': {
+                                                       'fields': ('first_name', 'last_name', 'avatar')
+                                                   }
+                                               }),
+                                mimetype="application/json")
         return HttpResponse(simplejson.dumps({'id': 0, 'status': form._errors}), mimetype="application/json")
 
 
