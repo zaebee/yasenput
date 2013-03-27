@@ -170,8 +170,23 @@ $(function(){
     // });
 });
 
+// бесконечный скролл
 $(function(){
+    window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
+    $(window).scroll(function () {
 
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+            // если уже не грузим, то в путь
+            if( !window.loadingNow ) {
+                window.loadingNow = true;
+                console.log('LOAD MORE DATA!');
+                points.loadNextPage();
+            }
+        }
+    });
+});
+
+$(function(){
     window.page = 1;
     window.content = 'new';
     window.category = 'Туризм';

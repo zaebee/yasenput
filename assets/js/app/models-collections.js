@@ -155,6 +155,12 @@ $(function(){
                     success: function(model, response, options) {
                         console.log('SUCCESS!');
                         console.log('model: ', model);
+
+                        console.log('response: ', response);
+                         // new window.Point( response[0] );
+                        // points.add(model).render();
+                        points.addPrepend( new window.Point( response[0] ) );
+                        $('.scroll-box').click();
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
                         // });
@@ -184,6 +190,7 @@ $(function(){
         // ready: $.Deferred(),
         initialize: function(){
             this.bind('reset', this.render, this);
+            this.bind('add', this.addAppend, this);
         },
         parse: function(response) {
             return response.points;
@@ -206,62 +213,101 @@ $(function(){
         	return this;
         },
         render: function(){
+            console.log('++> render points');
+
+            $(this.el).empty();
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
                 self.el.append(pin.render().el);
             });
-            // this.ready.resolve();
+
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
                 columnWidth: 241 
             });
-            // $(this.el).mansory({
-            //     itemSelector: '',
-            //     columnWidth: 229
-            // });
-            return self;
+            $(this.el).masonry( 'reload' );
+
+            this.redrawOnMap();
+            return this;
         },
-        // mapCoords:function(){
-        //     //return window.YPApp.mapCoords();
-        //     //return window.myMap.getBounds();
-        //     return 'dgdg';
-        // },
-        // setURL:function(){
-        //     console.log(window.YPApp.mapBounds());
-        //     this.url = '/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.YPApp.mapBounds().left+'&coord_right='+window.YPApp.mapBounds().right
-        // },
-        reload: function(){
-            var self = this;
-            var options = ({
-                error:function(){
-                    console.log('Ошибка обновления записей!');
-                },
-                success: function(){
-                   // myMap.geoObjects.add(pointCollection);
-                    // self.trigger('change');
-                }
-            });
-            self.setURL();
-            self.fetch(options);
-        },
-        fetchPointComments: function(point){
-            self = this;
-            pointComments = new window.PointComments();
-            point.set({pointComments: pointComments});
-            pointComments.fetch({
-                data: {
-                    object_id: point.get('id'),
-                    object_type: 12
-                },
-                success: function(collection, response, options){
-                    console.log('fetchPointComments '+point.get('id')+' success');
-                    self.trigger('fetchPointComments', point);
-                } 
+        redrawOnMap: function(){
+            console.log('%%> redrawOnMap');
+
+            window.clusterer.removeAll();
+            window.myGeoObjectsArr = [];
+
+            this.each(function(point){
+                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                        id: point.get('id')+'_'+point.get('point_id')
+                    }, {
+                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                        iconImageSize: [32, 36], // размеры картинки
+                        iconImageOffset: [-16, -38] // смещение картинки
+                });
+                window.myGeoObjectsArr.push(placemark);
             });
 
-            console.log('fetch the comments!');
-        }
+            window.clusterer.add( window.myGeoObjectsArr );
+        },
+        loadNextPage: function(){
+            collection = this;
+            console.log('loadNextPage');
+            this.page++;
+            jqXHR = this.setURL().fetch({add: true});
+            jqXHR.done(function(data, textStatus, jqXHR){
+                if( data.points.length > 0 ) {
+                    collection.redrawOnMap();
+                    window.loadingNow = false;
+                }
+                //  else {
+                //     collection.page--;
+                // }
+            });
+        },
+        addPrepend: function(model){
+            this.add(model, {silent: true});
+            var pin = new PointView({model:model});
+            this.el.prepend(pin.render().el);
+            $(this.el).masonry( 'reload' );
+            this.redrawOnMap();
+        },
+        addAppend: function(model){
+            var pin = new PointView({model:model});
+            this.el.prepend(pin.render().el);
+            $(this.el).masonry( 'appended', $(pin.render().el), true );
+        },
+        // reload: function(){
+        //     var self = this;
+        //     var options = ({
+        //         error:function(){
+        //             console.log('Ошибка обновления записей!');
+        //         },
+        //         success: function(){
+        //            // myMap.geoObjects.add(pointCollection);
+        //             // self.trigger('change');
+        //         }
+        //     });
+        //     self.setURL();
+        //     self.fetch(options);
+        // },
+        // fetchPointComments: function(point){
+        //     self = this;
+        //     pointComments = new window.PointComments();
+        //     point.set({pointComments: pointComments});
+        //     pointComments.fetch({
+        //         data: {
+        //             object_id: point.get('id'),
+        //             object_type: 12
+        //         },
+        //         success: function(collection, response, options){
+        //             console.log('fetchPointComments '+point.get('id')+' success');
+        //             self.trigger('fetchPointComments', point);
+        //         } 
+        //     });
+
+        //     console.log('fetch the comments!');
+        // }
     });
 	window.Point = Point;
     window.points = new Points();

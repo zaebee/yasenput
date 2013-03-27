@@ -196,35 +196,7 @@ $(function(){
             });
         },
         addNewPoint: function(event){
-            this.model.saveNew();
-        //     var tags = [];
-        //     tags.push('лыжи');
-        //     tags.push('сноуборд');
-        //     $.ajax ({
-        //         target: "#divToUpdate",
-        //         url: "points/add",
-        //         type: "POST",
-        //         data: {
-        //             name: $('#p-add-place-name').val(),
-        //             address: $('#add-new-place').val(),
-        //             latitude: window.YPApp.addPointState.coords[0],
-        //             longitude: window.YPApp.addPointState.coords[1],
-        //             imgs:window.YPApp.addPointState.imgs,
-        //             tags:tags
-        //         },
-        //         dataType:'json',
-        //         success: (function(data) {
-        //             if(data.r == 1){
-        //                 $(".popup").filter(":visible").fadeOut(150, function(){
-        //                     $("#overlay").fadeOut(200,function(){
-        //                         //window.router.navigate("", {trigger: true, replace: true});
-        //                     });
-        //                 });
-        //             }else{
-        //                 alert('Ошибка добавления!')
-        //             }
-        //         })
-        //     });
+            this.model.saveNew();        
         }
     });
     window.CreatePointView = CreatePointView;
