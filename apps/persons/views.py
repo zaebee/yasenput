@@ -8,14 +8,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
-from apps.reports import models as ReportsModels
-from apps.tags import models as TagsModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from django.db.models import Q
-import urllib
-import json
+
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
