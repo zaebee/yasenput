@@ -213,115 +213,101 @@ $(function(){
         	return this;
         },
         render: function(){
-            console.log('=> points render!');
+            console.log('++> render points');
+
+            $(this.el).empty();
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
                 self.el.append(pin.render().el);
             });
-            // this.ready.resolve();
+
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
                 columnWidth: 241 
             });
             $(this.el).masonry( 'reload' );
-            // $(this.el).mansory({
-            //     itemSelector: '',
-            //     columnWidth: 229
-            // });
-            return self;
+
+            this.redrawOnMap();
+            return this;
+        },
+        redrawOnMap: function(){
+            console.log('%%> redrawOnMap');
+
+            window.clusterer.removeAll();
+            window.myGeoObjectsArr = [];
+
+            this.each(function(point){
+                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                        id: point.get('id')+'_'+point.get('point_id')
+                    }, {
+                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                        iconImageSize: [32, 36], // размеры картинки
+                        iconImageOffset: [-16, -38] // смещение картинки
+                });
+                window.myGeoObjectsArr.push(placemark);
+            });
+
+            window.clusterer.add( window.myGeoObjectsArr );
         },
         loadNextPage: function(){
+            collection = this;
             console.log('loadNextPage');
-            var collection = this;
-            // if(! this.isEnd ) {
-                this.page++;
-                // var bufPoints = new window.Points();
-                // console.log('bufPoints: ', bufPoints);
-                // bufPoints.page = this.page;
-                // jqXHR = bufPoints.setURL().fetch({silent: true});
-                // jqXHR.done(function(data, textStatus, jqXHR){
-                //     if( data.points.length != 0) {
-                //         window.loadingNow = false;
-                //         console.log('data.points: ', data.points);
-                //         _.each( data.points, function(point){
-                //             collection.push(point);
-                //         });
-                //     }
-                // });
-
-                jqXHR = this.setURL().fetch({add: true});
-                // jqXHR.done(function(data, textStatus, jqXHR){
-                //     if( data.points.length != 0) {
-                //         window.loadingNow = false;
-                //         $(this.el).masonry( 'reload' );
-                //     }
-                // });
-            // }
+            this.page++;
+            jqXHR = this.setURL().fetch({add: true});
+            jqXHR.done(function(data, textStatus, jqXHR){
+                if( data.points.length > 0 ) {
+                    collection.redrawOnMap();
+                    window.loadingNow = false;
+                }
+                //  else {
+                //     collection.page--;
+                // }
+            });
         },
         addPrepend: function(model){
-            this.add(model);
+            this.add(model, {silent: true});
             var pin = new PointView({model:model});
             this.el.prepend(pin.render().el);
-            // $(this.el).masonry( 'appended', $(pin.render().el), true );
             $(this.el).masonry( 'reload' );
+            this.redrawOnMap();
         },
         addAppend: function(model){
-            console.log('++> addAppend !');
-            console.log('model: ', model);
-
             var pin = new PointView({model:model});
             this.el.prepend(pin.render().el);
-
             $(this.el).masonry( 'appended', $(pin.render().el), true );
-            // buf = 
         },
-        // addToDOM: function(model){
-        //     var pin = new PointView({model:model});
-        //     this.el.prepend(pin.render().el);
-        //     // $(this.el).masonry( 'appended', $(pin.render().el), true );
-        //     $(this.el).masonry( 'reload' );
+        // reload: function(){
+        //     var self = this;
+        //     var options = ({
+        //         error:function(){
+        //             console.log('Ошибка обновления записей!');
+        //         },
+        //         success: function(){
+        //            // myMap.geoObjects.add(pointCollection);
+        //             // self.trigger('change');
+        //         }
+        //     });
+        //     self.setURL();
+        //     self.fetch(options);
         // },
-        // mapCoords:function(){
-        //     //return window.YPApp.mapCoords();
-        //     //return window.myMap.getBounds();
-        //     return 'dgdg';
-        // },
-        // setURL:function(){
-        //     console.log(window.YPApp.mapBounds());
-        //     this.url = '/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.YPApp.mapBounds().left+'&coord_right='+window.YPApp.mapBounds().right
-        // },
-        reload: function(){
-            var self = this;
-            var options = ({
-                error:function(){
-                    console.log('Ошибка обновления записей!');
-                },
-                success: function(){
-                   // myMap.geoObjects.add(pointCollection);
-                    // self.trigger('change');
-                }
-            });
-            self.setURL();
-            self.fetch(options);
-        },
-        fetchPointComments: function(point){
-            self = this;
-            pointComments = new window.PointComments();
-            point.set({pointComments: pointComments});
-            pointComments.fetch({
-                data: {
-                    object_id: point.get('id'),
-                    object_type: 12
-                },
-                success: function(collection, response, options){
-                    console.log('fetchPointComments '+point.get('id')+' success');
-                    self.trigger('fetchPointComments', point);
-                } 
-            });
+        // fetchPointComments: function(point){
+        //     self = this;
+        //     pointComments = new window.PointComments();
+        //     point.set({pointComments: pointComments});
+        //     pointComments.fetch({
+        //         data: {
+        //             object_id: point.get('id'),
+        //             object_type: 12
+        //         },
+        //         success: function(collection, response, options){
+        //             console.log('fetchPointComments '+point.get('id')+' success');
+        //             self.trigger('fetchPointComments', point);
+        //         } 
+        //     });
 
-            console.log('fetch the comments!');
-        }
+        //     console.log('fetch the comments!');
+        // }
     });
 	window.Point = Point;
     window.points = new Points();

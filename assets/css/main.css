@@ -812,7 +812,11 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 .c-edit-inputs input{display:block; margin:0 0 4px; width:780px; height:18px; padding:2px 10px; background:#fff; border:solid 1px #a9b6a8}
 
-
+.ymaps-default-cluster ymaps{
+	color: white;
+	font-family: "Trebuchet MS", "Helvetica CY", sans-serif;
+	font-weight: bold!important;
+}
 
 
 /**/
