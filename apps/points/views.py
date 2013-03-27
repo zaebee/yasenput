@@ -377,9 +377,9 @@ class PointsList(PointsBaseView):
                 copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                 collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
                
-            pointsreq  = pointsreq.extra(self.getPointsSelect(request))
-            copypointsreq  = copypointsreq.extra(self.getPointsByUserSelect(request))
-            collectionsreq = collectionsreq.extra(self.getCollectionsSelect(request))
+            pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
+            copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
+            collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
 
             points  = pointsreq[offset:limit].all()
             copypoints  = copypointsreq[offset:limit].all()
@@ -466,10 +466,10 @@ class PointAddByUser(LoggedPointsBaseView):
                              'latitude': 'main_points.latitude',
                              "reviewusersplus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=1",
                              "reviewusersminus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=0",
-                             "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
+                             #"beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
                              "likes_count": "select count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id",
                              "collections_count": "select count(*) from collections_collections_points join main_points on collections_collections_points.points_id=main_points.id where main_points.id=main_pointsbyuser.point_id",
-                             "isliked": isliked_select,
+                             #"isliked": isliked_select,
                              "id_point": "select " + str(originalPoint.id)                             
                          }
                      )
