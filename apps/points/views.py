@@ -11,7 +11,6 @@ from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
-from apps.descriptions import models as DescriptionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
@@ -381,9 +380,9 @@ class PointsList(PointsBaseView):
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
 
-            points  = pointsreq[offset:limit].all()
-            copypoints  = copypointsreq[offset:limit].all()
-            collections  = collectionsreq[offset:limit].all()
+            points = pointsreq[offset:limit].all()
+            copypoints = copypointsreq[offset:limit].all()
+            collections = collectionsreq[offset:limit].all()
             
             allpoints = json.loads(self.getSerializePoints(points))
             allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
@@ -411,7 +410,8 @@ class PointAddByUser(LoggedPointsBaseView):
             form = forms.IdForm(params)
             if not form.is_valid():
                 return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места для копирования"})
-            else: point_id = form.cleaned_data["id"]
+            else:
+                point_id = form.cleaned_data["id"]
 
         originalPoint = get_object_or_404(MainModels.Points, pk=point_id)
 
@@ -498,7 +498,13 @@ class PointAdd(LoggedPointsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             point.author = person
             point.save()
-
+            reviews = params.get("reviews")
+            if reviews:
+                reviews = json.load(reviews)
+                for review in reviews:
+                    new_review = ReviewsModels.Reviews.objects.create(name=review.review, author=person, rating=review.rating)
+                    point.reviews.add(new_review)
+                    point.save()
             tags = params.getlist("tags[]")
             if tags:
                 for tag in tags:
@@ -507,7 +513,8 @@ class PointAdd(LoggedPointsBaseView):
                         new_tag = TagsModels.Tags.objects.filter(id=tag)
                     if new_tag.count() == 0:
                         new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
-                    else: new_tag = new_tag[0]
+                    else:
+                        new_tag = new_tag[0]
                     point.tags.add(new_tag)
 
                 point.save()
