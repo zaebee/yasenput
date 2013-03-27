@@ -155,6 +155,12 @@ $(function(){
                     success: function(model, response, options) {
                         console.log('SUCCESS!');
                         console.log('model: ', model);
+
+                        console.log('response: ', response);
+                         // new window.Point( response[0] );
+                        // points.add(model).render();
+                        points.addPrepend( new window.Point( response[0] ) );
+                        $('.scroll-box').click();
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
                         // });
@@ -184,6 +190,7 @@ $(function(){
         // ready: $.Deferred(),
         initialize: function(){
             this.bind('reset', this.render, this);
+            this.bind('add', this.addAppend, this);
         },
         parse: function(response) {
             return response.points;
@@ -206,6 +213,7 @@ $(function(){
         	return this;
         },
         render: function(){
+            console.log('=> points render!');
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
@@ -216,12 +224,64 @@ $(function(){
                 itemSelector: 'article.item',
                 columnWidth: 241 
             });
+            $(this.el).masonry( 'reload' );
             // $(this.el).mansory({
             //     itemSelector: '',
             //     columnWidth: 229
             // });
             return self;
         },
+        loadNextPage: function(){
+            console.log('loadNextPage');
+            var collection = this;
+            // if(! this.isEnd ) {
+                this.page++;
+                // var bufPoints = new window.Points();
+                // console.log('bufPoints: ', bufPoints);
+                // bufPoints.page = this.page;
+                // jqXHR = bufPoints.setURL().fetch({silent: true});
+                // jqXHR.done(function(data, textStatus, jqXHR){
+                //     if( data.points.length != 0) {
+                //         window.loadingNow = false;
+                //         console.log('data.points: ', data.points);
+                //         _.each( data.points, function(point){
+                //             collection.push(point);
+                //         });
+                //     }
+                // });
+
+                jqXHR = this.setURL().fetch({add: true});
+                // jqXHR.done(function(data, textStatus, jqXHR){
+                //     if( data.points.length != 0) {
+                //         window.loadingNow = false;
+                //         $(this.el).masonry( 'reload' );
+                //     }
+                // });
+            // }
+        },
+        addPrepend: function(model){
+            this.add(model);
+            var pin = new PointView({model:model});
+            this.el.prepend(pin.render().el);
+            // $(this.el).masonry( 'appended', $(pin.render().el), true );
+            $(this.el).masonry( 'reload' );
+        },
+        addAppend: function(model){
+            console.log('++> addAppend !');
+            console.log('model: ', model);
+
+            var pin = new PointView({model:model});
+            this.el.prepend(pin.render().el);
+
+            $(this.el).masonry( 'appended', $(pin.render().el), true );
+            // buf = 
+        },
+        // addToDOM: function(model){
+        //     var pin = new PointView({model:model});
+        //     this.el.prepend(pin.render().el);
+        //     // $(this.el).masonry( 'appended', $(pin.render().el), true );
+        //     $(this.el).masonry( 'reload' );
+        // },
         // mapCoords:function(){
         //     //return window.YPApp.mapCoords();
         //     //return window.myMap.getBounds();

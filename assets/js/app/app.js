@@ -170,6 +170,66 @@ $(function(){
     // });
 });
 
+
+$(function(){
+    window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
+    // когда приходит points.length == 0, то флаг навечно становиться true
+    $(window).scroll(function () {
+        // $('#more').hide();
+        // $('#no-more').hide();
+        // console.log('=======================================');
+        // console.log('$(window).scrollTop(): ', $(window).scrollTop());
+        // console.log('$(window).height(): ', $(window).height());
+        // console.log('$(document).height(): ', $(document).height());
+
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+            // если уже не грузим, то в путь
+            if( !window.loadingNow ) {
+                window.loadingNow = true;
+                console.log('LOAD MORE DATA!');
+                points.loadNextPage();
+                // window.points.page = window.points.page + 1;
+                // points.setURL().fetch();
+
+            }
+            // $('#more').css("top","400");
+            // $('#more').show();
+        }
+
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            console.log('LOAD LOAD LOAD LOAD LOAD!');
+            // $('#more').hide();
+            // $('#no-more').hide();
+            // page++;
+            // var data = {
+            //     page_num: page
+            // };
+            // var actual_count = "<?php echo $actual_row_count; ?>";
+            // if((page-1)* 12 > actual_count){
+            //     $('#no-more').css("top","400");
+            //     $('#no-more').show();
+            // }else{
+
+            // }
+        }
+
+    });
+
+    // $('section.items').infinitescroll({
+    //     navSelector: "div.navigation",
+    //     nextSelector : "div.navigation a:first", 
+    //     itemSelector: "article.item", 
+    //     // other options
+    //     dataType: 'json',
+    //     appendCallback: false
+    // }, function(json, opts) {
+    //     // Get current page
+    //     var page = opts.state.currPage; 
+    //     console.log('LOAD MOAR DATA!');
+    //     // Do something with JSON data, create DOM elements, etc ..
+    // });
+});
+
 $(function(){
 
     window.page = 1;
