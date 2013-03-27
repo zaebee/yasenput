@@ -73,11 +73,14 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 	}
 })(jQuery);
 
+var multySearch;
 
 jQuery(function($){
-	var multySearch = {
+	multySearch = {
+	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
+					    <span style="display:none">1</span>\
 						<button class="remove-label"></button>\
 					</div>', //мини-шаблон для вставки лейблов
 		
@@ -231,14 +234,20 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
-            console.log('onClickDrop');
+            //console.log('onClickDrop');
 			var clsName = '';
 			
 			if(me.closest(".item-place").length){
 				clsName = ' label-place';
-			} else if (me.closest(".item-name").length){
+				
+				//id = me.span.text();
+				//qq = 11;
+				//multisearch_result.places.push()
+			}
+			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-			} else if (me.closest(".item-users").length){
+			}
+			else if (me.closest(".item-users").length){
 				clsName = ' label-user';
 			}
 			
@@ -251,7 +260,7 @@ jQuery(function($){
 		},
 		
 		init: function(params){
-			var me = this;
+			me = this;
 			me.p = params;
 			
 			me.setWidthInput();
@@ -290,7 +299,15 @@ jQuery(function($){
 					me.hideDropField();
 				}
 			});
+		},
+		reinit_click: function() {
+    			$("a", me.p.dropRoot).click(function(e){
+				e.preventDefault();
+				
+				me.onClickDrop($(this), me);
+			});
 		}
+		
 	};
 	window.multySearch = multySearch;
 	var searchAuth = $.extend({}, multySearch);
