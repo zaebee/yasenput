@@ -37,6 +37,7 @@ $(function(){
             'click .a-like': 'likepoint',
             'click .a-photo':"detailPlace",
             'click .a-collection':"addInCollection",
+
             // 'click .a-want':"wantvisit",
                       
             //'click .photo img':function(){

@@ -181,7 +181,7 @@ $(function(){
                     return true;
                 },
                 beforeSend: function(request) {
-                    request.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+                    // request.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
                     progress.find('.value').css(
                         {'width' : '0%'}
                     )

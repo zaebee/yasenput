@@ -1,5 +1,10 @@
 // var pointCollection;
 window.currentPointPopup = {}; // какой попап сейчас открыт (добавление / просмотр / редактирование точки)
+// узнаём Id текущего пользователся
+$(function(){
+    window.myId = parseInt( $('header').find('.user').attr('data-user-id'), 10);
+});
+
 jQuery(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;
@@ -85,12 +90,12 @@ $(window).scroll(function(){ //  главная карта
         
         if(scrollTop >= 370){
             if(!$(".main-map").hasClass("hide-map")){
-                $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
+                // $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
                 
                 $(".main-map .m-ico-group").hide();
             }
         } else {
-            $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
+            // $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
             
             $(".main-map .m-ico-group").show();
         }
@@ -98,42 +103,71 @@ $(window).scroll(function(){ //  главная карта
 });
 
 //показ маленьких подсказок на черном фоне
-$("body").delegate("[data-tooltip]", "mouseenter" , function(){
-    var txt = $(this).data("tooltip"),
-        offset = $(this).offset(),
-        width = $(this).width(),
-        height = $(this).height();
-    
-    if(!$("#tooltip").length){
-        $('<div id="tooltip"><span class="arrow"></span><div class="body"></div></div>').appendTo("body").hide();
-    }
-    
-    $('#tooltip .body').html(txt);
-    $('#tooltip').css({
-        display:"block",
-        visibility: "hidden"
+$(function(){
+    $("body").delegate("[data-tooltip]", "mouseenter" , function(){
+        var txt = $(this).data("tooltip"),
+            offset = $(this).offset(),
+            width = $(this).width(),
+            height = $(this).height();
+        
+        if(!$("#tooltip").length){
+            $('<div id="tooltip"><span class="arrow"></span><div class="body"></div></div>').appendTo("body").hide();
+        }
+        
+        $('#tooltip .body').html(txt);
+        $('#tooltip').css({
+            display:"block",
+            visibility: "hidden"
+        });
+        
+        var w = $('#tooltip').outerWidth(),
+            left = offset.left + width/2 - w/2,
+            top = offset.top + height+2;
+        
+        left = left < 0 ? 0 : (left > $(window).width()-w ? $(window).width()-w : left);
+        
+        $('#tooltip').css({
+            display:"none",
+            visibility: "visible",
+            left: left,
+            top : top
+        }).fadeIn(100);
+        
+        $('#tooltip .arrow').css({
+            left: offset.left + (width/2 - 5),
+            top : top-$(window).scrollTop()
+        });
+    })
+    .delegate("a[data-tooltip]", "mouseleave", function(){
+        $('#tooltip').fadeOut(100);
     });
-    
-    var w = $('#tooltip').outerWidth(),
-        left = offset.left + width/2 - w/2,
-        top = offset.top + height+2;
-    
-    left = left < 0 ? 0 : (left > $(window).width()-w ? $(window).width()-w : left);
-    
-    $('#tooltip').css({
-        display:"none",
-        visibility: "visible",
-        left: left,
-        top : top
-    }).fadeIn(100);
-    
-    $('#tooltip .arrow').css({
-        left: offset.left + (width/2 - 5),
-        top : top-$(window).scrollTop()
-    });
-})
-.delegate("a[data-tooltip]", "mouseleave", function(){
-    $('#tooltip').fadeOut(100);
+});
+
+// работа с попапами-подтверждалками
+$(function(){
+    $('body')
+    .delegate("#confirm-remove-comment .a-no", 'click', function (e) {
+        var self = e.currentTarget;
+        e.preventDefault();//отказ удаления фотки
+        $("#confirm-remove-comment").hide();
+    })
+    // .delegate("#confirm-remove-comment .a-yes", 'click', function (e) {
+    //     var self = e.currentTarget;
+    //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
+    //     //$("#confirm-remove-photo").hide();
+    // })
+    .delegate("#confirm-remove-photo .a-no", 'click', function (e) {
+        var self = e.currentTarget;
+        e.preventDefault();//отказ удаления фотки
+        $("#confirm-remove-photo").hide();
+    })
+    // .delegate("click #confirm-remove-photo .a-yes", 'click', function (e) {
+    //     var self = e.currentTarget;
+    //     e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
+
+    //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
+    //     //$("#confirm-remove-photo").hide();
+    // });
 });
 
 $(function(){
@@ -857,28 +891,28 @@ $(function(){
                     top: top
                 }).show();
             },
-            "click #confirm-remove-comment .a-no":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();//отказ удаления фотки
-                $("#confirm-remove-comment").hide();
-            },
-            "click #confirm-remove-comment .a-yes":function (e) {
-                var self = e.currentTarget;
-                //$($("#confirm-remove-photo").data("elemForRemove")).remove();
-                //$("#confirm-remove-photo").hide();
-            },
-            "click #confirm-remove-photo .a-no":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();//отказ удаления фотки
-                $("#confirm-remove-photo").hide();
-            },
-            "click #confirm-remove-photo .a-yes":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
+            // "click #confirm-remove-comment .a-no":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();//отказ удаления фотки
+            //     $("#confirm-remove-comment").hide();
+            // },
+            // "click #confirm-remove-comment .a-yes":function (e) {
+            //     var self = e.currentTarget;
+            //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
+            //     //$("#confirm-remove-photo").hide();
+            // },
+            // "click #confirm-remove-photo .a-no":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();//отказ удаления фотки
+            //     $("#confirm-remove-photo").hide();
+            // },
+            // "click #confirm-remove-photo .a-yes":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
 
-                //$($("#confirm-remove-photo").data("elemForRemove")).remove();
-                //$("#confirm-remove-photo").hide();
-            },
+            //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
+            //     //$("#confirm-remove-photo").hide();
+            // },
             "mouseenter a[data-tooltip]":function (e) {
                 var self = e.currentTarget;
                 //показ маленьких подсказок на черном фоне
@@ -955,25 +989,25 @@ $(function(){
 
                 $("#complaint-photo").css(params).show();
             },
-            "click .popup .toggle-block .a-toggle":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault(); // показать-скрыть скрытые блоки в попапе
-                if($(self).hasClass("is-open")){
-                    $("span", self).html("&darr;");
-                } else {
-                    $("span", self).html("&uarr;");
-                }
+            // "click .popup .toggle-block .a-toggle":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault(); // показать-скрыть скрытые блоки в попапе
+            //     if($(self).hasClass("is-open")){
+            //         $("span", self).html("&darr;");
+            //     } else {
+            //         $("span", self).html("&uarr;");
+            //     }
 
-                $(self).toggleClass("is-open");
+            //     $(self).toggleClass("is-open");
 
-                var parent = $(self).closest(".toggle-block");
+            //     var parent = $(self).closest(".toggle-block");
 
-                if(parent.find(".toggle-block").length){
-                    parent.find(".hidden-content").not(".bp-comments .hidden-content").toggle();
-                } else {
-                    parent.find(".hidden-content").toggle();
-                }
-            },
+            //     if(parent.find(".toggle-block").length){
+            //         parent.find(".hidden-content").not(".bp-comments .hidden-content").toggle();
+            //     } else {
+            //         parent.find(".hidden-content").toggle();
+            //     }
+            // },
             // "click .p-gallery .item-photo":function (e) {
             //     var self = e.currentTarget;
             //     e.preventDefault(); //показать главную фотку в попапе по клику на превьюшку
