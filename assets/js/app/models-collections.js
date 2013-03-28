@@ -35,6 +35,12 @@ $(function(){
             this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
             this.set( {photos_new: new window.YPimages()} );           
             this.set( {tags_collection: new window.Tags()} );
+            // узнаём, являемся ли мы автором этой точки
+            if(this.get('author').id == window.myId) {
+                this.set({ismine: 1});
+            } else {
+                this.set({ismine: 0});
+            }
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
