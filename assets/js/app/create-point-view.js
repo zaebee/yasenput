@@ -56,7 +56,7 @@ $(function(){
                                 placemark = new ymaps.Placemark(coords, {
                                         id:'map-point'
                                     }, {
-                                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                                        iconImageHref: '/assets/media/icons/place-none.png', // картинка иконки
                                         iconImageSize: [32, 36], // размеры картинки
                                         iconImageOffset: [-16, -38] // смещение картинки
                                 });

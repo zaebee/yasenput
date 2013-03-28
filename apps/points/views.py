@@ -39,7 +39,7 @@ class PointsBaseView(View):
                                 extras=['name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
                                 relations={'description': {'fields': ['description', 'id']},
-                                           'tags': {'fields': ['name', 'id', 'level']},
+                                           'tags': {'fields': ['name', 'id', 'level', 'icons']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
@@ -503,9 +503,9 @@ class PointAdd(LoggedPointsBaseView):
             if tags:
                 for tag in tags:
                     new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if new_tag.count == 0 and tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.filter(id=tag)
-                    if new_tag.count() == 0:
+                    if tag.isdigit():
+                        new_tag = TagsModels.Tags.objects.get(id=tag)
+                    elif new_tag.count() == 0:
                         new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
                     else:
                         new_tag = new_tag[0]

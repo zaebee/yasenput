@@ -8,29 +8,6 @@ $(function(){
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'likepoint');
-            var self = this;
-            //Point.bind("detailplace", self.detailPlace, self);
-
-            // TODO: отрисовка точки на карте
-            // Point.bind("detailPlace", self.detailPlace);
-
-            // if(!$('#tab-want').hasClass('active')){
-            //     var placemark = new ymaps.Placemark(
-            //         [ self.model.get('latitude'), self.model.get('longitude')],
-            //         {
-            //             balloonContentHeader: '<b>'+ self.model.get('name') +'</b>',
-            //             balloonContentBody:  self.model.get('description') +'<br />',
-            //             balloonContentFooter: 'Вологодская область, Вологда'
-            //         },
-            //         {
-            //             iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
-            //             iconImageSize: [22, 37], // размеры картинки
-            //             iconImageOffset: [-11, -37], // смещение картинки
-            //             draggable: false
-            //         }
-            //     )
-            //     pointCollection.add(placemark);
-            // }
         },
         events: {
             'click .yp-title, .yp-info': 'toggleYPinfo',
@@ -39,10 +16,6 @@ $(function(){
             'click .a-collection':"addInCollection",
 
             // 'click .a-want':"wantvisit",
-                      
-            //'click .photo img':function(){
-            //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
-            //}
         },
         toggleYPinfo: function(event) {
             $(event.currentTarget).toggle().siblings().toggle();
@@ -52,13 +25,9 @@ $(function(){
             console.log('like point: ', this.model.get('id'));
             view = this;
             this.model.like({
-                success: function(){
-                    $(view.el).find('.a-like').toggleClass('marked');
-                    if(view.model.get('isliked') == 0) {
-                        view.model.set({'isliked': 1});
-                    } else {
-                        view.model.set({'isliked': 0});
-                    }
+                success: function(model, response, options){
+                    model.set(response[0]).ratingCount();                    
+                    view.render();
                 },
                 error: function(){
 

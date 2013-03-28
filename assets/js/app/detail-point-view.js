@@ -12,6 +12,7 @@ $(function(){
         },
         events: {
             // 'keyup #add-new-place-address': 'searchLocation',
+            'click .m-ico-group>a': 'showNearPlace'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -23,57 +24,49 @@ $(function(){
                 collection: this.model.get('photos_pop'),
             });
             browsingPhotos.render();
-
             
             var myMapPopupPlace;
+            view = this;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
-                    if (id == 'tab-map-place'){
+                    if (id == 'tab-map'){
+                        console.log('we select tab-map');
                         if (!myMapPopupPlace) {
-                            
-                            myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                            myMapPopupPlace = new ymaps.Map('popup-map-1', {
                                 center: myMap.getCenter(),
                                 zoom: 11
                             });
+                            myMapPopupPlace.controls.add('zoomControl');
 
-                            myMapPopupPlace.controls.add('zoomControl')
-                            var placemark = {};
-                            
-                            myMapPopupPlace.events.add('click', function (event) {
-                                // убираем ранее поставленную точку, 
-                                myMapPopupPlace.geoObjects.remove(placemark);
-                                // добавляем точку
-                                var coords = event.get('coordPosition');
-                                placemark = new ymaps.Placemark(coords, {
-                                        id:'map-point'
-                                    }, {
-                                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
-                                        iconImageSize: [32, 36], // размеры картинки
-                                        iconImageOffset: [-16, -38] // смещение картинки
-                                });
-                                myMapPopupPlace.geoObjects.add(placemark);
-                                var labels = [];
-                                ymaps.geocode(coords).then(function (res) {
-                                    var i = true;
-                                    res.geoObjects.each(function (obj) {
-                                        if (i)
-                                            $('#add-new-place-address').val(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
-                                        i = false;
-                                    });
-                                    $(view.el).find('#add-new-place-address').change();
-                                });
-                                // console.log('coords: ', coords);
-                                longitude = coords[1];
-                                latitude = coords[0];
-                                newPoint.set({'longitude': longitude, 'latitude': latitude});
-                            });
+                            coords = [view.model.get('latitude'), view.model.get('longitude')];
+                            console.log('coords: ', coords);
+                            var placemark = new ymaps.Placemark(coords 
+                                ,{
+                                    id: view.model.get('id')
+                                } 
+                                ,{
+                                    iconImageHref: '/'+view.model.get('icon'), // картинка иконки
+                                    iconImageSize: [32, 36], // размеры картинки
+                                    iconImageOffset: [-16, -38] // смещение картинки
+                                }
+                            );
+                            myMapPopupPlace.geoObjects.add(placemark);
                         }
                     }
                 }
             });
+            // $(this.el).find(".tabs-inside").simpleTabs({
+            //     afterChange: function(){
+            //         console.log('hi all, im afterChange function');
+            //     }
+            // });
             return this;
         },	
-
+        showNearPlace: function(event){
+            event.preventDefault();
+            $(this.el).find("#near-objects").slideDown(200);
+            $(event.currentTarget).addClass('active').siblings().removeClass('active');
+        }
     });
     window.DetailPointView = DetailPointView;
 });

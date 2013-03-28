@@ -52,8 +52,6 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
         return $(this).each(function(i){
             var self = $(this);
 
-            console.log('this: ', this);
-            
             if(self.data("simpleTabs")) return;
             self.data("simpleTabs", "simpleTabs");
             
@@ -72,7 +70,6 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
             
             $("a", this).click(function(e){
                 e.preventDefault();
-                
                 toggleBlock($(this).attr(opt.attrTarget));
                 $(this).addClass("active").siblings().removeClass("active");
             });
@@ -87,16 +84,13 @@ $(window).scroll(function(){ //  главная карта
     
     if(!$(".main-map").hasClass("is-open")){
         $(".main-map").css("top", -top);
-        
         if(scrollTop >= 370){
             if(!$(".main-map").hasClass("hide-map")){
                 // $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
-                
                 $(".main-map .m-ico-group").hide();
             }
         } else {
             // $(".main-map").removeClass("hide-map").find(".a-toggle").html("Свернуть карту &uarr;");
-            
             $(".main-map .m-ico-group").show();
         }
     }
@@ -180,10 +174,28 @@ $(function(){
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
-                points.loadNextPage();
+                window.pointsArr.current.loadNextPage();
             }
         }
     });
+});
+
+// переключалка табов точек "популярные" / "новые"
+$(function(){
+    // $('header').find(".tabs").simpleTabs({
+    //     beforeChange: function(self, id){
+    //         console.log('beforeChange!');
+    //         console.log('self: ', self);
+    //         console.log('id: ', id);
+    //         collection = id.match(/tab-(\S+)/)[1];
+    //         console.log('collection: ', collection);
+    //         console.log('window.pointsArr: ', window.pointsArr);
+
+    //         // if( window.pointsArr[collection].loaded == false ) {
+    //         //     window.pointsArr[collection].setURL().fetch();
+    //         // }
+    //     }
+    // });
 });
 
 $(function(){
@@ -1051,11 +1063,11 @@ $(function(){
 
             //     //$("html, body").scrollTop($(window).scrollTop()+250);
             // },
-            "click #tab-map .m-ico-group .m-ico":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault();
-                $("#near-objects").slideDown(200);
-            },
+            // "click #tab-map .m-ico-group .m-ico":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault();
+            //     $("#near-objects").slideDown(200);
+            // },
             // "click .not-found-event .btn-place":function (e) {
             //     var self = e.currentTarget;
             //     e.preventDefault();

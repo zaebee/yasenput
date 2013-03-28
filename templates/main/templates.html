@@ -28,13 +28,16 @@
             {% if user.is_authenticated %}
                 <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
                 <a href="#" class="a-collection" data-tooltip="добавить в коллекцию">В коллекцию</a>
-                <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
+                <% if(ismine == 1) { %>
+                    <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
+                <% } else { %>
+                    <a href="#" class="a-share-new" data-tooltip="поделиться"></a>
+                <% } %>
             {% endif %}
             <div class="yasen-info">
                 <span class="yp-title"><%- YPscore %> ЯПи</span>
                 
                 <div class="yp-info">
-
                     <i class="yp-like"></i><small><%- likes_count %></small>
                     <i class="yp-marked"></i><small><%- collections_count %></small>
                     <i class="yp-place"></i><small><%- beens_count %></small>
@@ -42,16 +45,17 @@
                 </div>
             </div>
 
-
             <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="165"></a>
         </div>
 
         <div class="alert-added">Добавлено в раздел &laquo;Хочу посетить&raquo;</div>
 
-        <div class="body">
+        <div class="body <% if (id_point != 0) { %>author-point<% } %>">
+            <% if (id_point != 0) { %>
+                <img src="{{ MEDIA_URL }}<%- author.avatar %>" alt="" class="avatar" width="29" height="30">
+            <% } %>
             <h3><%- name %></h3>
             <p><%- address %></p>
-
         </div>
         <div class="comments">
             <ul>
@@ -331,7 +335,7 @@
 
                         <div id="tab-map">
                             <div class="map">
-                                <div id="popup-map-1" style="width:560px; height:510px"></div>
+{#                                <div id="popup-map-1" style="width:560px; height:510px"></div>#}
                                 <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
 
                                 <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
@@ -394,14 +398,14 @@
                                     </a>
                                 </div>
 
-                                <div class="placemark" style="top:35%">
-                                    <span class="m-ico m-hotel"></span>
-                                </div>
+{#                                <div class="placemark" style="top:35%">#}
+{#                                    <span class="m-ico m-hotel"></span>#}
+{#                                </div>#}
 
-                                <div class="placemark placemark-wide" style="top:65%">
-                                    <span class="m-ico m-commerc"></span>
-                                    <span class="num">32</span>
-                                </div>
+{#                                <div class="placemark placemark-wide" style="top:65%">#}
+{#                                    <span class="m-ico m-commerc"></span>#}
+{#                                    <span class="num">32</span>#}
+{#                                </div>#}
                             </div>
 
                             <div id="near-objects">
@@ -768,14 +772,10 @@
         
         <div class="tabs-content">
             <div id="tab-photo" style="display: block;">
-                <div class="tabs-inside"><!-- tp- tab photo -->
-                    <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
-                    <a href="#" data-target="tp-tab-my">новые</a>
-                    <a href="#" data-target="tp-tab-new">мои</a>
-                </div>
+{#                popup-map-1#}
                 
                 <div class="tabs-content">
-                    <div class="toggle-block">
+                    <div class="toggle-block"  id="tp-tab-pop">
 
                     </div>
                 </div>
@@ -786,71 +786,13 @@
                     <div id="popup-map-1" style="width:560px; height:510px"></div>
 
                     <div class="m-ico-group">
-                        <a href="#">
-                            <span class="m-ico m-hotel"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-cafe"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-restoran"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-turism"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-azs"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-active-rest"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-sto"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-commerc"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-hunting"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-events"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-shop"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-fishing"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-monument"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-church"></span>
-                        </a>
+                        {% for tag in tagsRequire %}
+                            <a href="#">
+                                <span class="m-ico {{ tag.mapicons }}" data-tag-id="{{ tag.id }}"></span>
+                            </a>
+                        {% endfor %}
                     </div>
                     
-                    <div class="placemark" style="top:35%">
-                        <span class="m-ico m-hotel"></span>
-                    </div>
-                    
-                    <div class="placemark placemark-wide" style="top:65%">
-                        <span class="m-ico m-commerc"></span>
-                        <span class="num">32</span>
-                    </div>
                 </div>
                 
                 <div id="near-objects">
@@ -1575,20 +1517,16 @@
 </script>
 
 <script type="text/template" id="browsing-photos">
-    <div class="toggle-block">
-        <div class="clearfix p-gallery">
-            <span class="upward-photos"></span>
-            
-            <div id="big-photo">
-            </div>
-
-            <span class="downward-photos"></span>
-            
-           
+    <div class="clearfix p-gallery">
+        <span class="upward-photos"></span>
+        
+        <div id="big-photo">
         </div>
 
-        <a href="#" class="a-toggle photos">все фотографии <span>↓</span></a>
+        <span class="downward-photos"></span>
     </div>
+
+    <a href="#" class="a-toggle photos">все фотографии <span>↓</span></a>
 </script>
 
 <script type="text/template" id="photos-thumb">

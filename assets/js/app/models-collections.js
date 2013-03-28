@@ -17,10 +17,46 @@ $(function(){
 			// tags:0,
 	  //       feedbacks:0
         },
-        idAttribute: 'id'+'_'+'id_point',
+        idAttribute: 'compositeId',
         initialize: function() {
             // console.log('+++ point initialize!');
-            // this.bind('invalid', this.validationFailed, this);
+            // задаём составной id, чтобы он был уникальным
+            if( this.get('id') != undefined ) {
+                this.set( { compositeId: this.get('id')+'_'+this.get('id_point') } );    
+            }            
+            // создаём коллекции фоток
+            this.set( {photos_create: new window.YPimages()} );
+            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
+            this.set( {photos_new: new window.YPimages()} );           
+
+            // коллекция тегов
+            this.set( {tags_collection: new window.Tags(this.get('tags'))} );
+
+            // коллекция ближайщих точек
+            nearPoints = new window.NearPoints();
+            nearPoints.elSelector = '#near-objects';
+            this.set( {near_points: nearPoints} );            
+            
+            // узнаём иконку этой точки
+            if(this.get('tags_collection').length > 0) {
+                zeroTag = this.get('tags_collection').find(function(tag){
+                    return tag.get('level') == 0;
+                });
+                this.set({icon: zeroTag.get('icons')});
+            }
+
+            // узнаём, являемся ли мы автором этой точки
+            if(this.get('author') != undefined) {
+                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    this.set({ismine: 1});
+                } else {
+                    this.set({ismine: 0});
+                }
+            }
+            this.ratingCount();
+            return this;
+        },
+        ratingCount: function(){
             // расчитываем рейтинг точки
             likes_count = parseInt( this.get('likes_count'), 10);
             beens_count = parseInt( this.get('beens_count'), 10);
@@ -29,18 +65,6 @@ $(function(){
             reviewusersminus = parseInt( this.get('reviewusersminus'), 10);
 
             this.set( {YPscore: likes_count + beens_count + collections_count + reviewusersplus - reviewusersminus } );
-
-            // создаём коллекции фоток
-            this.set( {photos_create: new window.YPimages()} );
-            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
-            this.set( {photos_new: new window.YPimages()} );           
-            this.set( {tags_collection: new window.Tags()} );
-            // узнаём, являемся ли мы автором этой точки
-            if(this.get('author').id == window.myId) {
-                this.set({ismine: 1});
-            } else {
-                this.set({ismine: 0});
-            }
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
@@ -81,10 +105,11 @@ $(function(){
             });
         },
         sync:  function(method, model, options) {
-            // console.log('Sync!');
-            // console.log('method: ', method);
-            // console.log('model: ', model);
-            // console.log('options: ', options);
+            console.log('Sync!');
+            console.log('method: ', method);
+            console.log('model: ', model);
+            console.log('options: ', options);
+
             console.wait = true;
             switch (method) {
                 case "create":
@@ -123,11 +148,13 @@ $(function(){
 
                 case "update":
                     options.type = 'POST';
+                    // console.log('SYNC: update');
                     switch (options.action) {
                         case 'like':
+                            // console.log('SYNC: like this photo!');
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
-                            // options.data = 'point_id='+model.get('point_id');
+                            options.data += '&id_point='+model.get('id_point');
                             break;
                     };
                     break;
@@ -165,7 +192,8 @@ $(function(){
                         console.log('response: ', response);
                          // new window.Point( response[0] );
                         // points.add(model).render();
-                        points.addPrepend( new window.Point( response[0] ) );
+                        // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
+                        window.currentPoints.addPrepend( new window.Point( response[0] ) );
                         $('.scroll-box').click();
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
@@ -183,6 +211,8 @@ $(function(){
             }
         },
         like: function(options){
+            console.log('like this photo');
+            console.log('this: ', this);
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
@@ -191,9 +221,10 @@ $(function(){
     Points = Backbone.Collection.extend({
         model: Point,
         // view:PointView,
-        el: $('#content section.items'),
+        // el: $('#content section.items'),
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
         // ready: $.Deferred(),
+        loaded: false, // флаг на то, была ли это коллекция загруженна (т.е. делали ли fetch хоть раз)
         initialize: function(){
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
@@ -219,8 +250,11 @@ $(function(){
         	return this;
         },
         render: function(){
+            this.loaded = true;
             console.log('++> render points');
+            console.log('this: ', this);
 
+            this.el = $(this.elSelector);
             $(this.el).empty();
             var self = this;
             this.each(function( item ) {
@@ -247,7 +281,7 @@ $(function(){
                 placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
                         id: point.get('id')+'_'+point.get('point_id')
                     }, {
-                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                        iconImageHref: '/'+point.get('icon'), // картинка иконки
                         iconImageSize: [32, 36], // размеры картинки
                         iconImageOffset: [-16, -38] // смещение картинки
                 });
@@ -316,7 +350,24 @@ $(function(){
         // }
     });
 	window.Point = Point;
-    window.points = new Points();
+
+    NearPoints = Points.extend({
+        render: function(){
+            this.loaded = true;
+            console.log('++> render points');
+            console.log('this: ', this);
+
+            $(this.el).empty();
+            var self = this;
+            this.each(function( item ) {
+                var pin = new PointView({model:item});
+                self.el.append(pin.render().el);
+            });
+
+            return this;
+        }
+    });
+    window.NearPoints = NearPoints;
 
     YPimage = Backbone.Model.extend({
         url: '/photos',
