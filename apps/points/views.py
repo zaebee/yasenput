@@ -42,7 +42,7 @@ class PointsBaseView(View):
                                            'tags': {'fields': ['name', 'id', 'level']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},

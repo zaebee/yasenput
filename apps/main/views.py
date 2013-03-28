@@ -54,7 +54,7 @@ def index(request):
                                 Photos.objects.filter(likeusers__id=user.id).count() +
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
-        tagsRequire = Tags.objects.filter(level = 0).all()
+    tagsRequire = Tags.objects.filter(level = 0).all()
     regions = Regions.objects.all()
     typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
