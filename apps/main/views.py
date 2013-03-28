@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from apps.main.models import Areas, Regions, HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
 from apps.comments.models import Comments
 from apps.photos.models import Photos
+from apps.tags.models import Tags
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
 from django.http import HttpResponse
@@ -53,6 +54,7 @@ def index(request):
                                 Photos.objects.filter(likeusers__id=user.id).count() +
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
+        tagsRequire = Tags.objects.filter(level = 0).all()
     regions = Regions.objects.all()
     typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
@@ -66,7 +68,7 @@ def index(request):
                                'countvisitpoints': countvisitpoints, 'regions': regions,
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
-                               'typepoints': typepoints,
+                               'typepoints': typepoints, 'tagsRequire': tagsRequire,
                                'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
                               context_instance=RequestContext(request))
 

@@ -1447,7 +1447,7 @@
                     <div id="tab-reviews-place" style="display: none;">
                         <div class="add-comment">
                             <div class="ac-block">
-                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+                                <img src="{{user.person.avatar.url}}" alt="" width="29" height="30" class="avatar">
 
                                 <div class="ac-body">
                                     <div class="toggle-area">
@@ -1550,17 +1550,9 @@
         <h4>Выберите одну из обязательных меток:</h4>
         
         <div class="require-labels">
-            <div class="label label-require" data-label-id="101" data-require="true">Туризм</div>
-            <div class="label label-require" data-label-id="102" data-require="true">Охота</div>
-            <div class="label label-require" data-label-id="103" data-require="true">Рыбалка</div>
-            <div class="label label-require" data-label-id="104" data-require="true">Активный отдых</div>
-            <div class="label label-require" data-label-id="105" data-require="true">Гостиница</div>
-            <div class="label label-require" data-label-id="106" data-require="true">Магазин</div>
-            <div class="label label-require" data-label-id="107" data-require="true">Кафе</div>
-            <div class="label label-require" data-label-id="108" data-require="true">Ресторан</div>
-            <div class="label label-require" data-label-id="109" data-require="true">АЗС</div>
-            <div class="label label-require" data-label-id="110" data-require="true">СТО</div>
-            <div class="label label-require" data-label-id="111" data-require="true">Шиномонтаж</div>
+            {% for tag in tagsRequire %}
+                <div class="label label-require" data-label-id="{{ tag.id }}" data-require="true">{{ tag.name }}</div>
+            {% endfor %}
         </div>
     </section>
 </div>

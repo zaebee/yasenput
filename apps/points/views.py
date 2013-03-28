@@ -434,13 +434,14 @@ class PointAddByUser(LoggedPointsBaseView):
                         message = "ошибка добавления изображения"
                         if message not in errors: errors.append(message)
             
-            reviews = params.getlist('reviews[]', None)
+            reviews = params.get("reviews")
             if reviews:
+                reviews = json.load(reviews)
                 for review in reviews:
                     try:
-                        feedback = ReviewsModels.Reviews.objects.get(id=review)
-                        point.reviews.add(feedback)
-                        originalPoint.reviews.add(feedback)
+                        new_review = ReviewsModels.Reviews.objects.create(name=review.review, author=person, rating=review.rating)
+                        point.reviews.add(new_review)
+                        originalPoint.reviews.add(new_review)
                     except:
                         message = "ошибка добавления отзыва"
                         if message not in errors: errors.append(message)
@@ -498,13 +499,6 @@ class PointAdd(LoggedPointsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             point.author = person
             point.save()
-            reviews = params.get("reviews")
-            if reviews:
-                reviews = json.load(reviews)
-                for review in reviews:
-                    new_review = ReviewsModels.Reviews.objects.create(name=review.review, author=person, rating=review.rating)
-                    point.reviews.add(new_review)
-                    point.save()
             tags = params.getlist("tags[]")
             if tags:
                 for tag in tags:
