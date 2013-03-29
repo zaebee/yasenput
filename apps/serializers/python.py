@@ -48,8 +48,8 @@ class Serializer(base.Serializer):
         Called when serializing of an object ends.
         """
         self._fields['id'] = obj._get_pk_val()
-	if self._extras:
-	    self._fields.update(self._extras)
+        if self._extras:
+            self._fields.update(self._extras)
         self.objects.append(self._fields)
         self._fields = None
         self._extras = None
@@ -118,7 +118,7 @@ class Serializer(base.Serializer):
                     serializer.serialize([related], **options)[0]
                        for related in getattr(obj, fname).iterator()]
             else:
-                # emulate the original behaviour and serialize to a list of 
+                # emulate the original behaviour and serialize to a list of
                 # primary key values
                 if self.use_natural_keys and hasattr(field.rel.to, 'natural_key'):
                     m2m_value = lambda value: value.natural_key()
@@ -127,6 +127,33 @@ class Serializer(base.Serializer):
                         value._get_pk_val(), strings_only=True)
                 self._fields[fname] = [m2m_value(related)
                     for related in getattr(obj, fname).iterator()]
+
+    def handle_gr_field(self, obj, field):
+        """
+        Called to handle a GenericRelation.
+        Recursively serializes relations specified in the 'relations' option.
+        """
+        fname = field.name
+        if fname in self.relations:
+            # perform full serialization of M2M
+            serializer = Serializer()
+            options = {}
+            if isinstance(self.relations, dict):
+                if isinstance(self.relations[fname], dict):
+                    options = self.relations[fname]
+            self._fields[fname] = [
+            serializer.serialize([related], **options)[0]
+            for related in getattr(obj, fname).iterator()]
+        else:
+            # emulate the original behaviour and serialize to a list of
+            # primary key values
+            if self.use_natural_keys and hasattr(field.rel.to, 'natural_key'):
+                m2m_value = lambda value: value.natural_key()
+            else:
+                m2m_value = lambda value: smart_unicode(
+                    value._get_pk_val(), strings_only=True)
+            self._fields[fname] = [m2m_value(related)
+                                   for related in getattr(obj, fname).iterator()]
 
     def getvalue(self):
         """

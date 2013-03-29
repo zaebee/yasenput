@@ -57,7 +57,7 @@ $(function(){
             $("#popup-add-place h3").text('Редактирование места');
             $.ajax({
                 type: "POST",
-                url: "point",
+                url: "ajpoint",
                 crossDomain: false,
                 dataType:'json',
                 data: {
@@ -249,14 +249,14 @@ $(function(){
     /* ----------------- Collection point---------------- */
     PointList = Backbone.Collection.extend({
         model: Point,
-        url:'/points/'+window.page +'?content='+window.content+'&categ='+window.category,
+        url:'/ajpoints/'+window.page +'?content='+window.content+'&categ='+window.category,
         view:PointView,
         initialize: function() {
             console.log('PointList Collection has been initialized');
 
         },
         setURL:function(){
-            this.url = '/points/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
+            this.url = '/ajpoints/list/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
         },
         reload: function(){
             var self = this;
@@ -407,10 +407,10 @@ $(function(){
     /* ----------------- Collection route---------------- */
     RouteList = Backbone.Collection.extend({
         model: Route,
-        url:'/routes/'+window.page +'?content='+window.content+'&categ='+window.category,
+        url:'/ajroutes/'+window.page +'?content='+window.content+'&categ='+window.category,
         view:RouteView,
         setURL:function(){
-            this.url = '/routes/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
+            this.url = '/ajroutes/'+window.page +'?content='+window.content+'&categ='+window.category+'&kind='+window.kind;
         },
         initialize: function() {
             console.log('RouteList Collection has been initialized');
@@ -624,12 +624,12 @@ $(function(){
             "":"points",
             "!/new":"new",
             "!/popular":"popular",
-            "!/points":"points",
-            "!/routes":"path",
-            "!/categories/:categ":"categories",
-            "!/want":"wantvisit",
-            "!/myroutes":"myroutes",
-            "!/mypoints":"mypoints"
+            "points":"points",
+            "routes":"path",
+            "categories/:categ":"categories",
+            "want":"wantvisit",
+            "myroutes":"myroutes",
+            "mypoints":"mypoints"
         },
         new:function () {
             console.log('Cтарт');
@@ -739,7 +739,7 @@ $(function(){
         //cluster.add(ypGeoObjects);
         //myMap.geoObjects.add(cluster);
 
-        Backbone.history.start();
+        Backbone.history.start({pushState: true});
     }
 
 });

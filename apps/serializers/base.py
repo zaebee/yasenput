@@ -5,6 +5,7 @@ except ImportError:
     from StringIO import StringIO
 
 from django.core.serializers import base
+from django.contrib.contenttypes.generic import GenericRelation
 
 
 class Serializer(base.Serializer):
@@ -21,6 +22,8 @@ class Serializer(base.Serializer):
         self.relations = None
         self.extras = None
         self.use_natural_keys = None
+        self.limit = None
+        self.order_by = None
         super(Serializer, self).__init__(*args, **kwargs)
 
     def serialize(self, queryset, **options):
@@ -39,9 +42,10 @@ class Serializer(base.Serializer):
         self.relations = options.pop("relations", [])
         self.extras = options.pop("extras", [])
         self.use_natural_keys = options.pop("use_natural_keys", False)
+        self.limit = options.pop("limit", None)
 
         self.start_serialization()
-        for obj in queryset:
+        for obj in queryset[:self.limit]:
             self.start_object(obj)
             for field in obj._meta.fields:
                 attname = field.attname
@@ -59,13 +63,21 @@ class Serializer(base.Serializer):
                     if field.attname not in self.excludes:
                         if not self.fields or field.attname in self.fields:
                             self.handle_m2m_field(obj, field)
+                elif isinstance(field, GenericRelation):
+                    if field.attname not in self.excludes:
+                        if not self.fields or field.attname in self.fields:
+                            self.handle_gr_field(obj, field)
             for extra in self.extras:
                 self.handle_extra_field(obj, extra)
-	    self.end_object(obj)
+            self.end_object(obj)
 	    
         self.end_serialization()
         return self.getvalue()
 
     def handle_extra_field(self, obj, extra):
         """Called to handle 'extras' field serialization."""
+        raise NotImplementedError
+
+    def handle_gr_field(self, obj, field):
+        """Called to handle 'generic relation' field serialization."""
         raise NotImplementedError

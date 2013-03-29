@@ -2,64 +2,26 @@
 
 {% block title %}Ясен Путь{% endblock %}
 
-{% block floatpanel %}
-	<div class="top-panel-float">
-		<div class="wrap">
-			<a href="/" class="site-name">
-				ясен <span>путь</span>
-			</a>
-            <a href="#" class="a-add-path" id="a-route-make">Сформировать маршрут</a>
-            {% if user.is_authenticated %}
-                <div class="auth auth-login">
-                    <a href="/logout/" class="a-logout">Выйти</a>
-                    <div class="user">
-                          <img src="{{ user.person.avatar.url|default:"null" }}" alt="" class="user-avatar" width="41" height="41">
-                        <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="auth">
-                    <a href="#" class="a-auth">Личный кабинет</a>
-                </div>
-            {% endif %}
-			<form action="#" method="post" class="search">
-				<fieldset>
-					<input type="text" value="Поиск" onfocus="if (this.value == this.defaultValue) this.value = '';" onblur="if (this.value == '') this.value = this.defaultValue;">
-				</fieldset>
-			</form>
-            <div class="clear"></div>
-            <a href="#" class="fr a-add-place">
-                    <span>
-                        Добавить место
-                    </span>
-            </a>
-            <ul class="tabs-maps">
-                {% for categ in categories %}
-                    <li {% if forloop.first %} class="active" {% endif %}  >
-                        <a href="#!/categories/{{ categ.name }}">{{ categ.name }}</a>
-                    </li>
-                {% endfor %}
-                <li>
-                    <a href="#!/categories/">События</a>
-                </li>
-            </ul>
-
-		</div>
-	</div>
-	<a href="#" class="a-up">Вверх <span>&uarr;</span></a>
-{% endblock %}
 
 {% block wrap %}
-    {% block header %}{% endblock %}
-    {% include 'main/header.html' %}
+    {% block header %}
+        {% include 'main/header.html' %}
+    {% endblock %}
+
+    {% block mainmap %}
+        {% include 'main/mainmap.html' %}
+    {% endblock %}
+
     {% block content %}{% endblock %}
     {% include 'main/content.html' %}
+
+    {% block footer %}
+        {% include 'main/footer.html' %}
+    {% endblock %}
 {% endblock %}
 
-{% block footer %}
-    {% include 'main/footer.html' %}
-{% endblock %}
-
-{% block overlay %}
-    {% include 'main/overlay.html' %}
+{% block popups %}
+    {% include 'includes/popups.html' %}
+    {% include 'includes/confirm-remove-comment.html' %}
+    {% include 'includes/confirm-remove-photo.html' %}
 {% endblock %}

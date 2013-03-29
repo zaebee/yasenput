@@ -3,7 +3,10 @@
 *.pyc
 settings_local.py
 /.idea/*
-/assets/media/*
+/assets/media/avatar/*
+/assets/media/cache/*
+/assets/media/point/*
+/assets/admin/*
 migrations
 .DS_Store
 ._*

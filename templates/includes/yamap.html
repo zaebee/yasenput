@@ -1,4 +1,4 @@
-<script type="text/javascript">
+{% comment %}<script type="text/javascript">
     ymaps.ready(init);
     var myMap;
     function init(){
@@ -10,4 +10,9 @@
         var pointCollection = new ymaps.GeoObjectCollection();
         myMap.geoObjects.add(pointCollection);
     }
-</script>
+</script>{% endcomment %}
+<!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
+<div id="ymaps-map-id_135963124358172716259" style="width: 100%; height: 477px;"></div>
+<script type="text/javascript">function fid_135963124358172716259(ymaps) {var map = new ymaps.Map("ymaps-map-id_135963124358172716259", {center: [39.87727985429851, 59.20427984011602], zoom: 10, type: "yandex#map"});map.controls.add("zoomControl").add("mapTools").add(new ymaps.control.TypeSelector(["yandex#map", "yandex#satellite", "yandex#hybrid", "yandex#publicMap"]));};</script>
+<script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=fid_135963124358172716259"></script>
+<!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
