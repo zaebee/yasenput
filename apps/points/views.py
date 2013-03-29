@@ -503,9 +503,9 @@ class PointAdd(LoggedPointsBaseView):
             if tags:
                 for tag in tags:
                     new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if new_tag.count == 0 and tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.filter(id=tag)
-                    if new_tag.count() == 0:
+                    if tag.isdigit():
+                        new_tag = TagsModels.Tags.objects.get(id=tag)
+                    elif new_tag.count() == 0:
                         new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
                     else:
                         new_tag = new_tag[0]
