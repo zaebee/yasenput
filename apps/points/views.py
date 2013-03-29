@@ -39,7 +39,7 @@ class PointsBaseView(View):
                                 extras=['name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
                                 relations={'description': {'fields': ['description', 'id']},
-                                           'tags': {'fields': ['name', 'id', 'level']},
+                                           'tags': {'fields': ['name', 'id', 'level', 'icons']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
@@ -280,11 +280,11 @@ class PointsSearch(PointsBaseView):
 
             content = form.cleaned_data.get("content")
             if content == 'new':
-                pointsreq  = pointsreq.order_by('-created')
+                pointsreq = pointsreq.order_by('-created')
             elif content == "popular":
-                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+                pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
             else:
-                pointsreq  = pointsreq.order_by("name")
+                pointsreq = pointsreq.order_by("name")
 
             points = pointsreq[offset:limit]
 
