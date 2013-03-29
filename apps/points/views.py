@@ -36,7 +36,7 @@ class PointsBaseView(View):
         return YpJson.serialize(points, 
                                 fields=['id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
                                         'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'updated', 'likes_count'],
-                                extras=['name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
+                                extras=['popular', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
                                 relations={'description': {'fields': ['description', 'id']},
                                            'tags': {'fields': ['name', 'id', 'level', 'icons']},
@@ -88,7 +88,7 @@ class PointsBaseView(View):
                  'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                  'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
-               }}
+                 }}
         return args
             
     def getPointsByUserSelect(self, request):
@@ -128,7 +128,7 @@ class PointsBaseView(View):
         args = {"select": {
                       "isliked": collections_isliked,
                       "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
-                      }
+                    }
             }
         return args
 
@@ -365,20 +365,24 @@ class PointsList(PointsBaseView):
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
                 collectionsreq = collectionsreq.filter(points__tags__in=tags)
-
-            content = form.cleaned_data.get("content") or 'new'
-            if content == 'new':
-                pointsreq  = pointsreq.order_by('-created')
-                copypointsreq  = copypointsreq.order_by('-created')
-                collectionsreq = collectionsreq.order_by('-created')
-            elif content == "popular":
-                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-               
+           
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
+
+            content = form.cleaned_data.get("content") or 'new'
+            if content == 'new':
+                pointsreq  = pointsreq.extra(select={"popular": "0"}).order_by('-created')
+                copypointsreq  = copypointsreq.extra(select={"popular": "0"}).order_by('-created')
+                collectionsreq = collectionsreq.extra(select={"popular": "0"}).order_by('-created')
+            elif content == "popular":
+                pointsreq  = pointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
+                copypointsreq  = copypointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
+                collectionsreq = collectionsreq.annotate(popular=Count('likeusers__id')).order_by('-popular')
+#                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+#                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+#                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
+   
 
             points = pointsreq[offset:limit].all()
             copypoints = copypointsreq[offset:limit].all()
@@ -388,7 +392,7 @@ class PointsList(PointsBaseView):
             allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
             
-            allpoints = sorted(allpoints, key=lambda x: (x['likes_count']))[:COUNT_ELEMENTS]
+            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS]
             
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
