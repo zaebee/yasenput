@@ -34,7 +34,8 @@ $(function(){
 
             // коллекция ближайщих точек
             nearPoints = new window.NearPoints();
-            nearPoints.elSelector = '#near-objects';
+            nearPoints.elSelector = '#near-objects>ol';
+            nearPoints.thisPoint = this;
             this.set( {near_points: nearPoints} );            
             
             // узнаём иконку этой точки
@@ -90,6 +91,26 @@ $(function(){
                 };
                 errors.push(error);
             }
+
+            requiredTag = this.get('tags_collection').find(function(tag){
+                return tag.get('required') == true;
+            });
+            if( typeof requiredTag != 'object' ) {
+                error = {
+                    'field': 'tags',
+                    'msg': 'Не выбран обязательный тег'
+                };
+                errors.push(error);   
+            }
+
+            if( this.get('photos_create').length == 0 ) {
+                error = {
+                    'field': 'photos',
+                    'msg': 'Нужно загрузить хотя бы одну фотку'
+                };
+                errors.push(error);   
+            }
+
             // TODO: обязательно должна быть хотя бы одна метка из обязательных меток
             if(errors.length > 0) {
                 return errors;
@@ -98,7 +119,7 @@ $(function(){
         validationFailed: function(errors){
             console.log('validation failed error: ', errors);
             _.each(errors, function(error){
-                var $field = $(window.currentPointPopup.el).find('input[data-key="'+error.field+'"]');
+                var $field = $(window.currentPointPopup.el).find('[data-key="'+error.field+'"]');
                 $field.addClass('validation-error');
                 // TODO: всплывающий тултип чтоб работал
                 // $field.attr('data-tooltip', error.msg);
@@ -233,20 +254,34 @@ $(function(){
             return response.points;
         },
         setURL: function(){
+            console.log('setURL');
+            console.log('this: ', this);
+
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
             this.user_id = (this.user_id != null) ? this.user_id : '';
+            
+            tagStr = '';
+            _.each(this.tags, function(tag){
+                tagStr += '&tags[]=' + tag.id 
+            });
+            if(tagStr != ''){
+                this.tagStr = tagStr;    
+            } else {
+                this.tagStr = '';
+            }
 
             // TODO: поиск по тегам!
-        	bounds = myMap.getBounds();
+        	bounds = this.map.getBounds();
         	this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
         	this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
         	this.url = '/points/list/'+this.page +
         				'?content='+this.content+
         				'&coord_left='+this.coord_left+
         				'&coord_right='+this.coord_right+
-                        '&user_id='+this.user_id;
+                        '&user_id='+this.user_id+
+                        this.tagStr;
         	return this;
         },
         render: function(){
@@ -268,14 +303,14 @@ $(function(){
             });
             $(this.el).masonry( 'reload' );
 
-            this.redrawOnMap();
+            this.redrawOnMap(window.clusterer);
             return this;
         },
-        redrawOnMap: function(){
+        redrawOnMap: function(clusterer){
             console.log('%%> redrawOnMap');
 
-            window.clusterer.removeAll();
-            window.myGeoObjectsArr = [];
+            clusterer.removeAll();
+            var myGeoObjectsArr = [];
 
             this.each(function(point){
                 placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
@@ -285,10 +320,10 @@ $(function(){
                         iconImageSize: [32, 36], // размеры картинки
                         iconImageOffset: [-16, -38] // смещение картинки
                 });
-                window.myGeoObjectsArr.push(placemark);
+                myGeoObjectsArr.push(placemark);
             });
 
-            window.clusterer.add( window.myGeoObjectsArr );
+            clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){
             collection = this;
@@ -297,7 +332,7 @@ $(function(){
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
                 if( data.points.length > 0 ) {
-                    collection.redrawOnMap();
+                    collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
                 }
                 //  else {
@@ -310,7 +345,7 @@ $(function(){
             var pin = new PointView({model:model});
             this.el.prepend(pin.render().el);
             $(this.el).masonry( 'reload' );
-            this.redrawOnMap();
+            this.redrawOnMap(window.clusterer);
         },
         addAppend: function(model){
             var pin = new PointView({model:model});
@@ -352,17 +387,44 @@ $(function(){
 	window.Point = Point;
 
     NearPoints = Points.extend({
+        template: _.template( $('#near-point').html() ),
+        initialize: function(){
+            _.bindAll(this, 'render');
+        },
+        parse: function(response){
+            response = response.points;
+            // thisPoint = this.thisPoint;
+            if( this.thisPoint.get('id_point') == 0 ) {
+                motherId = this.thisPoint.get('id');
+            } else {
+                motherId = this.thisPoint.get('id_point');
+            }
+
+            console.log('motherId: ', motherId);
+            
+            var newResponse = _.reject(response, function(point){
+                if( point.id_point == 0 ) {
+                    return ( point.id == motherId )
+                } else {
+                    return ( point.id_point == motherId )    
+                }
+            });
+            console.log('newResponse: ', newResponse);
+            return newResponse;
+        },
         render: function(){
             this.loaded = true;
-            console.log('++> render points');
+            console.log('++> render NEAR points');
             console.log('this: ', this);
+            console.log('this.popupMap.geoObjects: ', this.popupMap.geoObjects);
 
+            this.el = $(this.elSelector);
             $(this.el).empty();
             var self = this;
             this.each(function( item ) {
-                var pin = new PointView({model:item});
-                self.el.append(pin.render().el);
+                self.el.append( self.template( item.toJSON() ) );
             });
+            this.redrawOnMap( this.clusterer );
 
             return this;
         }
@@ -505,6 +567,12 @@ $(function(){
     Labels = Backbone.Collection.extend({
         model: Label,
         url: '/tags',
+        parse: function(response){
+            response = _.reject(response, function(tag){
+                return tag.level == 0;
+            });
+            return response;
+        },
         sync:  function(method, model, options) {
             console.log('Sync Labels!');
             console.log('method: ', method);
@@ -515,8 +583,7 @@ $(function(){
                     switch (options.action) {
                         case 'load':
                             options.url = model.url + '/list';
-                            // options.data = 'content='+options.content;
-                            options.url = '/assets/fakedata/labels.json';
+                            options.data = 'content='+options.content;
                             options.type = 'GET';
                             break;
                         case 'search':

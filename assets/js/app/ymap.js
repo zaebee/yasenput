@@ -59,19 +59,18 @@ $(function(){
         });
         window.mapBounds = myMap.getBounds()
         window.myGeoObjectsArr = []; // массив геообъектов
-        var clusterIcons = [{
-            href: 'assets/media/icons/cluster_small.png',
+        window.clusterIcons = [{
+            href: '/assets/media/icons/cluster_small.png',
             size: [32, 32],
             // задаем отступ, чтобы метка центрировалась
             offset: [-23, -23],
-            iconContent :'<div style="color: white"> Some </div>'
         }, {
-            href: 'assets/media/icons/cluster_big.png',
+            href: '/assets/media/icons/cluster_big.png',
             size: [59, 59], 
             offset: [-29, -29]
         }];
         window.clusterer = new ymaps.Clusterer({
-            clusterIcons: clusterIcons,
+            clusterIcons: window.clusterIcons,
         }); // кластетер, куда складываются все геообъекты
         window.myMap.geoObjects.add( window.clusterer );
 

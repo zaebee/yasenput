@@ -26,17 +26,29 @@ $(function(){
             browsingPhotos.render();
             
             var myMapPopupPlace;
+            this.popupMap = myMapPopupPlace;
+
             view = this;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
-                        if (!myMapPopupPlace) {
-                            myMapPopupPlace = new ymaps.Map('popup-map-1', {
+                        if (!view.popupMap) {
+                            view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: myMap.getCenter(),
                                 zoom: 11
                             });
-                            myMapPopupPlace.controls.add('zoomControl');
+                            view.model.get('near_points').map = view.popupMap;
+                            view.popupMap.controls.add('zoomControl');
+                            view.clusterer = new ymaps.Clusterer({
+                                clusterIcons: window.clusterIcons,
+                            });
+                            
+                            view.popupMap.events.add('boundschange', function(event){
+                                view.model.get('near_points').setURL().fetch();
+                            });
+
+                            view.popupMap.geoObjects.add( view.clusterer );
 
                             coords = [view.model.get('latitude'), view.model.get('longitude')];
                             console.log('coords: ', coords);
@@ -50,7 +62,7 @@ $(function(){
                                     iconImageOffset: [-16, -38] // смещение картинки
                                 }
                             );
-                            myMapPopupPlace.geoObjects.add(placemark);
+                            view.popupMap.geoObjects.add(placemark);
                         }
                     }
                 }
@@ -66,6 +78,15 @@ $(function(){
             event.preventDefault();
             $(this.el).find("#near-objects").slideDown(200);
             $(event.currentTarget).addClass('active').siblings().removeClass('active');
+
+            tagId = parseInt( $(event.currentTarget).find('span').attr('data-tag-id'), 10);
+            console.log('tagId: ', tagId);
+
+            this.model.get('near_points').tags = [ {id: tagId} ];
+            this.model.get('near_points').popupMap = this.popupMap;
+            this.model.get('near_points').clusterer = this.clusterer;
+            this.model.get('near_points').setURL().fetch();
+            console.log('this.model.get(near_points).url: ', this.model.get('near_points').url);
         }
     });
     window.DetailPointView = DetailPointView;

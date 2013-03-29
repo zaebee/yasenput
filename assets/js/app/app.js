@@ -1,5 +1,4 @@
 // var pointCollection;
-window.currentPointPopup = {}; // какой попап сейчас открыт (добавление / просмотр / редактирование точки)
 // узнаём Id текущего пользователся
 $(function(){
     window.myId = parseInt( $('header').find('.user').attr('data-user-id'), 10);
@@ -1345,30 +1344,30 @@ $(function(){
                 }
             },
             // /end ага, вот эти ребята
-            "keyup #input-add-labels":function(e){
-                var self = e.currentTarget;
-                if ($(self).val().length > 0){
-                    var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
-                    $dropResult.find('li').remove();
-                    $.ajax({
-                        type: "GET",
-                        url: "tags/search",
-                        crossDomain: false,
-                        dataType:'json',
-                        data: {
-                            s:  $(self).val()
-                        },
-                        success: function(data) {
-                            _.each(data, function(itm){
-                                $dropResult.append('<li data-point-id='+itm.id+'>'+itm.name+'</li>')
-                            });
-                        },
-                        error: function (request, status, error) {
-                            alert(status);
-                        }
-                    });
-                }
-            },
+            // "keyup #input-add-labels":function(e){
+            //     var self = e.currentTarget;
+            //     if ($(self).val().length > 0){
+            //         var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+            //         $dropResult.find('li').remove();
+            //         $.ajax({
+            //             type: "GET",
+            //             url: "tags/search",
+            //             crossDomain: false,
+            //             dataType:'json',
+            //             data: {
+            //                 s:  $(self).val()
+            //             },
+            //             success: function(data) {
+            //                 _.each(data, function(itm){
+            //                     $dropResult.append('<li data-point-id='+itm.id+'>'+itm.name+'</li>')
+            //                 });
+            //             },
+            //             error: function (request, status, error) {
+            //                 alert(status);
+            //             }
+            //         });
+            //     }
+            // },
             "click #popups .scroll-box": function(e){
                 self = this;
                 if( e.target == $(self.el).find('#popups .scroll-box').get(0) ){
@@ -1445,105 +1444,105 @@ $(function(){
 
         //     $("#popups .viewport").scrollTop(Math.abs(scrollTop));
         // },
-        onFocusDropInput: function (input, withMatch){
-            console.log(input);
-            var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
+        // onFocusDropInput: function (input, withMatch){
+        //     console.log(input);
+        //     var $dropResult = $(input).closest(".drop-filter").find(".drop-results");
 
-            // $(input).closest(".input-line").css("z-index", 2134);
-            $dropResult.show();
-            $(".hover", $dropResult).removeClass("hover");
-            $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
-                var next;
-                //console.log(next)
-                if(e.which == 38){
-                    if($(".hover", $dropResult).length){
-                        if($(".hover", $dropResult).prev().length){
-                            next = $(".hover", $dropResult).prev();
-                        } else {
-                            next = $("li:last", $dropResult);
-                        }
-                    } else {
-                        next = $("li:last", $dropResult);
-                    }
-                } else if(e.which == 40){
-                    if($(".hover", $dropResult).length){
-                        if($(".hover", $dropResult).next().length){
-                            next = $(".hover", $dropResult).next();
-                        } else {
-                            next = $("li:first", $dropResult);
-                        }
-                    } else {
-                        next = $("li:first", $dropResult);
-                    }
-                } else if (e.which == 13){
-                    if($dropResult.is(":visible") && $(".hover", $dropResult).length){
-                        input.val($(".hover", $dropResult).text());
-                        var dropRoot = $(input).closest(".drop-filter");
+        //     // $(input).closest(".input-line").css("z-index", 2134);
+        //     $dropResult.show();
+        //     $(".hover", $dropResult).removeClass("hover");
+        //     $(document).unbind("keydown.onFocusDropInput").bind("keydown.onFocusDropInput", function(e){
+        //         var next;
+        //         //console.log(next)
+        //         if(e.which == 38){
+        //             if($(".hover", $dropResult).length){
+        //                 if($(".hover", $dropResult).prev().length){
+        //                     next = $(".hover", $dropResult).prev();
+        //                 } else {
+        //                     next = $("li:last", $dropResult);
+        //                 }
+        //             } else {
+        //                 next = $("li:last", $dropResult);
+        //             }
+        //         } else if(e.which == 40){
+        //             if($(".hover", $dropResult).length){
+        //                 if($(".hover", $dropResult).next().length){
+        //                     next = $(".hover", $dropResult).next();
+        //                 } else {
+        //                     next = $("li:first", $dropResult);
+        //                 }
+        //             } else {
+        //                 next = $("li:first", $dropResult);
+        //             }
+        //         } else if (e.which == 13){
+        //             if($dropResult.is(":visible") && $(".hover", $dropResult).length){
+        //                 input.val($(".hover", $dropResult).text());
+        //                 var dropRoot = $(input).closest(".drop-filter");
 
-                        if(withMatch == true){
-                            if((""+input.val()) == $(".hover", $dropResult).text()){
-                                //если текст совпадает, то выбрать его
+        //                 if(withMatch == true){
+        //                     if((""+input.val()) == $(".hover", $dropResult).text()){
+        //                         //если текст совпадает, то выбрать его
 
-                            } else {
-                                $(input).val("Событие не найдено");
-                                $(".not-found-event").slideDown(100);
-                            }
-                        } else {
-                            if($(input).closest(".drop-filter").hasClass("select-labels")){ //установить метку в попапе Добавить место
+        //                     } else {
+        //                         $(input).val("Событие не найдено");
+        //                         $(".not-found-event").slideDown(100);
+        //                     }
+        //                 } else {
+        //                     if($(input).closest(".drop-filter").hasClass("select-labels")){ //установить метку в попапе Добавить место
 
-                                $(".label-add", dropRoot).show();
-                                $(multySearch.tmplLabel.replace("{text}", $(".hover", $dropResult).text())).insertBefore($(".label-add", dropRoot));
-                                $("input[type=text]", dropRoot).blur().hide();
-                            } else {
-                                //установить значение в инпут в попапе
-                                input.val($(".hover", $dropResult).text());
-                            }
-                        }
-                        $dropResult.hide();
-                        // $(input).closest(".input-line").css("z-index", 1);
-                        input.blur();
+        //                         $(".label-add", dropRoot).show();
+        //                         $(multySearch.tmplLabel.replace("{text}", $(".hover", $dropResult).text())).insertBefore($(".label-add", dropRoot));
+        //                         $("input[type=text]", dropRoot).blur().hide();
+        //                     } else {
+        //                         //установить значение в инпут в попапе
+        //                         input.val($(".hover", $dropResult).text());
+        //                     }
+        //                 }
+        //                 $dropResult.hide();
+        //                 // $(input).closest(".input-line").css("z-index", 1);
+        //                 input.blur();
 
-                        //временно вернуть фолс для тестов
-                        return false;
-                    } else if($dropResult.is(":visible")){
-                        if(withMatch == true){
-                            var flag = false; // если был введен текст и нажат Enter, то проверить, есть ли такой текст в выпадающем списке, если нет, то закрыть и предложить выбрать место
+        //                 //временно вернуть фолс для тестов
+        //                 return false;
+        //             } else if($dropResult.is(":visible")){
+        //                 if(withMatch == true){
+        //                     var flag = false; // если был введен текст и нажат Enter, то проверить, есть ли такой текст в выпадающем списке, если нет, то закрыть и предложить выбрать место
 
-                            $("li", $dropResult).each(function(){
-                                if($(this).text().toLowerCase() == (""+input.val()).toLowerCase()){
-                                    flag = true;
-                                }
-                            });
+        //                     $("li", $dropResult).each(function(){
+        //                         if($(this).text().toLowerCase() == (""+input.val()).toLowerCase()){
+        //                             flag = true;
+        //                         }
+        //                     });
 
-                            if(flag){
-                                //если текст совпадает, то закрыть выпадающий список и запустить поиск
-                                $dropResult.hide();
-                                // $(input).closest(".input-line").css("z-index", 1);
-                                input.blur();
-                                $(".not-found-event").slideUp(200);
-                            } else {
-                                $(input).val("Событие не найдено");
-                                $dropResult.hide();
-                                // $(input).closest(".input-line").css("z-index", 1);
-                                input.blur();
-                                $(".not-found-event").slideDown(200);
-                            }
-                        }
-                    }
-                }
-                    if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
-                });
-                $(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
-                    if($dropResult.is(":visible")){
-                        setTimeout(function(){
-                            $dropResult.hide();
-                            if(input[0].value == ''){
-                                input.val(input[0].defaultValue);
-                            }
-                        }, 100);
-                    }
-                });
-        },
+        //                     if(flag){
+        //                         //если текст совпадает, то закрыть выпадающий список и запустить поиск
+        //                         $dropResult.hide();
+        //                         // $(input).closest(".input-line").css("z-index", 1);
+        //                         input.blur();
+        //                         $(".not-found-event").slideUp(200);
+        //                     } else {
+        //                         $(input).val("Событие не найдено");
+        //                         $dropResult.hide();
+        //                         // $(input).closest(".input-line").css("z-index", 1);
+        //                         input.blur();
+        //                         $(".not-found-event").slideDown(200);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //             if(next) next.addClass("hover").siblings(".hover").removeClass("hover");
+        //         });
+        //         $(input).unbind("blur.onBlur").bind("blur.onBlur", function(){
+        //             if($dropResult.is(":visible")){
+        //                 setTimeout(function(){
+        //                     $dropResult.hide();
+        //                     if(input[0].value == ''){
+        //                         input.val(input[0].defaultValue);
+        //                     }
+        //                 }, 100);
+        //             }
+        //         });
+        // },
         mapBounds:function(){
             var bounds = myMap.getBounds();
             var coords = {

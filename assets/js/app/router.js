@@ -15,14 +15,13 @@ $(function(){
                     return point.get('YPscore') * (-1);
                 }
             });
-            // window.pointsPop.el = $('#content section#tab-popular');
+            window.pointsPop.map = window.myMap;
             window.pointsPop.elSelector = '#content section#tab-popular';
-            
             window.pointsPop.content = 'popular';
             window.pointsArr['popular'] =  window.pointsPop;
 
             window.pointsNew = new Points();
-            // window.pointsNew.el = $('#content section#tab-new');
+            window.pointsNew.map = window.myMap;
             window.pointsNew.elSelector = '#content section#tab-new';
             window.pointsNew.content = 'new';
             window.pointsArr['new'] = window.pointsNew;

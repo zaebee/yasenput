@@ -386,6 +386,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .drop-labels-field .label-user.selected, .drop-labels-field .label-user:hover{background:#f5c05c !important; color:#fff}
 
 .pop-labels{margin:0 0 9px}
+.pop-labels.validation-error{border: 1px dashed red;}
 	.pop-labels h4{font-size:14.5px; font-weight:normal; line-height:1em; margin:0 0 8px; color:#333}
 	.pop-labels .label{padding-right:9px; cursor:pointer}
 .not-found-event{font-size:13px; color:#666; line-height:20px; display:none}
@@ -420,7 +421,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .popup .input-line{position:relative; padding:0 0 13px}
 .popup .input-line.calendar-line{margin-top:-5px}
 .popup .input-line.submit-line{padding-bottom:0}
-.popup .input-line:hover{z-index:22}
+/*.popup .input-line:hover{z-index:22}*/
 .input-line .required{color:#aabda8; font-size:24px; position:absolute; right:-12px; top:0; font-weight:bold}
 .input-line .required.fill{color:#71a46b}
 .input-line input[type=text]{width:527px; display:block; padding:3px 10px; font:13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif; color:#666; border:solid 1px #c4cec3; height:18px}
@@ -751,6 +752,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .aside-controls-map textarea{height:120px; line-height:18px; overflow:auto}
 
 .drop-labels .drop-not-found{font-size:13px; color:#000; font-style:italic; display:block; padding:1px 9px 4px}
+.drop-labels .drop-not-found{display: none;}
 
 .require-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
@@ -818,6 +820,6 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	font-family: "Trebuchet MS", "Helvetica CY", sans-serif;
 	font-weight: bold!important;
 }
-
+#tab-photos-place.validation-error{border: 1px dashed red;}
 
 /**/
