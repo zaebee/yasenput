@@ -73,11 +73,14 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 	}
 })(jQuery);
 
+var multySearch;
 
 jQuery(function($){
-	var multySearch = {
+	multySearch = {
+	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
+					    <span style="display:none">1</span>\
 						<button class="remove-label"></button>\
 					</div>', //мини-шаблон для вставки лейблов
 		
@@ -101,72 +104,6 @@ jQuery(function($){
 		},
 		
 		showDropField: function(){ // показать выпадайку
-            $('.drop-search ul.item.item-name li').not('.item-title').remove();
-            $('.drop-search ul.item.item-name').append('<li>Загрузка ...</li>');
-            $.ajax({
-                type: "GET",
-                url: "points/search",
-                crossDomain: false,
-                dataType:'json',
-                data: {
-                    s: $("input[type=text]", $(this.p.searchInput)).val()
-                },
-                success: function(data) {
-                    $('.drop-search ul.item.item-name li').not('.item-title').remove();
-                    _.each(data, function(itm){
-                        $('.drop-search ul.item.item-name').append('<li><a href="#">'+itm.name+'</a></li>')
-                    });
-                },
-                error: function (request, status, error) {
-                    alert(status);
-                    $('.drop-search ul.item.item-name li').not('.item-title').remove();
-                }
-            });
-
-            $('.drop-search ul.item.item-users li').not('.item-title').remove();
-            $('.drop-search ul.item.item-users').append('<li>Загрузка ...</li>');
-            $.ajax({
-                type: "GET",
-                url: "users/search",
-                crossDomain: false,
-                dataType:'json',
-                data: {
-                    s: $("input[type=text]", $(this.p.searchInput)).val()
-                },
-                success: function(data) {
-                    $('.drop-search ul.item.item-users li').not('.item-title').remove();
-                    _.each(data, function(itm){
-                        $('.drop-search ul.item.item-users').append('<li><a href="#">'+itm.last_name+' '+itm.first_name+'</a></li>')
-                    });
-                },
-                error: function (request, status, error) {
-                    alert(status);
-                    $('.drop-search ul.item.item-users li').not('.item-title').remove();
-                }
-            });
-
-            $('.drop-search ul.item.item-labels li').not('.item-title').remove();
-            $('.drop-search ul.item.item-labels').append('<li>Загрузка ...</li>');
-            $.ajax({
-                type: "GET",
-                url: "tags/search",
-                crossDomain: false,
-                dataType:'json',
-                data: {
-                    s: $("input[type=text]", $(this.p.searchInput)).val()
-                },
-                success: function(data) {
-                    $('.drop-search ul.item.item-labels li').not('.item-title').remove();
-                    _.each(data, function(itm){
-                        $('.drop-search ul.item.item-labels').append('<li><a href="#">'+itm.name+'</a></li>')
-                    });
-                },
-                error: function (request, status, error) {
-                    alert(status);
-                    $('.drop-search ul.item.item-labels li').not('.item-title').remove();
-                }
-            });
-
 			$(this.p.dropRoot).show().find(".selected").removeClass("selected");
 			$(this.p.labelAdd).hide();
 			$(this.p.searchInput).show();
@@ -297,14 +234,20 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
-            console.log('onClickDrop');
+            //console.log('onClickDrop');
 			var clsName = '';
 			
 			if(me.closest(".item-place").length){
 				clsName = ' label-place';
-			} else if (me.closest(".item-name").length){
+				
+				//id = me.span.text();
+				//qq = 11;
+				//multisearch_result.places.push()
+			}
+			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-			} else if (me.closest(".item-users").length){
+			}
+			else if (me.closest(".item-users").length){
 				clsName = ' label-user';
 			}
 			
@@ -317,7 +260,7 @@ jQuery(function($){
 		},
 		
 		init: function(params){
-			var me = this;
+			me = this;
 			me.p = params;
 			
 			me.setWidthInput();
@@ -356,7 +299,15 @@ jQuery(function($){
 					me.hideDropField();
 				}
 			});
+		},
+		reinit_click: function() {
+    			$("a", me.p.dropRoot).click(function(e){
+				e.preventDefault();
+				
+				me.onClickDrop($(this), me);
+			});
 		}
+		
 	};
 	window.multySearch = multySearch;
 	var searchAuth = $.extend({}, multySearch);
@@ -1060,7 +1011,7 @@ jQuery(function($){
         }
     };*/
 	
-	if($(".private").length || $(".a-enter").length){
+/*	if($(".private").length || $(".a-enter").length){
 		$(".private .a-edit, #header .a-enter").click(function(e){
 			e.preventDefault();
 			
@@ -1076,7 +1027,7 @@ jQuery(function($){
 				}
 			});
 		});
-	}
+	}*/
 	
 //	if($(".top-panel .btn-place").length || $(".top-panel .btn-event").length){
 //		$(".top-panel .btn-place, .top-panel .btn-event").click(function(e){

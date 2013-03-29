@@ -9,6 +9,8 @@ $(function(){
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'loadImage');
+            _.bindAll(this, 'addFromList');
+            
             // _.bindAll(this, 'likepoint');     
         },
         events: {
@@ -16,6 +18,12 @@ $(function(){
             'keyup #add-new-place-address': 'searchLocation',
             
             'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
+
+            'focus #add-new-place-address': 'openMap',
+
+            'focus .input-line input:text': 'showDropList',
+            'blur .input-line input:text': 'hideDropList',
+            'mousedown .drop-results>li': 'addFromList',
 
             'change #p-add-place input:file': 'loadImage',
             'click #a-add-point': 'addNewPoint'
@@ -35,32 +43,33 @@ $(function(){
             $(this.el).html(content);
             $(this.el).find('.add-labels-place').replaceWith( addLabelsView.render().el );
             var myMapPopupPlace;
+            view.popupMap = myMapPopupPlace;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
                     if (id == 'tab-map-place'){
-                        if (!myMapPopupPlace) {
+                        if (!view.popupMap) {
                             
-                            myMapPopupPlace = new ymaps.Map('popup-map-place', {
+                            view.popupMap = new ymaps.Map('popup-map-place', {
                                 center: myMap.getCenter(),
                                 zoom: 11
                             });
 
-                            myMapPopupPlace.controls.add('zoomControl')
+                            view.popupMap.controls.add('zoomControl')
                             var placemark = {};
                             
-                            myMapPopupPlace.events.add('click', function (event) {
+                            view.popupMap.events.add('click', function (event) {
                                 // убираем ранее поставленную точку, 
-                                myMapPopupPlace.geoObjects.remove(placemark);
+                                view.popupMap.geoObjects.remove(placemark);
                                 // добавляем точку
                                 var coords = event.get('coordPosition');
                                 placemark = new ymaps.Placemark(coords, {
                                         id:'map-point'
                                     }, {
-                                        iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
+                                        iconImageHref: '/assets/media/icons/place-none.png', // картинка иконки
                                         iconImageSize: [32, 36], // размеры картинки
                                         iconImageOffset: [-16, -38] // смещение картинки
                                 });
-                                myMapPopupPlace.geoObjects.add(placemark);
+                                view.popupMap.geoObjects.add(placemark);
                                 var labels = [];
                                 ymaps.geocode(coords).then(function (res) {
                                     var i = true;
@@ -82,12 +91,43 @@ $(function(){
             });
             return this;
         },	
+        openMap: function(){
+            $(this.el).find('[data-target="tab-map-place"]').click();
+        },
+        showDropList: function(event){
+            console.log('showDropList');
+            $(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999);
+        },
+        hideDropList: function(event){
+            console.log('hideDropList');
+            $(event.currentTarget).closest('.drop-filter').find('.drop-results').hide().css('z-index', 20);
+        },
+        addFromList: function(event){
+            console.log('addFromList');
+            txt = $(event.currentTarget).text();
+            console.log('txt: ', txt);
+            $(event.currentTarget).closest('.drop-filter').find('input:text').val( txt ).change();
+            coords = $.parseJSON($(event.currentTarget).attr('data-coords'));
+            placemark = new ymaps.Placemark( coords, {
+                    id:'map-point'
+                }, {
+                    iconImageHref: '/assets/media/icons/place-none.png', // картинка иконки
+                    iconImageSize: [32, 36], // размеры картинки
+                    iconImageOffset: [-16, -38] // смещение картинки
+            });
+            longitude = coords[1];
+            latitude = coords[0];
+            newPoint.set({'longitude': longitude, 'latitude': latitude});
+            console.log('this: ', this);
+            console.log('this.popupMap: ', this.popupMap);
+            this.popupMap.geoObjects.add( placemark );
+        },
         setValue: function(event){
             console.log('change!');
             inputValue = $.trim( $(event.currentTarget).val() );
             key = $(event.currentTarget).attr('data-key');
-            console.log('key: ', key);
-            console.log('inputValue: ', inputValue);
+            // console.log('key: ', key);
+            // console.log('inputValue: ', inputValue);
             obj = {}
             obj[key] = inputValue
             this.model.set(obj);
@@ -102,13 +142,22 @@ $(function(){
         },
         searchLocation: function(event){
             var self = event.currentTarget;
+            // bounds = window.myMap.getBounds();
+            // console.log('bounds: ', bounds);
             if ($(self).val().length > 0){
-                var $dropResult = $(self).closest(".drop-filter").find(".drop-results").show();
-                ymaps.geocode($(self).val())
+                var $dropResult = $(self).closest(".drop-filter").find(".drop-results");
+                ymaps.geocode($(self).val() 
+                    ,{
+                        boundedBy: window.myMap.getBounds()
+                        ,strictBounds: false
+                    }
+                    )
                     .then(function (res) {
                         var results = [];
                         $dropResult.find('li').remove();
                         res.geoObjects.each(function (geoObject) {
+                            console.log('geoObject: ', geoObject);
+
                             var props = geoObject.properties,
                                 text = props.get('text'),
                                 name = props.get('name'),
@@ -116,17 +165,28 @@ $(function(){
                             // tags = props.get('metaDataProperty.PSearchObjectMetaData.Tags', [])
                                 tags = $.map(props.get('metaDataProperty.PSearchObjectMetaData') &&
                                     props.get('metaDataProperty.PSearchObjectMetaData.Tags') || [], function (t) { return t.tag });
+                            
                             console.log(text,name,description,tags);
-                            results.push(
-                                text || [name, description]
-                                    .concat(tags)
-                                    .filter(Boolean)
-                                    .join(', ')
+                            
+                            console.log(' geoObject.geometry.getBounds(): ',  geoObject.geometry.getBounds());
+                            console.log(' geoObject.geometry.getCoordinates(): ',  geoObject.geometry.getCoordinates());
+                            
+                            coords = geoObject.geometry.getCoordinates();
+                            console.log('geoObject.geometry.coordinates: ', coords);
+
+                            results.push({
+                                name: text || [name, description]
+                                        .concat(tags)
+                                        .filter(Boolean)
+                                        .join(', '),
+                                coords: JSON.stringify( coords )
+                            }
+                                    
                             );
                         });
 
                         _.each(results, function(itm){
-                            $dropResult.append('<li>'+itm+'</li>')
+                            $dropResult.append('<li data-coords="'+itm.coords+'">'+itm.name+'</li>')
                         });
                     });
             }
@@ -181,7 +241,7 @@ $(function(){
                     return true;
                 },
                 beforeSend: function(request) {
-                    request.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+                    // request.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
                     progress.find('.value').css(
                         {'width' : '0%'}
                     )
@@ -196,35 +256,7 @@ $(function(){
             });
         },
         addNewPoint: function(event){
-            this.model.saveNew();
-        //     var tags = [];
-        //     tags.push('лыжи');
-        //     tags.push('сноуборд');
-        //     $.ajax ({
-        //         target: "#divToUpdate",
-        //         url: "points/add",
-        //         type: "POST",
-        //         data: {
-        //             name: $('#p-add-place-name').val(),
-        //             address: $('#add-new-place').val(),
-        //             latitude: window.YPApp.addPointState.coords[0],
-        //             longitude: window.YPApp.addPointState.coords[1],
-        //             imgs:window.YPApp.addPointState.imgs,
-        //             tags:tags
-        //         },
-        //         dataType:'json',
-        //         success: (function(data) {
-        //             if(data.r == 1){
-        //                 $(".popup").filter(":visible").fadeOut(150, function(){
-        //                     $("#overlay").fadeOut(200,function(){
-        //                         //window.router.navigate("", {trigger: true, replace: true});
-        //                     });
-        //                 });
-        //             }else{
-        //                 alert('Ошибка добавления!')
-        //             }
-        //         })
-        //     });
+            this.model.saveNew();        
         }
     });
     window.CreatePointView = CreatePointView;

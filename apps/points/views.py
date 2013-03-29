@@ -39,10 +39,10 @@ class PointsBaseView(View):
                                 extras=['name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
                                 relations={'description': {'fields': ['description', 'id']},
-                                           'tags': {'fields': ['name', 'id', 'level']},
+                                           'tags': {'fields': ['name', 'id', 'level', 'icons']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -280,11 +280,11 @@ class PointsSearch(PointsBaseView):
 
             content = form.cleaned_data.get("content")
             if content == 'new':
-                pointsreq  = pointsreq.order_by('-created')
+                pointsreq = pointsreq.order_by('-created')
             elif content == "popular":
-                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+                pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
             else:
-                pointsreq  = pointsreq.order_by("name")
+                pointsreq = pointsreq.order_by("name")
 
             points = pointsreq[offset:limit]
 
@@ -300,7 +300,7 @@ class PointsSearch(PointsBaseView):
 
 
 class PointsList(PointsBaseView):
-    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
+    #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
@@ -380,9 +380,9 @@ class PointsList(PointsBaseView):
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
 
-            points  = pointsreq[offset:limit].all()
-            copypoints  = copypointsreq[offset:limit].all()
-            collections  = collectionsreq[offset:limit].all()
+            points = pointsreq[offset:limit].all()
+            copypoints = copypointsreq[offset:limit].all()
+            collections = collectionsreq[offset:limit].all()
             
             allpoints = json.loads(self.getSerializePoints(points))
             allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
@@ -410,7 +410,8 @@ class PointAddByUser(LoggedPointsBaseView):
             form = forms.IdForm(params)
             if not form.is_valid():
                 return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места для копирования"})
-            else: point_id = form.cleaned_data["id"]
+            else:
+                point_id = form.cleaned_data["id"]
 
         originalPoint = get_object_or_404(MainModels.Points, pk=point_id)
 
@@ -433,13 +434,14 @@ class PointAddByUser(LoggedPointsBaseView):
                         message = "ошибка добавления изображения"
                         if message not in errors: errors.append(message)
             
-            reviews = params.getlist('reviews[]', None)
+            reviews = params.get("reviews")
             if reviews:
+                reviews = json.load(reviews)
                 for review in reviews:
                     try:
-                        feedback = ReviewsModels.Reviews.objects.get(id=review)
-                        point.reviews.add(feedback)
-                        originalPoint.reviews.add(feedback)
+                        new_review = ReviewsModels.Reviews.objects.create(name=review.review, author=person, rating=review.rating)
+                        point.reviews.add(new_review)
+                        originalPoint.reviews.add(new_review)
                     except:
                         message = "ошибка добавления отзыва"
                         if message not in errors: errors.append(message)
@@ -497,18 +499,18 @@ class PointAdd(LoggedPointsBaseView):
             person = MainModels.Person.objects.get(username=request.user)
             point.author = person
             point.save()
-
             tags = params.getlist("tags[]")
             if tags:
                 for tag in tags:
                     new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if new_tag.count == 0 and tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.filter(id=tag)                            
-                    if new_tag.count() == 0:
+                    if tag.isdigit():
+                        new_tag = TagsModels.Tags.objects.get(id=tag)
+                    elif new_tag.count() == 0:
                         new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
-                    else: new_tag = new_tag[0]
+                    else:
+                        new_tag = new_tag[0]
                     point.tags.add(new_tag)
-            
+
                 point.save()
             
             return PointAddByUser().get(request, id=point.id)
