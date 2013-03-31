@@ -3,10 +3,12 @@ from django import forms
 from .models import Reviews
 
 class ReviewsForm(forms.ModelForm):
+    point = forms.IntegerField(required=True)
+    
     class Meta:
         model = Reviews
         exclude = ('author', )
 
-    def clean(self):
-        cleaned_data = super(ReviewsForm, self).clean()
-        return cleaned_data
+
+class IdForm(forms.Form):
+    id = forms.IntegerField(required=True)
