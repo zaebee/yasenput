@@ -221,7 +221,7 @@ $(function(){
 
             var jqXHR = photo.addComment(txt);
             jqXHR.then(function(data, textStatus, jqXHR){
-                data[0].ismine = 1;
+                //data[0].ismine = 1;
                 photo.get('comments').push(data[0]);
                 view.redrawBigPhoto(photo.get('id'));
             }, function(jqXHR, textStatus, errorThrown){
