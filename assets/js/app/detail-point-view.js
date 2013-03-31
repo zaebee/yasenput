@@ -12,7 +12,8 @@ $(function(){
         },
         events: {
             // 'keyup #add-new-place-address': 'searchLocation',
-            'click .m-ico-group>a': 'showNearPlace'
+            'click .m-ico-group>a': 'showNearPlace',
+            'click .p-place-desc .a-toggle-desc':'moreDescription'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -36,7 +37,7 @@ $(function(){
                         if (!view.popupMap) {
                             view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: myMap.getCenter(),
-                                zoom: 11
+                                zoom: 14
                             });
                             view.model.get('near_points').map = view.popupMap;
                             view.popupMap.controls.add('zoomControl');
@@ -87,6 +88,15 @@ $(function(){
             this.model.get('near_points').clusterer = this.clusterer;
             this.model.get('near_points').setURL().fetch();
             console.log('this.model.get(near_points).url: ', this.model.get('near_points').url);
+        },
+        moreDescription: function(event){
+            event.preventDefault();
+            var parent = $(event.currentTarget).closest(".p-place-desc");
+            console.log(parent);
+            $(".hellip", parent).toggle();
+            $(".more-desc", parent).toggleClass("hidden");
+            $(event.currentTarget).toggleClass("open");
+            $(event.currentTarget).hasClass("open") ? $(event.currentTarget).text("свернуть") : $(event.currentTarget).text("подробнее");
         }
     });
     window.DetailPointView = DetailPointView;
