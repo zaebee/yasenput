@@ -722,8 +722,8 @@
         
         <!--<div class="event-date">1―5 января</div>-->
         
-        <h2><a href="#" class="a-place-name"><%- name %></a> <small>Поделился</small>
-        <a href="#"><%- author.first_name %> <%- author.last_name %></a></h2>
+        <h2><a href="#" class="a-place-name"><%- name %></a> <% if(id_point!=0 ){ %><small>Поделился</small>
+        <a href="#"><%- author.first_name %> <%- author.last_name %></a><%}%></h2>
         <div class="addr"><%- address %></div>
         
         <div class="p-place-desc">
@@ -1059,6 +1059,15 @@
         <form action="#">
             <div class="input-line">
                 <div class="required">*</div>
+                <div class="drop-filter">
+                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
+                    <ul class="drop-results">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
 
                 <div class="drop-filter">
 
@@ -1067,15 +1076,6 @@
 
                     <ul class="drop-results">
 
-                    </ul>
-                </div>
-            </div>
-
-            <div class="input-line">
-                <div class="required">*</div>
-                    <div class="drop-filter">
-                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
-                    <ul class="drop-results">
                     </ul>
                 </div>
             </div>
