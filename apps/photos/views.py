@@ -96,6 +96,7 @@ class PhotosAdd(PhotosBaseView):
             photo.save()
             if object:
                 object.imgs.add(photo)
+            json = YpSerialiser()
             return HttpResponse(json.serialize([photo], excludes=("img"),
                                                extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207'),
                                                relations={
