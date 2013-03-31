@@ -35,7 +35,7 @@ $(function(){
             $(this.el).html( this.template() );
 
             view = this;
-            // если больше 4ёх фоток, то "добавить" ресуем снизу, иначе -- сверху
+            // если больше 4-ёх фоток, то "добавить" рисуем снизу, иначе -- сверху
             if (this.collection.length > 4) {
                 firstPhotos = this.collection.first(4);
                 console.log('firstPhotos: ', firstPhotos);
