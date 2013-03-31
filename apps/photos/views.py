@@ -9,8 +9,9 @@ from django.utils import simplejson
 
 from apps.serializers.json import Serializer as YpSerialiser
 
+from apps.main import models as MainModels
 from .models import Photos
-from .forms import PhotosForm
+from .forms import PhotosForm, IdForm
 
 class PhotosBaseView(View):
 
@@ -23,7 +24,7 @@ class PhotosBaseView(View):
     def photoList(self, photos):
         json = YpSerialiser()
         return HttpResponse(json.serialize(photos, excludes= ("img",),
-                                                     #extras=('thumbnail130x130','img_url'),
+                                                    extras=["isliked", "likes_count", 'thumbnail130x130','img_url'],
                                                      relations={'author': {'fields': (
                                                                     'first_name',
                                                                     'last_name',
@@ -40,29 +41,41 @@ class PhotosBaseView(View):
                                                                     },
                                                                 }), mimetype="application/json")
 
+    def getPhotoSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            photo_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM photos_photos_likeusers WHERE photos_photos_likeusers.photos_id = photos_photos.id and photos_photos_likeusers.user_id = '+str(user.id)
+        else:
+            photo_isliked = "select 0" 
+        args = {"select": {'isliked': photo_isliked,
+                 'likes_count': 'SELECT count(*) FROM photos_photos_likeusers WHERE photos_photos_likeusers.photos_id = photos_photos.id',
+               }}
+        return args
+    
 
 class PhotosList(MultipleObjectMixin, PhotosBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
     paginate_by = 20
     model = None
-    object = None
 
-    def get_object(self):
-        pk = self.args[0]
+    def get_object(self, pk):
         return get_object_or_404(self.model,pk=pk)
 
-    def get_queryset(self):
-        return self.object.imgs.all()
+    def get_queryset(self, request):
+        return self.object.imgs.all().extra(**self.getPhotoSelect(request))
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        queryset = self.get_queryset()
-        page_size = self.get_paginate_by(queryset)
-        if page_size:
-            paginator, page, photos, is_paginated = self.paginate_queryset(queryset, page_size)
-        else:
-            photos = []
-        return self.photoList(photos)
+    def post(self, request, *args, **kwargs):
+        form = IdForm(request.POST)
+        if form.is_valid():
+            self.object = self.get_object(form.cleaned_data["id"])
+            queryset = self.get_queryset(request)
+            page_size = self.get_paginate_by(queryset)
+            if page_size:
+                paginator, page, photos, is_paginated = self.paginate_queryset(queryset, page_size)
+            else:
+                photos = []
+            return self.photoList(photos)
+        return HttpResponse(simplejson.dumps({'id': 0, 'status': 1, 'txt': "Некорректно задан id"}), mimetype="application/json")
 
 
 class PhotosAdd(PhotosBaseView):
@@ -97,12 +110,16 @@ class PhotosAdd(PhotosBaseView):
 
 
 class PhotosDetail(PhotosBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request):
-        pk = request.GET.get('id')
-        photo = get_object_or_404(Photos, pk=pk)
-        return self.photoList([photo])
+    def post(self, request):
+        form = IdForm(request.POST)
+        if form.is_valid():
+            photo = Photos.objects.filter(id=form.cleaned_data["id"]).extra(**self.getPhotoSelect(request))
+            if photo.count() > 0:
+                return self.photoList(photo)
+        return HttpResponse(simplejson.dumps({'id': 0, 'status': 1, 'txt': "Некорректно задан id"}), mimetype="application/json")
+    
 
 class PhotosDel(PhotosBaseView):
     http_method_names = ('post',)
@@ -110,13 +127,18 @@ class PhotosDel(PhotosBaseView):
     def post(self, request):
         pk = request.POST.get('id')
         status = 0
+        txt = ""
         try:
             photo = Photos.objects.get(pk=pk, author=request.user.get_profile())
         except Photos.DoesNotExist:
-            status = u'Указаный объект не найден'
+            txt = u'Указаный объект не найден'
+            status = 1
+        except:
+            txt = u'Ошибка удаления'
+            status = 1
         else:
             photo.delete()
-        return HttpResponse(simplejson.dumps({'id': pk, 'status': status}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id': pk, 'status': status, 'txt': txt}), mimetype="application/json")
 
 
 class PhotosLike(PhotosBaseView):
@@ -134,5 +156,5 @@ class PhotosLike(PhotosBaseView):
                 photo.likeusers.remove(request.user.get_profile())
             else:
                 photo.likeusers.add(request.user.get_profile())
-            return self.photoList([photo])
+            return self.photoList(Photos.objects.filter(id=pk).extra(**self.getPhotoSelect(request)))
         return HttpResponse(simplejson.dumps({'id': pk, 'status': 1, 'txt': error}), mimetype="application/json")

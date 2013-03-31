@@ -28,13 +28,16 @@
             {% if user.is_authenticated %}
                 <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
                 <a href="#" class="a-collection" data-tooltip="добавить в коллекцию">В коллекцию</a>
-                <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
+                <% if(ismine == 1) { %>
+                    <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
+                <% } else { %>
+                    <a href="#" class="a-share-new" data-tooltip="поделиться"></a>
+                <% } %>
             {% endif %}
             <div class="yasen-info">
                 <span class="yp-title"><%- YPscore %> ЯПи</span>
                 
                 <div class="yp-info">
-
                     <i class="yp-like"></i><small><%- likes_count %></small>
                     <i class="yp-marked"></i><small><%- collections_count %></small>
                     <i class="yp-place"></i><small><%- beens_count %></small>
@@ -42,16 +45,17 @@
                 </div>
             </div>
 
-
-            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="165"></a>
+            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
         </div>
 
         <div class="alert-added">Добавлено в раздел &laquo;Хочу посетить&raquo;</div>
 
-        <div class="body">
+        <div class="body <% if (id_point != 0) { %>author-point<% } %>">
+            <% if (id_point != 0) { %>
+                <img src="{{ MEDIA_URL }}<%- author.avatar %>" alt="" class="avatar" width="29" height="30">
+            <% } %>
             <h3><%- name %></h3>
             <p><%- address %></p>
-
         </div>
         <div class="comments">
             <ul>
@@ -331,7 +335,7 @@
 
                         <div id="tab-map">
                             <div class="map">
-                                <div id="popup-map-1" style="width:560px; height:510px"></div>
+{#                                <div id="popup-map-1" style="width:560px; height:510px"></div>#}
                                 <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
 
                                 <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
@@ -394,14 +398,14 @@
                                     </a>
                                 </div>
 
-                                <div class="placemark" style="top:35%">
-                                    <span class="m-ico m-hotel"></span>
-                                </div>
+{#                                <div class="placemark" style="top:35%">#}
+{#                                    <span class="m-ico m-hotel"></span>#}
+{#                                </div>#}
 
-                                <div class="placemark placemark-wide" style="top:65%">
-                                    <span class="m-ico m-commerc"></span>
-                                    <span class="num">32</span>
-                                </div>
+{#                                <div class="placemark placemark-wide" style="top:65%">#}
+{#                                    <span class="m-ico m-commerc"></span>#}
+{#                                    <span class="num">32</span>#}
+{#                                </div>#}
                             </div>
 
                             <div id="near-objects">
@@ -609,7 +613,7 @@
                                     </ul>
                                 </div>
 
-                                <a href="#" class="a-toggle">Все описания <span>&darr;</span></a>
+                                <a href="#" class="a-toggle">Ещё описания <span>&darr;</span></a>
                             </div>
 
                             <div class="add-comment">
@@ -657,7 +661,7 @@
                                         <a href="#"><img src="temp/avatar.jpg" alt=""></a>
                                     </div>
 
-                                    <a href="#" class="a-toggle">все пользователи <span>&darr;</span></a>
+                                    <a href="#" class="a-toggle">Ещё пользователи <span>&darr;</span></a>
                                 </div>
                             </section>
 
@@ -718,38 +722,36 @@
         
         <!--<div class="event-date">1―5 января</div>-->
         
-        <h2><a href="#" class="a-place-name"><%- name %></a> <small>Глазами</small>
-        <a href="#"><%- author.first_name %> <%- author.last_name %></a></h2>
+        <h2><a href="#" class="a-place-name"><%- name %></a> <% if(id_point!=0 ){ %><small>Поделился</small>
+        <a href="#"><%- author.first_name %> <%- author.last_name %></a><%}%></h2>
         <div class="addr"><%- address %></div>
         
         <div class="p-place-desc">
-            <%- description %>
+            <%- description.substring(0,150) %>
+            <% if((description.length) > 150){ %>
             <span class="hellip">…</span> 
-            <span class="hidden more-desc">API предоставляет возможность создания собственных элементов управления, позволяющих выполнить произвольные действия. Наиболее часто элементы управления реализуются в виде кнопок. <br>Для создания кнопочного элемента управления предназначен класс control.Button. Поддерживается два типа реакций на нажатие кнопки: после нажатия кнопка остается нажатой (поведение по умолчанию) или возвращается в исходное состояние. Тип реакции на нажатие задается опцией selectOnClick (true/false). <br>При нажатии на кнопку всегда генерируется событие click. Для кнопок, запоминающих свое состояние после нажатия, дополнительно генерируется событие select или deselect (в зависимости от того, в каком состоянии кнопка находилась в момент нажатия).<br></span>
+            <span class="hidden more-desc"><%- description.substring(150,description.length) %></span>
             <a href="#" class="a-toggle-desc">подробнее</a>
+            <%}%>
         </div>
         
         <div class="stats">
-            <span>
-                <span class="ico-want-small"></span>
-                <%- beens_count %>
-            </span>
-            
+
             <span>
                 <span class="ico-like-small"></span>
                 <%- likes_count %>
             </span>
-            
-            <span>
-                <span class="ico-comment-small"></span>
-                <%- reviews_count %>
-            </span>
-            
+
             <span>
                 <span class="ico-star-small"></span>
                 <%- collections_count %>
             </span>
-            
+
+            <span>
+                <span class="ico-want-small"></span>
+                <%- beens_count %>
+            </span>
+
             <span>
                 <span class="ico-vote-small"></span>
                 <%- reviewusersplus %>/<%- reviewusersminus %>
@@ -768,14 +770,9 @@
         
         <div class="tabs-content">
             <div id="tab-photo" style="display: block;">
-                <div class="tabs-inside"><!-- tp- tab photo -->
-                    <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
-                    <a href="#" data-target="tp-tab-my">новые</a>
-                    <a href="#" data-target="tp-tab-new">мои</a>
-                </div>
                 
                 <div class="tabs-content">
-                    <div class="toggle-block">
+                    <div class="toggle-block"  id="tp-tab-pop">
 
                     </div>
                 </div>
@@ -786,101 +783,19 @@
                     <div id="popup-map-1" style="width:560px; height:510px"></div>
 
                     <div class="m-ico-group">
-                        <a href="#">
-                            <span class="m-ico m-hotel"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-cafe"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-restoran"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-turism"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-azs"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-active-rest"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-sto"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-commerc"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-hunting"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-events"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-shop"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-fishing"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-monument"></span>
-                        </a>
-                        
-                        <a href="#">
-                            <span class="m-ico m-church"></span>
-                        </a>
+                        {% for tag in tagsRequire %}
+                            <a href="#">
+                                <span class="m-ico {{ tag.mapicons }}" data-tag-id="{{ tag.id }}"></span>
+                            </a>
+                        {% endfor %}
                     </div>
                     
-                    <div class="placemark" style="top:35%">
-                        <span class="m-ico m-hotel"></span>
-                    </div>
-                    
-                    <div class="placemark placemark-wide" style="top:65%">
-                        <span class="m-ico m-commerc"></span>
-                        <span class="num">32</span>
-                    </div>
                 </div>
                 
                 <div id="near-objects">
-                    <h4 class="title-block">Ближайшие гостинницы</h4>
-                    
+                    <h4 class="title-block">Ближайшие точки</h4>
                     <ol>
-                        <li>
-                            <h5>Место номер один</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
                         
-                        <li>
-                            <h5>Место номер два</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-                        
-                        <li>
-                            <h5>Место номер три</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-                        
-                        <li>
-                            <h5>Место номер четыре</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-                        
-                        <li>
-                            <h5>Место номер пять</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
                     </ol>
                 </div>
             </div>
@@ -888,7 +803,7 @@
             <div id="tab-desc" style="display: none;">
                 <div class="tab-desc">
                     <div class="toggle-block a-toggle-up">
-                        <a href="#" class="a-toggle">Все описания <span>↓</span></a>
+                        <a href="#" class="a-toggle">Ещё отзывы <span>↓</span></a>
                         
                         <ul class="ul-desc">
                             <li class="item-comment">
@@ -1046,262 +961,7 @@
         </div>
         
         <div class="tabs-content p-common-content">
-{#            <section class="p-block event-labels">#}
-{#                <h4 class="title-block">Коллекции с этим местом</h4>#}
-{#                #}
-{#                <menu class="p-nav-collection">#}
-{#                    <a href="#" class="prev">← предыдущие</a>#}
-{#                    <a href="#" class="next">следующие →</a>#}
-{#                </menu>#}
-{#                #}
-{#                <div class="clearfix body">#}
-{#                    <div class="scroll-photos">#}
-{#                        <ul class="ul-collection-list">#}
-{#                            <li><!-- ucl-  ul-collection-list -->#}
-{#                                <div class="ucl-item">#}
-{#                                    <div class="photo">#}
-{#                                        <div class="yasen-info">#}
-{#                                            <div class="yp-info">#}
-{#                                                <i class="yp-like"></i><small>12</small>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        #}
-{#                                        <a href="#" class="a-photo"><img src="temp/photo-166x132.jpg" alt="" width="166" height="132"></a>#}
-{#                                    </div>#}
-{#                                    #}
-{#                                    <ul class="photo-preview">#}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                    </ul>#}
-{#                                    #}
-{#                                    <div class="body">#}
-{#                                        <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">#}
-{#                                        #}
-{#                                        <div class="collection-short-desc">#}
-{#                                            <h3>Путешествие в лето</h3>#}
-{#                                            <p>Коллекция Андрея Короткова</p>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                #}
-{#                                <div class="ucl-item">#}
-{#                                    <div class="photo">#}
-{#                                        <div class="yasen-info">#}
-{#                                            <div class="yp-info">#}
-{#                                                <i class="yp-like"></i><small>12</small>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        #}
-{#                                        <a href="#" class="a-photo"><img src="temp/photo-166x132.jpg" alt="" width="166" height="132"></a>#}
-{#                                    </div>#}
-{#                                    #}
-{#                                    <ul class="photo-preview">#}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                    </ul>#}
-{#                                    #}
-{#                                    <div class="body">#}
-{#                                        <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">#}
-{#                                        #}
-{#                                        <div class="collection-short-desc">#}
-{#                                            <h3>Путешествие в лето</h3>#}
-{#                                            <p>Коллекция Андрея Короткова</p>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                #}
-{#                                <div class="ucl-item">#}
-{#                                    <div class="photo">#}
-{#                                        <div class="yasen-info">#}
-{#                                            <div class="yp-info">#}
-{#                                                <i class="yp-like"></i><small>12</small>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        #}
-{#                                        <a href="#" class="a-photo"><img src="temp/photo-166x132.jpg" alt="" width="166" height="132"></a>#}
-{#                                    </div>#}
-{#                                    #}
-{#                                    <ul class="photo-preview">#}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                    </ul>#}
-{#                                    #}
-{#                                    <div class="body">#}
-{#                                        <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">#}
-{#                                        #}
-{#                                        <div class="collection-short-desc">#}
-{#                                            <h3>Путешествие в лето</h3>#}
-{#                                            <p>Коллекция Андрея Короткова</p>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </li>#}
-{#                            #}
-{#                            <li><!-- ucl-  ul-collection-list -->#}
-{#                                <div class="ucl-item">#}
-{#                                    <div class="photo">#}
-{#                                        <div class="yasen-info">#}
-{#                                            <div class="yp-info">#}
-{#                                                <i class="yp-like"></i><small>12</small>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        #}
-{#                                        <a href="#" class="a-photo"><img src="temp/photo-166x132.jpg" alt="" width="166" height="132"></a>#}
-{#                                    </div>#}
-{#                                    #}
-{#                                    <ul class="photo-preview">#}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                    </ul>#}
-{#                                    #}
-{#                                    <div class="body">#}
-{#                                        <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">#}
-{#                                        #}
-{#                                        <div class="collection-short-desc">#}
-{#                                            <h3>Путешествие в лето</h3>#}
-{#                                            <p>Коллекция Андрея Короткова</p>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                #}
-{#                                <div class="ucl-item">#}
-{#                                    <div class="photo">#}
-{#                                        <div class="yasen-info">#}
-{#                                            <div class="yp-info">#}
-{#                                                <i class="yp-like"></i><small>12</small>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        #}
-{#                                        <a href="#" class="a-photo"><img src="temp/photo-166x132.jpg" alt="" width="166" height="132"></a>#}
-{#                                    </div>#}
-{#                                    #}
-{#                                    <ul class="photo-preview">#}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                        #}
-{#                                        <li>#}
-{#                                            <a href="#">#}
-{#                                                <img src="temp/img-51x41.jpg" alt="" width="51" height="41">#}
-{#                                            </a>#}
-{#                                        </li>#}
-{#                                    </ul>#}
-{#                                    #}
-{#                                    <div class="body">#}
-{#                                        <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">#}
-{#                                        #}
-{#                                        <div class="collection-short-desc">#}
-{#                                            <h3>Путешествие в лето</h3>#}
-{#                                            <p>Коллекция Андрея Короткова</p>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </li>#}
-{#                        </ul>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </section>#}
-            
-{#            <section class="p-block peoples">#}
-{#                <h4 class="title-block">Это место хотят посетить</h4>#}
-{#                #}
-{#                <div class="clearfix toggle-block">#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    #}
-{#                    <div class="clearfix hidden-content">#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>#}
-{#                    </div>#}
-{#                    #}
-{#                    <a href="#" class="a-toggle">все пользователи <span>↓</span></a>#}
-{#                </div>#}
-{#            </section>#}
-            
+           
             <section class="p-block event-labels">
                 <h4 class="title-block">Метки</h4>
                 
@@ -1346,6 +1006,12 @@
 </aside>
 </script>
 
+<script type="text/template" id="near-point">
+    <li>
+        <h5><%- name %></h5>
+        <p><%- description %></p>
+    </li>
+</script>
 
  <!--
 <input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" value="Введите названия места" onfocus="if(this.value == this.defaultValue) this.value = '';" onblur="if(this.value == '') this.value = this.defaultValue;">
@@ -1393,6 +1059,15 @@
         <form action="#">
             <div class="input-line">
                 <div class="required">*</div>
+                <div class="drop-filter">
+                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
+                    <ul class="drop-results">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
 
                 <div class="drop-filter">
 
@@ -1401,15 +1076,6 @@
 
                     <ul class="drop-results">
 
-                    </ul>
-                </div>
-            </div>
-
-            <div class="input-line">
-                <div class="required">*</div>
-                    <div class="drop-filter">
-                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
-                    <ul class="drop-results">
                     </ul>
                 </div>
             </div>
@@ -1431,7 +1097,7 @@
                 </div>
 
                 <div class="tabs-content">
-                    <div id="tab-photos-place">
+                    <div id="tab-photos-place" data-key="photos">
 
                         <div class="clearfix p-photos">
                             <div class="item-photo load-photo">
@@ -1546,7 +1212,7 @@
 </div>
 
 <div class="input-line">
-    <section class="clearfix pop-labels">
+    <section class="clearfix pop-labels" data-key="tags">
         <h4>Выберите одну из обязательных меток:</h4>
         
         <div class="require-labels">
@@ -1575,20 +1241,16 @@
 </script>
 
 <script type="text/template" id="browsing-photos">
-    <div class="toggle-block">
-        <div class="clearfix p-gallery">
-            <span class="upward-photos"></span>
-            
-            <div id="big-photo">
-            </div>
-
-            <span class="downward-photos"></span>
-            
-           
+    <div class="clearfix p-gallery">
+        <span class="upward-photos"></span>
+        
+        <div id="big-photo">
         </div>
 
-        <a href="#" class="a-toggle photos">все фотографии <span>↓</span></a>
+        <span class="downward-photos"></span>
     </div>
+
+    <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
 </script>
 
 <script type="text/template" id="photos-thumb">
@@ -1623,7 +1285,7 @@
 
     <div class="bp-comments">
         <div class="toggle-block a-toggle-up">
-            <a href="#" class="a-toggle comments">все комментарии <span>↓</span></a>
+            <a href="#" class="a-toggle comments">Ещё комментарии <span>↓</span></a>
             
             <% 
             count = 1;

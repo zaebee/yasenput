@@ -22,10 +22,12 @@ $(function(){
         },
         events: {
             'click .drop-labels': 'showDropList',
-            'click li.label': 'addLabel',
+            'mousedown li.label': 'addLabel',
             'keyup .text-field>input:text': 'doSearch',
             'click .remove-label': 'removeSelectedLabel',
-            'click .label-require': 'addLabel'
+            'click .label-require': 'addLabel',
+            'blur input:text': 'hideDropList',
+            'click .clear-selected': 'clearTags'
         },
         closeDropList: function(){
             console.log('closeDropList');
@@ -51,10 +53,15 @@ $(function(){
                 $(view.el).find(view.labels_place_selector).append( view.templateLabel( label.toJSON() ) );
             });
         },
+        clearTags: function(event){
+            $(this.el).find('.selected-labels .label').each(function(){
+                $(this).find('.remove-label').click();
+            });
+        },
         doSearch: function(event){
             console.log('do Search!');
             view = this;
-            str = $.trim( $(event.currentTarget).val() );
+            var str = $.trim( $(event.currentTarget).val() );
             console.log('str: ', str);
 
             switch (event.which) {
@@ -71,18 +78,46 @@ $(function(){
                     $(view.el).find('.drop-not-found').hide();
                     break;
                 default:
-                    // event.stopPropagation();
-                    
-                    this.collection.search(str, {
-                        success: function(model, response, options){
-                            if(response.length == 0) {
-                                view = $(view.el).find('.drop-not-found').show();
+                    if(str == '') {
+                        console.log('labels load');
+                        $(view.el).find('.drop-not-found').hide();
+                        this.collection.load(str, {
+                            success: function(model, response, options){
+                                // if(response.length == 0) {
+                                //     view = $(view.el).find('.drop-not-found').show();
+                                // }
+                            },
+                            error: function(model, response, options){
+                                console.log('search ERROR!');
                             }
-                        },
-                        error: function(model, response, options){
-                            console.log('search ERROR!');
-                        }
-                    });
+                        });
+                        
+                    } else {
+                        $(view.el).find('.require-labels>.label').each(function(){
+                            console.log('$(this).text().toLowerCase(): ', $(this).text().toLowerCase());
+                            if( $(this).text().toLowerCase() == str.toLowerCase() ) {
+                                $(this).click();
+                                return;
+                                return;
+                            }
+                        });
+
+                        $(view.el).find('.drop-not-found').show();
+                        this.collection.search(str, {
+                            success: function(model, response, options){
+                                tag = _.find(response, function(tag){
+                                    return str.toLowerCase() == tag.name.toLowerCase()
+                                });
+                                if( typeof tag == 'object' ) {
+                                    $(view.el).find('[data-label-id="'+tag.id+'"]').trigger('mousedown');
+                                    $(event.currentTarget).val('');
+                                }
+                            },
+                            error: function(model, response, options){
+                                console.log('search ERROR!');
+                            }
+                        });
+                    }
                     break;
             };            
         },
@@ -96,9 +131,14 @@ $(function(){
             if(this.collection.length == 0) {
                 this.collection.load('popular');
             }
+            $(this.el).find('.text-field>input:text').trigger('keyup');
+        },
+        hideDropList: function(event){
+            $(this.el).find('.label-add').show();
+            $(this.el).find('.text-field').hide();
+            $(this.el).find('.drop-labels-field').hide()
         },
         addLabel: function(event){
-
             event.stopPropagation();
             labelId = $(event.currentTarget).attr('data-label-id');
             labelRequired = $(event.currentTarget).attr('data-require');
@@ -118,7 +158,7 @@ $(function(){
                 // $existReqLabel.find('.remove-label').click();
                 $(this.el).find(this.labels_add_selector).find('[data-required="true"] .remove-label').click();
                 name = $(event.currentTarget).text();
-                label = new window.Label({id: labelId, name: name, required: true});
+                label = new window.Label({id: labelId, name: name, required: true, level: 0});
             } else {
                 // console.log('east side');
                 label = this.collection.get(labelId);

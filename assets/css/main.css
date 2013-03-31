@@ -1,4 +1,4 @@
-﻿html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code,
+﻿﻿html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,
 time, mark, audio, video {margin: 0;padding: 0;border: 0;font-size: 100%;vertical-align: baseline}
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, time {display: block}
@@ -195,6 +195,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.add-comment .toggle-area.focus{height:47px}
 	.content .item .alert-added{position:absolute; font-family:Verdana, "Geneva CY", "DejaVu Sans", sans-serif; padding:2px 11px; background:rgba(0, 0, 0, .7); filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#aa000000,EndColorStr=#aa000000); text-align:center; left:0; top:47px; color:#fff; width:126px}
 	.content .item .body{padding:0 11px 11px; color:#999; font-size:12px}
+	.content .item .body.author-point{padding-left:50px}
 	.content .item h3{font-size:14px; font-weight:normal; line-height:14px; color:#333}
 		.content .item .body p{padding:0 0 6px}
 .stats{}
@@ -385,6 +386,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .drop-labels-field .label-user.selected, .drop-labels-field .label-user:hover{background:#f5c05c !important; color:#fff}
 
 .pop-labels{margin:0 0 9px}
+.pop-labels.validation-error{border: 1px dashed red;}
 	.pop-labels h4{font-size:14.5px; font-weight:normal; line-height:1em; margin:0 0 8px; color:#333}
 	.pop-labels .label{padding-right:9px; cursor:pointer}
 .not-found-event{font-size:13px; color:#666; line-height:20px; display:none}
@@ -419,7 +421,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .popup .input-line{position:relative; padding:0 0 13px}
 .popup .input-line.calendar-line{margin-top:-5px}
 .popup .input-line.submit-line{padding-bottom:0}
-.popup .input-line:hover{z-index:22}
+/*.popup .input-line:hover{z-index:22}*/
 .input-line .required{color:#aabda8; font-size:24px; position:absolute; right:-12px; top:0; font-weight:bold}
 .input-line .required.fill{color:#71a46b}
 .input-line input[type=text]{width:527px; display:block; padding:3px 10px; font:13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif; color:#666; border:solid 1px #c4cec3; height:18px}
@@ -750,12 +752,13 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .aside-controls-map textarea{height:120px; line-height:18px; overflow:auto}
 
 .drop-labels .drop-not-found{font-size:13px; color:#000; font-style:italic; display:block; padding:1px 9px 4px}
+.drop-labels .drop-not-found{display: none;}
 
 .require-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
 .label-require{background:#ffadc9 !important}
 
-.content .item .body{padding-left:50px !important}
+/*.content .item .body{padding-left:50px !important}*/
 	.content .item .body .avatar{margin-left:-39px}
 .content .item .body p{font-size:11px; padding:0; margin:0}
 
@@ -817,6 +820,5 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	font-family: "Trebuchet MS", "Helvetica CY", sans-serif;
 	font-weight: bold!important;
 }
-
-
+#tab-photos-place.validation-error{border: 1px dashed red;}
 /**/

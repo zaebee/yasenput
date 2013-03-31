@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 
-from django.conf.urls import *
-from django.conf import settings
+from django.conf.urls import patterns, url
 from apps.events import views
+from apps.main.models import Events
+from apps.photos import views as PhotosViews
 
 urlpatterns = patterns('',
     url(r'^$', views.EventsList.as_view()),
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^like/*$', views.LikeEvent.as_view()),
     url(r'^visit/*$', views.WantVisitEvent.as_view()),
     url(r'^follow/*$', views.FollowEvent.as_view()),
+    url(r'^photos/*$', PhotosViews.PhotosList.as_view(model=Events)),
     #url(r'^delete$', 'apps.points.views.delete'),
     
 )
