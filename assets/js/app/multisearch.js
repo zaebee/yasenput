@@ -1,8 +1,8 @@
 var multisearch_result = {
-    place: "",
+    places: [],
     points: [],
     tags: [],
-    user: ""
+    users: []
 }
 
 var multisearch_data = {
@@ -37,11 +37,15 @@ function update_multisearch() {
                     res.geoObjects.each(function (geoObject) {
                         multisearch_data.places.push(geoObject);
                         text = geoObject.properties.get("text");
-                        tt = "qq";
                     });
                     compiled = multisearch_places_tmpl({data: multisearch_data.places});
                     $("#multisearch-places").html(compiled);
                     
+                    // add id to each element
+                    i = 0
+                    _.each($("#multisearch-places ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+
+                    // ReInit OnClick
                     multySearch.reinit_click();
                 },
                 function (err) {
@@ -66,6 +70,13 @@ function update_multisearch() {
                 multisearch_data.points = data;
                 compiled = multisearch_points_tmpl({data: data});
                 $("#multisearch-points").html(compiled);
+                
+                // add id to each element
+                i = 0
+                _.each($("#multisearch-points ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+
+                    // ReInit OnClick
+                    multySearch.reinit_click();
                 },
             error: function (request, status, error) {
                 //alert(status);
@@ -89,6 +100,14 @@ function update_multisearch() {
                 multisearch_data.users = data;
                 var compiled = multisearch_users_tmpl({data: data});
                 $("#multisearch-points").html(compiled);
+
+                // add id to each element
+                i = 0
+                _.each($("#multisearch-users ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+
+                    // ReInit OnClick
+                    multySearch.reinit_click();
+
                 },
             error: function (request, status, error) {
                 //alert(status);
@@ -112,6 +131,14 @@ function update_multisearch() {
                 multisearch_data.tags = data;
                 var compiled = multisearch_tags_tmpl({data: data});
                 $("#multisearch-points").html(compiled);
+
+                // add id to each element
+                i = 0
+                _.each($("#multisearch-tags ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+
+                // ReInit OnClick
+                multySearch.reinit_click();
+
                 },
             error: function (request, status, error) {
                 //alert(status);

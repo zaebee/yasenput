@@ -80,7 +80,6 @@ jQuery(function($){
 	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
-					    <span style="display:none">1</span>\
 						<button class="remove-label"></button>\
 					</div>', //мини-шаблон для вставки лейблов
 		
@@ -234,27 +233,97 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
-            //console.log('onClickDrop');
 			var clsName = '';
 			
+			text_labels = [];
+			
+			// places labels
 			if(me.closest(".item-place").length){
+			    // can add only ine place
+			    if (multisearch_result.places.length > 0)
+			    {
+			        return;
+			    }
 				clsName = ' label-place';
 				
-				//id = me.span.text();
-				//qq = 11;
-				//multisearch_result.places.push()
+				split_labels = me.text().split(",")
+				
+				i = 0;
+				_.each(split_labels, function(label) { 
+				                multisearch_result.places.push(label);
+				                text_labels.push({
+				                    text: label,
+				                    id: i,
+				                    type: "place"
+				                });
+				                i++;
+				              });
 			}
+			// points labels
 			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
+				
+				id = multisearch_data.points[me.data("id")].id;
+				// add only one instance of point
+				if (multisearch_result.points.indexOf(id) != -1)
+				{
+				    return;
+				}
+				
+				multisearch_result.points.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.points.length-1,
+				                type: "point"
+				                });
 			}
+			// users labels
 			else if (me.closest(".item-users").length){
+			    // can add only ine user
+			    if (multisearch_result.users.length > 0)
+			    {
+			        return;
+			    }
 				clsName = ' label-user';
+				
+				id = multisearch_data.users[me.data("id")].id;
+				multisearch_result.users.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id:multisearch_result.users.length-1,
+				                type: "user"
+				                });
+			}
+			// tags labels
+			else if (me.closest(".item-labels").length){
+				clsName = ' label-label';
+				
+				id = multisearch_data.points[me.data("id")].id;
+				
+				// add only one instance of tag
+				if (multisearch_result.tags.indexOf(id) != -1)
+				{
+				    return;
+				}
+				multisearch_result.tags.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.tags.length,
+				                type: "tag"
+				                });
 			}
 			
 			$(self.p.labelAdd).show();
 			
-			var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', me.text());
-			$(label).insertBefore($(self.p.labelAdd));
+			_.each(text_labels, function(txt_label) {
+			        var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', txt_label.text);
+			        added_label = $(label).insertBefore($(self.p.labelAdd));
+			        $(added_label).data("id", txt_label.id);
+			        $(added_label).data("type", txt_label.type);
+			});
 			
 			self.hideDropField();
 		},
@@ -334,6 +403,28 @@ jQuery(function($){
 	});
 	
 	$(".label-fields").delegate(".remove-label", "click", function(e){
+	    id = $(this).parents(".label").data("id");
+	    type = $(this).parents(".label").data("type");
+
+	    switch (type) {
+	        case "point": {
+	            multisearch_result.points.splice(id, 1);
+	            break;
+	        }
+	        case "place": {
+	            multisearch_result.places.splice(id, 1);
+	            break;
+	        }
+	        case "user": {
+	            multisearch_result.users.splice(id, 1);
+	            break;
+	        }
+	        case "tag": {
+	            multisearch_result.tags.splice(id, 1);
+	            break;
+	        }
+	    }
+
 		$(this).parents(".label").remove();
 	});
 	

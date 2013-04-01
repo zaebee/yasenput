@@ -3,22 +3,22 @@
 <!-- <% if(isliked) { %> marked <% } %>  -->
 <script type="text/template" id="multisearch-places-template">
     <li class="item-title">Местоположения <sup><%= data.length %></sup></li>
-    <% i=0; _.each(data, function(geoObject){ %> <li><a href="#"><%= geoObject.properties.get("text") %></a><span style="display:none"><%= i %></span></li><% i++ }) %>
+    <% _.each(data, function(geoObject){ %> <li class="_item_"><a href="#"><%= geoObject.properties.get("text") %></a></li><% }) %>
 </script>
 
 <script type="text/template" id="multisearch-points-template">
     <li class="item-title">Название <sup><%= data.length %></sup></li>
-    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></a></li><% }) %>
+    <% _.each(data, function(value){ %> <li class="_item_"><a href="#"><%= value.name %></a></li><% }) %>
 </script>
 
 <script type="text/template" id="multisearch-tags-template">
     <li class="item-title">Метки <sup><%= data.length %></sup></li>
-    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></a></li><% }) %>
+    <% _.each(data, function(value){ %> <li class="_item_"><a href="#"><%= value.name %></a></li><% }) %>
 </script>
 
 <script type="text/template" id="multisearch-users-template">
     <li class="item-title">Пользователи <sup><%= data.length %></sup></li>
-    <% _.each(data, function(value){ %> <li><a href="#"><%= value.name %></a></li><% }) %>
+    <% _.each(data, function(value){ %> <li class="_item_"><a href="#"><%= value.name %></a></li><% }) %>
 </script>
 
 
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="165"></a>
+            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
         </div>
 
         <div class="alert-added">Добавлено в раздел &laquo;Хочу посетить&raquo;</div>
@@ -613,7 +613,7 @@
                                     </ul>
                                 </div>
 
-                                <a href="#" class="a-toggle">Все описания <span>&darr;</span></a>
+                                <a href="#" class="a-toggle">Ещё описания <span>&darr;</span></a>
                             </div>
 
                             <div class="add-comment">
@@ -661,7 +661,7 @@
                                         <a href="#"><img src="temp/avatar.jpg" alt=""></a>
                                     </div>
 
-                                    <a href="#" class="a-toggle">все пользователи <span>&darr;</span></a>
+                                    <a href="#" class="a-toggle">Ещё пользователи <span>&darr;</span></a>
                                 </div>
                             </section>
 
@@ -722,38 +722,36 @@
         
         <!--<div class="event-date">1―5 января</div>-->
         
-        <h2><a href="#" class="a-place-name"><%- name %></a> <small>Глазами</small>
-        <a href="#"><%- author.first_name %> <%- author.last_name %></a></h2>
+        <h2><a href="#" class="a-place-name"><%- name %></a> <% if(id_point!=0 ){ %><small>Поделился</small>
+        <a href="#"><%- author.first_name %> <%- author.last_name %></a><%}%></h2>
         <div class="addr"><%- address %></div>
         
         <div class="p-place-desc">
-            <%- description %>
+            <%- description.substring(0,150) %>
+            <% if((description.length) > 150){ %>
             <span class="hellip">…</span> 
-            <span class="hidden more-desc">API предоставляет возможность создания собственных элементов управления, позволяющих выполнить произвольные действия. Наиболее часто элементы управления реализуются в виде кнопок. <br>Для создания кнопочного элемента управления предназначен класс control.Button. Поддерживается два типа реакций на нажатие кнопки: после нажатия кнопка остается нажатой (поведение по умолчанию) или возвращается в исходное состояние. Тип реакции на нажатие задается опцией selectOnClick (true/false). <br>При нажатии на кнопку всегда генерируется событие click. Для кнопок, запоминающих свое состояние после нажатия, дополнительно генерируется событие select или deselect (в зависимости от того, в каком состоянии кнопка находилась в момент нажатия).<br></span>
+            <span class="hidden more-desc"><%- description.substring(150,description.length) %></span>
             <a href="#" class="a-toggle-desc">подробнее</a>
+            <%}%>
         </div>
         
         <div class="stats">
-            <span>
-                <span class="ico-want-small"></span>
-                <%- beens_count %>
-            </span>
-            
+
             <span>
                 <span class="ico-like-small"></span>
                 <%- likes_count %>
             </span>
-            
-            <span>
-                <span class="ico-comment-small"></span>
-                <%- reviews_count %>
-            </span>
-            
+
             <span>
                 <span class="ico-star-small"></span>
                 <%- collections_count %>
             </span>
-            
+
+            <span>
+                <span class="ico-want-small"></span>
+                <%- beens_count %>
+            </span>
+
             <span>
                 <span class="ico-vote-small"></span>
                 <%- reviewusersplus %>/<%- reviewusersminus %>
@@ -805,7 +803,7 @@
             <div id="tab-desc" style="display: none;">
                 <div class="tab-desc">
                     <div class="toggle-block a-toggle-up">
-                        <a href="#" class="a-toggle">Все описания <span>↓</span></a>
+                        <a href="#" class="a-toggle">Ещё отзывы <span>↓</span></a>
                         
                         <ul class="ul-desc">
                             <li class="item-comment">
@@ -1061,6 +1059,15 @@
         <form action="#">
             <div class="input-line">
                 <div class="required">*</div>
+                <div class="drop-filter">
+                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
+                    <ul class="drop-results">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
 
                 <div class="drop-filter">
 
@@ -1069,15 +1076,6 @@
 
                     <ul class="drop-results">
 
-                    </ul>
-                </div>
-            </div>
-
-            <div class="input-line">
-                <div class="required">*</div>
-                    <div class="drop-filter">
-                    <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
-                    <ul class="drop-results">
                     </ul>
                 </div>
             </div>
@@ -1252,7 +1250,7 @@
         <span class="downward-photos"></span>
     </div>
 
-    <a href="#" class="a-toggle photos">все фотографии <span>↓</span></a>
+    <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
 </script>
 
 <script type="text/template" id="photos-thumb">
@@ -1287,7 +1285,7 @@
 
     <div class="bp-comments">
         <div class="toggle-block a-toggle-up">
-            <a href="#" class="a-toggle comments">все комментарии <span>↓</span></a>
+            <a href="#" class="a-toggle comments">Ещё комментарии <span>↓</span></a>
             
             <% 
             count = 1;

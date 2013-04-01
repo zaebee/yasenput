@@ -89,6 +89,8 @@ class PhotosAdd(PhotosBaseView):
         return get_object_or_404(self.model,pk=pk)
 
     def post(self, request, *args, **kwargs):
+        object = self.get_object()
+        json = YpSerialiser()
         form = PhotosForm(request.POST, request.FILES)
         if form.is_valid():
             photo = form.save(commit=False)

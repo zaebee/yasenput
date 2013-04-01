@@ -35,7 +35,7 @@ $(function(){
             $(this.el).html( this.template() );
 
             view = this;
-            // если больше 4ёх фоток, то "добавить" ресуем снизу, иначе -- сверху
+            // если больше 4-ёх фоток, то "добавить" рисуем снизу, иначе -- сверху
             if (this.collection.length > 4) {
                 firstPhotos = this.collection.first(4);
                 console.log('firstPhotos: ', firstPhotos);
@@ -137,7 +137,7 @@ $(function(){
             }
         },
         redrawBigPhoto: function(photoId){
-            event.preventDefault();
+            //photoId.preventDefault();
             $(this.el).find('.item-photo').removeClass('current');
             // console.log('fire redrawBigPhoto whit: ', photoId);
             elem = $(this.el).find('[data-photo-id="'+ photoId +'"]');
@@ -221,7 +221,7 @@ $(function(){
 
             var jqXHR = photo.addComment(txt);
             jqXHR.then(function(data, textStatus, jqXHR){
-                data[0].ismine = 1;
+                //data[0].ismine = 1;
                 photo.get('comments').push(data[0]);
                 view.redrawBigPhoto(photo.get('id'));
             }, function(jqXHR, textStatus, errorThrown){

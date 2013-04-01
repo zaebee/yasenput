@@ -40,7 +40,7 @@ $(function(){
             this.$el.attr( 'data-point-id', this.model.get('id') );
             return this;
         },       
-        detailPlace:function(e){
+        detailPlace:function(event){
             // window.newPoint = new window.Point();
             detailPointView = new window.DetailPointView( { model: this.model} );
             detailPointView.render();
