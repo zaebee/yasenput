@@ -9,27 +9,19 @@
                         <a href="#">Места</a>
                     </li>
 
-                    <li class="item-pathes">
-                        <a href="#">Маршруты</a>
-                    </li>
                     {% if user.is_authenticated %}
                     <li class="item-want">
-                        <a href="#">Хочу посетить <sup>0</sup></a>
-
-                        <ul class="subnav">
-                            <li><a href="#">Новости</a></li>
-                            <li class="last"><a href="/logout/">Выход</a></li>
-                        </ul>
+                        <a href="/logout/" class="a-enter">Выход</a>
                     </li>
                     {% else %}
                     <li class="item-want">
-                        <a href="#" class="a-enter">Вход</a>
+                        <a href="/login/vkontakte-oauth2" class="a-enter">Вход</a>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
             {% if user.is_authenticated %}
-            <div class="auth user">
+            <div class="auth user" data-user-id="{{ user.id }}">
                 <img src="{% if user.person.avatar %}{{ user.person.avatar.url|default:"null" }}{% else %}null{% endif %}" alt="" class="avatar" width="30" height="30">
                 <div class="user-body">
                     <div class="user-name"><a href="#">{{ user.first_name }} {{ user.last_name }}</a></div>

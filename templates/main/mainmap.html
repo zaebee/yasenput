@@ -5,6 +5,14 @@
 
     </div>
 
+    <div class="m-ico-group">
+        {% for tag in tagsRequire %}
+            <a href="#" data-tooltip="ближайшие точки {{ tag.name }}">
+                <span class="m-ico {{ tag.mapicons }}" data-tag-id="{{ tag.id }}"></span>
+            </a>
+        {% endfor %}
+    </div>
+
     <div class="toggle-bottom">
         <a href="#" class="a-toggle">Свернуть карту &uarr;</a>
     </div>

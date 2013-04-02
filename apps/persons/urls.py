@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 
-from django.conf.urls import *
-from django.conf import settings
+from django.conf.urls import url, patterns
 from apps.persons import views
 
 urlpatterns = patterns('',

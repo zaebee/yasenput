@@ -1102,7 +1102,7 @@ jQuery(function($){
         }
     };*/
 	
-	if($(".private").length || $(".a-enter").length){
+/*	if($(".private").length || $(".a-enter").length){
 		$(".private .a-edit, #header .a-enter").click(function(e){
 			e.preventDefault();
 			
@@ -1118,7 +1118,7 @@ jQuery(function($){
 				}
 			});
 		});
-	}
+	}*/
 	
 //	if($(".top-panel .btn-place").length || $(".top-panel .btn-event").length){
 //		$(".top-panel .btn-place, .top-panel .btn-event").click(function(e){

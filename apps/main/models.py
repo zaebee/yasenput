@@ -140,8 +140,7 @@ class Points(models.Model):
     name = models.CharField('Название', max_length=255)
     longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
     latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
-    description = models.ForeignKey(Descriptions, null=True, blank=True, related_name="point_description")
-    descriptions = models.ManyToManyField(Descriptions, null=True, blank=True, related_name="points_descriptions")
+    description = models.TextField(null=True, blank=True)
     reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
@@ -185,7 +184,7 @@ class PointsByUser(models.Model):
 
     point = models.ForeignKey(Points, max_length=255)
 
-    description = models.ForeignKey(Descriptions, null=True, blank=True) #Описание, оно же попадает в основную точку. Оно одно, поэтому ForeignKey
+    description = models.TextField(null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True) #id изображений, они же попадают в основную точку
     main_img = models.ForeignKey(Photos, null=True, blank=True, related_name="points_main_img")
 
@@ -197,6 +196,9 @@ class PointsByUser(models.Model):
     author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
+    
+    def __unicode__(self):
+        return self.point.name
 
 
 class Routes(models.Model):

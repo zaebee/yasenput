@@ -11,6 +11,26 @@ $(function(){
         myMap.ready = $.Deferred();
         
         myMap.controls.add('zoomControl').add('typeSelector');
+        myMap.events.add('boundschange', function(event){
+            // window.mapBounds = myMap.getBounds()
+            window.loadingNow = false;
+
+            pointsPop.loaded = false;
+            pointsPop.page = 1;
+
+            pointsNew.loaded = false;
+            pointsNew.page = 1;
+            // _.each(window.pointsArr, function(points){
+            //     console.log('points: ', points);
+            //     points.loaded = false;
+            // });
+            window.currentPoints.page = 1;
+            window.currentPoints.setURL().fetch();
+
+            // window.pointsArr.current.page = 1;
+            // window.pointsArr.current.setURL().fetch();
+        });
+
         coords = myMap.getCenter();
         var labels = [];
         ymaps.geocode(coords).then(function (res) {
@@ -38,6 +58,22 @@ $(function(){
 
         });
         window.mapBounds = myMap.getBounds()
+        window.myGeoObjectsArr = []; // массив геообъектов
+        window.clusterIcons = [{
+            href: '/assets/media/icons/cluster_small.png',
+            size: [32, 32],
+            // задаем отступ, чтобы метка центрировалась
+            offset: [-23, -23],
+        }, {
+            href: '/assets/media/icons/cluster_big.png',
+            size: [59, 59], 
+            offset: [-29, -29]
+        }];
+        window.clusterer = new ymaps.Clusterer({
+            clusterIcons: window.clusterIcons,
+        }); // кластетер, куда складываются все геообъекты
+        window.myMap.geoObjects.add( window.clusterer );
+
         console.log('myMap: ', myMap);
         myMap.ready.resolve();
         // console.log(window.mapBounds);
