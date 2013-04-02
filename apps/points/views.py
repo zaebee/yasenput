@@ -490,14 +490,14 @@ class PointAddByUser(LoggedPointsBaseView):
 
 
 class PointAdd(LoggedPointsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddPointForm(params)
         if form.is_valid():
             point = form.save(commit=False)
@@ -519,7 +519,7 @@ class PointAdd(LoggedPointsBaseView):
 
                 point.save()
             
-            return PointAddByUser().get(request, id=point.id)
+            return PointAddByUser().post(request, id=point.id)
         else:
             e = form.errors
             for er in e:
