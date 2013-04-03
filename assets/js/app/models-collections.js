@@ -44,6 +44,7 @@ $(function(){
                     return tag.get('level') == 0;
                 });
                 this.set({icon: zeroTag.get('icons')});
+                console.log('zeroTag:',zeroTag.get('icons'));
             }
 
             // узнаём, являемся ли мы автором этой точки
