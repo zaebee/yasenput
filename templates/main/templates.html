@@ -23,7 +23,7 @@
 
 
 <script type="text/template" id="point-template">
-{#    <article class="item item-place" data-point-id="<%- id %>">#}
+{#    <article class="item item-place" data-point-id="<%- compositeId %>">#}
         <div class="photo">
             {% if user.is_authenticated %}
                 <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
@@ -722,8 +722,13 @@
         
         <!--<div class="event-date">1―5 января</div>-->
         
-        <h2><a href="#" class="a-place-name"><%- name %></a> <small>Глазами</small>
-        <a href="#"><%- author.first_name %> <%- author.last_name %></a></h2>
+        <h2><a href="#" class="a-place-name"><%- name %></a> 
+        <% if(ismine == 1) {  %>
+            <small>Глазами</small> <a href="#"><%- author.first_name %> <%- author.last_name %></a>
+        <% } else { %>
+            <a href="#" style="visibility: hidden;"><%- author.first_name %> <%- author.last_name %></a>
+        <% } %>
+        </h2>
         <div class="addr"><%- address %></div>
         
         <div class="p-place-desc">
@@ -1273,7 +1278,7 @@
             <img src="<%- thumbnail130x130 %>" alt="" width="130" height="130">
         </a>
 
-        <% if(ismine == 1) { %>
+        <% if (ismine == 1) { %>
             <button type="button" class="remove-photo"></button>
         <% } else { %>
             <button type="button" class="complaint-photo"></button>
@@ -1299,8 +1304,10 @@
 
     <div class="bp-comments">
         <div class="toggle-block a-toggle-up">
-            <a href="#" class="a-toggle comments">все комментарии <span>↓</span></a>
-            
+            <% if(comments.length > 2) { %>
+                <a href="#" class="a-toggle comments">все комментарии <span>↓</span></a>
+            <% } %>
+
             <% 
             count = 1;
             _.each(comments, function(comment) { %>

@@ -35,6 +35,11 @@ $(function(){
             $(this.el).html( this.template() );
 
             view = this;
+            this.collection.each(function(photo){
+               if(view.collection.isminePoint == 0 ) {
+                    photo.set({ismine: 0});
+               }
+            });
             // если больше 4ёх фоток, то "добавить" ресуем снизу, иначе -- сверху
             if (this.collection.length > 4) {
                 firstPhotos = this.collection.first(4);
@@ -56,7 +61,10 @@ $(function(){
                 });
 
                 // рендерим "добавить"
-                $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                console.log('ismine: ', view.mainPoint.get('ismine'));
+                if(view.mainPoint.get('ismine') == 1) {
+                    $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                }
                 // $(view.el).find(view.photosPlace).find('.item-photo').last().after( view.templateLoadPhoto() );
 
             } else {
@@ -64,11 +72,17 @@ $(function(){
                     $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templatePhoto(img.toJSON()) );
                     // $(view.el).find(view.photosPlace).find(view.bigPhotoPlace).before( view.templatePhoto(img.toJSON()) );
                 });
-                $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                console.log('view: ', view);
+                console.log('ismine: ', view.mainPoint.get('ismine'));
+                if(view.mainPoint.get('ismine') == 1) {
+                    $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                }
             }
             $(view.el).find(view.photosPlace).find('.item-photo').first().addClass('current');
             // к фоткам в верхней линии над большой фоткой добавляем класс just-redraw-big
             this.addJustRedrawBigClass();
+
+            console.log('this: ', this);
 
             $(this.el).find(this.bigPhotoPlace).html( this.templateBigPhoto( this.collection.first().toJSON() ) );
             

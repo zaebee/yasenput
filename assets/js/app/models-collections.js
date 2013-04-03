@@ -21,13 +21,35 @@ $(function(){
         initialize: function() {
             // console.log('+++ point initialize!');
             // задаём составной id, чтобы он был уникальным
+
+            var compositeId = this.get('id') + '_' + this.get('id_point');
             if( this.get('id') != undefined ) {
-                this.set( { compositeId: this.get('id')+'_'+this.get('id_point') } );    
+                this.set( { compositeId: compositeId } );    
             }            
+            // узнаём, являемся ли мы автором этой точки
+            if(this.get('author') != undefined) {
+                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    this.set({ismine: 1});
+                } else {
+                    this.set({ismine: 0});
+                }
+            }
             // создаём коллекции фоток
-            this.set( {photos_create: new window.YPimages()} );
-            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
-            this.set( {photos_new: new window.YPimages()} );           
+            photos_create = new window.YPimages();
+            photos_create.isminePoint = this.get('ismine');
+            this.set( {photos_create: photos_create} );
+
+            photos_pop = new window.YPimages( this.get('imgs') );
+            photos_pop.isminePoint = this.get('ismine');
+            this.set( {photos_pop: photos_pop} );
+
+            photos_new = new window.YPimages();
+            photos_new.isminePoint = this.get('ismine');
+            this.set( {photos_new: photos_new} );
+
+            // this.set( {photos_create: new window.YPimages(  )} );
+            // this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
+            // this.set( {photos_new: new window.YPimages()} );
 
             // коллекция тегов
             this.set( {tags_collection: new window.Tags(this.get('tags'))} );
@@ -46,14 +68,7 @@ $(function(){
                 this.set({icon: zeroTag.get('icons')});
             }
 
-            // узнаём, являемся ли мы автором этой точки
-            if(this.get('author') != undefined) {
-                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
-                    this.set({ismine: 1});
-                } else {
-                    this.set({ismine: 0});
-                }
-            }
+            
             this.ratingCount();
             return this;
         },
@@ -287,7 +302,7 @@ $(function(){
                         console.log('model: ', model);
 
                         console.log('response: ', response);
-                        point.set({response[0]}).initialize();
+                        // point.set({response[0]}).initialize();
                         
                         // TODO:
                         // uodate model on client from server response
@@ -409,17 +424,81 @@ $(function(){
         },
         redrawOnMap: function(clusterer){
             console.log('%%> redrawOnMap');
+            collection = this;
 
             clusterer.removeAll();
             var myGeoObjectsArr = [];
 
+            // console.log('all points: ');
+            // this.each(function(point){
+            //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
+            // });
+
+            rejectedPoints = [];
+
+            // Показ на карте значков только популярных точек из одинаковых
             this.each(function(point){
+                // console.log('this id: ', point.get('id'));
+                var id = point.get('id');
+                findedPoint = collection.find(function(point){
+                    // console.log('this id_point: ', point.get('id_point'))
+                    return id == point.get('id_point')
+                });     
+                // console.log('findedPoint: ', findedPoint);   
+                // console.log('(typeof findedPoint): ', (typeof findedPoint));
+                if ((typeof findedPoint) == 'object') {
+                    // console.log('concurented point 1: [id: ' + point.get('id') + '; ' + point.get('id_point') + ']');
+                    // console.log('concurented point 2: [id: ' + findedPoint.get('id') + '; ' + findedPoint.get('id_point') + ']');
+                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
+                        rejectedPoints.push(point);
+                    } else {
+                        rejectedPoints.push(findedPoint);                        
+                    }
+                }
+                // console.log('=============');
+                return ((typeof findedPoint) == 'object');
+            });
+
+            // Фильтруем точки с одинаковыми координатами
+            console.log('longitude latitude check');
+            this.each(function(point){
+                var id = point.get('id');
+                var id_point = point.get('id_point');
+                var longitude = point.get('longitude');
+                var latitude = point.get('latitude');
+
+                findedPoint = collection.find(function(point){
+                    return 
+                        (longitude == point.get('longitude')) && 
+                        (latitude == point.get('latitude')) &&
+                        (id != point.get('id')) &&
+                        (id_point != point.get('id_point'))
+                }); 
+                if ((typeof findedPoint) == 'object') {
+                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
+                        rejectedPoints.push(point);
+                    } else {
+                        rejectedPoints.push(findedPoint);                        
+                    }
+                }
+            });
+
+            // console.log('rejectedPoints: ', rejectedPoints);
+
+            mapPoints = _.difference(this.toArray(), rejectedPoints);
+            // console.log('this result: ', this.toArray());
+
+            _.each(mapPoints, function(point){
                 placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-                        id: point.get('id')+'_'+point.get('point_id')
+                        id: point.get('compositeId')
                     }, {
                         iconImageHref: '/'+point.get('icon'), // картинка иконки
                         iconImageSize: [32, 36], // размеры картинки
                         iconImageOffset: [-16, -38] // смещение картинки
+                });
+                placemark.events.add('mousedown', function(event){
+                    pointId = event.originalEvent.target.properties.get('id');
+                    $('[data-point-id="'+pointId+'"] .a-photo').click();
                 });
                 myGeoObjectsArr.push(placemark);
             });
@@ -592,7 +671,13 @@ $(function(){
         },
         initialize: function(){
             // this.set( {comments: new window.Comments(this.get('comments'))} );
-            if(this.get('author').id == window.myId) {
+            console.log('++++++++++++++++++');
+            console.log('this: ', this);
+            console.log('this.collection: ', this.collection);
+            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
+            console.log('++++++++++++++++++');
+            // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
+            if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});

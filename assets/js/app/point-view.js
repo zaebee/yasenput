@@ -39,7 +39,7 @@ $(function(){
         render:function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
-            this.$el.attr( 'data-point-id', this.model.get('id') );
+            this.$el.attr( 'data-point-id', this.model.get('compositeId') );
             return this;
         },
         editPoint: function(event){
@@ -103,12 +103,12 @@ $(function(){
                     $("#"+id).css("display", "block").siblings().css("display", "none");
                 }
             });
-
         },
         detailPlace:function(e){
             // window.newPoint = new window.Point();
             detailPointView = new window.DetailPointView( { model: this.model} );
             detailPointView.render();
+            detailPointView.thumbView = this;
             $(".scroll-box").find('#'+detailPointView.id).remove();            
             $(".scroll-box").append(detailPointView.el);
 

@@ -12,7 +12,8 @@ $(function(){
         },
         events: {
             // 'keyup #add-new-place-address': 'searchLocation',
-            'click .m-ico-group>a': 'showNearPlace'
+            'click .m-ico-group>a': 'showNearPlace',
+            'click .a-like': 'likePhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -23,6 +24,7 @@ $(function(){
                 el: $(this.el).find(this.photosPlace),
                 collection: this.model.get('photos_pop'),
             });
+            browsingPhotos.mainPoint = this.model;
             browsingPhotos.render();
             
             var myMapPopupPlace;
@@ -87,6 +89,21 @@ $(function(){
             this.model.get('near_points').clusterer = this.clusterer;
             this.model.get('near_points').setURL().fetch();
             console.log('this.model.get(near_points).url: ', this.model.get('near_points').url);
+        },
+        likePhoto: function(event){
+            event.preventDefault();
+            $(event.currentTarget).toggleClass('marked');
+            console.log('like this photo');
+            view = this;
+            this.model.like({
+                success: function(model, response, options){
+                    model.set(response[0]).ratingCount();                    
+                    view.thumbView.render();
+                },
+                error: function(){
+
+                }
+            });
         }
     });
     window.DetailPointView = DetailPointView;
