@@ -316,7 +316,6 @@ $(function(){
 
             this.each(function(point){
                 var point_id;
-                console.log('point:',point);
                 if (point.get('id_point') == 0){
                     point_id = point.get('id');
                 }else{

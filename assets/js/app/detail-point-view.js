@@ -36,8 +36,9 @@ $(function(){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
                         if (!view.popupMap) {
+                            coords = [view.model.get('latitude'), view.model.get('longitude')];
                             view.popupMap = new ymaps.Map('popup-map-1', {
-                                center: myMap.getCenter(),
+                                center: coords,
                                 zoom: 14
                             });
                             view.model.get('near_points').map = view.popupMap;
@@ -52,7 +53,7 @@ $(function(){
 
                             view.popupMap.geoObjects.add( view.clusterer );
 
-                            coords = [view.model.get('latitude'), view.model.get('longitude')];
+
                             console.log('coords: ', coords);
                             var placemark = new ymaps.Placemark(coords 
                                 ,{
