@@ -97,10 +97,12 @@ $(function(){
         showDropList: function(event){
             console.log('showDropList');
             $(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999);
+            $(event.currentTarget).closest('.input-line').css('z-index', 20);
         },
         hideDropList: function(event){
             console.log('hideDropList');
             $(event.currentTarget).closest('.drop-filter').find('.drop-results').hide().css('z-index', 20);
+            $(event.currentTarget).closest('.input-line').css('z-index', 1);
         },
         addFromList: function(event){
             console.log('addFromList');

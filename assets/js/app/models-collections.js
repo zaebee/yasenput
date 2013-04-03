@@ -144,7 +144,7 @@ $(function(){
                         case 'saveNew':
                             console.log('===> save new point!');
                             // return;
-                            options.type = 'GET';
+                            options.type = 'POST';
                             options.url = model.url + '/add';
                             options.data = 'name='+model.get('name');
                             options.data += '&address='+model.get('address');
