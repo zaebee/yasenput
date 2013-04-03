@@ -321,6 +321,9 @@ $(function(){
                 }else{
                     point_id = point.get('id_point');
                 }
+                console.log(pointsOnMap);
+                console.log(point_id);
+                console.log($.inArray(point_id, pointsOnMap));
                 if ($.inArray(point_id, pointsOnMap) != -1){
                     placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
                             id: point.get('id')+'_'+point.get('id_point')
