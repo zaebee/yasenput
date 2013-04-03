@@ -239,11 +239,6 @@ jQuery(function($){
 			
 			// places labels
 			if(me.closest(".item-place").length){
-			    // can add only ine place
-			    if (multisearch_result.places.length > 0)
-			    {
-			        return;
-			    }
 				clsName = ' label-place';
 				
 				split_labels = me.text().split(",")
@@ -406,26 +401,38 @@ jQuery(function($){
 	    id = $(this).parents(".label").data("id");
 	    type = $(this).parents(".label").data("type");
 
+        // delete item from array
 	    switch (type) {
 	        case "point": {
 	            multisearch_result.points.splice(id, 1);
+	            $(this).parents(".label").remove();
 	            break;
 	        }
 	        case "place": {
-	            multisearch_result.places.splice(id, 1);
+	            // for place delete all labels of this type which are to the right of current
+	            multisearch_result.places.splice(id, multisearch_result.places.length - id);
+
+	            _.each($(this).parents(".label-fields").children(".label-place"), function(label) {
+		            lab_id = $(label).data("id");
+		            if (lab_id >= id) {
+		                $(label).remove();
+		            }
+		       });
 	            break;
 	        }
 	        case "user": {
 	            multisearch_result.users.splice(id, 1);
+	            $(this).parents(".label").remove();
 	            break;
 	        }
 	        case "tag": {
 	            multisearch_result.tags.splice(id, 1);
+	            $(this).parents(".label").remove();
 	            break;
 	        }
 	    }
 
-		$(this).parents(".label").remove();
+
 	});
 	
 	$(".drop-search ul").hover(function(){

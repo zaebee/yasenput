@@ -32,7 +32,16 @@ function update_multisearch() {
         $('.drop-search ul.item.item-place').append('<li>Загрузка ...</li>');
         multisearch_data.places = [];
         multisearch_data.places.length = 0;
-        ymaps.geocode($("#multisearch-text").val())
+        
+        if (multisearch_result.places.length > 0) 
+        {
+            search_string = multisearch_result.places.join(",") + "," + $("#multisearch-text").val();
+        }
+        else
+        {
+            search_string = $("#multisearch-text").val();
+        }
+        ymaps.geocode(search_string)
             .then(
                 function (res) {
                     res.geoObjects.each(function (geoObject) {
