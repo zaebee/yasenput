@@ -4,7 +4,7 @@ $(function(){
         // el: $('#tab-photos-place'),
         initialize: function() {
             _.bindAll(this, 'render');
-            // _.bindAll(this, 'likepoint');     
+            // _.bindAll(this, 'likepoint');
         },
         events: {
 
@@ -14,7 +14,7 @@ $(function(){
             var view = this;
             $(this.el).html(content);          
             return this;
-        },	
+        },
         // "change #p-add-place input:file":function (e){
         //         if (e.target.files.length == 0){
         //             return;

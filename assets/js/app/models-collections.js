@@ -44,6 +44,7 @@ $(function(){
                     return tag.get('level') == 0;
                 });
                 this.set({icon: zeroTag.get('icons')});
+                console.log('zeroTag:',zeroTag.get('icons'));
             }
 
             // узнаём, являемся ли мы автором этой точки
@@ -311,16 +312,32 @@ $(function(){
 
             clusterer.removeAll();
             var myGeoObjectsArr = [];
+            var pointsOnMap = [];
 
             this.each(function(point){
-                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-                        id: point.get('id')+'_'+point.get('point_id')
-                    }, {
-                        iconImageHref: '/'+point.get('icon'), // картинка иконки
-                        iconImageSize: [32, 36], // размеры картинки
-                        iconImageOffset: [-16, -38] // смещение картинки
-                });
-                myGeoObjectsArr.push(placemark);
+                var point_id;
+                if (point.get('id_point') == 0){
+                    point_id = point.get('id');
+                }else{
+                    point_id = point.get('id_point');
+                }
+                //if ($.inArray(point_id, pointsOnMap) != -1){
+                if (point.get('id_point') === 0){ //временно !!!
+                    placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                            id: point.get('id')+'_'+point.get('id_point')
+                        }, {
+                            iconImageHref: '/'+point.get('icon'), // картинка иконки
+                            iconImageSize: [32, 36], // размеры картинки
+                            iconImageOffset: [-16, -38] // смещение картинки
+                    });
+                    myGeoObjectsArr.push(placemark);
+                }
+                if (point.get('id_point') == 0){
+                    pointsOnMap.push(point.get('id'));
+                }else{
+                    pointsOnMap.push(point.get('id_point'));
+                }
+
             });
 
             clusterer.add( myGeoObjectsArr );
@@ -531,7 +548,6 @@ $(function(){
     YPimages = Backbone.Collection.extend({
         model: YPimage,
         template: _.template($('#item-photo').html()),
-
         initialize: function(models, options){
             // this.bind('reset', this.render, this);
             this.bind('add', this.addToDOM, this);
@@ -546,7 +562,8 @@ $(function(){
                 .find(selector)
                 .find('.photo-loading')
                 .replaceWith( this.template(yp_image.toJSON()) );
-        }
+        },
+
     });
 
     Comment = Backbone.Model.extend({});

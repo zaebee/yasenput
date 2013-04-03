@@ -28,10 +28,20 @@ $(function() {
 
 function update_multisearch() {
         // update places
-        $('.drop-search ul.item.item-name li').not('.item-title').remove();
-        $('.drop-search ul.item.item-name').append('<li>Загрузка ...</li>');
+        $('.drop-search ul.item.item-place li').not('.item-title').remove();
+        $('.drop-search ul.item.item-place').append('<li>Загрузка ...</li>');
+        multisearch_data.places = [];
         multisearch_data.places.length = 0;
-        ymaps.geocode($("#multisearch-text").val())
+        
+        if (multisearch_result.places.length > 0) 
+        {
+            search_string = multisearch_result.places.join(",") + "," + $("#multisearch-text").val();
+        }
+        else
+        {
+            search_string = $("#multisearch-text").val();
+        }
+        ymaps.geocode(search_string)
             .then(
                 function (res) {
                     res.geoObjects.each(function (geoObject) {
@@ -50,13 +60,14 @@ function update_multisearch() {
                 },
                 function (err) {
                 // alert ("error");
-                $('.drop-search ul.item.item-points li').not('.item-title').remove();
+                $('.drop-search ul.item.item-place li').not('.item-title').remove();
                 }
              );
 
         // update points
         $('.drop-search ul.item.item-name li').not('.item-title').remove();
         $('.drop-search ul.item.item-name').append('<li>Загрузка ...</li>');
+        multisearch_data.places = [];
         multisearch_data.points.length = 0;
         $.ajax({
             type: "GET",
@@ -80,7 +91,7 @@ function update_multisearch() {
                 },
             error: function (request, status, error) {
                 //alert(status);
-
+                $('.drop-search ul.item.item-name li').not('.item-title').remove();
             }
         });
 
@@ -99,7 +110,7 @@ function update_multisearch() {
             success: function(data) {
                 multisearch_data.users = data;
                 var compiled = multisearch_users_tmpl({data: data});
-                $("#multisearch-points").html(compiled);
+                $("#multisearch-users").html(compiled);
 
                 // add id to each element
                 i = 0
@@ -130,7 +141,7 @@ function update_multisearch() {
             success: function(data) {
                 multisearch_data.tags = data;
                 var compiled = multisearch_tags_tmpl({data: data});
-                $("#multisearch-points").html(compiled);
+                $("#multisearch-tags").html(compiled);
 
                 // add id to each element
                 i = 0

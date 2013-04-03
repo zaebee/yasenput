@@ -99,7 +99,6 @@ jQuery(function($){
             }
             $('.hint-specify-place').show()
 
-
             $("#popup-add-place").show();
 			var h = $("#popup-add-place").height();
 			$("#overlay").hide().css("top","0");

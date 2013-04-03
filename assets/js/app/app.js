@@ -149,11 +149,11 @@ $(function(){
     //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
     //     //$("#confirm-remove-photo").hide();
     // })
-    .delegate("#confirm-remove-photo .a-no", 'click', function (e) {
-        var self = e.currentTarget;
-        e.preventDefault();//отказ удаления фотки
-        $("#confirm-remove-photo").hide();
-    })
+//    .delegate("#confirm-remove-photo .a-no", 'click', function (e) {
+//        var self = e.currentTarget;
+//        e.preventDefault();//отказ удаления фотки
+//        $("#confirm-remove-photo").hide();
+//    })
     // .delegate("click #confirm-remove-photo .a-yes", 'click', function (e) {
     //     var self = e.currentTarget;
     //     e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
