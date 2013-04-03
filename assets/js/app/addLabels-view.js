@@ -16,7 +16,6 @@ $(function(){
             _.bindAll(this, 'closeDropList');
             _.bindAll(this, 'removeSelectedLabel');
             
-            
             this.bind('clickout', this.closeDropList);
             this.collection.bind('reset', this.renderLabelsList);
         },

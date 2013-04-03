@@ -14,6 +14,8 @@ $(function(){
             'click .a-like': 'likepoint',
             'click .a-photo':"detailPlace",
             'click .a-collection':"addInCollection",
+            'click .a-edit-new': 'editPoint',
+            'click .a-share-new': 'sharePoint'
 
             // 'click .a-want':"wantvisit",
         },
@@ -39,7 +41,70 @@ $(function(){
             this.$el.html(content);
             this.$el.attr( 'data-point-id', this.model.get('id') );
             return this;
+        },
+        editPoint: function(event){
+            event.preventDefault();
+            
+            editPointView = new window.EditPointView( { model: this.model} );
+            window.currentPointPopup = editPointView;
+            editPointView.render();
+
+            $(".scroll-box").find('#'+editPointView.id).remove();            
+            $(".scroll-box").append(editPointView.el);
+
+            var self = event.currentTarget;
+
+            var id = editPointView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
         },       
+        sharePoint: function(event){
+            event.preventDefault();
+
+            sharePointView = new window.SharePointView( { model: this.model} );
+            window.currentPointPopup = sharePointView;
+            sharePointView.render();
+
+            $(".scroll-box").find('#'+sharePointView.id).remove();            
+            $(".scroll-box").append( sharePointView.el );
+
+            var self = event.currentTarget;
+
+            var id = sharePointView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
+
+        },
         detailPlace:function(e){
             // window.newPoint = new window.Point();
             detailPointView = new window.DetailPointView( { model: this.model} );
