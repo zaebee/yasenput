@@ -531,7 +531,6 @@ $(function(){
     YPimages = Backbone.Collection.extend({
         model: YPimage,
         template: _.template($('#item-photo').html()),
-
         initialize: function(models, options){
             // this.bind('reset', this.render, this);
             this.bind('add', this.addToDOM, this);
@@ -546,7 +545,8 @@ $(function(){
                 .find(selector)
                 .find('.photo-loading')
                 .replaceWith( this.template(yp_image.toJSON()) );
-        }
+        },
+
     });
 
     Comment = Backbone.Model.extend({});

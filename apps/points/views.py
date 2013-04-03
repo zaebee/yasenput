@@ -480,7 +480,6 @@ class PointAddByUser(LoggedPointsBaseView):
                              "id_point": "select " + str(originalPoint.id)                             
                          }
                      )
-            
             return self.pointsList(points)
         else:
             e = form.errors
