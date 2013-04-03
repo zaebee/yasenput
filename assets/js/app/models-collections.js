@@ -325,6 +325,7 @@ $(function(){
                 console.log(point_id);
                 console.log($.inArray(point_id, pointsOnMap));
                 if ($.inArray(point_id, pointsOnMap) != -1){
+                    console.log('На карту!', point.get('id')+'_'+point.get('id_point'));
                     placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
                             id: point.get('id')+'_'+point.get('id_point')
                         }, {
