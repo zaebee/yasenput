@@ -14,6 +14,7 @@ from apps.collections import models as CollectionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
+from YasenPut.limit_config import LIMITS
 import json
 
 def JsonHTTPResponse(json):
@@ -35,12 +36,13 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(points, 
                                 fields=['main_img', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'updated', 'likes_count'],
+                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count'],
                                 extras=['popular', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
-                                relations={'description': {'fields': ['description', 'id']},
-                                           'tags': {'fields': ['name', 'id', 'level', 'icons']},
-                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
+                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.POINTS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked','thumbnail207_height'],
                                                         },
@@ -48,20 +50,15 @@ class PointsBaseView(View):
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': 5
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },
-                                                                   'limit': 5
-                                                                  }
+                                                                  },
+                                                     'limit': LIMITS.POINTS_LIST.IMAGES_COUNT
                                                     }, 
-                                           'comments': {'fields': ['txt', 'created', 'author'], 
-                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
-                                                                      },
-                                                        'limit': 5
-                                                        },
                                            'reviews': {'fields': ['id', 'review', 'rating', 'author'],
                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                },
-                                                       'limit': 5
+                                                       'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                       }
                                            })          
     
@@ -70,11 +67,13 @@ class PointsBaseView(View):
         return YpJson.serialize(collections, 
                                 fields=['id', 'name', 'description', 'author', 'points', 'likeusers', 'updated', 'likes_count'],
                                 extras=['likes_count', 'isliked'],
-                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130','thumbnail207_height'],
-                                                    'limit': 4
-                                                    }, 
+
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
+                                                    },
                                            })          
     
     def getPointsSelect(self, request):
@@ -265,7 +264,7 @@ class PointsSearch(PointsBaseView):
 
     def get(self, request, *args, **kwargs):
         params = request.GET
-        COUNT_ELEMENTS = 5
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_SEARCH_COUNT
         errors = []
 
         limit = COUNT_ELEMENTS
@@ -308,7 +307,7 @@ class PointsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         params = request.GET
 
-        COUNT_ELEMENTS = 10
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
 
         page = kwargs.get("page", 1) or 1
@@ -394,7 +393,10 @@ class PointsList(PointsBaseView):
             allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
             
-            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS]
+            if content == 'new':
+                allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS]
+            else:
+                allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS]
             
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
