@@ -151,7 +151,7 @@ $(function(){
             }
         },
         redrawBigPhoto: function(photoId){
-            event.preventDefault();
+            //event.preventDefault();
             $(this.el).find('.item-photo').removeClass('current');
             // console.log('fire redrawBigPhoto whit: ', photoId);
             elem = $(this.el).find('[data-photo-id="'+ photoId +'"]');

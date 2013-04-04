@@ -112,7 +112,7 @@ $(function(){
             $(".scroll-box").find('#'+detailPointView.id).remove();            
             $(".scroll-box").append(detailPointView.el);
 
-            var self = event.currentTarget;
+            var self = e.currentTarget;
             // var addPoint = this.templateAdd();
             // $("#popups").remove();
             // $("#overlay").after(createPointView.render().el);
