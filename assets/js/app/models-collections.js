@@ -697,8 +697,9 @@ $(function(){
                 url: '/comments/add',
                 type: 'POST',
                 data: {
-                    object_id: model.get('id'),
-                    object_type: 23,
+                    photo: model.get('id'),
+                    // object_id: model.get('id'),
+                    // object_type: 23,
                     txt: txt
                 }
             });

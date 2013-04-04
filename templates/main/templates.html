@@ -1309,10 +1309,12 @@
             <% } %>
 
             <% 
-            count = 1;
+            count = 0;
+            amount = comments.length;
+            limit = 2;
             _.each(comments, function(comment) { %>
                 <div class="item-comment" data-comment-id="<%- comment.id %>"
-                <% if(count > 3) { %>
+                <% if(count < amount - limit) { %>
                     style="display: none;"
                 <% } %>
                 >

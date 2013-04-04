@@ -218,7 +218,8 @@ $(function(){
                 $(this.el).find(this.bigPhotoPlace).find('.item-comment').show();
             // скрываем
             } else {
-                $(this.el).find(this.bigPhotoPlace).find('.item-comment').slice(3).hide();
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').hide();
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').slice(-2).show();
             }
             $(event.currentTarget).toggleClass('isopen');
         },
