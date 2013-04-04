@@ -42,9 +42,9 @@ class PointsBaseView(View):
                                            'tags': {'fields': ['name', 'id', 'level', 'icons']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
+                                           'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked','thumbnail207_height'],
                                                         },
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -72,7 +72,7 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130','thumbnail207_height'],
                                                     'limit': 4
                                                     }, 
                                            })          
