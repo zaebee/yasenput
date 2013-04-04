@@ -23,7 +23,7 @@
 
 
 <script type="text/template" id="point-template">
-{#    <article class="item item-place" data-point-id="<%- id %>">#}
+{#    <article class="item item-place" data-point-id="<%- compositeId %>">#}
         <div class="photo">
             {% if user.is_authenticated %}
                 <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
@@ -722,10 +722,14 @@
         
         <!--<div class="event-date">1―5 января</div>-->
         
-        <h2><a href="#" class="a-place-name"><%- name %></a> <% if(id_point!=0 ){ %><small>Поделился</small>
-        <a href="#"><%- author.first_name %> <%- author.last_name %></a><%}%></h2>
+        <h2><a href="#" class="a-place-name"><%- name %></a>
+        <% if(ismine == 1) {  %>
+            <small>Глазами</small> <a href="#"><%- author.first_name %> <%- author.last_name %></a>
+        <% } else { %>
+            <a href="#" style="visibility: hidden;"><%- author.first_name %> <%- author.last_name %></a>
+        <% } %>
+        </h2>
         <div class="addr"><%- address %></div>
-        
         <div class="p-place-desc">
             <%- description.substring(0,150) %>
             <% if((description.length) > 150){ %>
@@ -1143,15 +1147,17 @@
     </div>
 </script>
 
-<script type="text/template" id="item-photo">
-    <div class="item-photo" data-photo-id="<%- id %>">
-        <img src="<%- thumbnail130x130 %>" alt="" width="130" height="130" 
-        data-src-big="<%- img_url %>" 
-        data-author="<%- author.first_name %> <%- author.last_name %>" 
-        data-count-likes="5" data-avatar="<%- author.avatar %> ">
-        <button class="remove-photo"></button>
-    </div>
-</script>
+
+    {#<script type="text/template" id="item-photo">#}
+    {#    <div class="item-photo">#}
+    {#        <img src="<%- thumbnail130x130 %>" alt="" width="130" height="130" #}
+    {#        data-src-big="<%- img_url %>" #}
+    {#        data-author="<%- author.first_name %> <%- author.last_name %>" #}
+    {#        data-count-likes="5" data-avatar="<%- author.avatar %> ">#}
+    {#        <button class="remove-photo"></button>#}
+    {#    </div>#}
+    {#</script>#}
+
 
 <script type="text/template" id="progress-image">
     <div class="item-photo photo-loading">
@@ -1168,60 +1174,60 @@
 </script>
 
 <script type="text/template" id="add-labels">
-<div class="input-line" style="z-index: 1;">
-    <div class="drop-filter select-labels">
-        <div class="p-labels drop-labels">
-            <div class="clearfix selected-labels" style="">
-                <div class="label label-add" style="display: block;">
-                    Добавить<span>+</span>
+    <div class="input-line" style="z-index: 1;">
+        <div class="drop-filter select-labels">
+            <div class="p-labels drop-labels">
+                <div class="clearfix selected-labels" style="">
+                    <div class="label label-add" style="display: block;">
+                        Добавить<span>+</span>
+                    </div>
+                    
+                    <span class="text-field" style="display: none;"><input type="text"></span>
                 </div>
                 
-                <span class="text-field" style="display: none;"><input type="text"></span>
+                <input type="button" value=" " class="clear-selected">
+                
+                <ul class="drop-labels-field" style="display: none;">
+    {#                <li class="label" data-label-id="1">#}
+    {#                    <a href="#">Где-то тут</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="2">#}
+    {#                    <a href="#">товарищ SinteZ</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="3">#}
+    {#                    <a href="#">г. Вологда, Вологодская области</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="4">#}
+    {#                    <a href="#">Катание на катке</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="5">#}
+    {#                    <a href="#">Где-то здесь</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="6">#}
+    {#                    <a href="#">товарищ MadveX</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="7">#}
+    {#                    <a href="#">г. Вологда, Вологодская области</a>#}
+    {#                </li>#}
+    {#                <li class="label" data-label-id="8">#}
+    {#                    <a href="#">Сноуборд</a>#}
+    {#                </li>#}
+                <li class="drop-not-found">Такой метки не найдено. Создайте новую метку нажав кнопку Enter</li></ul>
             </div>
-            
-            <input type="button" value=" " class="clear-selected">
-            
-            <ul class="drop-labels-field" style="display: none;">
-{#                <li class="label" data-label-id="1">#}
-{#                    <a href="#">Где-то тут</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="2">#}
-{#                    <a href="#">товарищ SinteZ</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="3">#}
-{#                    <a href="#">г. Вологда, Вологодская области</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="4">#}
-{#                    <a href="#">Катание на катке</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="5">#}
-{#                    <a href="#">Где-то здесь</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="6">#}
-{#                    <a href="#">товарищ MadveX</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="7">#}
-{#                    <a href="#">г. Вологда, Вологодская области</a>#}
-{#                </li>#}
-{#                <li class="label" data-label-id="8">#}
-{#                    <a href="#">Сноуборд</a>#}
-{#                </li>#}
-            <li class="drop-not-found">Такой метки не найдено. Создайте новую метку нажав кнопку Enter</li></ul>
         </div>
     </div>
-</div>
 
-<div class="input-line">
-    <section class="clearfix pop-labels" data-key="tags">
-        <h4>Выберите одну из обязательных меток:</h4>
-        
-        <div class="require-labels">
-            {% for tag in tagsRequire %}
-                <div class="label label-require" data-label-id="{{ tag.id }}" data-require="true">{{ tag.name }}</div>
-            {% endfor %}
-        </div>
-    </section>
-</div>
+    <div class="input-line">
+        <section class="clearfix pop-labels" data-key="tags">
+            <h4>Выберите одну из обязательных меток:</h4>
+            
+            <div class="require-labels">
+                {% for tag in tagsRequire %}
+                    <div class="label label-require" data-label-id="{{ tag.id }}" data-require="true">{{ tag.name }}</div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
 </script>
 <script type="text/template" id="label">
     <li class="label" data-label-id="<%- id %>">
@@ -1253,13 +1259,25 @@
     <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
 </script>
 
+<script type="text/template" id="edit-photos">
+    <div id="tab-edit-photos" style="display: block;">
+        <div class="p-desc-collection">Создайте свою коллекцию фотографий для этого места.<br>Загрузите новые или выберите понравившиеся из уже загруженных фотографий.</div>
+        <div class="clearfix p-photos photos-user">
+            
+            <div class="toggle-block">
+                <a href="#" class="a-toggle">все фотографии <span>↓</span></a>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/template" id="photos-thumb">
     <div class="item-photo" data-photo-id="<%- id %>">
         <a href="<%- thumbnail560 %>">
             <img src="<%- thumbnail130x130 %>" alt="" width="130" height="130">
-        </a> 
+        </a>
 
-        <% if(ismine == 1) { %>
+        <% if (ismine == 1) { %>
             <button type="button" class="remove-photo"></button>
         <% } else { %>
             <button type="button" class="complaint-photo"></button>
@@ -1268,7 +1286,7 @@
 </script>
 <script type="text/template" id="load-photo">
     <div class="item-photo load-photo">
-        <input type="file">
+        <input name="img" type="file">
     </div>
 </script>
 <script type="text/template" id="photos-big">
@@ -1285,13 +1303,16 @@
 
     <div class="bp-comments">
         <div class="toggle-block a-toggle-up">
-            <a href="#" class="a-toggle comments">Ещё комментарии <span>↓</span></a>
-            
-            <% 
-            count = 1;
+            <% if(comments.length > 2) { %>
+                <a href="#" class="a-toggle comments">Ещё комментарии <span>↓</span></a>
+            <% } %>
+            <%
+            count = 0;
+            amount = comments.length;
+            limit = 2;
             _.each(comments, function(comment) { %>
                 <div class="item-comment" data-comment-id="<%- comment.id %>"
-                <% if(count > 3) { %>
+                <% if(count < amount - limit) { %>
                     style="display: none;"
                 <% } %>
                 >
@@ -1333,6 +1354,154 @@
             </div>
             
         </div>
+    </div>
+</script>
+
+<script type="text/template" id="edit-point">
+    <div class="p-top">
+        <h3><%- name %> от <%- author.first_name %> <%- author.last_name %></h3>
+        
+        <input type="button" class="p-close" value=" ">
+    </div>
+
+    <div class="clearfix p-body">
+        <form action="#">
+            
+            <div class="input-line">
+                <div class="required">*</div>
+                
+                <div class="drop-filter">
+                    <input type="text" value="<%- name %>" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
+                
+                <div class="drop-filter">
+                    <input type="text" value="<%- address %>" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
+
+                <div class="drop-filter">
+                    <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
+                </div>
+            </div>
+
+            <div class="wide-box">
+                <div class="clearfix p-tabs">
+                    <a href="#" data-target="tab-edit-photos" class="active">Фотографии</a>
+                    
+                    <div class="shadow"></div>
+                </div>
+                
+                <form action="#">
+                    <div class="clearfix tabs-content">
+                        
+                        <div id="tab-edit-photos" style="display: block;">
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tabs-content p-common-content">
+               
+                <section class="p-block event-labels">
+                    <h4 class="title-block">Метки</h4>
+                    
+                    <div class="body">
+                        <% _.each(tags, function(tag){ %>
+                            <div class="label"><%- tag.name %></div>
+                        <% }); %>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="input-line submit-line align-r">
+                <small class="required-desc">Поля со значком * обязательны для заполнения</small>
+                
+                <input type="submit" value="Добавить" class="a-btn">
+            </div>
+        </form>
+    </div>
+</script>
+
+<script type="text/template" id="share-point">
+    <div class="p-top">
+        <h3><%- name %> от {{ user.person.first_name }} {{ user.person.last_name }} </h3>
+        
+        <input type="button" class="p-close" value=" ">
+    </div>
+
+    <div class="clearfix p-body">
+        <form action="#">
+            
+            <div class="input-line">
+                <div class="required">*</div>
+                
+                <div class="drop-filter">
+                    <input type="text" value="<%- name %>" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
+                
+                <div class="drop-filter">
+                    <input type="text" value="<%- address %>" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="input-line">
+                <div class="required">*</div>
+
+                <div class="drop-filter">
+                    <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
+                </div>
+            </div>
+
+            <div class="wide-box">
+                <div class="clearfix p-tabs">
+                    <a href="#" data-target="tab-edit-photos" class="active">Фотографии</a>
+                    
+                    <div class="shadow"></div>
+                </div>
+                
+                <form action="#">
+                    <div class="clearfix tabs-content">
+                        
+                        <div id="tab-edit-photos" style="display: block;">
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tabs-content p-common-content">
+               
+                <section class="p-block event-labels">
+                    <h4 class="title-block">Метки</h4>
+                    
+                    <div class="body">
+                        <% _.each(tags, function(tag){ %>
+                            <div class="label"><%- tag.name %></div>
+                        <% }); %>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="input-line submit-line align-r">
+                <small class="required-desc">Поля со значком * обязательны для заполнения</small>
+                
+                <input type="submit" value="Добавить" class="a-btn">
+            </div>
+        </form>
     </div>
 </script>
 
@@ -1439,6 +1608,5 @@
         </div>
     </div>
 </script>
-
 
 {% endif %}

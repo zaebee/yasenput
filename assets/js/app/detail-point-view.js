@@ -14,7 +14,8 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .bp-photo':'nextBigPhoto'
+            'click .bp-photo':'nextBigPhoto',
+            'click .a-like': 'likePhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -23,8 +24,9 @@ $(function(){
 
             browsingPhotos = new window.BrowsingPhotosView({
                 el: $(this.el).find(this.photosPlace),
-                collection: this.model.get('photos_pop'),
+                collection: this.model.get('photos_pop')
             });
+            browsingPhotos.mainPoint = this.model;
             browsingPhotos.render();
             
             var myMapPopupPlace;
@@ -44,7 +46,7 @@ $(function(){
                             view.model.get('near_points').map = view.popupMap;
                             view.popupMap.controls.add('zoomControl');
                             view.clusterer = new ymaps.Clusterer({
-                                clusterIcons: window.clusterIcons,
+                                clusterIcons: window.clusterIcons
                             });
                             
                             view.popupMap.events.add('boundschange', function(event){
@@ -107,6 +109,21 @@ $(function(){
                     next = items.index(current) < items.length-1 ? items.eq(items.index(current)+1) : items.eq(0);
                 next.find('a').click();
             }
+        },
+        likePhoto: function(event){
+            event.preventDefault();
+            $(event.currentTarget).toggleClass('marked');
+            console.log('like this photo');
+            view = this;
+            this.model.like({
+                success: function(model, response, options){
+                    model.set(response[0]).ratingCount();                    
+                    view.thumbView.render();
+                },
+                error: function(){
+
+                }
+            });
         }
     });
     window.DetailPointView = DetailPointView;
