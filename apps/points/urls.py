@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^add/*$', views.PointAdd.as_view()),
     url(r'^addbyuser/*$', views.PointAddByUser.as_view()),
     url(r'^edit/*$', views.PointEdit.as_view()),
-    url(r'^editbypoint/*$', views.EditByPoint.as_view()),
+    url(r'^editbyuser/*$', views.EditByPoint.as_view()),
     url(r'^search/*$', views.PointsSearch.as_view()), # при добавлении точки
     url(r'^like/*$', views.LikePoint.as_view()), #wait for julia
     # url(r'^visit/*$', views.WantVisitPoint.as_view()),

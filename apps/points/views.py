@@ -529,11 +529,11 @@ class PointAdd(LoggedPointsBaseView):
 
 
 class EditByPoint(LoggedPointsBaseView):
-    http_method_names = ('get')
+    http_method_names = ('post')
     
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         errors = []
-        params = request.GET
+        params = request.POST
         
         point_id = kwargs.get("id", None)
         if not point_id:
