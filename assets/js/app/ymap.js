@@ -35,26 +35,46 @@ $(function(){
         var labels = [];
         ymaps.geocode(coords).then(function (res) {
             res.geoObjects.each(function (obj) {
+                console.log('objs: ', obj);
                 if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'country'){
+                    window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.text'));
                 }
                 if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'province'){
+                    window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine'));
                 }
                 if (obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'area'){
+                    window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName'));
                 }
                 if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName')){
+                    window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName'));
                 }
                 if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName')){
+                    window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'));
                 }
             });
-            console.log('labels: ', labels);
-            // $.each(labels, function(index, value){
-            //     $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
-            // })
+            compiled = multisearch_places_tmpl({data: window.multisearch_data.places});
+            $("#multisearch-places").html(compiled);
+
+            // add id to each element
+            i = 0
+            _.each($("#multisearch-places ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+
+            // ReInit OnClick
+            multySearch.reinit_click();
+            var i = 0;
+            $.each(labels, function(index, value){
+
+                added_label = $(multySearch.tmplLabel.replace("{text}", value).replace("{clsName}", "label-place")).insertBefore($(".label-add"));
+                $(added_label).data("id", i);
+                $(added_label).data("type", 'place');
+                window.multisearch_result.places.push(value);
+                i++;
+            })
 
         });
         window.mapBounds = myMap.getBounds()

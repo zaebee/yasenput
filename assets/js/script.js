@@ -233,6 +233,7 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
+            console.log('onClickDrop')
 			var clsName = '';
 			
 			text_labels = [];
@@ -247,7 +248,7 @@ jQuery(function($){
 				// delete all current places labels
 				$(".label-fields").children(".label-place").remove();
 				
-				split_labels = me.text().split(",")
+				split_labels = me.text().split(",");
 				
 				i = 0;
 				_.each(split_labels, function(label) { 
@@ -259,20 +260,33 @@ jQuery(function($){
 				                });
 				                i++;
 				              });
+
+                var myGeocoder = ymaps.geocode(me.text());
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    },
+                    function (err) {
+                        alert('Ошибка');
+                    }
+                );
 			}
 			// points labels
 			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-				
+
+                multisearch_result.points.length = 0;
+                $(".label-fields").children(".label-name").remove();
 				id = multisearch_data.points[me.data("id")].id;
+				name = multisearch_data.points[me.data("id")].name;
 				// add only one instance of point
-				if (multisearch_result.points.indexOf(id) != -1)
+				if (multisearch_result.points.indexOf(name) != -1)
 				{
 				    return;
 				}
-				
-				multisearch_result.points.push(id);
-				
+                console.log('onClickDrop name');
+				multisearch_result.points.push(name);
+
 				text_labels.push({
 				                text: me.text(),
 				                id: multisearch_result.points.length-1,
@@ -372,9 +386,9 @@ jQuery(function($){
 			});
 		},
 		reinit_click: function() {
+                console.log('reinit_click')
     			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
-				
 				me.onClickDrop($(this), me);
 			});
 		}
@@ -405,6 +419,8 @@ jQuery(function($){
 	});
 	
 	$(".label-fields").delegate(".remove-label", "click", function(e){
+        console.log('delete');
+
 	    id = $(this).parents(".label").data("id");
 	    type = $(this).parents(".label").data("type");
 
@@ -418,13 +434,20 @@ jQuery(function($){
 	        case "place": {
 	            // for place delete all labels of this type which are to the right of current
 	            multisearch_result.places.splice(id, multisearch_result.places.length - id);
-
+//                window.myMap
+                console.log('Костыль: ',multisearch_result.places);
 	            _.each($(this).parents(".label-fields").children(".label-place"), function(label) {
 		            lab_id = $(label).data("id");
 		            if (lab_id >= id) {
 		                $(label).remove();
 		            }
 		       });
+                var myGeocoder = ymaps.geocode(multisearch_result.places.join(','));
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    }
+                );
 	            break;
 	        }
 	        case "user": {
@@ -438,7 +461,7 @@ jQuery(function($){
 	            break;
 	        }
 	    }
-
+        window.currentPoints.setURL().fetch();
 
 	});
 	

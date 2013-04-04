@@ -255,9 +255,10 @@ $(function(){
             return response.points;
         },
         setURL: function(){
-            console.log('setURL');
-            console.log('this: ', this);
 
+            this.tags = window.multisearch_result.tags;
+            this.user_id = window.multisearch_result.users;
+            this.name = window.multisearch_result.points;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -265,7 +266,7 @@ $(function(){
             
             tagStr = '';
             _.each(this.tags, function(tag){
-                tagStr += '&tags[]=' + tag.id 
+                tagStr += '&tags[]=' + tag
             });
             if(tagStr != ''){
                 this.tagStr = tagStr;    
@@ -282,6 +283,7 @@ $(function(){
         				'&coord_left='+this.coord_left+
         				'&coord_right='+this.coord_right+
                         '&user_id='+this.user_id+
+                        '&name='+this.name+
                         this.tagStr;
         	return this;
         },
