@@ -241,6 +241,12 @@ jQuery(function($){
 			if(me.closest(".item-place").length){
 				clsName = ' label-place';
 				
+				// clear _result array (only one place can be added)
+				multisearch_result.places.length = 0;
+				
+				// delete all current places labels
+				$(".label-fields").children(".label-place").remove();
+				
 				split_labels = me.text().split(",")
 				
 				i = 0;
@@ -295,7 +301,8 @@ jQuery(function($){
 			else if (me.closest(".item-labels").length){
 				clsName = ' label-label';
 				
-				id = multisearch_data.points[me.data("id")].id;
+				label_id = me.data("id")
+				id = multisearch_data.tags[label_id].id;
 				
 				// add only one instance of tag
 				if (multisearch_result.tags.indexOf(id) != -1)
@@ -306,7 +313,7 @@ jQuery(function($){
 				
 				text_labels.push({
 				                text: me.text(),
-				                id: multisearch_result.tags.length,
+				                id: multisearch_result.tags.length-1,
 				                type: "tag"
 				                });
 			}

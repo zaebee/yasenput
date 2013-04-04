@@ -145,7 +145,7 @@ function update_multisearch() {
 
                 // add id to each element
                 i = 0
-                _.each($("#multisearch-tags ._item_ a"), function(item) { $.data(item, "id", i); i++  });
+                _.each($("#multisearch-tags ._item_ a"), function(item) { $.data(item, "id", i); i++ });
 
                 // ReInit OnClick
                 multySearch.reinit_click();
