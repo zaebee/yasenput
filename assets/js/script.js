@@ -234,6 +234,7 @@ jQuery(function($){
 		
 		onClickDrop: function(me, self){
             console.log('onClickDrop')
+            window.currentPoints.page = 1;
             window.currentPoints.setURL().fetch();
 			var clsName = '';
 			

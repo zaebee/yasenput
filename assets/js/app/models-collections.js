@@ -371,7 +371,6 @@ $(function(){
             return response.points;
         },
         setURL: function(){
-
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
