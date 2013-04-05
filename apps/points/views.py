@@ -14,6 +14,7 @@ from apps.collections import models as CollectionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
+from itertools import chain
 import json
 
 def JsonHTTPResponse(json):
@@ -42,7 +43,7 @@ class PointsBaseView(View):
                                            'tags': {'fields': ['name', 'id', 'level', 'icons']},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked'],
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail130x130', 'isliked'],
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -304,13 +305,14 @@ class PointsList(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
+        
         params = request.GET
 
-        COUNT_ELEMENTS = 10
+        COUNT_ELEMENTS = 5
         errors = []
 
         page = kwargs.get("page", 1) or 1
-
+        
         limit = COUNT_ELEMENTS*int(page)
         offset = (int(page)-1)*COUNT_ELEMENTS
 
@@ -318,7 +320,11 @@ class PointsList(PointsBaseView):
         if form.is_valid():
             pointsreq = MainModels.Points.objects
             copypointsreq = MainModels.PointsByUser.objects
+            #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
+            file_debug=open('file.txt','w')
+            file_debug.write(str(collectionsreq.values_list('id', 'likes_count')))
+            file_debug.close()
 
             user = form.cleaned_data.get("user")
             if user:
@@ -383,16 +389,17 @@ class PointsList(PointsBaseView):
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
    
-
             points = pointsreq[offset:limit].all()
+            #points = pointsreq[offset:limit].all()
             copypoints = copypointsreq[offset:limit].all()
             collections = collectionsreq[offset:limit].all()
             
-            allpoints = json.loads(self.getSerializePoints(points))
-            allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
+            allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
             
-            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS]
+            #allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
+            
+            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
             
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:

@@ -204,6 +204,9 @@ def point(request):
         else:
             return HttpResponse('{"r":"0"}', mimetype="application/json")
 
+#def add_collection(request):
+#    if request.user.is_authenticated():
+
 
 def routes(request, page):
     limit = 15*int(page)

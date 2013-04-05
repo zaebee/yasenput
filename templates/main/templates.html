@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
+            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="<%- imgs[0].thumbnail207_height %>"></a>
         </div>
 
         <div class="alert-added">Добавлено в раздел &laquo;Хочу посетить&raquo;</div>
@@ -1422,15 +1422,7 @@
                 <div class="line">
                     <label>Выберите из уже созданных коллекций:</label>
                     <div class="wide-box">
-                        <div class="small-viewport">
-                            <% _.each(collections, function(colltn){ %>
-                                <label class="custom-checkbox" data-id="<%- colltn.id %>">
-                                    <input type="checkbox" value="" name="">
-                                    colln
-                                    <%- colltn.name %>
-                                </label>
-                            <% }) %>
-                        </div>
+                        
                     </div>
                 </div>
 

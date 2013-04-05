@@ -1,17 +1,16 @@
 $(function(){
-/* -------------------- View point-------------------- */
-    PointView = Backbone.View.extend({
+/* -------------------- View collection-------------------- */
+    CollectionView = Backbone.View.extend({
         tagName: 'article',
         className: 'item item-place',
-        template: _.template($('#point-template').html()),
-        // photos_place_selector: '#tab-photos-place>div',
+        template: _.template($('#collection-template').html()),
         initialize: function() {
             _.bindAll(this, 'render');
-            _.bindAll(this, 'likepoint');
+            _.bindAll(this, 'likecollection');
         },
         events: {
             'click .yp-title, .yp-info': 'toggleYPinfo',
-            'click .a-like': 'likepoint',
+            'click .a-like': 'likecollection',
             'click .a-photo':"detailPlace",
             'click .a-collection':"addInCollection",
 
@@ -20,9 +19,9 @@ $(function(){
         toggleYPinfo: function(event) {
             $(event.currentTarget).toggle().siblings().toggle();
         },
-        likepoint: function(event){
+        likecollection: function(event){
             event.preventDefault();
-            console.log('like point: ', this.model.get('id'));
+            console.log('like collection: ', this.model.get('id'));
             view = this;
             this.model.like({
                 success: function(model, response, options){
@@ -37,23 +36,18 @@ $(function(){
         render:function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
-            this.$el.attr( 'data-point-id', this.model.get('id') );
+            this.$el.attr( 'data-collection-id', this.model.get('id') );
             return this;
         },       
         detailPlace:function(event){
-            // window.newPoint = new window.Point();
-            detailPointView = new window.DetailPointView( { model: this.model} );
-            detailPointView.render();
-            $(".scroll-box").find('#'+detailPointView.id).remove();            
-            $(".scroll-box").append(detailPointView.el);
+            detailCollectionView = new window.DetailCollectionView( { model: this.model} );
+            detailCollectionView.render();
+            $(".scroll-box").find('#'+detailCollectionView.id).remove();            
+            $(".scroll-box").append(detailCollectionView.el);
 
             var self = event.currentTarget;
-            // var addPoint = this.templateAdd();
-            // $("#popups").remove();
-            // $("#overlay").after(createPointView.render().el);
-            // $("#overlay").after(detcontent);
 
-            var id = detailPointView.id;
+            var id = detailCollectionView.id;
             window.YPApp.popups.open({
                 elem: $("#overlay"),
                 callbackAfter: function(){
@@ -62,7 +56,7 @@ $(function(){
                         elem: $("#popups"),
                         callbackAfter: function(){
                             // console.log('callback after');
-                            // window.newPoint = new Point();
+                            // window.newCollection = new Collection();
                         }
                     });
                 },
@@ -80,7 +74,7 @@ $(function(){
 
                 $.ajax({
                     type: "GET",
-                    url: "points/visit",
+                    url: "collections/visit",
                     crossDomain: false,
                     dataType:'json',
                     data: {
@@ -104,7 +98,7 @@ $(function(){
             }else{
                 $.ajax({
                     type: "GET",
-                    url: "points/visit",
+                    url: "collections/visit",
                     crossDomain: false,
                     dataType:'json',
                     data: {
@@ -130,18 +124,12 @@ $(function(){
         },
         addInCollection:function(evenet){
             console.log(this.model);
-            window.newCollection = new window.CollectionPoint();
+            window.newCollection = new window.CollectionCollection();
             addCollectionView = new window.AddCollectionView({ model: window.newCollection });
             
             addCollectionView.render({ model: this.model });
             $(".scroll-box").find('#'+addCollectionView.id).remove();            
             $(".scroll-box").append(addCollectionView.el);
-
-            //var self = event.currentTarget;
-            // var addPoint = this.templateAdd();
-            // $("#popups").remove();
-            // $("#overlay").after(createPointView.render().el);
-            // $("#overlay").after(detcontent);
 
             var id = addCollectionView.id;
             window.YPApp.popups.open({
@@ -151,8 +139,6 @@ $(function(){
                     window.YPApp.popups.open({
                         elem: $("#popups"),
                         callbackAfter: function(){
-                            // console.log('callback after');
-                            // window.newPoint = new Point();
                         }
                     });
                 },
@@ -161,10 +147,9 @@ $(function(){
                     $("#"+id).css("display", "block").siblings().css("display", "none");
                 }
             });
-            //e.preventDefault();
 
        }
     });
 
-	window.PointView = PointView;
+	window.CollectionView = CollectionView;
 });

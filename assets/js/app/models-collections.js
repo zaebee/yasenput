@@ -200,7 +200,7 @@ $(function(){
             });
         },
         saveNew: function(){
-            console.log('');
+            console.log('etst');
             errors = this.ckeckValid();
             if(errors == null) {
                 this.save({}, {
@@ -249,6 +249,7 @@ $(function(){
         initialize: function(){
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
+            console.log('points inited!')
         },
         parse: function(response) {
             return response.points;

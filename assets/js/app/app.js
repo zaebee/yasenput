@@ -851,11 +851,11 @@ $(function(){
                 } else if($(e.target).closest("#complaint-photo").length){
                     $("#complaint-photo").hide();
                 } else {
-                    window.YPApp.popups.close({
+                    window.YPApp.popups.remove({
                         elem: $("#popups"),
                         speed: 0,
                         callbackBefore: function(){
-                            window.YPApp.popups.close({
+                            window.YPApp.popups.remove({
                                 elem: $("#overlay")
                             });
                         },
