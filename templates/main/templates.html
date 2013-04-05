@@ -1052,7 +1052,7 @@
 </div>
  -->
 
-{% if user.is_authenticated %}
+
 <script type="text/template" id="point-add-template">
     <div class="p-top">
         <h3>Добавить место</h3>
@@ -1608,5 +1608,5 @@
         </div>
     </div>
 </script>
-
+{% if user.is_authenticated %}
 {% endif %}
