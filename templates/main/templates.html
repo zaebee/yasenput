@@ -216,7 +216,9 @@
                                                 <div class="bp-add-like">
                                                     <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
                                                     <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
+                                                    {% if user.is_authenticated %}
                                                     <a href="#" class="a-like"></a>
+                                                    {% endif %}
                                                     <span class="count-like"><%- imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
@@ -986,7 +988,9 @@
     <a href="#" class="a-btn a-edit">Редактировать</a>
     
     <div class="small-icons">
+        {% if user.is_authenticated %}
         <a href="#" class="a-like" data-tooltip="Нравится"></a><a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
+        {% endif %}
     </div>
     
     <div class="aside-social">
@@ -1296,7 +1300,9 @@
         <div class="bp-add-like">
             <img src="{{MEDIA_URL}}<%- author.avatar %>" alt="" width="22" height="22" class="avatar">
             <span class="bp-name"><%- author.first_name %> <%- author.last_name %></span>
+            {% if user.is_authenticated %}
             <a href="#" class="a-like"></a>
+            {% endif %}
             <span class="count-like">5</span>
         </div>
     </div>
