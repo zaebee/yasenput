@@ -607,9 +607,6 @@ $(function(){
         url: '/photos',
         sync:  function(method, model, options) {
             console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
