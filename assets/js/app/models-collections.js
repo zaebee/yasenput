@@ -663,11 +663,11 @@ $(function(){
         },
         initialize: function(){
             // this.set( {comments: new window.Comments(this.get('comments'))} );
-            console.log('++++++++++++++++++');
-            console.log('this: ', this);
-            console.log('this.collection: ', this.collection);
-            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
-            console.log('++++++++++++++++++');
+//            console.log('++++++++++++++++++');
+//            console.log('this: ', this);
+//            console.log('this.collection: ', this.collection);
+//            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
+//            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
             if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
