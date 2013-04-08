@@ -725,7 +725,7 @@
         <!--<div class="event-date">1―5 января</div>-->
         
         <h2><a href="#" class="a-place-name"><%- name %></a>
-        <% if(ismine == 1) {  %>
+        <% if(id_point != 0) {  %>
             <small>поделился</small> <a href="#"><%- author.first_name %> <%- author.last_name %></a>
         <% } else { %>
             <a href="#" style="visibility: hidden;"><%- author.first_name %> <%- author.last_name %></a>
@@ -769,7 +769,7 @@
         <div class="p-tabs">
             <a href="#" data-target="tab-photo" class="active">Фотография</a>
             <a href="#" data-target="tab-map">На карте</a>
-            <a href="#" data-target="tab-desc">Отзывы</a>
+{#            <a href="#" data-target="tab-desc">Отзывы</a>#}
 
             <div class="shadow"></div>
         </div>
@@ -983,9 +983,9 @@
 </div>
 
 <aside id="right-panel">
-    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
-    <a href="#" class="a-btn a-add-path">Создать маршрут</a>
-    <a href="#" class="a-btn a-edit">Редактировать</a>
+{#    <a href="#" class="a-btn a-add-collection">В коллекцию</a>#}
+{#    <a href="#" class="a-btn a-add-path">Создать маршрут</a>#}
+{#    <a href="#" class="a-btn a-edit">Редактировать</a>#}
     
     <div class="small-icons">
         {% if user.is_authenticated %}
@@ -994,7 +994,7 @@
     </div>
     
     <div class="aside-social">
-        <img src="temp/social-2.png" alt="">
+{#        <img src="temp/social-2.png" alt="">#}
     </div>
     
     <div class="small-icons">
@@ -1100,7 +1100,7 @@
                 <div class="clearfix p-tabs">
                     <a href="#" data-target="tab-photos-place" class="active">Фотографии</a>
                     <a href="#" data-target="tab-map-place">На карте</a>
-                    <a href="#" data-target="tab-reviews-place">Отзывы</a>
+{#                    <a href="#" data-target="tab-reviews-place">Отзывы</a>#}
                     <div class="shadow"></div>
                 </div>
 
@@ -1303,7 +1303,7 @@
             {% if user.is_authenticated %}
             <a href="#" class="a-like"></a>
             {% endif %}
-            <span class="count-like">5</span>
+{#            <span class="count-like">5</span>#}
         </div>
     </div>
 
@@ -1343,7 +1343,7 @@
             <% 
             count++;
             }) %>
-
+            {% if user.is_authenticated %}
             <div class="add-comment">
                 <form action="#">
                     <div class="ac-block">
@@ -1358,7 +1358,7 @@
                     </div>
                 </form>
             </div>
-            
+            {% endif %}
         </div>
     </div>
 </script>
