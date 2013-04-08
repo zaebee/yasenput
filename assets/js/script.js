@@ -546,10 +546,26 @@ jQuery(function($){
 			}
 		} else if ($(e.target).closest("#footer").length){
 			$("body").toggleClass("hide-footer");
+			$(".a-up").toggleClass("a-up-toggle");
 		}
 	});
-	
+
+    $(".a-up").click(function(e){
+        e.preventDefault();
+
+        $("html, body").animate({
+            scrollTop: 0
+        });
+    });
+
 	$(window).scroll(function(){
+
+        if($(window).scrollTop() > 65){
+            $(".a-up").show();
+        } else {
+            $(".a-up").hide();
+        }
+
 		var scrollTop = $(window).scrollTop(),
 			top = scrollTop <= 370 ? scrollTop : 370;
 		
