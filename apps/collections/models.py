@@ -12,6 +12,7 @@ class Collections(models.Model):
         verbose_name = u'Коллекции точек'
         verbose_name_plural = u'Коллекция точек'
     points = models.ManyToManyField(MainModels.Points, null=True, blank=True)
+    points_by_user = models.ManyToManyField(MainModels.PointsByUser, null=True, blank=True)
     author = models.ForeignKey('main.Person', unique=False)
     name = models.CharField('Название', max_length=1024, null=False)
     description = models.TextField(null=True, blank=True)
