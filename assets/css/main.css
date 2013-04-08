@@ -159,7 +159,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.tabs a{float:left; height:26px; line-height:26px; padding:0 16px; text-decoration:none; color:#984d56; font-size:15px; position:relative}
 	.tabs a.active{color:#333; background:#becfbc;}
 
-.content{position:relative; margin:0 20px}
+.content{position:relative; margin:0 5px}
 	.content .items{position:relative; margin:auto}
 	.content .item{width:229px; background:#fff; margin:0 0 12px; padding-top:11px}
 	.no-boxshadow .content .item{width:227px; border:solid 1px #cfd9ce}
