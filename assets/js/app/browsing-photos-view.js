@@ -95,6 +95,7 @@ $(function(){
         viewImg: function(event){
             event.preventDefault();
             imgElem = $(event.currentTarget).closest('.item-photo');
+            view = this;
 
             // если не нужно перемещать фотки снизу вверх и сверху вниз
             if ( $(imgElem).hasClass('just-redraw-big') ) {
@@ -144,7 +145,8 @@ $(function(){
 
                     elemsArr = elemsArr.add(imgElem);
                     elemsArr = elemsArr.add( $(imgElem).nextAll().slice(0, divsForward) );
-                    $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( elemsArr );
+
+                    $(view.el).find(view.upwardPhotos).append( elemsArr );
                 }
                 this.addJustRedrawBigClass();
                 $(imgElem).find('a').click();
