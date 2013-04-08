@@ -418,7 +418,7 @@ $(function(){
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
                 columnWidth: 241,
-                isFitWidth: true
+                //isFitWidth: true
             });
             $(this.el).masonry( 'reload' );
 
