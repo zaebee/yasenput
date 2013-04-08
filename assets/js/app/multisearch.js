@@ -22,7 +22,23 @@ $(function() {
     multisearch_points_tmpl = _.template($('#multisearch-points-template').html());
     multisearch_users_tmpl = _.template($('#multisearch-users-template').html());
     multisearch_tags_tmpl = _.template($('#multisearch-tags-template').html());
+    $('.clear-input').click(function(){
+       $('.label-fields .label').not('.label-add').remove();
+        window.multisearch_result = {
+            places: [],
+            points: [],
+            tags: [],
+            users: []
+        }
 
+        window.multisearch_data = {
+            places: [],
+            points: [],
+            tags: [],
+            users: []
+        };
+        window.currentPoints.setURL().fetch();
+    })
 //   $("#multisearch-text").oninput = update_multisearch;
 });
 
