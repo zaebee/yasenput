@@ -69,7 +69,7 @@ $(function(){
                 console.log('zeroTag:',zeroTag.get('icons'));
             }
 
-            
+
             this.ratingCount();
             return this;
         },
