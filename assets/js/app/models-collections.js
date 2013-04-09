@@ -100,13 +100,13 @@ $(function(){
                 };
                 errors.push(error);
             }
-            if( $.trim( this.get('description') ) == '' ) {
-                error = {
-                    'field': 'description',
-                    'msg': 'Обязательное поле'
-                };
-                errors.push(error);
-            }
+//            if( $.trim( this.get('description') ) == '' ) {
+//                error = {
+//                    'field': 'description',
+//                    'msg': 'Обязательное поле'
+//                };
+//                errors.push(error);
+//            }
 
             requiredTag = this.get('tags_collection').find(function(tag){
                 return tag.get('required') == true;
