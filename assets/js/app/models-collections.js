@@ -427,11 +427,6 @@ $(function(){
         },
         redrawOnMap: function(clusterer){
             console.log('%%> redrawOnMap');
-            $(this.el).masonry({
-                itemSelector: 'article.item',
-                columnWidth: 241,
-                //isFitWidth: true
-            });
             collection = this;
 
             clusterer.removeAll();
