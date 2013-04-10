@@ -323,9 +323,14 @@ class PointsList(PointsBaseView):
             #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
             file_debug=open('file.txt','w')
-            file_debug.write(str(collectionsreq.values_list('id', 'likes_count')))
+            
+            points_fields_list = pointsreq.values_list('id','likeusers')
+            points_by_user_fields_list = copypointsreq.values_list('id')
+            collections_fields_list = collectionsreq.values_list('id')
+            file_debug.write(str(points_fields_list))
+            file_debug.write(str(points_by_user_fields_list))
+            file_debug.write(str(collections_fields_list))
             file_debug.close()
-
             user = form.cleaned_data.get("user")
             if user:
                 pointsreq = pointsreq.filter(author__id=user)

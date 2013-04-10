@@ -24,4 +24,3 @@ class Collections(models.Model):
         return self.likeusers.count()
 
     likes = property(_likes)
-    
