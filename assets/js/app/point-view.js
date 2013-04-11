@@ -3,7 +3,7 @@ $(function(){
     PointView = Backbone.View.extend({
         tagName: 'article',
         className: 'item item-place',
-        template: _.template($('#point-template').html()),
+        template: _.template($('#collection-template').html()),
         // photos_place_selector: '#tab-photos-place>div',
         initialize: function() {
             _.bindAll(this, 'render');
@@ -38,6 +38,7 @@ $(function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
             this.$el.attr( 'data-point-id', this.model.get('id') );
+            console.log(this.$el.html(content))
             return this;
         },       
         detailPlace:function(event){

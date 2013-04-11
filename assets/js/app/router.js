@@ -1,12 +1,12 @@
 // var Router;
 $(function(){
     window.pointsArr = [];
-    //window.collectionsArr = [];
+    window.collectionsArr = [];
     Router = Backbone.Router.extend({
         routes:{
             "":"main",
-            "detailpoint/:point":"detailPoint",
-            "tag/*tag(/z/:point)":"test"
+            "detailpoint/:ppoint":"detailPoint",
+            "tag/*tag(/z/:ppoint)":"test"
         },
         main:function(){
             console.log('Rounter: main');
@@ -16,27 +16,27 @@ $(function(){
                     return point.get('YPscore') * (-1);
                 }
             });
-            //window.collectionsPop = new Collections([], {
-            //    comparator: function(collection){
-            //       return collection.get('YPscore') * (-1);
-            //    }
-            //});
+            window.collectionsPop = new CollectionPoints([], {
+                comparator: function(collection){
+                   return collection.get('YPscore') * (-1);
+                }
+            });
             window.pointsPop.map = window.myMap;
             window.pointsPop.elSelector = '#content section#tab-popular';
-            //window.collectionsPop.elSelector = '#content section#tab-popular';
+            window.collectionsPop.elSelector = '#content section#tab-popular';
             window.pointsPop.content = 'popular';
-            //window.collectionsArr['popular'] =  window.collectionsPop;
-            //window.collectionsPop.content = 'popular';
+            window.collectionsArr['popular'] =  window.collectionsPop;
+            window.collectionsPop.content = 'popular';
             window.pointsArr['popular'] =  window.pointsPop;
             window.pointsNew = new Points();
-            //window.collectionsNew = new Collections();
+            window.collectionsNew = new CollectionPoints();
             window.pointsNew.map = window.myMap;
             window.pointsNew.elSelector = '#content section#tab-new';
-            //window.collectionsNew.elSelector = '#content section#tab-new';
+            window.collectionsNew.elSelector = '#content section#tab-new';
             window.pointsNew.content = 'new';
-            //window.collectionsNew.content = 'new';
+            window.collectionsNew.content = 'new';
             window.pointsArr['new'] = window.pointsNew;
-            //window.collectionsArr['new'] = window.collectionsNew;
+            window.collectionsArr['new'] = window.collectionsNew;
 
             myMap.ready.then(function(){
                 $('header').find(".tabs").simpleTabs({
@@ -49,17 +49,18 @@ $(function(){
                         console.log('window.pointsArr: ', window.pointsArr);
                         if( window.pointsArr[collection].loaded == false ) {
                             window.pointsArr[collection].setURL().fetch();
+                            window.collectionsArr[collection].setURL().fetch();
                         }
 
 
-                        window.pointsArr.current = window.pointsArr[collection];
-                        //window.collectionsArr.current = window.collectionsArr[collection];
-                        window.currentPoints = window.pointsArr[collection];
-                        //window.currentCollections = window.collectionsArr[collection];
-                        window.loadingNow = false;
+                        //window.pointsArr.current = window.pointsArr[collection];
+                        window.collectionsArr.current = window.collectionsArr[collection];
+                        //window.currentPoints = window.pointsArr[collection];
+                        window.currentCollectionPoints = window.collectionsArr[collection];
+                        //window.loadingNow = false;
                         //window.collectionsArr[collection].render().fetch();
                         console.log('window.pointsArr: ', window.pointsArr);
-                        //console.log('window.collectionArr: ', window.collectionsArr);
+                        console.log('window.collectionArr: ', window.collectionsArr);
                     }
                 });
                 // console.log('Router: myMapReady!');
@@ -67,7 +68,7 @@ $(function(){
             });
 
             // points.fetch();
-            // window.App.setCollection(Points);
+            // window.App.setCollectionPoint(Points);
             // window.App.render();
             return false;
         },
@@ -81,7 +82,7 @@ $(function(){
 
 
 
-            //window.App.setCollection(Points);
+            //window.App.setCollectionPoint(Points);
             //window.App.render();
             //window.YPApp.pppp(point);
             //return false;

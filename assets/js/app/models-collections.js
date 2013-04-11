@@ -295,6 +295,7 @@ $(function(){
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
+                //alert(pin.el);
                 self.el.append(pin.render().el);
             });
 
