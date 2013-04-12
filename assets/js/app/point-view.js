@@ -3,7 +3,7 @@ $(function(){
     PointView = Backbone.View.extend({
         tagName: 'article',
         className: 'item item-place',
-        template: _.template($('#collection-template').html()),
+        template: _.template($('#point-template').html()),
         // photos_place_selector: '#tab-photos-place>div',
         initialize: function() {
             _.bindAll(this, 'render');

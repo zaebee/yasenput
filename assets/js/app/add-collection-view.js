@@ -45,7 +45,7 @@ $(function(){
     });
     window.AddCollectionView = AddCollectionView;
 
-    CollectionView = Backbone.View.extend({
+    CollectionDetailView = Backbone.View.extend({
         tagName: 'div',
         template: _.template($('#new-collection-template').html()),
         initialize: function() {
@@ -57,5 +57,5 @@ $(function(){
         }
 
     });
-    window.CollectionView = CollectionView;
+    window.CollectionDetailView = CollectionDetailView;
 });

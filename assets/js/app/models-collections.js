@@ -289,9 +289,10 @@ $(function(){
             this.loaded = true;
             console.log('++> render points');
             console.log('this: ', this);
-
+            console.log('points elSelector ->>', $(this.elSelector))
             this.el = $(this.elSelector);
-            $(this.el).empty();
+            //$(this.el).empty();
+            console.log('this -->', this.el);
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});

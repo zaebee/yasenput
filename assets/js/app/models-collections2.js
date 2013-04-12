@@ -66,6 +66,7 @@ $(function(){
             this.url = '/points/list/'+this.page +
                         '?content='+this.content+
                         this.tagStr;
+            console.log('content ' + this.content);
             return this;
         },
         render: function(){
@@ -75,16 +76,17 @@ $(function(){
             console.log('this url: ', this.url);
 
 
-            console.log('elSelector collections = ' + $(this.elSelector));
+            console.log('elSelector collections = ', $(this.elSelector));
+            this.el = $(this.elSelector);
             //$(this.el).empty();
             var self = this;
-            console.log('smsms');
+            console.log('self -->', self);
             this.each(function( item ) {
                 var pin = new CollectionView({model:item});
                 //alert(pin.el);
-                console.log(pin);
-                console.log('pin render append' + pin.el);
-                self.el.append(pin.el);
+                console.log(pin.el);
+                console.log('pin render append', self.el);
+                self.el.append(pin.render().el);
             });
 
             $(this.el).masonry({ 

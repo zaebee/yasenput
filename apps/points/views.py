@@ -71,9 +71,12 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130'], 
-                                                    'limit': 4
-                                                    }, 
+                                           'points': {'fields': ['imgs'],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                    'limit': 4},
+                                                        },
+                                                    },
+                                            
                                            })          
     
     def getPointsSelect(self, request):
@@ -126,9 +129,12 @@ class PointsBaseView(View):
             collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
         else:
             collections_isliked = "select 0"   
-        args = {"select": {
+        args = {
+                "tables": ["main_points"],
+                "select": {
                       "isliked": collections_isliked,
                       "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
+                      #"imgs": 'SELECT count(*) from main_points',
                     }
             }
         return args
