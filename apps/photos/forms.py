@@ -10,3 +10,8 @@ class PhotosForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(PhotosForm, self).clean()
         return cleaned_data
+
+class IdForm(forms.Form):
+    id = forms.IntegerField(required=True)
+    page = forms.IntegerField(required=False)
+    

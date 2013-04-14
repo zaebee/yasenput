@@ -73,9 +73,11 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 	}
 })(jQuery);
 
+var multySearch;
 
 jQuery(function($){
-	var multySearch = {
+	multySearch = {
+	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
 						<button class="remove-label"></button>\
@@ -231,27 +233,121 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
-            console.log('onClickDrop');
+            console.log('onClickDrop')
+            window.currentPoints.page = 1;
+            window.currentPoints.setURL().fetch();
 			var clsName = '';
 			
+			text_labels = [];
+			
+			// places labels
 			if(me.closest(".item-place").length){
 				clsName = ' label-place';
-			} else if (me.closest(".item-name").length){
+				
+				// clear _result array (only one place can be added)
+				multisearch_result.places.length = 0;
+				
+				// delete all current places labels
+				$(".label-fields").children(".label-place").remove();
+				
+				split_labels = me.text().split(",");
+				
+				i = 0;
+				_.each(split_labels, function(label) { 
+				                multisearch_result.places.push(label);
+				                text_labels.push({
+				                    text: label,
+				                    id: i,
+				                    type: "place"
+				                });
+				                i++;
+				              });
+
+                var myGeocoder = ymaps.geocode(me.text());
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    },
+                    function (err) {
+                        alert('Ошибка');
+                    }
+                );
+			}
+			// points labels
+			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-			} else if (me.closest(".item-users").length){
+
+                multisearch_result.points.length = 0;
+                $(".label-fields").children(".label-name").remove();
+				id = multisearch_data.points[me.data("id")].id;
+				name = multisearch_data.points[me.data("id")].name;
+				// add only one instance of point
+				if (multisearch_result.points.indexOf(name) != -1)
+				{
+				    return;
+				}
+                console.log('onClickDrop name');
+				multisearch_result.points.push(name);
+
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.points.length-1,
+				                type: "point"
+				                });
+			}
+			// users labels
+			else if (me.closest(".item-users").length){
+			    // can add only ine user
+			    if (multisearch_result.users.length > 0)
+			    {
+			        return;
+			    }
 				clsName = ' label-user';
+				
+				id = multisearch_data.users[me.data("id")].id;
+				multisearch_result.users.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id:multisearch_result.users.length-1,
+				                type: "user"
+				                });
+			}
+			// tags labels
+			else if (me.closest(".item-labels").length){
+				clsName = ' label-label';
+				
+				label_id = me.data("id")
+				id = multisearch_data.tags[label_id].id;
+				
+				// add only one instance of tag
+				if (multisearch_result.tags.indexOf(id) != -1)
+				{
+				    return;
+				}
+				multisearch_result.tags.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.tags.length-1,
+				                type: "tag"
+				                });
 			}
 			
 			$(self.p.labelAdd).show();
 			
-			var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', me.text());
-			$(label).insertBefore($(self.p.labelAdd));
+			_.each(text_labels, function(txt_label) {
+			        var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', txt_label.text);
+			        added_label = $(label).insertBefore($(self.p.labelAdd));
+			        $(added_label).data("id", txt_label.id);
+			        $(added_label).data("type", txt_label.type);
+			});
 			
 			self.hideDropField();
 		},
 		
 		init: function(params){
-			var me = this;
+			me = this;
 			me.p = params;
 			
 			me.setWidthInput();
@@ -290,7 +386,15 @@ jQuery(function($){
 					me.hideDropField();
 				}
 			});
+		},
+		reinit_click: function() {
+                console.log('reinit_click')
+    			$("a", me.p.dropRoot).click(function(e){
+				e.preventDefault();
+				me.onClickDrop($(this), me);
+			});
 		}
+		
 	};
 	window.multySearch = multySearch;
 	var searchAuth = $.extend({}, multySearch);
@@ -317,7 +421,50 @@ jQuery(function($){
 	});
 	
 	$(".label-fields").delegate(".remove-label", "click", function(e){
-		$(this).parents(".label").remove();
+        console.log('delete');
+
+	    id = $(this).parents(".label").data("id");
+	    type = $(this).parents(".label").data("type");
+
+        // delete item from array
+	    switch (type) {
+	        case "point": {
+	            multisearch_result.points.splice(id, 1);
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	        case "place": {
+	            // for place delete all labels of this type which are to the right of current
+	            multisearch_result.places.splice(id, multisearch_result.places.length - id);
+//                window.myMap
+                console.log('Костыль: ',multisearch_result.places);
+	            _.each($(this).parents(".label-fields").children(".label-place"), function(label) {
+		            lab_id = $(label).data("id");
+		            if (lab_id >= id) {
+		                $(label).remove();
+		            }
+		       });
+                var myGeocoder = ymaps.geocode(multisearch_result.places.join(','));
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    }
+                );
+	            break;
+	        }
+	        case "user": {
+	            multisearch_result.users.splice(id, 1);
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	        case "tag": {
+	            multisearch_result.tags.splice(id, 1);
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	    }
+        window.currentPoints.setURL().fetch();
+
 	});
 	
 	$(".drop-search ul").hover(function(){
@@ -399,10 +546,26 @@ jQuery(function($){
 			}
 		} else if ($(e.target).closest("#footer").length){
 			$("body").toggleClass("hide-footer");
+			$(".a-up").toggleClass("a-up-toggle");
 		}
 	});
-	
+
+    $(".a-up").click(function(e){
+        e.preventDefault();
+
+        $("html, body").animate({
+            scrollTop: 0
+        });
+    });
+
 	$(window).scroll(function(){
+
+        if($(window).scrollTop() > 65){
+            $(".a-up").show();
+        } else {
+            $(".a-up").hide();
+        }
+
 		var scrollTop = $(window).scrollTop(),
 			top = scrollTop <= 370 ? scrollTop : 370;
 		
@@ -994,7 +1157,7 @@ jQuery(function($){
         }
     };*/
 	
-	if($(".private").length || $(".a-enter").length){
+/*	if($(".private").length || $(".a-enter").length){
 		$(".private .a-edit, #header .a-enter").click(function(e){
 			e.preventDefault();
 			
@@ -1010,7 +1173,7 @@ jQuery(function($){
 				}
 			});
 		});
-	}
+	}*/
 	
 //	if($(".top-panel .btn-place").length || $(".top-panel .btn-event").length){
 //		$(".top-panel .btn-place, .top-panel .btn-event").click(function(e){

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm
-from apps.main.models import Points
 from django import forms
 
 

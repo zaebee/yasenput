@@ -17,9 +17,63 @@ $(function(){
 			// tags:0,
 	  //       feedbacks:0
         },
+        idAttribute: 'compositeId',
         initialize: function() {
             // console.log('+++ point initialize!');
-            // this.bind('invalid', this.validationFailed, this);
+            // задаём составной id, чтобы он был уникальным
+
+            var compositeId = this.get('id') + '_' + this.get('id_point');
+            if( this.get('id') != undefined ) {
+                this.set( { compositeId: compositeId } );    
+            }            
+            // узнаём, являемся ли мы автором этой точки
+            if(this.get('author') != undefined) {
+                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    this.set({ismine: 1});
+                } else {
+                    this.set({ismine: 0});
+                }
+            }
+            // создаём коллекции фоток
+            photos_create = new window.YPimages();
+            photos_create.isminePoint = this.get('ismine');
+            this.set( {photos_create: photos_create} );
+
+            photos_pop = new window.YPimages( this.get('imgs') );
+            photos_pop.isminePoint = this.get('ismine');
+            this.set( {photos_pop: photos_pop} );
+
+            photos_new = new window.YPimages();
+            photos_new.isminePoint = this.get('ismine');
+            this.set( {photos_new: photos_new} );
+
+            // this.set( {photos_create: new window.YPimages(  )} );
+            // this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
+            // this.set( {photos_new: new window.YPimages()} );
+
+            // коллекция тегов
+            this.set( {tags_collection: new window.Tags(this.get('tags'))} );
+
+            // коллекция ближайщих точек
+            nearPoints = new window.NearPoints();
+            nearPoints.elSelector = '#near-objects>ol';
+            nearPoints.thisPoint = this;
+            this.set( {near_points: nearPoints} );            
+            
+            // узнаём иконку этой точки
+            if(this.get('tags_collection').length > 0) {
+                zeroTag = this.get('tags_collection').find(function(tag){
+                    return tag.get('level') == 0;
+                });
+                this.set({icon: zeroTag.get('icons')});
+                console.log('zeroTag:',zeroTag.get('icons'));
+            }
+
+            
+            this.ratingCount();
+            return this;
+        },
+        ratingCount: function(){
             // расчитываем рейтинг точки
             likes_count = parseInt( this.get('likes_count'), 10);
             beens_count = parseInt( this.get('beens_count'), 10);
@@ -28,12 +82,6 @@ $(function(){
             reviewusersminus = parseInt( this.get('reviewusersminus'), 10);
 
             this.set( {YPscore: likes_count + beens_count + collections_count + reviewusersplus - reviewusersminus } );
-
-            // создаём коллекции фоток
-            this.set( {photos_create: new window.YPimages()} );
-            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
-            this.set( {photos_new: new window.YPimages()} );           
-            this.set( {tags: new window.Tags()} );
         },
         ckeckValid: function(){
             console.log('validate this: ', this);
@@ -52,13 +100,33 @@ $(function(){
                 };
                 errors.push(error);
             }
-            if( $.trim( this.get('description') ) == '' ) {
+//            if( $.trim( this.get('description') ) == '' ) {
+//                error = {
+//                    'field': 'description',
+//                    'msg': 'Обязательное поле'
+//                };
+//                errors.push(error);
+//            }
+
+            requiredTag = this.get('tags_collection').find(function(tag){
+                return tag.get('required') == true;
+            });
+            if( typeof requiredTag != 'object' ) {
                 error = {
-                    'field': 'description',
-                    'msg': 'Обязательное поле'
+                    'field': 'tags',
+                    'msg': 'Не выбран обязательный тег'
                 };
-                errors.push(error);
+                errors.push(error);   
             }
+
+            if( this.get('photos_create').length == 0 ) {
+                error = {
+                    'field': 'photos',
+                    'msg': 'Нужно загрузить хотя бы одну фотку'
+                };
+                errors.push(error);   
+            }
+
             // TODO: обязательно должна быть хотя бы одна метка из обязательных меток
             if(errors.length > 0) {
                 return errors;
@@ -67,17 +135,18 @@ $(function(){
         validationFailed: function(errors){
             console.log('validation failed error: ', errors);
             _.each(errors, function(error){
-                var $field = $(window.currentPointPopup.el).find('input[data-key="'+error.field+'"]');
+                var $field = $(window.currentPointPopup.el).find('[data-key="'+error.field+'"]');
                 $field.addClass('validation-error');
                 // TODO: всплывающий тултип чтоб работал
                 // $field.attr('data-tooltip', error.msg);
             });
         },
         sync:  function(method, model, options) {
-            // console.log('Sync!');
-            // console.log('method: ', method);
-            // console.log('model: ', model);
-            // console.log('options: ', options);
+            console.log('Sync!');
+            console.log('method: ', method);
+            console.log('model: ', model);
+            console.log('options: ', options);
+
             console.wait = true;
             switch (method) {
                 case "create":
@@ -91,21 +160,21 @@ $(function(){
                         case 'saveNew':
                             console.log('===> save new point!');
                             // return;
-                            options.type = 'GET';
+                            options.type = 'POST';
                             options.url = model.url + '/add';
                             options.data = 'name='+model.get('name');
                             options.data += '&address='+model.get('address');
                             options.data += '&description='+model.get('description');
 
-                            model.get('tags').each(function(tag){
+                            model.get('tags_collection').each(function(tag){
                                 if(tag.get('isnew') != true) {
-                                    options.data += '&tag[]='+tag.get('id');
+                                    options.data += '&tags[]='+tag.get('id');
                                 } else {
-                                    options.data += '&tag[]='+tag.get('name');
+                                    options.data += '&tags[]='+tag.get('name');
                                 }
                             });
                             model.get('photos_create').each(function(img){
-                                options.data += '&img[]='+img.get('id');
+                                options.data += '&imgs[]='+img.get('id');
                             });
                             options.data += '&longitude='+model.get('longitude');
                             options.data += '&latitude='+model.get('latitude');
@@ -116,15 +185,51 @@ $(function(){
 
                 case "update":
                     options.type = 'POST';
+                    // console.log('SYNC: update');
                     switch (options.action) {
                         case 'like':
+                            // console.log('SYNC: like this photo!');
+                            console.log('SYNC: update this point!');
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
-                            // options.data = 'point_id='+model.get('point_id');
+                            options.data += '&id_point='+model.get('id_point');
                             break;
-                    };
+
+                        case 'update':
+                            options.url = model.url + '/editbyuser';
+                            // options.type = 'GET';
+                            // options.url = model.url + '/edit';
+                            options.data = 'id='+model.get('id');
+                            options.data += '&description='+model.get('description');
+                            model.get('photos_create').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            model.get('photos_pop').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            // TODO: choose main photo
+                            // options.data += '&main_img='+model.get('description');
+                            break;
+
+                        case 'share':
+                            options.url = model.url + '/addbyuser';
+                            // options.type = 'GET';
+                            // options.url = model.url + '/edit';
+                            options.data = 'id='+model.get('id');
+                            options.data += '&description='+model.get('description');
+                            model.get('photos_create').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            model.get('photos_pop').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            // TODO: choose main photo
+                            // options.data += '&main_img='+model.get('description');
+                            break;
+                    
+                    }
                     break;
-            };
+            }
             console.log('options', options);
             return Backbone.sync(method, model, options);
         },
@@ -153,11 +258,20 @@ $(function(){
                     action: 'saveNew', 
                     success: function(model, response, options) {
                         console.log('SUCCESS!');
+                        console.log('model: ', model);
+
+                        console.log('response: ', response);
+                         // new window.Point( response[0] );
+                        // points.add(model).render();
+                        // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
+                        window.currentPoints.addPrepend( new window.Point( response[0] ) );
+                        $('.scroll-box').click();
                         // _.each(response, function(item){
                         //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
                         // });
                     },
                     error: function (model, response, options) {
+                        //  TODO обработка ошибки
                         console.log('ERROR!');
                         alert(status);
                     },
@@ -168,108 +282,331 @@ $(function(){
             }
         },
         like: function(options){
+            console.log('like this photo');
+            console.log('this: ', this);
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
+        },
+        update: function(options){
+            console.log('update');
+            point = this;
+
+            // TODO: validate point
+            // errors = this.ckeckValid();
+            // if(errors == null) {
+                this.save({}, {
+                    // wait: true,
+                    action: 'update', 
+                    success: function(model, response, options) {
+                        console.log('SUCCESS!');
+                        console.log('model: ', model);
+
+                        console.log('response: ', response);
+                        // point.set({response[0]}).initialize();
+                        
+                        // TODO:
+                        // uodate model on client from server response
+                        $('.scroll-box').click();
+                    },
+                    error: function (model, response, options) {
+                        //  TODO обработка ошибки
+                        console.log('ERROR!');
+                        alert(status);
+                    },
+                });   
+            // } else {
+            //     console.log('validation errors:', errors);
+            //     this.validationFailed(errors);
+            // }
+        },
+        share: function(options){
+            console.log('share');
+
+            // TODO: validate point
+            // errors = this.ckeckValid();
+            // if(errors == null) {
+                this.save({}, {
+                    // wait: true,
+                    action: 'share', 
+                    success: function(model, response, options) {
+                        console.log('SUCCESS!');
+                        console.log('model: ', model);
+
+                        console.log('response: ', response);
+                         // new window.Point( response[0] );
+                        // points.add(model).render();
+                        // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
+                        window.currentPoints.addPrepend( new window.Point( response[0] ) );
+                        $('.scroll-box').click();
+                        // _.each(response, function(item){
+                        //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
+                        // });
+                    },
+                    error: function (model, response, options) {
+                        //  TODO обработка ошибки
+                        console.log('ERROR!');
+                        alert(status);
+                    },
+                });   
+            // } else {
+            //     console.log('validation errors:', errors);
+            //     this.validationFailed(errors);
+            // }
         }
     });
     Points = Backbone.Collection.extend({
         model: Point,
         // view:PointView,
-        el: $('.content'),
+        // el: $('#content section.items'),
         url:'/points/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
         // ready: $.Deferred(),
+        loaded: false, // флаг на то, была ли это коллекция загруженна (т.е. делали ли fetch хоть раз)
         initialize: function(){
+            _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
+            this.bind('add', this.addAppend, this);
         },
         parse: function(response) {
             return response.points;
         },
         setURL: function(){
+            this.tags = window.multisearch_result.tags;
+            this.user_id = window.multisearch_result.users;
+            this.name = window.multisearch_result.points;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
             this.user_id = (this.user_id != null) ? this.user_id : '';
+            
+            tagStr = '';
+            _.each(this.tags, function(tag){
+                tagStr += '&tags[]=' + tag
+            });
+            if(tagStr != ''){
+                this.tagStr = tagStr;    
+            } else {
+                this.tagStr = '';
+            }
 
             // TODO: поиск по тегам!
-        	bounds = myMap.getBounds();
+        	bounds = this.map.getBounds();
         	this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
         	this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
         	this.url = '/points/list/'+this.page +
         				'?content='+this.content+
         				'&coord_left='+this.coord_left+
         				'&coord_right='+this.coord_right+
-                        '&user_id='+this.user_id;
+                        '&user_id='+this.user_id+
+                        '&name='+this.name+
+                        this.tagStr;
         	return this;
         },
         render: function(){
+            this.loaded = true;
+            console.log('++> render points');
+            console.log('this: ', this);
+
+            this.el = $(this.elSelector);
+            $(this.el).empty();
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
                 self.el.append(pin.render().el);
             });
-            // this.ready.resolve();
+
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
-                columnWidth: 241 
+                columnWidth: 241,
+                //isFitWidth: true
             });
-            // $(this.el).mansory({
-            //     itemSelector: '',
-            //     columnWidth: 229
+            $(this.el).masonry( 'reload' );
+
+            this.redrawOnMap(window.clusterer);
+            return this;
+        },
+        redrawOnMap: function(clusterer){
+            console.log('%%> redrawOnMap');
+            collection = this;
+
+            clusterer.removeAll();
+            var myGeoObjectsArr = [];
+            var pointsOnMap = [];
+
+            // console.log('all points: ');
+            // this.each(function(point){
+            //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
             // });
-            return self;
-        },
-        // mapCoords:function(){
-        //     //return window.YPApp.mapCoords();
-        //     //return window.myMap.getBounds();
-        //     return 'dgdg';
-        // },
-        // setURL:function(){
-        //     console.log(window.YPApp.mapBounds());
-        //     this.url = '/points/list/'+window.page +'?content='+window.content+'&coord_left='+window.YPApp.mapBounds().left+'&coord_right='+window.YPApp.mapBounds().right
-        // },
-        reload: function(){
-            var self = this;
-            var options = ({
-                error:function(){
-                    console.log('Ошибка обновления записей!');
-                },
-                success: function(){
-                   // myMap.geoObjects.add(pointCollection);
-                    // self.trigger('change');
+
+            rejectedPoints = [];
+
+            // Показ на карте значков только популярных точек из одинаковых
+            this.each(function(point){
+                // console.log('this id: ', point.get('id'));
+                var id = point.get('id');
+                findedPoint = collection.find(function(point){
+                    // console.log('this id_point: ', point.get('id_point'))
+                    return id == point.get('id_point')
+                });     
+                // console.log('findedPoint: ', findedPoint);   
+                // console.log('(typeof findedPoint): ', (typeof findedPoint));
+                if ((typeof findedPoint) == 'object') {
+                    // console.log('concurented point 1: [id: ' + point.get('id') + '; ' + point.get('id_point') + ']');
+                    // console.log('concurented point 2: [id: ' + findedPoint.get('id') + '; ' + findedPoint.get('id_point') + ']');
+                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
+                        rejectedPoints.push(point);
+                    } else {
+                        rejectedPoints.push(findedPoint);                        
+                    }
                 }
-            });
-            self.setURL();
-            self.fetch(options);
-        },
-        fetchPointComments: function(point){
-            self = this;
-            pointComments = new window.PointComments();
-            point.set({pointComments: pointComments});
-            pointComments.fetch({
-                data: {
-                    object_id: point.get('id'),
-                    object_type: 12
-                },
-                success: function(collection, response, options){
-                    console.log('fetchPointComments '+point.get('id')+' success');
-                    self.trigger('fetchPointComments', point);
-                } 
+                // console.log('=============');
+                return ((typeof findedPoint) == 'object');
             });
 
-            console.log('fetch the comments!');
+            // Фильтруем точки с одинаковыми координатами
+            console.log('longitude latitude check');
+            this.each(function(point){
+                var point_id;
+                if (point.get('id_point') == 0){
+                    point_id = point.get('id');
+                }else{
+                    point_id = point.get('id_point');
+                }
+                //if ($.inArray(point_id, pointsOnMap) != -1){
+                if (point.get('id_point') === 0){ //временно !!!
+                    placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                            id: point.get('id')+'_'+point.get('id_point')
+                        }, {
+                            iconImageHref: '/'+point.get('icon'), // картинка иконки
+                            iconImageSize: [32, 36], // размеры картинки
+                            iconImageOffset: [-16, -38] // смещение картинки
+                    });
+                placemark.events.add('mousedown', function(event){
+                    pointId = event.originalEvent.target.properties.get('id');
+                    $('[data-point-id="'+pointId+'"] .a-photo').click();
+                });
+                    myGeoObjectsArr.push(placemark);
+                }
+                if (point.get('id_point') == 0){
+                    pointsOnMap.push(point.get('id'));
+                }else{
+                    pointsOnMap.push(point.get('id_point'));
+                }
+
+            });
+
+            clusterer.add( myGeoObjectsArr );
+        },
+        loadNextPage: function(){
+            collection = this;
+            console.log('loadNextPage');
+            this.page++;
+            jqXHR = this.setURL().fetch({add: true});
+            jqXHR.done(function(data, textStatus, jqXHR){
+                if( data.points.length > 0 ) {
+                    collection.redrawOnMap(window.clusterer);
+                    window.loadingNow = false;
+                }
+                //  else {
+                //     collection.page--;
+                // }
+            });
+        },
+        addPrepend: function(model){
+            this.add(model, {silent: true});
+            var pin = new PointView({model:model});
+            this.el.prepend(pin.render().el);
+            $(this.el).masonry( 'reload' );
+            this.redrawOnMap(window.clusterer);
+        },
+        addAppend: function(model){
+            var pin = new PointView({model:model});
+            $(this.el).prepend(pin.render().el);
+            $(this.el).masonry( 'appended', $(pin.render().el), true );
         }
+        // reload: function(){
+        //     var self = this;
+        //     var options = ({
+        //         error:function(){
+        //             console.log('Ошибка обновления записей!');
+        //         },
+        //         success: function(){
+        //            // myMap.geoObjects.add(pointCollection);
+        //             // self.trigger('change');
+        //         }
+        //     });
+        //     self.setURL();
+        //     self.fetch(options);
+        // },
+        // fetchPointComments: function(point){
+        //     self = this;
+        //     pointComments = new window.PointComments();
+        //     point.set({pointComments: pointComments});
+        //     pointComments.fetch({
+        //         data: {
+        //             object_id: point.get('id'),
+        //             object_type: 12
+        //         },
+        //         success: function(collection, response, options){
+        //             console.log('fetchPointComments '+point.get('id')+' success');
+        //             self.trigger('fetchPointComments', point);
+        //         } 
+        //     });
+
+        //     console.log('fetch the comments!');
+        // }
     });
 	window.Point = Point;
-    window.points = new Points();
+
+    NearPoints = Points.extend({
+        template: _.template( $('#near-point').html() ),
+        initialize: function(){
+            _.bindAll(this, 'render');
+        },
+        parse: function(response){
+            response = response.points;
+            // thisPoint = this.thisPoint;
+            if( this.thisPoint.get('id_point') == 0 ) {
+                motherId = this.thisPoint.get('id');
+            } else {
+                motherId = this.thisPoint.get('id_point');
+            }
+
+            console.log('motherId: ', motherId);
+            
+            var newResponse = _.reject(response, function(point){
+                if( point.id_point == 0 ) {
+                    return ( point.id == motherId )
+                } else {
+                    return ( point.id_point == motherId )    
+                }
+            });
+            console.log('newResponse: ', newResponse);
+            return newResponse;
+        },
+        render: function(){
+            this.loaded = true;
+            console.log('++> render NEAR points');
+            console.log('this: ', this);
+            console.log('this.popupMap.geoObjects: ', this.popupMap.geoObjects);
+
+            this.el = $(this.elSelector);
+            $(this.el).empty();
+            var self = this;
+            this.each(function( item ) {
+                self.el.append( self.template( item.toJSON() ) );
+            });
+            this.redrawOnMap( this.clusterer );
+
+            return this;
+        }
+    });
+    window.NearPoints = NearPoints;
 
     YPimage = Backbone.Model.extend({
         url: '/photos',
         sync:  function(method, model, options) {
             console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
@@ -289,20 +626,90 @@ $(function(){
                             break;
                     };
                     break;
-                // case "update":
-                //     options.url = model.url + '/'
-                //     break;
-                // case "delete":
-                //     options.url = model.url + '/del'
-                //     options.type = 'POST';
+                case "update":
+                    // options.url = model.url + '/'
+                    switch (options.action) {
+                        // case 'addComment':
+                        //     console.log('===> YPimage addComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/add';
+                        //     options.data = 'object_id='+( model.get('id') );
+                        //     options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     options.data += '&txt='+options.txt;
+                        //     break;
+                        // case 'removeComment':
+                        //     console.log('===> YPimage removeComment!');
+                        //     options.type = 'POST';
+                        //     options.url = '/comments/del';
+                        //     options.data = 'id='+( options.commentId );
+                        //     // options.data += '&object_type=23';
+                        //     // options.data = 'photo='+( model.get('id') );
+                        //     // options.data += '&txt='+options.txt;
+                        //     break;
+                        
+                    };
+                    break;
+                case "delete":
+                    options.url = model.url + '/del'
+                    options.type = 'POST';
+                    options.data = 'id='+( model.get('id') );
+                    break;
             };
             return Backbone.sync(method, model, options);
+        },
+        initialize: function(){
+            // this.set( {comments: new window.Comments(this.get('comments'))} );
+//            console.log('++++++++++++++++++');
+//            console.log('this: ', this);
+//            console.log('this.collection: ', this.collection);
+//            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
+//            console.log('++++++++++++++++++');
+            // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
+            if(this.get('author').id == window.myId ) {
+                this.set({ismine: 1});
+            } else {
+                this.set({ismine: 0});
+            }
+            _.each( this.get('comments'), function(comment){
+                if(comment.author.id == window.myId) {
+                    comment.ismine = 1;
+                } else {
+                    comment.ismine = 0;
+                }
+            });
+            return this;
+        },
+        addComment: function(txt, options){
+            model = this;
+            jqXHR = $.ajax({
+                url: '/comments/add',
+                type: 'POST',
+                data: {
+                    photo: model.get('id'),
+                    // object_id: model.get('id'),
+                    // object_type: 23,
+                    txt: txt
+                }
+            });
+            // console.log('addComment: ', jqXHR);
+            return jqXHR;
+        },
+        removeComment: function(commentId, options){
+            jqXHR = $.ajax({
+                url: '/comments/del',
+                type: 'POST',
+                data: {
+                    id: commentId
+                }
+            });
+            // console.log('removeComment: ', jqXHR);
+            return jqXHR;
         }
     });
     YPimages = Backbone.Collection.extend({
         model: YPimage,
-        template: _.template($('#item-photo').html()),
-
+        template: _.template($('#photos-thumb').html()),
         initialize: function(models, options){
             // this.bind('reset', this.render, this);
             this.bind('add', this.addToDOM, this);
@@ -318,7 +725,15 @@ $(function(){
                 .find('.photo-loading')
                 .replaceWith( this.template(yp_image.toJSON()) );
         }
+
     });
+
+    Comment = Backbone.Model.extend({});
+    Comments = Backbone.Collection.extend({
+        model: Comment
+    });
+    window.Comment = Comment;
+    window.Comments = Comments;
 
     Label = Backbone.Model.extend({
         url: '/tags',    
@@ -330,6 +745,12 @@ $(function(){
     Labels = Backbone.Collection.extend({
         model: Label,
         url: '/tags',
+        parse: function(response){
+            response = _.reject(response, function(tag){
+                return tag.level == 0;
+            });
+            return response;
+        },
         sync:  function(method, model, options) {
             console.log('Sync Labels!');
             console.log('method: ', method);
@@ -340,8 +761,7 @@ $(function(){
                     switch (options.action) {
                         case 'load':
                             options.url = model.url + '/list';
-                            // options.data = 'content='+options.content;
-                            options.url = '/assets/fakedata/labels.json';
+                            options.data = 'content='+options.content;
                             options.type = 'GET';
                             break;
                         case 'search':

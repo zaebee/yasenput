@@ -8,40 +8,16 @@ $(function(){
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'likepoint');
-            var self = this;
-            //Point.bind("detailplace", self.detailPlace, self);
-
-            // TODO: отрисовка точки на карте
-            // Point.bind("detailPlace", self.detailPlace);
-
-            // if(!$('#tab-want').hasClass('active')){
-            //     var placemark = new ymaps.Placemark(
-            //         [ self.model.get('latitude'), self.model.get('longitude')],
-            //         {
-            //             balloonContentHeader: '<b>'+ self.model.get('name') +'</b>',
-            //             balloonContentBody:  self.model.get('description') +'<br />',
-            //             balloonContentFooter: 'Вологодская область, Вологда'
-            //         },
-            //         {
-            //             iconImageHref: 'assets/media/icons/place-none.png', // картинка иконки
-            //             iconImageSize: [22, 37], // размеры картинки
-            //             iconImageOffset: [-11, -37], // смещение картинки
-            //             draggable: false
-            //         }
-            //     )
-            //     pointCollection.add(placemark);
-            // }
         },
         events: {
             'click .yp-title, .yp-info': 'toggleYPinfo',
             'click .a-like': 'likepoint',
             'click .a-photo':"detailPlace",
             'click .a-collection':"addInCollection",
+            'click .a-edit-new': 'editPoint',
+            'click .a-share-new': 'sharePoint'
+
             // 'click .a-want':"wantvisit",
-                      
-            //'click .photo img':function(){
-            //    window.router.navigate("detailpoint/"+this.model.get('id'), {trigger: true, replace: true});
-            //}
         },
         toggleYPinfo: function(event) {
             $(event.currentTarget).toggle().siblings().toggle();
@@ -51,13 +27,9 @@ $(function(){
             console.log('like point: ', this.model.get('id'));
             view = this;
             this.model.like({
-                success: function(){
-                    $(view.el).find('.a-like').toggleClass('marked');
-                    if(view.model.get('isliked') == 0) {
-                        view.model.set({'isliked': 1});
-                    } else {
-                        view.model.set({'isliked': 0});
-                    }
+                success: function(model, response, options){
+                    model.set(response[0]).ratingCount();                    
+                    view.render();
                 },
                 error: function(){
 
@@ -67,17 +39,80 @@ $(function(){
         render:function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
-            this.$el.attr( 'data-point-id', this.model.get('id') );
+            this.$el.attr( 'data-point-id', this.model.get('compositeId') );
             return this;
+        },
+        editPoint: function(event){
+            event.preventDefault();
+            
+            editPointView = new window.EditPointView( { model: this.model} );
+            window.currentPointPopup = editPointView;
+            editPointView.render();
+
+            $(".scroll-box").find('#'+editPointView.id).remove();            
+            $(".scroll-box").append(editPointView.el);
+
+            var self = event.currentTarget;
+
+            var id = editPointView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
         },       
+        sharePoint: function(event){
+            event.preventDefault();
+
+            sharePointView = new window.SharePointView( { model: this.model} );
+            window.currentPointPopup = sharePointView;
+            sharePointView.render();
+
+            $(".scroll-box").find('#'+sharePointView.id).remove();            
+            $(".scroll-box").append( sharePointView.el );
+
+            var self = event.currentTarget;
+
+            var id = sharePointView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
+        },
         detailPlace:function(e){
             // window.newPoint = new window.Point();
             detailPointView = new window.DetailPointView( { model: this.model} );
             detailPointView.render();
+            detailPointView.thumbView = this;
             $(".scroll-box").find('#'+detailPointView.id).remove();            
             $(".scroll-box").append(detailPointView.el);
 
-            var self = event.currentTarget;
+            var self = e.currentTarget;
             // var addPoint = this.templateAdd();
             // $("#popups").remove();
             // $("#overlay").after(createPointView.render().el);

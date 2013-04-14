@@ -5,8 +5,8 @@ from apps.photos.views import PhotosList, PhotosAdd, PhotosDel, PhotosLike, Phot
 from apps.main.models import Points, Events
 
 urlpatterns = patterns('',
-    url(r'^point/(\d+)$', PhotosList.as_view(model=Points), name='photos_point_list'),
-    url(r'^event/(\d+)$', PhotosList.as_view(model=Events), name='photos_event_list'),
+    url(r'^point$', PhotosList.as_view(model=Points), name='photos_point_list'),
+    url(r'^event$', PhotosList.as_view(model=Events), name='photos_event_list'),
     url(r'^point/(\d+)/add$', PhotosAdd.as_view(model=Points), name='photos_point_add'),
     url(r'^event/(\d+)/add$', PhotosAdd.as_view(model=Events), name='photos_event_add'),
     url(r'^add$', PhotosAdd.as_view(), name='photos_add'),

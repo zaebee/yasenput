@@ -3,9 +3,10 @@ __author__ = 'art'
 
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
-from apps.main.models import Areas, Regions ,HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
+from apps.main.models import Areas, Regions, HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
 from apps.comments.models import Comments
 from apps.photos.models import Photos
+from apps.tags.models import Tags
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
 from django.http import HttpResponse
@@ -18,17 +19,9 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.conf import settings
 
-#class YpSerialiser(Serializer):
-#    def end_object( self, obj ):
-#        self._current['id'] = obj._get_pk_val()
-#        #todo Сделать виртуальные поля likes, visits
-#        self._current['likes'] = obj.likes
-#        self._current['visits'] = obj.visits
-#        self.objects.append(self._current)
-#        self._current = None
 
 class YpSerialiser(Serializer):
-    def end_object( self, obj ):
+    def end_object(self, obj):
         self._fields['id'] = obj._get_pk_val()
         #todo Сделать виртуальные поля likes, visits
         self._fields['likes'] = obj.likes
@@ -40,64 +33,51 @@ class YpSerialiser(Serializer):
         self.objects.append(self._fields)
         self._fields = None
         self._extras = None
-		
-#    def handle_m2m_field(self, obj, field):
-#        if field.rel.through._meta.auto_created:
-#            if self.use_natural_keys and hasattr(field.rel.to, 'natural_key'):
-#                m2m_value = lambda value: value.natural_key()
-#                self._current[field.name] = [m2m_value(related)
-#                                             for related in getattr(obj, field.name).iterator()]
-#            else:
-#                #m2m_value = lambda value: smart_unicode(value._get_pk_val(), strings_only=True)
-#                json = YpSerialiser()
-#                m2m_value = lambda value: json.serialize(value.objects.all(), use_natural_keys=True)
-#                self._current[field.name] = [m2m_value(related)
-#                                         for related in getattr(obj, field.name).iterator()]
-# '91.202.196.154',
+
 
 @csrf_exempt
 def index(request):
-    if (request.META['REMOTE_ADDR'] in ['127.0.0.1', '213.176.243.173', '176.65.96.188', '95.53.199.47', '92.101.171.155', '91.202.196.154']) or (request.user.is_authenticated()):
-        template_name = 'main/main.html'
-    else:
-        template_name = 'off.html'
-    areas  = Areas.objects.all()
-    heads  = HeadDescriptions.objects.all()
-    categories  = Categories.objects.all()
-    countvisitpoints  = 0
+    # if (request.META['REMOTE_ADDR'] in ['127.0.0.1', '213.176.243.173', '176.65.96.188', '95.53.199.47', '92.101.171.155', '91.202.196.154']) or (request.user.is_authenticated()):
+    template_name = 'main/main.html'
+    # else:
+    #     template_name = 'off.html'
+    areas = Areas.objects.all()
+    heads = HeadDescriptions.objects.all()
+    categories = Categories.objects.all()
+    countvisitpoints = 0
     count_liked_objects = 0
     count_commented_objects = 0
     if request.user.is_authenticated():
-        user = User.objects.get(username = request.user)
-        countvisitpoints  = Points.objects.filter(visitusers__id = user.id).count()
-        count_liked_objects  = (Points.objects.filter(likeusers__id = user.id).count() +
-                                Photos.objects.filter(likeusers__id = user.id).count() +
-                                Events.objects.filter(likeusers__id = user.id).count());
-        count_commented_objects  = Comments.objects.filter(author__id = user.id).count();
-    regions  = Regions.objects.all()
-    typepoints  = TypePoints.objects.all()
+        user = User.objects.get(username=request.user)
+        countvisitpoints = Points.objects.filter(visitusers__id=user.id).count()
+        count_liked_objects = (Points.objects.filter(likeusers__id=user.id).count() +
+                                Photos.objects.filter(likeusers__id=user.id).count() +
+                                Events.objects.filter(likeusers__id=user.id).count())
+        count_commented_objects = Comments.objects.filter(author__id=user.id).count()
+    tagsRequire = Tags.objects.filter(level = 0).all()
+    regions = Regions.objects.all()
+    typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
     for i in range(len(typepoints)):
-        if (i%int(cnt)+1) == int(cnt):
+        if (i % int(cnt) + 1) == int(cnt):
             typepoints[i].ul = True
         else:
             typepoints[i].ul = False
     return render_to_response(template_name,
-                              {'areas': areas, 'heads':heads, 'categories':categories, 
-                               'countvisitpoints':countvisitpoints, 'regions':regions,
+                              {'areas': areas, 'heads': heads, 'categories': categories,
+                               'countvisitpoints': countvisitpoints, 'regions': regions,
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
-                               'typepoints':typepoints, 
-                               'VKONTAKTE_APP_ID':settings.VKONTAKTE_APP_ID}, 
+                               'typepoints': typepoints, 'tagsRequire': tagsRequire,
+                               'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
                               context_instance=RequestContext(request))
 
-    #return HttpResponse('Index Page')
 
 def addpoint(request):
     #todo Сделать проверку на ajax
     if 'name' in request.POST and request.POST['name']:
         t = ''
-        f = AddPointForm(request.POST )
+        f = AddPointForm(request.POST)
         if f.is_valid():
             point = f.save(commit=False)
             point.author = Person.objects.get(username=request.user)
@@ -113,10 +93,11 @@ def addpoint(request):
         else:
             e = f.errors
             for er in e:
-                t = t + ', '+ er +':'+e[er][0]
+                t = t + ', '+er +':'+e[er][0]
         return HttpResponse(t)
     else:
         return HttpResponse('ap-name 2')
+
 
 def editpoint(request):
     #todo Сделать проверку на ajax
@@ -139,6 +120,7 @@ def editpoint(request):
     else:
         return HttpResponse('ap-name 2')
 
+
 def loginauth(request):
     if 'username' in request.POST and request.POST['username']:
         username = request.POST['username']
@@ -157,6 +139,7 @@ def loginauth(request):
         return HttpResponse(mess)
     else:
         return HttpResponse(3)
+
 
 def points(request, page):
     #todo Сделать проверку на ajax
@@ -209,6 +192,7 @@ def points(request, page):
     return HttpResponse(json.serialize(points, extras=["currentvisit"], relations={'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}), mimetype="application/json")
     #return HttpResponse(points[0].likes, mimetype="application/json")
 
+
 def point(request):
     #todo Сделать проверку на ajax
     if request.user.is_authenticated():
@@ -219,6 +203,7 @@ def point(request):
             return HttpResponse(json.serialize(point, relations={'type': {}}), mimetype="application/json")
         else:
             return HttpResponse('{"r":"0"}', mimetype="application/json")
+
 
 def routes(request, page):
     limit = 15*int(page)
@@ -253,6 +238,7 @@ def routes(request, page):
     json = YpSerialiser()
     return HttpResponse(json.serialize(routes, relations={'author': {'fields': ('first_name', 'last_name', 'avatar')},'points': {'relations': {'imgs':{'extras':('thumbnail80', 'thumbnail325',)}, 'author': {'fields': ('first_name', 'last_name', 'avatar')}}}}), mimetype="application/json")
 
+
 def wantvisit(request):
     #todo Сделать проверку на ajax
     if 'point' in request.POST:
@@ -265,6 +251,7 @@ def wantvisit(request):
         req = '{"v":"error"}'
     return HttpResponse(req, mimetype="application/json")
 
+
 def userlike(request):
     #todo Сделать проверку на ajax
     if 'point' in request.POST:
@@ -276,6 +263,7 @@ def userlike(request):
     else:
         req = '{"r":"1"}'
     return HttpResponse(req, mimetype="application/json")
+
 
 def routesave(request):
     #todo Сделать проверку на ajax
@@ -295,6 +283,7 @@ def routesave(request):
         req = '{"r":"1"}'
     return HttpResponse(req, mimetype="application/json")
 
+
 def addimage(request):
     #todo Сделать проверку на ajax
     if request.user.is_authenticated():
@@ -307,6 +296,7 @@ def addimage(request):
     else:
         req = '{"i":"0"}'
     return HttpResponse(req, mimetype="application/json")
+
 
 def deletemypoint(request):
     #todo Сделать проверку на ajax
@@ -322,9 +312,11 @@ def deletemypoint(request):
         req = '{"i":"0"}'
     return HttpResponse(req, mimetype="application/json")
 
+
 def logout_view(request):
     logout(request)
     return redirect('/')
+
 
 def yapdd(request):
     return HttpResponse('b3be50c0ce9a')
