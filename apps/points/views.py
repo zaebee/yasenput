@@ -312,8 +312,8 @@ class PointsList(PointsBaseView):
 
         page = kwargs.get("page", 1) or 1
 
-        limit = COUNT_ELEMENTS*int(page)
-        offset = (int(page)-1)*COUNT_ELEMENTS
+        limit = COUNT_ELEMENTS * int(page)
+        offset = (int(page) - 1) * COUNT_ELEMENTS
 
         form = forms.FiltersForm(params)
         if form.is_valid():
@@ -389,14 +389,13 @@ class PointsList(PointsBaseView):
             copypoints = copypointsreq[offset:limit].all()
             collections = collectionsreq[offset:limit].all()
             
-            allpoints = json.loads(self.getSerializePoints(points))
-            allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
+            allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
             
             if content == 'new':
-                allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS]
+                allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
             else:
-                allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS]
+                allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
             
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:

@@ -216,7 +216,9 @@
                                                 <div class="bp-add-like">
                                                     <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
                                                     <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
+                                                    {% if user.is_authenticated %}
                                                     <a href="#" class="a-like"></a>
+                                                    {% endif %}
                                                     <span class="count-like"><%- imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
@@ -335,11 +337,6 @@
 
                         <div id="tab-map">
                             <div class="map">
-{#                                <div id="popup-map-1" style="width:560px; height:510px"></div>#}
-                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
-
-                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
-
                                 <div class="m-ico-group">
                                     <a href="#">
                                         <span class="m-ico m-hotel"></span>
@@ -480,136 +477,12 @@
                         <div id="tab-desc">
                             <div class="toggle-block">
                                 <ul class="ul-desc">
-                                    <li class="item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
 
-                                        <div class="body">
-                                            <a href="#" class="a-author">Андрей Коротков</a>
-
-                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                            <div class="desc-date">12.02.2032</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-                                        </div>
-                                    </li>
-
-                                    <li class="even item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="body">
-                                            <a href="#" class="a-author">Андрей Коротков</a>
-
-                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                            <div class="desc-date">12.02.2032</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                        </div>
-                                    </li>
-
-                                    <li class="item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="body">
-                                            <a href="#" class="a-author">Андрей Коротков</a>
-
-                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                            <div class="desc-date">12.02.2032</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                        </div>
-                                    </li>
-
-                                    <li class="even item-comment">
-                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                        <div class="body">
-                                            <a href="#" class="a-author">Андрей Коротков</a>
-
-                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                            <div class="desc-date">12.02.2032</div>
-                                        </div>
-
-                                        <div class="action">
-                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                        </div>
-                                    </li>
                                 </ul>
 
                                 <div class="hidden-content">
                                     <ul class="ul-desc">
-                                        <li class="item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
 
-                                            <div class="body">
-                                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                                <div class="desc-date">12.02.2032</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                            </div>
-                                        </li>
-
-                                        <li class="even item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="body">
-                                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                                <div class="desc-date">12.02.2032</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                            </div>
-                                        </li>
-
-                                        <li class="item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="body">
-                                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                                <div class="desc-date">12.02.2032</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                            </div>
-                                        </li>
-
-                                        <li class="even item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="body">
-                                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                                <div class="desc-date">12.02.2032</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                            </div>
-                                        </li>
                                     </ul>
                                 </div>
 
@@ -723,7 +596,7 @@
         <!--<div class="event-date">1―5 января</div>-->
         
         <h2><a href="#" class="a-place-name"><%- name %></a>
-        <% if(ismine == 1) {  %>
+        <% if(id_point != 0) {  %>
             <small>поделился</small> <a href="#"><%- author.first_name %> <%- author.last_name %></a>
         <% } else { %>
             <a href="#" style="visibility: hidden;"><%- author.first_name %> <%- author.last_name %></a>
@@ -766,8 +639,10 @@
     <div class="wide-box">
         <div class="p-tabs">
             <a href="#" data-target="tab-photo" class="active">Фотография</a>
+{#            <a href="#" data-target="tab-info">Информация</a>#}
+{#            <a href="#" data-target="tab-desc">Отзывы</a>#}
+{#            <a href="#" data-target="tab-event">События</a>#}
             <a href="#" data-target="tab-map">На карте</a>
-            <a href="#" data-target="tab-desc">Отзывы</a>
 
             <div class="shadow"></div>
         </div>
@@ -981,16 +856,18 @@
 </div>
 
 <aside id="right-panel">
-    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
-    <a href="#" class="a-btn a-add-path">Создать маршрут</a>
-    <a href="#" class="a-btn a-edit">Редактировать</a>
+{#    <a href="#" class="a-btn a-add-collection">В коллекцию</a>#}
+{#    <a href="#" class="a-btn a-add-path">Создать маршрут</a>#}
+{#    <a href="#" class="a-btn a-edit">Редактировать</a>#}
     
     <div class="small-icons">
+        {% if user.is_authenticated %}
         <a href="#" class="a-like" data-tooltip="Нравится"></a><a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
+        {% endif %}
     </div>
     
     <div class="aside-social">
-        <img src="temp/social-2.png" alt="">
+{#        <img src="temp/social-2.png" alt="">#}
     </div>
     
     <div class="small-icons">
@@ -1052,7 +929,7 @@
 </div>
  -->
 
-{% if user.is_authenticated %}
+
 <script type="text/template" id="point-add-template">
     <div class="p-top">
         <h3>Добавить место</h3>
@@ -1085,10 +962,10 @@
             </div>
 
             <div class="input-line" style="z-index: 1;">
-                <div class="required">*</div>
+                <div class="required"></div>
 
                 <div class="drop-filter">
-                    <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description">
+                    <input type="text" data-key="description" maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description">
                 </div>
             </div>
 
@@ -1096,7 +973,7 @@
                 <div class="clearfix p-tabs">
                     <a href="#" data-target="tab-photos-place" class="active">Фотографии</a>
                     <a href="#" data-target="tab-map-place">На карте</a>
-                    <a href="#" data-target="tab-reviews-place">Отзывы</a>
+{#                    <a href="#" data-target="tab-reviews-place">Отзывы</a>#}
                     <div class="shadow"></div>
                 </div>
 
@@ -1296,8 +1173,10 @@
         <div class="bp-add-like">
             <img src="{{MEDIA_URL}}<%- author.avatar %>" alt="" width="22" height="22" class="avatar">
             <span class="bp-name"><%- author.first_name %> <%- author.last_name %></span>
+            {% if user.is_authenticated %}
             <a href="#" class="a-like"></a>
-            <span class="count-like">5</span>
+            {% endif %}
+{#            <span class="count-like">5</span>#}
         </div>
     </div>
 
@@ -1337,7 +1216,7 @@
             <% 
             count++;
             }) %>
-
+            {% if user.is_authenticated %}
             <div class="add-comment">
                 <form action="#">
                     <div class="ac-block">
@@ -1352,7 +1231,7 @@
                     </div>
                 </form>
             </div>
-            
+            {% endif %}
         </div>
     </div>
 </script>
@@ -1384,10 +1263,10 @@
             </div>
 
             <div class="input-line">
-                <div class="required">*</div>
+                <div class="required"></div>
 
                 <div class="drop-filter">
-                    <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
+                    <input type="text" data-key="description"  maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
                 </div>
             </div>
 
@@ -1458,10 +1337,10 @@
             </div>
 
             <div class="input-line">
-                <div class="required">*</div>
+                <div class="required"></div>
 
                 <div class="drop-filter">
-                    <input type="text" data-key="description" placeholder="Введите описание места..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
+                    <input type="text" data-key="description"  maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description" value="<%- description %>">
                 </div>
             </div>
 
@@ -1608,5 +1487,5 @@
         </div>
     </div>
 </script>
-
+{% if user.is_authenticated %}
 {% endif %}

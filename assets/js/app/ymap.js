@@ -13,6 +13,7 @@ $(function(){
         myMap.controls.add('zoomControl').add('typeSelector');
         myMap.events.add('boundschange', function(event){
             // window.mapBounds = myMap.getBounds()
+            console.log('boundschange');
             window.loadingNow = false;
 
             pointsPop.loaded = false;

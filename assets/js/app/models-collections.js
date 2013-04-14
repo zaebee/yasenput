@@ -100,13 +100,13 @@ $(function(){
                 };
                 errors.push(error);
             }
-            if( $.trim( this.get('description') ) == '' ) {
-                error = {
-                    'field': 'description',
-                    'msg': 'Обязательное поле'
-                };
-                errors.push(error);
-            }
+//            if( $.trim( this.get('description') ) == '' ) {
+//                error = {
+//                    'field': 'description',
+//                    'msg': 'Обязательное поле'
+//                };
+//                errors.push(error);
+//            }
 
             requiredTag = this.get('tags_collection').find(function(tag){
                 return tag.get('required') == true;
@@ -417,7 +417,8 @@ $(function(){
 
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
-                columnWidth: 241 
+                columnWidth: 241,
+                //isFitWidth: true
             });
             $(this.el).masonry( 'reload' );
 
@@ -606,9 +607,6 @@ $(function(){
         url: '/photos',
         sync:  function(method, model, options) {
             console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
@@ -662,11 +660,11 @@ $(function(){
         },
         initialize: function(){
             // this.set( {comments: new window.Comments(this.get('comments'))} );
-            console.log('++++++++++++++++++');
-            console.log('this: ', this);
-            console.log('this.collection: ', this.collection);
-            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
-            console.log('++++++++++++++++++');
+//            console.log('++++++++++++++++++');
+//            console.log('this: ', this);
+//            console.log('this.collection: ', this.collection);
+//            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
+//            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
             if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
@@ -702,7 +700,7 @@ $(function(){
                 url: '/comments/del',
                 type: 'POST',
                 data: {
-                    id: commentId,
+                    id: commentId
                 }
             });
             // console.log('removeComment: ', jqXHR);

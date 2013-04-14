@@ -159,7 +159,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.tabs a{float:left; height:26px; line-height:26px; padding:0 16px; text-decoration:none; color:#984d56; font-size:15px; position:relative}
 	.tabs a.active{color:#333; background:#becfbc;}
 
-.content{position:relative; margin:0 40px}
+.content{position:relative; margin:0 10px}
 	.content .items{position:relative; margin:auto}
 	.content .item{width:229px; background:#fff; margin:0 0 12px; padding-top:11px}
 	.no-boxshadow .content .item{width:227px; border:solid 1px #cfd9ce}
@@ -841,4 +841,11 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	font-weight: bold!important;
 }
 #tab-photos-place.validation-error{border: 1px dashed red;}
+
+.a-up:hover{background:#a58e78;color:#fff}
+
+.a-up{position:fixed;right:20px;bottom:39px;background:#6f5e4e;-moz-border-radius:2px 2px 0 0;-webkit-border-radius:2px 2px 0 0;border-radius:2px 2px 0 0;width:auto;padding:5px 25px;color:#fff;text-decoration:none;z-index:1234;line-height:18px;display:none}
+.a-up span{font-size:18px}
+.a-up{font-family: "Trebuchet MS", "Helvetica CY", sans-serif;font-size: 15px;}
+.a-up-toggle{bottom:0px}
 /**/
