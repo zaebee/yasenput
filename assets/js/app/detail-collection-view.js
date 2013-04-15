@@ -4,7 +4,7 @@ $(function(){
         id: 'p-common',
         className: 'popup',
         photosPlace: '#tab-photo .tabs-content .toggle-block',
-        template: _.template($('#collection-detail-new').html()),
+        template: _.template($('#collection-detail').html()),
         initialize: function() {
             _.bindAll(this, 'render');
             // _.bindAll(this, 'loadImage');
@@ -15,68 +15,26 @@ $(function(){
             //'click .m-ico-group>a': 'showNearPlace',
             //'click .p-place-desc .a-toggle-desc':'moreDescription',
             //'click .bp-photo':'nextBigPhoto'
+            'click .choose_place':'choosePlace'
         },
-        render:function(){
+        render:function(place){
+            this.model.set({fir: 0});
             var content = this.template(this.model.toJSON());
-            console.log('POINT: ', this.model.toJSON());
+            console.log('CLLECTION: ', this.model.toJSON());
             $(this.el).html(content);
 
-            browsingPhotos = new window.BrowsingPhotosView({
-                el: $(this.el).find(this.photosPlace),
-                collection: this.model.get('photos_pop'),
-            });
-            browsingPhotos.render();
             
-            var myMapPopupPlace;
-            this.popupMap = myMapPopupPlace;
-
-            view = this;
-            $(this.el).find(".p-tabs").simpleTabs({
-                afterChange: function(self, id){
-                    if (id == 'tab-map'){
-                        console.log('we select tab-map');
-                        if (!view.popupMap) {
-                            view.popupMap = new ymaps.Map('popup-map-1', {
-                                center: myMap.getCenter(),
-                                zoom: 14
-                            });
-                            view.model.get('near_points').map = view.popupMap;
-                            view.popupMap.controls.add('zoomControl');
-                            view.clusterer = new ymaps.Clusterer({
-                                clusterIcons: window.clusterIcons,
-                            });
-                            
-                            view.popupMap.events.add('boundschange', function(event){
-                                view.model.get('near_points').setURL().fetch();
-                            });
-
-                            view.popupMap.geoObjects.add( view.clusterer );
-
-                            coords = [view.model.get('latitude'), view.model.get('longitude')];
-                            console.log('coords: ', coords);
-                            var placemark = new ymaps.Placemark(coords 
-                                ,{
-                                    id: view.model.get('id')
-                                } 
-                                ,{
-                                    iconImageHref: '/'+view.model.get('icon'), // картинка иконки
-                                    iconImageSize: [32, 36], // размеры картинки
-                                    iconImageOffset: [-16, -38] // смещение картинки
-                                }
-                            );
-                            view.popupMap.geoObjects.add(placemark);
-                        }
-                    }
-                }
-            });
-            // $(this.el).find(".tabs-inside").simpleTabs({
-            //     afterChange: function(){
-            //         console.log('hi all, im afterChange function');
-            //     }
-            // });
             return this;
         },	
-        
+        choosePlace: function(event){
+            event.preventDefault();
+            var id = $(event.currentTarget).find('.choose_place_a').attr('idi');
+            this.model.set({fir: id});
+            console.log('автор --->', this.model.get('points')[0].author);
+            var content = this.template(this.model.toJSON());
+            $(this.el).html(content);
+            return this;
+        },
         moreDescription: function(event){
             event.preventDefault();
             var parent = $(event.currentTarget).closest(".p-place-desc");

@@ -20,6 +20,7 @@ import json
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
 
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
@@ -71,9 +72,9 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'points': {'fields': ['imgs'],
+                                           'points': {'fields': ['imgs', 'name', 'author'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
-                                                    'limit': 4},
+                                                    'limit': 4}, 'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
                                                         },
                                                     },
                                             
@@ -333,7 +334,7 @@ class PointsList(PointsBaseView):
             points_fields_list = pointsreq.values_list('id','likeusers')
             points_by_user_fields_list = copypointsreq.values_list('id')
             collections_fields_list = collectionsreq.values_list('id')
-            file_debug.write(str(points_fields_list))
+            file_debug.write('smth')
             file_debug.write(str(points_by_user_fields_list))
             file_debug.write(str(collections_fields_list))
             file_debug.close()
