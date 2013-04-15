@@ -104,26 +104,25 @@ $(function(){
             } else {
                 // фотки из верхнего ряда
                 if( $(imgElem).parent(this.upwardPhotos).length > 0 ) {
-                    // массив елементов, кот. будем переносить наверх
-                    elemsArr = $(imgElem).nextAll();
+                    // сколько дивов сзади
+                    countBack = $(imgElem).prevAll().length + 1;
+                    console.log('countBack: ', countBack);
 
-                    // сколько дивов впереди
-                    countDivs = $(imgElem).nextAll().length;
-                    console.log('countDivs: ', countDivs);
-
-                    // сколько полных линий впереди
-                    countLines = Math.floor( countDivs / 4 );
+                    // сколько полных линий
+                    countLines = Math.floor( countBack / 4 );
                     console.log('countLines: ', countLines);
 
-                    // сколько нужно удалить дивов
-                    divsRemove = (countDivs - countLines * 4);
-                    console.log('divsRemove: ', divsRemove);
+                    //какой это див по счёту в линии
+                    indexDiv = countBack - (countLines * 4);
+                    console.log('indexDiv: ', indexDiv);
 
-                    // elemsArr = elemsArr.add(imgElem);
-                    // elemsArr = elemsArr.add( $(imgElem).prevAll().slice(0, divsBackward) );
-                    elemsArr = elemsArr.slice(divsRemove);
+                    // солько дивов переди текущего дива нужно перенести
+                    transAmout = 4 - indexDiv;
+                    console.log('transAmout: ', transAmout);
 
-                    console.log('elemsArr: ', elemsArr);
+                    // elemsArr = $(imgElem).nextAll();
+                    elemsArr = $(imgElem).nextAll().slice(transAmout);
+
 
                     $(view.el).find(view.photosPlace).find(view.downwardPhotos).prepend( elemsArr );
                 // фотки из нижнего ряда
