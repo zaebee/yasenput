@@ -28,6 +28,7 @@ $(function(){
             'click a.a-toggle.comments': 'toggleComments',
             'click input:submit': 'addComment',
             'click .a-remove-comment': 'removeComment',
+            'click .bp-photo':'nextBigPhoto',
         },
         render:function(){
             console.log('browsing photos render! ');
@@ -183,25 +184,40 @@ $(function(){
                     } else {
                         console.log('loadPhoto наыерху');
                         var loadPhoto = $(view.el).find(view.photosPlace).find(view.upwardPhotos).find('.load-photo');
-                        firstPhoto = _.first(restPhotos)
+                        firstPhoto = _.first(restPhotos);
                         loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
+                        restRestPhotos = _.rest(restPhotos);
 
                         loadPhoto.appendTo($(view.el).find(view.downwardPhotos));
-                         _.each(restPhotos, function(img){
+                         _.each(restRestPhotos, function(img){
                             loadPhoto.before( view.templatePhoto( img.toJSON() ) );
                         });
                     }
                 // если не в первый, то просто показываем отрендеренные
                 } else {
-                    _.each( view.restPhotos, function(img){
-                        $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').show();
-                    });    
+                    $(view.el).find('.item-photo').show();
+                    // _.each( view.restPhotos, function(img){
+                        // $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').show();
+                    // });    
                 }
             // скрываем
             } else {
-                _.each( view.restPhotos, function(img){
-                    $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').hide();
-                });
+                toShow = $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4);
+                toShow = toShow.add( $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4).nextAll() )
+
+                // console.log( 'up -4: ', $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4).nextAll() );
+
+                // console.log('down 4: ', $(view.el).find(view.downwardPhotos).find('.item-photo').slice(0, 4) );
+
+                toShow = toShow.add( $(view.el).find(view.downwardPhotos).find('.item-photo').slice(0, 4) );
+                $(view.el).find('.item-photo').hide();
+                toShow.show();
+
+
+                // _.each( view.restPhotos, function(img){
+                //     $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').hide();
+                // });
+
                 // если loadPhoto остался внизу
                 // var loadPhoto = $(view.el).find(view.downwardPhotos).find('.load-photo');
                 // if(loadPhoto.length > 0) {
@@ -286,7 +302,32 @@ $(function(){
             });
 
             $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
-        }
+        },
+        nextBigPhoto: function(event){
+            event.preventDefault();
+            photoId = $(event.currentTarget).attr('data-photo-id');
+            $next = $(view.el).find('.item-photo[data-photo-id="'+photoId+'"]').next(':not(.load-photo)');
+
+            if($next.length > 0) {
+                $next.find('a').click();
+            } else {
+                if( $(view.el).find(view.downwardPhotos).find('.item-photo:not(.load-photo):visible').length > 0 ) {
+                    // переходим на нижний ряд
+                    $(view.el).find(view.downwardPhotos).find('.item-photo>a').first().click();
+                } else {
+                    if(! $(view.el).find('a.a-toggle.photos').hasClass('isopen') ) {
+                        // открываем "все фото"
+                        $(view.el).find('a.a-toggle.photos').click();
+                        $(event.currentTarget).click();
+                    } else {
+                        // идём по второму кругу
+                        $(view.el).find(view.upwardPhotos).find('.item-photo>a').first().click();
+                        $('.viewport').animate({ scrollTop: 0 }, "slow");
+                    }
+                }
+            }
+            
+        },
     });
     window.BrowsingPhotosView = BrowsingPhotosView;
 });
