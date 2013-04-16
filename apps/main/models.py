@@ -137,15 +137,15 @@ class Points(models.Model):
         verbose_name = u'Точки'
         verbose_name_plural = u'Точки'
 
-    name = models.CharField('Название', max_length=255)
-    longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20)
-    latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20)
+    name = models.CharField('Название', max_length=255, blank=True)
+    longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20, blank=True)
+    latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20, blank=True)
     description = models.TextField(null=True, blank=True)
     reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     type = models.ForeignKey(TypePoints, null=True, blank=True)
-    address = models.TextField('Адрес')
+    address = models.TextField('Адрес', blank=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)

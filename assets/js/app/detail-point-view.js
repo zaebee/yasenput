@@ -25,6 +25,7 @@ $(function(){
                 el: $(this.el).find(this.photosPlace),
                 collection: this.model.get('photos_pop'),
             });
+            console.log('browsingPhotos-->', browsingPhotos.el)
             browsingPhotos.render();
             
             var myMapPopupPlace;
@@ -36,6 +37,7 @@ $(function(){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
                         if (!view.popupMap) {
+                            console.log('inside of if', view);
                             view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: myMap.getCenter(),
                                 zoom: 14

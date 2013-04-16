@@ -1,17 +1,29 @@
 $(function(){
     CollectionPoint = Backbone.Model.extend({
         url: '/collections',
+        defaults: {
+            name:'',
+            description:'',
+            points:[],
+        },
         sync:  function(method, model, options) {
             console.log('Sync!');
             console.log('method: ', method);
             console.log('model: ', model);
             console.log('options: ', options);
+            console.log('url: ');
             switch (method) {
                 case "create":
-                    // options.url = model.url + '/add'
-                    // console.log('model: ', model);
-                    // options.data = 'object_id='+model.get('object_id')+'&object_type=12&txt='+encodeURI(model.get('txt'));
-                    // options.type = 'POST';
+                    console.log('===> save new collection!');
+                            // return;
+                            options.type = 'GET';
+                            options.url = model.url + '/add';
+                            options.data = 'name='+model.get('name');
+                            options.data += '&description='+model.get('description');
+                            
+                            
+                            // options.data = 's='+options.searchStr;
+                            break;
                     switch (options.action) {
                         case 'search':
                             // console.log('===> create with search!');
@@ -46,8 +58,6 @@ $(function(){
             return response.collections;
         },
         setURL: function(){
-            console.log('setURL collections');
-            console.log('this: ', this);
 
             this.page = (this.page != null) ? this.page : 1;
             this.content = (this.content != null) ? this.content : 'new';
@@ -71,21 +81,13 @@ $(function(){
         },
         render: function(){
             this.loaded = true;
-            console.log('++> render collections');
-            console.log('this: ', this);
-            console.log('this url: ', this.url);
 
 
-            console.log('elSelector collections = ', $(this.elSelector));
             this.el = $(this.elSelector);
             //$(this.el).empty();
             var self = this;
-            console.log('self -->', self);
             this.each(function( item ) {
                 var pin = new CollectionView({model:item});
-                //alert(pin.el);
-                console.log(pin.el);
-                console.log('pin render append', self.el);
                 self.el.append(pin.render().el);
             });
 

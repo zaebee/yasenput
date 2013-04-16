@@ -33,7 +33,7 @@ $(function(){
             console.log('browsing photos render! ');
             
             $(this.el).html( this.template() );
-
+            console.log(this.el);
             view = this;
             // если больше 4-ёх фоток, то "добавить" рисуем снизу, иначе -- сверху
             if (this.collection.length > 4) {

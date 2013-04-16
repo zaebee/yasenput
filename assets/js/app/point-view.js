@@ -130,7 +130,8 @@ $(function(){
             }
         },
         addInCollection:function(evenet){
-            console.log(this.model);
+            console.log('addincollection', this.model);
+            $(".popup").remove();
             window.newCollection = new window.CollectionPoint();
             addCollectionView = new window.AddCollectionView({ model: window.newCollection });
             
@@ -162,7 +163,13 @@ $(function(){
                     $("#"+id).css("display", "block").siblings().css("display", "none");
                 }
             });
-            //e.preventDefault();
+            var self = event.currentTarget;
+            console.log('target = ', self);
+            console.log('this = ', this.model);
+            event.preventDefault();
+            pointId = this.model.attributes;
+            console.log('pointId = ', pointId);
+            addCollectionView.addCollection(pointId);
 
        }
     });

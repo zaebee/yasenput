@@ -72,7 +72,7 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'points': {'fields': ['imgs', 'name', 'author'],
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
                                                     'limit': 4}, 'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
                                                         },

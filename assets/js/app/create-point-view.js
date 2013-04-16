@@ -256,6 +256,7 @@ $(function(){
             });
         },
         addNewPoint: function(event){
+            console.log('addNewPoint-->', this.model);
             this.model.saveNew();        
         }
     });

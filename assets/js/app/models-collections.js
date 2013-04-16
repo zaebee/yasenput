@@ -130,7 +130,6 @@ $(function(){
             console.log('method: ', method);
             console.log('model: ', model);
             console.log('options: ', options);
-
             console.wait = true;
             switch (method) {
                 case "create":

@@ -177,27 +177,45 @@ class CollectionsList(View):
 
 
 class CollectionAdd(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+
+        DEFAULT_LEVEL = 2
+
         errors = []
 
-        params = request.POST
+        params = request.GET.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
-            collection = form.save(commit=False)
+            file_debug=open('file.txt','w')
+            file_debug.write('smth2')
+            file_debug.close()
+            point = form.save(commit=False)
 
             person = MainModels.Person.objects.get(username=request.user)
-            collection.author = person
-            collection.save()
+            point.author = person
+            point.save()
+            tags = params.getlist("tags[]")
+            if tags:
+                for tag in tags:
+                    new_tag = TagsModels.Tags.objects.filter(name=tag)
+                    if tag.isdigit():
+                        new_tag = TagsModels.Tags.objects.get(id=tag)
+                    elif new_tag.count() == 0:
+                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
+                    else:
+                        new_tag = new_tag[0]
+                    point.tags.add(new_tag)
 
-            YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize([collection], fields=('name', 'id')), mimetype="application/json")
+                point.save()
+            
+            return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
             for er in e:
                 errors.append(er + ':' + e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": "2", "txt": ", ".join(errors)})
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
 class CollectionEdit(CollectionsBaseView):
@@ -225,9 +243,10 @@ class CollectionEdit(CollectionsBaseView):
 
 
 class AddPoint(CollectionsBaseView):
-    http_method_names = ('post',)
-
+    http_method_names = ('get',)
+    
     def post(self, request, *args, **kwargs):
+        
         errors = []
 
         params = request.POST
