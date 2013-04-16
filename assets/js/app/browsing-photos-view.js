@@ -182,7 +182,7 @@ $(function(){
                         });
                     // если наверху
                     } else {
-                        console.log('loadPhoto наыерху');
+                        // console.log('loadPhoto наверху');
                         var loadPhoto = $(view.el).find(view.photosPlace).find(view.upwardPhotos).find('.load-photo');
                         firstPhoto = _.first(restPhotos);
                         loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
@@ -193,36 +193,29 @@ $(function(){
                             loadPhoto.before( view.templatePhoto( img.toJSON() ) );
                         });
                     }
+                    // и если его нет
+                    if( $(view.el).find('.load-photo').length == 0 ){
+                        // console.log('его нет!');
+                        var restPhotos = this.collection.toArray().splice(7);
+                        view.restPhotos = restPhotos;
+
+                        _.each(restPhotos, function(img){
+                            $(view.el).find(view.downwardPhotos).append( view.templatePhoto( img.toJSON() ) );
+                        });
+                    }
+
                 // если не в первый, то просто показываем отрендеренные
                 } else {
                     $(view.el).find('.item-photo').show();
-                    // _.each( view.restPhotos, function(img){
-                        // $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').show();
-                    // });    
                 }
             // скрываем
             } else {
                 toShow = $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4);
                 toShow = toShow.add( $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4).nextAll() )
 
-                // console.log( 'up -4: ', $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4).nextAll() );
-
-                // console.log('down 4: ', $(view.el).find(view.downwardPhotos).find('.item-photo').slice(0, 4) );
-
                 toShow = toShow.add( $(view.el).find(view.downwardPhotos).find('.item-photo').slice(0, 4) );
                 $(view.el).find('.item-photo').hide();
                 toShow.show();
-
-
-                // _.each( view.restPhotos, function(img){
-                //     $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').hide();
-                // });
-
-                // если loadPhoto остался внизу
-                // var loadPhoto = $(view.el).find(view.downwardPhotos).find('.load-photo');
-                // if(loadPhoto.length > 0) {
-                //     loadPhoto.appendTo($(view.el).find(view.upwardPhotos));
-                // }
             }
             $(event.currentTarget).toggleClass('isopen');
         },
