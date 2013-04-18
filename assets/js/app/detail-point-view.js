@@ -36,6 +36,7 @@ $(function(){
                 afterChange: function(self, id){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
+                        console.log('view.model', view.model);
                         if (!view.popupMap) {
                             coords = [view.model.get('latitude'), view.model.get('longitude')];
                             view.popupMap = new ymaps.Map('popup-map-1', {

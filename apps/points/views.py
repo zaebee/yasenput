@@ -257,7 +257,21 @@ class OnePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
         return self.pointsList([point])
-    
+
+
+class OneDetailPoint(PointsBaseView):
+    http_method_names = ('post',)
+
+    def post(self, request, *args, **kwargs):
+        point_ = request.POST['id']
+        # return point_
+        point_ = point_.split('_')
+        if point_[1] == '0':
+            point = MainModels.Points.objects.filter(id=point_[0]).extra(**self.getPointsSelect(request))
+        else:
+            point = MainModels.PointsByUser.objects.filter(id=point_[0]).extra(**self.getPointsByUserSelect(request))
+        return self.pointsList(point)
+
 
 class PointsSearch(PointsBaseView):
     http_method_names = ('get',)

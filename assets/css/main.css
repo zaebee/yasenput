@@ -775,6 +775,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .drop-labels .drop-not-found{display: none;}
 
 .require-labels{margin:-3px 0 0 -3px}
+.other-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
 .label-require{background:#ffadc9 !important}
 

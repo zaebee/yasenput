@@ -54,7 +54,8 @@ def index(request):
                                 Photos.objects.filter(likeusers__id=user.id).count() +
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
-    tagsRequire = Tags.objects.filter(level = 0).all()
+    tagsRequire = Tags.objects.filter(level=0).all()
+    tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
     regions = Regions.objects.all()
     typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
@@ -69,6 +70,7 @@ def index(request):
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
                                'typepoints': typepoints, 'tagsRequire': tagsRequire,
+                               'tagsOther': tagsOther,
                                'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
                               context_instance=RequestContext(request))
 

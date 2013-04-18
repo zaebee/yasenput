@@ -464,7 +464,6 @@ $(function(){
             });
 
             // Фильтруем точки с одинаковыми координатами
-            console.log('longitude latitude check');
             this.each(function(point){
                 var point_id;
                 if (point.get('id_point') == 0){
@@ -494,7 +493,6 @@ $(function(){
                 }
 
             });
-
             clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){

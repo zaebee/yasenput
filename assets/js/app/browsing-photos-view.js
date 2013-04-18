@@ -182,9 +182,9 @@ $(function(){
                         });
                     // если наверху
                     } else {
-                        // console.log('loadPhoto наверху');
+                        console.log('restPhotos',this.collection.toArray().splice(7));
                         var loadPhoto = $(view.el).find(view.photosPlace).find(view.upwardPhotos).find('.load-photo');
-                        firstPhoto = _.first(restPhotos);
+                        var firstPhoto = _.first(restPhotos);
                         loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
                         restRestPhotos = _.rest(restPhotos);
 
