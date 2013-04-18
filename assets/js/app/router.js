@@ -61,6 +61,15 @@ $(function(){
                                 var coords = [];
                                 coords.push(data[0].latitude);
                                 coords.push(data[0].longitude);
+
+
+                                clsName = ' label-name';
+                                var added_label = $(multySearch.tmplLabel.replace("{text}", data[0].name).replace("{clsName}", "label-name")).insertBefore($(".label-add"));
+                                $(added_label).data("id", data[0].id);
+                                $(added_label).data("type", 'point');
+
+                                console.log('$(added_label).data --->', $(added_label).data("id"));
+
                                 window.multisearch_result.points = [];
                                 window.multisearch_result.points.push(data[0].name);
 
@@ -70,6 +79,7 @@ $(function(){
                                     window.myMap.setCenter(coords)
                                 ).then(function(){
                                         window.fetchPoint.done(function(){
+                                            multySearch.reinit_click();
                                             $('#content').find('[data-point-id="'+point+'"]').find('.a-photo').click();
                                         });
 

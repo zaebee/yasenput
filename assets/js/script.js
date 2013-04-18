@@ -425,11 +425,12 @@ jQuery(function($){
 
 	    id = $(this).parents(".label").data("id");
 	    type = $(this).parents(".label").data("type");
-
+        console.log('delete:', multisearch_result.points);
+        console.log('delete2:', multisearch_data.points);
         // delete item from array
 	    switch (type) {
 	        case "point": {
-	            multisearch_result.points.splice(id, 1);
+	            multisearch_result.points.length = 0;
 	            $(this).parents(".label").remove();
 	            break;
 	        }
@@ -463,6 +464,8 @@ jQuery(function($){
 	            break;
 	        }
 	    }
+        console.log('after delete:', multisearch_result.points);
+        console.log('after delete2:', multisearch_data.points);
         window.currentPoints.setURL().fetch();
 
 	});
