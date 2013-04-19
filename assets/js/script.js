@@ -208,13 +208,20 @@ jQuery(function($){
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
-					
-					if($(".selected", $(self.p.dropRoot)).length){
-						$(".selected a", $(self.p.dropRoot)).click();
-					} else {
-						$(self.p.dropRoot).hide();
-					}
-					
+                    var flag = false;
+                    _.each(multisearch_data.tags, function(tag){
+
+                         if(tag.name.toLowerCase() == $("#multisearch-text").val().toLowerCase()){
+                             console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
+                             $('#multisearch-tags a').filter(function() { return $.data(this, "id") == tag.id; }).end().click();
+                             flag = true;
+                         }
+                    })
+                    if(multisearch_data.places.length>0 && !flag){
+                        console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
+                        $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
+                    }
+					console.log('нажат enter');
 					break;
 				case 27:
 					setTimeout(function(){
@@ -388,7 +395,6 @@ jQuery(function($){
 			});
 		},
 		reinit_click: function() {
-                console.log('reinit_click')
     			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
 				me.onClickDrop($(this), me);
