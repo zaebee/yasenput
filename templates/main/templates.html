@@ -103,7 +103,7 @@
         <ul class="photo-preview">
             <li>
                 <a href="#">
-                    <img src="<% if (points[1].imgs[0]) { %> <%- points[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
+                    <img src="<% if (points[1]) { %> <%- points[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
 
@@ -2042,13 +2042,29 @@
                 </div>
 
                 <div class="line">
-                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc">
+                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc" defaultValue="fortest">
                 </div>
 
                 <input type="submit" value="Создать" class="a-btn a-add-collection">
 
                 <br><br>
 
+                <div class="line">
+                    <label>Выберите из уже созданных коллекций:</label>
+                    <div class="wide-box">
+                        <div class="small-viewport">
+                        <% console.log('{% for collection in collections %} {{collection.id}} {%endfor%}') %>
+                            {% for collection in collections %}
+                            <label class="custom-checkbox" data-id="{{collection.id}}">
+                                <input type="checkbox" value="" name="" dataid="{{collection.id}}">
+                                {{collection.name}}
+                            </label>
+                            {%endfor%}
+                        </div>
+                    </div>
+                </div>
+
+                <input type="submit" value="Выбрать" class="a-btn nonav">
                 
             </form>
         </div>

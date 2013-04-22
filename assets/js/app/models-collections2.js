@@ -20,7 +20,7 @@ $(function(){
                             options.url = model.url + '/add';
                             options.data = 'name='+model.get('name');
                             options.data += '&description='+model.get('description');
-                            
+                            options.data += '&pointid=' +model.get('pointid');
                             
                             // options.data = 's='+options.searchStr;
                             break;
@@ -33,6 +33,14 @@ $(function(){
                             break;
                     };
                     break;
+                case "update":
+                    console.log('update')
+                    options.type = 'GET';
+                    options.url = model.url + '/edit';
+                    options.data = 'name='+model.get('name');
+                    options.data += '&pointid=' +model.get('pointid');
+                    options.data += '&collectionid=' +model.get('collectionid');
+                    break
                 // case "update":
                 //     options.url = model.url + '/'
                 //     break;

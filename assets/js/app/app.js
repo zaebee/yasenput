@@ -795,14 +795,25 @@ $(function(){
             "click .custom-checkbox":function(e){
                 var self = e.currentTarget;
                 setTimeout(function(){
-                    this.toggleCheckbox(self);
-                }, 0);
+                    if ($("input[type=checkbox]").is(":checked")) {
+                        $(self).addClass("checked");
+                    } else {
+                        $(self).removeClass("checked");
+                    }
+                    }, 0);
             },
             "click .custom-radio":function(e){
                 var self = e.currentTarget;
                 setTimeout(function(){
                     this.toggleRadio(self);
                 }, 0);
+            },
+            toggleCheckbox: function (label) {
+                if ($("input[type=checkbox]", label).is(":checked")) {
+                    label.addClass("checked");
+                } else {
+                    label.removeClass("checked");
+                }
             },
             "click .pop-labels .label":function(e){
                 var self = e.currentTarget;

@@ -130,11 +130,15 @@ $(function(){
             }
         },
         addInCollection:function(evenet){
-            console.log('addincollection', this.model);
+            console.log(this.model);
             $(".popup").remove();
             window.newCollection = new window.CollectionPoint();
             addCollectionView = new window.AddCollectionView({ model: window.newCollection });
-            
+            var self = event.currentTarget;
+            console.log('target = ', self);
+            console.log('this = ', this.model);
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
             addCollectionView.render({ model: this.model });
             $(".scroll-box").find('#'+addCollectionView.id).remove();            
             $(".scroll-box").append(addCollectionView.el);
@@ -167,9 +171,9 @@ $(function(){
             console.log('target = ', self);
             console.log('this = ', this.model);
             event.preventDefault();
-            pointId = this.model.attributes;
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
             console.log('pointId = ', pointId);
-            addCollectionView.addCollection(pointId);
+            addCollectionView.getPoint(pointId);
 
        }
     });

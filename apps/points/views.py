@@ -329,15 +329,12 @@ class PointsList(PointsBaseView):
             copypointsreq = MainModels.PointsByUser.objects
             #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
-            file_debug=open('file.txt','w')
+            
             
             points_fields_list = pointsreq.values_list('id','likeusers')
             points_by_user_fields_list = copypointsreq.values_list('id')
             collections_fields_list = collectionsreq.values_list('id')
-            file_debug.write('smth')
-            file_debug.write(str(points_by_user_fields_list))
-            file_debug.write(str(collections_fields_list))
-            file_debug.close()
+            
             user = form.cleaned_data.get("user")
             if user:
                 pointsreq = pointsreq.filter(author__id=user)
@@ -412,7 +409,7 @@ class PointsList(PointsBaseView):
             #allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
             
             allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            
+            #allcollections = allcollections[:1]
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

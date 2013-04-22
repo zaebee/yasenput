@@ -38,10 +38,10 @@ $(function(){
             this.popupMap = myMapPopupPlace;
 
             //this.model.save();
-            var newq = new CollectionPoint;
-            newq.attributes = this.model.attributes;
-            console.log(this.model.attributes);
-            newq.save();
+            //var newq = new CollectionPoint;
+            //newq.attributes = this.model.attributes;
+            //console.log(this.model.attributes);
+            //newq.save();
             view = this;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
