@@ -97,7 +97,7 @@
                 </div>
             </div>
 
-            <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207 %>"></a>
+            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207 %>"></a>
         </div>
 
         <ul class="photo-preview">
@@ -184,11 +184,11 @@
 
                         <div class="tabs-content">
                         <div id="tab-photo">
-                            <div class="tabs-inside"><!-- tp- tab photo -->
+                            <!--<div class="tabs-inside"> tp- tab photo 
                                 <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
                                 <a href="#" data-target="tp-tab-my">новые</a>
                                 <a href="#" data-target="tp-tab-new">мои</a>
-                            </div>
+                            </div>-->
 
                             <div class="tabs-content">
                                 <div class="toggle-block">
@@ -716,7 +716,7 @@
 </script>
 
 <script type="text/template" id="collection-detail">
-                <div class="popup p-collection" id="p-common">
+                <!--<div class="popup p-collection" id="p-common">-->
                     <div class="clearfix p-body">
                     <header>
                         {% if user.is_authenticated %}
@@ -756,11 +756,11 @@
 
                         <div class="tabs-content">
                         <div id="tab-photo">
-                            <div class="tabs-inside"><!-- tp- tab photo -->
+                            <!--<div class="tabs-inside"> tp- tab photo
                                 <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
                                 <a href="#" data-target="tp-tab-my">новые</a>
                                 <a href="#" data-target="tp-tab-new">мои</a>
-                            </div>
+                            </div>-->
 
                             <div class="tabs-content">
                                 <div class="toggle-block">
@@ -1293,13 +1293,14 @@
                 <header id="c-top-panel">
                     <div class="inner-wrap">
                         <aside class="stp-buttons">
+                        {% if user.is_authenticated %}
                             <div class="c-buttons">
                                 <a href="#" class="a-btn stp-like">Нравится</a>
-                                <a href="#" class="a-btn stp-edit">Редактировать</a>
+                                <% if (author.id == {{ user.person.id }}){ %><a href="#" class="a-btn stp-edit">Редактировать</a><% } %>
                             </div>
-                            
+                        {% endif %}
                             <div class="c-edit-buttons">
-                                <a href="#" class="a-btn stp-remove">Удалить</a>
+                                <!--<a href="#" class="a-btn stp-remove">Удалить</a>-->
                                 <a href="#" class="a-btn stp-save">Сохранить</a>
                             </div>
                         </aside>
@@ -1319,8 +1320,8 @@
                         </div>
                         
                         <div class="c-edit-inputs">
-                            <input type="text" value="Путешествие в лето">
-                            <input type="text" value="Описание коллекции...">
+                            <input type="text" value="<%- name %>">
+                            <input type="text" value="<%- description %>">
                         </div>
                     </div>
                 </header>
@@ -1342,7 +1343,7 @@
                         <a href="#" class="clp-down"></a>
                     </div>
                 </aside>
-            </div>
+            <!--</div>-->
 </script>
 
 <script type="text/template" id="point-detail-new">

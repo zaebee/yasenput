@@ -168,12 +168,15 @@ $(function(){
     window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
     $(window).scroll(function () {
 
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 600) {
             // если уже не грузим, то в путь
+            console.log('loading');
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
+                console.log(window.pointsArr);
                 window.pointsArr.current.loadNextPage();
+                window.collectionsArr.current.loadNextPageCollection();
             }
         }
     });

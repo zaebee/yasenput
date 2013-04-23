@@ -2,7 +2,7 @@ $(function(){
     DetailCollectionView = Backbone.View.extend({
         tagName: 'div',
         id: 'p-common',
-        className: 'popup',
+        className: 'popup p-collection',
         photosPlace: '#tab-photo .tabs-content .toggle-block',
         template: _.template($('#collection-detail').html()),
         initialize: function() {
@@ -16,7 +16,9 @@ $(function(){
             //'click .m-ico-group>a': 'showNearPlace',
             //'click .p-place-desc .a-toggle-desc':'moreDescription',
             'click .bp-photo':'nextBigPhoto',
-            'click .choose_place':'choosePlace'
+            'click .choose_place':'choosePlace',
+            'click .stp-edit':'startEdit',
+            'click .stp-save':'editCollection',
         },
         render:function(){
             var point_id = 0;
@@ -84,6 +86,27 @@ $(function(){
             });
             return this;
         },	
+        startEdit: function(){
+            $('.c-buttons').css('display','none');
+            $('.ctp-head').css('display','none');
+            $('.ctp-content').css('display','none');
+            $('.c-edit-buttons').css('display','block');
+            $('.c-edit-inputs').css('display','block');
+        },
+        editCollection: function(){
+            console.log('start edit collection', this.model.id);
+            var inputs = $(this.el).find('input');
+            console.log(inputs);
+            var edited_collection = new CollectionPoint;
+            edited_collection.id = 1;
+            console.log($(this.el).find('input')[3].value);
+            edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[3].value));;
+            edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[4].value));
+            edited_collection.attributes.collectionid = this.model.id;
+            edited_collection.save();
+            $('.scroll-box').click();
+            
+        },
         choosePlace: function(event){
             //event.preventDefault();
             var point_id = $(event.currentTarget).find('.choose_place_a').attr('idi');

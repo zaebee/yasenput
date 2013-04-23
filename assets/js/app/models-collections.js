@@ -333,8 +333,10 @@ $(function(){
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
+                console.log('=============================');
+                console.log('loadNextPage', data.collections);
                 if( data.points.length > 0 ) {
-                    collection.redrawOnMap(window.clusterer);
+                    //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
                 }
                 //  else {

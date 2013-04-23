@@ -34,10 +34,14 @@ $(function(){
                     };
                     break;
                 case "update":
-                    console.log('update')
+                    console.log('update', model.get('nameofcollection'), model.get('description'))
                     options.type = 'GET';
                     options.url = model.url + '/edit';
-                    options.data = 'name='+model.get('name');
+                    //options.data = 'name='+model.get('name');
+                    //options.data = '&nameofcollection='+model.get('nameofcollection');
+                    options.data = 'nameofcollection='+model.get('nameofcollection');
+                    options.data += '&description='+model.get('description');
+                    
                     options.data += '&pointid=' +model.get('pointid');
                     options.data += '&collectionid=' +model.get('collectionid');
                     break
@@ -107,7 +111,23 @@ $(function(){
             $(this.el).masonry( 'reload' );
             return this;
         },
-        
+        loadNextPageCollection: function(){
+            collection = this;
+            console.log('nininininininininininininininininininininin');
+            
+            this.page++;
+            jqXHR = this.setURL().fetch({add: true});
+            jqXHR.done(function(data, textStatus, jqXHR){
+                console.log('loadNextPage', data.points);
+                if( data.collections.length > 0 ) {
+                    //collection.redrawOnMap(window.clusterer);
+                    window.loadingNow = false;
+                }
+                //  else {
+                //     collection.page--;
+                // }
+            });
+        },
         addPrepend: function(model){
             this.add(model, {silent: true});
             var pin = new CollectionView({model:model});

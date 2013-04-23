@@ -12,6 +12,7 @@ from apps.collections.models import Collections
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
+from django.utils.encoding import smart_str, smart_unicode
 import sys
 import json
 
@@ -228,12 +229,19 @@ class CollectionEdit(CollectionsBaseView):
             #file1.write(str(list_of_collections))
             for coll_id in list_of_collections:
                 
-                file1.write('-')
-                file1.write(coll_id)
+                #file1.write('-')
+                #file1.write(coll_id)
                 
                 collection = Collections.objects.get(id = int(coll_id))
                 collection.save()
-                collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                #file1.write(str(params.__getitem__("collectionid")))
+                file1.write(smart_str(params.__getitem__("nameofcollection")))
+                if(params.__getitem__("nameofcollection") != 'undefined'):
+                    collection.name = smart_str(params.__getitem__("nameofcollection"))
+                    collection.description = params.__getitem__("description")
+                if(params.__getitem__("pointid") != 'undefined'):
+                    file1.write(params.__getitem__("pointid"))
+                    collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
                 collection.save()
             file1.close()
             

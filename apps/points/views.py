@@ -315,7 +315,7 @@ class PointsList(PointsBaseView):
         
         params = request.GET
 
-        COUNT_ELEMENTS = 5
+        COUNT_ELEMENTS = 1
         errors = []
 
         page = kwargs.get("page", 1) or 1
@@ -394,6 +394,9 @@ class PointsList(PointsBaseView):
                 pointsreq  = pointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 copypointsreq  = copypointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 collectionsreq = collectionsreq.annotate(popular=Count('likeusers__id')).order_by('-popular')
+                file1 = open('file4.txt','w')
+                file1.write(str(collectionsreq.values_list()))
+                file1.close()
 #                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
@@ -401,7 +404,7 @@ class PointsList(PointsBaseView):
             points = pointsreq[offset:limit].all()
             #points = pointsreq[offset:limit].all()
             copypoints = copypointsreq[offset:limit].all()
-            collections = collectionsreq[offset:limit].all()
+            collections = collectionsreq[offset:limit*2].all()
             
             allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
@@ -409,7 +412,7 @@ class PointsList(PointsBaseView):
             #allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
             
             allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            #allcollections = allcollections[:1]
+            allcollections = allcollections[:1]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

@@ -46,18 +46,18 @@ $(function(){
                         console.log('id: ', id);
                         collection = id.match(/tab-(\S+)/)[1];
                         console.log('collection: ', collection);
-                        console.log('window.pointsArr: ', window.pointsArr);
+                        console.log('window.pointsArr: ', window.pointsArr.current);
                         if( window.pointsArr[collection].loaded == false ) {
                             window.pointsArr[collection].setURL().fetch();
                             window.collectionsArr[collection].setURL().fetch();
                         }
 
 
-                        //window.pointsArr.current = window.pointsArr[collection];
+                        window.pointsArr.current = window.pointsArr[collection];
                         window.collectionsArr.current = window.collectionsArr[collection];
-                        //window.currentPoints = window.pointsArr[collection];
+                        window.currentPoints = window.pointsArr[collection];
                         window.currentCollectionPoints = window.collectionsArr[collection];
-                        //window.loadingNow = false;
+                        window.loadingNow = false;
                         //window.collectionsArr[collection].render().fetch();
                         console.log('window.pointsArr: ', window.pointsArr);
                         console.log('window.collectionArr: ', window.collectionsArr);
