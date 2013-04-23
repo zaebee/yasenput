@@ -27,7 +27,7 @@
         <div class="photo">
             {% if user.is_authenticated %}
                 <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
-                <a href="#" class="a-collection" data-tooltip="добавить в коллекцию">В коллекцию</a>
+                <a href="#" class="a-collection nonav" data-tooltip="добавить в коллекцию">В коллекцию</a>
                 <% if(ismine == 1) { %>
                     <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
                 <% } else { %>
@@ -44,7 +44,6 @@
                     <i class="yp-star"></i><small>+<%- reviewusersplus %>/-<%- reviewusersminus %></small>
                 </div>
             </div>
-
             <a href="/detailpoint/<%- id %>_<%- id_point %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="<%- imgs[0].thumbnail207_height %>"></a>
         </div>
 
@@ -86,10 +85,10 @@
 </script>
 
 <script type="text/template" id="collection-template" data-collection-id="<%=id%>">
-    <article class="item item-collection">
+    {#<article class="item item-collection">#}
         <div class="photo">
             {% if user.is_authenticated %}
-            <a href="#" class="a-like" data-tooltip="мне нравится">&nbsp;</a>
+            <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
             {% endif %}
             <div class="yasen-info">
                 <div class="yp-info">
@@ -97,34 +96,34 @@
                 </div>
             </div>
 
-            <a href="#" class="a-photo"><img src="temp/img-207x313.jpg" alt="" width="207" height="313"></a>
+            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207 %>"></a>
         </div>
 
         <ul class="photo-preview">
             <li>
                 <a href="#">
-                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                    <img src="<% if (points[1]) { %> <%- points[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                    <img src="<% if (points[2]) { %> <%- points[2].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <img src="temp/img-preview-65x52.jpg" alt="" width="65" height="52">
+                    <img src="<% if (points[3]) { %> <%- points[3].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
         </ul>
 
-        <div class="body">
-            <img src="temp/avatar.jpg" alt="" class="avatar" width="29" height="30">
+        <div class="body author-point">
+            <img src="{{MEDIA_URL}}<%=author.avatar%>" alt="" class="avatar" width="29" height="30">
 
-            <h3>Кирилло-Белозерский монастырь</h3>
-            <p>поделился Андрей Коротков</p>
+            <h3><%- name %></h3>
+            <p>поделился <%- author.first_name %> <%- author.last_name %></p>
         </div>
     </article>
 </script>
@@ -184,11 +183,11 @@
 
                         <div class="tabs-content">
                         <div id="tab-photo">
-                            <div class="tabs-inside"><!-- tp- tab photo -->
+                            <!--<div class="tabs-inside"> tp- tab photo 
                                 <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
                                 <a href="#" data-target="tp-tab-my">новые</a>
                                 <a href="#" data-target="tp-tab-new">мои</a>
-                            </div>
+                            </div>-->
 
                             <div class="tabs-content">
                                 <div class="toggle-block">
@@ -216,9 +215,7 @@
                                                 <div class="bp-add-like">
                                                     <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
                                                     <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
-                                                    {% if user.is_authenticated %}
                                                     <a href="#" class="a-like"></a>
-                                                    {% endif %}
                                                     <span class="count-like"><%- imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
@@ -337,6 +334,11 @@
 
                         <div id="tab-map">
                             <div class="map">
+{#                                <div id="popup-map-1" style="width:560px; height:510px"></div>#}
+                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
+
+                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
+
                                 <div class="m-ico-group">
                                     <a href="#">
                                         <span class="m-ico m-hotel"></span>
@@ -477,12 +479,136 @@
                         <div id="tab-desc">
                             <div class="toggle-block">
                                 <ul class="ul-desc">
+                                    <li class="item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
 
+                                        <div class="body">
+                                            <a href="#" class="a-author">Андрей Коротков</a>
+
+                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                            <div class="desc-date">12.02.2032</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                                        </div>
+                                    </li>
+
+                                    <li class="even item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="body">
+                                            <a href="#" class="a-author">Андрей Коротков</a>
+
+                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                            <div class="desc-date">12.02.2032</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                        </div>
+                                    </li>
+
+                                    <li class="item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="body">
+                                            <a href="#" class="a-author">Андрей Коротков</a>
+
+                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                            <div class="desc-date">12.02.2032</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                        </div>
+                                    </li>
+
+                                    <li class="even item-comment">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="body">
+                                            <a href="#" class="a-author">Андрей Коротков</a>
+
+                                            <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                            <div class="desc-date">12.02.2032</div>
+                                        </div>
+
+                                        <div class="action">
+                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                        </div>
+                                    </li>
                                 </ul>
 
                                 <div class="hidden-content">
                                     <ul class="ul-desc">
+                                        <li class="item-comment">
+                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
 
+                                            <div class="body">
+                                                <a href="#" class="a-author">Андрей Коротков</a>
+
+                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                                <div class="desc-date">12.02.2032</div>
+                                            </div>
+
+                                            <div class="action">
+                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                            </div>
+                                        </li>
+
+                                        <li class="even item-comment">
+                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                            <div class="body">
+                                                <a href="#" class="a-author">Андрей Коротков</a>
+
+                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                                <div class="desc-date">12.02.2032</div>
+                                            </div>
+
+                                            <div class="action">
+                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                            </div>
+                                        </li>
+
+                                        <li class="item-comment">
+                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                            <div class="body">
+                                                <a href="#" class="a-author">Андрей Коротков</a>
+
+                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                                <div class="desc-date">12.02.2032</div>
+                                            </div>
+
+                                            <div class="action">
+                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                            </div>
+                                        </li>
+
+                                        <li class="even item-comment">
+                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                            <div class="body">
+                                                <a href="#" class="a-author">Андрей Коротков</a>
+
+                                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                                <div class="desc-date">12.02.2032</div>
+                                            </div>
+
+                                            <div class="action">
+                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
 
@@ -586,6 +712,514 @@
         </div>
     </div>
 </div>
+</script>
+
+<script type="text/template" id="collection-detail">
+                <!--<div class="popup p-collection" id="p-common">-->
+                    <div class="clearfix p-body">
+                    <header>
+                        {% if user.is_authenticated %}
+                        <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
+                        {% endif %}
+                        <!--<div class="event-date">1―5 января</div>-->
+
+                        <h2><%- points[fir].name %></h2>
+                        <div class="addr"><%- points[fir].address %></div>
+
+                        <div class="stats">
+                            <span>
+                                <span class="ico-want-small"></span>
+                                <%- beens_count %>
+                            </span>
+
+                            <span>
+                                <span class="ico-like-small"></span>
+                                <%- likes_count %>
+                            </span>
+
+                            <span>
+                                <span class="ico-comment-small"></span>
+                                <%- points[fir].comments %>
+                            </span>
+                        </div>
+                    </header>
+
+                    <div class="wide-box">
+                        <div class="p-tabs">
+                            <a href="#" data-target="tab-photo" class="active">Фотография</a>
+                            <a href="#" data-target="tab-map">На карте</a>
+                            <a href="#" data-target="tab-desc">Описание</a>
+
+                            <div class="shadow"></div>
+                        </div>
+
+                        <div class="tabs-content">
+                        <div id="tab-photo">
+                            <!--<div class="tabs-inside"> tp- tab photo
+                                <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
+                                <a href="#" data-target="tp-tab-my">новые</a>
+                                <a href="#" data-target="tp-tab-new">мои</a>
+                            </div>-->
+
+                            <div class="tabs-content">
+                                <div class="toggle-block">
+                                    <div class="clearfix p-gallery">
+                                        <% _.each(points[fir].imgs, function(itm, index){ %>
+                                            <div class="item-photo <% if(index == 0){ print ('current') }%>">
+                                                <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="<%- itm.likeusers %>" data-avatar="{{ MEDIA_URL }}<%- itm.author.avatar %>">
+                                                    <img src="<%= itm.thumbnail130x130 %>" alt="" width="130" height="130">
+                                                </a>
+                                                <button class="remove-photo"></button>
+                                                <button class="complaint-photo"></button>
+                                            </div>
+                                        {% if user.is_authenticated %}
+                                            <% if(((points[fir].imgs.length < 4) && ((points[fir].imgs.length-1) == index)) || ((points[fir].imgs.length-1) == index)){ %>
+                                                <div class="item-photo load-photo">
+                                                    <input type="file">
+                                                </div>
+                                            <% } %>
+                                        {% endif %}
+                                        <% if(((points[fir].imgs.length < 5) && ((points[fir].imgs.length-1) == index)) || (index == 3)){ %>
+                                            <div id="big-photo">
+                                            <div class="bp-photo">
+                                                <img src="<%= points[fir].imgs[0].thumbnail560 %>" alt="">
+
+                                                <div class="bp-add-like">
+                                                    <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
+                                                    <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
+                                                    {% if user.is_authenticated %}
+                                                    <a href="#" class="a-like"></a>
+                                                    {% endif %}
+                                                    <span class="count-like"><%- imgs[0].likeusers %></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="bp-comments">
+                                                <div class="toggle-block">
+                                                    <div  class="item-comment">
+                                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                        <div class="comment-body">
+                                                            <div class="comment-author">Андрей Коротков</div>
+
+                                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                            <div class="comment-date">20.02.2013</div>
+                                                        </div>
+
+                                                        <div class="action">
+                                                            <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div  class="item-comment">
+                                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                        <div class="comment-body">
+                                                            <div class="comment-author">Андрей Коротков</div>
+
+                                                            <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                            <div class="comment-date">20.02.2013</div>
+                                                        </div>
+
+                                                        <div class="action">
+                                                            <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="hidden-content">
+                                                        <div  class="item-comment">
+                                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                            <div class="comment-body">
+                                                                <div class="comment-author">Андрей Коротков</div>
+
+                                                                <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                                <div class="comment-date">20.02.2013</div>
+                                                            </div>
+
+                                                            <div class="action">
+                                                                <a href="#" class="a-complaint-comment"></a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div  class="item-comment">
+                                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                            <div class="comment-body">
+                                                                <div class="comment-author">Андрей Коротков</div>
+
+                                                                <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                                <div class="comment-date">20.02.2013</div>
+                                                            </div>
+
+                                                            <div class="action">
+                                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div  class="item-comment">
+                                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                            <div class="comment-body">
+                                                                <div class="comment-author">Андрей Коротков</div>
+
+                                                                <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
+
+                                                                <div class="comment-date">20.02.2013</div>
+                                                            </div>
+
+                                                            <div class="action">
+                                                                <a href="#" class="a-complaint-comment"></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="add-comment">
+                                                        <form action="#">
+                                                            <div class="ac-block">
+                                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                                                <div class="ac-body">
+                                                                    <div class="toggle-area">
+                                                                        <textarea rows="3" cols="40"></textarea>
+                                                                        <input type="submit" value=" ">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <a href="#" class="a-toggle comments">ещё комментарии <span>&darr;</span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                        <% }) %>
+                                    </div>
+
+                                    <a href="#" class="a-toggle photos">ещё фотографии <span>&darr;</span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-map" style="display: none">
+                            <div class="map">
+                                <div id="popup-map-1" style="width:560px; height:510px"></div>
+                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
+
+                                <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
+                                <div class="m-ico-group">
+                                    <a href="#">
+                                        <span class="m-ico m-hotel"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-cafe"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-restoran"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-turism"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-azs"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-active-rest"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-sto"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-commerc"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-hunting"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-events"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-shop"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-fishing"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-monument"></span>
+                                    </a>
+
+                                    <a href="#">
+                                        <span class="m-ico m-church"></span>
+                                    </a>
+                                </div>
+
+{#                                <div class="placemark" style="top:35%">#}
+{#                                    <span class="m-ico m-hotel"></span>#}
+{#                                </div>#}
+
+{#                                <div class="placemark placemark-wide" style="top:65%">#}
+{#                                    <span class="m-ico m-commerc"></span>#}
+{#                                    <span class="num">32</span>#}
+{#                                </div>#}
+                            </div>
+
+                            <div id="near-objects">
+                                <h4 class="title-block">Ближайшие гостинницы</h4>
+
+                                <ol>
+                                    <li>
+                                        <h5>Место номер один</h5>
+                                        <p>Краткое описание места и того, что здесь находится</p>
+                                    </li>
+
+                                    <li>
+                                        <h5>Место номер два</h5>
+                                        <p>Краткое описание места и того, что здесь находится</p>
+                                    </li>
+
+                                    <li>
+                                        <h5>Место номер три</h5>
+                                        <p>Краткое описание места и того, что здесь находится</p>
+                                    </li>
+
+                                    <li>
+                                        <h5>Место номер четыре</h5>
+                                        <p>Краткое описание места и того, что здесь находится</p>
+                                    </li>
+
+                                    <li>
+                                        <h5>Место номер пять</h5>
+                                        <p>Краткое описание места и того, что здесь находится</p>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <!--<form action="#">
+                                <div class="clearfix p-photos">
+                                    <div class="item-photo">
+                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                        <button class="remove-photo"></button>
+                                    </div>
+
+                                    <div class="item-photo photo-loading">
+                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                        <button class="remove-photo"></button>
+
+                                        <div class="load-status">
+                                            <div class="progress-loading">
+                                                <div class="value" style="width:33%"></div>
+                                            </div>
+                                            33%
+                                        </div>
+                                    </div>
+
+                                    <div class="item-photo photo-loading">
+                                        <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
+                                        <button class="remove-photo"></button>
+
+                                        <div class="load-status">
+                                            <div class="progress-loading">
+                                                <div class="value" style="width:56%"></div>
+                                            </div>
+                                            56%
+                                        </div>
+                                    </div>
+
+                                    <div class="item-photo load-photo">
+                                        <input type="file">
+                                    </div>
+                                </div>
+                            </form>-->
+                        </div>
+
+                        <div id="tab-desc" style="display: none">
+                            <div class="toggle-block">
+                                <ul class="ul-desc">
+
+                                </ul>
+
+                                <div class="hidden-content">
+                                    <ul class="ul-desc">
+
+                                    </ul>
+                                </div>
+
+                                <a href="#" class="a-toggle">Ещё описания <span>&darr;</span></a>
+                            </div>
+
+                            <div class="add-comment">
+                                <form action="#">
+                                    <div class="ac-block">
+                                        <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                        <div class="ac-body">
+                                            <div class="toggle-area">
+                                                <textarea rows="3" cols="40"></textarea>
+                                                <input type="submit" value=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="tabs-content p-common-content" style="display: none">
+                            <section class="p-block peoples">
+                                <h4 class="title-block">Это место хотят посетить</h4>
+
+                                <div class="clearfix toggle-block">
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+
+                                    <div class="clearfix hidden-content">
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
+                                    </div>
+
+                                    <a href="#" class="a-toggle">Ещё пользователи <span>&darr;</span></a>
+                                </div>
+                            </section>
+
+                            <section class="p-block event-labels">
+                                <h4 class="title-block">Метки</h4>
+
+                                <div class="body">
+                                    <% _.each(points[fir].comments, function(itm, index){ %>
+                                        <div class="label"><%= itm.name %></div>
+                                    <% }) %>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <footer>
+                        {% if user.is_authenticated %}
+                            <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
+                        {% endif %}
+                        <div class="stats">
+                                                <span>
+                                                    <span class="ico-want-small"></span>
+                                                    <%- points[fir].visits %>
+                                                </span>
+
+                                                <span>
+                                                    <span class="ico-like-small"></span>
+                                                    <%- points[fir].likes %>
+                                                </span>
+
+                                                <span>
+                                                    <span class="ico-comment-small"></span>
+                                                    <%- points[fir].comments %>
+                                                </span>
+                        </div>
+                    </footer>
+                </div>
+                
+                <aside id="right-panel">
+                    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+                    <a href="#" class="a-btn a-add-path">Создать маршрут</a>
+                    <a href="#" class="a-btn a-edit">Редактировать</a>
+                    
+                    <!--<div class="small-icons">
+                        <a href="#" class="a-like" data-tooltip="Нравится"></a><a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
+                    </div>
+                    
+                    <div class="aside-social">
+                        <img src="temp/social-2.png" alt="">
+                    </div>
+                    
+                    <div class="small-icons">
+                        <i class="ico-wifi"></i><i class="ico-disabled"></i><i class="ico-p"></i><i class="ico-wc"></i>
+                    </div>-->
+                </aside>
+                
+                <header id="c-top-panel">
+                    <div class="inner-wrap">
+                        <aside class="stp-buttons">
+                        {% if user.is_authenticated %}
+                            <div class="c-buttons">
+                                <a href="#" class="a-btn stp-like">Нравится</a>
+                                <% if (author.id == {{ user.person.id }}){ %><a href="#" class="a-btn stp-edit">Редактировать</a><% } %>
+                            </div>
+                        {% endif %}
+                            <div class="c-edit-buttons">
+                                <!--<a href="#" class="a-btn stp-remove">Удалить</a>-->
+                                <a href="#" class="a-btn stp-save">Сохранить</a>
+                            </div>
+                        </aside>
+                        
+                        <div class="ctp-head">
+                            <h1><%- name %></h1>
+                            коллекцию добавил
+                            <a href="#"><%- author.first_name %> <%- author.last_name %></a>
+                        </div>
+                        
+                        <div class="ctp-content">
+                            <%- description %><span class="hellip">&hellip;</span> 
+                            
+                            <span class="hidden more-desc">В отличие от опций, которые позволяют изменить только некоторые параметры отображения элемента, макет позволяет сформировать какое угодно его представление. <br>Реализация собственного макета «с нуля» на основе интерфейса ILayout является относительно трудоемкой задачей, решение которой выходит за рамки данного руководства. Однако API предоставляет удобный механизм, позволяющий генерировать макеты на основе шаблонов<br></span>
+                            
+                            <a href="#" class="a-ctp-toggle">подробнее</a>
+                        </div>
+                        
+                        <div class="c-edit-inputs">
+                            <input type="text" value="<%- name %>">
+                            <input type="text" value="<%- description %>">
+                        </div>
+                    </div>
+                </header>
+                
+                <aside id="c-left-panel">
+                    <div class="aside-content">
+                        <div class="aside-viewport">
+                            <ol id="ol-collection">
+                                <% _.each(points, function(point, id){ %>
+                                <li class="<% if(fir == id) { %>active <% }; %>choose_place" data-placemark-id="placemark-1">
+                                    <a href="#" class="choose_place_a" idi="<%- id %>"><%- point.name %></a>
+                                    <button type="button" class="remove-collection"></button>
+                                </li>
+                                <% }); %>
+                            </ol>
+                        </div>
+                        
+                        <a href="#" class="clp-up"></a> <!-- clp- collection left panel  -->
+                        <a href="#" class="clp-down"></a>
+                    </div>
+                </aside>
+            <!--</div>-->
 </script>
 
 <script type="text/template" id="point-detail-new">
@@ -1473,10 +2107,10 @@
                 </div>
 
                 <div class="line">
-                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc">
+                    <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc" defaultValue="fortest">
                 </div>
 
-                <input type="button" value="Создать" class="a-btn a-add-collection">
+                <input type="submit" value="Создать" class="a-btn a-add-collection">
 
                 <br><br>
 
@@ -1484,18 +2118,19 @@
                     <label>Выберите из уже созданных коллекций:</label>
                     <div class="wide-box">
                         <div class="small-viewport">
-                            <% _.each(collections, function(colltn){ %>
-                                <label class="custom-checkbox" data-id="<%- colltn.id %>">
-                                    <input type="checkbox" value="" name="">
-                                    colln
-                                    <%- colltn.name %>
-                                </label>
-                            <% }) %>
+                        <% console.log('{% for collection in collections %} {{collection.id}} {%endfor%}') %>
+                            {% for collection in collections %}
+                            <label class="custom-checkbox" data-id="{{collection.id}}">
+                                <input type="checkbox" value="" name="" dataid="{{collection.id}}">
+                                {{collection.name}}
+                            </label>
+                            {%endfor%}
                         </div>
                     </div>
                 </div>
 
-                <input type="submit" value="Выбрать" class="a-btn">
+                <input type="submit" value="Выбрать" class="a-btn nonav">
+                
             </form>
         </div>
     </div>

@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^mypoints', 'apps.main.views.index'),
     url(r'^tag', 'apps.main.views.index'),
     url(r'^detailpoint', 'apps.main.views.index'),
+    url(r'^add_collection', 'apps.main.views.index'),
 
 )

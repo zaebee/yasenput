@@ -4,6 +4,7 @@ __author__ = 'art'
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from apps.main.models import Areas, Regions, HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
+from apps.collections.models import Collections
 from apps.comments.models import Comments
 from apps.photos.models import Photos
 from apps.tags.models import Tags
@@ -54,6 +55,7 @@ def index(request):
                                 Photos.objects.filter(likeusers__id=user.id).count() +
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
+        collections = Collections.objects.filter(author__id=user.id)
     tagsRequire = Tags.objects.filter(level=0).all()
     tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
     regions = Regions.objects.all()
@@ -65,7 +67,7 @@ def index(request):
         else:
             typepoints[i].ul = False
     return render_to_response(template_name,
-                              {'areas': areas, 'heads': heads, 'categories': categories,
+                              {'areas': areas, 'collections':collections, 'heads': heads, 'categories': categories,
                                'countvisitpoints': countvisitpoints, 'regions': regions,
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
@@ -205,6 +207,9 @@ def point(request):
             return HttpResponse(json.serialize(point, relations={'type': {}}), mimetype="application/json")
         else:
             return HttpResponse('{"r":"0"}', mimetype="application/json")
+
+#def add_collection(request):
+#    if request.user.is_authenticated():
 
 
 def routes(request, page):

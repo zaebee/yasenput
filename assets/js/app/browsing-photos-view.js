@@ -34,7 +34,7 @@ $(function(){
             console.log('browsing photos render! ');
             
             $(this.el).html( this.template() );
-
+            console.log(this.el);
             view = this;
             this.collection.each(function(photo){
                if(view.collection.isminePoint == 0 ) {

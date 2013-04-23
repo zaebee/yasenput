@@ -146,7 +146,6 @@ $(function(){
             console.log('method: ', method);
             console.log('model: ', model);
             console.log('options: ', options);
-
             console.wait = true;
             switch (method) {
                 case "create":
@@ -250,7 +249,7 @@ $(function(){
             });
         },
         saveNew: function(){
-            console.log('');
+            console.log('etst');
             errors = this.ckeckValid();
             if(errors == null) {
                 this.save({}, {
@@ -366,6 +365,7 @@ $(function(){
             _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
+            console.log('points inited!')
         },
         parse: function(response) {
             return response.points;
@@ -406,12 +406,14 @@ $(function(){
             this.loaded = true;
             console.log('++> render points');
             console.log('this: ', this);
-
+            console.log('points elSelector ->>', $(this.elSelector))
             this.el = $(this.elSelector);
-            $(this.el).empty();
+            //$(this.el).empty();
+            console.log('this -->', this.el);
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
+                //alert(pin.el);
                 self.el.append(pin.render().el);
             });
 
@@ -501,8 +503,10 @@ $(function(){
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
+                console.log('=============================');
+                console.log('loadNextPage', data.collections);
                 if( data.points.length > 0 ) {
-                    collection.redrawOnMap(window.clusterer);
+                    //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
                 }
                 //  else {

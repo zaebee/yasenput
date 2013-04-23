@@ -8,10 +8,12 @@ from django.utils import simplejson
 from apps.collections import forms
 from apps.collections import models as CollectionsModels
 from apps.main import models as MainModels
+from apps.collections.models import Collections
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
+from django.utils.encoding import smart_str
 import sys
 import json
 
@@ -181,57 +183,76 @@ class CollectionsList(View):
 
 
 class CollectionAdd(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+
+        DEFAULT_LEVEL = 2
+
         errors = []
 
-        params = request.POST
+        params = request.GET.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
+            
             collection = form.save(commit=False)
 
             person = MainModels.Person.objects.get(username=request.user)
             collection.author = person
             collection.save()
-
-            YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize([collection], fields=('name', 'id')), mimetype="application/json")
+            #points = MainModels.Points.objects.all()
+            
+            collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+            collection.save()
+            
+            return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
             for er in e:
                 errors.append(er + ':' + e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": "2", "txt": ", ".join(errors)})
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
 class CollectionEdit(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+
+        DEFAULT_LEVEL = 2
+
         errors = []
-        params = request.POST
-        form = forms.IdForm(params)
-        if not form.is_valid():
-            return JsonHTTPResponse({"status": 0, "id": "1", "txt": "Ожидается id коллекции"})
 
-        
-        form = forms.AddCollectionForm(params, instance=CollectionsModels.Collections.objects.get(pk=form.cleaned_data['id']))
+        params = request.GET.copy()
+        form = forms.AddCollectionForm(params)
         if form.is_valid():
-            collection = form.save()
-
-            YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize([collection], fields=('name', 'id')), mimetype="application/json")
+            
+            
+            #list_of_collections.split()
+            list_of_collections = params.__getitem__("collectionid").split(",")
+            list_of_collections
+            for coll_id in list_of_collections:
+                collection = Collections.objects.get(id = int(coll_id))
+                collection.save()
+                if(params.__getitem__("nameofcollection") != 'undefined'):
+                    collection.name = smart_str(params.__getitem__("nameofcollection"))
+                    collection.description = params.__getitem__("description")
+                if(params.__getitem__("pointid") != 'undefined'):
+                    collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                collection.save()
+            
+            return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
             for er in e:
                 errors.append(er + ':' + e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": "2", "txt": ", ".join(errors)})
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
 class AddPoint(CollectionsBaseView):
-    http_method_names = ('post',)
-
+    http_method_names = ('get',)
+    
     def post(self, request, *args, **kwargs):
+        
         errors = []
 
         params = request.POST
