@@ -48,6 +48,7 @@ def index(request):
     countvisitpoints = 0
     count_liked_objects = 0
     count_commented_objects = 0
+    collections = Collections.objects.filter(author__id=0)
     if request.user.is_authenticated():
         user = User.objects.get(username=request.user)
         countvisitpoints = Points.objects.filter(visitusers__id=user.id).count()
