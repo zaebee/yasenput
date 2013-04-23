@@ -67,7 +67,7 @@ def index(request):
         else:
             typepoints[i].ul = False
     return render_to_response(template_name,
-                              {'areas': areas, 'collections':collections, 'heads': heads, 'categories': categories,
+                              {'areas': areas, 'collections': collections, 'heads': heads, 'categories': categories,
                                'countvisitpoints': countvisitpoints, 'regions': regions,
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
