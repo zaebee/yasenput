@@ -193,7 +193,7 @@ $(function(){
 
             }
         },
-        addInCollection:function(evenet){
+        addInCollection:function(event){
             console.log(this.model);
             $(".popup").remove();
             window.newCollection = new window.CollectionPoint();
