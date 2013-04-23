@@ -19,6 +19,7 @@ $(function(){
             'click .choose_place':'choosePlace',
             'click .stp-edit':'startEdit',
             'click .stp-save':'editCollection',
+            'click .remove-collection':'removePoint',
         },
         render:function(){
             var point_id = 0;
@@ -92,6 +93,12 @@ $(function(){
             $('.ctp-content').css('display','none');
             $('.c-edit-buttons').css('display','block');
             $('.c-edit-inputs').css('display','block');
+            $('.remove-collection').css('display','block');
+            //$('.remove-collection').addClass('nonav');
+        },
+        removePoint: function(event){
+            console.log('this====================',$(event.target).parent());
+            
         },
         editCollection: function(){
             console.log('start edit collection', this.model.id);
