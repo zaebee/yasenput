@@ -394,9 +394,7 @@ class PointsList(PointsBaseView):
                 pointsreq  = pointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 copypointsreq  = copypointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 collectionsreq = collectionsreq.annotate(popular=Count('likeusers__id')).order_by('-popular')
-                file1 = open('file4.txt','w')
-                file1.write(str(collectionsreq.values_list()))
-                file1.close()
+                
 #                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')

@@ -222,31 +222,19 @@ class CollectionEdit(CollectionsBaseView):
         form = forms.AddCollectionForm(params)
         if form.is_valid():
             
-            file1 = open('file2.txt','w')
+            
             #list_of_collections.split()
             list_of_collections = params.__getitem__("collectionid").split(",")
             list_of_collections
-            #file1.write(str(list_of_collections))
             for coll_id in list_of_collections:
-                
-                #file1.write('-')
-                #file1.write(coll_id)
-                
                 collection = Collections.objects.get(id = int(coll_id))
                 collection.save()
-                #file1.write(str(params.__getitem__("collectionid")))
-                file1.write(smart_str(params.__getitem__("nameofcollection")))
                 if(params.__getitem__("nameofcollection") != 'undefined'):
                     collection.name = smart_str(params.__getitem__("nameofcollection"))
                     collection.description = params.__getitem__("description")
                 if(params.__getitem__("pointid") != 'undefined'):
-                    file1.write(params.__getitem__("pointid"))
                     collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
                 collection.save()
-            file1.close()
-            
-            
-            
             
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
