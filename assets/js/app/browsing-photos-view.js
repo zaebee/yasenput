@@ -117,19 +117,9 @@ $(function(){
                     //какой это див по счёту в линии
                     indexDiv = countBack - (countLines * 4);
                     console.log('indexDiv: ', indexDiv);
-<<<<<<< HEAD
-
                     // солько дивов переди текущего дива нужно перенести
                     transAmout = 4 - indexDiv;
                     console.log('transAmout: ', transAmout);
-
-=======
-
-                    // солько дивов переди текущего дива нужно перенести
-                    transAmout = 4 - indexDiv;
-                    console.log('transAmout: ', transAmout);
-
->>>>>>> korolev
                     // elemsArr = $(imgElem).nextAll();
                     elemsArr = $(imgElem).nextAll().slice(transAmout);
 
