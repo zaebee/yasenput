@@ -21,13 +21,21 @@ $(function(){
             $(event.currentTarget).toggle().siblings().toggle();
         },
         likecollection: function(event){
+
             event.preventDefault();
+            console.log(event.target);
+            if ($(event.target).hasClass('marked')){
+                $(event.target).removeClass('marked');
+            } else {
+                $(event.target).addClass('marked')
+            }
             console.log('like collection: ', this.model.get('id'));
             view = this;
+            console.log(this.model.id);
             this.model.like({
                 success: function(model, response, options){
-                    model.set(response[0]).ratingCount();                    
-                    view.render();
+                    model.set(response[0]).ratingCount();
+                    //view.render();
                 },
                 error: function(){
 

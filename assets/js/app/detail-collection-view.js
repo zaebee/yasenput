@@ -100,7 +100,7 @@ $(function(){
             console.log('this====================',$(event.target).parent());
             
         },
-        editCollection: function(){
+        editCollection: function(options){
             console.log('start edit collection', this.model.id);
             var inputs = $(this.el).find('input');
             console.log(inputs);
@@ -110,7 +110,8 @@ $(function(){
             edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[2].value));;
             edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[3].value));
             edited_collection.attributes.collectionid = this.model.id;
-            edited_collection.save();
+            options.action = 'update';
+            edited_collection.save({}, options);
             $('.scroll-box').click();
             
         },

@@ -33,27 +33,39 @@ $(function(){
                             break;
                     };
                     break;
+                
                 case "update":
-                    console.log('update', model.get('nameofcollection'), model.get('description'))
-                    options.type = 'GET';
-                    options.url = model.url + '/edit';
-                    //options.data = 'name='+model.get('name');
-                    //options.data = '&nameofcollection='+model.get('nameofcollection');
-                    options.data = 'nameofcollection='+model.get('nameofcollection');
-                    options.data += '&description='+model.get('description');
-                    
-                    options.data += '&pointid=' +model.get('pointid');
-                    options.data += '&collectionid=' +model.get('collectionid');
-                    break
-                // case "update":
-                //     options.url = model.url + '/'
-                //     break;
-                // case "delete":
-                //     options.url = model.url + '/del'
-                //     options.type = 'POST';
+                    switch (options.action) {
+                        case 'update':
+                            options.type = 'GET';
+                            options.url = model.url + '/edit';
+                            options.data = 'nameofcollection='+model.get('nameofcollection');
+                            options.data += '&description='+model.get('description');
+                            options.data += '&pointid=' +model.get('pointid');
+                            options.data += '&collectionid=' +model.get('collectionid');
+                            break;
+                        case 'like':
+                            options.type = 'GET';
+                            console.log('SYNC: like the collection', model.get('id'));
+                            options.url = model.url + '/like';
+                            options.data = 'collectionid='+model.get('id');
+                            break;
+                    }
             };
             return Backbone.sync(method, model, options);
-        }
+        },
+        like: function(options){
+            console.log('this: ', this.id);
+            options.action = 'like';
+            newCollection = new CollectionPoint;
+            newCollection.id = '1';
+            newCollection.attributes.id = this.id;
+            newCollection.save({}, options);
+        },
+        ratingCount: function(){
+            likes_count = parseInt( this.get('likes_count'), 10);
+            this.set( {YPscore: likes_count } );
+        },
     });
     CollectionPoints = Backbone.Collection.extend({
         model: CollectionPoint,
