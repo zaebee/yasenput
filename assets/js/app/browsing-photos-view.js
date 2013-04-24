@@ -23,7 +23,7 @@ $(function(){
             // _.bindAll(this, 'likepoint');     
         },
         events: {
-            'click .item-photo:not(.current)>a': 'viewImg',
+            'click .item-photo>a': 'viewImg', 
             'click a.a-toggle.photos': 'togglePhotos',
             'click a.a-toggle.comments': 'toggleComments',
             'click input:submit': 'addComment',
