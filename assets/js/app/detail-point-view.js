@@ -14,7 +14,7 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .bp-photo':'nextBigPhoto'
+            'click .a-like': 'likePhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -23,9 +23,9 @@ $(function(){
 
             browsingPhotos = new window.BrowsingPhotosView({
                 el: $(this.el).find(this.photosPlace),
-                collection: this.model.get('photos_pop'),
+                collection: this.model.get('photos_pop')
             });
-            console.log('browsingPhotos-->', browsingPhotos.el)
+            browsingPhotos.mainPoint = this.model;
             browsingPhotos.render();
             
             var myMapPopupPlace;
@@ -36,16 +36,17 @@ $(function(){
                 afterChange: function(self, id){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
+                        console.log('view.model', view.model);
                         if (!view.popupMap) {
-                            console.log('inside of if', view);
+                            coords = [view.model.get('latitude'), view.model.get('longitude')];
                             view.popupMap = new ymaps.Map('popup-map-1', {
-                                center: myMap.getCenter(),
+                                center: coords,
                                 zoom: 14
                             });
                             view.model.get('near_points').map = view.popupMap;
                             view.popupMap.controls.add('zoomControl');
                             view.clusterer = new ymaps.Clusterer({
-                                clusterIcons: window.clusterIcons,
+                                clusterIcons: window.clusterIcons
                             });
                             
                             view.popupMap.events.add('boundschange', function(event){
@@ -54,7 +55,7 @@ $(function(){
 
                             view.popupMap.geoObjects.add( view.clusterer );
 
-                            coords = [view.model.get('latitude'), view.model.get('longitude')];
+
                             console.log('coords: ', coords);
                             var placemark = new ymaps.Placemark(coords 
                                 ,{
@@ -100,14 +101,20 @@ $(function(){
             $(event.currentTarget).toggleClass("open");
             $(event.currentTarget).hasClass("open") ? $(event.currentTarget).text("свернуть") : $(event.currentTarget).text("подробнее");
         },
-        nextBigPhoto: function(event){
+        likePhoto: function(event){
             event.preventDefault();
-            if(event.target.tagName.toLowerCase() == 'img' && !$(event.target).hasClass("avatar")){
-                var items = $(event.currentTarget).closest(".p-gallery").find(".item-photo:visible").not(".load-photo"),
-                    current = items.filter(".current"),
-                    next = items.index(current) < items.length-1 ? items.eq(items.index(current)+1) : items.eq(0);
-                next.find('a').click();
-            }
+            $(event.currentTarget).toggleClass('marked');
+            console.log('like this photo');
+            view = this;
+            this.model.like({
+                success: function(model, response, options){
+                    model.set(response[0]).ratingCount();                    
+                    view.thumbView.render();
+                },
+                error: function(){
+
+                }
+            });
         }
     });
     window.DetailPointView = DetailPointView;

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from sorl.thumbnail.shortcuts import get_thumbnail
 from apps.main.models import Person
 from apps.comments.models import Comments
+from django.utils import simplejson
 
 def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
@@ -44,7 +45,7 @@ class Photos(models.Model):
         return im.height
 
     def thumbnail560(self):
-        im = get_thumbnail(self.img, '560')
+        im = get_thumbnail(self.img, 'x560')
         return im.url
 
     def img_url(self):

@@ -80,7 +80,6 @@ jQuery(function($){
 	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
 					{text}\
-					    <span style="display:none">1</span>\
 						<button class="remove-label"></button>\
 					</div>', //мини-шаблон для вставки лейблов
 		
@@ -209,13 +208,20 @@ jQuery(function($){
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
-					
-					if($(".selected", $(self.p.dropRoot)).length){
-						$(".selected a", $(self.p.dropRoot)).click();
-					} else {
-						$(self.p.dropRoot).hide();
-					}
-					
+                    var flag = false;
+                    _.each(multisearch_data.tags, function(tag){
+
+                         if(tag.name.toLowerCase() == $("#multisearch-text").val().toLowerCase()){
+                             console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
+                             $('#multisearch-tags a').filter(function() { return $.data(this, "id") == tag.id; }).end().click();
+                             flag = true;
+                         }
+                    })
+                    if(multisearch_data.places.length>0 && !flag){
+                        console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
+                        $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
+                    }
+					console.log('нажат enter');
 					break;
 				case 27:
 					setTimeout(function(){
@@ -234,27 +240,115 @@ jQuery(function($){
 		},
 		
 		onClickDrop: function(me, self){
-            //console.log('onClickDrop');
+            console.log('onClickDrop')
+            window.currentPoints.page = 1;
+            window.currentPoints.setURL().fetch();
 			var clsName = '';
 			
+			text_labels = [];
+			
+			// places labels
 			if(me.closest(".item-place").length){
 				clsName = ' label-place';
 				
-				//id = me.span.text();
-				//qq = 11;
-				//multisearch_result.places.push()
+				// clear _result array (only one place can be added)
+				multisearch_result.places.length = 0;
+				
+				// delete all current places labels
+				$(".label-fields").children(".label-place").remove();
+				
+				split_labels = me.text().split(",");
+				
+				i = 0;
+				_.each(split_labels, function(label) { 
+				                multisearch_result.places.push(label);
+				                text_labels.push({
+				                    text: label,
+				                    id: i,
+				                    type: "place"
+				                });
+				                i++;
+				              });
+
+                var myGeocoder = ymaps.geocode(me.text());
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    },
+                    function (err) {
+                        alert('Ошибка');
+                    }
+                );
 			}
+			// points labels
 			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
+
+                multisearch_result.points.length = 0;
+                $(".label-fields").children(".label-name").remove();
+				id = multisearch_data.points[me.data("id")].id;
+				name = multisearch_data.points[me.data("id")].name;
+				// add only one instance of point
+				if (multisearch_result.points.indexOf(name) != -1)
+				{
+				    return;
+				}
+                console.log('onClickDrop name');
+				multisearch_result.points.push(name);
+
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.points.length-1,
+				                type: "point"
+				                });
 			}
+			// users labels
 			else if (me.closest(".item-users").length){
+			    // can add only ine user
+			    if (multisearch_result.users.length > 0)
+			    {
+			        return;
+			    }
 				clsName = ' label-user';
+				
+				id = multisearch_data.users[me.data("id")].id;
+				multisearch_result.users.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id:multisearch_result.users.length-1,
+				                type: "user"
+				                });
+			}
+			// tags labels
+			else if (me.closest(".item-labels").length){
+				clsName = ' label-label';
+				
+				label_id = me.data("id")
+				id = multisearch_data.tags[label_id].id;
+				
+				// add only one instance of tag
+				if (multisearch_result.tags.indexOf(id) != -1)
+				{
+				    return;
+				}
+				multisearch_result.tags.push(id);
+				
+				text_labels.push({
+				                text: me.text(),
+				                id: multisearch_result.tags.length-1,
+				                type: "tag"
+				                });
 			}
 			
 			$(self.p.labelAdd).show();
 			
-			var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', me.text());
-			$(label).insertBefore($(self.p.labelAdd));
+			_.each(text_labels, function(txt_label) {
+			        var label = self.tmplLabel.replace('{clsName}', clsName).replace('{text}', txt_label.text);
+			        added_label = $(label).insertBefore($(self.p.labelAdd));
+			        $(added_label).data("id", txt_label.id);
+			        $(added_label).data("type", txt_label.type);
+			});
 			
 			self.hideDropField();
 		},
@@ -303,7 +397,6 @@ jQuery(function($){
 		reinit_click: function() {
     			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
-				
 				me.onClickDrop($(this), me);
 			});
 		}
@@ -334,7 +427,53 @@ jQuery(function($){
 	});
 	
 	$(".label-fields").delegate(".remove-label", "click", function(e){
-		$(this).parents(".label").remove();
+        console.log('delete');
+
+	    id = $(this).parents(".label").data("id");
+	    type = $(this).parents(".label").data("type");
+        console.log('delete:', multisearch_result.points);
+        console.log('delete2:', multisearch_data.points);
+        // delete item from array
+	    switch (type) {
+	        case "point": {
+	            multisearch_result.points.length = 0;
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	        case "place": {
+	            // for place delete all labels of this type which are to the right of current
+	            multisearch_result.places.splice(id, multisearch_result.places.length - id);
+//                window.myMap
+                console.log('Костыль: ',multisearch_result.places);
+	            _.each($(this).parents(".label-fields").children(".label-place"), function(label) {
+		            lab_id = $(label).data("id");
+		            if (lab_id >= id) {
+		                $(label).remove();
+		            }
+		       });
+                var myGeocoder = ymaps.geocode(multisearch_result.places.join(','));
+                myGeocoder.then(
+                    function (res) {
+                        window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                    }
+                );
+	            break;
+	        }
+	        case "user": {
+	            multisearch_result.users.splice(id, 1);
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	        case "tag": {
+	            multisearch_result.tags.splice(id, 1);
+	            $(this).parents(".label").remove();
+	            break;
+	        }
+	    }
+        console.log('after delete:', multisearch_result.points);
+        console.log('after delete2:', multisearch_data.points);
+        window.currentPoints.setURL().fetch();
+
 	});
 	
 	$(".drop-search ul").hover(function(){
@@ -416,10 +555,26 @@ jQuery(function($){
 			}
 		} else if ($(e.target).closest("#footer").length){
 			$("body").toggleClass("hide-footer");
+			$(".a-up").toggleClass("a-up-toggle");
 		}
 	});
-	
+
+    $(".a-up").click(function(e){
+        e.preventDefault();
+
+        $("html, body").animate({
+            scrollTop: 0
+        });
+    });
+
 	$(window).scroll(function(){
+
+        if($(window).scrollTop() > 65){
+            $(".a-up").show();
+        } else {
+            $(".a-up").hide();
+        }
+
 		var scrollTop = $(window).scrollTop(),
 			top = scrollTop <= 370 ? scrollTop : 370;
 		

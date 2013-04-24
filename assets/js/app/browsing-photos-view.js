@@ -28,6 +28,7 @@ $(function(){
             'click a.a-toggle.comments': 'toggleComments',
             'click input:submit': 'addComment',
             'click .a-remove-comment': 'removeComment',
+            'click .bp-photo':'nextBigPhoto',
         },
         render:function(){
             console.log('browsing photos render! ');
@@ -35,7 +36,12 @@ $(function(){
             $(this.el).html( this.template() );
             console.log(this.el);
             view = this;
-            // если больше 4-ёх фоток, то "добавить" рисуем снизу, иначе -- сверху
+            this.collection.each(function(photo){
+               if(view.collection.isminePoint == 0 ) {
+                    photo.set({ismine: 0});
+               }
+            });
+            // если больше 4ёх фоток, то "добавить" ресуем снизу, иначе -- сверху
             if (this.collection.length > 4) {
                 firstPhotos = this.collection.first(4);
                 console.log('firstPhotos: ', firstPhotos);
@@ -56,7 +62,10 @@ $(function(){
                 });
 
                 // рендерим "добавить"
-                $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                console.log('ismine: ', view.mainPoint.get('ismine'));
+                if(view.mainPoint.get('ismine') == 1) {
+                    $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                }
                 // $(view.el).find(view.photosPlace).find('.item-photo').last().after( view.templateLoadPhoto() );
 
             } else {
@@ -64,11 +73,18 @@ $(function(){
                     $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templatePhoto(img.toJSON()) );
                     // $(view.el).find(view.photosPlace).find(view.bigPhotoPlace).before( view.templatePhoto(img.toJSON()) );
                 });
-                $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                console.log('viewee: ', view);
+                if (view.mainPoint){console.log('ismine: ', view.mainPoint.get('ismine'));
+                    if(view.mainPoint.get('ismine') == 1) {
+                        $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                    }
+                }
             }
             $(view.el).find(view.photosPlace).find('.item-photo').first().addClass('current');
             // к фоткам в верхней линии над большой фоткой добавляем класс just-redraw-big
             this.addJustRedrawBigClass();
+
+            console.log('this: ', this);
 
             $(this.el).find(this.bigPhotoPlace).html( this.templateBigPhoto( this.collection.first().toJSON() ) );
             
@@ -81,6 +97,7 @@ $(function(){
         viewImg: function(event){
             event.preventDefault();
             imgElem = $(event.currentTarget).closest('.item-photo');
+            view = this;
 
             // если не нужно перемещать фотки снизу вверх и сверху вниз
             if ( $(imgElem).hasClass('just-redraw-big') ) {
@@ -89,26 +106,25 @@ $(function(){
             } else {
                 // фотки из верхнего ряда
                 if( $(imgElem).parent(this.upwardPhotos).length > 0 ) {
-                    // массив елементов, кот. будем переносить наверх
-                    elemsArr = $(imgElem).nextAll();
+                    // сколько дивов сзади
+                    countBack = $(imgElem).prevAll().length + 1;
+                    console.log('countBack: ', countBack);
 
-                    // сколько дивов впереди
-                    countDivs = $(imgElem).nextAll().length;
-                    console.log('countDivs: ', countDivs);
-
-                    // сколько полных линий впереди
-                    countLines = Math.floor( countDivs / 4 );
+                    // сколько полных линий
+                    countLines = Math.floor( countBack / 4 );
                     console.log('countLines: ', countLines);
 
-                    // сколько нужно удалить дивов
-                    divsRemove = (countDivs - countLines * 4);
-                    console.log('divsRemove: ', divsRemove);
+                    //какой это див по счёту в линии
+                    indexDiv = countBack - (countLines * 4);
+                    console.log('indexDiv: ', indexDiv);
 
-                    // elemsArr = elemsArr.add(imgElem);
-                    // elemsArr = elemsArr.add( $(imgElem).prevAll().slice(0, divsBackward) );
-                    elemsArr = elemsArr.slice(divsRemove);
+                    // солько дивов переди текущего дива нужно перенести
+                    transAmout = 4 - indexDiv;
+                    console.log('transAmout: ', transAmout);
 
-                    console.log('elemsArr: ', elemsArr);
+                    // elemsArr = $(imgElem).nextAll();
+                    elemsArr = $(imgElem).nextAll().slice(transAmout);
+
 
                     $(view.el).find(view.photosPlace).find(view.downwardPhotos).prepend( elemsArr );
                 // фотки из нижнего ряда
@@ -130,14 +146,14 @@ $(function(){
 
                     elemsArr = elemsArr.add(imgElem);
                     elemsArr = elemsArr.add( $(imgElem).nextAll().slice(0, divsForward) );
-                    $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( elemsArr );
+
+                    $(view.el).find(view.upwardPhotos).append( elemsArr );
                 }
                 this.addJustRedrawBigClass();
                 $(imgElem).find('a').click();
             }
         },
         redrawBigPhoto: function(photoId){
-            //photoId.preventDefault();
             $(this.el).find('.item-photo').removeClass('current');
             // console.log('fire redrawBigPhoto whit: ', photoId);
             elem = $(this.el).find('[data-photo-id="'+ photoId +'"]');
@@ -167,32 +183,40 @@ $(function(){
                         });
                     // если наверху
                     } else {
-                        console.log('loadPhoto наыерху');
+                        console.log('restPhotos',this.collection.toArray().splice(7));
                         var loadPhoto = $(view.el).find(view.photosPlace).find(view.upwardPhotos).find('.load-photo');
-                        firstPhoto = _.first(restPhotos)
+                        var firstPhoto = _.first(restPhotos);
                         loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
+                        restRestPhotos = _.rest(restPhotos);
 
                         loadPhoto.appendTo($(view.el).find(view.downwardPhotos));
-                         _.each(restPhotos, function(img){
+                         _.each(restRestPhotos, function(img){
                             loadPhoto.before( view.templatePhoto( img.toJSON() ) );
                         });
                     }
+                    // и если его нет
+                    if( $(view.el).find('.load-photo').length == 0 ){
+                        // console.log('его нет!');
+                        var restPhotos = this.collection.toArray().splice(7);
+                        view.restPhotos = restPhotos;
+
+                        _.each(restPhotos, function(img){
+                            $(view.el).find(view.downwardPhotos).append( view.templatePhoto( img.toJSON() ) );
+                        });
+                    }
+
                 // если не в первый, то просто показываем отрендеренные
                 } else {
-                    _.each( view.restPhotos, function(img){
-                        $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').show();
-                    });    
+                    $(view.el).find('.item-photo').show();
                 }
             // скрываем
             } else {
-                _.each( view.restPhotos, function(img){
-                    $(view.el).find('[data-photo-id="'+ img.get('id') +'"]').hide();
-                });
-                // если loadPhoto остался внизу
-                // var loadPhoto = $(view.el).find(view.downwardPhotos).find('.load-photo');
-                // if(loadPhoto.length > 0) {
-                //     loadPhoto.appendTo($(view.el).find(view.upwardPhotos));
-                // }
+                toShow = $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4);
+                toShow = toShow.add( $(view.el).find(view.upwardPhotos).find('.item-photo').eq(-4).nextAll() )
+
+                toShow = toShow.add( $(view.el).find(view.downwardPhotos).find('.item-photo').slice(0, 4) );
+                $(view.el).find('.item-photo').hide();
+                toShow.show();
             }
             $(event.currentTarget).toggleClass('isopen');
         },
@@ -204,7 +228,8 @@ $(function(){
                 $(this.el).find(this.bigPhotoPlace).find('.item-comment').show();
             // скрываем
             } else {
-                $(this.el).find(this.bigPhotoPlace).find('.item-comment').slice(3).hide();
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').hide();
+                $(this.el).find(this.bigPhotoPlace).find('.item-comment').slice(-2).show();
             }
             $(event.currentTarget).toggleClass('isopen');
         },
@@ -271,7 +296,32 @@ $(function(){
             });
 
             $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
-        }
+        },
+        nextBigPhoto: function(event){
+            event.preventDefault();
+            photoId = $(event.currentTarget).attr('data-photo-id');
+            $next = $(view.el).find('.item-photo[data-photo-id="'+photoId+'"]').next(':not(.load-photo)');
+
+            if($next.length > 0) {
+                $next.find('a').click();
+            } else {
+                if( $(view.el).find(view.downwardPhotos).find('.item-photo:not(.load-photo):visible').length > 0 ) {
+                    // переходим на нижний ряд
+                    $(view.el).find(view.downwardPhotos).find('.item-photo>a').first().click();
+                } else {
+                    if(! $(view.el).find('a.a-toggle.photos').hasClass('isopen') ) {
+                        // открываем "все фото"
+                        $(view.el).find('a.a-toggle.photos').click();
+                        $(event.currentTarget).click();
+                    } else {
+                        // идём по второму кругу
+                        $(view.el).find(view.upwardPhotos).find('.item-photo>a').first().click();
+                        $('.viewport').animate({ scrollTop: 0 }, "slow");
+                    }
+                }
+            }
+            
+        },
     });
     window.BrowsingPhotosView = BrowsingPhotosView;
 });

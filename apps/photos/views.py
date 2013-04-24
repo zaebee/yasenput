@@ -12,6 +12,7 @@ from apps.serializers.json import Serializer as YpSerialiser
 from apps.main import models as MainModels
 from .models import Photos
 from .forms import PhotosForm, IdForm
+from YasenPut.limit_config import LIMITS
 
 class PhotosBaseView(View):
 
@@ -34,10 +35,11 @@ class PhotosBaseView(View):
                                                                     'first_name',
                                                                     'last_name',
                                                                     'avatar'
-                                                                    )},
+                                                                    ),
+                                                                              'limit': LIMITS.IMAGES_LIST.LIKEUSERS_COUNT},
                                                                 'comments': {'fields': ['txt', 'created', 'author'],
                                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                     'limit': 5
+                                                                     'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                     },
                                                                 }), mimetype="application/json")
 
@@ -55,7 +57,7 @@ class PhotosBaseView(View):
 
 class PhotosList(MultipleObjectMixin, PhotosBaseView):
     http_method_names = ('post',)
-    paginate_by = 20
+    paginate_by = LIMITS.IMAGES_LIST.IMAGES_COUNT
     model = None
 
     def get_object(self, pk):
@@ -98,8 +100,9 @@ class PhotosAdd(PhotosBaseView):
             photo.save()
             if object:
                 object.imgs.add(photo)
+            json = YpSerialiser()
             return HttpResponse(json.serialize([photo], excludes=("img"),
-                                               extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207'),
+                                               extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207', 'thumbnail207_height'),
                                                relations={
                                                    'author': {
                                                        'fields': ('first_name', 'last_name', 'avatar')

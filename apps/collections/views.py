@@ -12,7 +12,8 @@ from apps.collections.models import Collections
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
-from django.utils.encoding import smart_str, smart_unicode
+from YasenPut.limit_config import LIMITS
+from django.utils.encoding import smart_str
 import sys
 import json
 
@@ -83,7 +84,7 @@ class CollectionsList(View):
     def post(self, request, *args, **kwargs):
         params = request.POST
 
-        COUNT_ELEMENTS = 10
+        COUNT_ELEMENTS = LIMITS.COLLECTIONS_LIST.COLLECTIONS_LIST_COUNT
         errors = []
 
         page = kwargs.get("page", 1) or 1
@@ -163,11 +164,14 @@ class CollectionsList(View):
                                                  fields=('id', 'name', 'description', 'likeusers', 'updated', 'points', 'author'),
                                                  relations={'points': {'fields': ('id', 'name', 'address', 'author', 'imgs'),
                                                                        'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},
-                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130')},                    
-                                                                                     }
+                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'),
+                                                                                              'limit': LIMITS.POINTS_LIST.IMAGES_COUNT},                    
+                                                                                     },
+                                                                       'limit': LIMITS.COLLECTIONS_LIST.POINTS_COUNT
                                                                        },
                                                             'author': {'fields': ('id', 'first_name', 'last_name', 'avatar')},
-                                                            'likeusers': {'fields': ('id', 'first_name', 'last_name', 'avatar')}
+                                                            'likeusers': {'fields': ('id', 'first_name', 'last_name', 'avatar'),
+                                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}
                                                             }
                                                  ), 
                                 mimetype="application/json")

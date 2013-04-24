@@ -21,13 +21,35 @@ $(function(){
         initialize: function() {
             // console.log('+++ point initialize!');
             // задаём составной id, чтобы он был уникальным
+
+            var compositeId = this.get('id') + '_' + this.get('id_point');
             if( this.get('id') != undefined ) {
-                this.set( { compositeId: this.get('id')+'_'+this.get('id_point') } );    
+                this.set( { compositeId: compositeId } );    
             }            
+            // узнаём, являемся ли мы автором этой точки
+            if(this.get('author') != undefined) {
+                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    this.set({ismine: 1});
+                } else {
+                    this.set({ismine: 0});
+                }
+            }
             // создаём коллекции фоток
-            this.set( {photos_create: new window.YPimages()} );
-            this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
-            this.set( {photos_new: new window.YPimages()} );           
+            photos_create = new window.YPimages();
+            photos_create.isminePoint = this.get('ismine');
+            this.set( {photos_create: photos_create} );
+
+            photos_pop = new window.YPimages( this.get('imgs') );
+            photos_pop.isminePoint = this.get('ismine');
+            this.set( {photos_pop: photos_pop} );
+
+            photos_new = new window.YPimages();
+            photos_new.isminePoint = this.get('ismine');
+            this.set( {photos_new: photos_new} );
+
+            // this.set( {photos_create: new window.YPimages(  )} );
+            // this.set( {photos_pop: new window.YPimages( this.get('imgs') )} );
+            // this.set( {photos_new: new window.YPimages()} );
 
             // коллекция тегов
             this.set( {tags_collection: new window.Tags(this.get('tags'))} );
@@ -44,16 +66,10 @@ $(function(){
                     return tag.get('level') == 0;
                 });
                 this.set({icon: zeroTag.get('icons')});
+                console.log('zeroTag:',zeroTag.get('icons'));
             }
 
-            // узнаём, являемся ли мы автором этой точки
-            if(this.get('author') != undefined) {
-                if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
-                    this.set({ismine: 1});
-                } else {
-                    this.set({ismine: 0});
-                }
-            }
+            
             this.ratingCount();
             return this;
         },
@@ -84,13 +100,13 @@ $(function(){
                 };
                 errors.push(error);
             }
-            if( $.trim( this.get('description') ) == '' ) {
-                error = {
-                    'field': 'description',
-                    'msg': 'Обязательное поле'
-                };
-                errors.push(error);
-            }
+//            if( $.trim( this.get('description') ) == '' ) {
+//                error = {
+//                    'field': 'description',
+//                    'msg': 'Обязательное поле'
+//                };
+//                errors.push(error);
+//            }
 
             requiredTag = this.get('tags_collection').find(function(tag){
                 return tag.get('required') == true;
@@ -143,7 +159,7 @@ $(function(){
                         case 'saveNew':
                             console.log('===> save new point!');
                             // return;
-                            options.type = 'GET';
+                            options.type = 'POST';
                             options.url = model.url + '/add';
                             options.data = 'name='+model.get('name');
                             options.data += '&address='+model.get('address');
@@ -172,13 +188,47 @@ $(function(){
                     switch (options.action) {
                         case 'like':
                             // console.log('SYNC: like this photo!');
+                            console.log('SYNC: update this point!');
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
                             options.data += '&id_point='+model.get('id_point');
                             break;
-                    };
+
+                        case 'update':
+                            options.url = model.url + '/editbyuser';
+                            // options.type = 'GET';
+                            // options.url = model.url + '/edit';
+                            options.data = 'id='+model.get('id');
+                            options.data += '&description='+model.get('description');
+                            model.get('photos_create').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            model.get('photos_pop').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            // TODO: choose main photo
+                            // options.data += '&main_img='+model.get('description');
+                            break;
+
+                        case 'share':
+                            options.url = model.url + '/addbyuser';
+                            // options.type = 'GET';
+                            // options.url = model.url + '/edit';
+                            options.data = 'id='+model.get('id');
+                            options.data += '&description='+model.get('description');
+                            model.get('photos_create').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            model.get('photos_pop').each(function(img){
+                                options.data += '&imgs[]='+img.get('id');
+                            });
+                            // TODO: choose main photo
+                            // options.data += '&main_img='+model.get('description');
+                            break;
+                    
+                    }
                     break;
-            };
+            }
             console.log('options', options);
             return Backbone.sync(method, model, options);
         },
@@ -236,6 +286,72 @@ $(function(){
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
+        },
+        update: function(options){
+            console.log('update');
+            point = this;
+
+            // TODO: validate point
+            // errors = this.ckeckValid();
+            // if(errors == null) {
+                this.save({}, {
+                    // wait: true,
+                    action: 'update', 
+                    success: function(model, response, options) {
+                        console.log('SUCCESS!');
+                        console.log('model: ', model);
+
+                        console.log('response: ', response);
+                        // point.set({response[0]}).initialize();
+                        
+                        // TODO:
+                        // uodate model on client from server response
+                        $('.scroll-box').click();
+                    },
+                    error: function (model, response, options) {
+                        //  TODO обработка ошибки
+                        console.log('ERROR!');
+                        alert(status);
+                    },
+                });   
+            // } else {
+            //     console.log('validation errors:', errors);
+            //     this.validationFailed(errors);
+            // }
+        },
+        share: function(options){
+            console.log('share');
+
+            // TODO: validate point
+            // errors = this.ckeckValid();
+            // if(errors == null) {
+                this.save({}, {
+                    // wait: true,
+                    action: 'share', 
+                    success: function(model, response, options) {
+                        console.log('SUCCESS!');
+                        console.log('model: ', model);
+
+                        console.log('response: ', response);
+                         // new window.Point( response[0] );
+                        // points.add(model).render();
+                        // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
+                        window.currentPoints.addPrepend( new window.Point( response[0] ) );
+                        $('.scroll-box').click();
+                        // _.each(response, function(item){
+                        //     $dropResult.append('<li data-point-id='+item.id+'>'+item.name+'</li>')
+                        // });
+                    },
+                    error: function (model, response, options) {
+                        //  TODO обработка ошибки
+                        console.log('ERROR!');
+                        alert(status);
+                    },
+                });   
+            // } else {
+            //     console.log('validation errors:', errors);
+            //     this.validationFailed(errors);
+            // }
         }
     });
     Points = Backbone.Collection.extend({
@@ -246,6 +362,7 @@ $(function(){
         // ready: $.Deferred(),
         loaded: false, // флаг на то, была ли это коллекция загруженна (т.е. делали ли fetch хоть раз)
         initialize: function(){
+            _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
             console.log('points inited!')
@@ -254,9 +371,9 @@ $(function(){
             return response.points;
         },
         setURL: function(){
-            console.log('setURL');
-            console.log('this: ', this);
-
+            this.tags = window.multisearch_result.tags;
+            this.user_id = window.multisearch_result.users;
+            this.name = window.multisearch_result.points;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -264,7 +381,7 @@ $(function(){
             
             tagStr = '';
             _.each(this.tags, function(tag){
-                tagStr += '&tags[]=' + tag.id 
+                tagStr += '&tags[]=' + tag
             });
             if(tagStr != ''){
                 this.tagStr = tagStr;    
@@ -281,6 +398,7 @@ $(function(){
         				'&coord_left='+this.coord_left+
         				'&coord_right='+this.coord_right+
                         '&user_id='+this.user_id+
+                        '&name='+this.name+
                         this.tagStr;
         	return this;
         },
@@ -301,7 +419,8 @@ $(function(){
 
             $(this.el).masonry({ 
                 itemSelector: 'article.item',
-                columnWidth: 241 
+                columnWidth: 241,
+                //isFitWidth: true
             });
             $(this.el).masonry( 'reload' );
 
@@ -310,21 +429,72 @@ $(function(){
         },
         redrawOnMap: function(clusterer){
             console.log('%%> redrawOnMap');
+            collection = this;
 
             clusterer.removeAll();
             var myGeoObjectsArr = [];
+            var pointsOnMap = [];
 
+            // console.log('all points: ');
+            // this.each(function(point){
+            //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
+            // });
+
+            rejectedPoints = [];
+
+            // Показ на карте значков только популярных точек из одинаковых
             this.each(function(point){
-                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-                        id: point.get('id')+'_'+point.get('point_id')
-                    }, {
-                        iconImageHref: '/'+point.get('icon'), // картинка иконки
-                        iconImageSize: [32, 36], // размеры картинки
-                        iconImageOffset: [-16, -38] // смещение картинки
-                });
-                myGeoObjectsArr.push(placemark);
+                // console.log('this id: ', point.get('id'));
+                var id = point.get('id');
+                findedPoint = collection.find(function(point){
+                    // console.log('this id_point: ', point.get('id_point'))
+                    return id == point.get('id_point')
+                });     
+                // console.log('findedPoint: ', findedPoint);   
+                // console.log('(typeof findedPoint): ', (typeof findedPoint));
+                if ((typeof findedPoint) == 'object') {
+                    // console.log('concurented point 1: [id: ' + point.get('id') + '; ' + point.get('id_point') + ']');
+                    // console.log('concurented point 2: [id: ' + findedPoint.get('id') + '; ' + findedPoint.get('id_point') + ']');
+                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
+                        rejectedPoints.push(point);
+                    } else {
+                        rejectedPoints.push(findedPoint);                        
+                    }
+                }
+                // console.log('=============');
+                return ((typeof findedPoint) == 'object');
             });
 
+            // Фильтруем точки с одинаковыми координатами
+            this.each(function(point){
+                var point_id;
+                if (point.get('id_point') == 0){
+                    point_id = point.get('id');
+                }else{
+                    point_id = point.get('id_point');
+                }
+                //if ($.inArray(point_id, pointsOnMap) != -1){
+                if (point.get('id_point') === 0){ //временно !!!
+                    placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                            id: point.get('id')+'_'+point.get('id_point')
+                        }, {
+                            iconImageHref: '/'+point.get('icon'), // картинка иконки
+                            iconImageSize: [32, 36], // размеры картинки
+                            iconImageOffset: [-16, -38] // смещение картинки
+                    });
+                placemark.events.add('mousedown', function(event){
+                    pointId = event.originalEvent.target.properties.get('id');
+                    $('[data-point-id="'+pointId+'"] .a-photo').click();
+                });
+                    myGeoObjectsArr.push(placemark);
+                }
+                if (point.get('id_point') == 0){
+                    pointsOnMap.push(point.get('id'));
+                }else{
+                    pointsOnMap.push(point.get('id_point'));
+                }
+
+            });
             clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){
@@ -353,9 +523,9 @@ $(function(){
         },
         addAppend: function(model){
             var pin = new PointView({model:model});
-            this.el.prepend(pin.render().el);
+            $(this.el).prepend(pin.render().el);
             $(this.el).masonry( 'appended', $(pin.render().el), true );
-        },
+        }
         // reload: function(){
         //     var self = this;
         //     var options = ({
@@ -439,9 +609,6 @@ $(function(){
         url: '/photos',
         sync:  function(method, model, options) {
             console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
@@ -485,15 +652,23 @@ $(function(){
                         
                     };
                     break;
-                // case "delete":
-                //     options.url = model.url + '/del'
-                //     options.type = 'POST';
+                case "delete":
+                    options.url = model.url + '/del'
+                    options.type = 'POST';
+                    options.data = 'id='+( model.get('id') );
+                    break;
             };
             return Backbone.sync(method, model, options);
         },
         initialize: function(){
             // this.set( {comments: new window.Comments(this.get('comments'))} );
-            if(this.get('author').id == window.myId) {
+//            console.log('++++++++++++++++++');
+//            console.log('this: ', this);
+//            console.log('this.collection: ', this.collection);
+//            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
+//            console.log('++++++++++++++++++');
+            // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
+            if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
@@ -514,6 +689,8 @@ $(function(){
                 type: 'POST',
                 data: {
                     photo: model.get('id'),
+                    // object_id: model.get('id'),
+                    // object_type: 23,
                     txt: txt
                 }
             });
@@ -525,7 +702,7 @@ $(function(){
                 url: '/comments/del',
                 type: 'POST',
                 data: {
-                    id: commentId,
+                    id: commentId
                 }
             });
             // console.log('removeComment: ', jqXHR);
@@ -534,8 +711,7 @@ $(function(){
     });
     YPimages = Backbone.Collection.extend({
         model: YPimage,
-        template: _.template($('#item-photo').html()),
-
+        template: _.template($('#photos-thumb').html()),
         initialize: function(models, options){
             // this.bind('reset', this.render, this);
             this.bind('add', this.addToDOM, this);
@@ -551,6 +727,7 @@ $(function(){
                 .find('.photo-loading')
                 .replaceWith( this.template(yp_image.toJSON()) );
         }
+
     });
 
     Comment = Backbone.Model.extend({});

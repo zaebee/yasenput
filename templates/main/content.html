@@ -5,7 +5,9 @@
     <div id="content">
     <header class="clearfix top-panel">
 {#        <a href="#" class="fr btn btn-event"><b>+</b> Событие</a>#}
+        {% if user.is_authenticated %}
         <a href="#" class="fr btn btn-place"><b>+</b> Место</a>
+        {% endif %}
         <menu class="tabs">
             <a href="#" data-target="tab-popular" class="active">популярное</a>
             <a href="#" data-target="tab-new">новое</a>
@@ -32,7 +34,7 @@
                 <a href="#" class="a-like" title="Нравится">&nbsp;</a>
                 <a href="#" class="a-comment" title="Комментировать">&nbsp;</a>
                 {% endif %}
-                <a href="/detailpoint/<%- id %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207"></a>
+                <a href="/detailpoint/<%- id %>_<%- id_point %>" class="a-photo nonav"><img src="<%- imgs[0].thumbnail207 %>" alt="" width="207" height="<%- imgs[0].thumbnail207_height %>"></a>
             </div>
 
             <div class="body">

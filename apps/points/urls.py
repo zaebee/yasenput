@@ -14,11 +14,13 @@ urlpatterns = patterns('',
     url(r'^add/*$', views.PointAdd.as_view()),
     url(r'^addbyuser/*$', views.PointAddByUser.as_view()),
     url(r'^edit/*$', views.PointEdit.as_view()),
+    url(r'^editbyuser/*$', views.EditByPoint.as_view()),
     url(r'^search/*$', views.PointsSearch.as_view()), # при добавлении точки
     url(r'^like/*$', views.LikePoint.as_view()), #wait for julia
     # url(r'^visit/*$', views.WantVisitPoint.as_view()),
     url(r'^been/*$', views.BeenThere.as_view()),
     url(r'^follow/*$', views.FollowPoint.as_view()),
+    url(r'^point/*$', views.OneDetailPoint.as_view()),
     url(r'^photos/*$', PhotosViews.PhotosList.as_view(model=Points)),
     #url(r'^delete$', 'apps.points.views.delete'),
     

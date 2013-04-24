@@ -7,6 +7,7 @@ $(function(){
         labels_add_selector: '.clearfix.selected-labels', // куда добавляются теги
         labels_place_selector: '.drop-labels-field', // куда отрисовываются теги после загрузки с сервера
         required_labels: '.require-labels', // где отрисованны обязательные теги
+        other_labels: '.other-labels', // где найденные теги
         space : {},
         initialize: function() {
             _.bindAll(this, 'render');
@@ -15,7 +16,6 @@ $(function(){
             _.bindAll(this, 'addLabel');
             _.bindAll(this, 'closeDropList');
             _.bindAll(this, 'removeSelectedLabel');
-            
             
             this.bind('clickout', this.closeDropList);
             this.collection.bind('reset', this.renderLabelsList);
@@ -26,6 +26,7 @@ $(function(){
             'keyup .text-field>input:text': 'doSearch',
             'click .remove-label': 'removeSelectedLabel',
             'click .label-require': 'addLabel',
+            'click .other-labels .label': 'addLabel',
             'blur input:text': 'hideDropList',
             'click .clear-selected': 'clearTags'
         },
@@ -48,9 +49,9 @@ $(function(){
         renderLabelsList: function(){
             console.log('renderLabelsList!');
             view = this;
-            $(view.el).find(view.labels_place_selector).find('.label').remove();
+            $(view.el).find(view.other_labels).find('.label').remove();
             this.collection.each(function(label){
-                $(view.el).find(view.labels_place_selector).append( view.templateLabel( label.toJSON() ) );
+                $(view.el).find(view.other_labels).append( view.templateLabelSelected( label.toJSON() ) );
             });
         },
         clearTags: function(event){
@@ -72,7 +73,7 @@ $(function(){
                     // view.collection.add(label);
                     window.newPoint.get('tags_collection').add(label);
                     $(this.el).find('.clearfix.selected-labels')
-                       .find('.label-add')
+                       .find('.text-field')
                        .before( this.templateLabelSelected( label.toJSON() ) );
                     $(event.currentTarget).val('').trigger('click');
                     $(view.el).find('.drop-not-found').hide();
@@ -123,7 +124,7 @@ $(function(){
         },
         showDropList: function(event){
             event.stopPropagation();
-            $(this.el).find('.label-add').hide();
+            //$(this.el).find('.label-add').hide();
             $(this.el).find('.text-field').show();
             $(this.el).find('.drop-labels-field').show();
             $(event.currentTarget).find('input:text').focus();
@@ -134,8 +135,8 @@ $(function(){
             $(this.el).find('.text-field>input:text').trigger('keyup');
         },
         hideDropList: function(event){
-            $(this.el).find('.label-add').show();
-            $(this.el).find('.text-field').hide();
+            //$(this.el).find('.label-add').show();
+            //$(this.el).find('.text-field').hide();
             $(this.el).find('.drop-labels-field').hide()
         },
         addLabel: function(event){
@@ -161,14 +162,17 @@ $(function(){
                 label = new window.Label({id: labelId, name: name, required: true, level: 0});
             } else {
                 // console.log('east side');
-                label = this.collection.get(labelId);
-                this.collection.remove(labelId)
+                //label = this.collection.get(labelId);
+                //this.collection.remove(labelId)
+
+                name = $(event.currentTarget).text();
+                label = new window.Label({id: labelId, name: name, other: true, level: 2});
             }
             label.set({selected: true});
             // console.log('labelRequired: ', labelRequired);
             window.newPoint.get('tags_collection').add(label);
             $(this.el).find('.clearfix.selected-labels')
-               .find('.label-add')
+               .find('.text-field')
                .before( this.templateLabelSelected( label.toJSON() ) );
 
             var fullWidth = $(this.el).find(this.labels_add_selector).width();
@@ -202,6 +206,8 @@ $(function(){
             label.set({selected: false});
             if (label.get('required') == true){
                 $(this.el).find(this.required_labels).append( this.templateLabelRequired( label.toJSON() ) );
+            } else if(label.get('other') == true){
+                $(this.el).find(this.other_labels).append( this.templateLabelSelected( label.toJSON() ) );
             } else if(label.get('isnew') != true) {
                 exist = this.collection.get(label.get('id'));
                 console.log('exist: ', exist);

@@ -149,11 +149,13 @@ $(function(){
     //     //$($("#confirm-remove-photo").data("elemForRemove")).remove();
     //     //$("#confirm-remove-photo").hide();
     // })
-    .delegate("#confirm-remove-photo .a-no", 'click', function (e) {
-        var self = e.currentTarget;
-        e.preventDefault();//отказ удаления фотки
-        $("#confirm-remove-photo").hide();
-    })
+
+    // delete photo
+    // .delegate("#confirm-remove-photo .a-no", 'click', function (e) {
+    //     var self = e.currentTarget;
+    //     e.preventDefault();//отказ удаления фотки
+    //     $("#confirm-remove-photo").hide();
+    // })
     // .delegate("click #confirm-remove-photo .a-yes", 'click', function (e) {
     //     var self = e.currentTarget;
     //     e.preventDefault();//подтверждение удаления фотки, нужный код после добавить
@@ -921,16 +923,22 @@ $(function(){
 //                $(self).closest(".popup").find(".p-tabs a[data-target=tab-map-place]").trigger("click");
 //                $(self).val("");
 //            },
-            "click .remove-photo":function (e) {
-                var self = e.currentTarget;
-                e.preventDefault(); //показать окно подтверждения удаления фотки
-                var left = $(self).offset().left - 150,
-                    top = $(self).offset().top - 30;
-                $("#confirm-remove-photo").data("elemForRemove", $(self).closest(".item-photo")).css({
-                    left: left,
-                    top: top
-                }).show();
-            },
+
+
+            // delete photo
+            // "click .remove-photo":function (e) {
+            //     var self = e.currentTarget;
+            //     e.preventDefault(); //показать окно подтверждения удаления фотки
+            //     var left = $(self).offset().left - 150,
+            //         top = $(self).offset().top - 30;
+            //     $("#confirm-remove-photo").data("elemForRemove", $(self).closest(".item-photo")).css({
+            //         left: left,
+            //         top: top
+            //     }).show();
+            // },
+
+
+            
             // "click #confirm-remove-comment .a-no":function (e) {
             //     var self = e.currentTarget;
             //     e.preventDefault();//отказ удаления фотки

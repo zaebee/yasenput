@@ -107,8 +107,8 @@ $(function(){
             var edited_collection = new CollectionPoint;
             edited_collection.id = 1;
             console.log($(this.el).find('input')[3].value);
-            edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[3].value));;
-            edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[4].value));
+            edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[2].value));;
+            edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[3].value));
             edited_collection.attributes.collectionid = this.model.id;
             edited_collection.save();
             $('.scroll-box').click();

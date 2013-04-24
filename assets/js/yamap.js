@@ -5,7 +5,7 @@ function init(){
     //alert(ymaps.geolocation.latitude);
     myMap = new ymaps.Map ("mainmap", {
         center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
-        zoom: 10
+        zoom: 12
     });
 
     myMap.controls.add('zoomControl').add('typeSelector').add('searchControl');

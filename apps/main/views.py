@@ -38,10 +38,10 @@ class YpSerialiser(Serializer):
 
 @csrf_exempt
 def index(request):
-    if (request.META['REMOTE_ADDR'] in ['127.0.0.1', '213.176.243.173', '176.65.96.188', '95.53.199.47', '92.101.171.155', '91.202.196.154']) or (request.user.is_authenticated()):
-        template_name = 'main/main.html'
-    else:
-        template_name = 'off.html'
+    # if (request.META['REMOTE_ADDR'] in ['127.0.0.1', '213.176.243.173', '176.65.96.188', '95.53.199.47', '92.101.171.155', '91.202.196.154']) or (request.user.is_authenticated()):
+    template_name = 'main/main.html'
+    # else:
+    #     template_name = 'off.html'
     areas = Areas.objects.all()
     heads = HeadDescriptions.objects.all()
     categories = Categories.objects.all()
@@ -57,8 +57,8 @@ def index(request):
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
         collections = Collections.objects.filter(author__id=user.id)
-
-    tagsRequire = Tags.objects.filter(level = 0).all()
+    tagsRequire = Tags.objects.filter(level=0).all()
+    tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
     regions = Regions.objects.all()
     typepoints = TypePoints.objects.all()
     cnt = ceil(float(typepoints.count())/3)
@@ -68,11 +68,12 @@ def index(request):
         else:
             typepoints[i].ul = False
     return render_to_response(template_name,
-                              {'areas': areas, 'collections':collections, 'heads': heads, 'categories': categories,
+                              {'areas': areas, 'collections': collections, 'heads': heads, 'categories': categories,
                                'countvisitpoints': countvisitpoints, 'regions': regions,
                                'count_liked_objects': count_liked_objects,
                                'count_commented_objects': count_commented_objects, 
                                'typepoints': typepoints, 'tagsRequire': tagsRequire,
+                               'tagsOther': tagsOther,
                                'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
                               context_instance=RequestContext(request))
 

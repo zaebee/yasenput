@@ -1,5 +1,7 @@
 <!doctype html>
     <head>
+        <link rel="shortcut icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
         <meta name="keywords" content="{% block keywords %}{% endblock %}">
         <meta name="description" content="{% block description %}{% endblock %}">
@@ -8,7 +10,7 @@
 
         {% block preload_css %}
         {% endblock %}
-            <link rel="stylesheet" href="{{ STATIC_URL }}css/main_main.css">
+{#            <link rel="stylesheet" href="{{ STATIC_URL }}css/main_main.css">#}
             <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css">
             <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-1.10.0.custom.css">
         {% block postload_css %}
@@ -34,7 +36,7 @@
           <script src="{{ STATIC_URL }}js/app/multisearch.js"></script>
 
           <script src="{{ STATIC_URL }}js/script.js"></script>
-
+{##}
           <script src="{{ STATIC_URL }}js/app/app.js"></script>
 
 {#          <script src="{{ STATIC_URL }}js/app/my-app.js"></script>#}
@@ -47,8 +49,11 @@
           <script src="{{ STATIC_URL }}js/app/point-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/collection-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/detail-point-view.js"></script>
+          <script src="{{ STATIC_URL }}js/app/editPoint-view.js"></script>
+          <script src="{{ STATIC_URL }}js/app/sharePoint-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/detail-collection-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/browsing-photos-view.js"></script>
+          <script src="{{ STATIC_URL }}js/app/edit-photos-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/addLabels-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/create-point-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/router.js"></script>
@@ -65,6 +70,7 @@
     </head>
 
     <body class="front">
+    <a href="#" class="a-up">Вверх <span>&uarr;</span></a>
     {% csrf_token %}
     <div id="wrap">
         {% block wrap %}{% endblock %}

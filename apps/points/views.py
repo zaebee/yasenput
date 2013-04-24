@@ -14,7 +14,7 @@ from apps.collections import models as CollectionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
-from itertools import chain
+from YasenPut.limit_config import LIMITS
 import json
 
 def JsonHTTPResponse(json):
@@ -36,32 +36,31 @@ class PointsBaseView(View):
     def getSerializePoints(self, points):
         YpJson = YpSerialiser()
         return YpJson.serialize(points, 
-                                fields=['id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'updated', 'likes_count'],
+                                fields=['main_img', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
+                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count'],
                                 extras=['popular', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
-                                relations={'description': {'fields': ['description', 'id']},
-                                           'tags': {'fields': ['name', 'id', 'level', 'icons']},
-                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
+                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.POINTS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail130x130', 'isliked'],
+                                           'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked','thumbnail207_height'],
+                                                        },
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],
+
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': 5
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },
-                                                                   'limit': 5
-                                                                  }
+                                                                  },
+                                                     'limit': LIMITS.POINTS_LIST.IMAGES_COUNT
                                                     }, 
-                                           'comments': {'fields': ['txt', 'created', 'author'], 
-                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
-                                                                      },
-                                                        'limit': 5
-                                                        },
                                            'reviews': {'fields': ['id', 'review', 'rating', 'author'],
                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                },
-                                                       'limit': 5
+                                                       'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                       }
                                            })          
     
@@ -70,15 +69,20 @@ class PointsBaseView(View):
         return YpJson.serialize(collections, 
                                 fields=['id', 'name', 'description', 'author', 'points', 'likeusers', 'updated', 'likes_count'],
                                 extras=['likes_count', 'isliked'],
-                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
+
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
+                                                    },
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
                                                     'limit': 4}, 'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
                                                         },
                                                     },
-                                            
-                                           })          
+
+                                           })
     
     def getPointsSelect(self, request):
         if request.user.is_authenticated():
@@ -264,14 +268,28 @@ class OnePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
         return self.pointsList([point])
-    
+
+
+class OneDetailPoint(PointsBaseView):
+    http_method_names = ('post',)
+
+    def post(self, request, *args, **kwargs):
+        point_ = request.POST['id']
+        # return point_
+        point_ = point_.split('_')
+        if point_[1] == '0':
+            point = MainModels.Points.objects.filter(id=point_[0]).extra(**self.getPointsSelect(request))
+        else:
+            point = MainModels.PointsByUser.objects.filter(id=point_[0]).extra(**self.getPointsByUserSelect(request))
+        return self.pointsList(point)
+
 
 class PointsSearch(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
         params = request.GET
-        COUNT_ELEMENTS = 5
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_SEARCH_COUNT
         errors = []
 
         limit = COUNT_ELEMENTS
@@ -315,13 +333,13 @@ class PointsList(PointsBaseView):
         
         params = request.GET
 
-        COUNT_ELEMENTS = 1
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
 
         page = kwargs.get("page", 1) or 1
-        
-        limit = COUNT_ELEMENTS*int(page)
-        offset = (int(page)-1)*COUNT_ELEMENTS
+
+        limit = COUNT_ELEMENTS * int(page)
+        offset = (int(page) - 1) * COUNT_ELEMENTS
 
         form = forms.FiltersForm(params)
         if form.is_valid():
@@ -406,8 +424,11 @@ class PointsList(PointsBaseView):
             
             allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
-            
-            #allpoints = allpoints + json.loads(self.getSerializePoints(copypoints))
+            if content == 'new':
+                allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+            else:
+                allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+
             
             allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
             allcollections = allcollections[:1]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
@@ -420,11 +441,11 @@ class PointsList(PointsBaseView):
 
 
 class PointAddByUser(LoggedPointsBaseView):
-    http_method_names = ('get')
+    http_method_names = ('post')
     
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         errors = []
-        params = request.GET
+        params = request.POST
         
         point_id = kwargs.get("id", None)
         if not point_id:
@@ -495,7 +516,6 @@ class PointAddByUser(LoggedPointsBaseView):
                              "id_point": "select " + str(originalPoint.id)                             
                          }
                      )
-            
             return self.pointsList(points)
         else:
             e = form.errors
@@ -505,14 +525,14 @@ class PointAddByUser(LoggedPointsBaseView):
 
 
 class PointAdd(LoggedPointsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddPointForm(params)
         if form.is_valid():
             point = form.save(commit=False)
@@ -534,7 +554,7 @@ class PointAdd(LoggedPointsBaseView):
 
                 point.save()
             
-            return PointAddByUser().get(request, id=point.id)
+            return PointAddByUser().post(request, id=point.id)
         else:
             e = form.errors
             for er in e:
@@ -542,6 +562,45 @@ class PointAdd(LoggedPointsBaseView):
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
+class EditByPoint(LoggedPointsBaseView):
+    http_method_names = ('post')
+    
+    def post(self, request, *args, **kwargs):
+        errors = []
+        params = request.POST
+        
+        point_id = kwargs.get("id", None)
+        if not point_id:
+            form = forms.IdForm(params)
+            if not form.is_valid():
+                return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места"})
+            else:
+                point_id = form.cleaned_data["id"]
+
+        form = forms.AddPointByUserForm(params, instance=MainModels.PointsByUser.objects.get(pk=point_id))
+        if form.is_valid():
+            point = form.save()
+
+            images = params.getlist('imgs[]')
+            if images:
+                originalPoint = MainModels.Points.objects.get(pk=point.point.id)
+                for image in images:
+                    try:
+                        img = PhotosModels.Photos.objects.get(id=image)
+                        point.imgs.add(img)
+                        originalPoint.imgs.add(img)
+                    except:
+                        message = "ошибка добавления изображения"
+                        if message not in errors: errors.append(message)
+                point.save()
+            return self.pointsList(MainModels.PointsByUser.objects.filter(id=point.id).extra(**self.getPointsByUserSelect(request)))
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
+
+        
 
 class PointEdit(LoggedPointsBaseView):
     http_method_names = ('get',)

@@ -26,7 +26,8 @@ $(function(){
             'mousedown .drop-results>li': 'addFromList',
 
             'change #p-add-place input:file': 'loadImage',
-            'click #a-add-point': 'addNewPoint'
+            'click #a-add-point': 'addNewPoint',
+            'click .remove-photo': 'deleteImage'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -62,6 +63,12 @@ $(function(){
                                 view.popupMap.geoObjects.remove(placemark);
                                 // добавляем точку
                                 var coords = event.get('coordPosition');
+                                view.popupMap.geoObjects.each(function (geoObject) {
+                                    if (geoObject.properties.get('id') == 'map-point') {
+                                        view.popupMap.geoObjects.remove(geoObject)
+                                        return false;
+                                    }
+                                });
                                 placemark = new ymaps.Placemark(coords, {
                                         id:'map-point'
                                     }, {
@@ -80,6 +87,10 @@ $(function(){
                                     });
                                     $(view.el).find('#add-new-place-address').change();
                                 });
+                                view.popupMap.setCenter(coords, 14, {
+                                    checkZoomRange: true,
+                                    duration:1000
+                                });
                                 // console.log('coords: ', coords);
                                 longitude = coords[1];
                                 latitude = coords[0];
@@ -97,10 +108,12 @@ $(function(){
         showDropList: function(event){
             console.log('showDropList');
             $(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999);
+            $(event.currentTarget).closest('.input-line').css('z-index', 20);
         },
         hideDropList: function(event){
             console.log('hideDropList');
             $(event.currentTarget).closest('.drop-filter').find('.drop-results').hide().css('z-index', 20);
+            $(event.currentTarget).closest('.input-line').css('z-index', 1);
         },
         addFromList: function(event){
             console.log('addFromList');
@@ -108,6 +121,13 @@ $(function(){
             console.log('txt: ', txt);
             $(event.currentTarget).closest('.drop-filter').find('input:text').val( txt ).change();
             coords = $.parseJSON($(event.currentTarget).attr('data-coords'));
+            var self = this;
+            this.popupMap.geoObjects.each(function (geoObject) {
+                if (geoObject.properties.get('id') == 'map-point') {
+                    self.popupMap.geoObjects.remove(geoObject)
+                    return false;
+                }
+            });
             placemark = new ymaps.Placemark( coords, {
                     id:'map-point'
                 }, {
@@ -117,6 +137,10 @@ $(function(){
             });
             longitude = coords[1];
             latitude = coords[0];
+            this.popupMap.setCenter(coords, 14, {
+                checkZoomRange: true,
+                duration:1000
+            });
             newPoint.set({'longitude': longitude, 'latitude': latitude});
             console.log('this: ', this);
             console.log('this.popupMap: ', this.popupMap);
@@ -254,6 +278,10 @@ $(function(){
                     progress.find('.progress-count').text(percentComplete+' %');
                 }
             });
+        },
+        deleteImage:function(event){
+            view.model.get('photos_create').remove(view.model.get('photos_create').get($(event.currentTarget).parent().attr('data-photo-id')))
+            $(event.currentTarget).parent().remove();
         },
         addNewPoint: function(event){
             console.log('addNewPoint-->', this.model);
