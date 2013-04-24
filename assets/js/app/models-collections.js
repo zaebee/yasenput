@@ -668,15 +668,20 @@ $(function(){
 //            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
-            if(this.get('author').id == window.myId ) {
+            console.log(this);
+            console.log(window.myId);
+            if(this.get('author') == window.myId ) {
+                console.log('mine');
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
             }
             _.each( this.get('comments'), function(comment){
+                console.log('comment-----',comment);
+                if (comment.author) {
                 if(comment.author.id == window.myId) {
                     comment.ismine = 1;
-                } else {
+                } }else {
                     comment.ismine = 0;
                 }
             });

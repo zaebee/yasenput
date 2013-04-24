@@ -14,7 +14,7 @@ $(function(){
         events: {
             // 'keyup #add-new-place-address': 'searchLocation',
             //'click .m-ico-group>a': 'showNearPlace',
-            //'click .p-place-desc .a-toggle-desc':'moreDescription',
+            'click .a-toggle-desc':'moreDescription',
             'click .bp-photo':'nextBigPhoto',
             'click .choose_place':'choosePlace',
             'click .stp-edit':'startEdit',
@@ -178,8 +178,8 @@ $(function(){
         moreDescription: function(event){
             event.preventDefault();
             var parent = $(event.currentTarget).closest(".p-place-desc");
-            $(".hellip", parent).toggle();
-            $(".more-desc", parent).toggleClass("hidden");
+            $(".hellip").toggle();
+            $(".more-desc").toggleClass("hidden");
             $(event.currentTarget).toggleClass("open");
             $(event.currentTarget).hasClass("open") ? $(event.currentTarget).text("свернуть") : $(event.currentTarget).text("подробнее");
         },

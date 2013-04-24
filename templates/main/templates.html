@@ -1189,11 +1189,12 @@
                         </div>
                         
                         <div class="ctp-content">
-                            <%- description %><span class="hellip">&hellip;</span> 
-                            
-                            <span class="hidden more-desc">В отличие от опций, которые позволяют изменить только некоторые параметры отображения элемента, макет позволяет сформировать какое угодно его представление. <br>Реализация собственного макета «с нуля» на основе интерфейса ILayout является относительно трудоемкой задачей, решение которой выходит за рамки данного руководства. Однако API предоставляет удобный механизм, позволяющий генерировать макеты на основе шаблонов<br></span>
-                            
-                            <a href="#" class="a-ctp-toggle">подробнее</a>
+                            <%- description.substring(0,150) %>
+                                <% if((description.length) > 150){ %>
+                                <span class="hellip">…</span> 
+                                <span class="hidden more-desc"><%-description.substring(150,description.length)%></span>
+                                <a href="#" class="a-toggle-desc">подробнее</a>
+                                <%}%>
                         </div>
                         
                         <div class="c-edit-inputs">
