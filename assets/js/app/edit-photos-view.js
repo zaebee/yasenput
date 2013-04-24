@@ -141,6 +141,9 @@ $(function(){
 
             console.log('this.model: ', this.model);
             photo = this.model.get('photos_pop').get(photoId);
+            if (photo == undefined) {
+                photo = this.model.get('photos_create').get(photoId);
+            }
             photo.destroy({
                 success: function(model, response){
                     $(view.el).find(view.photosPlace).find('[data-photo-id="'+model.get('id')+'"]').fadeOut(function(){
