@@ -1,4 +1,5 @@
 $(function(){
+    console.log('ymaps.js');
     window.myMap = {};
     
     ymaps.ready(function(){

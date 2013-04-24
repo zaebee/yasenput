@@ -14,7 +14,7 @@ $(function(){
         events: {
             // 'keyup #add-new-place-address': 'searchLocation',
             //'click .m-ico-group>a': 'showNearPlace',
-            //'click .p-place-desc .a-toggle-desc':'moreDescription',
+            'click .a-toggle-desc':'moreDescription',
             'click .bp-photo':'nextBigPhoto',
             'click .choose_place':'choosePlace',
             'click .stp-edit':'startEdit',
@@ -107,8 +107,8 @@ $(function(){
             var edited_collection = new CollectionPoint;
             edited_collection.id = 1;
             console.log($(this.el).find('input')[3].value);
-            edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[3].value));;
-            edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[4].value));
+            edited_collection.attributes.nameofcollection = String(encodeURIComponent($(this.el).find('input')[2].value));;
+            edited_collection.attributes.description = String(encodeURIComponent($(this.el).find('input')[3].value));
             edited_collection.attributes.collectionid = this.model.id;
             edited_collection.save();
             $('.scroll-box').click();
@@ -178,8 +178,8 @@ $(function(){
         moreDescription: function(event){
             event.preventDefault();
             var parent = $(event.currentTarget).closest(".p-place-desc");
-            $(".hellip", parent).toggle();
-            $(".more-desc", parent).toggleClass("hidden");
+            $(".hellip").toggle();
+            $(".more-desc").toggleClass("hidden");
             $(event.currentTarget).toggleClass("open");
             $(event.currentTarget).hasClass("open") ? $(event.currentTarget).text("свернуть") : $(event.currentTarget).text("подробнее");
         },

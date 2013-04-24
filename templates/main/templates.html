@@ -765,6 +765,7 @@
                                 <div class="toggle-block">
                                     <div class="clearfix p-gallery">
                                         <% _.each(points[fir].imgs, function(itm, index){ %>
+                                        <% console.log('here') %>
                                             <div class="item-photo <% if(index == 0){ print ('current') }%>">
                                                 <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="<%- itm.likeusers %>" data-avatar="{{ MEDIA_URL }}<%- itm.author.avatar %>">
                                                     <img src="<%= itm.thumbnail130x130 %>" alt="" width="130" height="130">
@@ -785,12 +786,12 @@
                                                 <img src="<%= points[fir].imgs[0].thumbnail560 %>" alt="">
 
                                                 <div class="bp-add-like">
-                                                    <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
-                                                    <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
+                                                    <img src="{{ MEDIA_URL }}<%- points[fir].imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
+                                                    <span class="bp-name"><%- points[fir].imgs[0].author.first_name %> <%- points[fir].imgs[0].author.last_name %></span>
                                                     {% if user.is_authenticated %}
                                                     <a href="#" class="a-like"></a>
                                                     {% endif %}
-                                                    <span class="count-like"><%- imgs[0].likeusers %></span>
+                                                    <span class="count-like"><%- points[fir].imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
 
@@ -1188,11 +1189,12 @@
                         </div>
                         
                         <div class="ctp-content">
-                            <%- description %><span class="hellip">&hellip;</span> 
-                            
-                            <span class="hidden more-desc">В отличие от опций, которые позволяют изменить только некоторые параметры отображения элемента, макет позволяет сформировать какое угодно его представление. <br>Реализация собственного макета «с нуля» на основе интерфейса ILayout является относительно трудоемкой задачей, решение которой выходит за рамки данного руководства. Однако API предоставляет удобный механизм, позволяющий генерировать макеты на основе шаблонов<br></span>
-                            
-                            <a href="#" class="a-ctp-toggle">подробнее</a>
+                            <%- description.substring(0,150) %>
+                                <% if((description.length) > 150){ %>
+                                <span class="hellip">…</span> 
+                                <span class="hidden more-desc"><%-description.substring(150,description.length)%></span>
+                                <a href="#" class="a-toggle-desc">подробнее</a>
+                                <%}%>
                         </div>
                         
                         <div class="c-edit-inputs">

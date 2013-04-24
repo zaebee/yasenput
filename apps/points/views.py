@@ -78,7 +78,11 @@ class PointsBaseView(View):
                                                     },
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
-                                                    'limit': 4}, 'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}}, 
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
                                                         },
                                                     },
 

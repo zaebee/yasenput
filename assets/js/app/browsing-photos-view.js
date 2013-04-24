@@ -73,10 +73,11 @@ $(function(){
                     $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templatePhoto(img.toJSON()) );
                     // $(view.el).find(view.photosPlace).find(view.bigPhotoPlace).before( view.templatePhoto(img.toJSON()) );
                 });
-                console.log('view: ', view);
-                console.log('ismine: ', view.mainPoint.get('ismine'));
-                if(view.mainPoint.get('ismine') == 1) {
-                    $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                console.log('viewee: ', view);
+                if (view.mainPoint){console.log('ismine: ', view.mainPoint.get('ismine'));
+                    if(view.mainPoint.get('ismine') == 1) {
+                        $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
+                    }
                 }
             }
             $(view.el).find(view.photosPlace).find('.item-photo').first().addClass('current');
@@ -116,11 +117,19 @@ $(function(){
                     //какой это див по счёту в линии
                     indexDiv = countBack - (countLines * 4);
                     console.log('indexDiv: ', indexDiv);
+<<<<<<< HEAD
 
                     // солько дивов переди текущего дива нужно перенести
                     transAmout = 4 - indexDiv;
                     console.log('transAmout: ', transAmout);
 
+=======
+
+                    // солько дивов переди текущего дива нужно перенести
+                    transAmout = 4 - indexDiv;
+                    console.log('transAmout: ', transAmout);
+
+>>>>>>> korolev
                     // elemsArr = $(imgElem).nextAll();
                     elemsArr = $(imgElem).nextAll().slice(transAmout);
 
