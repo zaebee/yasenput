@@ -42,7 +42,7 @@ $(function(){
             console.log(pointID);
             newCollection.save();
         },
-        addInCollection:function(){
+        addInCollection:function(options){
             console.log('strt adding');
             console.log('model to add = ', $(this.el).find('input'));
             //console.log('MEGAPOINT===>>>',point);
@@ -63,7 +63,9 @@ $(function(){
                 }
             });
             newCollection.attributes.collectionid = String(newCollection.attributes.collectionid);
-            newCollection.save();
+
+            options.action = 'update';
+            newCollection.save({}, options);
             console.log('closing window');
             $(".popup").remove();
             window.YPApp.popups.close({
