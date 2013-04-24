@@ -622,7 +622,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .items .a-collection, .items .a-edit-new, .items .a-like{visibility:hidden}
 .items .photo:hover .a-collection, .items .photo:hover .a-edit-new, .items .photo:hover .a-like, .items .photo:hover .a-share-new{visibility:visible}
 
-#new-collection{position:relative; z-index:12345; width:332px; left:50%; top:120px; text-align:left; display:none; font-size:14px; margin:0 0 40px -166px;}
+#new-collection{position:relative; z-index:12345; width:332px; left:50%; top:120px; text-align:left; display:block; font-size:14px; margin:0 0 40px -166px;}
 	#new-collection .line{padding:0 0 12px}
 		#new-collection .line label{display:block; margin:6px 0 8px}
 		#new-collection .line label:first-child{display:block; margin-top:0}
@@ -775,6 +775,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .drop-labels .drop-not-found{display: none;}
 
 .require-labels{margin:-3px 0 0 -3px}
+.other-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
 .label-require{background:#ffadc9 !important}
 

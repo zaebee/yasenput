@@ -170,12 +170,15 @@ $(function(){
     window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
     $(window).scroll(function () {
 
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 600) {
             // если уже не грузим, то в путь
+            console.log('loading');
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
+                console.log(window.pointsArr);
                 window.pointsArr.current.loadNextPage();
+                window.collectionsArr.current.loadNextPageCollection();
             }
         }
     });
@@ -797,14 +800,25 @@ $(function(){
             "click .custom-checkbox":function(e){
                 var self = e.currentTarget;
                 setTimeout(function(){
-                    this.toggleCheckbox(self);
-                }, 0);
+                    if ($("input[type=checkbox]").is(":checked")) {
+                        $(self).addClass("checked");
+                    } else {
+                        $(self).removeClass("checked");
+                    }
+                    }, 0);
             },
             "click .custom-radio":function(e){
                 var self = e.currentTarget;
                 setTimeout(function(){
                     this.toggleRadio(self);
                 }, 0);
+            },
+            toggleCheckbox: function (label) {
+                if ($("input[type=checkbox]", label).is(":checked")) {
+                    label.addClass("checked");
+                } else {
+                    label.removeClass("checked");
+                }
             },
             "click .pop-labels .label":function(e){
                 var self = e.currentTarget;
@@ -853,11 +867,11 @@ $(function(){
                 } else if($(e.target).closest("#complaint-photo").length){
                     $("#complaint-photo").hide();
                 } else {
-                    window.YPApp.popups.close({
+                    window.YPApp.popups.remove({
                         elem: $("#popups"),
                         speed: 0,
                         callbackBefore: function(){
-                            window.YPApp.popups.close({
+                            window.YPApp.popups.remove({
                                 elem: $("#overlay")
                             });
                         },

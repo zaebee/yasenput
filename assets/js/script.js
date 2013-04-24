@@ -208,13 +208,20 @@ jQuery(function($){
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
-					
-					if($(".selected", $(self.p.dropRoot)).length){
-						$(".selected a", $(self.p.dropRoot)).click();
-					} else {
-						$(self.p.dropRoot).hide();
-					}
-					
+                    var flag = false;
+                    _.each(multisearch_data.tags, function(tag){
+
+                         if(tag.name.toLowerCase() == $("#multisearch-text").val().toLowerCase()){
+                             console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
+                             $('#multisearch-tags a').filter(function() { return $.data(this, "id") == tag.id; }).end().click();
+                             flag = true;
+                         }
+                    })
+                    if(multisearch_data.places.length>0 && !flag){
+                        console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
+                        $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
+                    }
+					console.log('нажат enter');
 					break;
 				case 27:
 					setTimeout(function(){
@@ -388,7 +395,6 @@ jQuery(function($){
 			});
 		},
 		reinit_click: function() {
-                console.log('reinit_click')
     			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
 				me.onClickDrop($(this), me);
@@ -425,11 +431,12 @@ jQuery(function($){
 
 	    id = $(this).parents(".label").data("id");
 	    type = $(this).parents(".label").data("type");
-
+        console.log('delete:', multisearch_result.points);
+        console.log('delete2:', multisearch_data.points);
         // delete item from array
 	    switch (type) {
 	        case "point": {
-	            multisearch_result.points.splice(id, 1);
+	            multisearch_result.points.length = 0;
 	            $(this).parents(".label").remove();
 	            break;
 	        }
@@ -463,6 +470,8 @@ jQuery(function($){
 	            break;
 	        }
 	    }
+        console.log('after delete:', multisearch_result.points);
+        console.log('after delete2:', multisearch_data.points);
         window.currentPoints.setURL().fetch();
 
 	});

@@ -146,7 +146,6 @@ $(function(){
             console.log('method: ', method);
             console.log('model: ', model);
             console.log('options: ', options);
-
             console.wait = true;
             switch (method) {
                 case "create":
@@ -250,7 +249,7 @@ $(function(){
             });
         },
         saveNew: function(){
-            console.log('');
+            console.log('etst');
             errors = this.ckeckValid();
             if(errors == null) {
                 this.save({}, {
@@ -366,6 +365,7 @@ $(function(){
             _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
+            console.log('points inited!')
         },
         parse: function(response) {
             return response.points;
@@ -406,12 +406,14 @@ $(function(){
             this.loaded = true;
             console.log('++> render points');
             console.log('this: ', this);
-
+            console.log('points elSelector ->>', $(this.elSelector))
             this.el = $(this.elSelector);
-            $(this.el).empty();
+            //$(this.el).empty();
+            console.log('this -->', this.el);
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
+                //alert(pin.el);
                 self.el.append(pin.render().el);
             });
 
@@ -432,12 +434,6 @@ $(function(){
             clusterer.removeAll();
             var myGeoObjectsArr = [];
             var pointsOnMap = [];
-
-            // console.log('all points: ');
-            // this.each(function(point){
-            //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
-            // });
-
             rejectedPoints = [];
 
             // Показ на карте значков только популярных точек из одинаковых
@@ -464,7 +460,6 @@ $(function(){
             });
 
             // Фильтруем точки с одинаковыми координатами
-            console.log('longitude latitude check');
             this.each(function(point){
                 var point_id;
                 if (point.get('id_point') == 0){
@@ -494,7 +489,6 @@ $(function(){
                 }
 
             });
-
             clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){
@@ -503,8 +497,10 @@ $(function(){
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
+                console.log('=============================');
+                console.log('loadNextPage', data.collections);
                 if( data.points.length > 0 ) {
-                    collection.redrawOnMap(window.clusterer);
+                    //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
                 }
                 //  else {
@@ -666,15 +662,20 @@ $(function(){
 //            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
-            if(this.get('author').id == window.myId ) {
+            console.log(this);
+            console.log(window.myId);
+            if(this.get('author') == window.myId ) {
+                console.log('mine');
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
             }
             _.each( this.get('comments'), function(comment){
+                console.log('comment-----',comment);
+                if (comment.author) {
                 if(comment.author.id == window.myId) {
                     comment.ismine = 1;
-                } else {
+                } }else {
                     comment.ismine = 0;
                 }
             });

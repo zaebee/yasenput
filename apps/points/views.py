@@ -20,6 +20,7 @@ import json
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
 
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
@@ -47,6 +48,7 @@ class PointsBaseView(View):
                                            'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked','thumbnail207_height'],
                                                         },
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],
+
                                                      'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                    'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -74,7 +76,17 @@ class PointsBaseView(View):
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
-                                           })          
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}}, 
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                        },
+                                                    },
+
+                                           })
     
     def getPointsSelect(self, request):
         if request.user.is_authenticated():
@@ -126,9 +138,12 @@ class PointsBaseView(View):
             collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
         else:
             collections_isliked = "select 0"   
-        args = {"select": {
+        args = {
+                "tables": ["main_points"],
+                "select": {
                       "isliked": collections_isliked,
                       "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
+                      #"imgs": 'SELECT count(*) from main_points',
                     }
             }
         return args
@@ -257,7 +272,21 @@ class OnePoint(PointsBaseView):
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
         return self.pointsList([point])
-    
+
+
+class OneDetailPoint(PointsBaseView):
+    http_method_names = ('post',)
+
+    def post(self, request, *args, **kwargs):
+        point_ = request.POST['id']
+        # return point_
+        point_ = point_.split('_')
+        if point_[1] == '0':
+            point = MainModels.Points.objects.filter(id=point_[0]).extra(**self.getPointsSelect(request))
+        else:
+            point = MainModels.PointsByUser.objects.filter(id=point_[0]).extra(**self.getPointsByUserSelect(request))
+        return self.pointsList(point)
+
 
 class PointsSearch(PointsBaseView):
     http_method_names = ('get',)
@@ -305,6 +334,7 @@ class PointsList(PointsBaseView):
     http_method_names = ('get',)
 
     def get(self, request, *args, **kwargs):
+        
         params = request.GET
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
@@ -319,8 +349,14 @@ class PointsList(PointsBaseView):
         if form.is_valid():
             pointsreq = MainModels.Points.objects
             copypointsreq = MainModels.PointsByUser.objects
+            #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
-
+            
+            
+            points_fields_list = pointsreq.values_list('id','likeusers')
+            points_by_user_fields_list = copypointsreq.values_list('id')
+            collections_fields_list = collectionsreq.values_list('id')
+            
             user = form.cleaned_data.get("user")
             if user:
                 pointsreq = pointsreq.filter(author__id=user)
@@ -380,23 +416,26 @@ class PointsList(PointsBaseView):
                 pointsreq  = pointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 copypointsreq  = copypointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
                 collectionsreq = collectionsreq.annotate(popular=Count('likeusers__id')).order_by('-popular')
+                
 #                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
    
-
             points = pointsreq[offset:limit].all()
+            #points = pointsreq[offset:limit].all()
             copypoints = copypointsreq[offset:limit].all()
-            collections = collectionsreq[offset:limit].all()
+            collections = collectionsreq[offset:limit*2].all()
             
             allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
-            
             if content == 'new':
                 allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
             else:
                 allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+
             
+            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+            allcollections = allcollections[:1]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

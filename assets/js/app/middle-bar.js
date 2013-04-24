@@ -8,6 +8,7 @@
         },
         createNewPoint: function(event){
             // event.preventDefault();
+            console.log(this);
             window.newPoint = new window.Point();
             createPointView = new window.CreatePointView({model: window.newPoint});
             window.currentPointPopup = createPointView;

@@ -64,7 +64,6 @@ function update_multisearch() {
                         window.multisearch_data.places.push(geoObject);
                         text = geoObject.properties.get("text");
 //                        boundsPoint = geoObject.properties.get("boundedBy");;
-                        console.log(geoObject);
                     });
 
                     compiled = multisearch_places_tmpl({data: window.multisearch_data.places});

@@ -14,7 +14,6 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .bp-photo':'nextBigPhoto',
             'click .a-like': 'likePhoto'
         },
         render:function(){
@@ -37,6 +36,7 @@ $(function(){
                 afterChange: function(self, id){
                     if (id == 'tab-map'){
                         console.log('we select tab-map');
+                        console.log('view.model', view.model);
                         if (!view.popupMap) {
                             coords = [view.model.get('latitude'), view.model.get('longitude')];
                             view.popupMap = new ymaps.Map('popup-map-1', {
@@ -100,15 +100,6 @@ $(function(){
             $(".more-desc", parent).toggleClass("hidden");
             $(event.currentTarget).toggleClass("open");
             $(event.currentTarget).hasClass("open") ? $(event.currentTarget).text("свернуть") : $(event.currentTarget).text("подробнее");
-        },
-        nextBigPhoto: function(event){
-            event.preventDefault();
-            if(event.target.tagName.toLowerCase() == 'img' && !$(event.target).hasClass("avatar")){
-                var items = $(event.currentTarget).closest(".p-gallery").find(".item-photo:visible").not(".load-photo"),
-                    current = items.filter(".current"),
-                    next = items.index(current) < items.length-1 ? items.eq(items.index(current)+1) : items.eq(0);
-                next.find('a').click();
-            }
         },
         likePhoto: function(event){
             event.preventDefault();

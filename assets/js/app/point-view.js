@@ -193,9 +193,53 @@ $(function(){
 
             }
         },
-        addInCollection:function(e){
-            e.preventDefault();
-        }
+        addInCollection:function(event){
+            console.log(this.model);
+            $(".popup").remove();
+            window.newCollection = new window.CollectionPoint();
+            addCollectionView = new window.AddCollectionView({ model: window.newCollection });
+            var self = event.currentTarget;
+            console.log('target = ', self);
+            console.log('this = ', this.model);
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            addCollectionView.render({ model: this.model });
+            $(".scroll-box").find('#'+addCollectionView.id).remove();            
+            $(".scroll-box").append(addCollectionView.el);
+
+            //var self = event.currentTarget;
+            // var addPoint = this.templateAdd();
+            // $("#popups").remove();
+            // $("#overlay").after(createPointView.render().el);
+            // $("#overlay").after(detcontent);
+
+            var id = addCollectionView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
+            var self = event.currentTarget;
+            console.log('target = ', self);
+            console.log('this = ', this.model);
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            console.log('pointId = ', pointId);
+            addCollectionView.getPoint(pointId);
+
+       }
     });
 
 	window.PointView = PointView;

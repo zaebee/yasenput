@@ -1,4 +1,5 @@
 $(function(){
+    console.log('ymaps.js');
     window.myMap = {};
     
     ymaps.ready(function(){
@@ -8,6 +9,7 @@ $(function(){
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
             zoom: 12,
         });
+        console.log('ymaps.Map');
         myMap.ready = $.Deferred();
         
         myMap.controls.add('zoomControl').add('typeSelector');
@@ -21,15 +23,11 @@ $(function(){
 
             pointsNew.loaded = false;
             pointsNew.page = 1;
-            // _.each(window.pointsArr, function(points){
-            //     console.log('points: ', points);
-            //     points.loaded = false;
-            // });
-            window.currentPoints.page = 1;
-            window.currentPoints.setURL().fetch();
 
-            // window.pointsArr.current.page = 1;
-            // window.pointsArr.current.setURL().fetch();
+            window.currentPoints.page = 1;
+
+            window.fetchPoint = new $.Deferred();
+            window.fetchPoint = window.currentPoints.setURL().fetch();
         });
 
         coords = myMap.getCenter();
@@ -52,6 +50,10 @@ $(function(){
                 if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName')){
                     window.multisearch_data.places.push(obj);
                     labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.Locality.LocalityName'));
+                }
+                if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.LocalityName')){
+                    window.multisearch_data.places.push(obj);
+                    labels.unshift(obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.LocalityName'));
                 }
                 if ((obj.properties.get('metaDataProperty.GeocoderMetaData.kind') == 'locality') && obj.properties.get('metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName')){
                     window.multisearch_data.places.push(obj);

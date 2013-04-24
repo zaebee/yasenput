@@ -284,6 +284,7 @@ $(function(){
             $(event.currentTarget).parent().remove();
         },
         addNewPoint: function(event){
+            console.log('addNewPoint-->', this.model);
             this.model.saveNew();        
         }
     });
