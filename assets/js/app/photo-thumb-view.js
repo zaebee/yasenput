@@ -22,7 +22,6 @@ $(function(){
             browsingPhotos.el = $(this.el).find(photosPlace);
             browsingPhotos.render();
 
-            
             var myMapPopupPlace;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){

@@ -23,7 +23,7 @@ $(function(){
             // _.bindAll(this, 'likepoint');     
         },
         events: {
-            'click .item-photo:not(.current)>a': 'viewImg',
+            'click .item-photo>a': 'viewImg', 
             'click a.a-toggle.photos': 'togglePhotos',
             'click a.a-toggle.comments': 'toggleComments',
             'click input:submit': 'addComment',
@@ -172,9 +172,11 @@ $(function(){
                 if(view.restPhotos.length == 0) {
                     // оставшиеся фотки, которые нужно отрендерить
                     var restPhotos = this.collection.toArray().splice(7);
+                    console.log('restPhotos: ', restPhotos);
                     view.restPhotos = restPhotos
                     // если лоадФото внизу
                     var loadPhoto = $(view.el).find(view.photosPlace).find(view.downwardPhotos).find('.load-photo');
+                    console.log('loadPhoto: ', loadPhoto);
                     if ( loadPhoto.length > 0 ) {
                         _.each(restPhotos, function(img){
                             loadPhoto.before( view.templatePhoto( img.toJSON() ) );
@@ -183,14 +185,16 @@ $(function(){
                     } else {
                         console.log('restPhotos',this.collection.toArray().splice(7));
                         var loadPhoto = $(view.el).find(view.photosPlace).find(view.upwardPhotos).find('.load-photo');
-                        var firstPhoto = _.first(restPhotos);
-                        loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
-                        restRestPhotos = _.rest(restPhotos);
+                        if(restPhotos.length != 0) {
+                            firstPhoto = _.first(restPhotos);
+                            loadPhoto.before( view.templatePhoto( firstPhoto.toJSON() ) );
+                            restRestPhotos = _.rest(restPhotos);
 
-                        loadPhoto.appendTo($(view.el).find(view.downwardPhotos));
-                         _.each(restRestPhotos, function(img){
-                            loadPhoto.before( view.templatePhoto( img.toJSON() ) );
-                        });
+                            loadPhoto.appendTo($(view.el).find(view.downwardPhotos));
+                            _.each(restRestPhotos, function(img){
+                                loadPhoto.before( view.templatePhoto( img.toJSON() ) );
+                            });
+                        }
                     }
                     // и если его нет
                     if( $(view.el).find('.load-photo').length == 0 ){

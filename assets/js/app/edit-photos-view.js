@@ -133,12 +133,17 @@ $(function(){
             });
         },
         deleteImg: function(event){
+            console.log('deleteImg');
             event.preventDefault();
             view = this;
             elemPhoto = $(event.currentTarget).closest('.item-photo');
             photoId = parseInt( elemPhoto.attr('data-photo-id'), 10);
 
-            photo = this.model.get('photos_create').get(photoId);
+            console.log('this.model: ', this.model);
+            photo = this.model.get('photos_pop').get(photoId);
+            if (photo == undefined) {
+                photo = this.model.get('photos_create').get(photoId);
+            }
             photo.destroy({
                 success: function(model, response){
                     $(view.el).find(view.photosPlace).find('[data-photo-id="'+model.get('id')+'"]').fadeOut(function(){
