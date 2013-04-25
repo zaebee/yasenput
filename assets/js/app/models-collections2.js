@@ -21,6 +21,7 @@ $(function(){
                             options.data = 'name='+model.get('name');
                             options.data += '&description='+model.get('description');
                             options.data += '&pointid=' +model.get('pointid');
+                            options.data += '&secondid=' +model.get('secondid');
                             
                             // options.data = 's='+options.searchStr;
                             break;
@@ -42,6 +43,7 @@ $(function(){
                             options.data = 'nameofcollection='+model.get('nameofcollection');
                             options.data += '&description='+model.get('description');
                             options.data += '&pointid=' +model.get('pointid');
+                            options.data += '&secondid=' +model.get('secondid');
                             options.data += '&collectionid=' +model.get('collectionid');
                             break;
                         case 'like':

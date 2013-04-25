@@ -95,8 +95,9 @@
                     <i class="yp-like"></i><small><%- likeusers %></small>
                 </div>
             </div>
-
-            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207 %>"></a>
+            <% _.each(points_by_user, function(itm, index){ points.push(itm); console.log(itm.imgs[0]) })%>
+            <% console.log('poinst_by_user -->',points) %>
+            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207_height %>"></a>
         </div>
 
         <ul class="photo-preview">
@@ -123,7 +124,7 @@
             <img src="{{MEDIA_URL}}<%=author.avatar%>" alt="" class="avatar" width="29" height="30">
 
             <h3><%- name %></h3>
-            <p>поделился <%- author.first_name %> <%- author.last_name %></p>
+            <p>создал <%- author.first_name %> <%- author.last_name %></p>
         </div>
     </article>
 </script>
@@ -722,8 +723,14 @@
                         <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
                         {% endif %}
                         <!--<div class="event-date">1―5 января</div>-->
-
-                        <h2><%- points[fir].name %></h2>
+                        <% var name1 = points[fir].name
+                            if (!points[fir].name){
+                                name1 = points[fir].point.name
+                            }; %>
+                        <h2><%- name1 %></h2><% if(points[fir].point) {  %>
+                            <small>поделился</small> <a href="#"><%- points[fir].author.first_name %> <%- points[fir].author.last_name %></a>
+                        <% } %>
+                            
                         <div class="addr"><%- points[fir].address %></div>
 
                         <div class="stats">
@@ -1209,8 +1216,12 @@
                         <div class="aside-viewport">
                             <ol id="ol-collection">
                                 <% _.each(points, function(point, id){ %>
+                                    <% var name = point.name
+                                        if (!point.name){
+                                            name = point.point.name
+                                        }; %>
                                 <li class="<% if(fir == id) { %>active <% }; %>choose_place" data-placemark-id="placemark-1">
-                                    <a href="#" class="choose_place_a" idi="<%- id %>"><%- point.name %></a>
+                                    <a href="#" class="choose_place_a" idi="<%- id %>"><%- name %></a>
                                     <button type="button" class="remove-collection"></button>
                                 </li>
                                 <% }); %>

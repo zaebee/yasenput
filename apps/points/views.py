@@ -67,7 +67,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'description', 'author', 'points', 'likeusers', 'updated', 'likes_count'],
+                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count'],
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
@@ -83,6 +83,16 @@ class PointsBaseView(View):
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },}}, 
                                                                     'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                        },
+                                                    },
+                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}}, 
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
                                                         },
                                                     },
 
@@ -435,7 +445,7 @@ class PointsList(PointsBaseView):
 
             
             allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            allcollections = allcollections[:1]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
+            allcollections = allcollections[:COUNT_ELEMENTS]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

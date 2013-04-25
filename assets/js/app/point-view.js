@@ -236,8 +236,9 @@ $(function(){
             console.log('this = ', this.model);
             event.preventDefault();
             pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            console.log(this.model.attributes.id_point);
             console.log('pointId = ', pointId);
-            addCollectionView.getPoint(pointId);
+            addCollectionView.getPoint(pointId, this.model.attributes.id_point);
 
        }
     });
