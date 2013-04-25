@@ -63,8 +63,10 @@ $(function(){
 
                 // рендерим "добавить"
                 console.log('ismine: ', view.mainPoint.get('ismine'));
-                if(view.mainPoint.get('ismine') == 1) {
-                    $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                if (view.mainPoint){
+                    if(view.mainPoint.get('ismine') == 1) {
+                        $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
+                    }
                 }
                 // $(view.el).find(view.photosPlace).find('.item-photo').last().after( view.templateLoadPhoto() );
 
@@ -74,7 +76,7 @@ $(function(){
                     // $(view.el).find(view.photosPlace).find(view.bigPhotoPlace).before( view.templatePhoto(img.toJSON()) );
                 });
                 console.log('viewee: ', view);
-                if (view.mainPoint){console.log('ismine: ', view.mainPoint.get('ismine'));
+                if (view.mainPoint){
                     if(view.mainPoint.get('ismine') == 1) {
                         $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );
                     }
