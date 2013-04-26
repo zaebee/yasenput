@@ -62,7 +62,6 @@ $(function(){
                 });
 
                 // рендерим "добавить"
-                console.log('ismine: ', view.mainPoint.get('ismine'));
                 if (view.mainPoint){
                     if(view.mainPoint.get('ismine') == 1) {
                         $(view.el).find(view.photosPlace).find(view.downwardPhotos).append( view.templateLoadPhoto() );
