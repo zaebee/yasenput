@@ -402,6 +402,11 @@ class PointsList(PointsBaseView):
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
                 collectionsreq = collectionsreq.filter(points__tags__in=tags)
+
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=name)
+                copypointsreq = copypointsreq.filter(point__address__icontains=name)
            
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))

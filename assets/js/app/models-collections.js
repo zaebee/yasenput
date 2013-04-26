@@ -374,6 +374,7 @@ $(function(){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
+            this.address = window.multisearch_result.places;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -399,6 +400,7 @@ $(function(){
         				'&coord_right='+this.coord_right+
                         '&user_id='+this.user_id+
                         '&name='+this.name+
+                        //'&address='+this.address+
                         this.tagStr;
         	return this;
         },
