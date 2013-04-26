@@ -212,9 +212,14 @@ class CollectionAdd(CollectionsBaseView):
             collection.author = person
             collection.save()
             #points = MainModels.Points.objects.all()
-            
-            collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
-            collection.save()
+            f = open('file1.txt', 'w')
+            f.write(params.__getitem__("secondid"))
+            f.close()
+            if (params.__getitem__("secondid") == '0'):
+                collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+            else:
+                collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
+            #collection.save()
             
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
@@ -248,7 +253,10 @@ class CollectionEdit(CollectionsBaseView):
                     collection.name = smart_str(params.__getitem__("nameofcollection"))
                     collection.description = params.__getitem__("description")
                 if(params.__getitem__("pointid") != 'undefined'):
-                    collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                    if (params.__getitem__("secondid") == '0'):
+                        collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                    else:
+                        collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
                 collection.save()
             
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})

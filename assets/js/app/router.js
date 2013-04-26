@@ -44,6 +44,8 @@ $(function(){
                         collection = id.match(/tab-(\S+)/)[1];
                         if( window.pointsArr[collection].loaded == false ) {
                             window.pointsArr[collection].setURL().fetch();
+                        }
+                        if( window.collectionsArr[collection].loaded == false ) {
                             window.collectionsArr[collection].setURL().fetch();
                         }
                         window.pointsArr.current = window.pointsArr[collection];

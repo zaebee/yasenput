@@ -1,1 +1,1 @@
-31
+SELECT count(*) FROM collections_collections_points where collections_collections_points.collections_id=collections_collections.id

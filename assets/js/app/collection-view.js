@@ -5,7 +5,6 @@ $(function(){
         className: 'item item-collection',
         template: _.template($('#collection-template').html()),
         initialize: function() {
-            console.log('init started !!!!');
             _.bindAll(this, 'render');
             _.bindAll(this, 'likecollection');
         },
@@ -23,15 +22,12 @@ $(function(){
         likecollection: function(event){
 
             event.preventDefault();
-            console.log(event.target);
             if ($(event.target).hasClass('marked')){
                 $(event.target).removeClass('marked');
             } else {
                 $(event.target).addClass('marked')
             }
-            console.log('like collection: ', this.model.get('id'));
             view = this;
-            console.log(this.model.id);
             this.model.like({
                 success: function(model, response, options){
                     model.set(response[0]).ratingCount();
@@ -43,7 +39,6 @@ $(function(){
             });
         },
         detailCollect:function(event){
-            console.log('yes yes yes yes yes yes')
             // window.newPoint = new window.Point();
             detailCollectionView = new window.DetailCollectionView( { model: this.model} );
             detailCollectionView.render();
@@ -76,9 +71,19 @@ $(function(){
             });
         },
         render:function(){
+            console.log('RENDER', this.model.attributes);
+            var allPoints = [];
+            _.each(this.model.attributes.points_by_user, function(itm){
+                allPoints.push(itm);
+            });
+            _.each(this.model.attributes.points, function(itm){
+                allPoints.push(itm);
+            });
+            this.model.attributes.allpoints = allPoints;
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
             this.$el.attr( 'data-collection-id', this.model.get('id') );
+            console.log('rendering ======= COLLECTION ====== in =====collection-view', this.model.id)
             return this;
         },       
     });

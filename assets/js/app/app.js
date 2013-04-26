@@ -176,11 +176,12 @@ $(function(){
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
-                console.log(window.pointsArr);
+                console.log(window.collectionsArr);
                 window.pointsArr.current.loadNextPage();
                 window.collectionsArr.current.loadNextPageCollection();
             }
         }
+        
     });
 });
 

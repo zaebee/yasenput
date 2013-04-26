@@ -26,7 +26,7 @@ $(function(){
             this.model.set({fir: point_id});
             console.log('COLLECTION: ', this.model.toJSON());
             this.model.set( {photos_create: new window.YPimages()} );
-            this.model.set( {photos_pop: new window.YPimages( this.model.get('points')[point_id].imgs )} );
+            this.model.set( {photos_pop: new window.YPimages( this.model.get('allpoints')[point_id].imgs )} );
             this.model.set( {photos_new: new window.YPimages()} );
             var content = this.template(this.model.toJSON());
             $(this.el).html(content);
@@ -52,7 +52,15 @@ $(function(){
                         console.log('we select tab-map');
                         if (!view.popupMap) {
                             console.log('inside of if', view);
-                            coords = [view.model.get('points')[point_id].latitude, view.model.get('points')[point_id].longitude];
+                            var latitude = view.model.get('allpoints')[point_id].latitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                latitude = view.model.get('allpoints')[point_id].point.latitude
+                            };
+                            var longitude = view.model.get('allpoints')[point_id].longitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                longitude = view.model.get('allpoints')[point_id].point.longitude
+                            };
+                            coords = [latitude, longitude];
                             view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: coords,
                                 zoom: 14
@@ -72,7 +80,7 @@ $(function(){
                             console.log('coords: ', coords);
                             var placemark = new ymaps.Placemark(coords 
                                 ,{
-                                    id: view.model.get('points')[point_id].id
+                                    id: view.model.get('allpoints')[point_id].id
                                 } 
                                 ,{
                                     iconImageHref: '/assets/media/icons/troopper.png', // картинка иконки
@@ -120,7 +128,7 @@ $(function(){
             var point_id = $(event.currentTarget).find('.choose_place_a').attr('idi');
             this.model.set({fir: point_id});
             this.model.set( {photos_create: new window.YPimages()} );
-            this.model.set( {photos_pop: new window.YPimages( this.model.get('points')[point_id].imgs )} );
+            this.model.set( {photos_pop: new window.YPimages( this.model.get('allpoints')[point_id].imgs )} );
             this.model.set( {photos_new: new window.YPimages()} );
             var content = this.template(this.model.toJSON());
             $(this.el).html(content);
@@ -141,13 +149,21 @@ $(function(){
                         console.log('we select tab-map');
                         if (!view.popupMap) {
                             console.log('inside of if', view);
-                            coords = [view.model.get('points')[point_id].latitude, view.model.get('points')[point_id].longitude];
+                            var latitude = view.model.get('allpoints')[point_id].latitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                latitude = view.model.get('allpoints')[point_id].point.latitude
+                            };
+                            var longitude = view.model.get('allpoints')[point_id].longitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                longitude = view.model.get('allpoints')[point_id].point.longitude
+                            };
+                            coords = [latitude, longitude];
                             view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: coords,
                                 zoom: 14
                             });
                             //view.model.get('near_points').map = view.popupMap;
-                            console.log('testtest');
+                            console.log('coords ----->', coords);
                             view.popupMap.controls.add('zoomControl');
                             view.clusterer = new ymaps.Clusterer({
                                 clusterIcons: window.clusterIcons,
@@ -161,7 +177,7 @@ $(function(){
                             console.log('coords: ', coords);
                             var placemark = new ymaps.Placemark(coords 
                                 ,{
-                                    id: view.model.get('points')[point_id].id
+                                    id: view.model.get('allpoints')[point_id].id
                                 } 
                                 ,{
                                     iconImageHref: '/assets/media/icons/troopper.png', // картинка иконки
