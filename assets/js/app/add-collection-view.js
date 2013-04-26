@@ -31,7 +31,7 @@ $(function(){
         events: {
             'click .a-add-collection': 'addCollection',
             'click .p-close': 'close',
-            'click .a-btn': 'addInCollection',
+            'click .a-to-collection': 'addInCollection',
         },
         addCollection:function(){
             console.log('strt adding');
@@ -44,7 +44,23 @@ $(function(){
             newCollection.attributes.name = String(encodeURIComponent($(this.el).find('input')[1].value));
             newCollection.attributes.description = String(encodeURIComponent($(this.el).find('input')[2].value));
             console.log(pointID);
-            newCollection.save();
+            newCollection.save('create');
+            console.log('closing window');
+            $(".popup").remove();
+            window.YPApp.popups.close({
+                    elem: $("#popups"),
+                    speed: 0,
+                    callbackBefore: function(){
+                        console.log('closing');
+                        window.YPApp.popups.close({
+                            elem: $("#overlay")
+                        });
+                    },
+                    callbackAfter: function(){
+                        console.log('closing');
+                        $("body").css("overflow", "visible");
+                    }
+                });
         },
         addInCollection:function(options){
             console.log('strt adding');

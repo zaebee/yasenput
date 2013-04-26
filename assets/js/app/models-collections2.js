@@ -7,15 +7,8 @@ $(function(){
             points:[],
         },
         sync:  function(method, model, options) {
-            console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
-            console.log('url: ');
             switch (method) {
                 case "create":
-                    console.log('===> save new collection!');
-                            // return;
                             options.type = 'GET';
                             options.url = model.url + '/add';
                             options.data = 'name='+model.get('name');
@@ -27,10 +20,6 @@ $(function(){
                             break;
                     switch (options.action) {
                         case 'search':
-                            // console.log('===> create with search!');
-                            // options.type = 'GET';
-                            // options.url = model.url + '/search';
-                            // options.data = 's='+options.searchStr;
                             break;
                     };
                     break;
@@ -48,7 +37,6 @@ $(function(){
                             break;
                         case 'like':
                             options.type = 'GET';
-                            console.log('SYNC: like the collection', model.get('id'));
                             options.url = model.url + '/like';
                             options.data = 'collectionid='+model.get('id');
                             break;
@@ -57,7 +45,6 @@ $(function(){
             return Backbone.sync(method, model, options);
         },
         like: function(options){
-            console.log('this: ', this.id);
             options.action = 'like';
             newCollection = new CollectionPoint;
             newCollection.id = '1';
@@ -77,14 +64,13 @@ $(function(){
         initialize: function(){
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
-            console.log('collections inited!' + this)
 
         },
         parse: function(response) {
             return response.collections;
         },
         setURL: function(){
-
+            console.log('setURL ', this);
             this.page = (this.page != null) ? this.page : 1;
             this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -102,10 +88,11 @@ $(function(){
             this.url = '/points/list/'+this.page +
                         '?content='+this.content+
                         this.tagStr;
-            console.log('content ' + this.content);
             return this;
         },
         render: function(){
+            console.log('render ============================= render');
+
             this.loaded = true;
 
 
@@ -121,19 +108,17 @@ $(function(){
                 itemSelector: 'article.item',
                 columnWidth: 241 
             });
-            console.log('smsms');
             $(this.el).masonry( 'reload' );
             return this;
         },
         loadNextPageCollection: function(){
             collection = this;
-            console.log('nininininininininininininininininininininin');
             
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
-                console.log('loadNextPage', data.points);
                 if( data.collections.length > 0 ) {
+                    console.log(data.collections[0].id);
                     //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
                 }
@@ -143,12 +128,14 @@ $(function(){
             });
         },
         addPrepend: function(model){
+            console.log('PREPEND');
             this.add(model, {silent: true});
             var pin = new CollectionView({model:model});
             this.el.prepend(pin.render().el);
             $(this.el).masonry( 'reload' );
         },
         addAppend: function(model){
+            console.log('APPEND');
             var pin = new CollectionView({model:model});
             this.el.prepend(pin.render().el);
             $(this.el).masonry( 'appended', $(pin.render().el), true );

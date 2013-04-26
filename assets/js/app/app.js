@@ -176,20 +176,12 @@ $(function(){
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
-                console.log(window.pointsArr);
+                console.log(window.collectionsArr);
                 window.pointsArr.current.loadNextPage();
-            }
-        }
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 600) {
-            // если уже не грузим, то в путь
-            console.log('loading');
-            if( !window.loadingNow ) {
-                window.loadingNow = true;
-                console.log('LOAD MORE DATA!');
-                console.log(window.pointsArr);
                 window.collectionsArr.current.loadNextPageCollection();
             }
         }
+        
     });
 });
 

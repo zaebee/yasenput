@@ -434,7 +434,7 @@ class PointsList(PointsBaseView):
             points = pointsreq[offset:limit].all()
             #points = pointsreq[offset:limit].all()
             copypoints = copypointsreq[offset:limit].all()
-            collections = collectionsreq[offset:limit*2].all()
+            collections = collectionsreq[offset:limit].all()
             
             allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
             allcollections = json.loads(self.getSerializeCollections(collections))
@@ -444,8 +444,8 @@ class PointsList(PointsBaseView):
                 allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
 
             
-            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            allcollections = allcollections[:COUNT_ELEMENTS]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
+            #allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+            allcollections = allcollections#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

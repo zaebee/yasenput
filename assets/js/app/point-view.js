@@ -40,6 +40,7 @@ $(function(){
             var content = this.template(this.model.toJSON());
             this.$el.html(content);
             this.$el.attr( 'data-point-id', this.model.get('compositeId') );
+            console.log('rendering ======= point ====== in =====point-view', this.$el)
             return this;
         },
         editPoint: function(event){
@@ -232,12 +233,8 @@ $(function(){
                 }
             });
             var self = event.currentTarget;
-            console.log('target = ', self);
-            console.log('this = ', this.model);
             event.preventDefault();
             pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
-            console.log(this.model.attributes.id_point);
-            console.log('pointId = ', pointId);
             addCollectionView.getPoint(pointId, this.model.attributes.id_point);
 
        }

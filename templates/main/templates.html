@@ -95,27 +95,30 @@
                     <i class="yp-like"></i><small><%- likeusers %></small>
                 </div>
             </div>
-            <% _.each(points_by_user, function(itm, index){ points.push(itm); console.log(itm.imgs[0]) })%>
+            <% console.log('points_by_user in template--> ', points_by_user) %>
+            <% console.log('points in template--> ', allpoints) %>
+            <% console.log('id of collection', id) %>
+            <% _.each(points_by_user, function(itm){  console.log(points) })%>
             <% console.log('poinst_by_user -->',points) %>
-            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- points[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- points[0].imgs[0].thumbnail207_height %>"></a>
+            <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- allpoints[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- allpoints[0].imgs[0].thumbnail207_height %>"></a>
         </div>
 
         <ul class="photo-preview">
             <li>
                 <a href="#">
-                    <img src="<% if (points[1]) { %> <%- points[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
+                    <img src="<% if (allpoints[1]) { %> <%- allpoints[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <img src="<% if (points[2]) { %> <%- points[2].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
+                    <img src="<% if (allpoints[2]) { %> <%- allpoints[2].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <img src="<% if (points[3]) { %> <%- points[3].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
+                    <img src="<% if (allpoints[3]) { %> <%- allpoints[3].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
         </ul>
@@ -723,15 +726,15 @@
                         <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
                         {% endif %}
                         <!--<div class="event-date">1―5 января</div>-->
-                        <% var name1 = points[fir].name
-                            if (!points[fir].name){
-                                name1 = points[fir].point.name
+                        <% var name1 = allpoints[fir].name
+                            if (!allpoints[fir].name){
+                                name1 = allpoints[fir].point.name
                             }; %>
-                        <h2><%- name1 %></h2><% if(points[fir].point) {  %>
-                            <small>поделился</small> <a href="#"><%- points[fir].author.first_name %> <%- points[fir].author.last_name %></a>
+                        <h2><%- name1 %></h2><% if(allpoints[fir].point) {  %>
+                            <small>поделился</small> <a href="#"><%- allpoints[fir].author.first_name %> <%- allpoints[fir].author.last_name %></a>
                         <% } %>
                             
-                        <div class="addr"><%- points[fir].address %></div>
+                        <div class="addr"><%- allpoints[fir].address %></div>
 
                         <div class="stats">
                             <span>
@@ -746,7 +749,7 @@
 
                             <span>
                                 <span class="ico-comment-small"></span>
-                                <%- points[fir].comments %>
+                                <%- allpoints[fir].comments %>
                             </span>
                         </div>
                     </header>
@@ -771,7 +774,7 @@
                             <div class="tabs-content">
                                 <div class="toggle-block">
                                     <div class="clearfix p-gallery">
-                                        <% _.each(points[fir].imgs, function(itm, index){ %>
+                                        <% _.each(allpoints[fir].imgs, function(itm, index){ %>
                                         <% console.log('here') %>
                                             <div class="item-photo <% if(index == 0){ print ('current') }%>">
                                                 <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="<%- itm.likeusers %>" data-avatar="{{ MEDIA_URL }}<%- itm.author.avatar %>">
@@ -781,24 +784,24 @@
                                                 <button class="complaint-photo"></button>
                                             </div>
                                         {% if user.is_authenticated %}
-                                            <% if(((points[fir].imgs.length < 4) && ((points[fir].imgs.length-1) == index)) || ((points[fir].imgs.length-1) == index)){ %>
+                                            <% if(((allpoints[fir].imgs.length < 4) && ((allpoints[fir].imgs.length-1) == index)) || ((allpoints[fir].imgs.length-1) == index)){ %>
                                                 <div class="item-photo load-photo">
                                                     <input type="file">
                                                 </div>
                                             <% } %>
                                         {% endif %}
-                                        <% if(((points[fir].imgs.length < 5) && ((points[fir].imgs.length-1) == index)) || (index == 3)){ %>
+                                        <% if(((allpoints[fir].imgs.length < 5) && ((allpoints[fir].imgs.length-1) == index)) || (index == 3)){ %>
                                             <div id="big-photo">
                                             <div class="bp-photo">
-                                                <img src="<%= points[fir].imgs[0].thumbnail560 %>" alt="">
+                                                <img src="<%= allpoints[fir].imgs[0].thumbnail560 %>" alt="">
 
                                                 <div class="bp-add-like">
-                                                    <img src="{{ MEDIA_URL }}<%- points[fir].imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
-                                                    <span class="bp-name"><%- points[fir].imgs[0].author.first_name %> <%- points[fir].imgs[0].author.last_name %></span>
+                                                    <img src="{{ MEDIA_URL }}<%- allpoints[fir].imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
+                                                    <span class="bp-name"><%- allpoints[fir].imgs[0].author.first_name %> <%- allpoints[fir].imgs[0].author.last_name %></span>
                                                     {% if user.is_authenticated %}
                                                     <a href="#" class="a-like"></a>
                                                     {% endif %}
-                                                    <span class="count-like"><%- points[fir].imgs[0].likeusers %></span>
+                                                    <span class="count-like"><%- allpoints[fir].imgs[0].likeusers %></span>
                                                 </div>
                                             </div>
 
@@ -1125,7 +1128,7 @@
                                 <h4 class="title-block">Метки</h4>
 
                                 <div class="body">
-                                    <% _.each(points[fir].comments, function(itm, index){ %>
+                                    <% _.each(allpoints[fir].comments, function(itm, index){ %>
                                         <div class="label"><%= itm.name %></div>
                                     <% }) %>
                                 </div>
@@ -1140,17 +1143,17 @@
                         <div class="stats">
                                                 <span>
                                                     <span class="ico-want-small"></span>
-                                                    <%- points[fir].visits %>
+                                                    <%- allpoints[fir].visits %>
                                                 </span>
 
                                                 <span>
                                                     <span class="ico-like-small"></span>
-                                                    <%- points[fir].likes %>
+                                                    <%- allpoints[fir].likes %>
                                                 </span>
 
                                                 <span>
                                                     <span class="ico-comment-small"></span>
-                                                    <%- points[fir].comments %>
+                                                    <%- allpoints[fir].comments %>
                                                 </span>
                         </div>
                     </footer>
@@ -1215,7 +1218,7 @@
                     <div class="aside-content">
                         <div class="aside-viewport">
                             <ol id="ol-collection">
-                                <% _.each(points, function(point, id){ %>
+                                <% _.each(allpoints, function(point, id){ %>
                                     <% var name = point.name
                                         if (!point.name){
                                             name = point.point.name
@@ -2142,7 +2145,7 @@
                     </div>
                 </div>
 
-                <input type="submit" value="Выбрать" class="a-btn nonav">
+                <input type="submit" value="Выбрать" class="a-btn a-to-collection nonav">
                 
             </form>
         </div>

@@ -19,7 +19,6 @@ $(function(){
         },
         idAttribute: 'compositeId',
         initialize: function() {
-            // console.log('+++ point initialize!');
             // задаём составной id, чтобы он был уникальным
 
             var compositeId = this.get('id') + '_' + this.get('id_point');
@@ -66,7 +65,6 @@ $(function(){
                     return tag.get('level') == 0;
                 });
                 this.set({icon: zeroTag.get('icons')});
-                console.log('zeroTag:',zeroTag.get('icons'));
             }
 
             
@@ -84,7 +82,6 @@ $(function(){
             this.set( {YPscore: likes_count + beens_count + collections_count + reviewusersplus - reviewusersminus } );
         },
         ckeckValid: function(){
-            console.log('validate this: ', this);
             errors = [];
             if( $.trim( this.get('name') ) == '' ) {
                 error = {
@@ -133,7 +130,6 @@ $(function(){
             }
         },
         validationFailed: function(errors){
-            console.log('validation failed error: ', errors);
             _.each(errors, function(error){
                 var $field = $(window.currentPointPopup.el).find('[data-key="'+error.field+'"]');
                 $field.addClass('validation-error');
@@ -142,22 +138,16 @@ $(function(){
             });
         },
         sync:  function(method, model, options) {
-            console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             console.wait = true;
             switch (method) {
                 case "create":
                     switch (options.action) {
                         case 'search':
-                            console.log('===> create with search!');
                             options.type = 'GET';
                             options.url = model.url + '/search';
                             options.data = 's='+options.searchStr;
                             break;
                         case 'saveNew':
-                            console.log('===> save new point!');
                             // return;
                             options.type = 'POST';
                             options.url = model.url + '/add';
@@ -188,7 +178,6 @@ $(function(){
                     switch (options.action) {
                         case 'like':
                             // console.log('SYNC: like this photo!');
-                            console.log('SYNC: update this point!');
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
                             options.data += '&id_point='+model.get('id_point');
@@ -229,7 +218,6 @@ $(function(){
                     }
                     break;
             }
-            console.log('options', options);
             return Backbone.sync(method, model, options);
         },
         search: function(searchStr, $dropResult){
@@ -249,17 +237,12 @@ $(function(){
             });
         },
         saveNew: function(){
-            console.log('etst');
             errors = this.ckeckValid();
             if(errors == null) {
                 this.save({}, {
                     // wait: true,
                     action: 'saveNew', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                          // new window.Point( response[0] );
                         // points.add(model).render();
                         // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
@@ -271,24 +254,19 @@ $(function(){
                     },
                     error: function (model, response, options) {
                         //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
             } else {
-                console.log('validation errors:', errors);
                 this.validationFailed(errors);
             }
         },
         like: function(options){
-            console.log('like this photo');
-            console.log('this: ', this);
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
         },
         update: function(options){
-            console.log('update');
             point = this;
 
             // TODO: validate point
@@ -298,10 +276,6 @@ $(function(){
                     // wait: true,
                     action: 'update', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                         // point.set({response[0]}).initialize();
                         
                         // TODO:
@@ -309,18 +283,14 @@ $(function(){
                         $('.scroll-box').click();
                     },
                     error: function (model, response, options) {
-                        //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
             // } else {
-            //     console.log('validation errors:', errors);
             //     this.validationFailed(errors);
             // }
         },
         share: function(options){
-            console.log('share');
 
             // TODO: validate point
             // errors = this.ckeckValid();
@@ -329,10 +299,6 @@ $(function(){
                     // wait: true,
                     action: 'share', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                          // new window.Point( response[0] );
                         // points.add(model).render();
                         // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
@@ -344,7 +310,6 @@ $(function(){
                     },
                     error: function (model, response, options) {
                         //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
@@ -365,7 +330,6 @@ $(function(){
             _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
-            console.log('points inited!')
         },
         parse: function(response) {
             return response.points;
@@ -403,13 +367,10 @@ $(function(){
         	return this;
         },
         render: function(){
+            console.log('point ============================= render');
             this.loaded = true;
-            console.log('++> render points');
-            console.log('this: ', this);
-            console.log('points elSelector ->>', $(this.elSelector))
             this.el = $(this.elSelector);
             //$(this.el).empty();
-            console.log('this -->', this.el);
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
@@ -428,7 +389,6 @@ $(function(){
             return this;
         },
         redrawOnMap: function(clusterer){
-            console.log('%%> redrawOnMap');
             collection = this;
 
             clusterer.removeAll();
@@ -499,12 +459,9 @@ $(function(){
         },
         loadNextPage: function(){
             collection = this;
-            console.log('loadNextPage');
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
-                console.log('=============================');
-                console.log('loadNextPage', data.collections);
                 if( data.points.length > 0 ) {
                     //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
@@ -574,7 +531,6 @@ $(function(){
                 motherId = this.thisPoint.get('id_point');
             }
 
-            console.log('motherId: ', motherId);
             
             var newResponse = _.reject(response, function(point){
                 if( point.id_point == 0 ) {
@@ -583,14 +539,10 @@ $(function(){
                     return ( point.id_point == motherId )    
                 }
             });
-            console.log('newResponse: ', newResponse);
             return newResponse;
         },
         render: function(){
             this.loaded = true;
-            console.log('++> render NEAR points');
-            console.log('this: ', this);
-            console.log('this.popupMap.geoObjects: ', this.popupMap.geoObjects);
 
             this.el = $(this.elSelector);
             $(this.el).empty();
@@ -608,7 +560,6 @@ $(function(){
     YPimage = Backbone.Model.extend({
         url: '/photos',
         sync:  function(method, model, options) {
-            console.log('Sync!');
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
@@ -668,16 +619,13 @@ $(function(){
 //            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
-            console.log(this);
-            console.log(window.myId);
+
             if(this.get('author') == window.myId ) {
-                console.log('mine');
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
             }
             _.each( this.get('comments'), function(comment){
-                console.log('comment-----',comment);
                 if (comment.author) {
                 if(comment.author.id == window.myId) {
                     comment.ismine = 1;
@@ -759,10 +707,6 @@ $(function(){
             return response;
         },
         sync:  function(method, model, options) {
-            console.log('Sync Labels!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 case "read":
                     switch (options.action) {
