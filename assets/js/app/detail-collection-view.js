@@ -52,7 +52,15 @@ $(function(){
                         console.log('we select tab-map');
                         if (!view.popupMap) {
                             console.log('inside of if', view);
-                            coords = [view.model.get('allpoints')[point_id].latitude, view.model.get('allpoints')[point_id].longitude];
+                            var latitude = view.model.get('allpoints')[point_id].latitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                latitude = view.model.get('allpoints')[point_id].point.latitude
+                            };
+                            var longitude = view.model.get('allpoints')[point_id].longitude
+                            if (!view.model.get('allpoints')[point_id].latitude){
+                                longitude = view.model.get('allpoints')[point_id].point.longitude
+                            };
+                            coords = [latitude, longitude];
                             view.popupMap = new ymaps.Map('popup-map-1', {
                                 center: coords,
                                 zoom: 14
@@ -143,7 +151,7 @@ $(function(){
                             console.log('inside of if', view);
                             var latitude = view.model.get('allpoints')[point_id].latitude
                             if (!view.model.get('allpoints')[point_id].latitude){
-                                latitude = view.model.get('points')[point_id].point.latitude
+                                latitude = view.model.get('allpoints')[point_id].point.latitude
                             };
                             var longitude = view.model.get('allpoints')[point_id].longitude
                             if (!view.model.get('allpoints')[point_id].latitude){
