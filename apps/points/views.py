@@ -362,7 +362,7 @@ class PointsList(PointsBaseView):
             copypointsreq = MainModels.PointsByUser.objects
             #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
-            
+            collectreq = []
             
             points_fields_list = pointsreq.values_list('id','likeusers')
             points_by_user_fields_list = copypointsreq.values_list('id')
@@ -386,7 +386,25 @@ class PointsList(PointsBaseView):
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
-                        collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
+                        #collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
+                        
+                        collectreq = []
+                        for collect in collectionsreq.all():
+                            trig = 0
+                            for point in collect.points.all():
+                                if point.longitude >= ln:
+                                    if point.latitude >= lt:
+                                        trig = 1
+                            for point in collect.points_by_user.all():
+                                if point.point.longitude >= ln:
+                                    if point.point.latitude >= lt:
+                                        trig = 1
+                            if trig == 1:
+                                collectreq.append(collect.id)
+
+                        collectionsreq = collectionsreq.filter(id__in=collectreq)
+                        
+                        
                     else:
                         errors.append("некорректно задана левая точка на карте для фильтра")
             coord_right = params.get("coord_right")
@@ -401,8 +419,23 @@ class PointsList(PointsBaseView):
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
-                        collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
+                        #collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
                         #collectionsreq = collectionsreq.filter(points_by_user__longitude__lte=ln, points_by_user__latitude__lte=lt)
+                        collectreq = []
+                        for collect in collectionsreq.all():
+                            trig = 0
+                            for point in collect.points.all():
+                                if point.longitude <= ln:
+                                    if point.latitude <= lt:
+                                        trig = 1
+                            for point in collect.points_by_user.all():
+                                if point.point.longitude <= ln:
+                                    if point.point.latitude <= lt:
+                                        trig = 1
+                            if trig == 1:
+                                collectreq.append(collect.id)
+
+                        collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             name = form.cleaned_data.get("name")
             if name:
@@ -450,7 +483,8 @@ class PointsList(PointsBaseView):
                         points.append(copypoints_need_point[0])
                 
             total_points = points[offset:limit]
-            collections = collectionsreq[offset:limit].all()
+
+            collections = collectionsreq[offset:limit]
             
             allpoints = json.loads(self.getSerializePoints(total_points))
             allcollections = json.loads(self.getSerializeCollections(collections))

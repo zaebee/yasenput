@@ -75,7 +75,7 @@ $(function(){
                     $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templatePhoto(img.toJSON()) );
                     // $(view.el).find(view.photosPlace).find(view.bigPhotoPlace).before( view.templatePhoto(img.toJSON()) );
                 });
-                console.log('viewee: ', view);
+                //console.log('viewee: ', view);
                 if (view.mainPoint){
                     if(view.mainPoint.get('ismine') == 1) {
                         $(view.el).find(view.photosPlace).find(view.upwardPhotos).append( view.templateLoadPhoto() );

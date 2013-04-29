@@ -405,61 +405,20 @@ $(function(){
             //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
             // });
 
-            rejectedPoints = [];
+            //var myGeoObjectsArr = [];
 
-            // Показ на карте значков только популярных точек из одинаковых
             this.each(function(point){
-                // console.log('this id: ', point.get('id'));
-                var id = point.get('id');
-                findedPoint = collection.find(function(point){
-                    // console.log('this id_point: ', point.get('id_point'))
-                    return id == point.get('id_point')
-                });     
-                // console.log('findedPoint: ', findedPoint);   
-                // console.log('(typeof findedPoint): ', (typeof findedPoint));
-                if ((typeof findedPoint) == 'object') {
-                    // console.log('concurented point 1: [id: ' + point.get('id') + '; ' + point.get('id_point') + ']');
-                    // console.log('concurented point 2: [id: ' + findedPoint.get('id') + '; ' + findedPoint.get('id_point') + ']');
-                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
-                        rejectedPoints.push(point);
-                    } else {
-                        rejectedPoints.push(findedPoint);                        
-                    }
-                }
-                // console.log('=============');
-                return ((typeof findedPoint) == 'object');
-            });
-
-            // Фильтруем точки с одинаковыми координатами
-            this.each(function(point){
-                var point_id;
-                if (point.get('id_point') == 0){
-                    point_id = point.get('id');
-                }else{
-                    point_id = point.get('id_point');
-                }
-                //if ($.inArray(point_id, pointsOnMap) != -1){
-                if (point.get('id_point') === 0){ //временно !!!
-                    placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-                            id: point.get('id')+'_'+point.get('id_point')
-                        }, {
-                            iconImageHref: '/'+point.get('icon'), // картинка иконки
-                            iconImageSize: [32, 36], // размеры картинки
-                            iconImageOffset: [-16, -38] // смещение картинки
-                    });
-                placemark.events.add('mousedown', function(event){
-                    pointId = event.originalEvent.target.properties.get('id');
-                    $('[data-point-id="'+pointId+'"] .a-photo').click();
+                console.log('ICON OF POINT',point)
+                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                        id: point.get('id')+'_'+point.get('point_id')
+                    }, {
+                        iconImageHref: '/'+point.get('icon'), // картинка иконки
+                        iconImageSize: [32, 36], // размеры картинки
+                        iconImageOffset: [-16, -38] // смещение картинки
                 });
-                    myGeoObjectsArr.push(placemark);
-                }
-                if (point.get('id_point') == 0){
-                    pointsOnMap.push(point.get('id'));
-                }else{
-                    pointsOnMap.push(point.get('id_point'));
-                }
-
+                myGeoObjectsArr.push(placemark);
             });
+
             clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){
