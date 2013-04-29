@@ -479,6 +479,7 @@ $(function(){
         template: _.template( $('#near-point').html() ),
         initialize: function(){
             _.bindAll(this, 'render');
+            // this.bind('reset', this.render, this);
         },
         parse: function(response){
             response = response.points;
@@ -488,7 +489,6 @@ $(function(){
             } else {
                 motherId = this.thisPoint.get('id_point');
             }
-
             
             var newResponse = _.reject(response, function(point){
                 if( point.id_point == 0 ) {
