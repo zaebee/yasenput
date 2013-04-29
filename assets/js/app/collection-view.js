@@ -45,7 +45,7 @@ $(function(){
             $(".scroll-box").find('#'+detailCollectionView.id).remove();            
             $(".scroll-box").append(detailCollectionView.el);
 
-            var self = event.currentTarget;
+            //var self = event.currentTarget;
             // var addPoint = this.templateAdd();
             // $("#popups").remove();
             // $("#overlay").after(createPointView.render().el);

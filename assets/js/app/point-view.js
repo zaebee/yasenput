@@ -235,7 +235,7 @@ $(function(){
             var self = event.currentTarget;
             event.preventDefault();
             pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
-            addCollectionView.getPoint(pointId, this.model.attributes.id_point);
+            addCollectionView.getPoint(pointId, this.model.attributes.id_point, this);
 
        }
     });

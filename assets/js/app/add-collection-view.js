@@ -1,6 +1,7 @@
 $(function(){
     var poindID;
     var secondID;
+    var totalPoint;
 
     AddCollectionView = Backbone.View.extend({
         tagName: 'div',
@@ -12,9 +13,10 @@ $(function(){
 
             
         },
-        getPoint:function(point, second){
+        getPoint:function(point, second, total){
             pointID = point;
             secondID = second;
+            totalPoint = total;
 
         },
         render:function(){
@@ -41,8 +43,8 @@ $(function(){
             newCollection.attributes.secondid = secondID;
             newCollection.attributes.pointid = pointID;
 
-            newCollection.attributes.name = String(encodeURIComponent($(this.el).find('input')[1].value));
-            newCollection.attributes.description = String(encodeURIComponent($(this.el).find('input')[2].value));
+            newCollection.attributes.name = String($(this.el).find('input')[1].value);
+            newCollection.attributes.description = String($(this.el).find('input')[2].value);
             console.log(pointID);
             newCollection.save('create');
             console.log('closing window');
@@ -60,7 +62,16 @@ $(function(){
                         console.log('closing');
                         $("body").css("overflow", "visible");
                     }
-                });
+                })
+            console.log('newcollection====>',newCollection);
+            //console.log('points', window.points)
+            newCollection.attributes.author = 'new';
+            newCollection.attributes.author.first_name = 'Вы толькочто';
+            newCollection.attributes.allpoints = [];
+            newCollection.attributes.allpoints.push(totalPoint.model.attributes);
+            newCollectionView = new CollectionView({ model: newCollection});
+            console.log(totalPoint)
+            newCollectionView.detailCollect();
         },
         addInCollection:function(options){
             console.log('strt adding');

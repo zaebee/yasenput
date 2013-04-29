@@ -375,35 +375,45 @@ class PointsList(PointsBaseView):
                 collectionsreq = collectionsreq.filter(author__id=user)
 
             coord_left = params.get("coord_left")
+            coord_right = params.get("coord_right")
             if coord_left:
                 try:
                     coord_left = json.loads(coord_left)
+                    coord_right = json.loads(coord_right)
                 except:
                     errors.append("некорректно задана левая точка на карте для фильтра")
                 else:
                     ln = coord_left.get("ln")
                     lt = coord_left.get("lt")
+                    lnr = coord_right.get("ln")
+                    ltr = coord_right.get("lt")
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
                         #collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
                         
                         collectreq = []
+                        file1 = open('file.txt','w')
                         for collect in collectionsreq.all():
                             trig = 0
+                            
                             for point in collect.points.all():
-                                if point.longitude >= ln:
-                                    if point.latitude >= lt:
-                                        trig = 1
+                                if point.longitude >= ln and point.latitude >= lt and point.longitude <= lnr and point.latitude <= ltr:
+                                    trig = 1
+                                    file1.write(' - triggered - ')
                             for point in collect.points_by_user.all():
-                                if point.point.longitude >= ln:
-                                    if point.point.latitude >= lt:
-                                        trig = 1
+                                if point.point.longitude >= ln and point.point.latitude >= lt and point.point.longitude <= lnr and point.point.latitude <= ltr:
+                                    trig = 1
+                                    file1.write(' - triggered - ')
+                                    file1.write(str(point.point.longitude))
                             if trig == 1:
                                 collectreq.append(collect.id)
+                                
+                            file1.write(str(lnr)+ ' '+str(ln))
+                            
 
                         collectionsreq = collectionsreq.filter(id__in=collectreq)
-                        
+                        file1.close()
                         
                     else:
                         errors.append("некорректно задана левая точка на карте для фильтра")
