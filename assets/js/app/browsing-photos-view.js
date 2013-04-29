@@ -148,8 +148,10 @@ $(function(){
                     $(this.el).find(this.upwardPhotos).append( elemsArr );
                 }
                 this.addJustRedrawBigClass();
+
                 $(imgElem).find('a').click();
             }
+
         },
         redrawBigPhoto: function(photoId){
             $(this.el).find('.item-photo').removeClass('current');
@@ -160,6 +162,7 @@ $(function(){
             elem.addClass('current')
             photo = this.collection.get(photoId);
             $(this.el).find(this.bigPhotoPlace).html( this.templateBigPhoto( photo.toJSON() ) );
+            $('.viewport').scrollTo('.bp-photo', {offset: {top:-200, left:0}});
             return this;
         },
         togglePhotos: function(event){
