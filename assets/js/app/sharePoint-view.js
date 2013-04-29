@@ -22,6 +22,7 @@ $(function(){
             // $(this.el).html(content);
             $(this.el).html( this.template( this.model.toJSON() ) );
 
+            this.model.viewCaller = this;
             editPhotos = new window.EditPhotosView({
                 el: $(this.el).find(this.photosPlace),
                 model: this.model,

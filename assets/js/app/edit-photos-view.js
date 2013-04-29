@@ -28,8 +28,10 @@ $(function(){
             // рисуем loadImg
             $(this.el).find(this.photosPlace).append( this.templateLoadPhoto() );
 
-            // this.collection.each(function(img){
             this.model.get('photos_pop').each(function(img){
+                if (view.model.viewCaller instanceof SharePointView) {
+                    img.set({ismine: 1});
+                }
                 $(view.el).find(view.photosPlace).append( view.templatePhoto( img.toJSON() ) );
             });
 

@@ -27,9 +27,18 @@ $(function(){
             }            
             // узнаём, являемся ли мы автором этой точки
             if(this.get('author') != undefined) {
+                
+                console.log('===> author != undefined: ');
+                console.log('indow.myId: ', window.myId);
+                console.log('this.get(author).id: ', this.get('author').id);
+
+                console.log('this.get(id_point): ', this.get('id_point'));
+
                 if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    console.log('===> ismine: 1');
                     this.set({ismine: 1});
                 } else {
+                    console.log('===> ismine: 0');
                     this.set({ismine: 0});
                 }
             }
@@ -578,7 +587,7 @@ $(function(){
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
 
-            if(this.get('author') == window.myId ) {
+            if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
