@@ -15,6 +15,7 @@ from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
+import random
 import json
 
 def JsonHTTPResponse(json):
@@ -401,6 +402,7 @@ class PointsList(PointsBaseView):
                         pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
                         collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
+                        #collectionsreq = collectionsreq.filter(points_by_user__longitude__lte=ln, points_by_user__latitude__lte=lt)
 
             name = form.cleaned_data.get("name")
             if name:
@@ -431,12 +433,26 @@ class PointsList(PointsBaseView):
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
    
-            points = pointsreq[offset:limit].all()
             #points = pointsreq[offset:limit].all()
-            copypoints = copypointsreq[offset:limit].all()
+            #points = pointsreq[offset:limit].all()
+            points = []
+            copypoints = []
+            for point_need in pointsreq.all():
+                point_need_total = point_need
+                copypoints_need_same = copypointsreq.filter(point=point_need)
+                copypoints_need_point = copypoints_need_same.order_by('-popular')
+                if point_need.popular > copypoints_need_point[0].popular:
+                    points.append(point_need)
+                else:
+                    if point_need.popular == copypoints_need_point[0].popular:
+                        points.append(random.choice([point_need, copypoints_need_point[0]]))
+                    else:
+                        points.append(copypoints_need_point[0])
+                
+            total_points = points[offset:limit]
             collections = collectionsreq[offset:limit].all()
             
-            allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
+            allpoints = json.loads(self.getSerializePoints(total_points))
             allcollections = json.loads(self.getSerializeCollections(collections))
             if content == 'new':
                 allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
