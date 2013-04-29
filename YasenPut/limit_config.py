@@ -22,3 +22,6 @@ class LIMITS():
         POINTS_COUNT = 1
         
         COLLECTIONS_LIST_COUNT = 10
+
+    class COLLECT():
+        COLLECTION_PAGE = 1
