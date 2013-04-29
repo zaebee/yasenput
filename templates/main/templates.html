@@ -1190,8 +1190,10 @@
                         
                         <div class="ctp-head">
                             <h1><%- name %></h1>
+                            <% if (author != 'new'){ %>
                             коллекцию добавил
                             <a href="#"><%- author.first_name %> <%- author.last_name %></a>
+                            <% } %>
                         </div>
                         
                         <div class="ctp-content">
