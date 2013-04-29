@@ -334,6 +334,11 @@ $(function(){
         parse: function(response) {
             return response.points;
         },
+        clearing:function(){
+            this.el = $(this.elSelector);
+            console.log('CLEARING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            $(this.el).empty();
+        },
         setURL: function(){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;

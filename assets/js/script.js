@@ -205,6 +205,7 @@ jQuery(function($){
 		},
 		
 		onKeyDown: function(e, self){
+            console.log('Нажали!')
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
@@ -231,6 +232,11 @@ jQuery(function($){
 				case 38:
 					e.preventDefault();
 					self.selectDropLi(-1);
+					break;
+                case 8:
+					e.preventDefault();
+                    console.log($(".label-fields").find(".label"));
+                    $(".label-fields").find(".label:last").remove();
 					break;
 				case 40:
 					e.preventDefault();
@@ -375,7 +381,7 @@ jQuery(function($){
 			$("input[type=text]", $(this.p.searchInput)).focus(function(){
 				me.onFocusInput($(this), me);
 			});
-			
+
 			$(document).bind("keydown.findMatch", function(e){
 				if($(me.p.dropRoot).is(":visible")){
 					me.onKeyDown(e, me);

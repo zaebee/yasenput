@@ -42,6 +42,8 @@ $(function(){
                 $('header').find(".tabs").simpleTabs({
                     afterChange: function(self, id){
                         collection = id.match(/tab-(\S+)/)[1];
+                        //window.pointsArr[collection].clearing().fetch();
+                        console.log('afterChange!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         if( window.pointsArr[collection].loaded == false ) {
                             window.pointsArr[collection].setURL().fetch();
                         }
