@@ -234,9 +234,9 @@ jQuery(function($){
 					self.selectDropLi(-1);
 					break;
                 case 8:
-					e.preventDefault();
-                    console.log($(".label-fields").find(".label"));
-                    $(".label-fields").find(".label:last").remove();
+//					e.preventDefault();
+//                    console.log($(".label-fields").find(".label"));
+//                    $(".label-fields").find(".label:last").remove();
 					break;
 				case 40:
 					e.preventDefault();
