@@ -393,27 +393,21 @@ class PointsList(PointsBaseView):
                         #collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
                         
                         collectreq = []
-                        file1 = open('file.txt','w')
                         for collect in collectionsreq.all():
                             trig = 0
                             
                             for point in collect.points.all():
                                 if point.longitude >= ln and point.latitude >= lt and point.longitude <= lnr and point.latitude <= ltr:
                                     trig = 1
-                                    file1.write(' - triggered - ')
                             for point in collect.points_by_user.all():
                                 if point.point.longitude >= ln and point.point.latitude >= lt and point.point.longitude <= lnr and point.point.latitude <= ltr:
                                     trig = 1
-                                    file1.write(' - triggered - ')
-                                    file1.write(str(point.point.longitude))
                             if trig == 1:
                                 collectreq.append(collect.id)
                                 
-                            file1.write(str(lnr)+ ' '+str(ln))
                             
 
                         collectionsreq = collectionsreq.filter(id__in=collectreq)
-                        file1.close()
                         
                     else:
                         errors.append("некорректно задана левая точка на карте для фильтра")
