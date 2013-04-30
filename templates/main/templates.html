@@ -84,6 +84,7 @@
 
 </script>
 
+
 <script type="text/template" id="collection-template" data-collection-id="<%=id%>">
     {#<article class="item item-collection">#}
         <div class="photo">
@@ -2148,6 +2149,26 @@
             </form>
         </div>
     </div>
+</script>
+
+
+<script type="text/template" id="contacts-template">
+    
+        <div class="p-top">
+            <h3>Контакты</h3>
+            <button type="button"  class="p-close"></button>
+        </div>
+        
+        <div class="p-body">
+            <b>Антон Ботвин</b>
+            <p>8-921-134-2225</p>
+            <br>
+            <b>Андрей Коротков</b>
+            <p>8-906-296-9011</p>
+            <br>
+            <p>e-mail: <a href="mailto:info@yasenput.ru">info@yasenput.ru</a></p>
+        </div>
+    
 </script>
 {% if user.is_authenticated %}
 {% endif %}
