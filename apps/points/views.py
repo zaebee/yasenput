@@ -425,26 +425,23 @@ class PointsList(PointsBaseView):
                         copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
                         #collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
                         #collectionsreq = collectionsreq.filter(points_by_user__longitude__lte=ln, points_by_user__latitude__lte=lt)
-                        collectreq = []
-                        for collect in collectionsreq.all():
-                            trig = 0
-                            for point in collect.points.all():
-                                if point.longitude <= ln:
-                                    if point.latitude <= lt:
-                                        trig = 1
-                            for point in collect.points_by_user.all():
-                                if point.point.longitude <= ln:
-                                    if point.point.latitude <= lt:
-                                        trig = 1
-                            if trig == 1:
-                                collectreq.append(collect.id)
-
-                        collectionsreq = collectionsreq.filter(id__in=collectreq)
+                        
 
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
                 copypointsreq = copypointsreq.filter(point__name__icontains=name)
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        if point.name == name:
+                            trig = 1
+                    for point in collect.points_by_user.all():
+                        if point.point.name == name:
+                            trig = 1
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                    collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             tags = params.getlist("tags[]")
             if tags and len(tags) > 0:
