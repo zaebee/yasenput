@@ -76,6 +76,27 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 var multySearch;
 
 jQuery(function($){
+    $('#multisearch-text').live('keydown',function(e, wich){
+        if (e.keyCode == 8 && $('#multisearch-text').val().length == 0){
+            $(".label-fields").find(".label:not(.label-add):last").remove();
+            id = $(this).parents(".label").data("id");
+            type = $(this).parents(".label").data("type");
+            _.each($(this).parents(".label-fields").children(".label-place"), function(label) {
+                lab_id = $(label).data("id");
+                if (lab_id >= id) {
+                    $(label).remove();
+                }
+            });
+            var myGeocoder = ymaps.geocode(multisearch_result.places.join(','));
+            myGeocoder.then(
+                function (res) {
+                    window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
+                }
+            );
+            window.currentPoints.setURL().fetch();
+        };
+    })
+
 	multySearch = {
 	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
@@ -213,7 +234,7 @@ jQuery(function($){
                     _.each(multisearch_data.tags, function(tag){
 
                          if(tag.name.toLowerCase() == $("#multisearch-text").val().toLowerCase()){
-                             console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
+                             //console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
                              $('#multisearch-tags a').filter(function() { return $.data(this, "id") == tag.id; }).end().click();
                              flag = true;
                          }
@@ -234,9 +255,9 @@ jQuery(function($){
 					self.selectDropLi(-1);
 					break;
                 case 8:
-//					e.preventDefault();
-//                    console.log($(".label-fields").find(".label"));
-//                    $(".label-fields").find(".label:last").remove();
+					//e.preventDefault();
+                    //console.log($(".label-fields").find(".label"));
+                    //$(".label-fields").find(".label:last").remove();
 					break;
 				case 40:
 					e.preventDefault();
