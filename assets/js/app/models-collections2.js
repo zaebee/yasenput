@@ -58,6 +58,7 @@ $(function(){
     });
     CollectionPoints = Backbone.Collection.extend({
         model: CollectionPoint,
+
         url:'/collections/list/'+this.page +'?content='+this.content+'&coord_left='+this.coord_left+'&coord_right='+this.coord_right,
         // ready: $.Deferred(),
         loaded: false, 
@@ -85,8 +86,13 @@ $(function(){
             } else {
                 this.tagStr = '';
             }
+            this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
+            this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
             this.url = '/points/list/'+this.page +
-                        '?content='+this.content+
+                        '?content='+this.content+'&coord_left='+this.coord_left+
+                        '&coord_right='+this.coord_right+
+                        '&user_id='+this.user_id+
+                        '&name='+this.name+
                         this.tagStr;
             return this;
         },
