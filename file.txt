@@ -1,1 +1,1 @@
-SELECT count(*) FROM collections_collections_points where collections_collections_points.collections_id=collections_collections.id
+39.996350331 39.5620470473 - triggered -  - triggered - 39.8798031269530850000039.996350331 39.5620470473 - triggered - 39.996350331 39.5620470473 - triggered - 39.996350331 39.5620470473

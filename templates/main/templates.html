@@ -84,6 +84,7 @@
 
 </script>
 
+
 <script type="text/template" id="collection-template" data-collection-id="<%=id%>">
     {#<article class="item item-collection">#}
         <div class="photo">
@@ -1190,8 +1191,10 @@
                         
                         <div class="ctp-head">
                             <h1><%- name %></h1>
+                            <% if (author != 'new'){ %>
                             коллекцию добавил
                             <a href="#"><%- author.first_name %> <%- author.last_name %></a>
+                            <% } %>
                         </div>
                         
                         <div class="ctp-content">
@@ -2112,7 +2115,7 @@
         </div>
 
         <div class="p-body">
-            <form action="#">
+            <form >
                 <div class="line">
                     <label for="input-add-new">Создайте новую коллекцию</label>
                     <input type="text" placeholder="Введите название коллекции..." id="input-add-new">
@@ -2122,7 +2125,7 @@
                     <input type="text" placeholder="Введите описание коллекции..." id="input-add-new-desc" defaultValue="fortest">
                 </div>
 
-                <input type="submit" value="Создать" class="a-btn a-add-collection">
+                <input type="submit" value="Создать" class="a-btn a-add-collection nonav">
 
                 <br><br>
 
@@ -2146,6 +2149,26 @@
             </form>
         </div>
     </div>
+</script>
+
+
+<script type="text/template" id="contacts-template">
+    
+        <div class="p-top">
+            <h3>Контакты</h3>
+            <button type="button"  class="p-close"></button>
+        </div>
+        
+        <div class="p-body">
+            <b>Антон Ботвин</b>
+            <p>8-921-134-2225</p>
+            <br>
+            <b>Андрей Коротков</b>
+            <p>8-906-296-9011</p>
+            <br>
+            <p>e-mail: <a href="mailto:info@yasenput.ru">info@yasenput.ru</a></p>
+        </div>
+    
 </script>
 {% if user.is_authenticated %}
 {% endif %}
