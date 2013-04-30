@@ -24,10 +24,21 @@ $(function(){
             pointsNew.loaded = false;
             pointsNew.page = 1;
 
-            window.currentPoints.page = 1;
+            collectionsPop.loaded = false;
+            collectionsPop.page = 1;
 
+            collectionsNew.loaded = false;
+            collectionsPop.page = 1;
+
+            window.currentPoints.page = 1;
+            window.currentCollectionPoints.page = 1;
+
+            window.currentPoints.clearing();
             window.fetchPoint = new $.Deferred();
+            window.fetchCollection = new $.Deferred();
+            //window.fetchPoint = window.currentPoints.clearing().fetch();
             window.fetchPoint = window.currentPoints.setURL().fetch();
+            window.fetchCollection = window.currentCollectionPoints.setURL().fetch();
         });
 
         coords = myMap.getCenter();

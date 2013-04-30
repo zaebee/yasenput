@@ -365,7 +365,16 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .sa-fb:hover{background-position:-142px -450px}
 .sa-vk{background-position:-3px -362px}
 .sa-vk:hover{background-position:-3px -450px}
-
+.popup.slim{
+	width: 300px;
+	margin-top: 100px;
+}
+.popup.slim .p-body p{
+	font-size: 16px;
+}
+.popup.slim .p-body b{
+	font-size: 16px;
+}
 .create-account .add-avatar{width:130px; height:130px; background-position:-466px -43px; position:relative; overflow:hidden; cursor:pointer; margin:0 17px 0 0}
 .add-avatar input[type=file]{font-size:130px; position:absolute; top:0; right:0; opacity:0; filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0); cursor:pointer}
 .create-account .body{overflow:hidden}

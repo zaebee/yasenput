@@ -1,5 +1,7 @@
 $(function(){
     var poindID;
+    var secondID;
+    var totalPoint;
 
     AddCollectionView = Backbone.View.extend({
         tagName: 'div',
@@ -11,8 +13,11 @@ $(function(){
 
             
         },
-        getPoint:function(point){
+        getPoint:function(point, second, total){
             pointID = point;
+            secondID = second;
+            totalPoint = total;
+
         },
         render:function(){
             console.log('POINT: ', this.model);
@@ -28,21 +33,47 @@ $(function(){
         events: {
             'click .a-add-collection': 'addCollection',
             'click .p-close': 'close',
-            'click .a-btn': 'addInCollection',
+            'click .a-to-collection': 'addInCollection',
         },
         addCollection:function(){
             console.log('strt adding');
             console.log('model to add = ', $(this.el).find('input'));
             //console.log('MEGAPOINT===>>>',point);
             newCollection = new CollectionPoint;
+            newCollection.attributes.secondid = secondID;
             newCollection.attributes.pointid = pointID;
 
-            newCollection.attributes.name = String(encodeURIComponent($(this.el).find('input')[1].value));
-            newCollection.attributes.description = String(encodeURIComponent($(this.el).find('input')[2].value));
+            newCollection.attributes.name = String($(this.el).find('input')[1].value);
+            newCollection.attributes.description = String($(this.el).find('input')[2].value);
             console.log(pointID);
-            newCollection.save();
+            newCollection.save('create');
+            console.log('closing window');
+            $(".popup").remove();
+            window.YPApp.popups.close({
+                    elem: $("#popups"),
+                    speed: 0,
+                    callbackBefore: function(){
+                        console.log('closing');
+                        window.YPApp.popups.close({
+                            elem: $("#overlay")
+                        });
+                    },
+                    callbackAfter: function(){
+                        console.log('closing');
+                        $("body").css("overflow", "visible");
+                    }
+                })
+            console.log('newcollection====>',newCollection);
+            //console.log('points', window.points)
+            newCollection.attributes.author = 'new';
+            newCollection.attributes.author.first_name = 'Вы толькочто';
+            newCollection.attributes.allpoints = [];
+            newCollection.attributes.allpoints.push(totalPoint.model.attributes);
+            newCollectionView = new CollectionView({ model: newCollection});
+            console.log(totalPoint)
+            newCollectionView.detailCollect();
         },
-        addInCollection:function(){
+        addInCollection:function(options){
             console.log('strt adding');
             console.log('model to add = ', $(this.el).find('input'));
             //console.log('MEGAPOINT===>>>',point);
@@ -51,6 +82,7 @@ $(function(){
             newCollection.id = '1';
             console.log('Коллекция ->',newCollection)
             newCollection.attributes.pointid = pointID;
+            newCollection.attributes.secondid = secondID;
             newCollection.attributes.collectionid = [];
             var inputs = $(this.el).find('input');
 
@@ -63,7 +95,9 @@ $(function(){
                 }
             });
             newCollection.attributes.collectionid = String(newCollection.attributes.collectionid);
-            newCollection.save();
+
+            options.action = 'update';
+            newCollection.save({}, options);
             console.log('closing window');
             $(".popup").remove();
             window.YPApp.popups.close({

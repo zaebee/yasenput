@@ -19,7 +19,6 @@ $(function(){
         },
         idAttribute: 'compositeId',
         initialize: function() {
-            // console.log('+++ point initialize!');
             // задаём составной id, чтобы он был уникальным
 
             var compositeId = this.get('id') + '_' + this.get('id_point');
@@ -28,9 +27,18 @@ $(function(){
             }            
             // узнаём, являемся ли мы автором этой точки
             if(this.get('author') != undefined) {
+                
+                console.log('===> author != undefined: ');
+                console.log('indow.myId: ', window.myId);
+                console.log('this.get(author).id: ', this.get('author').id);
+
+                console.log('this.get(id_point): ', this.get('id_point'));
+
                 if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    console.log('===> ismine: 1');
                     this.set({ismine: 1});
                 } else {
+                    console.log('===> ismine: 0');
                     this.set({ismine: 0});
                 }
             }
@@ -66,7 +74,6 @@ $(function(){
                     return tag.get('level') == 0;
                 });
                 this.set({icon: zeroTag.get('icons')});
-                console.log('zeroTag:',zeroTag.get('icons'));
             }
 
 
@@ -84,7 +91,6 @@ $(function(){
             this.set( {YPscore: likes_count + beens_count + collections_count + reviewusersplus - reviewusersminus } );
         },
         ckeckValid: function(){
-            console.log('validate this: ', this);
             errors = [];
             if( $.trim( this.get('name') ) == '' ) {
                 error = {
@@ -133,7 +139,6 @@ $(function(){
             }
         },
         validationFailed: function(errors){
-            console.log('validation failed error: ', errors);
             _.each(errors, function(error){
                 var $field = $(window.currentPointPopup.el).find('[data-key="'+error.field+'"]');
                 $field.addClass('validation-error');
@@ -142,22 +147,16 @@ $(function(){
             });
         },
         sync:  function(method, model, options) {
-            console.log('Sync!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             console.wait = true;
             switch (method) {
                 case "create":
                     switch (options.action) {
                         case 'search':
-                            console.log('===> create with search!');
                             options.type = 'GET';
                             options.url = model.url + '/search';
                             options.data = 's='+options.searchStr;
                             break;
                         case 'saveNew':
-                            console.log('===> save new point!');
                             // return;
                             options.type = 'POST';
                             options.url = model.url + '/add';
@@ -188,7 +187,6 @@ $(function(){
                     switch (options.action) {
                         case 'like':
                             // console.log('SYNC: like this photo!');
-                            console.log('SYNC: update this point!');
                             options.url = model.url + '/like';
                             options.data = 'id='+model.get('id');
                             options.data += '&id_point='+model.get('id_point');
@@ -229,7 +227,6 @@ $(function(){
                     }
                     break;
             }
-            console.log('options', options);
             return Backbone.sync(method, model, options);
         },
         search: function(searchStr, $dropResult){
@@ -249,17 +246,12 @@ $(function(){
             });
         },
         saveNew: function(){
-            console.log('etst');
             errors = this.ckeckValid();
             if(errors == null) {
                 this.save({}, {
                     // wait: true,
                     action: 'saveNew', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                          // new window.Point( response[0] );
                         // points.add(model).render();
                         // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
@@ -271,24 +263,19 @@ $(function(){
                     },
                     error: function (model, response, options) {
                         //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
             } else {
-                console.log('validation errors:', errors);
                 this.validationFailed(errors);
             }
         },
         like: function(options){
-            console.log('like this photo');
-            console.log('this: ', this);
             options = (options != undefined) ? options : {};
             options.action = 'like';
             this.save({}, options);
         },
         update: function(options){
-            console.log('update');
             point = this;
 
             // TODO: validate point
@@ -298,10 +285,6 @@ $(function(){
                     // wait: true,
                     action: 'update', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                         // point.set({response[0]}).initialize();
                         
                         // TODO:
@@ -309,18 +292,14 @@ $(function(){
                         $('.scroll-box').click();
                     },
                     error: function (model, response, options) {
-                        //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
             // } else {
-            //     console.log('validation errors:', errors);
             //     this.validationFailed(errors);
             // }
         },
         share: function(options){
-            console.log('share');
 
             // TODO: validate point
             // errors = this.ckeckValid();
@@ -329,10 +308,6 @@ $(function(){
                     // wait: true,
                     action: 'share', 
                     success: function(model, response, options) {
-                        console.log('SUCCESS!');
-                        console.log('model: ', model);
-
-                        console.log('response: ', response);
                          // new window.Point( response[0] );
                         // points.add(model).render();
                         // window.pointArr.current.addPrepend( new window.Point( response[0] ) );
@@ -344,7 +319,6 @@ $(function(){
                     },
                     error: function (model, response, options) {
                         //  TODO обработка ошибки
-                        console.log('ERROR!');
                         alert(status);
                     },
                 });   
@@ -362,18 +336,23 @@ $(function(){
         // ready: $.Deferred(),
         loaded: false, // флаг на то, была ли это коллекция загруженна (т.е. делали ли fetch хоть раз)
         initialize: function(){
+            console.log('COOOOOOOOOOORDDDDDDDDDDDDDD LEFTTTTTTTTTTTT', this.coord_left);
             _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
-            console.log('points inited!')
         },
         parse: function(response) {
             return response.points;
+        },
+        clearing:function(){
+            this.el = $(this.elSelector);
+            $(this.el).empty();
         },
         setURL: function(){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
+            this.address = window.multisearch_result.places;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -399,17 +378,15 @@ $(function(){
         				'&coord_right='+this.coord_right+
                         '&user_id='+this.user_id+
                         '&name='+this.name+
+                        //'&address='+this.address+
                         this.tagStr;
         	return this;
         },
         render: function(){
+            console.log('point ============================= render');
             this.loaded = true;
-            console.log('++> render points');
-            console.log('this: ', this);
-            console.log('points elSelector ->>', $(this.elSelector))
             this.el = $(this.elSelector);
             //$(this.el).empty();
-            console.log('this -->', this.el);
             var self = this;
             this.each(function( item ) {
                 var pin = new PointView({model:item});
@@ -428,77 +405,30 @@ $(function(){
             return this;
         },
         redrawOnMap: function(clusterer){
-            console.log('%%> redrawOnMap');
             collection = this;
 
             clusterer.removeAll();
             var myGeoObjectsArr = [];
             var pointsOnMap = [];
-            rejectedPoints = [];
-
-            // Показ на карте значков только популярных точек из одинаковых
             this.each(function(point){
-                // console.log('this id: ', point.get('id'));
-                var id = point.get('id');
-                findedPoint = collection.find(function(point){
-                    // console.log('this id_point: ', point.get('id_point'))
-                    return id == point.get('id_point')
-                });     
-                // console.log('findedPoint: ', findedPoint);   
-                // console.log('(typeof findedPoint): ', (typeof findedPoint));
-                if ((typeof findedPoint) == 'object') {
-                    // console.log('concurented point 1: [id: ' + point.get('id') + '; ' + point.get('id_point') + ']');
-                    // console.log('concurented point 2: [id: ' + findedPoint.get('id') + '; ' + findedPoint.get('id_point') + ']');
-                    if( point.get('YPscore') > findedPoint.get('YPscore') ) {
-                        rejectedPoints.push(point);
-                    } else {
-                        rejectedPoints.push(findedPoint);                        
-                    }
-                }
-                // console.log('=============');
-                return ((typeof findedPoint) == 'object');
-            });
-
-            // Фильтруем точки с одинаковыми координатами
-            this.each(function(point){
-                var point_id;
-                if (point.get('id_point') == 0){
-                    point_id = point.get('id');
-                }else{
-                    point_id = point.get('id_point');
-                }
-                //if ($.inArray(point_id, pointsOnMap) != -1){
-                if (point.get('id_point') === 0){ //временно !!!
-                    placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-                            id: point.get('id')+'_'+point.get('id_point')
-                        }, {
-                            iconImageHref: '/'+point.get('icon'), // картинка иконки
-                            iconImageSize: [32, 36], // размеры картинки
-                            iconImageOffset: [-16, -38] // смещение картинки
-                    });
-                placemark.events.add('mousedown', function(event){
-                    pointId = event.originalEvent.target.properties.get('id');
-                    $('[data-point-id="'+pointId+'"] .a-photo').click();
+                console.log('ICON OF POINT',point)
+                placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                        id: point.get('id')+'_'+point.get('point_id')
+                    }, {
+                        iconImageHref: '/'+point.get('icon'), // картинка иконки
+                        iconImageSize: [32, 36], // размеры картинки
+                        iconImageOffset: [-16, -38] // смещение картинки
                 });
-                    myGeoObjectsArr.push(placemark);
-                }
-                if (point.get('id_point') == 0){
-                    pointsOnMap.push(point.get('id'));
-                }else{
-                    pointsOnMap.push(point.get('id_point'));
-                }
-
+                myGeoObjectsArr.push(placemark);
             });
+
             clusterer.add( myGeoObjectsArr );
         },
         loadNextPage: function(){
             collection = this;
-            console.log('loadNextPage');
             this.page++;
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
-                console.log('=============================');
-                console.log('loadNextPage', data.collections);
                 if( data.points.length > 0 ) {
                     //collection.redrawOnMap(window.clusterer);
                     window.loadingNow = false;
@@ -558,6 +488,7 @@ $(function(){
         template: _.template( $('#near-point').html() ),
         initialize: function(){
             _.bindAll(this, 'render');
+            // this.bind('reset', this.render, this);
         },
         parse: function(response){
             response = response.points;
@@ -567,8 +498,6 @@ $(function(){
             } else {
                 motherId = this.thisPoint.get('id_point');
             }
-
-            console.log('motherId: ', motherId);
             
             var newResponse = _.reject(response, function(point){
                 if( point.id_point == 0 ) {
@@ -577,14 +506,10 @@ $(function(){
                     return ( point.id_point == motherId )    
                 }
             });
-            console.log('newResponse: ', newResponse);
             return newResponse;
         },
         render: function(){
             this.loaded = true;
-            console.log('++> render NEAR points');
-            console.log('this: ', this);
-            console.log('this.popupMap.geoObjects: ', this.popupMap.geoObjects);
 
             this.el = $(this.elSelector);
             $(this.el).empty();
@@ -602,7 +527,6 @@ $(function(){
     YPimage = Backbone.Model.extend({
         url: '/photos',
         sync:  function(method, model, options) {
-            console.log('Sync!');
             switch (method) {
                 // case "read":
                 //     options.url = model.url + '/'
@@ -662,16 +586,13 @@ $(function(){
 //            console.log('this.collection.isminePoint: ', this.collection.isminePoint);
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
-            console.log(this);
-            console.log(window.myId);
-            if(this.get('author') == window.myId ) {
-                console.log('mine');
+
+            if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
             }
             _.each( this.get('comments'), function(comment){
-                console.log('comment-----',comment);
                 if (comment.author) {
                 if(comment.author.id == window.myId) {
                     comment.ismine = 1;
@@ -753,10 +674,6 @@ $(function(){
             return response;
         },
         sync:  function(method, model, options) {
-            console.log('Sync Labels!');
-            console.log('method: ', method);
-            console.log('model: ', model);
-            console.log('options: ', options);
             switch (method) {
                 case "read":
                     switch (options.action) {

@@ -176,11 +176,12 @@ $(function(){
             if( !window.loadingNow ) {
                 window.loadingNow = true;
                 console.log('LOAD MORE DATA!');
-                console.log(window.pointsArr);
+                console.log(window.collectionsArr);
                 window.pointsArr.current.loadNextPage();
                 window.collectionsArr.current.loadNextPageCollection();
             }
         }
+        
     });
 });
 
@@ -1105,7 +1106,44 @@ $(function(){
                 };
                 $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
             },
+            'click .contacts':function(event){
+                console.log(this.model);
+                    $(".popup").remove();
+                    var ContactsView = new window.ContactsView();
+                    var self = event.currentTarget;
+                    console.log('target = ', self);
+                    console.log('this = ', this.model);
+                    event.preventDefault();
+                    ContactsView.render({ model: this.model });
+                    //$(".scroll-box").find('#'+ContactsView.id).remove();            
+                    $(".scroll-box").append(ContactsView.el);
 
+                    //var self = event.currentTarget;
+                    // var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $("#overlay").after(createPointView.render().el);
+                    // $("#overlay").after(detcontent);
+
+                    var id = ContactsView.id;
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            //$("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
+
+               },
             'click .top-panel .btn-place' : function(event){
                 event.preventDefault();
                 window.newPoint = new window.Point();

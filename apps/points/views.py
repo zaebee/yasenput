@@ -15,6 +15,7 @@ from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
+import random
 import json
 
 def JsonHTTPResponse(json):
@@ -67,7 +68,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'description', 'author', 'points', 'likeusers', 'updated', 'likes_count'],
+                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count'],
                                 extras=['likes_count', 'isliked'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
@@ -83,6 +84,16 @@ class PointsBaseView(View):
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },}}, 
                                                                     'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                        },
+                                                    },
+                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}}, 
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
                                                         },
                                                     },
 
@@ -307,6 +318,10 @@ class PointsSearch(PointsBaseView):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=address)
+
 
             content = form.cleaned_data.get("content")
             if content == 'new':
@@ -351,7 +366,7 @@ class PointsList(PointsBaseView):
             copypointsreq = MainModels.PointsByUser.objects
             #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
-            
+            collectreq = []
             
             points_fields_list = pointsreq.values_list('id','likeusers')
             points_by_user_fields_list = copypointsreq.values_list('id')
@@ -364,18 +379,40 @@ class PointsList(PointsBaseView):
                 collectionsreq = collectionsreq.filter(author__id=user)
 
             coord_left = params.get("coord_left")
+            coord_right = params.get("coord_right")
             if coord_left:
                 try:
                     coord_left = json.loads(coord_left)
+                    coord_right = json.loads(coord_right)
                 except:
                     errors.append("некорректно задана левая точка на карте для фильтра")
                 else:
                     ln = coord_left.get("ln")
                     lt = coord_left.get("lt")
+                    lnr = coord_right.get("ln")
+                    ltr = coord_right.get("lt")
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
-                        collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
+                        #collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
+                        
+                        collectreq = []
+                        for collect in collectionsreq.all():
+                            trig = 0
+                            
+                            for point in collect.points.all():
+                                if point.longitude >= ln and point.latitude >= lt and point.longitude <= lnr and point.latitude <= ltr:
+                                    trig = 1
+                            for point in collect.points_by_user.all():
+                                if point.point.longitude >= ln and point.point.latitude >= lt and point.point.longitude <= lnr and point.point.latitude <= ltr:
+                                    trig = 1
+                            if trig == 1:
+                                collectreq.append(collect.id)
+                                
+                            
+
+                        collectionsreq = collectionsreq.filter(id__in=collectreq)
+                        
                     else:
                         errors.append("некорректно задана левая точка на карте для фильтра")
             coord_right = params.get("coord_right")
@@ -390,18 +427,36 @@ class PointsList(PointsBaseView):
                     if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
                         pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
                         copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
-                        collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
+                        #collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
+                        #collectionsreq = collectionsreq.filter(points_by_user__longitude__lte=ln, points_by_user__latitude__lte=lt)
+                        
 
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
                 copypointsreq = copypointsreq.filter(point__name__icontains=name)
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        if point.name == name:
+                            trig = 1
+                    for point in collect.points_by_user.all():
+                        if point.point.name == name:
+                            trig = 1
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                    collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             tags = params.getlist("tags[]")
             if tags and len(tags) > 0:
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
                 collectionsreq = collectionsreq.filter(points__tags__in=tags)
+
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=name)
+                copypointsreq = copypointsreq.filter(point__address__icontains=name)
            
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
@@ -421,12 +476,27 @@ class PointsList(PointsBaseView):
 #                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
 #                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
    
-            points = pointsreq[offset:limit].all()
             #points = pointsreq[offset:limit].all()
-            copypoints = copypointsreq[offset:limit].all()
-            collections = collectionsreq[offset:limit*2].all()
+            #points = pointsreq[offset:limit].all()
+            points = []
+            copypoints = []
+            for point_need in pointsreq.all():
+                point_need_total = point_need
+                copypoints_need_same = copypointsreq.filter(point=point_need)
+                copypoints_need_point = copypoints_need_same.order_by('-popular')
+                if point_need.popular > copypoints_need_point[0].popular:
+                    points.append(point_need)
+                else:
+                    if point_need.popular == copypoints_need_point[0].popular:
+                        points.append(random.choice([point_need, copypoints_need_point[0]]))
+                    else:
+                        points.append(copypoints_need_point[0])
+                
+            total_points = points[offset:limit]
+
+            collections = collectionsreq[offset:limit]
             
-            allpoints = json.loads(self.getSerializePoints(points)) + json.loads(self.getSerializePoints(copypoints))
+            allpoints = json.loads(self.getSerializePoints(total_points))
             allcollections = json.loads(self.getSerializeCollections(collections))
             if content == 'new':
                 allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
@@ -434,8 +504,8 @@ class PointsList(PointsBaseView):
                 allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
 
             
-            allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            allcollections = allcollections[:1]#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
+            #allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
+            allcollections = allcollections#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
             return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
         else:
             e = form.errors

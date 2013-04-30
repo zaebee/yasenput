@@ -14,7 +14,8 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .a-like': 'likePhoto'
+            'click .a-like': 'likePhoto',
+            'click .a-complaint': 'reportPhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -32,11 +33,14 @@ $(function(){
             this.popupMap = myMapPopupPlace;
 
             view = this;
+            window.seeView = view;
             $(this.el).find(".p-tabs").simpleTabs({
                 afterChange: function(self, id){
                     if (id == 'tab-map'){
+
                         console.log('we select tab-map');
-                        console.log('view.model', view.model);
+                        console.log('==> view: ', view);
+                        //console.log('view.model', view.model);
                         if (!view.popupMap) {
                             coords = [view.model.get('latitude'), view.model.get('longitude')];
                             view.popupMap = new ymaps.Map('popup-map-1', {
@@ -113,6 +117,25 @@ $(function(){
                 },
                 error: function(){
 
+                }
+            });
+        },
+        reportPhoto: function(event){
+            event.preventDefault();
+            $.ajax({
+                url: '/reports/addt',
+                type: 'POST',
+                data: {
+                    point: this.model.get('id'),
+                    point_id: this.model.get('id_point'),
+                    model: 'point'
+                },
+                success: function(data) {
+                    if(data.i == 0){
+                        alert('Спасибо, ваша жалоба отправлена.')
+                    }else{
+                        alert('Ошибка отправки жалобы.')
+                    }
                 }
             });
         }

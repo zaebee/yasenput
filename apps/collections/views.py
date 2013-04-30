@@ -35,26 +35,37 @@ class CollectionsBaseView(View):
 
 
 class LikeCollection(CollectionsBaseView):
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
-        form = forms.IdForm(request.POST)
+    def get(self, request, *args, **kwargs):
+
+        DEFAULT_LEVEL = 2
+
+        errors = []
+
+        params = request.GET.copy()
+        form = forms.AddCollectionForm(params)
         if form.is_valid():
-            pk = form.cleaned_data["id"]
-            try:
-                collection = get_object_or_404(CollectionsModels.Collections, pk=pk)
-                person = MainModels.Person.objects.get(username=request.user)
-                if CollectionsModels.Collections.objects.filter(id=pk, likeusers__id=person.id).count() > 0:
-                    collection.likeusers.remove(person)
-                else:
-                    collection.likeusers.add(person)
+            
+            
+            #list_of_collections.split()
+            list_of_collections = params.__getitem__("collectionid").split(",")
+            list_of_collections
+            for coll_id in list_of_collections:
+                collection = Collections.objects.get(id = int(coll_id))
                 collection.save()
-            except:
-                return JsonHTTPResponse({"id": pk, "status": "1", "txt": "ошибка процедуры добавления лайка коллекции"})
-            else:
-                return JsonHTTPResponse({"id": pk, "status": "0", "txt": ""})
+                if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
+                    collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
+                else:
+                    collection.likeusers.add(MainModels.User.objects.get(username=request.user))
+                collection.save()
+            
+            return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
-            return JsonHTTPResponse({"status": "2", "txt": "некорректно задан id коллекции", "id": 0})
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
 
 class OneCollection(View):
@@ -201,9 +212,14 @@ class CollectionAdd(CollectionsBaseView):
             collection.author = person
             collection.save()
             #points = MainModels.Points.objects.all()
-            
-            collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
-            collection.save()
+            f = open('file1.txt', 'w')
+            f.write(params.__getitem__("secondid"))
+            f.close()
+            if (params.__getitem__("secondid") == '0'):
+                collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+            else:
+                collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
+            #collection.save()
             
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
@@ -237,7 +253,10 @@ class CollectionEdit(CollectionsBaseView):
                     collection.name = smart_str(params.__getitem__("nameofcollection"))
                     collection.description = params.__getitem__("description")
                 if(params.__getitem__("pointid") != 'undefined'):
-                    collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                    if (params.__getitem__("secondid") == '0'):
+                        collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
+                    else:
+                        collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
                 collection.save()
             
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
