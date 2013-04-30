@@ -263,7 +263,7 @@ jQuery(function($){
 				// delete all current places labels
 				$(".label-fields").children(".label-place").remove();
 				
-				split_labels = me.text().split(",");
+				split_labels = me.text().split(", ");
 				
 				i = 0;
 				_.each(split_labels, function(label) { 
