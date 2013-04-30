@@ -14,6 +14,7 @@ class FiltersForm(forms.Form):
 class SearchForm(forms.Form):
     s = forms.CharField(max_length=255, required=False)
     content = forms.CharField(max_length=255, required=False)
+    address = forms.CharField(max_length=255, required=False)
 
 
 class IdForm(forms.Form):

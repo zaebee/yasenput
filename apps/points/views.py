@@ -318,6 +318,10 @@ class PointsSearch(PointsBaseView):
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=address)
+
 
             content = form.cleaned_data.get("content")
             if content == 'new':
