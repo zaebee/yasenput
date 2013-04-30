@@ -14,7 +14,8 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .a-like': 'likePhoto'
+            'click .a-like': 'likePhoto',
+            'click .a-complaint': 'reportPhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -116,6 +117,25 @@ $(function(){
                 },
                 error: function(){
 
+                }
+            });
+        },
+        reportPhoto: function(event){
+            event.preventDefault();
+            $.ajax({
+                url: '/reports/addt',
+                type: 'POST',
+                data: {
+                    point: this.model.get('id'),
+                    point_id: this.model.get('id_point'),
+                    model: 'point'
+                },
+                success: function(data) {
+                    if(data.i == 0){
+                        alert('Спасибо, ваша жалоба отправлена.')
+                    }else{
+                        alert('Ошибка отправки жалобы.')
+                    }
                 }
             });
         }

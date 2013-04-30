@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson
+from django.core.mail import send_mail
 
 from apps.serializers.json import Serializer as YpSerialiser
 
@@ -74,7 +75,7 @@ class ReportAdd(ReportBaseView):
                                                                 }
                                                             }),
                                 mimetype="application/json")
-        return HttpResponse(simplejson.dumps({'id':0,'status':form._errors}), mimetype="application/json")
+        return HttpResponse(simplejson.dumps({'id': 0, 'status': form._errors}), mimetype="application/json")
 
 class ReportDel(ReportBaseView):
     http_method_names = ('post',)
@@ -89,3 +90,17 @@ class ReportDel(ReportBaseView):
         else:
             report.delete()
         return HttpResponse(simplejson.dumps({'id':pk, 'status':status}), mimetype="application/json")
+
+
+def ReportTemp(request):
+    req = '{"i":"1"}'
+    if request.POST['model'] == 'point':
+        send_mail(u'Жалоба с сайта: место', u'Жалоба с сайта на место http://yasenput.ru/detailpoint/'
+                                           + request.POST['point'] + '_' + request.POST['point_id'], 'info@yasenput.ru',
+                      ['a.korotkov@bk.ru'], fail_silently=False)
+        req = '{"i":"0"}'
+    elif request.POST['model'] == 'photo':
+        send_mail(u'Жалоба с сайта: фотография', u'Жалоба с сайта на фотографию с id ' + request.POST['photo'], 'info@yasenput.ru',
+                      ['a.korotkov@bk.ru'], fail_silently=False)
+        req = '{"i":"0"}'
+    return HttpResponse(req, mimetype="application/json")

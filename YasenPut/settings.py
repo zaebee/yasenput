@@ -11,6 +11,12 @@ except:
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'info@yasenput.ru'
+EMAIL_HOST_PASSWORD = 'ya$enputinfo'
+
+
 ADMINS = (
 # ('Artem Ushakov', 'artushakov@gmail.com'),
 )
