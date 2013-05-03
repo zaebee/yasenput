@@ -449,20 +449,16 @@ class PointsList(PointsBaseView):
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
                 collectreq = []
                 tags_list = list(tags)
-                #file1.write(str(tags_list[0]))
-                
                 for collect in collectionsreq.all():
                     trig = 0
                     for point in collect.points.all():
                         for tag in point.tags.all():
                             if str(tag.id) in tags:
-                                file1.write('yes')
                                 trig = 1
                         
                     for point in collect.points_by_user.all():
                         for tag in point.point.tags.all():
                             if str(tag.id) in tags:
-                                file1.write('yes2')
                                 trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
