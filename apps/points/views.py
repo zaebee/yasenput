@@ -451,14 +451,12 @@ class PointsList(PointsBaseView):
             if tags and len(tags) > 0:
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
-<<<<<<< HEAD
                 collectionsreq = collectionsreq.filter(points__tags__in=tags)
 
             address = form.cleaned_data.get("address")
             if address:
                 pointsreq = pointsreq.filter(address__icontains=name)
                 copypointsreq = copypointsreq.filter(point__address__icontains=name)
-=======
                 collectreq = []
                 file1 = open('file1.txt', 'w')
                 tags_list = list(tags)
@@ -483,8 +481,7 @@ class PointsList(PointsBaseView):
                         collectreq.append(collect.id)
                 file1.close()
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
->>>>>>> korolev
-           
+
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
