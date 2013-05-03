@@ -45,10 +45,10 @@ $(function(){
                         //window.pointsArr[collection].clearing().fetch();
                         console.log('fetch afterChange');
                         if( window.pointsArr[collection].loaded == false ) {
-                            //window.pointsArr[collection].setURL().fetch();
+                            window.pointsArr[collection].setURL().fetch();
                         }
                         if( window.collectionsArr[collection].loaded == false ) {
-                            //window.collectionsArr[collection].setURL().fetch();
+                            window.collectionsArr[collection].setURL().fetch();
                         }
                         window.pointsArr.current = window.pointsArr[collection];
                         window.collectionsArr.current = window.collectionsArr[collection];
