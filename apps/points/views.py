@@ -458,28 +458,20 @@ class PointsList(PointsBaseView):
                 pointsreq = pointsreq.filter(address__icontains=name)
                 copypointsreq = copypointsreq.filter(point__address__icontains=name)
                 collectreq = []
-                file1 = open('file1.txt', 'w')
                 tags_list = list(tags)
-                #file1.write(str(tags_list[0]))
-                
                 for collect in collectionsreq.all():
                     trig = 0
                     for point in collect.points.all():
                         for tag in point.tags.all():
-                            file1.write(str(tag.id))
                             if str(tag.id) in tags:
-                                file1.write('yes')
                                 trig = 1
                         
                     for point in collect.points_by_user.all():
                         for tag in point.point.tags.all():
-                            file1.write(str(tag.id))
                             if str(tag.id) in tags:
-                                file1.write('yes2')
                                 trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
-                file1.close()
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
