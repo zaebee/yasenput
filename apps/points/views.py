@@ -445,18 +445,45 @@ class PointsList(PointsBaseView):
                             trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
-                    collectionsreq = collectionsreq.filter(id__in=collectreq)
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             tags = params.getlist("tags[]")
             if tags and len(tags) > 0:
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
+<<<<<<< HEAD
                 collectionsreq = collectionsreq.filter(points__tags__in=tags)
 
             address = form.cleaned_data.get("address")
             if address:
                 pointsreq = pointsreq.filter(address__icontains=name)
                 copypointsreq = copypointsreq.filter(point__address__icontains=name)
+=======
+                collectreq = []
+                file1 = open('file1.txt', 'w')
+                tags_list = list(tags)
+                #file1.write(str(tags_list[0]))
+                
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        for tag in point.tags.all():
+                            file1.write(str(tag.id))
+                            if str(tag.id) in tags:
+                                file1.write('yes')
+                                trig = 1
+                        
+                    for point in collect.points_by_user.all():
+                        for tag in point.point.tags.all():
+                            file1.write(str(tag.id))
+                            if str(tag.id) in tags:
+                                file1.write('yes2')
+                                trig = 1
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                file1.close()
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
+>>>>>>> korolev
            
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))

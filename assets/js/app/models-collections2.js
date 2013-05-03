@@ -71,6 +71,7 @@ $(function(){
             return response.collections;
         },
         setURL: function(){
+            this.tags = window.multisearch_result.tags;
             console.log('setURL ', this);
             this.page = (this.page != null) ? this.page : 1;
             this.content = (this.content != null) ? this.content : 'new';
@@ -79,13 +80,14 @@ $(function(){
             
             tagStr = '';
             _.each(this.tags, function(tag){
-                tagStr += '&tags[]=' + tag.id 
+                tagStr += '&tags[]=' + tag
             });
             if(tagStr != ''){
                 this.tagStr = tagStr;    
             } else {
                 this.tagStr = '';
             }
+            console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
             this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
             this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
             this.url = '/points/list/'+this.page +
