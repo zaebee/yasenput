@@ -303,7 +303,7 @@ $(function(){
             $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
         },
         nextBigPhoto: function(event){
-            event.preventDefault();
+            // event.preventDefault();
             photoId = $(event.currentTarget).attr('data-photo-id');
             $next = $(this.el).find('.item-photo[data-photo-id="'+photoId+'"]').next(':not(.load-photo)');
 
@@ -321,11 +321,15 @@ $(function(){
                     } else {
                         // идём по второму кругу
                         $(this.el).find(this.upwardPhotos).find('.item-photo>a').first().click();
-                        $('.viewport').animate({ scrollTop: 0 }, "slow");
+                        // $('.viewport').animate({ scrollTop: 0 }, "slow");
                     }
                 }
             }
-            
+            big   = $(this.el).find("#big-photo");
+            var h = $(".bp-photo").height();
+            var q = big.offset().top - $("#popups .scroll-box").offset().top;
+            var scrollTop = q - ($(window).height() - h)/2;
+            $("#popups .viewport").scrollTop(Math.abs(scrollTop));
         },
     });
     window.BrowsingPhotosView = BrowsingPhotosView;
