@@ -103,14 +103,15 @@
             <% console.log('poinst_by_user -->',points) %>
             <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- allpoints[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- allpoints[0].imgs[0].thumbnail207_height %>"></a>
         </div>
-
+        <% if (allpoints[1]) { %>
         <ul class="photo-preview">
+            <% if (allpoints[3]) {%>
             <li>
                 <a href="#">
-                    <img src="<% if (allpoints[1]) { %> <%- allpoints[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
+                    <img src="<% if (allpoints[1]) { %> <%- allpoints[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" height="52">
                 </a>
             </li>
-
+            
             <li>
                 <a href="#">
                     <img src="<% if (allpoints[2]) { %> <%- allpoints[2].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
@@ -122,8 +123,29 @@
                     <img src="<% if (allpoints[3]) { %> <%- allpoints[3].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" width="65" height="52">
                 </a>
             </li>
+            <% } else { %>
+                <% if (allpoints[2]) { %>
+                    <li>
+                        <a href="#">
+                            <img src="<% if (allpoints[1]) { %> <%- allpoints[1].imgs[0].thumbnail65x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" height="52">
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <img src="<% if (allpoints[2]) { %> <%- allpoints[2].imgs[0].thumbnail135x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" height="52">
+                        </a>
+                    </li>
+                <% } else {%>
+                    <li>
+                        <a href="#">
+                            <img src="<% if (allpoints[1]) { %> <%- allpoints[1].imgs[0].thumbnail205x52 %> <% } else { %> {{STATIC_URL}}images/collection_logo.png <% } %>" alt="" height="52">
+                        </a>
+                    </li>
+                <% } %>
+            <% } %>
         </ul>
-
+        <% } %>
         <div class="body author-point">
             <img src="{{MEDIA_URL}}<%=author.avatar%>" alt="" class="avatar" width="29" height="30">
 
