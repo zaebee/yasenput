@@ -445,7 +445,7 @@ class PointsList(PointsBaseView):
                             trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
-                    collectionsreq = collectionsreq.filter(id__in=collectreq)
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             tags = params.getlist("tags[]")
             if tags and len(tags) > 0:
@@ -457,7 +457,23 @@ class PointsList(PointsBaseView):
             if address:
                 pointsreq = pointsreq.filter(address__icontains=name)
                 copypointsreq = copypointsreq.filter(point__address__icontains=name)
-           
+                collectreq = []
+                tags_list = list(tags)
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        for tag in point.tags.all():
+                            if str(tag.id) in tags:
+                                trig = 1
+                        
+                    for point in collect.points_by_user.all():
+                        for tag in point.point.tags.all():
+                            if str(tag.id) in tags:
+                                trig = 1
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
+
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))

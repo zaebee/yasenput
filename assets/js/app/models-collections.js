@@ -367,7 +367,7 @@ $(function(){
             } else {
                 this.tagStr = '';
             }
-
+            console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
             // TODO: поиск по тегам!
         	bounds = this.map.getBounds();
         	this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
