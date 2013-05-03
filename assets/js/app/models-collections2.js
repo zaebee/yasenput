@@ -123,6 +123,7 @@ $(function(){
             collection = this;
             
             this.page++;
+            console.log('fetch jqXHR');
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
                 if( data.collections.length > 0 ) {

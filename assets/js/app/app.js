@@ -175,8 +175,8 @@ $(function(){
             console.log('loading');
             if( !window.loadingNow ) {
                 window.loadingNow = true;
-                console.log('LOAD MORE DATA!');
-                console.log(window.collectionsArr);
+//                console.log('LOAD MORE DATA!');
+//                console.log(window.collectionsArr);
                 window.pointsArr.current.loadNextPage();
                 window.collectionsArr.current.loadNextPageCollection();
             }
