@@ -313,10 +313,22 @@ class PointsSearch(PointsBaseView):
         form = forms.SearchForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects
-
+            collectionsreq = CollectionsModels.Collections.objects
             name = form.cleaned_data.get("s")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
+                collectreq = []
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        if point.name == name:
+                            trig = 0
+                    for point in collect.points_by_user.all():
+                        if point.point.name == name:
+                            trig = 0
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
 
 
             content = form.cleaned_data.get("content")
@@ -435,10 +447,10 @@ class PointsList(PointsBaseView):
                     trig = 0
                     for point in collect.points.all():
                         if point.name == name:
-                            trig = 1
+                            trig = 0
                     for point in collect.points_by_user.all():
                         if point.point.name == name:
-                            trig = 1
+                            trig = 0
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)

@@ -25,15 +25,13 @@
 <script type="text/template" id="point-template">
 {#    <article class="item item-place" data-point-id="<%- compositeId %>">#}
         <div class="photo">
-            {% if user.is_authenticated %}
-                <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
-                <a href="#" class="a-collection nonav" data-tooltip="добавить в коллекцию">В коллекцию</a>
+                <a href="#" class="a-like {% if user.is_authenticated %}<% if(isliked==1) { %> marked <% } %> a-like-ok{% else %} enter{% endif %}" data-tooltip="мне нравится">&nbsp;</a>
+                <a href="#" class="a-collection nonav {% if user.is_authenticated %}a-collection-ok{% else %} enter {% endif %}" data-tooltip="добавить в коллекцию">В коллекцию</a>
                 <% if(ismine == 1) { %>
-                    <a href="#" class="a-edit-new" data-tooltip="отредактировать"></a>
+                    <a href="#" class="a-edit-new {% if user.is_authenticated %} a-edit-new-ok {% else %} enter {%endif%}" data-tooltip="отредактировать"></a>
                 <% } else { %>
-                    <a href="#" class="a-share-new" data-tooltip="поделиться"></a>
+                    <a href="#" class="a-share-new {% if user.is_authenticated %} a-share-new-ok {% else %} enter {%endif%}" data-tooltip="поделиться"></a>
                 <% } %>
-            {% endif %}
             <div class="yasen-info">
                 <span class="yp-title"><%- YPscore %> ЯПи</span>
                 
@@ -88,9 +86,9 @@
 <script type="text/template" id="collection-template" data-collection-id="<%=id%>">
     {#<article class="item item-collection">#}
         <div class="photo">
-            {% if user.is_authenticated %}
-            <a href="#" class="a-like <% if(isliked==1) { %> marked <% } %>" data-tooltip="мне нравится">&nbsp;</a>
-            {% endif %}
+            
+            <a href="#" class="a-like {% if user.is_authenticated %}<% if(isliked==1) { %> marked <% } %> a-like-ok {% else %} enter {% endif %}" data-tooltip="мне нравится">&nbsp;</a>
+            
             <div class="yasen-info">
                 <div class="yp-info">
                     <i class="yp-like"></i><small><%- likeusers %></small>
@@ -104,7 +102,7 @@
             <a href="/detailcollection/<%- id %>" class="a-photo nonav"><img src="<%- allpoints[0].imgs[0].thumbnail207 %>" alt="" width="207" height="<%- allpoints[0].imgs[0].thumbnail207_height %>"></a>
         </div>
         <% if (allpoints[1]) { %>
-        <ul class="photo-preview">
+        <ul class="photo-preview a-photo nonav">
             <% if (allpoints[3]) {%>
             <li>
                 <a href="#">
@@ -2190,6 +2188,27 @@
             <br>
             <p>e-mail: <a href="mailto:info@yasenput.ru">info@yasenput.ru</a></p>
         </div>
+    
+</script>
+
+<script type="text/template" id="auth-template">
+    
+                <div class="p-top">
+                    <h3>Вход</h3>
+                    
+                    <input type="button" class="p-close" value=" ">
+                </div>
+                
+                <div class="p-body">
+                    <div class="social-auth"><!-- sa- social auth -->
+                        <a href="/login/vkontakte-oauth2" class="sa-vk"></a>
+                        <a  class="sa-fb" style="opacity: 0.2"></a>
+                        <a  class="sa-tw" style="opacity: 0.2"></a>
+                        <a  class="sa-ok" style="opacity: 0.2"></a>
+                        <a  class="sa-mm" style="opacity: 0.2"></a>
+                        <a  class="sa-ya" style="opacity: 0.2"></a>
+                    </div>
+                </div>
     
 </script>
 {% if user.is_authenticated %}
