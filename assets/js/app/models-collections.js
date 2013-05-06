@@ -327,7 +327,6 @@ $(function(){
         // ready: $.Deferred(),
         loaded: false, // флаг на то, была ли это коллекция загруженна (т.е. делали ли fetch хоть раз)
         initialize: function(){
-            console.log('COOOOOOOOOOORDDDDDDDDDDDDDD LEFTTTTTTTTTTTT', this.coord_left);
             _.bindAll(this, 'addAppend');
             this.bind('reset', this.render, this);
             this.bind('add', this.addAppend, this);
