@@ -161,8 +161,17 @@ $(function(){
             $(this.el).find('.item-photo').removeClass('current');
             elem.addClass('current')
             photo = this.collection.get(photoId);
-            $(this.el).find(this.bigPhotoPlace).html( this.templateBigPhoto( photo.toJSON() ) );
-            $('.viewport').scrollTo('.bp-photo', {offset: {top:-200, left:0}});
+            thisView = this;
+
+            $(this.el).find(this.bigPhotoPlace).html( thisView.templateBigPhoto( photo.toJSON() ) );
+            $(thisView.el).find("#big-photo img").bind('load', function(){
+                big   = $(thisView.el).find("#big-photo");
+                var h = big.height();
+                var q = big.offset().top - $("#popups .scroll-box").offset().top;
+                var scrollTop = q - ($(window).height() - h)/2;
+                $("#popups .viewport").scrollTop(Math.abs(scrollTop));
+            });
+
             return this;
         },
         togglePhotos: function(event){
@@ -303,7 +312,8 @@ $(function(){
             $("#confirm-remove-comment").data("elemForRemove", $(self).closest(".item-comment")).css(params).show();
         },
         nextBigPhoto: function(event){
-            // event.preventDefault();
+            console.log('nextBigPhoto');
+            event.preventDefault();
             photoId = $(event.currentTarget).attr('data-photo-id');
             $next = $(this.el).find('.item-photo[data-photo-id="'+photoId+'"]').next(':not(.load-photo)');
 
@@ -325,11 +335,20 @@ $(function(){
                     }
                 }
             }
-            big   = $(this.el).find("#big-photo");
-            var h = $(".bp-photo").height();
-            var q = big.offset().top - $("#popups .scroll-box").offset().top;
-            var scrollTop = q - ($(window).height() - h)/2;
-            $("#popups .viewport").scrollTop(Math.abs(scrollTop));
+            // big   = $(this.el).find("#big-photo");
+            // console.log('big: ', big);
+
+            // var h = big.height();
+            // // var h = $(".bp-photo").height();
+            // console.log('h: ', h);
+
+            // var q = big.offset().top - $("#popups .scroll-box").offset().top;
+            // console.log('q: ', q);
+
+            // var scrollTop = q - ($(window).height() - h)/2;
+            // console.log('scrollTop: ', scrollTop);
+
+            // $("#popups .viewport").scrollTop(Math.abs(scrollTop));
         },
     });
     window.BrowsingPhotosView = BrowsingPhotosView;
