@@ -7,9 +7,12 @@
 
     <div class="m-ico-group">
         {% for tag in tagsRequire %}
-            <a href="#" data-tooltip="ближайшие точки {{ tag.name }}">
-                <span class="m-ico {{ tag.mapicons }}" data-tag-id="{{ tag.id }}"></span>
-            </a>
+            {% if tag.onmainmap != 0  %}
+                <a href="#" data-tooltip="ближайшие точки {{ tag.name }}">
+                    <span class="m-ico {{ tag.mapicons }}" data-tag-id="{{ tag.id }}"></span>
+                </a>
+            {% endif %}
+
         {% endfor %}
     </div>
 
