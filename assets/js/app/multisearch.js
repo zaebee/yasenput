@@ -37,9 +37,10 @@ $(function() {
             tags: [],
             users: []
         };
-        window.currentPoints.clearing();
-        window.currentPoints.setURL().fetch();
-        window.currentCollectionPoints.setURL().fetch();
+        //window.currentPoints.clearing();
+        console.log('CLEARING CLEARING CLEARING CLEARING')
+        //window.currentPoints.setURL().fetch();
+        //window.currentCollectionPoints.setURL().fetch();
     })
 //   $("#multisearch-text").oninput = update_multisearch;
 });
@@ -80,7 +81,8 @@ function update_multisearch() {
                     });
 
                     // ReInit OnClick
-                    multySearch.reinit_click();
+
+                    //multySearch.reinit_click();
                 },
                 function (err) {
                 // alert ("error");
@@ -114,7 +116,9 @@ function update_multisearch() {
                 });
 
                     // ReInit OnClick
+
                     multySearch.reinit_click();
+
                 },
             error: function (request, status, error) {
                 //alert(status);

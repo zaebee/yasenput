@@ -241,8 +241,11 @@ jQuery(function($){
 		
 		onClickDrop: function(me, self){
             console.log('onClickDrop')
+            var trig = 1;
             window.currentPoints.page = 1;
-            window.currentPoints.setURL().fetch();
+            window.currentCollectionPoints.page = 1;
+            window.currentPoints.clearing();
+            //window.currentCollectionPoints.setURL().fetch();
 			var clsName = '';
 			
 			text_labels = [];
@@ -349,7 +352,12 @@ jQuery(function($){
 			        $(added_label).data("id", txt_label.id);
 			        $(added_label).data("type", txt_label.type);
 			});
-			
+			if (trig = 1){
+
+            	window.currentPoints.setURL().fetch();
+            	window.currentCollectionPoints.setURL().fetch();
+            	trig = 0;
+			}
 			self.hideDropField();
 		},
 		
@@ -385,7 +393,7 @@ jQuery(function($){
 			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
 				
-				me.onClickDrop($(this), me);
+				//me.onClickDrop($(this), me);
 			});
 			
 			$(document).click(function(e){
