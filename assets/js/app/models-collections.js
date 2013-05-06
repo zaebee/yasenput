@@ -716,12 +716,14 @@ $(function(){
             options = (options != undefined) ? options : {};
             options.action = 'load';
             options.content = content;
+            console.log('fetch load');
             this.fetch(options);
         },
         search: function(str, options){
             options = (options != undefined) ? options : {};
             options.action = 'search';
             options.str = str;
+            console.log('fetch search');
             this.fetch(options);
         }
     });

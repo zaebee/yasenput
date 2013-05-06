@@ -10,8 +10,9 @@ $(function(){
         },
         events: {
             'click .yp-title, .yp-info': 'toggleYPinfo',
-            'click .a-like': 'likecollection',
-            'click .a-photo':"detailCollect",
+            'click .a-like-ok': 'likecollection',
+            'click .a-photo':'detailCollect',
+            'click .enter': 'enterIn',
             //'click .a-collection':"addInCollection",
 
             // 'click .a-want':"wantvisit",
@@ -37,6 +38,42 @@ $(function(){
 
                 }
             });
+        },
+        enterIn:function(){
+                    $(".popup").remove();
+                    var authView = new window.AuthView();
+                    var self = event.currentTarget;
+                    console.log('target = ', self);
+                    console.log('this = ', this.model);
+                    event.preventDefault();
+                    authView.render({ model: this.model });
+                    //$(".scroll-box").find('#'+ContactsView.id).remove();            
+                    $(".scroll-box").append(authView.el);
+
+                    //var self = event.currentTarget;
+                    // var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $("#overlay").after(createPointView.render().el);
+                    // $("#overlay").after(detcontent);
+
+                    var id = authView.id;
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            //$("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
         },
         detailCollect:function(event){
             // window.newPoint = new window.Point();

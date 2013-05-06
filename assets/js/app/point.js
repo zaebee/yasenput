@@ -275,6 +275,7 @@ $(function(){
                 }
             });
             console.log('Обновление записей...');
+            console.log('fetch PointList');
             self.setURL();
             console.log('Cтарт: Тип:: ' + window.type + ', содержание:: ' + window.content+', категория:: '+window.category);
             self.fetch(options);

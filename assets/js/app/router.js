@@ -44,12 +44,11 @@ $(function(){
                         collection = id.match(/tab-(\S+)/)[1];
                         //window.pointsArr[collection].clearing().fetch();
                         console.log('afterChange!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        if( window.pointsArr[collection].loaded == false ) {
+                        if( window.pointsArr[collection].loaded == false || window.collectionsArr[collection].loaded == false ) {
                             window.pointsArr[collection].setURL().fetch();
-                        }
-                        if( window.collectionsArr[collection].loaded == false ) {
                             window.collectionsArr[collection].setURL().fetch();
                         }
+                        
                         window.pointsArr.current = window.pointsArr[collection];
                         window.collectionsArr.current = window.collectionsArr[collection];
                         window.currentPoints = window.pointsArr[collection];

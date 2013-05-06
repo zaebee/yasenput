@@ -175,8 +175,8 @@ $(function(){
             console.log('loading');
             if( !window.loadingNow ) {
                 window.loadingNow = true;
-                console.log('LOAD MORE DATA!');
-                console.log(window.collectionsArr);
+//                console.log('LOAD MORE DATA!');
+//                console.log(window.collectionsArr);
                 window.pointsArr.current.loadNextPage();
                 window.collectionsArr.current.loadNextPageCollection();
             }
@@ -203,7 +203,7 @@ $(function(){
     // });
 });
 
-$(function(){
+$(function(request){
     window.page = 1;
     window.content = 'new';
     window.category = 'Туризм';
@@ -1144,39 +1144,79 @@ $(function(){
                     });
 
                },
-            'click .top-panel .btn-place' : function(event){
-                event.preventDefault();
-                window.newPoint = new window.Point();
-                createPointView = new window.CreatePointView({model: window.newPoint});
-                window.currentPointPopup = createPointView;
+            'click .top-panel .btn-place-ok' : function(event){
 
-                createPointView.render();
-                $(".scroll-box").find('#'+createPointView.id).remove();            
-                $(".scroll-box").append(createPointView.el);
+                
+                    event.preventDefault();
+                    window.newPoint = new window.Point();
+                    createPointView = new window.CreatePointView({model: window.newPoint});
+                    window.currentPointPopup = createPointView;
 
-                var self = event.currentTarget;
-                var addPoint = this.templateAdd();
-                // $("#popups").remove();
-                // $(".scroll-box").append(createPointView.render().el);
+                    createPointView.render();
+                    $(".scroll-box").find('#'+createPointView.id).remove();            
+                    $(".scroll-box").append(createPointView.el);
 
-                var id = 'p-add-place';
-                window.YPApp.popups.open({
-                    elem: $("#overlay"),
-                    callbackAfter: function(){
-                        $("body").css("overflow", "hidden");
-                        window.YPApp.popups.open({
-                            elem: $("#popups"),
-                            callbackAfter: function(){
-                                // console.log('callback after');
-                                // window.newPoint = new Point();
-                            }
-                        });
-                    },
-                    callbackBefore: function(){
-                        $("body").css("overflow", "hidden");
-                        $("#"+id).css("display", "block").siblings().css("display", "none");
-                    }
-                });
+                    var self = event.currentTarget;
+                    var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $(".scroll-box").append(createPointView.render().el);
+
+                    var id = 'p-add-place';
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            $("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
+                
+
+            },
+            'click .top-panel .enter' : function(event){
+                    $(".popup").remove();
+                    var authView = new window.AuthView();
+                    var self = event.currentTarget;
+                    console.log('target = ', self);
+                    console.log('this = ', this.model);
+                    event.preventDefault();
+                    authView.render({ model: this.model });
+                    //$(".scroll-box").find('#'+ContactsView.id).remove();            
+                    $(".scroll-box").append(authView.el);
+
+                    //var self = event.currentTarget;
+                    // var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $("#overlay").after(createPointView.render().el);
+                    // $("#overlay").after(detcontent);
+
+                    var id = authView.id;
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            //$("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
             },
             // "click .top-panel .btn-place, .top-panel .btn-event":function(e){
             //     e.preventDefault();

@@ -78,7 +78,7 @@ class PointsBaseView(View):
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'], 
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
@@ -87,7 +87,7 @@ class PointsBaseView(View):
                                                         },
                                                     },
                                            'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail130x130'], 
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'], 
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
@@ -313,10 +313,22 @@ class PointsSearch(PointsBaseView):
         form = forms.SearchForm(params)
         if form.is_valid():
             pointsreq = MainModels.Points.objects
-
+            collectionsreq = CollectionsModels.Collections.objects
             name = form.cleaned_data.get("s")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
+                collectreq = []
+                for collect in collectionsreq.all():
+                    trig = 0
+                    for point in collect.points.all():
+                        if point.name == name:
+                            trig = 0
+                    for point in collect.points_by_user.all():
+                        if point.point.name == name:
+                            trig = 0
+                    if trig == 1:
+                        collectreq.append(collect.id)
+                collectionsreq = collectionsreq.filter(id__in=collectreq)
 
             address = form.cleaned_data.get("address")
             if address:
@@ -439,10 +451,10 @@ class PointsList(PointsBaseView):
                     trig = 0
                     for point in collect.points.all():
                         if point.name == name:
-                            trig = 1
+                            trig = 0
                     for point in collect.points_by_user.all():
                         if point.point.name == name:
-                            trig = 1
+                            trig = 0
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
@@ -458,7 +470,6 @@ class PointsList(PointsBaseView):
                 pointsreq = pointsreq.filter(address__icontains=name)
                 copypointsreq = copypointsreq.filter(point__address__icontains=name)
                 collectreq = []
-                tags_list = list(tags)
                 for collect in collectionsreq.all():
                     trig = 0
                     for point in collect.points.all():

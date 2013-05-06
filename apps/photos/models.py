@@ -36,6 +36,14 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, '65x52', crop="center center")
         return im.url
 
+    def thumbnail135x52(self):
+        im = get_thumbnail(self.img, '135x52', crop="center center")
+        return im.url
+
+    def thumbnail205x52(self):
+        im = get_thumbnail(self.img, '205x52', crop="center center")
+        return im.url
+
     def thumbnail207(self):
         im = get_thumbnail(self.img, '207')
         return im.url

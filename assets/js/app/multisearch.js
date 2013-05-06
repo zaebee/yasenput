@@ -37,6 +37,7 @@ $(function() {
             tags: [],
             users: []
         };
+        console.log('fetch multisearch');
         window.currentPoints.clearing();
         window.currentPoints.setURL().fetch();
         window.currentCollectionPoints.setURL().fetch();

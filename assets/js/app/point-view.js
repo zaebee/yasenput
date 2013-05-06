@@ -11,11 +11,12 @@ $(function(){
         },
         events: {
             'click .yp-title, .yp-info': 'toggleYPinfo',
-            'click .a-like': 'likepoint',
+            'click .a-like-ok': 'likepoint',
             'click .a-photo':"detailPlace",
-            'click .a-collection':"addInCollection",
-            'click .a-edit-new': 'editPoint',
-            'click .a-share-new': 'sharePoint'
+            'click .a-collection-ok':"addInCollection",
+            'click .a-edit-new-ok': 'editPoint',
+            'click .a-share-new-ok': 'sharePoint',
+            'click .enter': 'enterIn'
 
             // 'click .a-want':"wantvisit",
         },
@@ -35,6 +36,42 @@ $(function(){
 
                 }
             });
+        },
+        enterIn:function(event){
+                    $(".popup").remove();
+                    var authView = new window.AuthView();
+                    var self = event.currentTarget;
+                    console.log('target = ', self);
+                    console.log('this = ', this.model);
+                    event.preventDefault();
+                    authView.render({ model: this.model });
+                    //$(".scroll-box").find('#'+ContactsView.id).remove();            
+                    $(".scroll-box").append(authView.el);
+
+                    //var self = event.currentTarget;
+                    // var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $("#overlay").after(createPointView.render().el);
+                    // $("#overlay").after(detcontent);
+
+                    var id = authView.id;
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            //$("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
         },
         render:function(){
             var content = this.template(this.model.toJSON());

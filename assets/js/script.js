@@ -256,6 +256,8 @@ jQuery(function($){
             console.log('onClickDrop')
             window.currentPoints.clearing();
             window.currentPoints.page = 1;
+
+            console.log('fetch onClickDrop');
             window.currentPoints.setURL().fetch();
 			var clsName = '';
 			
@@ -486,8 +488,8 @@ jQuery(function($){
 	    }
         console.log('after delete:', multisearch_result.points);
         console.log('after delete2:', multisearch_data.points);
-        window.currentPoints.clearing();
-        window.currentPoints.setURL().fetch();
+        //window.currentPoints.clearing();
+        //window.currentPoints.setURL().fetch();
 
 	});
 	
