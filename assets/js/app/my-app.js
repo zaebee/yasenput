@@ -79,12 +79,12 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 // корректный скрол
 $(window).scroll(function(){ //  главная карта
     var scrollTop = $(window).scrollTop(),
-        top = scrollTop <= 370 ? scrollTop : 370;
+        top = scrollTop <= 170 ? scrollTop : 170;
     
     if(!$(".main-map").hasClass("is-open")){
         $(".main-map").css("top", -top);
         
-        if(scrollTop >= 370){
+        if(scrollTop >= 170){
             if(!$(".main-map").hasClass("hide-map")){
                 $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
                 
