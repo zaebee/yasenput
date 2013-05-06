@@ -76,6 +76,7 @@ $(function(){
             this.name = window.multisearch_result.points;
             this.address = window.multisearch_result.places;
             console.log('setURL ', this);
+            this.name = window.multisearch_result.points;
             this.page = (this.page != null) ? this.page : 1;
             this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -90,7 +91,7 @@ $(function(){
             } else {
                 this.tagStr = '';
             }
-            console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
+            //console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
             this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
             this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
             this.url = '/points/list/'+this.page +
