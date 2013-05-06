@@ -180,9 +180,9 @@ $(function(){
                                     id: view.model.get('allpoints')[point_id].id
                                 } 
                                 ,{
-                                    iconImageHref: '/assets/media/icons/troopper.png', // картинка иконки
-                                    iconImageSize: [40, 40], // размеры картинки
-                                    iconImageOffset: [-20, -20] // смещение картинки
+                                    iconImageHref: '/assets/media/icons/place-none.png', // картинка иконки
+                                    iconImageSize: [32, 36], // размеры картинки
+                                    iconImageOffset: [-16, -38] // смещение картинки
                                 }
                             );
                             view.popupMap.geoObjects.add(placemark);

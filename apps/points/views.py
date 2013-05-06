@@ -322,10 +322,10 @@ class PointsSearch(PointsBaseView):
                     trig = 0
                     for point in collect.points.all():
                         if point.name == name:
-                            trig = 0
+                            trig = 1
                     for point in collect.points_by_user.all():
                         if point.point.name == name:
-                            trig = 0
+                            trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
@@ -343,9 +343,14 @@ class PointsSearch(PointsBaseView):
             else:
                 pointsreq = pointsreq.order_by("name")
 
-            points = pointsreq[offset:limit]
-
             YpJson = YpSerialiser()
+            points = pointsreq[offset:limit]
+            collections = collectionsreq[offset:limit]
+
+            allpoints = json.loads(self.getSerializePoints(points))
+            allcollections = json.loads(self.getSerializeCollections(collections))
+            
+            #return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
             return HttpResponse(YpJson.serialize(points, fields=('id', 'name'))) 
  
         else:
@@ -354,7 +359,6 @@ class PointsSearch(PointsBaseView):
                 errors.append(er +':'+e[er][0])
 
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
-
 
 class PointsList(PointsBaseView):
     #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
@@ -446,15 +450,16 @@ class PointsList(PointsBaseView):
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
+                collectreq = []
                 copypointsreq = copypointsreq.filter(point__name__icontains=name)
                 for collect in collectionsreq.all():
                     trig = 0
                     for point in collect.points.all():
                         if point.name == name:
-                            trig = 0
+                            trig = 1
                     for point in collect.points_by_user.all():
                         if point.point.name == name:
-                            trig = 0
+                            trig = 1
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
