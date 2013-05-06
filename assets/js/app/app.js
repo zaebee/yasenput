@@ -79,11 +79,11 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 // корректный скрол
 $(window).scroll(function(){ //  главная карта
     var scrollTop = $(window).scrollTop(),
-        top = scrollTop <= 370 ? scrollTop : 370;
+        top = scrollTop <= 170 ? scrollTop : 170;
     
     if(!$(".main-map").hasClass("is-open")){
         $(".main-map").css("top", -top);
-        if(scrollTop >= 370){
+        if(scrollTop >= 170){
             if(!$(".main-map").hasClass("hide-map")){
                 // $(".main-map").addClass("hide-map").find(".a-toggle").html("Развернуть карту &darr;");
                 $(".main-map .m-ico-group").hide();
@@ -1125,6 +1125,44 @@ $(function(request){
                     // $("#overlay").after(detcontent);
 
                     var id = ContactsView.id;
+                    window.YPApp.popups.open({
+                        elem: $("#overlay"),
+                        callbackAfter: function(){
+                            $("body").css("overflow", "hidden");
+                            window.YPApp.popups.open({
+                                elem: $("#popups"),
+                                callbackAfter: function(){
+                                    // console.log('callback after');
+                                    // window.newPoint = new Point();
+                                }
+                            });
+                        },
+                        callbackBefore: function(){
+                            $("body").css("overflow", "hidden");
+                            //$("#"+id).css("display", "block").siblings().css("display", "none");
+                        }
+                    });
+
+               },
+               'click .aboutProject':function(event){
+                console.log(this.model);
+                    $(".popup").remove();
+                    var aboutView = new window.AboutView();
+                    var self = event.currentTarget;
+                    console.log('target = ', self);
+                    console.log('this = ', this.model);
+                    event.preventDefault();
+                    aboutView.render({ model: this.model });
+                    //$(".scroll-box").find('#'+ContactsView.id).remove();            
+                    $(".scroll-box").append(aboutView.el);
+
+                    //var self = event.currentTarget;
+                    // var addPoint = this.templateAdd();
+                    // $("#popups").remove();
+                    // $("#overlay").after(createPointView.render().el);
+                    // $("#overlay").after(detcontent);
+
+                    var id = aboutView.id;
                     window.YPApp.popups.open({
                         elem: $("#overlay"),
                         callbackAfter: function(){

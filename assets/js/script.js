@@ -406,7 +406,7 @@ jQuery(function($){
 			$("a", me.p.dropRoot).click(function(e){
 				e.preventDefault();
 				
-				//me.onClickDrop($(this), me);
+				me.onClickDrop($(this), me);
 			});
 			
 			$(document).click(function(e){

@@ -241,7 +241,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	#footer .apps{float:left; width:26.8%; padding:7px 0 0}
 .app-android{float:left; width:113px; height:25px; text-decoration:none; background-position:0 -236px; margin:0 4% 0 0}
 .app-store{float:left; width:77px; height:25px; text-decoration:none; background-position:-121px -236px}
-#footer .share{float:left; width:auto; padding-top:9px}
+#footer .share{float:left; width:220px; padding-top:9px}
 .f-social{float:right; width:8%; margin:9px 40px 0 -10px}
 	.f-social a{float:right; width:23px; height:22px; text-decoration:none; margin:0 0 0 6px}
 .a-vk{background-position:-300px -71px}
@@ -373,6 +373,18 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	font-size: 16px;
 }
 .popup.slim .p-body b{
+	font-size: 16px;
+}
+.popup.aboutProject{
+	margin-top: 100px;
+}
+.popup.aboutProject .p-body p{
+	font-size: 16px;
+}
+.popup.aboutProject .p-body img{
+	float: right;
+}
+.popup.aboutProject .p-body b{
 	font-size: 16px;
 }
 .create-account .add-avatar{width:130px; height:130px; background-position:-466px -43px; position:relative; overflow:hidden; cursor:pointer; margin:0 17px 0 0}
@@ -858,4 +870,5 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .a-up span{font-size:18px}
 .a-up{font-family: "Trebuchet MS", "Helvetica CY", sans-serif;font-size: 15px;}
 .a-up-toggle{bottom:0px}
+#vk_like{float:left}
 /**/
