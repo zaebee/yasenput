@@ -14,7 +14,10 @@ $(function(){
             // 'keyup #add-new-place-address': 'searchLocation',
             'click .m-ico-group>a': 'showNearPlace',
             'click .p-place-desc .a-toggle-desc':'moreDescription',
-            'click .a-like': 'likePhoto'
+            'click .a-btn-like': 'likePhoto',
+            'click .a-add-collection': 'addInCollection',
+            'click .a-btn-share': 'sharePoint',
+            'click .a-btn-complaint': 'reportPhoto'
         },
         render:function(){
             var content = this.template(this.model.toJSON());
@@ -79,6 +82,83 @@ $(function(){
             // });
             return this;
         },	
+        sharePoint: function(event){
+            event.preventDefault();
+
+            sharePointView = new window.SharePointView( { model: this.model} );
+            window.currentPointPopup = sharePointView;
+            sharePointView.render();
+
+            $(".scroll-box").find('#'+sharePointView.id).remove();            
+            $(".scroll-box").append( sharePointView.el );
+
+            var self = event.currentTarget;
+
+            var id = sharePointView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
+        },
+        addInCollection:function(event){
+            console.log('INSIDE adding');
+            console.log(this.model);
+            $(".popup").remove();
+            window.newCollection = new window.CollectionPoint();
+            addCollectionView = new window.AddCollectionView({ model: window.newCollection });
+            var self = event.currentTarget;
+            console.log('target = ', self);
+            console.log('this = ', this.model);
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            addCollectionView.render({ model: this.model });
+            $(".scroll-box").find('#'+addCollectionView.id).remove();            
+            $(".scroll-box").append(addCollectionView.el);
+
+            //var self = event.currentTarget;
+            // var addPoint = this.templateAdd();
+            // $("#popups").remove();
+            // $("#overlay").after(createPointView.render().el);
+            // $("#overlay").after(detcontent);
+
+            var id = addCollectionView.id;
+            window.YPApp.popups.open({
+                elem: $("#overlay"),
+                callbackAfter: function(){
+                    $("body").css("overflow", "hidden");
+                    window.YPApp.popups.open({
+                        elem: $("#popups"),
+                        callbackAfter: function(){
+                            // console.log('callback after');
+                            // window.newPoint = new Point();
+                        }
+                    });
+                },
+                callbackBefore: function(){
+                    $("body").css("overflow", "hidden");
+                    $("#"+id).css("display", "block").siblings().css("display", "none");
+                }
+            });
+            var self = event.currentTarget;
+            event.preventDefault();
+            pointId = parseInt( $(self).closest(".item").attr('data-point-id') );
+            addCollectionView.getPoint(pointId, this.model.attributes.id_point, this);
+
+
+       },
         showNearPlace: function(event){
             event.preventDefault();
             $(this.el).find("#near-objects").slideDown(200);
@@ -113,6 +193,25 @@ $(function(){
                 },
                 error: function(){
 
+                }
+            });
+        },
+        reportPhoto: function(event){
+            event.preventDefault();
+            $.ajax({
+                url: '/reports/addt',
+                type: 'POST',
+                data: {
+                    point: this.model.get('id'),
+                    point_id: this.model.get('id_point'),
+                    model: 'point'
+                },
+                success: function(data) {
+                    if(data.i == 0){
+                        alert('Спасибо, ваша жалоба отправлена.')
+                    }else{
+                        alert('Ошибка отправки жалобы.')
+                    }
                 }
             });
         }

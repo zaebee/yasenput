@@ -89,11 +89,11 @@
             
             <a href="#" class="a-like {% if user.is_authenticated %}<% if(isliked==1) { %> marked <% } %> a-like-ok {% else %} enter {% endif %}" data-tooltip="мне нравится">&nbsp;</a>
             
-            <div class="yasen-info">
+            <!--<div class="yasen-info">
                 <div class="yp-info">
                     <i class="yp-like"></i><small><%- likeusers %></small>
                 </div>
-            </div>
+            </div>-->
             <% console.log('points_by_user in template--> ', points_by_user) %>
             <% console.log('points in template--> ', allpoints) %>
             <% console.log('id of collection', id) %>
@@ -726,6 +726,7 @@
 
                 <aside id="right-panel">
                     <a href="#" class="a-btn a-visit <% if(currentvisit == 1){ print ('a-btn-marked') }%>">Хочу посетить</a>
+                      <a href="#" class="a-btn a-add-to-collection">В коллекцию</a>
         {#            <a href="#" class="a-btn a-add-path">Создать маршрут</a>#}
         {#            <a href="#" class="a-btn a-edit">Редактировать</a>#}
                     <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
@@ -1531,7 +1532,12 @@
     
     <div class="small-icons">
         {% if user.is_authenticated %}
-        <a href="#" class="a-like" data-tooltip="Нравится"></a><a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
+        <a href="#" class="a-btn a-btn-like">Нравится</a>
+        <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+        <a href="#" class="a-btn a-btn-share">Поделиться</a>
+        <a href="#" class="a-btn a-btn-complaint">Пожаловаться</a>
+        <!--<a href="#" class="a-like" data-tooltip="Нравится"></a>
+        <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>-->
         {% endif %}
     </div>
     

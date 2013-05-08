@@ -1016,6 +1016,29 @@ $(function(request){
                     }
                 }
             },
+            "click .a-btn-complaint":function (e) {
+                var self = e.currentTarget;
+                e.preventDefault();//показать попап для жалобы на местo
+                console.log('mapComplaintPlace',mapComplaintPlace);
+                var params = {
+                    left: e.pageX - 166,
+                    top : $("#popups .viewport").scrollTop() + e.pageY - $(window).scrollTop() - 100
+                };
+
+                $("#complaint-place").css(params).show();
+
+                if(!mapComplaintPlace){
+
+                    mapComplaintPlace = new ymaps.Map('map-place-complaint', {
+                        center: [38.043392000000004, 48.30851300000994],
+                        zoom: 11
+                    });
+
+                    if(!myComplaintPlaceCollection){
+                        myComplaintPlaceCollection = new ymaps.GeoObjectCollection();
+                    }
+                }
+            },
             "click .a-complaint-comment":function (e) {
                 var self = e.currentTarget;
                 e.preventDefault();//показать попап для жалобы на comment
