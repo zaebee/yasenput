@@ -17,7 +17,7 @@ table {border-collapse: collapse;border-spacing: 0}
 
 /*   end global reset  */
 html{height:100%}
-body{height:100%;font-family:"Trebuchet MS", "Helvetica CY", sans-serif;text-align:center;font-size:11px;color:#555;line-height:1.3; background:url(../images/bg.jpg) repeat}
+body{height:200%;font-family:"Trebuchet MS", "Helvetica CY", sans-serif;text-align:center;font-size:11px;color:#555;line-height:1.3; background:url(../images/bg.jpg) repeat}
 
 ul{list-style:none}
 
