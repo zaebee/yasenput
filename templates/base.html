@@ -60,7 +60,7 @@
           <script src="{{ STATIC_URL }}js/app/addLabels-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/create-point-view.js"></script>
           <script src="{{ STATIC_URL }}js/app/router.js"></script>
-
+          
 
 
           <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
@@ -81,6 +81,13 @@
     <div id="overlay"></div>
     {% block popups %}{% endblock %}
     </body>
+    <script type="text/javascript">
+          $(document).ready(function(){
+              $(window).scrollTop(400);
+              console.log('scrollTop',$(document).scrollTop());
+          });
+            
+          </script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function (d, w, c) {

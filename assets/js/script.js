@@ -14,6 +14,10 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
         }
         return cookieValue;
     }
+    $(document).ready(function(){
+    	$(window).scrollTop(370);
+    	console.log('ПОНЕСЛАСЬ!!!!!')
+    });
     function sameOrigin(url) {
         // url could be relative or scheme relative or absolute
         var host = document.location.host; // host + port
@@ -241,7 +245,6 @@ jQuery(function($){
 		
 		onClickDrop: function(me, self){
             console.log('onClickDrop')
-            var trig = 1;
             window.currentPoints.page = 1;
             window.currentCollectionPoints.page = 1;
             window.currentPoints.clearing();
@@ -293,7 +296,8 @@ jQuery(function($){
 				name = multisearch_data.points[me.data("id")].name;
 				// add only one instance of point
 				if (multisearch_result.points.indexOf(name) != -1)
-				{
+				{	
+					console.log('returned_names');
 				    return;
 				}
                 console.log('onClickDrop name');
@@ -307,21 +311,32 @@ jQuery(function($){
 			}
 			// users labels
 			else if (me.closest(".item-users").length){
+
+            	clsName = ' label-user';
 			    // can add only ine user
-			    if (multisearch_result.users.length > 0)
-			    {
-			        return;
-			    }
-				clsName = ' label-user';
+			    
 				
+				
+				//multisearch_result.users.length = 0;
 				id = multisearch_data.users[me.data("id")].id;
-				multisearch_result.users.push(id);
+				console.log(multisearch_result.users);
 				
+			    if (multisearch_result.users.indexOf(id) != -1)
+			    {
+			    	console.log('returned');
+			    	self.hideDropField();
+			    	window.currentPoints.setURL().fetch();
+            		window.currentCollectionPoints.setURL().fetch();
+			        return;
+			    } else {
+			    	$(".label-fields").children(".label-user").remove();
+			    	multisearch_result.users = []
+				multisearch_result.users.push(id);
 				text_labels.push({
 				                text: me.text(),
 				                id:multisearch_result.users.length-1,
 				                type: "user"
-				                });
+				                });}
 			}
 			// tags labels
 			else if (me.closest(".item-labels").length){
@@ -352,12 +367,10 @@ jQuery(function($){
 			        $(added_label).data("id", txt_label.id);
 			        $(added_label).data("type", txt_label.type);
 			});
-			if (trig = 1){
 
             	window.currentPoints.setURL().fetch();
             	window.currentCollectionPoints.setURL().fetch();
-            	trig = 0;
-			}
+            	console.log('Complited')
 			self.hideDropField();
 		},
 		
@@ -1312,6 +1325,10 @@ jQuery(function($){
 	}
 	
 	toggleScroll();
+	$(document).ready(function(){
+    	$(window).scrollTop(370);
+    	console.log('ПОНЕСЛАСЬ!!!!!')
+    });
 });
 
 

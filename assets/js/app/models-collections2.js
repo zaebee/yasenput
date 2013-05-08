@@ -73,6 +73,7 @@ $(function(){
         setURL: function(){
             this.tags = window.multisearch_result.tags;
             console.log('setURL ', this);
+            this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
             this.page = (this.page != null) ? this.page : 1;
             this.content = (this.content != null) ? this.content : 'new';
