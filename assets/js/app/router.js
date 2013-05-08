@@ -2,6 +2,7 @@
 $(function(){
     window.pointsArr = [];
     window.collectionsArr = [];
+    console.log('inside of router');
     Router = Backbone.Router.extend({
         routes:{
             "":"main",
@@ -21,6 +22,7 @@ $(function(){
                    return collection.get('YPscore') * (-1);
                 }
             });
+
             window.pointsPop.map = window.myMap;
             window.pointsPop.elSelector = '#content section#tab-popular';
             window.collectionsPop.elSelector = '#content section#tab-popular';

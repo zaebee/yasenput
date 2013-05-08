@@ -389,10 +389,11 @@ class PointsList(PointsBaseView):
             collections_fields_list = collectionsreq.values_list('id')
             
             user = form.cleaned_data.get("user")
-            if user:
-                pointsreq = pointsreq.filter(author__id=user)
-                copypointsreq = copypointsreq.filter(author__id=user)
-                collectionsreq = collectionsreq.filter(author__id=user)
+            userID = params.get("user_id")
+            if userID != '':
+                pointsreq = pointsreq.filter(author__id=int(userID))
+                copypointsreq = copypointsreq.filter(author__id=int(userID))
+                collectionsreq = collectionsreq.filter(author__id=int(userID))
 
             coord_left = params.get("coord_left")
             coord_right = params.get("coord_right")
@@ -516,13 +517,16 @@ class PointsList(PointsBaseView):
                 point_need_total = point_need
                 copypoints_need_same = copypointsreq.filter(point=point_need)
                 copypoints_need_point = copypoints_need_same.order_by('-popular')
-                if point_need.popular > copypoints_need_point[0].popular:
-                    points.append(point_need)
-                else:
-                    if point_need.popular == copypoints_need_point[0].popular:
-                        points.append(random.choice([point_need, copypoints_need_point[0]]))
+                if len(copypoints_need_point.all())>0:
+                    if point_need.popular > copypoints_need_point[0].popular:
+                        points.append(point_need)
                     else:
-                        points.append(copypoints_need_point[0])
+                        if point_need.popular == copypoints_need_point[0].popular:
+                            points.append(random.choice([point_need, copypoints_need_point[0]]))
+                        else:
+                            points.append(copypoints_need_point[0])
+                else:
+                    points.append(point_need)
                 
             total_points = points[offset:limit]
 
