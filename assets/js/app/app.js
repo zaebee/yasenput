@@ -868,11 +868,11 @@ $(function(request){
                 } else if($(e.target).closest("#complaint-photo").length){
                     $("#complaint-photo").hide();
                 } else {
-                    window.YPApp.popups.remove({
+                    window.YPApp.popups.close({
                         elem: $("#popups"),
                         speed: 0,
                         callbackBefore: function(){
-                            window.YPApp.popups.remove({
+                            window.YPApp.popups.close({
                                 elem: $("#overlay")
                             });
                         },

@@ -80,7 +80,7 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 var multySearch;
 
 jQuery(function($){
-    $('#multisearch-text').live('keyup',function(e){
+    $('#multisearch-text').live('keydown',function(e){
         if (e.keyCode == 8 && $('#multisearch-text').val().length == 0){
             $(".label-fields").find(".label:not(.label-add):last .remove-label").click();
             //window.currentPoints.setURL().fetch();
@@ -233,6 +233,7 @@ jQuery(function($){
                         console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
                         $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
                     }
+                    self.reinit_click();
 					console.log('нажат enter');
 					break;
 				case 27:

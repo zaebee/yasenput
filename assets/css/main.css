@@ -798,6 +798,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .require-labels{margin:-3px 0 0 -3px}
 .other-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
+.other-labels .label{margin:3px 0 0 3px}
 .label-require{background:#ffadc9 !important}
 
 /*.content .item .body{padding-left:50px !important}*/
