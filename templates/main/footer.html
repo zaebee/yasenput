@@ -13,12 +13,16 @@
         </div>
 
         <div class="share">
-            <img src="{{ STATIC_URL }}temp/share.png" alt="">
+            <div id="vk_like"></div>
+            <script type="text/javascript">
+                VK.Widgets.Like("vk_like", {type: "mini"});
+            </script>
+            <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
         </div>
 
         <div class="f-social">
-            <a href="http://vk.com/yasenput" class="a-vk">&nbsp;</a>
-            <a href="#" class="a-fb">&nbsp;</a>
+            <a href="http://vk.com/yasenput" target="_blank" class="a-vk">&nbsp;</a>
+            <a href="http://www.facebook.com/yasenput" target="_blank" class="a-fb">&nbsp;</a>
         </div>
     </div>
 </footer>

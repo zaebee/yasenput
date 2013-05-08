@@ -38,6 +38,7 @@ $(function(){
             window.fetchCollection = new $.Deferred();
             //window.fetchPoint = window.currentPoints.clearing().fetch();
             window.fetchPoint = window.currentPoints.setURL().fetch();
+            window.fetchCollection = window.fetchPoint
             window.fetchCollection = window.currentCollectionPoints.setURL().fetch();
         });
 

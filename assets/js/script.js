@@ -80,6 +80,13 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 var multySearch;
 
 jQuery(function($){
+    $('#multisearch-text').live('keyup',function(e){
+        if (e.keyCode == 8 && $('#multisearch-text').val().length == 0){
+            $(".label-fields").find(".label:not(.label-add):last .remove-label").click();
+            //window.currentPoints.setURL().fetch();
+        };
+    })
+
 	multySearch = {
 	    me: 0,
 		tmplLabel: '<div class="label {clsName}">\
@@ -209,6 +216,7 @@ jQuery(function($){
 		},
 		
 		onKeyDown: function(e, self){
+            console.log('Нажали!')
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
@@ -216,7 +224,7 @@ jQuery(function($){
                     _.each(multisearch_data.tags, function(tag){
 
                          if(tag.name.toLowerCase() == $("#multisearch-text").val().toLowerCase()){
-                             console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
+                             //console.log('Попался --->', $('#multisearch-tags  ._item_ a').find(function() { return $.data(this, "id") == tag.id; }));
                              $('#multisearch-tags a').filter(function() { return $.data(this, "id") == tag.id; }).end().click();
                              flag = true;
                          }
@@ -235,6 +243,11 @@ jQuery(function($){
 				case 38:
 					e.preventDefault();
 					self.selectDropLi(-1);
+					break;
+                case 8:
+					//e.preventDefault();
+                    //console.log($(".label-fields").find(".label"));
+                    //$(".label-fields").find(".label:last").remove();
 					break;
 				case 40:
 					e.preventDefault();
@@ -263,7 +276,7 @@ jQuery(function($){
 				// delete all current places labels
 				$(".label-fields").children(".label-place").remove();
 				
-				split_labels = me.text().split(",");
+				split_labels = me.text().split(", ");
 				
 				i = 0;
 				_.each(split_labels, function(label) { 
@@ -396,7 +409,7 @@ jQuery(function($){
 			$("input[type=text]", $(this.p.searchInput)).focus(function(){
 				me.onFocusInput($(this), me);
 			});
-			
+
 			$(document).bind("keydown.findMatch", function(e){
 				if($(me.p.dropRoot).is(":visible")){
 					me.onKeyDown(e, me);
@@ -493,7 +506,8 @@ jQuery(function($){
 	    }
         console.log('after delete:', multisearch_result.points);
         console.log('after delete2:', multisearch_data.points);
-        window.currentPoints.setURL().fetch();
+        //window.currentPoints.clearing();
+        //window.currentPoints.setURL().fetch();
 
 	});
 	

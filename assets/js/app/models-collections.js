@@ -27,9 +27,18 @@ $(function(){
             }            
             // узнаём, являемся ли мы автором этой точки
             if(this.get('author') != undefined) {
+                
+                console.log('===> author != undefined: ');
+                console.log('indow.myId: ', window.myId);
+                console.log('this.get(author).id: ', this.get('author').id);
+
+                console.log('this.get(id_point): ', this.get('id_point'));
+
                 if( (this.get('author').id == window.myId) && (this.get('id_point') != 0) ) {
+                    console.log('===> ismine: 1');
                     this.set({ismine: 1});
                 } else {
+                    console.log('===> ismine: 0');
                     this.set({ismine: 0});
                 }
             }
@@ -342,6 +351,7 @@ $(function(){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
+            this.address = window.multisearch_result.places;
         	this.page = (this.page != null) ? this.page : 1;
         	this.content = (this.content != null) ? this.content : 'new';
             this.name = (this.name != null) ? this.name : '';
@@ -367,6 +377,7 @@ $(function(){
         				'&coord_right='+this.coord_right+
                         '&user_id='+this.user_id+
                         '&name='+this.name+
+                        //'&address='+this.address+
                         this.tagStr;
         	return this;
         },
@@ -398,14 +409,6 @@ $(function(){
             clusterer.removeAll();
             var myGeoObjectsArr = [];
             var pointsOnMap = [];
-
-            // console.log('all points: ');
-            // this.each(function(point){
-            //     console.log( '[ id: ' + point.get('id') + '; id_point: ' + point.get('id_point') + ' ]' );
-            // });
-
-            //var myGeoObjectsArr = [];
-
             this.each(function(point){
                 console.log('ICON OF POINT',point)
                 placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
@@ -484,6 +487,7 @@ $(function(){
         template: _.template( $('#near-point').html() ),
         initialize: function(){
             _.bindAll(this, 'render');
+            // this.bind('reset', this.render, this);
         },
         parse: function(response){
             response = response.points;
@@ -493,7 +497,6 @@ $(function(){
             } else {
                 motherId = this.thisPoint.get('id_point');
             }
-
             
             var newResponse = _.reject(response, function(point){
                 if( point.id_point == 0 ) {
@@ -583,7 +586,7 @@ $(function(){
 //            console.log('++++++++++++++++++');
             // if( (this.get('author').id == window.myId) && (this.collection.mainPoint.get('id_point') != 0) ) {
 
-            if(this.get('author') == window.myId ) {
+            if(this.get('author').id == window.myId ) {
                 this.set({ismine: 1});
             } else {
                 this.set({ismine: 0});
@@ -712,12 +715,14 @@ $(function(){
             options = (options != undefined) ? options : {};
             options.action = 'load';
             options.content = content;
+            console.log('fetch load');
             this.fetch(options);
         },
         search: function(str, options){
             options = (options != undefined) ? options : {};
             options.action = 'search';
             options.str = str;
+            console.log('fetch search');
             this.fetch(options);
         }
     });

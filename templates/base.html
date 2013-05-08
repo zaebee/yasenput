@@ -29,6 +29,8 @@
           <script src="{{ STATIC_URL }}js/libs/cusel-min-2.5.js"></script>
           <script src="{{ STATIC_URL }}js/libs/jScrollPane.js"></script>
           <script src="{{ STATIC_URL }}js/libs/jquery.infinitescroll.min.js"></script>
+          <script src="{{ STATIC_URL }}js/libs/jquery.scrollTo.min.js"></script>
+          <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
 
           <script src="{{ STATIC_URL }}js/libs/underscore-min.js"></script>
           <script src="{{ STATIC_URL }}js/libs/backbone-min.js"></script>
@@ -67,12 +69,20 @@
 
     {% block postload_js %}
         {% endblock %}
-{#    <script type="text/javascript">#}
-{#        VK.init({apiId: {{ VKONTAKTE_APP_ID }}, onlyWidgets: true});#}
-{#    </script>#}
+    <script type="text/javascript">
+        VK.init({apiId: {{ VKONTAKTE_APP_ID }}, onlyWidgets: true});
+    </script>
     </head>
 
     <body class="front">
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
     <a href="#" class="a-up">Вверх <span>&uarr;</span></a>
     {% csrf_token %}
     <div id="wrap">

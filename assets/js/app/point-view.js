@@ -37,7 +37,7 @@ $(function(){
                 }
             });
         },
-        enterIn:function(){
+        enterIn:function(event){
                     $(".popup").remove();
                     var authView = new window.AuthView();
                     var self = event.currentTarget;

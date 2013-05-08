@@ -330,6 +330,10 @@ class PointsSearch(PointsBaseView):
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
 
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=address)
+
 
             content = form.cleaned_data.get("content")
             if content == 'new':
@@ -465,6 +469,12 @@ class PointsList(PointsBaseView):
             if tags and len(tags) > 0:
                 pointsreq = pointsreq.filter(tags__in=tags)
                 copypointsreq = copypointsreq.filter(point__tags__in=tags)
+                collectionsreq = collectionsreq.filter(points__tags__in=tags)
+
+            address = form.cleaned_data.get("address")
+            if address:
+                pointsreq = pointsreq.filter(address__icontains=name)
+                copypointsreq = copypointsreq.filter(point__address__icontains=name)
                 collectreq = []
                 for collect in collectionsreq.all():
                     trig = 0
@@ -480,7 +490,7 @@ class PointsList(PointsBaseView):
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
-           
+
             pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
             copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
             collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))

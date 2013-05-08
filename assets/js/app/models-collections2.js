@@ -72,6 +72,9 @@ $(function(){
         },
         setURL: function(){
             this.tags = window.multisearch_result.tags;
+            this.user_id = window.multisearch_result.users;
+            this.name = window.multisearch_result.points;
+            this.address = window.multisearch_result.places;
             console.log('setURL ', this);
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
@@ -125,6 +128,7 @@ $(function(){
             collection = this;
             
             this.page++;
+            console.log('fetch jqXHR');
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
                 if( data.collections.length > 0 ) {

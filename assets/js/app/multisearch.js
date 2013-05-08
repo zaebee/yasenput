@@ -101,7 +101,8 @@ function update_multisearch() {
             crossDomain: false,
             dataType:'json',
             data: {
-                s: $("#multisearch-text").val()
+                s: $("#multisearch-text").val(),
+                address: window.multisearch_result.places.join(', ')
             },
             success: function(data) {
                 window.multisearch_data.points = data;
