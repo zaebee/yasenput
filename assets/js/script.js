@@ -232,8 +232,8 @@ jQuery(function($){
                     if(multisearch_data.places.length>0 && !flag){
                         console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
                         $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
-                    }
-					console.log('нажат enter');
+                    } 
+					console.log('нажат enter', ymaps.geolocation.latitude);
 					break;
 				case 27:
 					setTimeout(function(){
@@ -260,7 +260,7 @@ jQuery(function($){
             console.log('onClickDrop')
             window.currentPoints.page = 1;
             window.currentCollectionPoints.page = 1;
-            window.currentPoints.clearing();
+            //window.currentPoints.clearing();
             //window.currentCollectionPoints.setURL().fetch();
 			var clsName = '';
 			
@@ -286,12 +286,19 @@ jQuery(function($){
 				                    id: i,
 				                    type: "place"
 				                });
+				     console.log('LABEL!!!!!!!!!!!--------->',multisearch_result.points.indexOf(label))
+				    //if (multisearch_result.points.indexOf(label) != -1){
+					//	window.currentPoints.setURL().fetch();
+            		//	window.currentCollectionPoints.setURL().fetch();
+            		//}
 				                i++;
 				              });
 
                 var myGeocoder = ymaps.geocode(me.text());
                 myGeocoder.then(
                     function (res) {
+                    	console.log('SETBOUND');
+                    	console.log(ymaps.geolocation.latitude);
                         window.myMap.setBounds((res.geoObjects.get(0).properties.get("boundedBy")))
                     },
                     function (err) {
@@ -311,8 +318,7 @@ jQuery(function($){
 				if (multisearch_result.points.indexOf(name) != -1)
 				{	
 					console.log('returned_names');
-				    return;
-				}
+				} else {
                 console.log('onClickDrop name');
 				multisearch_result.points.push(name);
 
@@ -321,6 +327,10 @@ jQuery(function($){
 				                id: multisearch_result.points.length-1,
 				                type: "point"
 				                });
+					window.currentPoints.clearing();
+					window.currentPoints.setURL().fetch();
+            		window.currentCollectionPoints.setURL().fetch();
+            	}
 			}
 			// users labels
 			else if (me.closest(".item-users").length){
@@ -338,18 +348,23 @@ jQuery(function($){
 			    {
 			    	console.log('returned');
 			    	self.hideDropField();
-			    	window.currentPoints.setURL().fetch();
-            		window.currentCollectionPoints.setURL().fetch();
+			    	//multisearch_result.users = []
+			    	//window.currentPoints.setURL().fetch();
+            		//window.currentCollectionPoints.setURL().fetch();
 			        return;
 			    } else {
 			    	$(".label-fields").children(".label-user").remove();
 			    	multisearch_result.users = []
-				multisearch_result.users.push(id);
-				text_labels.push({
+					multisearch_result.users.push(id);
+					text_labels.push({
 				                text: me.text(),
 				                id:multisearch_result.users.length-1,
 				                type: "user"
-				                });}
+				                });
+					window.currentPoints.clearing();
+					window.currentPoints.setURL().fetch();
+            		window.currentCollectionPoints.setURL().fetch();
+				}
 			}
 			// tags labels
 			else if (me.closest(".item-labels").length){
@@ -362,7 +377,7 @@ jQuery(function($){
 				if (multisearch_result.tags.indexOf(id) != -1)
 				{
 				    return;
-				}
+				} else {
 				multisearch_result.tags.push(id);
 				
 				text_labels.push({
@@ -370,6 +385,10 @@ jQuery(function($){
 				                id: multisearch_result.tags.length-1,
 				                type: "tag"
 				                });
+				window.currentPoints.clearing();
+				window.currentPoints.setURL().fetch();
+            		window.currentCollectionPoints.setURL().fetch();
+				}
 			}
 			
 			$(self.p.labelAdd).show();
@@ -381,8 +400,8 @@ jQuery(function($){
 			        $(added_label).data("type", txt_label.type);
 			});
 
-            	window.currentPoints.setURL().fetch();
-            	window.currentCollectionPoints.setURL().fetch();
+            	//window.currentPoints.setURL().fetch();
+            	//window.currentCollectionPoints.setURL().fetch();
             	console.log('Complited')
 			self.hideDropField();
 		},
@@ -430,6 +449,7 @@ jQuery(function($){
 		},
 		reinit_click: function() {
     			$("a", me.p.dropRoot).click(function(e){
+    				console.log('REINIT_CLICK')
 				e.preventDefault();
 				me.onClickDrop($(this), me);
 			});
@@ -753,7 +773,7 @@ jQuery(function($){
 					input.blur();
 					
 					//временно вернуть фолс для тестов
-					return false;
+					//return false;
 				} else if($dropResult.is(":visible")){
 					if(withMatch == true){
 						var flag = false; // если был введен текст и нажат Enter, то проверить, есть ли такой текст в выпадающем списке, если нет, то закрыть и предложить выбрать место

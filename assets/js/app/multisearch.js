@@ -82,7 +82,7 @@ function update_multisearch() {
 
                     // ReInit OnClick
 
-                    //multySearch.reinit_click();
+                    multySearch.reinit_click();
                 },
                 function (err) {
                 // alert ("error");
@@ -118,7 +118,7 @@ function update_multisearch() {
 
                     // ReInit OnClick
 
-                    multySearch.reinit_click();
+                    //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
@@ -149,7 +149,7 @@ function update_multisearch() {
                 _.each($("#multisearch-users ._item_ a"), function(item) { $.data(item, "id", i); i++  });
 
                     // ReInit OnClick
-                    multySearch.reinit_click();
+                    //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
@@ -180,7 +180,7 @@ function update_multisearch() {
                 _.each($("#multisearch-tags ._item_ a"), function(item) { $.data(item, "id", i); i++ });
 
                 // ReInit OnClick
-                multySearch.reinit_click();
+                //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
