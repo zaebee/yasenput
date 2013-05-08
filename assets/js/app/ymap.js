@@ -11,7 +11,7 @@ $(function(){
         });
         console.log('ymaps.Map');
         myMap.ready = $.Deferred();
-        
+            
         myMap.controls.add('zoomControl').add('typeSelector');
         myMap.events.add('boundschange', function(event){
             // window.mapBounds = myMap.getBounds()
@@ -32,13 +32,13 @@ $(function(){
 
             window.currentPoints.page = 1;
             window.currentCollectionPoints.page = 1;
-
+            console.log('INSIDE!!!!!!!!')
             window.currentPoints.clearing();
             window.fetchPoint = new $.Deferred();
             window.fetchCollection = new $.Deferred();
             //window.fetchPoint = window.currentPoints.clearing().fetch();
             window.fetchPoint = window.currentPoints.setURL().fetch();
-            window.fetchCollection = window.fetchPoint
+            //window.fetchCollection = window.fetchPoint
             window.fetchCollection = window.currentCollectionPoints.setURL().fetch();
         });
 
