@@ -92,6 +92,7 @@ $(function(){
             } else {
                 this.tagStr = '';
             }
+            //currentPoints.cleared = false;
             //console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
             this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
             this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );

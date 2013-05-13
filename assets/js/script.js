@@ -15,7 +15,10 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
         return cookieValue;
     }
     $(document).ready(function(){
-    	$(window).scrollTop(370);
+    	if (window.scroll){
+    		$(window).scrollTop(370);
+    		window.scroll = false;
+    	}
     	console.log('ПОНЕСЛАСЬ!!!!!')
     });
     function sameOrigin(url) {
@@ -216,7 +219,7 @@ jQuery(function($){
 		},
 		
 		onKeyDown: function(e, self){
-            console.log('Нажали!')
+            console.log('Нажали!', e)
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
@@ -232,10 +235,13 @@ jQuery(function($){
                     if(multisearch_data.places.length>0 && !flag){
                         console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
                         $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
-                    }
-                    self.reinit_click();
-					console.log('нажат enter');
-
+                    } 
+                    window.currentPoints.clearing();
+                    if (window.currentPoints.cleared){
+						window.currentPoints.setURL().fetch();
+            			window.currentCollectionPoints.setURL().fetch();
+            			window.done = 2;
+            		};
 					break;
 				case 27:
 					setTimeout(function(){
@@ -311,7 +317,7 @@ jQuery(function($){
 			// points labels
 			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-
+				console.log('name');
                 multisearch_result.points.length = 0;
                 $(".label-fields").children(".label-name").remove();
 				id = multisearch_data.points[me.data("id")].id;

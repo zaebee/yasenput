@@ -22,7 +22,8 @@ $(function(){
                    return collection.get('YPscore') * (-1);
                 }
             });
-
+            window.done = 1;
+            window.scroll = true;
             window.pointsPop.map = window.myMap;
             window.pointsPop.elSelector = '#content section#tab-popular';
             window.collectionsPop.elSelector = '#content section#tab-popular';
@@ -39,7 +40,7 @@ $(function(){
             window.collectionsNew.content = 'new';
             window.pointsArr['new'] = window.pointsNew;
             window.collectionsArr['new'] = window.collectionsNew;
-
+            window.pointsArr.cleared = true;
             myMap.ready.then(function(){
                 $('header').find(".tabs").simpleTabs({
                     afterChange: function(self, id){
