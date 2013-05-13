@@ -15,7 +15,10 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
         return cookieValue;
     }
     $(document).ready(function(){
-    	$(window).scrollTop(370);
+    	if (window.scroll){
+    		$(window).scrollTop(370);
+    		window.scroll = false;
+    	}
     	console.log('ПОНЕСЛАСЬ!!!!!')
     });
     function sameOrigin(url) {

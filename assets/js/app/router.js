@@ -23,6 +23,7 @@ $(function(){
                 }
             });
             window.done = 1;
+            window.scroll = true;
             window.pointsPop.map = window.myMap;
             window.pointsPop.elSelector = '#content section#tab-popular';
             window.collectionsPop.elSelector = '#content section#tab-popular';
