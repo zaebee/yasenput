@@ -118,7 +118,7 @@ function update_multisearch() {
 
                     // ReInit OnClick
 
-                    //multySearch.reinit_click();
+                    multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
