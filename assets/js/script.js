@@ -216,7 +216,7 @@ jQuery(function($){
 		},
 		
 		onKeyDown: function(e, self){
-            console.log('Нажали!')
+            console.log('Нажали!', e)
 			switch(e.which){
 				case 13: //если нажали Enter при открытом списке, то отправить запрос и закрыть список
 					e.preventDefault();
@@ -233,7 +233,12 @@ jQuery(function($){
                         console.log('Попался --->', $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }));
                         $('#multisearch-places a').filter(function() { return $.data(this, "id") == 0; }).click();
                     } 
-					console.log('нажат enter', ymaps.geolocation.latitude);
+                    window.currentPoints.clearing();
+                    if (window.currentPoints.cleared){
+						window.currentPoints.setURL().fetch();
+            			window.currentCollectionPoints.setURL().fetch();
+            			window.done = 2;
+            		};
 					break;
 				case 27:
 					setTimeout(function(){
@@ -309,7 +314,7 @@ jQuery(function($){
 			// points labels
 			else if (me.closest(".item-name").length){
 				clsName = ' label-name';
-
+				console.log('name');
                 multisearch_result.points.length = 0;
                 $(".label-fields").children(".label-name").remove();
 				id = multisearch_data.points[me.data("id")].id;

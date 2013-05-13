@@ -344,10 +344,16 @@ $(function(){
             return response.points;
         },
         clearing:function(){
-            this.el = $(this.elSelector);
+            this.el = $(window.currentPoints.elSelector);
+            console.log('CLEARED', this.el);
             $(this.el).empty();
+            //$(this.el).remove();
+            console.log('CLEARED', this.el);
+            currentPoints.cleared = true;
+            return this;
         },
         setURL: function(){
+            //if (this.cleared){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
@@ -366,6 +372,7 @@ $(function(){
             } else {
                 this.tagStr = '';
             }
+            this.cleared = false;
             console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
             // TODO: поиск по тегам!
         	bounds = this.map.getBounds();
@@ -380,6 +387,7 @@ $(function(){
                         //'&address='+this.address+
                         this.tagStr;
         	return this;
+        //};
         },
         render: function(){
             console.log('point ============================= render');
@@ -401,6 +409,7 @@ $(function(){
             $(this.el).masonry( 'reload' );
 
             this.redrawOnMap(window.clusterer);
+
             return this;
         },
         redrawOnMap: function(clusterer){
