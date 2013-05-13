@@ -170,7 +170,7 @@ $(function(){
     window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
     $(window).scroll(function () {
 
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 600) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             // если уже не грузим, то в путь
             console.log('loading');
             if( !window.loadingNow ) {
@@ -868,11 +868,11 @@ $(function(request){
                 } else if($(e.target).closest("#complaint-photo").length){
                     $("#complaint-photo").hide();
                 } else {
-                    window.YPApp.popups.remove({
+                    window.YPApp.popups.close({
                         elem: $("#popups"),
                         speed: 0,
                         callbackBefore: function(){
-                            window.YPApp.popups.remove({
+                            window.YPApp.popups.close({
                                 elem: $("#overlay")
                             });
                         },
@@ -997,6 +997,29 @@ $(function(request){
                 var self = e.currentTarget;
                 e.preventDefault();//показать попап для жалобы на местo
 
+                var params = {
+                    left: e.pageX - 166,
+                    top : $("#popups .viewport").scrollTop() + e.pageY - $(window).scrollTop() - 100
+                };
+
+                $("#complaint-place").css(params).show();
+
+                if(!mapComplaintPlace){
+
+                    mapComplaintPlace = new ymaps.Map('map-place-complaint', {
+                        center: [38.043392000000004, 48.30851300000994],
+                        zoom: 11
+                    });
+
+                    if(!myComplaintPlaceCollection){
+                        myComplaintPlaceCollection = new ymaps.GeoObjectCollection();
+                    }
+                }
+            },
+            "click .a-btn-complaint":function (e) {
+                var self = e.currentTarget;
+                e.preventDefault();//показать попап для жалобы на местo
+                console.log('mapComplaintPlace',mapComplaintPlace);
                 var params = {
                     left: e.pageX - 166,
                     top : $("#popups .viewport").scrollTop() + e.pageY - $(window).scrollTop() - 100

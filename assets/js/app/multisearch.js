@@ -52,15 +52,20 @@ function update_multisearch() {
         window.multisearch_data.places = [];
         window.multisearch_data.places.length = 0;
         
-        if (window.multisearch_result.places.length > 0)
-        {
-            search_string = window.multisearch_result.places.join(",") + "," + $("#multisearch-text").val();
-        }
-        else
-        {
+//        if (window.multisearch_result.places.length > 0)
+//        {
+//            search_string = window.multisearch_result.places.join(",") + "," + $("#multisearch-text").val();
+//        }
+//        else
+//        {
             search_string = $("#multisearch-text").val();
-        }
-        ymaps.geocode(search_string)
+//        }
+        ymaps.geocode(search_string
+            ,{
+                boundedBy: window.myMap.getBounds()
+                ,strictBounds: false
+            }
+        )
             .then(
                 function (res) {
                     res.geoObjects.each(function (geoObject) {
@@ -82,7 +87,7 @@ function update_multisearch() {
 
                     // ReInit OnClick
 
-                    //multySearch.reinit_click();
+                    multySearch.reinit_click();
                 },
                 function (err) {
                 // alert ("error");
@@ -118,7 +123,7 @@ function update_multisearch() {
 
                     // ReInit OnClick
 
-                    multySearch.reinit_click();
+                    //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
@@ -149,7 +154,7 @@ function update_multisearch() {
                 _.each($("#multisearch-users ._item_ a"), function(item) { $.data(item, "id", i); i++  });
 
                     // ReInit OnClick
-                    multySearch.reinit_click();
+                    //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {
@@ -180,7 +185,7 @@ function update_multisearch() {
                 _.each($("#multisearch-tags ._item_ a"), function(item) { $.data(item, "id", i); i++ });
 
                 // ReInit OnClick
-                multySearch.reinit_click();
+                //multySearch.reinit_click();
 
                 },
             error: function (request, status, error) {

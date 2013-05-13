@@ -673,8 +673,8 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #edit-place .p-photos{padding-bottom:10px}
 
 .yasen-info{position:absolute; left:0; bottom:0; width:100%; font-size:8px !important; color:#fff; font-family: Verdana, sans-serif}
-.yp-title{cursor:pointer; background:url(../images/sprite.png) -297px -687px no-repeat; padding:0 0 0 23px; width:41px; height:22px; line-height:22px; color:#fff; float:left}
-.yp-info{height:18px; width:100%; color:#fff; padding:4px 0 0; display:none}
+.yp-title{cursor:pointer; background:url(../images/sprite.png) -297px -687px no-repeat;display:none; padding:0 0 0 23px; width:41px; height:22px; line-height:22px; color:#fff; float:left}
+.yp-info{height:18px; width:100%; color:#fff; padding:4px 0 0; display:block}
 .no-rgba.yp-info{background:url(../images/overlay-black.png)}
 .rgba .yp-info{cursor:pointer; background:rgba(0, 0, 0, .4)}
 	.yp-info i{display:inline-block; .display:inline; .zoom:1; vertical-align:middle; height:16px; background-image:url(../images/sprite.png); margin:0 2px 0 0}
@@ -798,6 +798,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .require-labels{margin:-3px 0 0 -3px}
 .other-labels{margin:-3px 0 0 -3px}
 .require-labels .label{margin:3px 0 0 3px}
+.other-labels .label{margin:3px 0 0 3px}
 .label-require{background:#ffadc9 !important}
 
 /*.content .item .body{padding-left:50px !important}*/
