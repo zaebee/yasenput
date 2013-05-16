@@ -640,12 +640,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .items .a-like:active, .items .a-like.marked{background-position:-141px -757px;}
 .items .a-like.marked:hover{background-position:-141px -793px;}
 .content .item-collection .a-like{right:3px;}
-.content .item-collection{
-	background: #f4cdcd;
-}
-.content .item-collection p{
-	color : #555;
-}
+
 .items .a-collection, .items .a-edit-new, .items .a-like{visibility:hidden}
 .items .photo:hover .a-collection, .items .photo:hover .a-edit-new, .items .photo:hover .a-like, .items .photo:hover .a-share-new{visibility:visible}
 

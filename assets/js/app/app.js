@@ -248,14 +248,14 @@ $(function(request){
   //   var Point = Backbone.Model.extend({
   //       defaults: function() {
   //           return {
-		// author:'...',
-		// visits:0,
+                // author:'...',
+                // visits:0,
   //               likes:0,
   //               description:'...',
   //               imgs:'',
   //               name:'...',
   //               address:'...',
-		// tags:0,
+                // tags:0,
   //               feedbacks:0
   //           };
   //       },
