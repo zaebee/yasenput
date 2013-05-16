@@ -166,11 +166,11 @@ $(function(){
 });
 
 // бесконечный скролл
-$(function(){
+$(document).ready(function(){
     window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
     $(window).scroll(function () {
 
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
+        if($(window).height() > $(document).height() - 2000) {
             // если уже не грузим, то в путь
             console.log('loading');
             if( !window.loadingNow ) {

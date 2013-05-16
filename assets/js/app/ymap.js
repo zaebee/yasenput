@@ -34,13 +34,15 @@ $(function(){
             window.currentCollectionPoints.page = 1;
             console.log('INSIDE!!!!!!!!')
             if (window.done != 2){
-            window.currentPoints.clearing();
-            window.fetchPoint = new $.Deferred();
-            window.fetchCollection = new $.Deferred();
-            window.fetchPoint = window.currentPoints.clearing().fetch();
-            window.fetchPoint = window.currentPoints.setURL().fetch();
-            window.fetchCollection = window.currentCollectionPoints.setURL().fetch();}
-            window.done = 1;
+                window.currentPoints.clearing();
+                window.fetchPoint = new $.Deferred();
+                window.fetchCollection = new $.Deferred();
+                window.fetchPoint = window.currentPoints.clearing().fetch();
+                window.fetchPoint = window.currentPoints.setURL().fetch();
+                window.fetchCollection = window.currentCollectionPoints.setURL().fetch();} 
+            else{
+                window.done = 1;
+            }
         });
 
         coords = myMap.getCenter();
