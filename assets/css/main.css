@@ -17,7 +17,7 @@ table {border-collapse: collapse;border-spacing: 0}
 
 /*   end global reset  */
 html{height:100%}
-body{height:200%;font-family:"Trebuchet MS", "Helvetica CY", sans-serif;text-align:center;font-size:11px;color:#555;line-height:1.3; background:url(../images/bg.jpg) repeat}
+body{height:160%;font-family:"Trebuchet MS", "Helvetica CY", sans-serif;text-align:center;font-size:11px;color:#555;line-height:1.3; background:url(../images/bg.jpg) repeat}
 
 ul{list-style:none}
 
@@ -640,6 +640,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .items .a-like:active, .items .a-like.marked{background-position:-141px -757px;}
 .items .a-like.marked:hover{background-position:-141px -793px;}
 .content .item-collection .a-like{right:3px;}
+
 .items .a-collection, .items .a-edit-new, .items .a-like{visibility:hidden}
 .items .photo:hover .a-collection, .items .photo:hover .a-edit-new, .items .photo:hover .a-like, .items .photo:hover .a-share-new{visibility:visible}
 

@@ -353,7 +353,6 @@ $(function(){
             return this;
         },
         setURL: function(){
-            //if (this.cleared){
             this.tags = window.multisearch_result.tags;
             this.user_id = window.multisearch_result.users;
             this.name = window.multisearch_result.points;
@@ -374,7 +373,6 @@ $(function(){
             }
             this.cleared = false;
             console.log('TAG TAG TAG TAG TAG TAG TAG', tagStr);
-            // TODO: поиск по тегам!
         	bounds = this.map.getBounds();
         	this.coord_left = JSON.stringify( {"ln": bounds[0][1], "lt": bounds[0][0]} );
         	this.coord_right = JSON.stringify( {"ln": bounds[1][1], "lt": bounds[1][0]} );
@@ -387,7 +385,6 @@ $(function(){
                         //'&address='+this.address+
                         this.tagStr;
         	return this;
-        //};
         },
         render: function(){
             console.log('point ============================= render');
@@ -435,6 +432,7 @@ $(function(){
         loadNextPage: function(){
             collection = this;
             this.page++;
+            console.log('NEXT PAGE!', this.page);
             jqXHR = this.setURL().fetch({add: true});
             jqXHR.done(function(data, textStatus, jqXHR){
                 if( data.points.length > 0 ) {
