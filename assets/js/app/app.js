@@ -166,11 +166,11 @@ $(function(){
 });
 
 // бесконечный скролл
-$(document).ready(function(){
+$(function(){
     window.loadingNow = false; // флаг на то, идёт ли загрузка сейчас
     $(window).scroll(function () {
 
-        if($(window).height() > $(document).height() - 2000) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             // если уже не грузим, то в путь
             console.log('loading');
             if( !window.loadingNow ) {
@@ -248,14 +248,14 @@ $(function(request){
   //   var Point = Backbone.Model.extend({
   //       defaults: function() {
   //           return {
-		// author:'...',
-		// visits:0,
+                // author:'...',
+                // visits:0,
   //               likes:0,
   //               description:'...',
   //               imgs:'',
   //               name:'...',
   //               address:'...',
-		// tags:0,
+                // tags:0,
   //               feedbacks:0
   //           };
   //       },
