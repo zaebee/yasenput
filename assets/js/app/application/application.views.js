@@ -1,4 +1,4 @@
-YPApp.module("Views", function(Views, YPApp, Backbone, Marionette, $, _){
+YPApp.module("App.Views", function(Views, YPApp, Backbone, Marionette, $, _){
 	Views.Layout = Marionette.Layout.extend({
 		template: '#templ-layout',
 		regions: {
