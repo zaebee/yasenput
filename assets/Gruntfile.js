@@ -44,11 +44,7 @@ module.exports = function(grunt) {
           'debug/js/application.js': [
             'debug/js/config.js', 
             'debug/js/helpers.js', 
-            'debug/js/models/**/*.js', 
-            'debug/js/collections/**/*.js',
-            'debug/js/views/**/*.js', 
-            'debug/js/controllers/**/*.js', 
-            'debug/js/routers/**/*.js', 
+            'debug/js/**/*.js',
             'debug/js/main.js'
           ]
         }
@@ -92,14 +88,14 @@ module.exports = function(grunt) {
     copy: {
       debug: {
         files: [
-          {expand: true, cwd: 'src/img/', src: ['**'], dest: 'debug/img'},
+          {expand: true, cwd: 'src/images/', src: ['**'], dest: 'debug/images'},
           {expand: true, cwd: 'src/lib/', src: ['**'], dest: 'debug/lib'},
           //{expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'debug/tpl'}
         ]
       },
       release: {
         files: [
-          {expand: true, cwd: 'src/img/', src: ['**'], dest: 'release/img'},
+          {expand: true, cwd: 'src/images/', src: ['**'], dest: 'release/images'},
           {expand: true, cwd: 'src/lib/', src: ['**'], dest: 'release/lib'},
           {expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'release/tpl'}
         ]
@@ -125,8 +121,8 @@ module.exports = function(grunt) {
         compilerOpts: {
            compilation_level: 'SIMPLE_OPTIMIZATIONS',
            externs: ['closure/jquery-1.8.ext.js'],
-           define: ['goog.DEBUG=false'],
-           //output_wrapper: "(function(){%output%}).call(this);"
+           //define: ['goog.DEBUG=false'],
+           //output_wrapper: '(function(){%output%}).call(this);'
         }
       },
       compile: {
