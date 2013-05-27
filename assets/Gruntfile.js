@@ -37,13 +37,13 @@ module.exports = function(grunt) {
       debug: {
         files: {
           'debug/css/styles.css': [
-            'src/css/main.css', 
-            'src/css/jquery-ui-1.10.0.custom.css.css', 
+            'src/css/main.css',
+            'src/css/jquery-ui-1.10.0.custom.css.css',
             'src/css/**/*.css'
           ],
           'debug/js/application.js': [
-            'debug/js/config.js', 
-            'debug/js/helpers.js', 
+            'debug/js/config.js',
+            'debug/js/helpers.js',
             'debug/js/**/*.js',
             'debug/js/main.js'
           ]
@@ -53,13 +53,9 @@ module.exports = function(grunt) {
         files: {
           'debug/js/application.js': [
             'debug/js/releaseonly.js',
-            'debug/js/config.js', 
-            'debug/js/helpers.js', 
-            'debug/js/models/**/*.js', 
-            'debug/js/collections/**/*.js',
-            'debug/js/views/**/*.js', 
-            'debug/js/controllers/**/*.js', 
-            'debug/js/routers/**/*.js', 
+            'debug/js/config.js',
+            'debug/js/helpers.js',
+            'debug/js/**/*.js',
             'debug/js/main.js'
           ]
         }
@@ -179,7 +175,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-handlebars-compiler');
   grunt.loadNpmTasks("grunt-contrib-handlebars");
-  
+
   grunt.registerTask('debug', ['clean:debug', 'coffeelint', 'coffee', 'concat:debug', 'copy:debug', 'handlebars']);
   grunt.registerTask('default', ['debug']);
   grunt.registerTask('release', ['clean:release', 'coffeelint', 'coffee', 'concat:release', 'closureCompiler:compile', 'cssmin', 'yuidoc', 'copy:release']);

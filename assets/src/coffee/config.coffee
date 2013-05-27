@@ -13,4 +13,3 @@ console.error = ->{}
 ###
 
 window.Yapp = new Marionette.Application()
-  return
