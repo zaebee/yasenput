@@ -1,0 +1,34 @@
+{
+  "name": "yasenput",
+  "version": "0.1.0",
+  "description": "yapp core",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "zaebuntu@gmail.com",
+  "license": "BSD",
+  "devDependencies": {
+    "grunt-contrib": "~0.5.0",
+    "dslivescript": "~1.1.1-DS",
+    "prelude-ls": "~0.6.0",
+    "grunt-closure-tools": "~0.7.7",
+    "yuidocjs": "~0.3.44",
+    "grunt-contrib-jst": "~0.5.0",
+    "grunt-contrib-coffee": "~0.6.7",
+    "grunt-coffeelint": "0.0.6",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.4.2",
+    "grunt-generator": "~0.2.6",
+    "grunt-contrib-copy": "~0.4.1",
+    "nproxy": "~1.3.1",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-yuidoc": "~0.4.0",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-handlebars": "~0.5.8",
+    "grunt-handlebars": "0.0.6",
+    "grunt-handlebars-compiler": "0.0.5",
+    "grunt": "~0.4.1"
+  }
+}
