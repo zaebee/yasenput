@@ -76,10 +76,10 @@ SITE_ROOT = os.path.join(path.realpath(path.pardir), SITE_NAME)
 MEDIA_URL = '/assets/media/'
 MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 
-STATIC_URL = '/assets/'
+STATIC_URL = '/assets/release/'
 STATIC_ROOT = '/assets/'
 STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(SITE_ROOT, 'assets')),
+    os.path.normpath(os.path.join(SITE_ROOT, 'assets/release')),
     #    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets'
