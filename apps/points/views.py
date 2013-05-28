@@ -197,6 +197,8 @@ class FollowPoint(LoggedPointsBaseView):
         else:
             return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
+        
+
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)
 
@@ -364,6 +366,9 @@ class PointsList(PointsBaseView):
     #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
 
+
+    
+
     def get(self, request, *args, **kwargs):
         
         params = request.GET
@@ -449,6 +454,12 @@ class PointsList(PointsBaseView):
                         
 
             name = form.cleaned_data.get("name")
+            result = MainModels.Points.search.query('name')
+            file1 = open('file1.txt', 'w')
+            file1.write(name)
+            
+            file1.write(str(result))
+            file1.close()
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
                 collectreq = []

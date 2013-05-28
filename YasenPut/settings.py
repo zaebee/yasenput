@@ -16,6 +16,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'info@yasenput.ru'
 EMAIL_HOST_PASSWORD = 'ya$enputinfo'
 
+SPHINX_API_VERSION = 0x116
 
 ADMINS = (
 # ('Artem Ushakov', 'artushakov@gmail.com'),
@@ -160,6 +161,7 @@ INSTALLED_APPS = (
     'apps.collections',
     'apps.reviews',
     'apps.descriptions',
+    'djangosphinx',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

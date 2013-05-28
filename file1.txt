@@ -1,1 +1,1 @@
-insideinside name[]
+<SphinxQuerySet instance>

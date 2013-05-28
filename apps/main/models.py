@@ -10,6 +10,7 @@ import os.path
 from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
+from djangosphinx.models import SphinxSearch
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
@@ -159,6 +160,8 @@ class Points(models.Model):
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
+
+    search = SphinxSearch()
 
     def _likes(self):
         return self.likeusers.count()
