@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import os.path
 from os import path
 
-try:
-    from .settings_local import *
-except:
-    pass
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -73,16 +68,11 @@ DECIMAL_SEPARATOR = '.'
 SITE_NAME = path.basename(path.realpath(path.curdir))
 SITE_ROOT = os.path.join(path.realpath(path.pardir), SITE_NAME)
 
-MEDIA_URL = '/assets/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 
-STATIC_URL = '/assets/release/'
-STATIC_ROOT = '/assets/'
-STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(SITE_ROOT, 'assets/release')),
-    #    'd:/dev/djcode/YasenPut/assets/',
-)
-STATICFILES_URL = '/assets'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/release'))
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -141,7 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     #'django.contrib.comments',
     'social_auth',
     'sorl.thumbnail',
