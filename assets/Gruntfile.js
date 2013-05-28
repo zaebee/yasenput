@@ -43,8 +43,14 @@ module.exports = function(grunt) {
           ],
           'debug/js/application.js': [
             'debug/js/config.js',
+            'debug/js/templates.js',
             'debug/js/helpers.js',
-            'debug/js/**/*.js',
+            'debug/js/**/module.js',
+            'debug/js/**/models.js',
+            'debug/js/**/collections.js',
+            'debug/js/**/views.js',
+            'debug/js/**/routers.js',
+            'debug/js/**/controllers.js',
             'debug/js/main.js'
           ]
         }
@@ -52,10 +58,15 @@ module.exports = function(grunt) {
       release: {
         files: {
           'debug/js/application.js': [
-            'debug/js/releaseonly.js',
             'debug/js/config.js',
+            'debug/js/templates.js',
             'debug/js/helpers.js',
-            'debug/js/**/*.js',
+            'debug/js/**/module.js',
+            'debug/js/**/models.js',
+            'debug/js/**/collections.js',
+            'debug/js/**/views.js',
+            'debug/js/**/routers.js',
+            'debug/js/**/controllers.js',
             'debug/js/main.js'
           ]
         }
@@ -176,9 +187,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-handlebars-compiler');
   grunt.loadNpmTasks("grunt-contrib-handlebars");
 
-  grunt.registerTask('debug', ['clean:debug', 'coffeelint', 'coffee', 'concat:debug', 'copy:debug', 'handlebars']);
+  grunt.registerTask('debug', ['clean:debug', 'coffeelint', 'coffee', 'handlebars', 'concat:debug', 'copy:debug']);
   grunt.registerTask('default', ['debug']);
-  grunt.registerTask('release', ['clean:release', 'coffeelint', 'coffee', 'concat:release', 'closureCompiler:compile', 'cssmin', 'yuidoc', 'copy:release']);
+  grunt.registerTask('release', ['clean:release', 'coffeelint', 'coffee', 'handlebars', 'concat:release', 'closureCompiler:compile', 'cssmin', 'yuidoc', 'copy:release']);
   grunt.registerTask('watching', ['watch']);
 
 };
