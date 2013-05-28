@@ -13,3 +13,5 @@ console.error = ->{}
 ###
 
 window.Yapp = new Marionette.Application()
+
+window.Yapp.API_BASE_URL = ''
