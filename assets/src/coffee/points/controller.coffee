@@ -22,15 +22,29 @@ class Yapp.Points.Controller extends Marionette.Controller
     console.log 'initializing Yapp.Points.Controller'
 
   ###*
-  # The stub for the webmaster links panel showing function
-  # @method showLinks
+  # The stub for all point's pins showing function
+  # @method showContent
   ###
-  showMap: ->
-    Yapp.map.show new Yapp.Points.MainLayout()
+  showContent: ->
+    console.log 'Show content View in Points module'
+    pointCollection = new Yapp.Points.PointCollection()
+    pointCollection.fetch(
+      data:
+        user_id: ''
+    )
+    Yapp.content.show new Yapp.Points.MainLayout()
 
   ###*
-  # The stub for the webmaster adding soft panel showing function
-  # @method addPlace
+  # The stub for popular pins showing function
+  # @method showPopular
+  ###
+  showPopular: ->
+    @showContent()
+
+
+  ###*
+  # The stub for  adding points function
+  # @method addPoint
   ###
   addPoint: ->
     Yapp.popup.show new Yapp.Common.StubView(

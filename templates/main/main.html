@@ -17,9 +17,11 @@
     {% block content %}{% endblock %}
     {% include 'main/content.html' %}
 
-    {% block footer %}
-        {% include 'main/footer.html' %}
-    {% endblock %}
+    <footer id="footer">
+      {% block footer %}
+          {% include 'main/footer.html' %}
+      {% endblock %}
+    </footer>
 {% endblock %}
 
 {% block popups %}

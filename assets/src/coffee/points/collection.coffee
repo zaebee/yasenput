@@ -26,6 +26,6 @@ class Yapp.Points.PointCollection extends Backbone.Collection
   # @method parse
   ###
   parse: (response) ->
-    return response
+    return response.points
 
   url: Yapp.API_BASE_URL + '/points/list/'
