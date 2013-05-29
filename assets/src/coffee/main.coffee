@@ -13,7 +13,7 @@ Yapp.addInitializer ->
   # application regions
   @addRegions(
     header:'#header'
-    map:'.main-map'
+    map:'#yandex-map'
     #menu:'#menu'
     content:'#content'
     footer:'#footer'

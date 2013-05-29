@@ -46,11 +46,11 @@ module.exports = function(grunt) {
             'debug/js/templates.js',
             'debug/js/helpers.js',
             'debug/js/**/module.js',
-            'debug/js/**/models.js',
-            'debug/js/**/collections.js',
+            'debug/js/**/model.js',
+            'debug/js/**/collection.js',
             'debug/js/**/views.js',
-            'debug/js/**/routers.js',
-            'debug/js/**/controllers.js',
+            'debug/js/**/router.js',
+            'debug/js/**/controller.js',
             'debug/js/main.js'
           ]
         }
@@ -62,11 +62,11 @@ module.exports = function(grunt) {
             'debug/js/templates.js',
             'debug/js/helpers.js',
             'debug/js/**/module.js',
-            'debug/js/**/models.js',
-            'debug/js/**/collections.js',
+            'debug/js/**/model.js',
+            'debug/js/**/collection.js',
             'debug/js/**/views.js',
-            'debug/js/**/routers.js',
-            'debug/js/**/controllers.js',
+            'debug/js/**/router.js',
+            'debug/js/**/controller.js',
             'debug/js/main.js'
           ]
         }
