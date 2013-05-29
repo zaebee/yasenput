@@ -43,21 +43,38 @@
 
     {% block preload_js %}{% endblock %}
 
-      {# application.main #}
-      <script src="{{ STATIC_URL }}js/application.js"></script>
+    {# application.main #}
+    <script src="{{ STATIC_URL }}js/application.js"></script>
 
-      <script type="text/javascript">
-        $(document).ready(function(){
-            $(window).scrollTop(400);
-        });
-      </script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $(window).scrollTop(400);
+      });
+    </script>
+
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+    <!--
+    <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=fid_135963124358172716259"></script>
+    -->
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var myMap;
+        function init(){
+            myMap = new ymaps.Map ("mainmap", {
+                center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
+                zoom: 12
+            });
+            myMap.controls.add('zoomControl').add('typeSelector');
+            var pointCollection = new ymaps.GeoObjectCollection();
+            myMap.geoObjects.add(pointCollection);
+        }
+    </script>
 
     {% block postload_js %}{% endblock %}
 
     {# external #}
     <!--
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
-    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 
     <script type="text/javascript">
       //VK init
