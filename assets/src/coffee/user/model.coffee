@@ -32,3 +32,6 @@ class Yapp.User.Profile extends Backbone.Model
     authorized: false
     email: false
     avatar: ''
+    last_state: 'map'
+    count_liked_objects: 0
+    count_commented_objects: 0

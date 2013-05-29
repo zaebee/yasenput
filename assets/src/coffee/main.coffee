@@ -42,43 +42,41 @@ Yapp.addInitializer ->
             options.successCallback.apply options.context, params
   )
 
-# fetching user info from API when application started
+# set user info from API when application started
 Yapp.on 'start', ->
   console.log 'starting application'
-  #@fetchUser()
+  @user = new Yapp.User.Profile()
+  @runApplication()
 
 # Init some modules
 Yapp.runApplication = ->
   if @user.get('authorized')
     @initYappUI()
   else
-    ## TODO: remove big-loader and show page conent
-    @Landing.start()
-    # on success auth we must refetch user data
-    @vent.on 'Landing:authorized', ->
-      Yapp.Landing.stop()
-      Yapp.fetchUser()
+    ## TODO: set another page for anonym
+    ## if need defference
+    @initYappUI()
 
 # init all modules for fully working application
 Yapp.initYappUI = ->
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
-  if $('#loginForm').length or $('#registrationForm').length
-    if(@user.get('last_place') is 'vendor')
-      @Webmaster.start()
-      @Vendor.start()
-    else
-      @Vendor.start()
-      @Webmaster.start()
-    ## TODO: move this event handler to the user model, when we have new api, it well be more efficent
-    @user.on 'change:last_place', ->
-      Yapp.request(
-        'request'
-          type: 'POST'
-          url: '/user/set_last_place'
-          data:
-            last_place: Yapp.user.get 'last_place'
-      )
+  if(@user.get('last_state') is 'map')
+    @Map.start()
+    @Points.start()
+  else
+    @Points.start()
+    @Map.start()
+
+  ## TODO: move this event handler to the user model, when in the future, it well be more efficent
+  @user.on 'change:last_place', ->
+    Yapp.request(
+      'request'
+        type: 'POST'
+        url: '/user/set_last_place'
+        data:
+          last_place: Yapp.user.get 'last_place'
+    )
   # on logout we must go to start application point
   @vent.on 'logout', ->
     window.location.replace '/'
