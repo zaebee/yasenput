@@ -20,12 +20,13 @@ class Yapp.Map.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Map.Controller'
+    Yapp.map.show new Yapp.Map.MapView()
 
   ###*
-  # The stub for the points showing function
+  # The stub for the map showing function
   # @method showMap
   ###
   showMap: ->
     console.log 'show Map View'
-    Yapp.content.show new Yapp.Map.MapView()
+    Yapp.map.show new Yapp.Map.MapView()
 
