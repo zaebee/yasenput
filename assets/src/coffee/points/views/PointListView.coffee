@@ -34,6 +34,13 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
+
+  ###*
+  # Method overrides default appendHtml
+  # @method appendHtml
+  ###
+  appendHtml: (collectionView, itemView, index) ->
+    collectionView.$el.append(itemView.el)
   
   ###*
   # The view event triggers
@@ -63,7 +70,4 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
     filter = $(event.target).data('type') or ''
     @collection.setFilter ['type'], filter
     @collection.trigger 'filter:collection'
-
-  appendHtml: (collectionView, itemView, index) ->
-    collectionView.$el.append(itemView.el)
 )
