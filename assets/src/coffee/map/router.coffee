@@ -1,30 +1,29 @@
 ###*
 # Submodule for all common functionality
 # @module Yapp
-# @submodule Common
+# @submodule Map
 ###
 
 Yapp = window.Yapp
 
 ###*
-# Router for Common module
-# @class Yapp.Common.Router
+# Router for Map module
+# @class Yapp.Map.Router
 # @extends Marionette.AppRouter
 # @constructor
 ###
-class Yapp.Common.Router extends Marionette.AppRouter
+class Yapp.Map.Router extends Marionette.AppRouter
 
   ###*
   # The router initialize method
   # @method initialize
   ###
   initialize: ->
-    console.log 'initializing Yapp.Common.Router'
+    console.log 'initializing Yapp.Map.Router'
 
   ###*
   # It determine route list of the router
   # @property appRoutes
   ###
-  #appRoutes:
-    ## TODO if you need you can add some common urls
-    #"user": "something"
+  appRoutes:
+    "map":"showMap"
