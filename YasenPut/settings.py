@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'apps.collections',
     'apps.reviews',
     'apps.descriptions',
+    'apps.search',
     'djangosphinx',
     'south',
     # Uncomment the next line to enable the admin:

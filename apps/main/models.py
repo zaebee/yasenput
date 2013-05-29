@@ -161,8 +161,6 @@ class Points(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
 
-    search = SphinxSearch()
-
     def _likes(self):
         return self.likeusers.count()
 

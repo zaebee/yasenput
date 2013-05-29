@@ -6,10 +6,13 @@ from django.db import models
 from sorl.thumbnail import ImageField
 import uuid
 import os.path
+from apps.main.models import Points
 from django.contrib.contenttypes import generic
 from djangosphinx.models import SphinxSearch
 
 class SearchItems(models.Model):
     name = models.CharField('Сущность', max_length=255)
     type_of_item = models.IntegerField('Тип сущности')
+    point = models.ForeignKey(Points, max_length=255)
 
+    #search = SphinxSearch()
