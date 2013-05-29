@@ -18,9 +18,17 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   # It wraps all instances of view into tr tag before render
   # @property tagName
   # @type String
-  # @default 'tr'
+  # @default 'article'
   ###
-  tagName: 'tr'
+  tagName: 'article'
+
+  ###*
+  # It set 'item item-place' class name for all instances of view into tag before render
+  # @property className
+  # @type String
+  # @default 'item item-place'
+  ###
+  className: 'item item-place'
 
   ###*
   # Required field for Marionette.View

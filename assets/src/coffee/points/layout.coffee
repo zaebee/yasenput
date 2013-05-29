@@ -23,13 +23,21 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   template:Templates.PointsMainLayout
 
   ###*
+  # id tag for view binding
+  # @property id
+  # @type String
+  # @default 'point-layout'
+  ###
+  id: 'point-layout'
+
+  ###*
   # List of layout regions
   # @property regions
   ###
   regions:
-    popularContainer: '#tab-popular'
-    nowContainer: '#tab-new'
-    navContainer: '#navContainer'
+    panelContainer: '#point-panel'
+    pointContainer: '#point-content'
+    #nowContainer: '#tab-new'
 
   ###*
   # Init method of the layout
@@ -43,6 +51,11 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   # @method onShow
   ###
   onShow: ->
+    console.log 'showing point panel view'
+    @.panelContainer.show new Yapp.Common.StubView(
+      template: Templates.PointPanelView
+    )
+    
     console.log 'loading points collection'
     _this = @
     pointCollection = new Yapp.Points.PointCollection()
@@ -54,13 +67,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
         if response.error or response.errors
           console.error response
         else
-          _this.popularContainer.show new Yapp.Points.PointListView(
+          _this.pointContainer.show new Yapp.Points.PointListView(
             collection: pointCollection
-            itemView: Yapp.Points.PointItemView
-            emptyView: Yapp.Points.PointEmptyView
           )
-          ## shows nav menu for point pins
-          #_this.navContainer.show new Yapp.Common.StubView(
-          #  collection: pointCollection
-          #)
     )

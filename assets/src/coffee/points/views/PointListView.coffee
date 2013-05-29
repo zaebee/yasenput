@@ -21,7 +21,12 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
   # @default Templates.PointListView
   ###
   template: Templates.PointListView
-  itemViewContainer: '#point-list'
+  tagName: 'section'
+  className: 'items'
+  id: 'tab-popular'
+
+  itemView: Yapp.Points.PointItemView
+  emptyView: Yapp.Points.PointEmptyView
 
   ###*
   # Init method of the view
@@ -43,6 +48,11 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
   ###
   onShow: ->
     console.log @itemView
+    console.log @el
+    @$el.masonry(
+      itemSelector: '.item',
+      columnWidth: 241
+    )
 
   ###*
   # Event method. It triggers when type filter is set
@@ -53,4 +63,7 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
     filter = $(event.target).data('type') or ''
     @collection.setFilter ['type'], filter
     @collection.trigger 'filter:collection'
+
+  appendHtml: (collectionView, itemView, index) ->
+    collectionView.$el.append(itemView.el)
 )
