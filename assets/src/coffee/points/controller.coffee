@@ -27,11 +27,11 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   showContent: ->
     console.log 'Show content View in Points module'
-    pointCollection = new Yapp.Points.PointCollection()
-    pointCollection.fetch(
-      data:
-        user_id: ''
-    )
+    #pointCollection = new Yapp.Points.PointCollection()
+    #pointCollection.fetch(
+    #  data:
+    #    user_id: ''
+    #)
     Yapp.content.show new Yapp.Points.MainLayout()
 
   ###*

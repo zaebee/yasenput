@@ -48,7 +48,9 @@ module.exports = function(grunt) {
             'debug/js/**/module.js',
             'debug/js/**/model.js',
             'debug/js/**/collection.js',
+            'debug/js/**/layout.js',
             'debug/js/**/views.js',
+            'debug/js/**/views/*.js',
             'debug/js/**/router.js',
             'debug/js/**/controller.js',
             'debug/js/main.js'
@@ -64,7 +66,9 @@ module.exports = function(grunt) {
             'debug/js/**/module.js',
             'debug/js/**/model.js',
             'debug/js/**/collection.js',
+            'debug/js/**/layout.js',
             'debug/js/**/views.js',
+            'debug/js/**/views/*.js',
             'debug/js/**/router.js',
             'debug/js/**/controller.js',
             'debug/js/main.js'

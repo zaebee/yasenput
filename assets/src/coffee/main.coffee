@@ -69,13 +69,13 @@ Yapp.initYappUI = ->
     @Map.start()
 
   ## TODO: move this event handler to the user model, when in the future, it well be more efficent
-  @user.on 'change:last_place', ->
+  @user.on 'change:last_state', ->
     Yapp.request(
       'request'
         type: 'POST'
-        url: '/user/set_last_place'
+        url: '/user/set_last_state'
         data:
-          last_place: Yapp.user.get 'last_place'
+          last_state: Yapp.user.get 'last_state'
     )
   # on logout we must go to start application point
   @vent.on 'logout', ->
