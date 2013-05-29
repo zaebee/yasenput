@@ -1,5 +1,5 @@
 ###*
-# Submodule for all points functionality
+# Submodule for all common functionality
 # @module Yapp
 # @submodule Common
 ###

@@ -38,8 +38,8 @@ class Yapp.Points.Controller extends Marionette.Controller
     )
 
   ###*
-  # The stub for the webmaster account panel showing function
-  # @method account
+  # The stub for the point detail showing function
+  # @method showPoint
   ###
   showPoint: ->
     Yapp.popup.show new Yapp.Common.StubView(

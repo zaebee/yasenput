@@ -1,5 +1,5 @@
 ###*
-# Submodule for all users common functionality
+# Submodule for all common functionality
 # @module Yapp
 # @submodule Common
 ###
@@ -7,7 +7,7 @@
 Yapp = window.Yapp
 
 ###*
-# Common Yapp Router for both modules - Vendor and Webmaster
+# Router for Common module
 # @class Yapp.Common.Router
 # @extends Marionette.AppRouter
 # @constructor

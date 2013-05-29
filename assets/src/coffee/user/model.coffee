@@ -7,7 +7,7 @@
 Yapp = window.Yapp
 
 ###*
-# User data
+# User Profile data
 # @class Yapp.User.Profile
 # @extends Backbone.Model
 # @constructor
