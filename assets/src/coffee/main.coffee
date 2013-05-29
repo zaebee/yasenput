@@ -14,9 +14,20 @@ Yapp.addInitializer ->
   @addRegions(
     header:'#header'
     map:'#yandex-map'
-    #menu:'#menu'
     content:'#content'
     footer:'#footer'
+  )
+
+  # creates command for toggle map
+  @commands.setHandler(
+    'toggleMap'
+    (state) ->
+      Yapp.map.$el.toggleClass 'map-opened'
+      $('#wrap').toggleClass 'map-opened'
+
+      if state and state = 'open'
+        Yapp.map.$el.addClass 'map-opened'
+        $('#wrap').addClass 'map-opened'
   )
 
   # create a handler for Yapp.request('request') - it send ajax request to the API

@@ -26,5 +26,4 @@ class Yapp.Map.Router extends Marionette.AppRouter
   # @property appRoutes
   ###
   appRoutes:
-    #"": "showMap"
     "map":"showMap"

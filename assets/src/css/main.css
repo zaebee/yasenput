@@ -39,6 +39,7 @@ a:hover{color:#333}
 .hidden{display:none !important}
 
 #wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-bottom:60px; padding-top:107px;}
+#wrap.map-opened {padding-top:477px;}
 
 #header{position:fixed; z-index:123; top:9px; left:0; width:100%; min-width:980px}
 	#header .wrap{margin:0 40px; background:url(../images/bg.jpg) repeat; border:solid 1px #d8e5cf; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px; min-height:58px; padding:10px}
@@ -119,7 +120,8 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.item-users .item-title, .drop-search .item-users a:hover, .drop-search .item-users .selected a{background:#f5c05c}
 	.drop-search .toggle-panel{position:absolute; left:50%; top:100%; margin:0 0 0 -18px; width:38px; height:22px; background-position:-240px -195px; border:0; cursor:pointer}
 
-.main-map{position:fixed; height:107px; z-index:3; width:100%; top:0; left:0;background: url(../images/bg.jpg);}
+.main-map {position:fixed; height:107px; z-index:3; width:100%; top:0; left:0;background: url(../images/bg.jpg);}
+.main-map.map-opened {height:477px;}
 	.main-map .toggle-bottom{position:absolute; left:0; bottom:-2px; width:100%; background:url(../images/map-shadow.png) 0 0 repeat-x; z-index:2; height:12px}
 	.main-map .a-toggle{display:block; margin:auto; position:relative; top:6px; text-align:center; width:103px; height:14px; background-position:-299px -119px; text-decoration:none; line-height:11px; font-size:9px; color:#567653}
 /*стили для отображения элементов управления в главной карте*/
@@ -127,6 +129,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .main-map .ymaps-group{left:40px !important; top:93px !important}
 .main-map .ymaps-controls-righttop{top:93px !important; right:35px !important; position:absolute !important}
 .main-map .ymaps-controls-lefttop{top:93px !important; left:35px !important; position:absolute !important}
+.map {height:117px; overflow:hidden;}
 
 .m-ico-group{position:absolute; left:40px; bottom:14px; z-index:5}
 	.m-ico-group a{float:left; width:29px; height:28px; background-position:-218px -237px; text-align:center; margin:2px 2px 0 0}

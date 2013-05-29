@@ -54,8 +54,6 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
   # @method onShow
   ###
   onShow: ->
-    console.log @itemView
-    console.log @el
     @$el.masonry(
       itemSelector: '.item',
       columnWidth: 241

@@ -27,6 +27,4 @@ class Yapp.Map.Controller extends Marionette.Controller
   # @method showMap
   ###
   showMap: ->
-    console.log 'show Map View'
-    Yapp.map.show new Yapp.Map.MapView()
-
+    Yapp.execute('toggleMap', 'open')
