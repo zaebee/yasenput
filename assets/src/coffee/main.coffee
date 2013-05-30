@@ -9,7 +9,7 @@ Yapp = window.Yapp
 # Application initializer
 Yapp.addInitializer ->
   console.log 'application initializing'
-  ## TODO: hide page content and show big ajax-loader if $('#loginForm').length or $('#registrationForm').length
+  ## TODO: set page content for showing big ajax-loader
   # application regions
   @addRegions(
     header:'#header'
@@ -28,6 +28,10 @@ Yapp.addInitializer ->
       if state and state = 'open'
         Yapp.map.$el.addClass 'map-opened'
         $('#wrap').addClass 'map-opened'
+
+      text = if Yapp.map.$el.find('.a-toggle').html() is 'Свернуть карту' then 'Развернуть карту' else 'Свернуть карту'
+      console.log text
+      Yapp.map.$el.find('.a-toggle').html text
   )
 
   # create a handler for Yapp.request('request') - it send ajax request to the API
