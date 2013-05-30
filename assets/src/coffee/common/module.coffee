@@ -18,7 +18,7 @@ Yapp.module 'Common',
       # show main navbar with user info
       console.log 'Show Common.StubView in header region'
       Yapp.header.show new Yapp.Common.StubView(
-        #model: Yapp.user
+        model: Yapp.user
         template: Templates.HeaderView
       )
       console.log 'Show Common.StubView in footer region'

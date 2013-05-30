@@ -24,6 +24,7 @@ Yapp.module 'Map',
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
             zoom: 12
           )
+          Yapp.user.set location: ymaps.geolocation
           myMap.controls.add('zoomControl').add('typeSelector')
           pointCollection = new ymaps.GeoObjectCollection()
           myMap.geoObjects.add(pointCollection)

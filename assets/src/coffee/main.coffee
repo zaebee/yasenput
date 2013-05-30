@@ -30,7 +30,6 @@ Yapp.addInitializer ->
         $('#wrap').addClass 'map-opened'
 
       text = if Yapp.map.$el.find('.a-toggle').html() is 'Свернуть карту' then 'Развернуть карту' else 'Свернуть карту'
-      console.log text
       Yapp.map.$el.find('.a-toggle').html text
   )
 
@@ -76,22 +75,13 @@ Yapp.runApplication = ->
 Yapp.initYappUI = ->
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
-  if(@user.get('last_state') is 'map')
+  if(@user.get('last_state') is 'pins')
     @Map.start()
     @Points.start()
   else
     @Points.start()
     @Map.start()
 
-  ## TODO: move this event handler to the user model, when in the future, it well be more efficent
-  @user.on 'change:last_state', ->
-    Yapp.request(
-      'request'
-        type: 'POST'
-        url: '/user/set_last_state'
-        data:
-          last_state: Yapp.user.get 'last_state'
-    )
   # on logout we must go to start application point
   @vent.on 'logout', ->
     window.location.replace '/'
