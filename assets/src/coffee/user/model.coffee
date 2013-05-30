@@ -27,8 +27,8 @@ class Yapp.User.Profile extends Backbone.Model
   # @type Object
   ###
   defaults:
-    first_name: 'zae'
-    last_name: 'bee'
+    first_name: ''
+    last_name: ''
     authorized: false
     email: false
     avatar: ''

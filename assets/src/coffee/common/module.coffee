@@ -23,7 +23,7 @@ Yapp.module 'Common',
       )
       console.log 'Show Common.StubView in footer region'
       Yapp.footer.show new Yapp.Common.StubView(
-        #model: Yapp.user
+        model: Yapp.user
         template: Templates.FooterView
       )
     )
