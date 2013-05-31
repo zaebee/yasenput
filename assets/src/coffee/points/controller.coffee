@@ -25,14 +25,14 @@ class Yapp.Points.Controller extends Marionette.Controller
   # The stub for all point's pins showing function
   # @method showContent
   ###
-  showContent: ->
+  showContent: (collection) ->
     console.log 'Show content View in Points module'
     #pointCollection = new Yapp.Points.PointCollection()
     #pointCollection.fetch(
     #  data:
     #    user_id: ''
     #)
-    Yapp.content.show new Yapp.Points.MainLayout()
+    Yapp.content.show new Yapp.Points.MainLayout({collection:collection})
 
   ###*
   # The stub for popular pins showing function

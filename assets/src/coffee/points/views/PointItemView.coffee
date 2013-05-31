@@ -45,6 +45,9 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Points.PointItemView'
 
+  modelEvents:
+    'change': 'render'
+
   ###*
   # After render method of the view
   # @method onRender
@@ -59,37 +62,3 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   events:
     "click .removePoint":"removePlace"
     "click a.removePointConfirm": "removePlaceConfirm"
-  
-  ###*
-  # Show tooltip for confirmation the removing
-  # @method removePoint
-  ###
-  removePoint: (event) ->
-    target = event.currentTarget
-    event.preventDefault()
-    return
-
-  ###*
-  # Send request for the removing to the API
-  # @method removePointConfirm
-  ###
-  removePointConfirm: (event) ->
-    console.log "removing place with id: #{@model.get('id')}"
-    event.preventDefault() # Don't let this button submit the form
-    Yapp.request(
-      'request'
-        type: 'POST'
-        url: '/webmasters/delete_places'
-        context: @
-        successCallback: @successRemoving
-        data:
-          ids:"[#{@model.get('id')}]"
-    )
-
-  ###*
-  # If response is ok it remove model from collection
-  # @method successRemoving
-  ###
-  successRemoving: (response)->
-    if response.response is 'ok'
-      @model.trigger 'destroy', @model, @model.collection

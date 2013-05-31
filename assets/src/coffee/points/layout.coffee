@@ -52,13 +52,13 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   onShow: ->
     console.log 'showing point panel view'
-    @.panelContainer.show new Yapp.Common.StubView(
+    @panelContainer.show new Yapp.Common.StubView(
       template: Templates.PointPanelView
     )
     
     console.log 'loading points collection'
+    pointCollection = @collection or new Yapp.Points.PointCollection()
     _this = @
-    pointCollection = new Yapp.Points.PointCollection()
     pointCollection.fetch(
       data:
         user_id: ''
