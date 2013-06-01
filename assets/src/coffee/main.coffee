@@ -16,6 +16,7 @@ Yapp.addInitializer ->
     map:'#yandex-map'
     content:'#content'
     footer:'#footer'
+    popup: '#popups .scroll-box'
   )
 
   # creates command for toggle map
@@ -85,6 +86,9 @@ Yapp.initYappUI = ->
   # on logout we must go to start application point
   @vent.on 'logout', ->
     window.location.replace '/'
-  Backbone.history.start()
+  Backbone.history.start(
+    pushState: true
+    root: '/'
+  )
 
 Yapp.start()
