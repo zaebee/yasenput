@@ -1,6 +1,6 @@
 {{#if type}}
   <div class="photo">
-    <a href="#" class="a-like a-like-ok" data-tooltip="мне нравится">&nbsp;</a>
+    <a href="#" class="a-like a-like-ok" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
 
     <a href="/detailset/{{id}}" class="a-photo nonav">
       <img src="{{allpoints.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{allpoints.[0].imgs.[0].thumbnail207_height}}">
@@ -61,9 +61,9 @@
 {{else}}
 
   <div class="photo">
-    <a href="#" class="a-like a-like-ok" data-tooltip="мне нравится">&nbsp;</a>
-    <a href="#" class="a-collection nonav " data-tooltip="добавить в коллекцию">В коллекцию</a>
-    <a href="#" class="a-share-new a-share-new-ok enter" data-tooltip="поделиться"></a>
+    <a href="#" class="a-like a-like-ok" title="мне нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+    <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
+    <a href="#" class="a-share-new a-share-new-ok enter" title="поделиться" data-toggle="tooltip" data-placement="bottom"></a>
     <div class="yasen-info">
       <span class="yp-title"><%- YPscore %> ЯПи</span>
 

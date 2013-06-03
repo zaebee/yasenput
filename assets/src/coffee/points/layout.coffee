@@ -52,7 +52,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   onShow: ->
     _this = @
-    
+
     pointCollection = new Yapp.Points.PointCollection()
 
     console.log 'show pointPanelView'

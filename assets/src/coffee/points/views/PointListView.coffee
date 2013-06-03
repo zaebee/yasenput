@@ -37,21 +37,22 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   # Method overrides default appendHtml
   # @method appendHtml
   ###
-  appendHtml: (collectionView, itemView, index) ->
-    collectionView.$el.append(itemView.el)
+  #appendHtml: (collectionView, itemView, index) ->
+  #  collectionView.$el.append(itemView.el)
   
   ###*
   # The view event triggers
   # @property events
   ###
   events:
-    "click button.typeFilter": "typeFilter"
+    'click button.typeFilter': 'typeFilter'
 
   ###*
   # Event method. It triggers when view fully rendered
   # @method onShow
   ###
   onShow: ->
+    @$el.find('[data-toggle=tooltip]').tooltip()
     @$el.masonry(
       itemSelector: '.item',
       columnWidth: 241
