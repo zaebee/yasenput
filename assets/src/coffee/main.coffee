@@ -16,7 +16,8 @@ Yapp.addInitializer ->
     map:'#yandex-map'
     content:'#content'
     footer:'#footer'
-    popup: '#popups .scroll-box'
+    #popup: '#popups .scroll-box'
+    popup: Yapp.Common.PopupRegion
   )
 
   # creates command for toggle map
@@ -60,35 +61,34 @@ Yapp.addInitializer ->
 # set user info from API when application started
 Yapp.on 'start', ->
   console.log 'starting application'
+
+  $(document).on 'click', 'a.nonav', (event) ->
+    href = $(@).attr 'href'
+    protocol = @protocol + '//'
+    if href and href.slice(0, protocol.length) isnt protocol and href.indexOf('javascript:') isnt 0
+      event.preventDefault()
+      Backbone.history.navigate(href, true)
+
   @user = new Yapp.User.Profile()
   @runApplication()
 
-# Init some modules
-Yapp.runApplication = ->
-  if @user.get('authorized')
-    @initYappUI()
-  else
-    ## TODO: set another page for anonym
-    ## if need defference
-    @initYappUI()
-
 # init all modules for fully working application
-Yapp.initYappUI = ->
+Yapp.runApplication = ->
+
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
   if(@user.get('last_state') is 'pins')
-    @Map.start()
     @Points.start()
+    @Map.start()
   else
-    @Points.start()
     @Map.start()
+    @Points.start()
 
   # on logout we must go to start application point
   @vent.on 'logout', ->
     window.location.replace '/'
   Backbone.history.start(
     pushState: true
-    root: '/'
   )
 
 Yapp.start()

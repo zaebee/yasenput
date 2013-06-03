@@ -54,8 +54,8 @@ class Yapp.Points.Controller extends Marionette.Controller
   # The stub for the point detail showing function
   # @method showPointDetail
   ###
-  showPointDetail: ->
-    Yapp.popup.show new Yapp.Common.StubView(
+  showPointDetail: (id) ->
+    Yapp.popup.show new Yapp.Common.PopupView(
       template: Templates.PointDetailView
     )
 
@@ -64,6 +64,6 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showSetDetail
   ###
   showSetDetail: ->
-    Yapp.popup.show new Yapp.Common.StubView(
+    Yapp.popup.show new Yapp.Common.PopupView(
       template: Templates.SetDetailView
     )

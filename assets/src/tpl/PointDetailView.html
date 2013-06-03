@@ -1,565 +1,387 @@
-<div class="popup" id="p-common">
-    <div class="clearfix p-body">
-        <header>
-            <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
-            <!--<div class="event-date">1―5 января</div>-->
-
-            <h2>{{name}}</h2>
-            <div class="addr">{{address}}</div>
-
-            <div class="stats">
-                <span>
-                    <span class="ico-want-small"></span>
-                    {{beens_count}}
-                </span>
-
-                <span>
-                    <span class="ico-like-small"></span>
-                    {{likes_count}}
-                </span>
-
-                <span>
-                    <span class="ico-comment-small"></span>
-                    {{comments}}
-                </span>
-            </div>
-        </header>
-
-        <div class="wide-box">
-            <div class="p-tabs">
-                <a href="#" data-target="tab-photo" class="active">Фотография</a>
-                <a href="#" data-target="tab-map">На карте</a>
-                <a href="#" data-target="tab-desc">Описание</a>
-
-                <div class="shadow"></div>
-            </div>
-
-            <div class="tabs-content">
-            <div id="tab-photo">
-                <!--<div class="tabs-inside"> tp- tab photo 
-                    <a href="#" data-target="tp-tab-pop" class="active">популярные</a>
-                    <a href="#" data-target="tp-tab-my">новые</a>
-                    <a href="#" data-target="tp-tab-new">мои</a>
-                </div>-->
-
-                <div class="tabs-content">
-                    <div class="toggle-block">
-                        <div class="clearfix p-gallery">
-                            <% _.each(imgs, function(itm, index){ %>
-                                <div class="item-photo <% if(index == 0){ print ('current') }%>">
-                                    <a href="<%= itm.thumbnail560 %>" data-src-big="<%= itm.thumbnail560 %>" data-author="<%- itm.author.first_name %> <%- itm.author.last_name %>" data-count-likes="<%- itm.likeusers %>" data-avatar="{{ MEDIA_URL }}<%- itm.author.avatar %>">
-                                        <img src="<%= itm.thumbnail130x130 %>" alt="" width="130" height="130">
-                                    </a>
-                                    <button class="remove-photo"></button>
-                                    <button class="complaint-photo"></button>
-                                </div>
-                            {% if user.is_authenticated %}
-                                <% if(((imgs.length < 4) && ((imgs.length-1) == index)) || ((imgs.length-1) == index)){ %>
-                                    <div class="item-photo load-photo">
-                                        <input type="file">
-                                    </div>
-                                <% } %>
-                            {% endif %}
-                            <% if(((imgs.length < 5) && ((imgs.length-1) == index)) || (index == 3)){ %>
-                                <div id="big-photo">
-                                <div class="bp-photo">
-                                    <img src="<%= imgs[0].thumbnail560 %>" alt="">
-
-                                    <div class="bp-add-like">
-                                        <img src="{{ MEDIA_URL }}<%- imgs[0].author.avatar %>" alt="" width="22" height="22" class="avatar">
-                                        <span class="bp-name"><%- imgs[0].author.first_name %> <%- imgs[0].author.last_name %></span>
-                                        <a href="#" class="a-like"></a>
-                                        <span class="count-like"><%- imgs[0].likeusers %></span>
-                                    </div>
-                                </div>
-
-                                <div class="bp-comments">
-                                    <div class="toggle-block">
-                                        <div  class="item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="comment-body">
-                                                <div class="comment-author">Андрей Коротков</div>
-
-                                                <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                                <div class="comment-date">20.02.2013</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                            </div>
-                                        </div>
-
-                                        <div  class="item-comment">
-                                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                            <div class="comment-body">
-                                                <div class="comment-author">Андрей Коротков</div>
-
-                                                <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                                <div class="comment-date">20.02.2013</div>
-                                            </div>
-
-                                            <div class="action">
-                                                <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-                                            </div>
-                                        </div>
-
-                                        <div class="hidden-content">
-                                            <div  class="item-comment">
-                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                                <div class="comment-body">
-                                                    <div class="comment-author">Андрей Коротков</div>
-
-                                                    <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                                    <div class="comment-date">20.02.2013</div>
-                                                </div>
-
-                                                <div class="action">
-                                                    <a href="#" class="a-complaint-comment"></a>
-                                                </div>
-                                            </div>
-
-                                            <div  class="item-comment">
-                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                                <div class="comment-body">
-                                                    <div class="comment-author">Андрей Коротков</div>
-
-                                                    <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                                    <div class="comment-date">20.02.2013</div>
-                                                </div>
-
-                                                <div class="action">
-                                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                                </div>
-                                            </div>
-
-                                            <div  class="item-comment">
-                                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                                <div class="comment-body">
-                                                    <div class="comment-author">Андрей Коротков</div>
-
-                                                    <p>Наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими. Сооружён в 1568 — 1570 годах по распоряжению</p>
-
-                                                    <div class="comment-date">20.02.2013</div>
-                                                </div>
-
-                                                <div class="action">
-                                                    <a href="#" class="a-complaint-comment"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="add-comment">
-                                            <form action="#">
-                                                <div class="ac-block">
-                                                    <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                                    <div class="ac-body">
-                                                        <div class="toggle-area">
-                                                            <textarea rows="3" cols="40"></textarea>
-                                                            <input type="submit" value=" ">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <a href="#" class="a-toggle comments">ещё комментарии <span>&darr;</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
-                            <% }) %>
-                        </div>
-
-                        <a href="#" class="a-toggle photos">ещё фотографии <span>&darr;</span></a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-map">
-                <div class="map">
-{#                                <div id="popup-map-1" style="width:560px; height:510px"></div>#}
-                    <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->
-
-                    <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->
-
-                    <div class="m-ico-group">
-                        <a href="#">
-                            <span class="m-ico m-hotel"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-cafe"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-restoran"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-turism"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-azs"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-active-rest"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-sto"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-commerc"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-hunting"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-events"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-shop"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-fishing"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-monument"></span>
-                        </a>
-
-                        <a href="#">
-                            <span class="m-ico m-church"></span>
-                        </a>
-                    </div>
-
-{#                                <div class="placemark" style="top:35%">#}
-{#                                    <span class="m-ico m-hotel"></span>#}
-{#                                </div>#}
-
-{#                                <div class="placemark placemark-wide" style="top:65%">#}
-{#                                    <span class="m-ico m-commerc"></span>#}
-{#                                    <span class="num">32</span>#}
-{#                                </div>#}
-                </div>
-
-                <div id="near-objects">
-                    <h4 class="title-block">Ближайшие гостинницы</h4>
-
-                    <ol>
-                        <li>
-                            <h5>Место номер один</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-
-                        <li>
-                            <h5>Место номер два</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-
-                        <li>
-                            <h5>Место номер три</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-
-                        <li>
-                            <h5>Место номер четыре</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-
-                        <li>
-                            <h5>Место номер пять</h5>
-                            <p>Краткое описание места и того, что здесь находится</p>
-                        </li>
-                    </ol>
-                </div>
-
-                <!--<form action="#">
-                    <div class="clearfix p-photos">
-                        <div class="item-photo">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            <button class="remove-photo"></button>
-                        </div>
-
-                        <div class="item-photo photo-loading">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            <button class="remove-photo"></button>
-
-                            <div class="load-status">
-                                <div class="progress-loading">
-                                    <div class="value" style="width:33%"></div>
-                                </div>
-                                33%
-                            </div>
-                        </div>
-
-                        <div class="item-photo photo-loading">
-                            <img src="temp/img-130x130.jpg" alt="" width="130" height="130">
-                            <button class="remove-photo"></button>
-
-                            <div class="load-status">
-                                <div class="progress-loading">
-                                    <div class="value" style="width:56%"></div>
-                                </div>
-                                56%
-                            </div>
-                        </div>
-
-                        <div class="item-photo load-photo">
-                            <input type="file">
-                        </div>
-                    </div>
-                </form>-->
-            </div>
-
-            <div id="tab-desc">
-                <div class="toggle-block">
-                    <ul class="ul-desc">
-                        <li class="item-comment">
-                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                            <div class="body">
-                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                <div class="desc-date">12.02.2032</div>
-                            </div>
-
-                            <div class="action">
-                                <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-                            </div>
-                        </li>
-
-                        <li class="even item-comment">
-                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                            <div class="body">
-                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                <div class="desc-date">12.02.2032</div>
-                            </div>
-
-                            <div class="action">
-                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                            </div>
-                        </li>
-
-                        <li class="item-comment">
-                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                            <div class="body">
-                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                <div class="desc-date">12.02.2032</div>
-                            </div>
-
-                            <div class="action">
-                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                            </div>
-                        </li>
-
-                        <li class="even item-comment">
-                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                            <div class="body">
-                                <a href="#" class="a-author">Андрей Коротков</a>
-
-                                <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                <div class="desc-date">12.02.2032</div>
-                            </div>
-
-                            <div class="action">
-                                <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="hidden-content">
-                        <ul class="ul-desc">
-                            <li class="item-comment">
-                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                <div class="body">
-                                    <a href="#" class="a-author">Андрей Коротков</a>
-
-                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                    <div class="desc-date">12.02.2032</div>
-                                </div>
-
-                                <div class="action">
-                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                </div>
-                            </li>
-
-                            <li class="even item-comment">
-                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                <div class="body">
-                                    <a href="#" class="a-author">Андрей Коротков</a>
-
-                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                    <div class="desc-date">12.02.2032</div>
-                                </div>
-
-                                <div class="action">
-                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                </div>
-                            </li>
-
-                            <li class="item-comment">
-                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                <div class="body">
-                                    <a href="#" class="a-author">Андрей Коротков</a>
-
-                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                    <div class="desc-date">12.02.2032</div>
-                                </div>
-
-                                <div class="action">
-                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                </div>
-                            </li>
-
-                            <li class="even item-comment">
-                                <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                <div class="body">
-                                    <a href="#" class="a-author">Андрей Коротков</a>
-
-                                    <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                    <div class="desc-date">12.02.2032</div>
-                                </div>
-
-                                <div class="action">
-                                    <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <a href="#" class="a-toggle">Ещё описания <span>&darr;</span></a>
-                </div>
-
-                <div class="add-comment">
-                    <form action="#">
-                        <div class="ac-block">
-                            <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                            <div class="ac-body">
-                                <div class="toggle-area">
-                                    <textarea rows="3" cols="40"></textarea>
-                                    <input type="submit" value=" ">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="tabs-content p-common-content">
-                <section class="p-block peoples">
-                    <h4 class="title-block">Это место хотят посетить</h4>
-
-                    <div class="clearfix toggle-block">
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-
-                        <div class="clearfix hidden-content">
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                            <a href="#"><img src="temp/avatar.jpg" alt=""></a>
-                        </div>
-
-                        <a href="#" class="a-toggle">Ещё пользователи <span>&darr;</span></a>
-                    </div>
-                </section>
-
-                <section class="p-block event-labels">
-                    <h4 class="title-block">Метки</h4>
-
-                    <div class="body">
-                        <% _.each(comments, function(itm, index){ %>
-                            <div class="label"><%= itm.name %></div>
-                        <% }) %>
-                    </div>
-                </section>
-            </div>
-        </div>
-
-        <footer>
-            {% if user.is_authenticated %}
-                <a href="#" class="fr a-btn a-subscribe">Подписаться</a>
-            {% endif %}
-            <div class="stats">
-                                    <span>
-                                        <span class="ico-want-small"></span>
-                                        <%- visits %>
-                                    </span>
-
-                                    <span>
-                                        <span class="ico-like-small"></span>
-                                        <%- likes %>
-                                    </span>
-
-                                    <span>
-                                        <span class="ico-comment-small"></span>
-                                        <%- comments %>
-                                    </span>
-            </div>
-        </footer>
+<div class="clearfix p-body">
+  <header>
+    <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
+    <!--<div class="event-date">1―5 января</div>-->
+
+    <h2><a href="#" class="a-place-name">{{name}}</a>
+      <small>поделился</small> <a href="#">{{author.first_name}} {{author.last_name}}</a>
+    </h2>
+
+    <div class="addr">Россия, Вологодская область, Череповец, Октябрьский мост</div>
+
+    <div class="p-place-desc">
+      {{description}}
+      <span class="hellip">…</span>
+      <span class="hidden more-desc">т в 1979 году и является первым вантовым мостом, построенным на территории России. По конструкции мост схож с мостом Святого Северина через Рейн в немецком Кёльне.</span>
+      <a href="#" class="a-toggle-desc">подробнее</a>
     </div>
 
-    <aside id="right-panel">
-        <a href="#" class="a-btn a-visit <% if(currentvisit == 1){ print ('a-btn-marked') }%>">Хочу посетить</a>
-          <a href="#" class="a-btn a-add-to-collection">В коллекцию</a>
-{#            <a href="#" class="a-btn a-add-path">Создать маршрут</a>#}
-{#            <a href="#" class="a-btn a-edit">Редактировать</a>#}
-        <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>
-        <div class="aside-social">
-{#                <img src="temp/social-2.png" alt="">#}
+    <div class="stats">
+      <span>
+        <span class="ico-like-small"></span>
+        {{likes_count}}
+      </span>
+      <span>
+        <span class="ico-star-small"></span>
+        0
+      </span>
+      <span>
+        <span class="ico-want-small"></span>
+        {{beens_count}}
+      </span>
+      <span>
+        <span class="ico-vote-small"></span>
+        {{review}}/{{review}}
+      </span>
+    </div>
+  </header>
+
+  <div class="wide-box">
+    <div class="p-tabs">
+      <a href="#" data-target="tab-photo" class="active">Фотография</a>
+      <a href="#" data-target="tab-map" class="">На карте</a>
+      <div class="shadow"></div>
+    </div>
+
+    <div class="tabs-content">
+      <div id="tab-photo" style="display: block;">
+
+        <div class="tabs-content">
+          <div class="toggle-block" id="tp-tab-pop">
+            <div class="clearfix p-gallery">
+              <span class="upward-photos">
+
+                <div class="item-photo current just-redraw-big" data-photo-id="420">
+                  <a href="/media/cache/92f7aba07d17dbb9784c55a6acc35dc9.jpg">
+                    <img src="/media/cache/ecce576818b74a76f2c6cecb60d027fd.jpg" alt="" width="130" height="130">
+                  </a>
+                </div>
+
+                <div class="item-photo just-redraw-big" data-photo-id="421">
+                  <a href="/media/cache/89bf28eb6973a421c8e8722f7560e6d5.jpg">
+                    <img src="/media/cache/dcc7d4da78bb936de166ec71bddb692d.jpg" alt="" width="130" height="130">
+                  </a>
+                </div>
+
+                <div class="item-photo just-redraw-big" data-photo-id="422">
+                  <a href="/media/cache/27bce4b0415a127b6f2eb34a00052ad9.jpg">
+                    <img src="/media/cache/990d86b521be00d3bcca5699f05e5abf.jpg" alt="" width="130" height="130">
+                  </a>
+                </div>
+
+                <div class="item-photo just-redraw-big" data-photo-id="423">
+                  <a href="/media/cache/5999f81a86d1060758dd318966f347e8.jpg">
+                    <img src="/media/cache/625580a58f95ed95c03710f9dfc29673.jpg" alt="" width="130" height="130">
+                  </a>
+                </div>
+              </span>
+
+              <div id="big-photo">
+                <div class="bp-photo" data-photo-id="420">
+                  <img src="/media/cache/92f7aba07d17dbb9784c55a6acc35dc9.jpg" alt="">
+
+                  <div class="bp-add-like">
+                    <img src="/media/avatar/22e2295c746b420b8bcb35e7d9fb77e6.jpeg" alt="" width="22" height="22" class="avatar">
+                    <span class="bp-name">Федя Ясенпуть</span>
+                    <a href="#" class="a-like"></a>
+                  </div>
+                </div>
+
+                <div class="bp-comments">
+                  <div class="toggle-block a-toggle-up">
+                    <div class="item-comment" data-comment-id="14">
+                      <img src="/media/avatar/33f4d8d28ed54a0ea8b53ddb5d55e718.jpeg" alt="" width="29" height="30" class="avatar">
+
+                      <div class="comment-body">
+                        <div class="comment-author">Anton Botvin</div>
+                        <p>Я тут был)</p>
+                        <div class="comment-date">2013-04-04T08:15:12Z</div>
+                      </div>
+
+                      <div class="action">
+                        <!--  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a> -->
+                      </div>
+                    </div>
+
+                    <div class="add-comment">
+                      <form action="#">
+                        <div class="ac-block">
+                          <img src="/media/avatar/f3984dc5a78d4473b82b1e1b3a9a56df.jpeg" alt="" width="29" height="30" class="avatar">
+                          <div class="ac-body">
+                            <div class="toggle-area">
+                              <textarea rows="3" cols="40" placeholder="Комментировать"></textarea>
+                              <input type="submit" value="">
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div><!-- end .add-comment -->
+
+                  </div><!-- end .toggle-block a-toggle-up -->
+                </div><!-- end .bp-comments -->
+              </div><!-- end #big-photo -->
+
+              <span class="downward-photos">
+                <div class="item-photo" data-photo-id="424">
+                  <a href="/assets/media/cache/1d/47/1d474535d6afd6e270136e15ac5ca260.jpg">
+                    <img src="/assets/media/cache/1e/58/1e581e37ae3e2ca36fb798da297a645d.jpg" alt="" width="130" height="130">
+                  </a>
+                  <!-- <button type="button" class="complaint-photo"></button> -->
+                </div>
+              </span>
+            </div><!-- end .p-gallery-->
+
+            <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
+          </div>
         </div>
-    </aside>
+      </div><!-- end #tab-photo -->
+
+      <div id="tab-map" style="display: none;">
+        <div class="map">
+          <div id="popup-map-1" style="width:560px; height:510px"></div>
+
+          <div class="m-ico-group">
+            <a href="#">
+              <span class="m-ico m-turism" data-tag-id="1"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-hunting" data-tag-id="2"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-fishing" data-tag-id="3"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-active-rest" data-tag-id="4"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-hotel" data-tag-id="5"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-shop" data-tag-id="6"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-cafe" data-tag-id="7"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-restoran" data-tag-id="8"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-azs" data-tag-id="9"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-sto" data-tag-id="10"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="85"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="86"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="87"></span>
+            </a>
+          </div>
+        </div><!-- end .map -->
+
+        <div id="near-objects">
+          <h4 class="title-block">Ближайшие точки</h4>
+          <ol></ol>
+        </div>
+      </div><!-- end #tab-map -->
+
+          <div id="tab-desc" style="display: none;">
+              <div class="tab-desc">
+                  <div class="toggle-block a-toggle-up">
+                      <a href="#" class="a-toggle">Ещё отзывы <span>↓</span></a>
+
+                      <ul class="ul-desc">
+                          <li class="item-comment">
+                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                              <div class="body">
+                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                  <div class="desc-date">12.02.2032</div>
+                              </div>
+
+                              <div class="action">
+                                  <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+                              </div>
+                          </li>
+
+                          <li class="even item-comment">
+                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                              <div class="body">
+                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                  <div class="desc-date">12.02.2032</div>
+                              </div>
+
+                              <div class="action">
+                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                              </div>
+                          </li>
+
+                          <li class="item-comment">
+                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                              <div class="body">
+                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                  <div class="desc-date">12.02.2032</div>
+                              </div>
+
+                              <div class="action">
+                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                              </div>
+                          </li>
+
+                          <li class="even item-comment">
+                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                              <div class="body">
+                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                  <div class="desc-date">12.02.2032</div>
+                              </div>
+
+                              <div class="action">
+                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                              </div>
+                          </li>
+                      </ul>
+
+                      <div class="hidden-content">
+                          <ul class="ul-desc">
+                              <li class="item-comment">
+                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                  <div class="body">
+                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                      <div class="desc-date">12.02.2032</div>
+                                  </div>
+
+                                  <div class="action">
+                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                  </div>
+                              </li>
+
+                              <li class="even item-comment">
+                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                  <div class="body">
+                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                      <div class="desc-date">12.02.2032</div>
+                                  </div>
+
+                                  <div class="action">
+                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                  </div>
+                              </li>
+
+                              <li class="item-comment">
+                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                  <div class="body">
+                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                      <div class="desc-date">12.02.2032</div>
+                                  </div>
+
+                                  <div class="action">
+                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                  </div>
+                              </li>
+
+                              <li class="even item-comment">
+                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
+
+                                  <div class="body">
+                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
+
+                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
+
+                                      <div class="desc-date">12.02.2032</div>
+                                  </div>
+
+                                  <div class="action">
+                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+                                  </div>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+
+                  <div class="add-comment">
+                      <div class="ac-block">
+                          <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar" data-author="Андрей Коротков">
+
+                          <div class="ac-body">
+                              <div class="toggle-area">
+                                  <textarea rows="3" cols="40">Оставить свой отзыв</textarea>
+                              </div>
+
+                              <div class="align-r review-buttons">
+                                  <a href="#" class="r-positive" data-status="+">Положительный отзыв</a><a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+      <div class="tabs-content p-common-content">
+        <section class="p-block event-labels">
+          <h4 class="title-block">Метки</h4>
+
+          <div class="body"></div>
+        </section>
+      </div>
+  </div>
+
 </div>
+
+<aside id="right-panel">
+  <div class="small-icons">
+    <a href="#" class="a-btn a-btn-like">Нравится</a>
+    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+    <a href="#" class="a-btn a-btn-share">Поделиться</a>
+    <a href="#" class="a-btn a-btn-complaint">Пожаловаться</a>
+    <!--<a href="#" class="a-like" data-tooltip="Нравится"></a>
+    <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>-->
+  </div>
+
+  <div class="aside-social"></div>
+  <div class="small-icons"></div>
+</aside>

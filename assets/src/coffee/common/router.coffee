@@ -25,6 +25,6 @@ class Yapp.Common.Router extends Marionette.AppRouter
   # It determine route list of the router
   # @property appRoutes
   ###
-  #appRoutes:
+  appRoutes:
     ## TODO if you need you can add some common urls
-    #"user": "something"
+    "user": "something"

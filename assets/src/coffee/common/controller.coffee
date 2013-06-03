@@ -20,3 +20,6 @@ class Yapp.Common.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.Controller'
+
+  something: ->
+    return
