@@ -65,7 +65,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
       pointCollection.comparator = (point) ->
         -new Date point.get('updated')
 
-    console.log 'loading points collection', pointCollection.comparator
+    console.log 'loading points collection'
     pointCollection.fetch(
       data:
         user_id: ''
@@ -75,7 +75,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
         if response.error or response.errors
           console.error response
         else
-          # render popular places
+          # sort coolection if new and render points
           pointCollection.sort()
           _this.popularContainer.show new Yapp.Points.PointListView(
             collection: pointCollection
