@@ -20,6 +20,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   # @method initialize
   ###
   initialize: ->
+    console.log 'initializing Yapp.Common.PopupRegion'
     @wrapper = '#popups'
     @overlay = '#overlay'
 
@@ -34,6 +35,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     $el.click (event) ->
       if $(event.target).hasClass 'scroll-box'
         _this.close()
+        Yapp.Common.router.navigate('/')
     $el
 
   ###*

@@ -27,11 +27,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   showContent: (collection) ->
     console.log 'Show content View in Points module'
-    #pointCollection = new Yapp.Points.PointCollection()
-    #pointCollection.fetch(
-    #  data:
-    #    user_id: ''
-    #)
+    Yapp.popup.close()
     Yapp.content.show new Yapp.Points.MainLayout({collection:collection})
 
   ###*

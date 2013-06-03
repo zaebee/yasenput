@@ -28,7 +28,7 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   # @type String
   # @default 'item item-place'
   ###
-  className: 'item item-place'
+  className: 'item'
 
   ###*
   # Required field for Marionette.View
@@ -49,11 +49,14 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
     'change': 'render'
 
   ###*
-  # After render method of the view
-  # @method onRender
+  # Before render method of the view. Add differnt class for point or set.
+  # @method onBeforeRender
   ###
-  onRender: ->
-    return
+  onBeforeRender: ->
+    if @model.get('type') is 'set'
+      @$el.addClass 'item-collection'
+    else
+      @$el.addClass 'item-place'
 
   ###*
   # The view event triggers
