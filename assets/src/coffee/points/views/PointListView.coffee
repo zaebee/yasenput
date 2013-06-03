@@ -1,5 +1,5 @@
 ###*
-# Submodule for all webmasters functionality
+# Submodule for all points functionality
 # @module Yapp
 # @submodule Points
 ###
@@ -12,7 +12,7 @@ Yapp = window.Yapp
 # @extends Marionette.CompositeView
 # @constructor
 ###
-Yapp.Points.PointListView = Marionette.CompositeView.extend(
+class Yapp.Points.PointListView extends Marionette.CompositeView
 
   ###*
   # Required field for Marionette.View
@@ -21,9 +21,7 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
   # @default Templates.PointListView
   ###
   template: Templates.PointListView
-  tagName: 'section'
   className: 'items'
-  id: 'tab-popular'
 
   itemView: Yapp.Points.PointItemView
   emptyView: Yapp.Points.PointEmptyView
@@ -68,4 +66,3 @@ Yapp.Points.PointListView = Marionette.CompositeView.extend(
     filter = $(event.target).data('type') or ''
     @collection.setFilter ['type'], filter
     @collection.trigger 'filter:collection'
-)

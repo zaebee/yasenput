@@ -1,5 +1,5 @@
 ###*
-# Submodule for all webmasters functionality
+# Submodule for all points functionality
 # @module Yapp
 # @submodule Points
 ###

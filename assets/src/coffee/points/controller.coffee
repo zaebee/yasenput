@@ -25,17 +25,25 @@ class Yapp.Points.Controller extends Marionette.Controller
   # The stub for all point's pins showing function
   # @method showContent
   ###
-  showContent: (collection) ->
+  showContent: (content_type) ->
     console.log 'Show content View in Points module'
     Yapp.popup.close()
-    Yapp.content.show new Yapp.Points.MainLayout({collection:collection})
+    @layout = new Yapp.Points.MainLayout({content_type: content_type})
+    Yapp.content.show @layout
 
   ###*
   # The stub for popular pins showing function
   # @method showPopular
   ###
   showPopular: ->
-    @showContent()
+    @showContent('popular')
+
+  ###*
+  # The stub for popular pins showing function
+  # @method showPopular
+  ###
+  showNew: ->
+    @showContent('new')
 
   ###*
   # The stub for adding point function

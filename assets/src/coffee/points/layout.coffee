@@ -36,8 +36,8 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   regions:
     panelContainer: '#point-panel'
-    pointContainer: '#point-content'
-    #nowContainer: '#tab-new'
+    popularContainer: '#tab-popular'
+    newContainer: '#tab-new'
 
   ###*
   # Init method of the layout
@@ -51,23 +51,33 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   # @method onShow
   ###
   onShow: ->
-    console.log 'showing point panel view'
-    @panelContainer.show new Yapp.Common.StubView(
-      template: Templates.PointPanelView
-    )
-    
-    console.log 'loading points collection'
-    pointCollection = @collection or new Yapp.Points.PointCollection()
     _this = @
+    
+    pointCollection = new Yapp.Points.PointCollection()
+
+    console.log 'show pointPanelView'
+    @panelContainer.show new Yapp.Points.PointPanelView(
+      template: Templates.PointPanelView
+      content_type: @options.content_type or 'popular'
+    )
+
+    if @options.content_type is 'new'
+      pointCollection.comparator = (point) ->
+        -new Date point.get('updated')
+
+    console.log 'loading points collection', pointCollection.comparator
     pointCollection.fetch(
       data:
         user_id: ''
+        content: @options.content_type or 'popular'
       success: (collection, response) ->
         console.log ['server response: ', response]
         if response.error or response.errors
           console.error response
         else
-          _this.pointContainer.show new Yapp.Points.PointListView(
+          # render popular places
+          pointCollection.sort()
+          _this.popularContainer.show new Yapp.Points.PointListView(
             collection: pointCollection
           )
     )
