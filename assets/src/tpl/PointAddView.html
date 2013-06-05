@@ -1,0 +1,91 @@
+<div class="p-top">
+    <h3>Добавить место</h3>
+    <input type="button" class="p-close" value=" ">
+</div>
+
+<div class="clearfix p-body">
+    <form action="#">
+        <div class="input-line" style="z-index: 1;">
+            <div class="required">*</div>
+            <div class="drop-filter">
+                <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
+                <ul class="drop-results">
+                </ul>
+            </div>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+            <div class="required">*</div>
+
+            <div class="drop-filter">
+
+
+                <input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" placeholder="Введите название места">
+
+                <ul class="drop-results">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+            <div class="required"></div>
+
+            <div class="drop-filter">
+                <input type="text" data-key="description" maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description">
+            </div>
+        </div>
+
+        <div class="wide-box">
+            <div class="clearfix p-tabs">
+                <a href="#" data-target="tab-photos-place" class="active">Фотографии</a>
+                <a href="#" data-target="tab-map-place">На карте</a>
+                <a href="#" data-target="tab-reviews-place">Отзывы</a>
+                <div class="shadow"></div>
+            </div>
+
+            <div class="tabs-content">
+                <div id="tab-photos-place" data-key="photos">
+
+                    <div class="clearfix p-photos">
+                        <div class="item-photo load-photo">
+                            <form action="#" id="addphoto"><input name="img" type="file"></form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-map-place" style="display: none;">
+                    <div id="popup-map-place" style="width:560px; height:510px"></div>
+                </div>
+
+                <div id="tab-reviews-place" style="display: none;">
+                    <div class="add-comment">
+                        <div class="ac-block">
+                            <img src="{{user.person.avatar.url}}" alt="" width="29" height="30" class="avatar">
+
+                            <div class="ac-body">
+                                <div class="toggle-area">
+                                    <textarea rows="3" cols="40" placeholder="оставить свой отзыв"></textarea>
+                                </div>
+                                <div class="align-r review-buttons">
+                                    <a href="#" class="r-positive" data-status="+">Положительный отзыв</a>
+                                    <a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <span class="add-labels-place"></span>
+
+        <div class="input-line submit-line">
+            <input type="submit" value="Добавить" class="a-btn" id="a-add-point">
+
+            <small class="required-desc">Поля со значком * обязательны для заполнения</small>
+        </div>
+    </form>
+</div>

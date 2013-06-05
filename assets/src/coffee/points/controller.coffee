@@ -50,8 +50,9 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method addPoint
   ###
   addPoint: ->
-    Yapp.popup.show new Yapp.Common.StubView(
-      template: Templates.AddPointView
+    Yapp.popup.show new Yapp.Common.PopupView(
+      template: Templates.PointAddView
+      id: 'p-add-place'
     )
 
   ###*

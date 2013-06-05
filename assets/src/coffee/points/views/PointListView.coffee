@@ -32,20 +32,12 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
-
-  ###*
-  # Method overrides default appendHtml
-  # @method appendHtml
-  ###
-  #appendHtml: (collectionView, itemView, index) ->
-  #  collectionView.$el.append(itemView.el)
-  
-  ###*
-  # The view event triggers
-  # @property events
-  ###
-  events:
-    'click button.typeFilter': 'typeFilter'
+    _.bindAll @, 'loadResults'
+    @collection.page += 1
+    # add infiniScroll for point collection
+    @infiniScroll = new Backbone.InfiniScroll @collection,
+      success: @loadResults,
+      strict: true
 
   ###*
   # Event method. It triggers when view fully rendered
@@ -57,13 +49,12 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       itemSelector: '.item',
       columnWidth: 241
     )
+    @$el.masonry 'reload'
 
   ###*
-  # Event method. It triggers when type filter is set
-  # @method typeFilter
+  # Success callback after collection fetch for infiniScroll
+  # @method onShow
   ###
-  typeFilter: (event) ->
-    event.preventDefault()
-    filter = $(event.target).data('type') or ''
-    @collection.setFilter ['type'], filter
-    @collection.trigger 'filter:collection'
+  loadResults: (collection, response) ->
+    @collection.page += 1
+    @onShow()
