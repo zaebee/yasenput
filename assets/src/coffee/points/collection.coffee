@@ -44,4 +44,8 @@ class Yapp.Points.PointCollection extends Backbone.Collection
     result = response.points
     result.concat response.collections
 
-  url: Yapp.API_BASE_URL + '/points/list/'
+  #url: Yapp.API_BASE_URL + '/points/list/'
+  url: ->
+    "#{Yapp.API_BASE_URL}/#{@page}/points_popular.json"
+
+  page: 1

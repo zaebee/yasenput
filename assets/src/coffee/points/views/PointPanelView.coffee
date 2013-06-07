@@ -30,3 +30,4 @@ class Yapp.Points.PointPanelView extends Marionette.ItemView
   ###
   templateHelpers: ->
     active: @options.content_type or 'popular'
+

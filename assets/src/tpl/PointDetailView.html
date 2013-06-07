@@ -7,12 +7,12 @@
       <small>поделился</small> <a href="#">{{author.first_name}} {{author.last_name}}</a>
     </h2>
 
-    <div class="addr">Россия, Вологодская область, Череповец, Октябрьский мост</div>
+    <div class="addr">{{address}}</div>
 
     <div class="p-place-desc">
       {{description}}
       <span class="hellip">…</span>
-      <span class="hidden more-desc">т в 1979 году и является первым вантовым мостом, построенным на территории России. По конструкции мост схож с мостом Святого Северина через Рейн в немецком Кёльне.</span>
+      <span class="hidden more-desc"></span>
       <a href="#" class="a-toggle-desc">подробнее</a>
     </div>
 
@@ -23,7 +23,7 @@
       </span>
       <span>
         <span class="ico-star-small"></span>
-        0
+        {{collections_count}}
       </span>
       <span>
         <span class="ico-want-small"></span>
@@ -31,7 +31,7 @@
       </span>
       <span>
         <span class="ico-vote-small"></span>
-        {{review}}/{{review}}
+        {{reviewusersplus}}/{{reviewusersminus}}
       </span>
     </div>
   </header>
@@ -49,31 +49,15 @@
         <div class="tabs-content">
           <div class="toggle-block" id="tp-tab-pop">
             <div class="clearfix p-gallery">
+
               <span class="upward-photos">
-
-                <div class="item-photo current just-redraw-big" data-photo-id="420">
-                  <a href="/media/cache/92f7aba07d17dbb9784c55a6acc35dc9.jpg">
-                    <img src="/media/cache/ecce576818b74a76f2c6cecb60d027fd.jpg" alt="" width="130" height="130">
-                  </a>
-                </div>
-
-                <div class="item-photo just-redraw-big" data-photo-id="421">
-                  <a href="/media/cache/89bf28eb6973a421c8e8722f7560e6d5.jpg">
-                    <img src="/media/cache/dcc7d4da78bb936de166ec71bddb692d.jpg" alt="" width="130" height="130">
-                  </a>
-                </div>
-
-                <div class="item-photo just-redraw-big" data-photo-id="422">
-                  <a href="/media/cache/27bce4b0415a127b6f2eb34a00052ad9.jpg">
-                    <img src="/media/cache/990d86b521be00d3bcca5699f05e5abf.jpg" alt="" width="130" height="130">
-                  </a>
-                </div>
-
-                <div class="item-photo just-redraw-big" data-photo-id="423">
-                  <a href="/media/cache/5999f81a86d1060758dd318966f347e8.jpg">
-                    <img src="/media/cache/625580a58f95ed95c03710f9dfc29673.jpg" alt="" width="130" height="130">
-                  </a>
-                </div>
+                {{#each imgs}}
+                  <div class="item-photo just-redraw-big" data-photo-id="{{id}}">
+                    <a href="{{thumbnail560}}">
+                      <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                    </a>
+                  </div>
+                {{/each}}
               </span>
 
               <div id="big-photo">
@@ -123,10 +107,6 @@
 
               <span class="downward-photos">
                 <div class="item-photo" data-photo-id="424">
-                  <a href="/assets/media/cache/1d/47/1d474535d6afd6e270136e15ac5ca260.jpg">
-                    <img src="/assets/media/cache/1e/58/1e581e37ae3e2ca36fb798da297a645d.jpg" alt="" width="130" height="130">
-                  </a>
-                  <!-- <button type="button" class="complaint-photo"></button> -->
                 </div>
               </span>
             </div><!-- end .p-gallery-->

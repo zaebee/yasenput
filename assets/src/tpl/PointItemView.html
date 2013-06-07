@@ -65,16 +65,16 @@
     <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
     <a href="#" class="a-share-new a-share-new-ok enter" title="поделиться" data-toggle="tooltip" data-placement="bottom"></a>
     <div class="yasen-info">
-      <span class="yp-title"><%- YPscore %> ЯПи</span>
+      <span class="yp-title">{{ypi}} ЯПи</span>
 
       <div class="yp-info">
-        <i class="yp-like"></i><small>{{ likes_count }}</small>
-        <i class="yp-marked"></i><small>{{ collections_count }}</small>
-        <i class="yp-place"></i><small>{{ beens_count }}</small>
-        <i class="yp-star"></i><small>+{{ reviewusersplus }}/-{{ reviewusersminus }}</small>
+        <i class="yp-like"></i><small>{{likes_count}}</small>
+        <i class="yp-marked"></i><small>{{collections_count}}</small>
+        <i class="yp-place"></i><small>{{beens_count}}</small>
+        <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
       </div>
     </div>
-    <a href="/detailpoint/{{ id }}_{{ id_point }}" class="a-photo nonav">
+    <a href="/detailpoint/{{ id_point }}" class="a-photo nonav">
       <img src="{{imgs.[0].thumbnail207}}" lt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
     </a>
   </div>

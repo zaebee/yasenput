@@ -21,6 +21,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.PopupRegion'
+    @body = 'body'
     @wrapper = '#popups'
     @overlay = '#overlay'
 
@@ -43,6 +44,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   # @method onShow
   ###
   onShow: ->
+    $(@body).css 'overflow', 'hidden'
     $(@overlay).show()
     $(@wrapper).show()
 
@@ -51,5 +53,6 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   # @method onClose
   ###
   onClose: ->
+    $(@body).css 'overflow', 'initial'
     $(@overlay).hide()
     $(@wrapper).hide()

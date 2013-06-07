@@ -60,8 +60,11 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showPointDetail
   ###
   showPointDetail: (id) ->
-    Yapp.popup.show new Yapp.Common.PopupView(
+    model = new Yapp.Points.Point id: id
+    model.fetch()
+    Yapp.popup.show new Yapp.Points.PointDetailView(
       template: Templates.PointDetailView
+      model: model
     )
 
   ###*
