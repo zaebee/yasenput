@@ -16,6 +16,7 @@ class Collections(models.Model):
     author = models.ForeignKey('main.Person', unique=False)
     name = models.TextField('Название', max_length=1024, null=False, blank=True)
     description = models.TextField(null=True, blank=True)
+    ypi = models.IntegerField(default=0, blank=True)
     likeusers = models.ManyToManyField(MainModels.User, null=True, blank=True, related_name='collections_users_likes', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)

@@ -10,7 +10,7 @@ import os.path
 from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
-from djangosphinx.models import SphinxSearch
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
@@ -157,9 +157,21 @@ class Points(models.Model):
     invalid = models.BooleanField(default=False)
     parking = models.BooleanField(default=False)
     
+    ypi = models.IntegerField(default=0, blank=True)
+
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
+
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_points",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+
+
+    file1 = open('file3.txt', 'w')
+    file1.write(str(searchdelta.query('cool')._sphinx)) #жопа
+    file1.close()
 
     def _likes(self):
         return self.likeusers.count()
@@ -194,6 +206,7 @@ class PointsByUser(models.Model):
 
     reviews = models.ManyToManyField(Reviews, null=True, blank=True, related_name='pointsbyusers_reviews', serialize=True) #Отзывы, они же попадают в основную точку
 
+    #ypi = models.IntegerField(default=0, blank=True)
     author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)

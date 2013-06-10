@@ -15,6 +15,8 @@ from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from querysetjoin import QuerySetJoin
 import random
 import json
 
@@ -372,7 +374,13 @@ class PointsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-
+        file2 = open('file4.txt', 'w')
+        #file2.write(str(params.name))
+        search = SphinxQuerySet(index="main_points",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+        file2.write(str(search.query(params.get('name'))._sphinx))
+        file2.close()
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
 
@@ -388,7 +396,11 @@ class PointsList(PointsBaseView):
             #pointsreq = chain(pointsreq, copypointsreq)
             collectionsreq = CollectionsModels.Collections.objects
             collectreq = []
-            
+            all_items = QuerySetJoin(pointsreq, collectionsreq)
+            file9000 = open('file900.txt', 'w')
+            for qs in all_items.order_by('id'):
+                file9000.write(str(qs.ypi))
+            file9000.close()
             points_fields_list = pointsreq.values_list('id','likeusers')
             points_by_user_fields_list = copypointsreq.values_list('id')
             collections_fields_list = collectionsreq.values_list('id')
@@ -461,6 +473,9 @@ class PointsList(PointsBaseView):
             file1.write(str(result))
             file1.close()
             if name:
+                
+
+                '''
                 pointsreq = pointsreq.filter(name__icontains=name)
                 collectreq = []
                 copypointsreq = copypointsreq.filter(point__name__icontains=name)
@@ -475,7 +490,7 @@ class PointsList(PointsBaseView):
                     if trig == 1:
                         collectreq.append(collect.id)
                 collectionsreq = collectionsreq.filter(id__in=collectreq)
-
+                '''
             tags = params.getlist("tags[]")
             if tags and len(tags) > 0:
                 pointsreq = pointsreq.filter(tags__in=tags)
