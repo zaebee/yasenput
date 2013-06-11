@@ -1,1 +1,1 @@
-<SphinxQuerySet instance>
+1 cool<SphinxQuerySet instance>

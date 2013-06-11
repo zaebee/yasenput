@@ -41,7 +41,7 @@ class PointsBaseView(View):
         return YpJson.serialize(points, 
                                 fields=['main_img', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
                                         'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count'],
-                                extras=['popular', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
+                                extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
                                 relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
@@ -71,7 +71,7 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
                                 fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count'],
-                                extras=['likes_count', 'isliked'],
+                                extras=['likes_count', 'isliked', 'type_of_item'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
@@ -374,201 +374,22 @@ class PointsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        file2 = open('file4.txt', 'w')
         #file2.write(str(params.name))
+        search_res_points = MainModels.Points.search.query(params.get('name'))
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('name'))
         search = SphinxQuerySet(index="main_points",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
-        file2.write(str(search.query(params.get('name'))._sphinx))
-        file2.close()
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
-
         page = kwargs.get("page", 1) or 1
-
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-
         form = forms.FiltersForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Points.objects
-            copypointsreq = MainModels.PointsByUser.objects
-            #pointsreq = chain(pointsreq, copypointsreq)
-            collectionsreq = CollectionsModels.Collections.objects
-            collectreq = []
-            all_items = QuerySetJoin(pointsreq, collectionsreq)
-            file9000 = open('file900.txt', 'w')
-            for qs in all_items.order_by('id'):
-                file9000.write(str(qs.ypi))
-            file9000.close()
-            points_fields_list = pointsreq.values_list('id','likeusers')
-            points_by_user_fields_list = copypointsreq.values_list('id')
-            collections_fields_list = collectionsreq.values_list('id')
-            
-            user = form.cleaned_data.get("user")
-            userID = params.get("user_id")
-            if userID != '':
-                pointsreq = pointsreq.filter(author__id=int(userID))
-                copypointsreq = copypointsreq.filter(author__id=int(userID))
-                collectionsreq = collectionsreq.filter(author__id=int(userID))
-
-            coord_left = params.get("coord_left")
-            coord_right = params.get("coord_right")
-            if coord_left:
-                try:
-                    coord_left = json.loads(coord_left)
-                    coord_right = json.loads(coord_right)
-                except:
-                    errors.append("некорректно задана левая точка на карте для фильтра")
-                else:
-                    ln = coord_left.get("ln")
-                    lt = coord_left.get("lt")
-                    lnr = coord_right.get("ln")
-                    ltr = coord_right.get("lt")
-                    if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(longitude__gte=ln, latitude__gte=lt)
-                        copypointsreq = copypointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
-                        #collectionsreq = collectionsreq.filter(points__longitude__gte=ln, points__latitude__gte=lt)
-                        
-                        collectreq = []
-                        for collect in collectionsreq.all():
-                            trig = 0
-                            
-                            for point in collect.points.all():
-                                if point.longitude >= ln and point.latitude >= lt and point.longitude <= lnr and point.latitude <= ltr:
-                                    trig = 1
-                            for point in collect.points_by_user.all():
-                                if point.point.longitude >= ln and point.point.latitude >= lt and point.point.longitude <= lnr and point.point.latitude <= ltr:
-                                    trig = 1
-                            if trig == 1:
-                                collectreq.append(collect.id)
-                                
-                            
-
-                        collectionsreq = collectionsreq.filter(id__in=collectreq)
-                        
-                    else:
-                        errors.append("некорректно задана левая точка на карте для фильтра")
-            coord_right = params.get("coord_right")
-            if coord_right:
-                try:
-                    coord_right = json.loads(coord_right)
-                except:
-                    errors.append("некорректно задана правая точка на карте для фильтра")
-                else:
-                    ln = coord_right.get("ln")
-                    lt = coord_right.get("lt")
-                    if str(ln).replace(".", "", 1).isdigit() and str(lt).replace(".", "", 1).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(longitude__lte=ln, latitude__lte=lt)
-                        copypointsreq = copypointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
-                        #collectionsreq = collectionsreq.filter(points__longitude__lte=ln, points__latitude__lte=lt)
-                        #collectionsreq = collectionsreq.filter(points_by_user__longitude__lte=ln, points_by_user__latitude__lte=lt)
-                        
-
-            name = form.cleaned_data.get("name")
-            result = MainModels.Points.search.query('name')
-            file1 = open('file1.txt', 'w')
-            file1.write(name)
-            
-            file1.write(str(result))
-            file1.close()
-            if name:
-                
-
-                '''
-                pointsreq = pointsreq.filter(name__icontains=name)
-                collectreq = []
-                copypointsreq = copypointsreq.filter(point__name__icontains=name)
-                for collect in collectionsreq.all():
-                    trig = 0
-                    for point in collect.points.all():
-                        if point.name == name:
-                            trig = 1
-                    for point in collect.points_by_user.all():
-                        if point.point.name == name:
-                            trig = 1
-                    if trig == 1:
-                        collectreq.append(collect.id)
-                collectionsreq = collectionsreq.filter(id__in=collectreq)
-                '''
-            tags = params.getlist("tags[]")
-            if tags and len(tags) > 0:
-                pointsreq = pointsreq.filter(tags__in=tags)
-                copypointsreq = copypointsreq.filter(point__tags__in=tags)
-                collectionsreq = collectionsreq.filter(points__tags__in=tags)
-
-            address = form.cleaned_data.get("address")
-            if address:
-                pointsreq = pointsreq.filter(address__icontains=name)
-                copypointsreq = copypointsreq.filter(point__address__icontains=name)
-                collectreq = []
-                for collect in collectionsreq.all():
-                    trig = 0
-                    for point in collect.points.all():
-                        for tag in point.tags.all():
-                            if str(tag.id) in tags:
-                                trig = 1
-                        
-                    for point in collect.points_by_user.all():
-                        for tag in point.point.tags.all():
-                            if str(tag.id) in tags:
-                                trig = 1
-                    if trig == 1:
-                        collectreq.append(collect.id)
-                collectionsreq = collectionsreq.filter(id__in=collectreq)
-
-            pointsreq  = pointsreq.extra(**self.getPointsSelect(request))
-            copypointsreq  = copypointsreq.extra(**self.getPointsByUserSelect(request))
-            collectionsreq = collectionsreq.extra(**self.getCollectionsSelect(request))
-
-            content = form.cleaned_data.get("content") or 'new'
-            if content == 'new':
-                pointsreq  = pointsreq.extra(select={"popular": "0"}).order_by('-created')
-                copypointsreq  = copypointsreq.extra(select={"popular": "0"}).order_by('-created')
-                collectionsreq = collectionsreq.extra(select={"popular": "0"}).order_by('-created')
-            elif content == "popular":
-                pointsreq  = pointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
-                copypointsreq  = copypointsreq.extra(select={'popular': "select beens_count + likes_count + reviewusersplus - reviewusersminus"}).order_by('-popular')
-                collectionsreq = collectionsreq.annotate(popular=Count('likeusers__id')).order_by('-popular')
-                
-#                pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-#                copypointsreq  = copypointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-#                collectionsreq = collectionsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-   
-            #points = pointsreq[offset:limit].all()
-            #points = pointsreq[offset:limit].all()
-            points = []
-            copypoints = []
-            for point_need in pointsreq.all():
-                point_need_total = point_need
-                copypoints_need_same = copypointsreq.filter(point=point_need)
-                copypoints_need_point = copypoints_need_same.order_by('-popular')
-                if len(copypoints_need_point.all())>0:
-                    if point_need.popular > copypoints_need_point[0].popular:
-                        points.append(point_need)
-                    else:
-                        if point_need.popular == copypoints_need_point[0].popular:
-                            points.append(random.choice([point_need, copypoints_need_point[0]]))
-                        else:
-                            points.append(copypoints_need_point[0])
-                else:
-                    points.append(point_need)
-                
-            total_points = points[offset:limit]
-
-            collections = collectionsreq[offset:limit]
-            
-            allpoints = json.loads(self.getSerializePoints(total_points))
-            allcollections = json.loads(self.getSerializeCollections(collections))
-            if content == 'new':
-                allpoints = sorted(allpoints, key=lambda x: (x['created'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            else:
-                allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-
-            
-            #allpoints = sorted(allpoints, key=lambda x: (x['popular'], x['name']), reverse=True)[:COUNT_ELEMENTS*2]
-            allcollections = allcollections#sorted(allcollections, key=lambda x: (x['name']), reverse=True)
-            return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
+            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), CollectionsModels.Collections.objects.all().extra(select = {'type_of_item': 2}))
+            items = json.loads(self.getSerializeCollections(all_items.order_by('-ypi')))
+            return HttpResponse(json.dumps({"items": items}), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
