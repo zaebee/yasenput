@@ -4,11 +4,11 @@
 </div>
 
 <div class="clearfix p-body">
-    <form action="#">
+    <form action="/photos/add" id="pointAddForm" enctype="multipart/form-data" method="POST">
         <div class="input-line" style="z-index: 1;">
             <div class="required">*</div>
             <div class="drop-filter">
-                <input type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address">
+              <input name="address" type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address" value="{{address}}">
                 <ul class="drop-results">
                 </ul>
             </div>
@@ -20,7 +20,7 @@
             <div class="drop-filter">
 
 
-                <input id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" placeholder="Введите название места">
+              <input name="name" id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" placeholder="Введите название места" value="{{name}}">
 
                 <ul class="drop-results">
 
@@ -32,55 +32,87 @@
             <div class="required"></div>
 
             <div class="drop-filter">
-                <input type="text" data-key="description" maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description">
+              <input name="description" type="text" data-key="description" maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description" value="{{description}}">
             </div>
         </div>
 
         <div class="wide-box">
-            <div class="clearfix p-tabs">
-                <a href="#" data-target="tab-photos-place" class="active">Фотографии</a>
-                <a href="#" data-target="tab-map-place">На карте</a>
-                <a href="#" data-target="tab-reviews-place">Отзывы</a>
-                <div class="shadow"></div>
-            </div>
+            <ul class="clearfix p-tabs">
+              <li class="active"><a href="#tab-photos-place" data-toggle="tab" _data-target="tab-photos-place" class="active">Фотографии</a></li>
+              <li><a href="#tab-map-place" data-toggle="tab" _data-target="tab-map-place">На карте</a></li>
+              <li><a href="#tab-reviews-place" data-toggle="tab" _data-target="tab-reviews-place">Отзывы</a></li>
+              <li><div class="shadow"></div></li>
+            </ul>
 
             <div class="tabs-content">
-                <div id="tab-photos-place" data-key="photos">
-
-                    <div class="clearfix p-photos">
-                        <div class="item-photo load-photo">
-                            <form action="#" id="addphoto"><input name="img" type="file"></form>
-                        </div>
+                <div id="tab-photos-place" data-key="photos" class="tab-pane active">
+                  <div class="clearfix p-photos">
+                    <div class="item-photo load-photo">
+                        <input name="img" type="file" id="inputImage" >
                     </div>
-                </div>
+                  </div>
+                </div><!-- end #tab-photos-place -->
 
-                <div id="tab-map-place" style="display: none;">
-                    <div id="popup-map-place" style="width:560px; height:510px"></div>
-                </div>
+                <div id="tab-map-place" class="tab-pane">
+                  <div id="popup-map-place" style="width:560px; height:510px"></div>
+                </div><!-- end #tab-map-place -->
 
-                <div id="tab-reviews-place" style="display: none;">
-                    <div class="add-comment">
-                        <div class="ac-block">
-                            <img src="{{user.person.avatar.url}}" alt="" width="29" height="30" class="avatar">
+                <div id="tab-reviews-place" class="tab-pane">
+                  <div class="add-comment">
+                    <div class="ac-block">
+                      <img src="{{user.person.avatar.url}}" alt="" width="29" height="30" class="avatar">
 
-                            <div class="ac-body">
-                                <div class="toggle-area">
-                                    <textarea rows="3" cols="40" placeholder="оставить свой отзыв"></textarea>
-                                </div>
-                                <div class="align-r review-buttons">
-                                    <a href="#" class="r-positive" data-status="+">Положительный отзыв</a>
-                                    <a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
-                                </div>
-                            </div>
+                      <div class="ac-body">
+                        <div class="toggle-area">
+                          <textarea rows="3" cols="40" placeholder="оставить свой отзыв"></textarea>
                         </div>
+                        <div class="align-r review-buttons">
+                          <a href="#" class="r-positive" data-status="+">Положительный отзыв</a>
+                          <a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
+                        </div>
+                      </div>
                     </div>
-                </div>
+                  </div>
+                </div><!-- end #tab-reviews-place -->
 
                 <div class="clear"></div>
             </div>
         </div>
 
-        <span class="add-labels-place"></span>
+        <div class="input-line">
+          <section class="clearfix pop-labels" data-key="tags">
+            <h4>Что это за место?</h4>
+
+            <div class="require-labels">
+              {{#each requireLabels}}
+                <div class="label label-require" data-label-id="{{id}}" >{{name}}</div>
+              {{/each}}
+            </div>
+          </section>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+          <div class="drop-filter select-labels">
+            <div class="p-labels drop-labels">
+              <div class="clearfix selected-labels" style="">
+                <span class="text-field" style="display: inline;"><input name="tags" type="text" placeholder="Поиск меток ..."></span>
+              </div>
+              <input type="button" value=" " class="clear-selected">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-line">
+          <section class="clearfix pop-labels" data-key="tags">
+            <h4>Похожие метки:</h4>
+
+            <div class="other-labels" style="height:170px;overflow:hidden;">
+              {{#each additionalLabels}}
+                <div class="label" data-label-id="{{id}}" >{{name}}</div>
+              {{/each}}
+            </div>
+          </section>
+        </div>
 
         <div class="input-line submit-line">
             <input type="submit" value="Добавить" class="a-btn" id="a-add-point">

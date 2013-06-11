@@ -27,3 +27,38 @@ class Yapp.Points.Point extends Backbone.Model
       @set 'allpoints', points.concat points_by_user
 
   urlRoot: Yapp.API_BASE_URL + '/points'
+
+  ###*
+  # Defaults data of soft model
+  # @property defaults
+  # @type Object
+  ###
+  defaults: ->
+    name: ''
+    address: ''
+    description: ''
+    longitude: ''
+    latitude: ''
+
+  validate: (attrs, options) ->
+    invalid = []
+    if attrs.name is ''
+      invalid.push 'name'
+
+    if attrs.address is ''
+      invalid.push 'address'
+
+    if attrs.longitude is ''
+      invalid.push 'longitude'
+
+    if attrs.latitude is ''
+      invalid.push 'latitude'
+
+    if not attrs.photos or attrs.photos is ''
+      invalid.push 'photos'
+
+    if not attrs.tags or attrs.tags is ''
+      invalid.push 'tags'
+
+    if invalid.length > 0
+      return invalid

@@ -43,6 +43,7 @@ Yapp.addInitializer ->
     'request'
     (options)->
       url = Yapp.API_BASE_URL + options.url
+      url = options.url
       console.log ["#{options.type} request to #{url} with data:", options.data]
       $.ajax
         url: url
