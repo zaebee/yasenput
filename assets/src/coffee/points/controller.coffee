@@ -40,7 +40,7 @@ class Yapp.Points.Controller extends Marionette.Controller
 
   ###*
   # The stub for popular pins showing function
-  # @method showPopular
+  # @method showNew
   ###
   showNew: ->
     @showContent('new')
@@ -56,14 +56,14 @@ class Yapp.Points.Controller extends Marionette.Controller
     )
 
   ###*
-  # The stub for the point detail showing function
+  # Method for the point detail showing function
   # @method showPointDetail
   ###
   showPointDetail: (id) ->
+    #@showContent()
     model = new Yapp.Points.Point id: id
     model.fetch()
     Yapp.popup.show new Yapp.Points.PointDetailView(
-      template: Templates.PointDetailView
       model: model
     )
 

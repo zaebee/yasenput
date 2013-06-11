@@ -37,14 +37,14 @@
   </header>
 
   <div class="wide-box">
-    <div class="p-tabs">
-      <a href="#" data-target="tab-photo" class="active">Фотография</a>
-      <a href="#" data-target="tab-map" class="">На карте</a>
-      <div class="shadow"></div>
-    </div>
+    <ul class="p-tabs">
+      <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
+      <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
+      <li><div class="shadow"></div></li>
+    </ul>
 
     <div class="tabs-content">
-      <div id="tab-photo" style="display: block;">
+      <div id="tab-photo" class="tab-pane active">
 
         <div class="tabs-content">
           <div class="toggle-block" id="tp-tab-pop">
@@ -116,7 +116,7 @@
         </div>
       </div><!-- end #tab-photo -->
 
-      <div id="tab-map" style="display: none;">
+      <div id="tab-map" class="tab-pane">
         <div class="map">
           <div id="popup-map-1" style="width:560px; height:510px"></div>
 

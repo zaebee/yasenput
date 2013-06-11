@@ -23,7 +23,7 @@ ul{list-style:none}
 
 #header nav, .a-want, .top-panel .btn, .a-edit, .create-account input[type=submit], #p-labels input[type=submit], .a-btn{font-family: 'pf_agora_slab_prolight'}
 
-.search input[type=submit], .remove-label, .drop-search .toggle-panel, .main-map .a-toggle, .a-want, .a-like, .a-comment, .stats > span span, .toggle-area input[type=submit], .top-panel .btn, #footer .a-toggle, .apps a, .f-social a, .content .item time, .private .u-addr, .private .tabs small span, .calendar .cusel, .cusel .jScrollPaneDrag, .cuselFrameRight, .m-ico-group a, .placemark, .m-ico, .placemark, .p-close, .social-auth a, .add-avatar, .custom-checkbox, .custom-radio, .load-photo, .p-tabs a.active:after, .remove-photo, .photo-loading .load-status, .ico-cal, .ui-datepicker-trigger, .user-likes .ico, .a-complaint, .popup .p-gallery .item-photo.current, .popup .toggle-block .a-toggle, .a-complaint-comment, .a-remove-comment, .event-list li time, .popup .btn, .ul-desc .action a, .complaint-photo, .popup .event-date{background-color:transparent; background-image: url(../images/sprite.png); background-repeat:no-repeat}
+.search input[type=submit], .remove-label, .drop-search .toggle-panel, .main-map .a-toggle, .a-want, .a-like, .a-comment, .stats > span span, .toggle-area input[type=submit], .top-panel .btn, #footer .a-toggle, .apps a, .f-social a, .content .item time, .private .u-addr, .private .tabs small span, .calendar .cusel, .cusel .jScrollPaneDrag, .cuselFrameRight, .m-ico-group a, .placemark, .m-ico, .placemark, .p-close, .social-auth a, .add-avatar, .custom-checkbox, .custom-radio, .load-photo, .p-tabs li.active a:after, .remove-photo, .photo-loading .load-status, .ico-cal, .ui-datepicker-trigger, .user-likes .ico, .a-complaint, .popup .p-gallery .item-photo.current, .popup .toggle-block .a-toggle, .a-complaint-comment, .a-remove-comment, .event-list li time, .popup .btn, .ul-desc .action a, .complaint-photo, .popup .event-date{background-color:transparent; background-image: url(../images/sprite.png); background-repeat:no-repeat}
 
 .p-labels, .create-account .controls-line input[type=text], #header nav, .avatar, .drop-search ul a, .drop-search .item-title, .add-comment .toggle-area, .a-edit, .create-account input[type=submit], .private .user .u-photo img, #p-labels input[type=submit], .search, .input-line input[type=text], .drop-filter .labels, .wrap-cal, .a-btn, #complaint-place .line input[type=text], #complaint-place .line textarea{-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px}
 
@@ -453,8 +453,16 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .p-tabs{padding-bottom:10px; position:relative; height:29px}
 	.p-tabs .shadow{position:absolute; width:100%; height:12px; ;left:0; bottom:0; z-index:12; background:url(../images/map-shadow.png) 0 0 repeat-x}
 	.p-tabs a{float:left; width:113px; height:29px; line-height:28px; text-align:center; background:#effbee; border:solid 1px #cedecd; border-bottom:0; -moz-border-radius:3px 3px 0 0; -webkit-border-radius:3px 3px 0 0; border-radius:3px 3px 0 0; position:relative; text-decoration:none; font-size:14px; color:#984d56; margin:0 2px 0 0}
-	.p-tabs a.active{height:35px; background:#cedecd; color:#333; z-index:14; border-color:#cedecd}
-	.p-tabs a.active:after{content:""; position:absolute; left:50%; top:100%; margin:0 0 0 -4px; width:14px; height:8px; font-size:0; background-position:-286px -288px;}
+	.p-tabs li.active a{height:35px; background:#cedecd; color:#333; z-index:14; border-color:#cedecd}
+	.p-tabs li.active a:after{content:""; position:absolute; left:50%; top:100%; margin:0 0 0 -4px; width:14px; height:8px; font-size:0; background-position:-286px -288px;}
+
+.tabs-content > .tab-pane {
+  display: none;
+}
+
+.tabs-content > .active {
+  display: block;
+}
 
 .popup .input-line{position:relative; padding:0 0 13px}
 .popup .input-line.calendar-line{margin-top:-5px}
