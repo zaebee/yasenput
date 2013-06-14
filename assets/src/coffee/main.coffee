@@ -48,11 +48,12 @@ Yapp.addInitializer ->
       $.ajax
         url: url
         type: options.type
-        dataType: "json"
+        dataType: options.dataType or 'json'
+        processData: options.processData
         data: options.data
         success: (response) ->
           console.log ['response from API: ', response]
-          if(options.successCallback)
+          if options.successCallback
             params = [response]
             _.each options.params, (p)->
               params.push p

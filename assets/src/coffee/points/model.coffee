@@ -39,6 +39,8 @@ class Yapp.Points.Point extends Backbone.Model
     description: ''
     longitude: ''
     latitude: ''
+    imgs: []
+    tags: []
 
   validate: (attrs, options) ->
     invalid = []
@@ -54,11 +56,32 @@ class Yapp.Points.Point extends Backbone.Model
     if attrs.latitude is ''
       invalid.push 'latitude'
 
-    if not attrs.photos or attrs.photos is ''
+    if not attrs.imgs or attrs.imgs.length is 0
       invalid.push 'photos'
 
-    if not attrs.tags or attrs.tags is ''
+    if not attrs.tags or attrs.tags.length is 0
       invalid.push 'tags'
 
     if invalid.length > 0
       return invalid
+
+  ###*
+  # Send request on server for searching point addresses
+  # @method search
+  ###
+  search: (searchStr, $dropResult) ->
+    Yapp.request(
+      'request'
+        type: 'GET'
+        url: '/points/search/',
+        params:
+          dropResult: $dropResult
+        data:
+          s:searchStr
+        successCallback: @successSearch
+    )
+
+  successSearch: (response, dropResult) ->
+    _.each(response, (item) ->
+      dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
+    )
