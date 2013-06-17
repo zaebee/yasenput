@@ -21,7 +21,7 @@ class Yapp.Common.StubView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Common.StubView'
 
-  'modelEvents':
+  modelEvents:
     'change': 'render'
 
 
@@ -44,8 +44,7 @@ class Yapp.Common.PopupView extends Marionette.ItemView
   className: 'popup'
 
   onBeforeRender: ->
-    #Yapp.popup.$el.parents('#popups').show()
     console.log 'before render PopupView'
 
-  'modelEvents':
+  modelEvents:
     'change': 'render'

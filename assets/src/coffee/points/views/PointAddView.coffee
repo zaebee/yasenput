@@ -58,6 +58,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     'keyup #p-add-place-name': 'searchName',
     'keyup #add-new-place-address': 'searchLocation',
     'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
+    'focus #add-new-place-address': 'openMap',
 
     'focus .input-line input:text': 'showDropList',
     'blur .input-line input:text': 'hideDropList',
@@ -73,6 +74,75 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
     'change .load-photo input:file': 'loadImage',
     'click .remove-photo': 'removePhoto',
+    'click .p-close': 'hidePopup'
+
+
+  ###*
+  # Method for hide popup
+  # @method hidePopup
+  ###
+  hidePopup: ->
+    console.log 'click p'
+    Yapp.popup.close()
+
+
+  ###*
+  # Method for open map if
+  # @method openMap
+  ###
+  openMap: ->
+    $('a[href="#tab-map-place"]').tab 'show'
+
+
+  ###*
+  # Method for initialize ya map
+  # @method onInitMap
+  ###
+  onInitMap:  ->
+    _this = @
+    @popupMap = new ymaps.Map 'popup-map-place', (
+      center: Yapp.myMap.getCenter()
+      zoom: 11
+    )
+    @popupMap.controls.add('zoomControl')
+    placemark = {}
+
+    @popupMap.events.add 'click', (event) ->
+      _this.popupMap.geoObjects.remove(placemark)
+      coords = event.get('coordPosition')
+      _this.popupMap.geoObjects.each (geoObject) ->
+        if geoObject.properties.get('id') is 'map-point'
+          _this.popupMap.geoObjects.remove(geoObject)
+          return false
+
+      placemark = new ymaps.Placemark coords, {
+        id:'map-point'
+      }, {
+        iconImageHref: '/media/icons/place-none.png',
+        iconImageSize: [32, 36],
+        iconImageOffset: [-16, -38]
+      }
+      _this.popupMap.geoObjects.add(placemark)
+      ymaps.geocode(coords).then (res) ->
+        i = true
+        res.geoObjects.each (obj) ->
+          if i
+            $('#add-new-place-address').val obj.properties.get('metaDataProperty.GeocoderMetaData.text')
+          i = false
+        _this.$el.find('#add-new-place-address').change()
+
+      _this.popupMap.setCenter coords, 14, (
+        checkZoomRange: true
+        duration:1000
+      )
+
+      longitude = coords[1]
+      latitude = coords[0]
+      _this.model.set(
+        'longitude': longitude
+        'latitude': latitude
+        {silent: true}
+      )
 
   ###*
   # Callback for setting labels attribute and render this lists in template
@@ -81,6 +151,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   setLabels: (response) ->
     @model.set 'requireLabels', response.filter (label) -> label.level is 0
     @model.set 'additionalLabels', response.filter (label) -> label.level is 1
+    @triggerMethod('init:map')
 
   ###*
   # Add labels attrbite for empty model to render in template
@@ -137,7 +208,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.requireLabels.append @ui.selectedLabels.find('.label-require')
     @ui.otherLabels.append @ui.selectedLabels.find('.label-other')
     @ui.inputTags.parent().show()
-    @model.set 'tags', []
+    @model.set 'tags', [], silent:true
 
   ###*
   # Show input for tags autocomplete
@@ -179,6 +250,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
         _this.ui.photoProgress.find('.progress-count').text percentComplete + ' %'
     )
 
+
   ###*
   # Remove photo from list
   # @method removePhoto
@@ -187,7 +259,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     event.preventDefault()
     console.log event.target
 
-  
+
   ###*
   # Set value for address and place name
   # @method setValue
@@ -195,8 +267,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   setValue: (event) ->
     inputValue = $.trim  $(event.currentTarget).val()
     key = $(event.currentTarget).attr 'data-key'
-    @model.set key, inputValue
-    console.log @model
+    @model.set key, inputValue, silent:true
 
 
   ###*
@@ -206,11 +277,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   searchName: (event) ->
     searchStr = $.trim $(event.currentTarget).val()
     event.preventDefault()
-    console.log searchStr
     if searchStr.length > 0
       $dropResult = $(event.currentTarget).closest(".drop-filter").find(".drop-results")
       $dropResult.find('li').remove()
-      this.model.search(searchStr, $dropResult)
+      @model.search(searchStr, $dropResult)
 
   ###*
   # Search coordinates for points
@@ -218,31 +288,87 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   searchLocation: (event) ->
     event.preventDefault()
-    console.log event.target
+    self = event.currentTarget
+    if $(self).val().length > 0
+      $dropResult = $(self).closest(".drop-filter").find(".drop-results")
+      ymaps.geocode $(self).val(),
+        boundedBy: Yapp.myMap.getBounds()
+        strictBounds: false
+      .then (res) ->
+        results = []
+        $dropResult.find('li').remove()
+        res.geoObjects.each (geoObject) ->
+          props = geoObject.properties
+          text = props.get('text')
+          name = props.get('name')
+          description = props.get('description')
+          tags = $.map(props.get('metaDataProperty.PSearchObjectMetaData') &&
+            props.get('metaDataProperty.PSearchObjectMetaData.Tags') || [], (t) -> t.tag)
+
+          coords = geoObject.geometry.getCoordinates()
+
+          results.push(
+            name: text or [name, description].concat(tags).filter(Boolean).join(', ')
+            coords: JSON.stringify(coords)
+          )
+
+        _.each results, (itm) ->
+            $dropResult.append("<li data-coords='#{itm.coords}'>#{itm.name}</li>")
+
 
   ###*
-  # 
+  #
   # @method showDropList
   ###
   showDropList: (event) ->
-    console.log('showDropList')
     $(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999)
     $(event.currentTarget).closest('.input-line').css('z-index', 20)
 
+
   ###*
-  # 
+  #
   # @method hideDropList
   ###
   hideDropList: (event) ->
-    console.log('hideDropList')
     $(event.currentTarget).closest('.drop-filter').find('.drop-results').hide().css('z-index', 20)
     $(event.currentTarget).closest('.input-line').css('z-index', 1)
 
+
+  ###*
+  #
+  # @method addFromList
+  ###
   addFromList: (event) ->
-    console.log('addFromList')
     txt = $(event.currentTarget).text()
-    console.log('txt: ', txt)
-    $(event.currentTarget).closest('.drop-filter').find('input:text').val( txt ).change()
+    $(event.currentTarget).closest('.drop-filter').find('input:text').val(txt).change()
+
+    coords = $(event.currentTarget).data 'coords'
+    if !_.isEmpty coords
+      self = this
+      @popupMap.geoObjects.each (geoObject) ->
+        if geoObject.properties.get('id') is 'map-point'
+          self.popupMap.geoObjects.remove(geoObject)
+          return false
+
+      placemark = new ymaps.Placemark coords, {
+        id:'map-point'
+      }, {
+        iconImageHref: '/media/icons/place-none.png'
+        iconImageSize: [32, 36]
+        iconImageOffset: [-16, -38]
+      }
+      longitude = coords[1]
+      latitude = coords[0]
+      @popupMap.setCenter coords, 14, (
+        checkZoomRange: true
+        duration:1000
+      )
+      @model.set(
+        'longitude': longitude
+        'latitude': latitude
+        {silent: true}
+      )
+      @popupMap.geoObjects.add placemark
 
 
   ###*
@@ -252,21 +378,17 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   validatePoint: (event) ->
     event.preventDefault()
     @model.set(
-     longitude: 0.0
-     latitude: 0.0
     )
     if @model.isValid()
       @$el.find("[data-key]").removeClass('validation-error')
       @model.trigger('valid')
-    console.log @model.validationError
+
 
   ###*
-  # Save point data
+  # Save point data on server
   # @method savePoint
   ###
   savePoint: ->
-    console.log 'save'
-    #return false
     Yapp.request(
       'request'
         url: '/points/add'
@@ -283,15 +405,20 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
           latitude: @model.get 'latitude'
           ypi: 0
     )
-    #@model.save()
 
   ###*
-  # Validate model attributes and show error fields
+  # Show error fields if model is invalid
   # @method showError
   ###
   showError: (model, errors) ->
     @$el.find("[data-key]").removeClass('validation-error')
     @$el.find("[data-key=#{key}]").addClass('validation-error') for key in errors
 
+
+  ###*
+  # Callback for success saving point model
+  # @method successSave
+  ###
   successSave: ->
+    Yapp.popup.close()
     console.log 'success'

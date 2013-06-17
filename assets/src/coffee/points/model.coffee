@@ -26,7 +26,7 @@ class Yapp.Points.Point extends Backbone.Model
       points_by_user = @get 'points_by_user'
       @set 'allpoints', points.concat points_by_user
 
-  urlRoot: Yapp.API_BASE_URL + '/points'
+  urlRoot: Yapp.API_BASE_URL + '/points/'
 
   ###*
   # Defaults data of soft model

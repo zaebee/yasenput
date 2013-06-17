@@ -16,7 +16,6 @@ Yapp.addInitializer ->
     map:'#yandex-map'
     content:'#content'
     footer:'#footer'
-    #popup: '#popups .scroll-box'
     popup: Yapp.Common.PopupRegion
   )
 

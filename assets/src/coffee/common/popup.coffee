@@ -32,11 +32,9 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   getEl: (selector) ->
     _this = @
     $el = $(selector)
-    $el.on("hidden", this.close)
     $el.click (event) ->
       if $(event.target).hasClass 'scroll-box'
         _this.close()
-        Yapp.Common.router.navigate('/')
     $el
 
   ###*
@@ -56,3 +54,4 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     $(@body).css 'overflow', 'initial'
     $(@overlay).hide()
     $(@wrapper).hide()
+    Yapp.Common.router.navigate('/')

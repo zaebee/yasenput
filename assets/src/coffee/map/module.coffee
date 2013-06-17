@@ -28,5 +28,6 @@ Yapp.module 'Map',
           myMap.controls.add('zoomControl').add('typeSelector')
           pointCollection = new ymaps.GeoObjectCollection()
           myMap.geoObjects.add(pointCollection)
+          Yapp.myMap = myMap
         )
     )
