@@ -57,6 +57,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   events: ->
     'keyup #p-add-place-name': 'searchName',
     'keyup #add-new-place-address': 'searchLocation',
+    'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
     'focus .input-line input:text': 'showDropList',
     'blur .input-line input:text': 'hideDropList',
@@ -87,9 +88,13 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   addRequireLabel: (event) ->
     @ui.inputTags.parent().hide()
-    @model.get('tags').push $(event.target).data 'label-id'
     @ui.requireLabels.append @ui.selectedLabels.find('.label-require')
     @ui.selectedLabels.prepend event.target
+    @model.get('tags').push(
+      id: $(event.target).data 'label-id'
+      name: $(event.target).text()
+      class: 'require'
+    )
 
   ###*
   # Add labels attrbite for empty model to render in template
@@ -97,8 +102,12 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   addOtherLabel: (event) ->
     @ui.inputTags.parent().hide()
-    @model.get('tags').push $(event.target).data 'label-id'
     @ui.selectedLabels.prepend event.target
+    @model.get('tags').push(
+      id: $(event.target).data 'label-id'
+      name: $(event.target).text()
+      class: 'other'
+    )
 
   ###*
   # Remove label from input list
@@ -115,6 +124,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     if @ui.selectedLabels.find('.label').length is 0
       @ui.inputTags.parent().show()
 
+    tags = @model.get 'tags'
+    @model.set 'tags', tags.filter (tag) ->
+      return tag.id isnt $label.data 'label-id'
+
   ###*
   # Remove all label from input list
   # @method clearLabels
@@ -124,6 +137,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.requireLabels.append @ui.selectedLabels.find('.label-require')
     @ui.otherLabels.append @ui.selectedLabels.find('.label-other')
     @ui.inputTags.parent().show()
+    @model.set 'tags', []
 
   ###*
   # Show input for tags autocomplete
@@ -173,6 +187,18 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     event.preventDefault()
     console.log event.target
 
+  
+  ###*
+  # Set value for address and place name
+  # @method setValue
+  ###
+  setValue: (event) ->
+    inputValue = $.trim  $(event.currentTarget).val()
+    key = $(event.currentTarget).attr 'data-key'
+    @model.set key, inputValue
+    console.log @model
+
+
   ###*
   # Search names for poins
   # @method searchName
@@ -213,7 +239,11 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     $(event.currentTarget).closest('.input-line').css('z-index', 1)
 
   addFromList: (event) ->
-    return
+    console.log('addFromList')
+    txt = $(event.currentTarget).text()
+    console.log('txt: ', txt)
+    $(event.currentTarget).closest('.drop-filter').find('input:text').val( txt ).change()
+
 
   ###*
   # Validate model attributes
@@ -222,16 +252,13 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   validatePoint: (event) ->
     event.preventDefault()
     @model.set(
-     name: @ui.inputName.val()
-     address: @ui.inputAddress.val()
-     description: @ui.inputDescription.val()
-     #tags: @ui.inputTags.val()
-     #{validate: true}
+     longitude: 0.0
+     latitude: 0.0
     )
-    console.log @model.isValid(), @model.validationError
-    #if @model.isValid()
-    #  @model.trigger('valid')
-    #@model.save()
+    if @model.isValid()
+      @$el.find("[data-key]").removeClass('validation-error')
+      @model.trigger('valid')
+    console.log @model.validationError
 
   ###*
   # Save point data
@@ -239,7 +266,23 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   savePoint: ->
     console.log 'save'
-    return false
+    #return false
+    Yapp.request(
+      'request'
+        url: '/points/add'
+        context: @
+        successCallback: @successSave
+        type: 'POST'
+        data:
+          name: @model.get 'name'
+          address: @model.get 'address'
+          description: @model.get 'description'
+          'tags[]': _.pluck @model.get('tags'), 'id'
+          'imgs[]': _.pluck @model.get('imgs'), 'id'
+          longitude: @model.get 'longitude'
+          latitude: @model.get 'latitude'
+          ypi: 0
+    )
     #@model.save()
 
   ###*
@@ -249,3 +292,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   showError: (model, errors) ->
     @$el.find("[data-key]").removeClass('validation-error')
     @$el.find("[data-key=#{key}]").addClass('validation-error') for key in errors
+
+  successSave: ->
+    console.log 'success'

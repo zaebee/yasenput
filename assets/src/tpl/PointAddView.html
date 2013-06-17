@@ -48,7 +48,16 @@
                 <div id="tab-photos-place" data-key="photos" class="tab-pane active">
                   <div class="clearfix p-photos">
 
-                    <div id="item-photo-list"></div>
+                    <div id="item-photo-list">
+                      {{#each imgs}}
+                      <div class="item-photo" data-photo-id="{{id}}">
+                        <a href="{{thumbnail560}}">
+                          <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                        </a>
+                        <button type="button" class="remove-photo"></button>
+                      </div>
+                      {{/each}}
+                    </div>
 
                     <div class="item-photo photo-loading" style="display:none;">
                       <div class="load-status">
@@ -109,6 +118,13 @@
           <div class="drop-filter select-labels">
             <div class="p-labels drop-labels">
               <div class="clearfix selected-labels" style="">
+
+                {{#each tags}}
+                <div class="label label-{{class}}" data-label-id="{{id}}" >{{name}}
+                  <button class="remove-label"></button>
+                </div>
+                {{/each}}
+
                 <span class="text-field" style="display: inline;"><input name="tags" type="text" placeholder="Поиск меток ..."></span>
               </div>
               <input type="button" value=" " class="clear-selected">
