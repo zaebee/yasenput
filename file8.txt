@@ -1,1 +1,0 @@
-{'raw': False, 'instance': <User: tenoclock2>, 'signal': <django.dispatch.dispatcher.Signal object at 0x9c15d8c>, 'using': 'default', 'created': False}
