@@ -21,6 +21,7 @@ from django.utils.encoding import smart_str
 import random
 import json
 
+
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
 
@@ -320,9 +321,6 @@ class PointsSearch(PointsBaseView):
             #collectionsreq = CollectionsModels.Collections.objects
             name = form.cleaned_data.get("s")
             if name:
-                file11111 = open('file1111.txt','w')
-                file11111.write(smart_str(params.get("s")))
-                file11111.close()
 
                 search_res_points = MainModels.Points.search.query(params.get("s"))
                 search_res_sets = CollectionsModels.Collections.search.query(name)
@@ -379,7 +377,6 @@ class PointsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        #file2.write(str(params.name))
         search_res_points = MainModels.Points.search.query(params.get('name'))
         search_res_sets = CollectionsModels.Collections.search.query(params.get('name'))
         search = SphinxQuerySet(index="main_points",

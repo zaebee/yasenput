@@ -169,9 +169,7 @@ class Points(models.Model):
                                 rankmode = 'SPH_RANK_NONE')
 
 
-    file1 = open('file3.txt', 'w')
-    file1.write(str(searchdelta.query('cool')._sphinx)) #жопа
-    file1.close()
+    
 
     def _likes(self):
         return self.likeusers.count()
