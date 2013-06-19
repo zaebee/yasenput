@@ -324,7 +324,9 @@ class PointsSearch(PointsBaseView):
 
                 search_res_points = MainModels.Points.search.query(params.get("s"))
                 search_res_sets = CollectionsModels.Collections.search.query(name)
-                
+            
+
+
             #    pointsreq = pointsreq.filter(name__icontains=name)
             #    collectreq = []
             #    for collect in collectionsreq.all():
