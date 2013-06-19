@@ -1,4 +1,6 @@
+{{#if authorized}}
 <a href="/points/add" class="fr btn btn-place btn-place-ok nonav"><b>+</b> Место</a>
+{{/if}}
 <menu class="tabs">
   <a href="/popular" data-target="tab-popular" class="{{#ifEquals active 'popular'}}active{{/ifEquals}} nonav menu-item">популярное</a>
   <a href="/new" data-target="tab-new" class="{{#ifEquals active 'new'}}active{{/ifEquals}} nonav menu-item">новое</a>

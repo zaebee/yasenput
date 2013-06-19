@@ -19,12 +19,31 @@
   </head>
 
   <body class="front">
+    {% if user.is_authenticated %}
+      <script>
+        var USER = {
+          authorized: true,
+          first_name: '{{ user.first_name }}',
+          last_name: '{{ user.last_name }}',
+          avatar: '{{ user.person.avatar.url }}',
+          last_state: 'pins',
+          count_liked_objects: {{count_liked_objects}},
+          count_commented_objects: {{count_commented_objects}},
+        };
+      </script>
+    {% else %}
+      <script>
+        var USER = {
+          authorized: false
+        };
+      </script>
+    {% endif %}
     <div id="fb-root"></div>
     <a href="#" class="a-up">Вверх <span>&uarr;</span></a>
     {% csrf_token %}
 
     <div id="wrap">
-        {% block wrap %}{% endblock %}
+      {% block wrap %}{% endblock %}
     </div>
     <div id="overlay"></div>
 

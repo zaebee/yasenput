@@ -39,7 +39,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ui:
     form: '#pointAddForm'
     addButton: '#a-add-point'
-    selectedLabels: '.selected-labels'
 
     inputName: 'input[name=name]'
     inputAddress: 'input[name=address]'
@@ -55,10 +54,14 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     selectedLabels: '.selected-labels'
 
   events: ->
+    'click .p-close': 'hidePopup'
+    'focus #add-new-place-address': 'openMap',
+
     'keyup #p-add-place-name': 'searchName',
     'keyup #add-new-place-address': 'searchLocation',
+    'keyup input[name=tags]': 'doSearch',
+
     'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
-    'focus #add-new-place-address': 'openMap',
 
     'focus .input-line input:text': 'showDropList',
     'blur .input-line input:text': 'hideDropList',
@@ -74,7 +77,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
     'change .load-photo input:file': 'loadImage',
     'click .remove-photo': 'removePhoto',
-    'click .p-close': 'hidePopup'
 
 
   ###*
@@ -82,7 +84,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method hidePopup
   ###
   hidePopup: ->
-    console.log 'click p'
     Yapp.popup.close()
 
 
@@ -95,7 +96,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
 
   ###*
-  # Method for initialize ya map
+  # Event for initialize ya map
   # @method onInitMap
   ###
   onInitMap:  ->
@@ -199,6 +200,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @model.set 'tags', tags.filter (tag) ->
       return tag.id isnt $label.data 'label-id'
 
+
   ###*
   # Remove all label from input list
   # @method clearLabels
@@ -209,6 +211,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.otherLabels.append @ui.selectedLabels.find('.label-other')
     @ui.inputTags.parent().show()
     @model.set 'tags', [], silent:true
+
 
   ###*
   # Show input for tags autocomplete

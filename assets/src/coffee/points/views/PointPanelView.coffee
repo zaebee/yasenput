@@ -21,6 +21,8 @@ class Yapp.Points.PointPanelView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Points.PointPanelView'
 
+  template: Templates.PointPanelView
+
   modelEvents:
     'change': 'render'
 

@@ -70,7 +70,7 @@ Yapp.on 'start', ->
       event.preventDefault()
       Backbone.history.navigate(href, true)
 
-  @user = new Yapp.User.Profile()
+  @user = new Yapp.User.Profile(USER)
   @runApplication()
 
 # init all modules for fully working application

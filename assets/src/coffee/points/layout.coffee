@@ -57,7 +57,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
 
     console.log 'show pointPanelView'
     @panelContainer.show new Yapp.Points.PointPanelView(
-      template: Templates.PointPanelView
+      model: Yapp.user
       content_type: @options.content_type or 'popular'
     )
 
