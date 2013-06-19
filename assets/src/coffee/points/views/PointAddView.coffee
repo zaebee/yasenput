@@ -222,6 +222,42 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.inputTags.parent().show()
     @ui.inputTags.focus()
 
+
+  ###*
+  # Search tags
+  # @method doSearch
+  ###
+  doSearch: (event) ->
+    event.preventDefault()
+    console.log('do Search!')
+    _this = @
+    #str = $.trim $(event.currentTarget).val()
+    switch event.which
+      when 13
+        event.preventDefault()
+        event.stopPropagation()
+        str = $.trim @ui.inputTags.val()
+        tagId = "new_#{_.uniqueId()}"
+        tag = id: tagId, name: str, class: 'other'
+
+        tags = @model.get('tags')
+        tags.push tag
+        console.log tags
+        @model.set 'tags', tags, silent:true
+        #@model.trigger('change')
+        @ui.selectedLabels.prepend """
+              <div class="label label-other" data-label-id="#{tag.id}" >#{tag.name}
+                <button class="remove-label"></button>
+              </div>
+              """
+        #$(event.currentTarget).val('').trigger('click')
+        @ui.inputTags.val ''
+
+        break
+      else
+        ''
+
+
   ###*
   # Load images to server
   # @method loadImage
