@@ -48,3 +48,10 @@ class Yapp.Common.PopupView extends Marionette.ItemView
 
   modelEvents:
     'change': 'render'
+
+  ###*
+  # Passed additional user data
+  # @method templateHelpers
+  ###
+  templateHelpers: ->
+    user: Yapp.user.toJSON()

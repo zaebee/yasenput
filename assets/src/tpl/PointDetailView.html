@@ -10,10 +10,12 @@
     <div class="addr">{{address}}</div>
 
     <div class="p-place-desc">
-      {{description}}
-      <span class="hellip">…</span>
-      <span class="hidden more-desc"></span>
-      <a href="#" class="a-toggle-desc">подробнее</a>
+      {{headDescription}}
+      {{#if tailDescription}}
+        <span class="hellip">…</span>
+        <span class="hidden more-desc">{{tailDescription}}</span>
+        <a href="#" class="a-toggle-desc">подробнее</a>
+      {{/if}}
     </div>
 
     <div class="stats">
@@ -47,71 +49,35 @@
       <div id="tab-photo" class="tab-pane active">
 
         <div class="tabs-content">
-          <div class="toggle-block" id="tp-tab-pop">
+          <div class="{{#if hiddenImages}}toggle-block{{/if}}" id="tp-tab-pop">
             <div class="clearfix p-gallery">
 
               <span class="upward-photos">
-                {{#each imgs}}
+                {{#each topImages}}
                   <div class="item-photo just-redraw-big" data-photo-id="{{id}}">
-                    <a href="{{thumbnail560}}">
+                    <a class="nonav" href="/detailpoint/{{../id}}/photo_{{id}}" _href="{{thumbnail560}}">
                       <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
                     </a>
                   </div>
                 {{/each}}
               </span>
 
-              <div id="big-photo">
-                <div class="bp-photo" data-photo-id="420">
-                  <img src="/media/cache/92f7aba07d17dbb9784c55a6acc35dc9.jpg" alt="">
-
-                  <div class="bp-add-like">
-                    <img src="/media/avatar/22e2295c746b420b8bcb35e7d9fb77e6.jpeg" alt="" width="22" height="22" class="avatar">
-                    <span class="bp-name">Федя Ясенпуть</span>
-                    <a href="#" class="a-like"></a>
-                  </div>
-                </div>
-
-                <div class="bp-comments">
-                  <div class="toggle-block a-toggle-up">
-                    <div class="item-comment" data-comment-id="14">
-                      <img src="/media/avatar/33f4d8d28ed54a0ea8b53ddb5d55e718.jpeg" alt="" width="29" height="30" class="avatar">
-
-                      <div class="comment-body">
-                        <div class="comment-author">Anton Botvin</div>
-                        <p>Я тут был)</p>
-                        <div class="comment-date">2013-04-04T08:15:12Z</div>
-                      </div>
-
-                      <div class="action">
-                        <!--  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a> -->
-                      </div>
-                    </div>
-
-                    <div class="add-comment">
-                      <form action="#">
-                        <div class="ac-block">
-                          <img src="/media/avatar/f3984dc5a78d4473b82b1e1b3a9a56df.jpeg" alt="" width="29" height="30" class="avatar">
-                          <div class="ac-body">
-                            <div class="toggle-area">
-                              <textarea rows="3" cols="40" placeholder="Комментировать"></textarea>
-                              <input type="submit" value="">
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </div><!-- end .add-comment -->
-
-                  </div><!-- end .toggle-block a-toggle-up -->
-                </div><!-- end .bp-comments -->
-              </div><!-- end #big-photo -->
+              <div id="big-photo"></div><!-- end #big-photo -->
 
               <span class="downward-photos">
-                <div class="item-photo" data-photo-id="424">
-                </div>
+                {{#each bottomImages}}
+                  <div class="item-photo just-redraw-big" data-photo-id="{{id}}">
+                    <a class="nonav" href="/detailpoint/{{../id}}/photo_{{id}}" _href="{{thumbnail560}}">
+                      <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                    </a>
+                  </div>
+                {{/each}}
               </span>
             </div><!-- end .p-gallery-->
 
-            <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
+            {{#if hiddenImages}}
+              <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
+            {{/if}}
           </div>
         </div>
       </div><!-- end #tab-photo -->
@@ -187,136 +153,10 @@
                       <a href="#" class="a-toggle">Ещё отзывы <span>↓</span></a>
 
                       <ul class="ul-desc">
-                          <li class="item-comment">
-                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                              <div class="body">
-                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                  <div class="desc-date">12.02.2032</div>
-                              </div>
-
-                              <div class="action">
-                                  <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
-                              </div>
-                          </li>
-
-                          <li class="even item-comment">
-                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                              <div class="body">
-                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                  <div class="desc-date">12.02.2032</div>
-                              </div>
-
-                              <div class="action">
-                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                              </div>
-                          </li>
-
-                          <li class="item-comment">
-                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                              <div class="body">
-                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                  <div class="desc-date">12.02.2032</div>
-                              </div>
-
-                              <div class="action">
-                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                              </div>
-                          </li>
-
-                          <li class="even item-comment">
-                              <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                              <div class="body">
-                                  <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                  <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                  <div class="desc-date">12.02.2032</div>
-                              </div>
-
-                              <div class="action">
-                                  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                              </div>
-                          </li>
                       </ul>
 
                       <div class="hidden-content">
                           <ul class="ul-desc">
-                              <li class="item-comment">
-                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                  <div class="body">
-                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве, Успенским собором Троице-Сергиевой лавры и другими). Сооружён в 1568 — 1570 годах по распоряжению Ивана Грозного. С 1587 по 1923 год — кафедральный собор Вологодской епархии (с 1776 по 1938 годы — вместе с тёплым Воскресенским собором) и усыпальница вологодских архиереев. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                      <div class="desc-date">12.02.2032</div>
-                                  </div>
-
-                                  <div class="action">
-                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                  </div>
-                              </li>
-
-                              <li class="even item-comment">
-                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                  <div class="body">
-                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                      <div class="desc-date">12.02.2032</div>
-                                  </div>
-
-                                  <div class="action">
-                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                  </div>
-                              </li>
-
-                              <li class="item-comment">
-                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                  <div class="body">
-                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                      <div class="desc-date">12.02.2032</div>
-                                  </div>
-
-                                  <div class="action">
-                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                  </div>
-                              </li>
-
-                              <li class="even item-comment">
-                                  <img src="temp/avatar.jpg" alt="" width="29" height="30" class="avatar">
-
-                                  <div class="body">
-                                      <a href="#" class="a-author">Андрей Коротков</a> <span class="status-review">+</span>
-
-                                      <p>Православный храм, ныне музей, древнейшее сохранившееся каменное сооружение на территории Вологды, одна из крупнейших построек эпохи Ивана Грозного (наряду с храмом Покрова на Рву в Москве. В соборе практически полностью сохранились фрески XVII века и иконостас первой половины XVIII века.</p>
-
-                                      <div class="desc-date">12.02.2032</div>
-                                  </div>
-
-                                  <div class="action">
-                                      <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-                                  </div>
-                              </li>
                           </ul>
                       </div>
                   </div>
@@ -344,6 +184,9 @@
       <div class="tabs-content p-common-content">
         <section class="p-block event-labels">
           <h4 class="title-block">Метки</h4>
+          {{#each tags}}
+          <div class="label">{{name}}</div>
+          {{/each}}
 
           <div class="body"></div>
         </section>
@@ -352,6 +195,7 @@
 
 </div>
 
+{{#if user.authorized}}
 <aside id="right-panel">
   <div class="small-icons">
     <a href="#" class="a-btn a-btn-like">Нравится</a>
@@ -365,3 +209,4 @@
   <div class="aside-social"></div>
   <div class="small-icons"></div>
 </aside>
+{{/if}}

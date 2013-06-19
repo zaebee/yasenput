@@ -52,14 +52,12 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   onShow: ->
     _this = @
-
     pointCollection = new Yapp.Points.PointCollection()
 
     console.log 'show pointPanelView'
-    @panelContainer.show new Yapp.Points.PointPanelView(
+    @panelContainer.show new Yapp.Points.PointPanelView
       model: Yapp.user
       content_type: @options.content_type or 'popular'
-    )
 
     if @options.content_type is 'new'
       pointCollection.comparator = (point) ->
@@ -75,9 +73,8 @@ class Yapp.Points.MainLayout extends Marionette.Layout
         if response.error or response.errors
           console.error response
         else
-          # sort coolection if new and render points
+          # sort collection if new and render points
           pointCollection.sort()
-          _this.popularContainer.show new Yapp.Points.PointListView(
+          _this.popularContainer.show new Yapp.Points.PointListView
             collection: pointCollection
-          )
     )
