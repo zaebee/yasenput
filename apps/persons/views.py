@@ -12,6 +12,7 @@ from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from django.db.models import Q
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 
 def JsonHTTPResponse(json):
@@ -79,11 +80,25 @@ class SearchPerson(PersonsBaseView):
         
         form = forms.SearchForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Person.objects;           
+            #pointsreq = MainModels.Person.objects;           
             
             name = form.cleaned_data.get("s")
+            users_list = []
             if name:
-                pointsreq = pointsreq.filter((Q(username__icontains=name) | Q(last_name__icontains=name) | Q(first_name__icontains=name)))
+                #pointsreq = MainModels.Person.search.query(params.get("s"))
+                #search = SphinxSearch()
+                search = SphinxQuerySet(index="auth_user")
+                
+                phrase_list = name.split(' ')
+                for phrase in phrase_list:
+                    if phrase != '':
+                        search_query = search.query(phrase)
+                        for splited_item in search_query:
+                            if not MainModels.Person.objects.get(id = splited_item['id']) in users_list:
+                                users_list.append(MainModels.Person.objects.get(id = splited_item['id']))
+                
+                        
+                
 
 
             content = form.cleaned_data.get("content") 
@@ -92,9 +107,10 @@ class SearchPerson(PersonsBaseView):
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(usfiliwers=Count('followers__id')).order_by('-usfiliwers', '-id')
             else:   
-                pointsreq  = pointsreq.order_by("username")
+                pointsreq  = users_list
                 
-            points = pointsreq[offset:limit]
+                
+            points = users_list[offset:limit]
             
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(points, 

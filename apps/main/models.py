@@ -19,6 +19,10 @@ class Person(User):
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_person",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
 
 
 def create_person(sender, **kwargs):
