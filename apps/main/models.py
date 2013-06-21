@@ -24,6 +24,10 @@ class Person(User):
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_person",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
 
 
 def create_person(sender, **kwargs):
@@ -174,9 +178,7 @@ class Points(models.Model):
                                 rankmode = 'SPH_RANK_NONE')
 
 
-    file1 = open('file3.txt', 'w')
-    file1.write(str(searchdelta.query('cool')._sphinx)) #жопа
-    file1.close()
+    
 
     def _likes(self):
         return self.likeusers.count()

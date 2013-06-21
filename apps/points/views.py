@@ -17,8 +17,10 @@ from django.db.models import Count
 from YasenPut.limit_config import LIMITS
 from djangosphinx.models import SphinxSearch, SphinxQuerySet
 from querysetjoin import QuerySetJoin
+from django.utils.encoding import smart_str
 import random
 import json
+
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -70,7 +72,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count'],
+                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs'],
                                 extras=['likes_count', 'isliked', 'type_of_item'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
@@ -305,57 +307,64 @@ class OneDetailPoint(PointsBaseView):
 
 class PointsSearch(PointsBaseView):
     http_method_names = ('get',)
-
     def get(self, request, *args, **kwargs):
         params = request.GET
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_SEARCH_COUNT
         errors = []
-
         limit = COUNT_ELEMENTS
         offset = 0
-
         form = forms.SearchForm(params)
+        #search_res_points = []
+        #search_res_sets = []
         if form.is_valid():
-            pointsreq = MainModels.Points.objects
-            collectionsreq = CollectionsModels.Collections.objects
+            #pointsreq = MainModels.Points.objects
+            #collectionsreq = CollectionsModels.Collections.objects
             name = form.cleaned_data.get("s")
             if name:
-                pointsreq = pointsreq.filter(name__icontains=name)
-                collectreq = []
-                for collect in collectionsreq.all():
-                    trig = 0
-                    for point in collect.points.all():
-                        if point.name == name:
-                            trig = 1
-                    for point in collect.points_by_user.all():
-                        if point.point.name == name:
-                            trig = 1
-                    if trig == 1:
-                        collectreq.append(collect.id)
-                collectionsreq = collectionsreq.filter(id__in=collectreq)
 
-            address = form.cleaned_data.get("address")
-            if address:
-                pointsreq = pointsreq.filter(address__icontains=address)
+                search_res_points = MainModels.Points.search.query(params.get("s"))
+                search_res_sets = CollectionsModels.Collections.search.query(name)
+            
 
 
-            content = form.cleaned_data.get("content")
-            if content == 'new':
-                pointsreq = pointsreq.order_by('-created')
-            elif content == "popular":
-                pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
-            else:
-                pointsreq = pointsreq.order_by("name")
+            #    pointsreq = pointsreq.filter(name__icontains=name)
+            #    collectreq = []
+            #    for collect in collectionsreq.all():
+            #        trig = 0
+            #        for point in collect.points.all():
+            #            if point.name == name:
+            #                trig = 1
+            #        for point in collect.points_by_user.all():
+            #            if point.point.name == name:
+            #                trig = 1
+            #        if trig == 1:
+            #            collectreq.append(collect.id)
+            #    collectionsreq = collectionsreq.filter(id__in=collectreq)
+
+            #address = form.cleaned_data.get("address")
+            #if address:
+            #    pointsreq = pointsreq.filter(address__icontains=address)
+
+
+            #content = form.cleaned_data.get("content")
+            #if content == 'new':
+            #    pointsreq = pointsreq.order_by('-created')
+            #elif content == "popular":
+            #    pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
+            #else:
+            #    pointsreq = pointsreq.order_by("name")
 
             YpJson = YpSerialiser()
-            points = pointsreq[offset:limit]
-            collections = collectionsreq[offset:limit]
+            #points = pointsreq[offset:limit]
+            #collections = collectionsreq[offset:limit]
 
-            allpoints = json.loads(self.getSerializePoints(points))
-            allcollections = json.loads(self.getSerializeCollections(collections))
-            
+            #allpoints = json.loads(self.getSerializePoints(points))
+            #allcollections = json.loads(self.getSerializeCollections(collections))
+
+            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), search_res_sets.extra(select = {'type_of_item': 2}))
+            items = json.loads(self.getSerializeCollections(all_items.order_by('-ypi')))
             #return HttpResponse(json.dumps({"points": allpoints, "collections": allcollections}), mimetype="application/json")
-            return HttpResponse(YpJson.serialize(points, fields=('id', 'name'))) 
+            return HttpResponse(YpJson.serialize(all_items, fields=('id', 'name'))) 
  
         else:
             e = form.errors
@@ -367,14 +376,9 @@ class PointsSearch(PointsBaseView):
 class PointsList(PointsBaseView):
     #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
-
-
-    
-
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        #file2.write(str(params.name))
         search_res_points = MainModels.Points.search.query(params.get('name'))
         search_res_sets = CollectionsModels.Collections.search.query(params.get('name'))
         search = SphinxQuerySet(index="main_points",
@@ -387,7 +391,7 @@ class PointsList(PointsBaseView):
         offset = (int(page) - 1) * COUNT_ELEMENTS
         form = forms.FiltersForm(params)
         if form.is_valid():
-            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), CollectionsModels.Collections.objects.all().extra(select = {'type_of_item': 2}))
+            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), search_res_sets.extra(select = {'type_of_item': 2}))
             items = json.loads(self.getSerializeCollections(all_items.order_by('-ypi')))
             return HttpResponse(json.dumps({"items": items}), mimetype="application/json")
         else:

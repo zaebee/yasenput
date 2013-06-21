@@ -8,6 +8,8 @@ from apps.events import forms
 from apps.tags import models as TagsModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
+from querysetjoin import QuerySetJoin
+import json
 
 
 RESPONSE_LIMITS = {"search": 5, "list": 15}
@@ -47,7 +49,20 @@ class TagsList(TagsBaseView):
             
             name = form.cleaned_data.get("s")
             if name:
-                pointsreq = pointsreq.filter(name__icontains=name)
+                name_spl = name.split(' ')
+
+                pointsreq = []
+                blocklist = []
+                for phrase in name_spl:
+                    if phrase.encode('utf-8') != '':
+                        pointsrq = TagsModels.Tags.search.query(phrase)
+                        for item2 in pointsreq:
+                            blocklist.append(item2.id)
+                        for item1 in pointsrq:
+                            if item1.id in blocklist:
+                                item2 = item1
+                            else:
+                                pointsreq.append(item1)
 
             content = form.cleaned_data.get("content") 
             if content == 'new':
@@ -60,7 +75,7 @@ class TagsList(TagsBaseView):
                         }
                     ).order_by('-popular2', '-id')
             else:   
-                pointsreq = pointsreq.order_by("name")
+                pointsreq = pointsreq
                 
             tags = pointsreq[offset:limit]
             
