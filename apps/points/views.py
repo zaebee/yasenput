@@ -72,8 +72,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs'],
-                                extras=['likes_count', 'isliked', 'type_of_item'],
+                                fields=['id', 'name', 'description', 'author', 'likes_count_p', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus'],
+                                extras=['likes_count', 'likes_count_p', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
@@ -158,7 +158,8 @@ class PointsBaseView(View):
                 "select": {
                       "isliked": collections_isliked,
                       "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
-                      #"imgs": 'SELECT count(*) from main_points',
+                      'likes_count_p': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                 #"imgs": 'SELECT count(*) from main_points',
                     }
             }
         return args
@@ -391,7 +392,11 @@ class PointsList(PointsBaseView):
         offset = (int(page) - 1) * COUNT_ELEMENTS
         form = forms.FiltersForm(params)
         if form.is_valid():
-            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), search_res_sets.extra(select = {'type_of_item': 2}))
+            all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1, 
+                'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
+                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                 }), search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"}))
             items = json.loads(self.getSerializeCollections(all_items.order_by('-ypi')))
             return HttpResponse(json.dumps({"items": items}), mimetype="application/json")
         else:
