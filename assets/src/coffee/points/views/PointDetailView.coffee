@@ -91,5 +91,4 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     nextPhotoId = $(activePhoto).next().data 'photo-id'
     @options.photoId = nextPhotoId
-    console.log nextPhotoId
     @showPhoto()

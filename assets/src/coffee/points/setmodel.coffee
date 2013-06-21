@@ -20,18 +20,10 @@ class Yapp.Points.Set extends Backbone.Model
   ###
   initialize: ->
     console.log "initializing Yapp.Points.Set"
-    #if @get('type_of_item') is 2 ## is collection type
-    #  @set 'type', 'collection'
-    #  points = @get 'points'
-    #  points_by_user = @get 'points_by_user'
-    #  @set 'allpoints', points.concat points_by_user
-    #if @get('type_of_item') is 1 ## is point type
-    #  @set 'type', 'point'
-
 
   urlRoot: ->
     type = @get 'type' ## point or collection
-    Yapp.API_BASE_URL + "/sets/"
+    Yapp.API_BASE_URL + "/collections/"
 
   ###*
   # Defaults data of soft model
