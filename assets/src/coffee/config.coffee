@@ -4,18 +4,11 @@
 # @main
 ###
 
-## TODO: uncomment 4 strings below in production
-###
-console.log = ->{}
-console.info = ->{}
-console.warn = ->{}
-console.error = ->{}
-###
-
 window.Yapp = new Marionette.Application()
 
 window.Yapp.API_BASE_URL = '/api'
 window.Yapp.YA_MAP_URL = 'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&wizard=constructor'
+window.Yapp.DEBUG = true
 
 jQuery(document).ajaxSend (event, xhr, settings) ->
   getCookie = (name) ->
@@ -47,3 +40,12 @@ jQuery(document).ajaxSend (event, xhr, settings) ->
 
   if not safeMethod(settings.type) and sameOrigin(settings.url)
     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'))
+
+
+if typeof(window.console) is 'undefined'
+  console = {}
+else
+  console = window.console
+
+if !window.Yapp.DEBUG or typeof console.log is 'undefined'
+  console.log = console.error = console.info = console.debug = console.warn = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = () ->
