@@ -1,0 +1,212 @@
+<div class="clearfix p-body">
+  <header>
+    <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
+    <!--<div class="event-date">1―5 января</div>-->
+
+    <h2><a href="#" class="a-place-name">{{name}}</a>
+      <small>поделился</small> <a href="#">{{author.first_name}} {{author.last_name}}</a>
+    </h2>
+
+    <div class="addr">{{address}}</div>
+
+    <div class="p-place-desc">
+      {{headDescription}}
+      {{#if tailDescription}}
+        <span class="hellip">…</span>
+        <span class="hidden more-desc">{{tailDescription}}</span>
+        <a href="#" class="a-toggle-desc">подробнее</a>
+      {{/if}}
+    </div>
+
+    <div class="stats">
+      <span>
+        <span class="ico-like-small"></span>
+        {{likes_count}}
+      </span>
+      <span>
+        <span class="ico-star-small"></span>
+        {{collections_count}}
+      </span>
+      <span>
+        <span class="ico-want-small"></span>
+        {{beens_count}}
+      </span>
+      <span>
+        <span class="ico-vote-small"></span>
+        {{reviewusersplus}}/{{reviewusersminus}}
+      </span>
+    </div>
+  </header>
+
+  <div class="wide-box">
+    <ul class="p-tabs">
+      <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
+      <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
+      <li><div class="shadow"></div></li>
+    </ul>
+
+    <div class="tabs-content">
+      <div id="tab-photo" class="tab-pane active">
+
+        <div class="tabs-content">
+          <div class="{{#if hiddenImages}}toggle-block{{/if}}" id="tp-tab-pop">
+            <div class="clearfix p-gallery">
+
+              <span class="upward-photos">
+                {{#each topImages}}
+                  <div class="item-photo just-redraw-big" data-photo-id="{{id}}">
+                    <a class="" href="/point/{{../id}}/photo/{{id}}" _href="{{thumbnail560}}">
+                      <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                    </a>
+                  </div>
+                {{/each}}
+              </span>
+
+              <div id="big-photo"></div><!-- end #big-photo -->
+
+              <span class="downward-photos">
+                {{#each bottomImages}}
+                  <div class="item-photo just-redraw-big" data-photo-id="{{id}}">
+                    <a class="" href="/detailpoint/{{../id}}/photo_{{id}}" _href="{{thumbnail560}}">
+                      <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                    </a>
+                  </div>
+                {{/each}}
+              </span>
+            </div><!-- end .p-gallery-->
+
+            {{#if hiddenImages}}
+              <a href="#" class="a-toggle photos">Ещё фотографии <span>↓</span></a>
+            {{/if}}
+          </div>
+        </div>
+      </div><!-- end #tab-photo -->
+
+      <div id="tab-map" class="tab-pane">
+        <div class="map">
+          <div id="popup-map-1" style="width:560px; height:510px"></div>
+
+          <div class="m-ico-group">
+            <a href="#">
+              <span class="m-ico m-turism" data-tag-id="1"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-hunting" data-tag-id="2"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-fishing" data-tag-id="3"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-active-rest" data-tag-id="4"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-hotel" data-tag-id="5"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-shop" data-tag-id="6"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-cafe" data-tag-id="7"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-restoran" data-tag-id="8"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-azs" data-tag-id="9"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico m-sto" data-tag-id="10"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="85"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="86"></span>
+            </a>
+
+            <a href="#">
+              <span class="m-ico " data-tag-id="87"></span>
+            </a>
+          </div>
+        </div><!-- end .map -->
+
+        <div id="near-objects">
+          <h4 class="title-block">Ближайшие точки</h4>
+          <ol></ol>
+        </div>
+      </div><!-- end #tab-map -->
+
+          <div id="tab-desc" style="display: none;">
+              <div class="tab-desc">
+                  <div class="toggle-block a-toggle-up">
+                      <a href="#" class="a-toggle">Ещё отзывы <span>↓</span></a>
+
+                      <ul class="ul-desc">
+                      </ul>
+
+                      <div class="hidden-content">
+                          <ul class="ul-desc">
+                          </ul>
+                      </div>
+                  </div>
+
+                  <div class="add-comment">
+                      <div class="ac-block">
+                        <img alt="" width="29" height="30" class="avatar" data-author="Андрей Коротков">
+
+                          <div class="ac-body">
+                              <div class="toggle-area">
+                                  <textarea rows="3" cols="40">Оставить свой отзыв</textarea>
+                              </div>
+
+                              <div class="align-r review-buttons">
+                                  <a href="#" class="r-positive" data-status="+">Положительный отзыв</a><a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+      <div class="tabs-content p-common-content">
+        <section class="p-block event-labels">
+          <h4 class="title-block">Метки</h4>
+          {{#each tags}}
+          <div class="label">{{name}}</div>
+          {{/each}}
+
+          <div class="body"></div>
+        </section>
+      </div>
+  </div>
+
+</div>
+
+{{#if user.authorized}}
+<aside id="right-panel">
+  <div class="small-icons">
+    <a href="#" class="a-btn a-btn-like">Нравится</a>
+    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+    <a href="#" class="a-btn a-btn-share">Поделиться</a>
+    <a href="#" class="a-btn a-btn-complaint">Пожаловаться</a>
+    <!--<a href="#" class="a-like" data-tooltip="Нравится"></a>
+    <a href="#" class="a-complaint" data-tooltip="Пожаловаться на место"></a>-->
+  </div>
+
+  <div class="aside-social"></div>
+  <div class="small-icons"></div>
+</aside>
+{{/if}}
