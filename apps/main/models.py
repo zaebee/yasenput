@@ -14,8 +14,13 @@ from djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
-    avatar = ImageField(upload_to='avatar', verbose_name=u'Аватарка', blank=True, null=True)
-    followers = models.ManyToManyField(User, null=True, blank=True, related_name='person_users_followers', serialize=True)
+    avatar = ImageField(upload_to='avatar',
+                        verbose_name=u'Аватарка',
+                        blank=True, null=True)
+    followers = models.ManyToManyField(User, null=True,
+                                       blank=True,
+                                       related_name='person_users_followers',
+                                       serialize=True)
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()

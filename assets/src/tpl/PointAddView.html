@@ -1,0 +1,152 @@
+<div class="p-top">
+    <h3>Добавить место</h3>
+    <input type="button" class="p-close" value=" ">
+</div>
+
+<div class="clearfix p-body">
+    <form action="" id="pointAddForm" enctype="multipart/form-data" method="POST">
+        <div class="input-line" style="z-index: 4;">
+            <div class="required">*</div>
+            <div class="drop-filter">
+              <input name="address" type="text" data-key="address" autocomplete="off" placeholder="Введите местоположение (область, район, населённый пункт)" id="add-new-place-address" value="{{address}}">
+                <ul class="drop-results">
+                </ul>
+            </div>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+            <div class="required">*</div>
+
+            <div class="drop-filter">
+
+              <input name="name" id="p-add-place-name" type="text" class="search-matches" data-key="name" autocomplete="off" placeholder="Введите название места" value="{{name}}">
+
+                <ul class="drop-results"></ul>
+            </div>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+            <div class="required"></div>
+
+            <div class="drop-filter">
+              <input name="description" type="text" data-key="description" maxlength="60" placeholder="Введите описание места (не более 60 символов) ..." class="input-place-desc" id="add-new-place-description" value="{{description}}">
+            </div>
+        </div>
+
+        <div class="wide-box">
+            <ul class="clearfix p-tabs">
+              <li class="active"><a href="#tab-photos-place" data-toggle="tab" _data-target="tab-photos-place" class="active">Фотографии</a></li>
+              <li><a href="#tab-map-place" data-toggle="tab" _data-target="tab-map-place">На карте</a></li>
+              <!--<li><a href="#tab-reviews-place" data-toggle="tab" _data-target="tab-reviews-place">Отзывы</a></li>-->
+              <li><div class="shadow"></div></li>
+            </ul>
+
+            <div class="tabs-content">
+                <div id="tab-photos-place" data-key="photos" class="tab-pane active">
+                  <div class="clearfix p-photos">
+
+                    <div id="item-photo-list">
+                      {{#each imgs}}
+                      <div class="item-photo" data-photo-id="{{id}}">
+                        <a href="{{thumbnail560}}">
+                          <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
+                        </a>
+                        <button type="button" class="remove-photo"></button>
+                      </div>
+                      {{/each}}
+                    </div>
+
+                    <div class="item-photo photo-loading" style="display:none;">
+                      <div class="load-status">
+                        <div class="progress-loading">
+                          <div style="width: 0%;" class="value"></div>
+                        </div>
+                        <span class="progress-count">0%</span>
+                      </div>
+                    </div>
+
+                    <div class="item-photo load-photo">
+                      <input name="img" type="file" id="inputImage" >
+                    </div>
+                  </div>
+                </div><!-- end #tab-photos-place -->
+
+                <div id="tab-map-place" class="tab-pane">
+                  <div id="popup-map-place" style="width:560px; height:510px"></div>
+                </div><!-- end #tab-map-place -->
+
+                <div id="tab-reviews-place" class="tab-pane">
+                  <div class="add-comment">
+                    <div class="ac-block">
+                      <img src="{{user.person.avatar.url}}" alt="" width="29" height="30" class="avatar">
+
+                      <div class="ac-body">
+                        <div class="toggle-area">
+                          <textarea rows="3" cols="40" placeholder="оставить свой отзыв"></textarea>
+                        </div>
+                        <div class="align-r review-buttons">
+                          <a href="#" class="r-positive" data-status="+">Положительный отзыв</a>
+                          <a href="#" class="r-negative" data-status="-">Отрицательный отзыв</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- end #tab-reviews-place -->
+
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="input-line">
+          <section class="clearfix pop-labels" data-key="tags">
+            <h4>Что это за место?</h4>
+
+            <div class="require-labels">
+              {{#each requireLabels}}
+              <div class="label label-require" data-label-id="{{id}}" >{{name}}
+                <button class="remove-label"></button>
+              </div>
+              {{/each}}
+            </div>
+          </section>
+        </div>
+
+        <div class="input-line" style="z-index: 1;">
+          <div class="drop-filter select-labels">
+            <div class="p-labels drop-labels">
+              <div class="clearfix selected-labels" style="">
+
+                {{#each tags}}
+                <div class="label label-{{class}}" data-label-id="{{id}}" >{{name}}
+                  <button class="remove-label"></button>
+                </div>
+                {{/each}}
+
+                <span class="text-field" style="display: inline;"><input name="tags" type="text" placeholder="Поиск меток ..."></span>
+              </div>
+              <input type="button" value=" " class="clear-selected">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-line">
+          <section class="clearfix pop-labels" data-key="tags">
+            <h4>Похожие метки:</h4>
+
+            <div class="other-labels">
+              {{#each additionalLabels}}
+              <div class="label label-other" data-label-id="{{id}}" >{{name}}
+                <button class="remove-label"></button>
+              </div>
+              {{/each}}
+            </div>
+          </section>
+        </div>
+
+        <div class="input-line submit-line">
+          <input type="submit" value="Добавить" class="a-btn" id="a-add-point">
+
+            <small class="required-desc">Поля со значком * обязательны для заполнения</small>
+        </div>
+    </form>
+</div>
