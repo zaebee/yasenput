@@ -1,8 +1,8 @@
-{{#if type}}
+{{#ifEquals type 'set'}}
   <div class="photo">
     <a href="#" class="a-like a-like-ok" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
 
-    <a href="/detailset/{{id}}" class="a-photo nonav">
+    <a href="/set/{{id}}" class="a-photo nonav">
       <img src="{{allpoints.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{allpoints.[0].imgs.[0].thumbnail207_height}}">
     </a>
   </div>
@@ -57,9 +57,9 @@
       <h3>{{name}}</h3>
       <p>коллекцию создал {{author.first_name}} {{author.last_name}}</p>
   </div>
+{{/ifEquals}}
 
-{{else}}
-
+{{#ifEquals type 'point'}}
   <div class="photo">
     <a href="#" class="a-like a-like-ok" title="мне нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
@@ -74,7 +74,7 @@
         <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
       </div>
     </div>
-    <a href="/detailpoint/{{ id_point }}" class="a-photo nonav">
+    <a href="/point/{{ id }}" class="a-photo nonav">
       <img src="{{imgs.[0].thumbnail207}}" lt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
     </a>
   </div>
@@ -93,4 +93,4 @@
       <ul>
       </ul>
   </div>
-{{/if}}
+{{/ifEquals}}

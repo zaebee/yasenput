@@ -39,13 +39,8 @@ class Yapp.Points.PointCollection extends Backbone.Collection
   # @method parse
   ###
   parse: (response) ->
-    _.map response.collections, (el) ->
-      el.type = 'set'
-    result = response.points
-    result.concat response.collections
+    return response.items
 
-  #url: Yapp.API_BASE_URL + '/points/list/'
-  url: ->
-    "#{Yapp.API_BASE_URL}/#{@page}/points_popular.json"
+  url: Yapp.API_BASE_URL + '/points/'
 
   page: 1

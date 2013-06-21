@@ -29,8 +29,8 @@ class Yapp.Points.Router extends Marionette.AppRouter
     "": "showContent"
     "popular": "showPopular"
     "new": "showNew"
-    "points/add": "addPoint"
-    "detailpoint/:id": "showPointDetail"
-    "detailset/:id": "showSetDetail"
+    "point/add": "addPoint"
+    "point/:id": "showPointDetail"
+    "set/:id": "showSetDetail"
 
-    "detailpoint/:id/photo_:photo_id": "showPointPhoto"
+    "point/:id/photo/:photo_id": "showPointPhoto"

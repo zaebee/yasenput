@@ -20,11 +20,15 @@ class Yapp.Points.Point extends Backbone.Model
   ###
   initialize: ->
     console.log "initializing Yapp.Points.Point"
-    @set 'ypi', @get('collections_count') + @get('likes_count') or 0
-    if @get('type') is 'set'
+    #@set 'ypi', @get('collections_count') + @get('likes_count') or 0
+    if @get('type_of_item') is 2 ## id point type
+      @set 'type', 'set'
       points = @get 'points'
       points_by_user = @get 'points_by_user'
       @set 'allpoints', points.concat points_by_user
+    if @get('type_of_item') is 1
+      @set 'type', 'point'
+
 
   urlRoot: Yapp.API_BASE_URL + '/points/'
 
@@ -85,3 +89,9 @@ class Yapp.Points.Point extends Backbone.Model
     _.each(response, (item) ->
       dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
     )
+
+  parse: (response) ->
+    if _.isArray response
+      response[0]
+    else
+      response
