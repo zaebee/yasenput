@@ -50,7 +50,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method addPoint
   ###
   addPoint: ->
-    @showContent()
+    #@showContent()
     Yapp.popup.show new Yapp.Points.PointAddView
       id: 'p-add-place'
 
@@ -60,6 +60,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   showPointDetail: (id, photo_id) ->
     model = new Yapp.Points.Point id: id
+    model.set 'type', 'point'
     model.fetch(
       success: (model, response) ->
         Yapp.popup.show new Yapp.Points.PointDetailView
@@ -71,9 +72,15 @@ class Yapp.Points.Controller extends Marionette.Controller
   # The stub for the set detail showing function
   # @method showSetDetail
   ###
-  showSetDetail: (id) ->
-    Yapp.popup.show new Yapp.Common.PopupView
-      template: Templates.SetDetailView
+  showSetDetail: (id, photo_id) ->
+    model = new Yapp.Points.Set id: id
+    model.set 'type', 'collection'
+    model.fetch(
+      success: (model, response) ->
+        Yapp.popup.show new Yapp.Points.SetDetailView
+          model: model
+          photoId: photo_id
+    )
 
   ###*
   # Method for the point showing function with selected photo

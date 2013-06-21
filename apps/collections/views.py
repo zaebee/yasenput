@@ -75,9 +75,9 @@ class OneCollection(View):
             raise Http404
         return super(OneCollection, self).dispatch(request, *args, **kwargs)
 
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         point = get_object_or_404(CollectionsModels.Collections, pk=kwargs.get("id"))
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize([point], relations={'points': {'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}}), mimetype="application/json")

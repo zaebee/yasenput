@@ -53,7 +53,7 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   # @method onBeforeRender
   ###
   onBeforeRender: ->
-    if @model.get('type') is 'set'
+    if @model.get('type') is 'collection'
       @$el.addClass 'item-collection'
     else
       @$el.addClass 'item-place'

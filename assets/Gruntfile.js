@@ -47,7 +47,7 @@ module.exports = function(grunt) {
             'debug/js/helpers.js',
             'debug/js/**/module.js',
             'debug/js/**/popup.js',
-            'debug/js/**/model.js',
+            'debug/js/**/*model.js',
             'debug/js/**/collection.js',
             'debug/js/**/layout.js',
             'debug/js/**/views.js',
