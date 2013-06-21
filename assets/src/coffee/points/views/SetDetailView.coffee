@@ -18,6 +18,11 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     console.log 'initialize SetDetailView'
     @bigPhotoTemplate = Templates.BigPhoto
 
+    pointId = parseInt @options.pointId, 10
+    point = _.find @model.get('allpoints'), (point) -> point.id is pointId
+    console.log point, pointId
+    @activePoint = point or @model.get('allpoints')[0]
+
   template: Templates.SetDetailView
   className: 'popup p-collection'
 
@@ -30,6 +35,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
    'click .p-place-desc .a-toggle-desc':'moreDescription'
    'click .item-photo': 'showPhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
+   'click li.choose_place > a': 'choosePlace'
 
   ###*
   # Passed additional user data
@@ -43,6 +49,8 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     headDescription: @model.get('description').slice 0, 150
     tailDescription: @model.get('description').slice 150
     user: Yapp.user.toJSON()
+
+    activePoint: @activePoint
 
   ###*
   # TODO
@@ -61,18 +69,20 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # TODO
   # @method showPhoto
   ###
-  showPhoto: (event) ->
+  showPhoto: (event, photoId) ->
     @ui.allPhotos.removeClass 'current'
     if event
       event.preventDefault()
       $target = $(event.currentTarget)
       photoId = $target.data 'photo-id'
-      photo = _.find @model.get('imgs'), (photo) -> photo.id is photoId
-    else if @options.photoId
-      photoId = parseInt @options.photoId, 10
-      photo = _.find @model.get('imgs'), (photo) -> photo.id is photoId
+      photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
+    else if photoId
+      photoId = parseInt photoId, 10
+      photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
     else
-      photo = @model.get('imgs')[0]
+      photoId = parseInt @options.photoId, 10
+      photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
+      photo = @activePoint.imgs[0]
       photoId = photo.id
 
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
@@ -80,8 +90,8 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     @ui.bigPhoto.html @bigPhotoTemplate(photo)
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
-  onShow: ->
-    #@showPhoto()
+  onRender: ->
+    @showPhoto()
 
   ###*
   # TODO
@@ -92,6 +102,11 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     photoId =  $target.data 'photo-id'
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     nextPhotoId = $(activePhoto).next().data 'photo-id'
-    @options.photoId = nextPhotoId
-    console.log nextPhotoId
-    @showPhoto()
+    @showPhoto null, nextPhotoId
+
+  choosePlace: (event) ->
+    event.preventDefault()
+    pointId = $(event.currentTarget).data 'id'
+    point = _.find @model.get('allpoints'), (point) -> point.id is pointId
+    @activePoint = point
+    @model.trigger('change')

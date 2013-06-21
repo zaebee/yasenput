@@ -90,8 +90,7 @@ class Yapp.Points.Point extends Backbone.Model
     if response.type_of_item is 2 ## is collection type
       response.type = 'collection'
       points = response.points
-      points_by_user = response.points_by_user
-      response.allpoints = points.concat points_by_user
+      response.allpoints = points
     if response.type_of_item is 1 ## is point type
       response.type = 'point'
     response
