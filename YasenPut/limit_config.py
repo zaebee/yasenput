@@ -14,7 +14,7 @@ class LIMITS():
         TAGS_COUNT = None 
         
         POINTS_SEARCH_COUNT = 1  # число точек на стронице поиска точек
-        POINTS_LIST_COUNT = 1
+        POINTS_LIST_COUNT = 5
     
     class COLLECTIONS_LIST():
         IMAGES_COUNT = 4
