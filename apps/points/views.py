@@ -72,7 +72,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count'],
+                                fields=['id', 'name', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs'],
                                 extras=['likes_count', 'isliked', 'type_of_item'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
