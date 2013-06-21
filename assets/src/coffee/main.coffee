@@ -78,7 +78,7 @@ Yapp.runApplication = ->
 
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
-  if(@user.get('last_state') is 'pins')
+  if @user.get('last_state') is 'pins'
     @Points.start()
     @Map.start()
   else
