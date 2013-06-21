@@ -36,41 +36,49 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showPopular
   ###
   showPopular: ->
-    @showContent('popular')
+    @showContent 'popular'
 
   ###*
   # The stub for popular pins showing function
   # @method showNew
   ###
   showNew: ->
-    @showContent('new')
+    @showContent 'new'
 
   ###*
   # The stub for adding point function
   # @method addPoint
   ###
   addPoint: ->
-    Yapp.popup.show new Yapp.Points.PointAddView(
+    @showContent()
+    Yapp.popup.show new Yapp.Points.PointAddView
       id: 'p-add-place'
-    )
 
   ###*
   # Method for the point detail showing function
   # @method showPointDetail
   ###
-  showPointDetail: (id) ->
-    #@showContent()
+  showPointDetail: (id, photo_id) ->
     model = new Yapp.Points.Point id: id
-    model.fetch()
-    Yapp.popup.show new Yapp.Points.PointDetailView(
-      model: model
+    model.fetch(
+      success: (model, response) ->
+        Yapp.popup.show new Yapp.Points.PointDetailView
+          model: model
+          photoId: photo_id
     )
 
   ###*
   # The stub for the set detail showing function
   # @method showSetDetail
   ###
-  showSetDetail: ->
-    Yapp.popup.show new Yapp.Common.PopupView(
+  showSetDetail: (id) ->
+    Yapp.popup.show new Yapp.Common.PopupView
       template: Templates.SetDetailView
-    )
+
+  ###*
+  # Method for the point showing function with selected photo
+  # @method showPointPhoto
+  ###
+  showPointPhoto: (id, photo_id) ->
+    @showContent()
+    @showPointDetail id, photo_id

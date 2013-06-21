@@ -32,3 +32,5 @@ class Yapp.Points.Router extends Marionette.AppRouter
     "points/add": "addPoint"
     "detailpoint/:id": "showPointDetail"
     "detailset/:id": "showSetDetail"
+
+    "detailpoint/:id/photo_:photo_id": "showPointPhoto"
