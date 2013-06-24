@@ -38,6 +38,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   templateHelpers: ->
     headDescription: @model.get('description').slice 0, 150
     tailDescription: @model.get('description').slice 150
+    user: Yapp.user.toJSON()
 
   ###*
   # TODO

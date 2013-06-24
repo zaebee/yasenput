@@ -20,7 +20,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
 
     pointId = parseInt @options.pointId, 10
     point = _.find @model.get('allpoints'), (point) -> point.id is pointId
-    console.log point, pointId
     @activePoint = point or @model.get('allpoints')[0]
 
   template: Templates.SetDetailView
@@ -30,6 +29,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     'bigPhoto': '#big-photo'
     'bigPhotoImg': '#big-photo > .bp-photo'
     'allPhotos': '.item-photo'
+    'placePhotos': '.place-photos'
 
   events: ->
    'click .p-place-desc .a-toggle-desc':'moreDescription'
@@ -42,15 +42,27 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method templateHelpers
   ###
   templateHelpers: ->
-    topImages: @model.get('imgs').slice 0, 4
-    bottomImages: @model.get('imgs').slice 4,8
-    hiddenImages: @model.get('imgs').slice 8
-
     headDescription: @model.get('description').slice 0, 150
     tailDescription: @model.get('description').slice 150
     user: Yapp.user.toJSON()
 
     activePoint: @activePoint
+
+  ###*
+  # TODO
+  # @method onRender
+  ###
+  onRender: ->
+    @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
+    @photoSlider = @ui.placePhotos.data 'slider'
+
+    @$el.find('[data-toggle=tooltip]').tooltip()
+    @showPhoto()
+
+    @photoSlider.init(
+      root: @ui.placePhotos
+      visible: 5
+    )
 
   ###*
   # TODO
@@ -79,6 +91,10 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     else if photoId
       photoId = parseInt photoId, 10
       photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
+    else if @options.photoId
+      photoId = parseInt @options.photoId, 10
+      photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
+      @options.photoId = false
     else
       photoId = parseInt @options.photoId, 10
       photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
@@ -90,9 +106,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     @ui.bigPhoto.html @bigPhotoTemplate(photo)
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
-  onRender: ->
-    @showPhoto()
-
   ###*
   # TODO
   # @method nextPhoto
@@ -101,7 +114,13 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     photoId =  $target.data 'photo-id'
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
-    nextPhotoId = $(activePhoto).next().data 'photo-id'
+    nextPhotoId = $(activePhoto).parent('li').next().children().data 'photo-id'
+
+    if nextPhotoId and @photoSlider.next.is ':visible'
+      @photoSlider.move(1)
+    else if @photoSlider.next.is ':visible'
+      @photoSlider.reinit()
+    #@options.photoId = nextPhotoId
     @showPhoto null, nextPhotoId
 
   choosePlace: (event) ->
