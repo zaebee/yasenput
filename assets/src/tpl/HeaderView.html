@@ -1,91 +1,109 @@
 <div class="wrap">
-    <a href="/" class="logo">ясен путь</a>
+  <div class="logo">ясен путь</div>
 
-    <nav>
-        <ul class="nav">
-            <li class="item-places active">
-                <a href="#">Места</a>
-            </li>
+  <div class="head-search">
+    <div class="search">
+      <form action="#">
+        <input type="submit" value="Найти">
 
-            <li class="item-want">
-              {{#if authorized}}
-                <a href="/logout/" class="a-enter">Выход</a>
-              {{else}}
-                <a href="/login/vkontakte-oauth2" class="a-enter">Вход</a>
-              {{/if}}
-            </li>
-        </ul>
-    </nav>
-
-    {{#if authorized}}
-      <div class="auth user" data-user-id="{{ user.id }}">
-        <img src="{{ avatar }}" alt="" class="avatar" width="30" height="30">
-        <div class="user-body">
-          <div class="user-name"><a href="#">{{first_name}} {{last_name}}</a></div>
-          <div class="user-likes">
-            <span class="ico ico-like-small"></span>
-            {{count_liked_objects}}
-            <span class="ico ico-comment-small"></span>
-            {{count_commented_objects}}
+        <div class="label-fields">
+          {{#if location.country}}
+          <div class="label label-place">
+            {{location.country}}
+            <button class="remove-label"></button>
           </div>
+          {{/if}}
+
+          {{#if location.region}}
+          <div class="label label-place">
+            {{location.region}}
+            <button class="remove-label"></button>
+          </div>
+          {{/if}}
+
+          {{#if location.city}}
+          <div class="label label-place">
+            {{location.city}}
+            <button class="remove-label"></button>
+          </div>
+          {{/if}}
+          <div class="label label-add">
+            Добавить
+            <span>+</span>
+          </div>
+
+          <span class="text-field"><input type="text"></span>
+        </div>
+        <button type="button" class="clear-input"></button>
+      </form>
+
+      <div class="drop-search">
+        <button type="button"  class="toggle-panel"></button>
+
+        <div class="inner-wrap">
+          <ul class="item item-place">
+            <li class="item-title">Местоположения <sup>15</sup></li>
+          </ul>
+
+          <ul class="item item-name">
+            <li class="item-title">Название <sup>15</sup></li>
+          </ul>
+
+          <ul class="item item-labels">
+            <li class="item-title">Метки <sup>15</sup></li>
+          </ul>
+
+          <ul class="item item-users">
+            <li class="item-title">Пользователи <sup>15</sup></li>
+          </ul>
         </div>
       </div>
-    {{/if}}
-
-    <div class="search">
-        <form action="#">
-            <input type="submit" value="Найти">
-
-            <div class="label-fields">
-              {{#if location.country}}
-              <div class="label label-place">
-                {{location.country}}
-                <button class="remove-label"></button>
-              </div>
-              {{/if}}
-
-              {{#if location.region}}
-              <div class="label label-place">
-                {{location.region}}
-                <button class="remove-label"></button>
-              </div>
-              {{/if}}
-
-              {{#if location.city}}
-              <div class="label label-place">
-                {{location.city}}
-                <button class="remove-label"></button>
-              </div>
-              {{/if}}
-
-              <div class="label label-add">
-                Добавить
-                <span>+</span>
-              </div>
-              <span class="text-field"><input type="text" id="multisearch-text" autocomplete="off" onInput='update_multisearch()'></span>
-            </div>
-
-            <button type="button" class="clear-input"></button>
-        </form>
-
-        <div class="drop-search">
-            <button class="toggle-panel"></button>
-
-            <div class="inner-wrap">
-                <ul class="item item-place" id="multisearch-places">
-                    <li class="item-title">Местоположения <sup></sup></li>
-                </ul>
-                <ul class="item item-name" id="multisearch-points">
-                    <li class="item-title">Название <sup></sup></li>
-                </ul>
-                <ul class="item item-labels" id="multisearch-tags">
-                    <li class="item-title">Метки <sup></sup></li>
-                </ul>
-                <ul class="item item-users" id="multisearch-users">
-                    <li class="item-title">Пользователи <sup></sup></li>
-                </ul>
-            </div>
-
-        </div>
     </div>
+  </div>
+
+  <div class="head-nav">
+    <div>
+      <ul>
+        <li class="head-nav-current-item">Коллекции</li>
+        <li><a href="#">Все сразу</a></li>
+        <li><a href="#">Места</a></li>
+        <li><a href="#">События</a></li>
+        <li><a href="#">Маршруты</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="add-block-head">
+    <i class="ico-add"></i>
+
+    <div>
+      <div class="drop-add-head">
+        <a href="/point/add" class="nonav" data-target="p-add-place">Добавить место</a>
+        <a href="/event/add" data-target="p-add-event">Добавить событие</a>
+      </div>
+    </div>
+  </div>
+
+  {{#if authorized}}
+    <div class="auth user">
+      <img src="{{avatar}}" alt="" class="avatar" width="29" height="30">
+      <div class="user-body">
+        <div class="user-name">{{first_name}} {{last_name}}<div class="drop-logout"><a href="/logout/" class="a-logout">Выход</a></div></div>
+        <div class="user-likes">
+          <span class="ico ico-like-small"></span>
+          {{count_liked_objects}}
+          <span class="ico ico-comment-small"></span>
+          {{count_commented_objects}}
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="auth">
+      <img src="/static/images/guest.png" alt="" class="avatar" width="29" height="30">
+      <div class="user-body">
+          <a href="/login/vkontakte-oauth2" class="a-login">Вход</a>
+      </div>
+    </div>
+  {{/if}}
 </div>
+

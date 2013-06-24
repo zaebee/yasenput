@@ -60,10 +60,12 @@
 {{/ifEquals}}
 
 {{#ifEquals type 'point'}}
+
   <div class="photo">
     <a href="#" class="a-like a-like-ok" title="мне нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
     <a href="#" class="a-share-new a-share-new-ok enter" title="поделиться" data-toggle="tooltip" data-placement="bottom"></a>
+
     <div class="yasen-info">
       <span class="yp-title">{{ypi}} ЯПи</span>
 
@@ -74,17 +76,14 @@
         <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
       </div>
     </div>
-    <a href="/point/{{ id }}" class="a-photo nonav">
+
+    <a href="/point/{{id}}" class="a-photo nonav">
       <img src="{{imgs.[0].thumbnail207}}" lt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
     </a>
   </div>
 
-  <div class="alert-added">Добавлено в раздел &laquo;Хочу посетить&raquo;</div>
-
-  <div class="body{{#if id_point}} author-point{{/if}}">
-    {{#if id_point}}
+  <div class="body {{#if id_point}}author-point{{/if}}">
       <img src="/media/{{author.avatar}}" alt="" class="avatar" width="29" height="30">
-    {{/if}}
     <h3>{{name}}</h3>
     <p>{{address}}</p>
   </div>

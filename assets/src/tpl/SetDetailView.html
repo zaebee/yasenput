@@ -24,7 +24,7 @@
 
   <div class="wide-box">
     <ul class="p-tabs">
-      <li class="active"><a href="#tab-photo" data-toggle="tab" class="active">Фотография</a></li>
+      <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
       <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
       <li><a href="#tab-desc" data-toggle="tab">Описание</a></li>
 
@@ -37,15 +37,26 @@
         <div class="tabs-content">
           <div class="toggle-block">
             <div class="clearfix p-gallery">
-              {{#each activePoint.imgs}}
-                <div class="item-photo" data-set-id="{{../id}}" data-photo-id="{{id}}">
-                  <a href="/set/{{../id}}/point/{{../activePoint.id}}/photo/{{id}}">
-                    <img src="{{thumbnail130x130}}" alt="" width="130" height="130">
-                  </a>
-                    <button class="remove-photo"></button>
-                    <button class="complaint-photo"></button>
+              <div class="clearfix place-photos">
+                <div class="photos-gallery">
+                  <ul>
+                    {{#each activePoint.imgs}}
+                    <li>
+                      <div class="item-photo" data-set-id="{{../id}}" data-photo-id="{{id}}">
+                        <a href="/set/{{../id}}/point/{{../activePoint.id}}/photo/{{id}}">
+                          <img src="{{thumbnail130x130}}" alt="" width="104" height="104">
+                        </a>
+                          <button class="remove-photo"></button>
+                          <button class="complaint-photo"></button>
+                      </div>
+                    </li>
+                    {{/each}}
+                  </ul>
                 </div>
-              {{/each}}
+
+                <span class="photos-next"></span>
+                <span class="photos-prev"></span>
+              </div>
 
               <div id="big-photo"></div><!-- end #big-photo -->
 
