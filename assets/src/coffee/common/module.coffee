@@ -16,12 +16,10 @@ Yapp.module 'Common',
         controller: new Yapp.Common.Controller()
       )
       # show main navbar with user info
-      console.log 'Show Common.StubView in header region'
-      Yapp.header.show new Yapp.Common.StubView(
+      Yapp.header.show new Yapp.Common.HeaderView(
         model: Yapp.user
-        template: Templates.HeaderView
       )
-      console.log 'Show Common.StubView in footer region'
+      # show footer info with social widgets
       Yapp.footer.show new Yapp.Common.StubView(
         model: Yapp.user
         template: Templates.FooterView

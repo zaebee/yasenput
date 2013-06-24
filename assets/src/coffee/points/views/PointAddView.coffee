@@ -34,6 +34,12 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
           content: 'popular'
     )
 
+  ###*
+  # Required field for Marionette.View
+  # @property template
+  # @type Object
+  # @default Templates.PointAddView
+  ###
   template: Templates.PointAddView
 
   ui:
@@ -53,6 +59,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     otherLabels: '.other-labels'
     selectedLabels: '.selected-labels'
 
+  ###*
+  # The view event triggers
+  # @property events
+  ###
   events: ->
     'click .p-close': 'hidePopup'
     'focus #add-new-place-address': 'openMap',
