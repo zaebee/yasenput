@@ -72,7 +72,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus'],
+                                fields=['id', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
                                 extras=['likes_count', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
@@ -167,7 +167,12 @@ class PointsBaseView(View):
     
     
     def pointsList(self, points):
-        return HttpResponse(self.getSerializePoints(points), mimetype="application/json")
+        #points.extra(select = {'type_of_item': 1, 
+        #        'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+        #        'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
+        #        'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+        #         })
+        return HttpResponse(self.getSerializeCollections(points), mimetype="application/json")
 
 
 class LoggedPointsBaseView(PointsBaseView):
@@ -289,6 +294,10 @@ class OnePoint(PointsBaseView):
 
     def get(self, request, *args, **kwargs):
         point = get_object_or_404(MainModels.Points, pk=kwargs.get("id"))
+        point.likes_count = point.likeusers.count()
+        point.reviewusersplus = point.reviews.filter(rating = 1).count()
+        point.reviewusersminus = point.reviews.filter(rating = 0).count()
+                 
         return self.pointsList([point])
 
 
@@ -325,42 +334,8 @@ class PointsSearch(PointsBaseView):
 
                 search_res_points = MainModels.Points.search.query(params.get("s"))
                 search_res_sets = CollectionsModels.Collections.search.query(name)
-            
-
-
-            #    pointsreq = pointsreq.filter(name__icontains=name)
-            #    collectreq = []
-            #    for collect in collectionsreq.all():
-            #        trig = 0
-            #        for point in collect.points.all():
-            #            if point.name == name:
-            #                trig = 1
-            #        for point in collect.points_by_user.all():
-            #            if point.point.name == name:
-            #                trig = 1
-            #        if trig == 1:
-            #            collectreq.append(collect.id)
-            #    collectionsreq = collectionsreq.filter(id__in=collectreq)
-
-            #address = form.cleaned_data.get("address")
-            #if address:
-            #    pointsreq = pointsreq.filter(address__icontains=address)
-
-
-            #content = form.cleaned_data.get("content")
-            #if content == 'new':
-            #    pointsreq = pointsreq.order_by('-created')
-            #elif content == "popular":
-            #    pointsreq = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
-            #else:
-            #    pointsreq = pointsreq.order_by("name")
 
             YpJson = YpSerialiser()
-            #points = pointsreq[offset:limit]
-            #collections = collectionsreq[offset:limit]
-
-            #allpoints = json.loads(self.getSerializePoints(points))
-            #allcollections = json.loads(self.getSerializeCollections(collections))
 
             all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), search_res_sets.extra(select = {'type_of_item': 2}))
             items = json.loads(self.getSerializeCollections(all_items.order_by('-ypi')))

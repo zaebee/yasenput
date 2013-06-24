@@ -10,7 +10,9 @@ from apps.comments.models import Comments
 from django.utils import simplejson
 
 def make_upload_path(instance, filename):
-    return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return u'point/%s/%s/%s/%s.jpg' % (filename[:2], filename[3:5], filename[6:8], filename)
 
 class Photos(models.Model):
     class Meta:
