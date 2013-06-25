@@ -35,15 +35,13 @@ class CollectionsBaseView(View):
 
 
 class LikeCollection(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
-
-        DEFAULT_LEVEL = 2
+    def post(self, request, *args, **kwargs):
 
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
 
@@ -51,7 +49,7 @@ class LikeCollection(CollectionsBaseView):
             list_of_collections = params.__getitem__("collectionid").split(",")
             list_of_collections
             for coll_id in list_of_collections:
-                collection = Collections.objects.get(id = int(coll_id))
+                collection = Collections.objects.get(id=int(coll_id))
                 collection.save()
                 if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
                     collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
