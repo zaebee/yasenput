@@ -1,15 +1,18 @@
 <div class="bp-photo" data-photo-id="{{id}}">
-  <img src="{{thumbnail560}}" alt="">
+  <img src="{{thumbnail560}}" alt="" class="main-photo">
 
   <div class="bp-add-like">
     <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
     <span class="bp-name">{{author.first_name}} {{author.last_name}}</span>
     <a href="#" class="a-like"></a>
+    <span class="count-like">5</span>
   </div>
 </div>
 
 <div class="bp-comments">
   <div class="toggle-block a-toggle-up">
+    <a href="#" class="a-toggle">все комментарии <span>&darr;</span></a>
+
     {{#each comments}}
     <div class="item-comment" data-comment-id="{{id}}">
       <img src="/media/{{author.avatar}}" alt="" width="29" height="30" class="avatar">
@@ -21,10 +24,14 @@
       </div>
 
       <div class="action">
-        <!--  <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a> -->
+        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
+        <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
       </div>
     </div>
     {{/each}}
+
+    <!-- hidden comments will be here -->
+    <div class="hidden-content"></div>
 
     <div class="add-comment">
       <form action="#">

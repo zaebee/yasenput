@@ -39,3 +39,13 @@ Handlebars.registerHelper('eachKey', (keysArray, options)->
   return ret
 )
 
+## add &shy; tags for long string
+Handlebars.registerHelper('addShy', (str, options)->
+  if _.contains str, ' '
+    str
+  else
+    strBegin = str.slice 0, 10
+    strEnd = str.slice 10
+    new Handlebars.SafeString "#{strBegin}&shy;#{strEnd}"
+)
+

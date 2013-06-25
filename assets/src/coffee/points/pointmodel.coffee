@@ -7,7 +7,7 @@
 Yapp = window.Yapp
 
 ###*
-# Point data
+# Point model
 # @class Yapp.Points.Point
 # @extends Backbone.Model
 # @constructor
@@ -21,8 +21,9 @@ class Yapp.Points.Point extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Point"
 
+  idAttribute: 'name'
+
   urlRoot: ->
-    type = @get 'type' ## point or collection
     Yapp.API_BASE_URL + "/points/"
 
   ###*
@@ -90,8 +91,7 @@ class Yapp.Points.Point extends Backbone.Model
     if response.type_of_item is 2 ## is collection type
       response.type = 'collection'
       points = response.points
-      points_by_user = response.points_by_user
-      response.allpoints = points.concat points_by_user
+      response.allpoints = points
     if response.type_of_item is 1 ## is point type
       response.type = 'point'
     response
