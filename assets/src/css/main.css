@@ -547,7 +547,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .popup .item-photo{width:130px; height:130px; overflow:hidden; position:relative; float:left; margin:0 13px 13px 0; -moz-box-shadow:0 1px 2px #9f9f9f; -webkit-box-shadow:0 1px 2px #9f9f9f; box-shadow:0 1px 2px #9f9f9f}
 .load-photo{background-position:-466px -43px; position:relative; overflow:hidden; cursor:pointer; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
 	.load-photo input[type=file]{font-size:130px; position:absolute; top:0; right:0; opacity:0; filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0); cursor:pointer}
-.photo-loading .load-status{position:absolute; width:130px; height:79px; text-align:center; background-position:-466px -199px; z-index:1; left:0; top:0; color:#666; padding:51px 0 0; text-transform:uppercase}
+.photo-loading .load-status{position:absolute; width:104px; height:79px; text-align:center; background-position:-466px -199px; z-index:1; left:0; top:0; color:#666; padding:51px 0 0; text-transform:uppercase}
 	.photo-loading .load-status img{display:block; margin:0 auto 8px}
 	.photo-loading .progress-loading{width:70px; height:11px; border:solid 1px #999; background:#686967; margin:0 auto 8px; position:relative; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; overflow:hidden}
 		.photo-loading .progress-loading .value{position:absolute; left:0; top:0; height:11px; background:#b4b5b4}
@@ -591,8 +591,9 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 #tab-map-place, #tab-map-event{padding-bottom:12px}
 
-.drop-filter{position:relative; z-index:23}
-.drop-filter .drop-results{position:absolute; left:0; top:100%; background:#fff; border:solid 1px #c4cec3; width:547px; margin:0; font-size:13px; margin:-1px 0 0; display:none}
+/* .drop-filter{position:relative; z-index:23} */
+.drop-filter{ z-index:23}
+.drop-filter .drop-results{position:absolute; left:0; top:31px; background:#fff; border:solid 1px #c4cec3; width:377px; font-size:13px; margin:0 5px 0; display:none}
 	.drop-filter .drop-results li{padding:4px 10px; cursor:pointer}
 	.drop-filter .drop-results li:hover, .drop-filter .drop-results li.hover{background:#f7fcf7}
 	.drop-filter.select-labels .drop-results{padding:4px 4px 1px 4px; width:539px}
@@ -919,6 +920,27 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.content .item .body .avatar{margin-left:-39px}
 .content .item .body p{font-size:11px; padding:0; margin:0}
 
+#tab-photos-place.validation-error{border: 1px dashed red;}
+#tab-photos-place.validation-error{border: 1px dashed red;}
+.pop-labels.validation-error{border: 1px dashed red;}
+.input-line input[type=text].validation-error{
+	background-color: #FFE4E4;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FFE4E4), to(#fff));
+	background-image: -moz-linear-gradient(top, #FFE4E4, #fff);
+	background-image: -o-linear-gradient(top, #FFE4E4, #fff);
+	background-image: -webkit-linear-gradient(top, #FFE4E4, #fff);
+	background-image: linear-gradient(to bottom, #FFE4E4, #fff);
+}
+.pop-labels.validation-error{border: 1px dashed red;}
+
+.input-line input[type=text].validation-error{
+	background-color: #FFE4E4;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FFE4E4), to(#fff));
+	background-image: -moz-linear-gradient(top, #FFE4E4, #fff);
+	background-image: -o-linear-gradient(top, #FFE4E4, #fff);
+	background-image: -webkit-linear-gradient(top, #FFE4E4, #fff);
+	background-image: linear-gradient(to bottom, #FFE4E4, #fff);
+}
 #hint-add-require-label{position:absolute; z-index:12345; width:300px; top:250px; left:50%; text-align:left; display:none; margin-left:-150px}
 	#hint-add-require-label p{font-size:14.5px; color:#333; margin:0 0 20px; font-family: Arial, sans-serif}
 
@@ -1053,7 +1075,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.place-photos .load-photo, .p-gallery .load-photo{background-position:-612px -199px; position:absolute; left:0; top:30px; margin:0}
 	.p-gallery .load-photo{left:auto; right:18px; top:3px}
 	.p-gallery .place-photos{padding:0}
-	.place-photos .photos-gallery{width:675px; overflow:hidden; margin-left:114px; padding-bottom:0}
+	.place-photos .photos-gallery{width:675px; overflow:hidden; margin-left:114px; padding-bottom:0; height:104px;}
 	.p-gallery .photos-gallery{width:560px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
 	.place-photos ul, .p-gallery .photos-gallery ul{width:12345em; position:relative}
 	.place-photos ul .item-photo, .p-gallery .photos-gallery ul .item-photo{margin:0}
