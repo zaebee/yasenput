@@ -300,7 +300,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 
 #content{}
 
-.content{position:relative; margin:0 40px}
+.content{position:relative; margin:0 auto;}
 	.content .items{position:relative; margin:auto}
 	.content .item{width:229px; background:#fff; margin:0 0 12px; padding-top:11px}
 	.no-boxshadow .content .item{width:227px; border:solid 1px #cfd9ce}
@@ -322,7 +322,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .a-comment.marked{background-position:-32px -111px;}
 .a-comment.marked:hover{background-position:-32px -147px;}
 	.content .item .a-want{position:absolute; left:3px; top:4px}
-	.content .item .a-like{position:absolute; right:34px; top:4px}
+	.content .item .a-like{position:absolute; right:4px; top:4px}
 	.content .item .a-comment{position:absolute; right:3px; top:4px}
 	.content .item .comments{background:url(../images/bg.jpg); border-top:solid 1px #ccd8cc; padding:6px 11px; display:none}
 	.comments .avatar, .comments .add-comment{margin:0 10px 0 0}
@@ -745,7 +745,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .a-collection:hover{background-position:0 -721px; color:#fff}
 .a-collection:active, .a-collection.marked{background-position0 -757px;}
 .a-collection.marked:hover{background-position:0 -793px;}
-.a-edit-new, .a-share-new{position:absolute; right:3px; top:4px; width:30px; height:27px; background-position:-173px -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
+.a-edit-new, .a-share-new{position:absolute; right:34px; top:4px; width:30px; height:27px; background-position:-173px -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
 .a-edit-new:hover{background-position:-173px -721px;}
 .a-edit-new:active, .a-edit-new.marked{background-position-172px -757px;}
 .a-edit-new.marked:hover{background-position:-172px -793px;}
