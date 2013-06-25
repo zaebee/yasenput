@@ -25,7 +25,7 @@ class PhotosBaseView(View):
     def photoList(self, photos):
         json = YpSerialiser()
         return HttpResponse(json.serialize(photos, excludes= ("img",),
-                                                    extras=["isliked", "likes_count", 'thumbnail130x130','img_url'],
+                                                    extras=["isliked", "likes_count", 'thumbnail104x104','img_url'],
                                                      relations={'author': {'fields': (
                                                                     'first_name',
                                                                     'last_name',
@@ -102,7 +102,7 @@ class PhotosAdd(PhotosBaseView):
                 object.imgs.add(photo)
             json = YpSerialiser()
             return HttpResponse(json.serialize([photo], excludes=("img"),
-                                               extras=('thumbnail130x130', 'img_url', 'thumbnail560', 'thumbnail207', 'thumbnail207_height'),
+                                               extras=('thumbnail104x104', 'img_url', 'thumbnail560', 'thumbnail207', 'thumbnail207_height'),
                                                relations={
                                                    'author': {
                                                        'fields': ('first_name', 'last_name', 'avatar')

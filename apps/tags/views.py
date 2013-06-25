@@ -17,14 +17,14 @@ RESPONSE_LIMITS = {"search": 5, "list": 15}
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
-    
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
 
 class TagsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-    
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -39,14 +39,14 @@ class TagsList(TagsBaseView):
         params = request.GET
         COUNT_ELEMENTS = RESPONSE_LIMITS[kwargs["type"]]
         errors = []
-               
+
         limit = COUNT_ELEMENTS
         offset = 0
-        
+
         form = forms.SearchForm(params)
         if form.is_valid():
             pointsreq = TagsModels.Tags.objects
-            
+
             name = form.cleaned_data.get("s")
             if name:
                 name_spl = name.split(' ')
@@ -64,7 +64,7 @@ class TagsList(TagsBaseView):
                             else:
                                 pointsreq.append(item1)
 
-            content = form.cleaned_data.get("content") 
+            content = form.cleaned_data.get("content")
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-id')
             elif content == "popular":
@@ -74,13 +74,13 @@ class TagsList(TagsBaseView):
                              'popular2': 'select count(*)+popular1 as p from main_events_tags where main_events_tags.tags_id = tags_tags.id'
                         }
                     ).order_by('-popular2', '-id')
-            else:   
+            else:
                 pointsreq = pointsreq
-                
+
             tags = pointsreq[offset:limit]
-            
+
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(tags, fields=("name","level")), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(tags, fields=("name","level", "icons")), mimetype="application/json")
         else:
             e = form.errors
             for er in e:
