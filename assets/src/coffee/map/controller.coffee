@@ -1,5 +1,5 @@
 ###*
-# Submodule for all common functionality
+# Submodule for all map functionality
 # @module Yapp
 # @submodule Map
 ###

@@ -8,8 +8,8 @@ Yapp = window.Yapp
 
 ###*
 # Composite view for the point add popup
-# @class Yapp.Points.PointItemView
-# @extends Marionette.ItemView
+# @class Yapp.Points.PointAddView
+# @extends Yapp.Common.PopupView
 # @constructor
 ###
 class Yapp.Points.PointAddView extends Yapp.Common.PopupView
@@ -98,7 +98,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
 
   ###*
-  # Method for open map if
+  # Method for open map if tab map clicked
   # @method openMap
   ###
   openMap: ->
@@ -106,7 +106,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
 
   ###*
-  # Event for initialize ya map
+  # Event for initialize ya map in tab
   # @method onInitMap
   ###
   onInitMap:  ->
@@ -156,7 +156,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       )
 
   ###*
-  # Callback for setting labels attribute and render this lists in template
+  # Callback for setting labels attribute and render this labels list in template
   # @method setLabels
   ###
   setLabels: (response) ->
@@ -165,7 +165,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @triggerMethod('init:map')
 
   ###*
-  # Add labels attrbite for empty model to render in template
+  # Add required labels attrbite for empty model to render in template
   # @method addRequireLabel
   ###
   addRequireLabel: (event) ->
@@ -179,7 +179,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     )
 
   ###*
-  # Add labels attrbite for empty model to render in template
+  # Add other labels attrbite for empty model to render in template
   # @method addOtherLabel
   ###
   addOtherLabel: (event) ->

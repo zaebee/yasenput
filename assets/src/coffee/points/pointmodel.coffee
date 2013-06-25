@@ -7,7 +7,7 @@
 Yapp = window.Yapp
 
 ###*
-# Point data
+# Point model
 # @class Yapp.Points.Point
 # @extends Backbone.Model
 # @constructor
@@ -22,7 +22,6 @@ class Yapp.Points.Point extends Backbone.Model
     console.log "initializing Yapp.Points.Point"
 
   urlRoot: ->
-    type = @get 'type' ## point or collection
     Yapp.API_BASE_URL + "/points/"
 
   ###*

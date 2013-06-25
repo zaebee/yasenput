@@ -8,8 +8,8 @@ Yapp = window.Yapp
 
 ###*
 # Composite view for the point popup
-# @class Yapp.Points.PointItemView
-# @extends Marionette.ItemView
+# @class Yapp.Points.PointDetailView
+# @extends Yapp.Common.PopupView
 # @constructor
 ###
 class Yapp.Points.PointDetailView extends Yapp.Common.PopupView

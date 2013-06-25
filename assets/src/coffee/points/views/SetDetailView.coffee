@@ -7,9 +7,9 @@
 Yapp = window.Yapp
 
 ###*
-# Composite view for the point popup
-# @class Yapp.Points.PointItemView
-# @extends Marionette.ItemView
+# Composite view for the set popup
+# @class Yapp.Points.SetDetailView
+# @extends Yapp.Common.PopupView
 # @constructor
 ###
 class Yapp.Points.SetDetailView extends Yapp.Common.PopupView

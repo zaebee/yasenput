@@ -7,8 +7,8 @@
 Yapp = window.Yapp
 
 ###*
-# Point data
-# @class Yapp.Points.Point
+# Set model
+# @class Yapp.Points.Set
 # @extends Backbone.Model
 # @constructor
 ###
