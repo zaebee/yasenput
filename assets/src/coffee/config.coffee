@@ -43,6 +43,7 @@ jQuery(document).ajaxSend (event, xhr, settings) ->
     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'))
 
 
+## disable console on production mode
 if typeof(window.console) is 'undefined'
   console = {}
 else

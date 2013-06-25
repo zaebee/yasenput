@@ -33,12 +33,12 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
     _.bindAll @, 'loadResults'
-    @collection.page += 1
     # add infiniScroll for point collection
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @loadResults,
-      strict: true
-      scrollOffset: 200
+      #strict: true
+      scrollOffset: 600
+      includePage: true
 
   ###*
   # Event method. It triggers when view fully rendered
@@ -57,5 +57,4 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   # @method onShow
   ###
   loadResults: (collection, response) ->
-    @collection.page += 1
     @onShow()

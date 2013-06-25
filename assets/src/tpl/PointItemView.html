@@ -14,53 +14,57 @@
     </div>
 
     <a href="/set/{{id}}" class="a-photo nonav">
-      <img src="{{allpoints.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{allpoints.[0].imgs.[0].thumbnail207_height}}">
+      {{#if points.[0].imgs.[0]}}
+        <img src="{{points.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{points.[0].imgs.[0].thumbnail207_height}}">
+      {{else}}
+        <img src="/static/images/collection_logo.png" alt="" width="65" height="52">
+      {{/if}}
     </a>
   </div>
 
-  {{#if allpoints}}
   <ul class="photo-preview a-photo nonav">
-    {{#if allpoints.[3]}}
+    {{#if points.[2]}}
       <li>
         <a href="#">
-          <img src="{{#if allpoints.[1]}} {{allpoints.[1].imgs.[0].thumbnail65x52}} {{else}} /static/mages/collection_logo.png{{/if}}" alt="" height="52">
+          <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" height="52">
         </a>
       </li>
 
       <li>
         <a href="#">
-          <img src="{{#if allpoints.[2]}} {{allpoints.[2].imgs.[0].thumbnail65x52}} {{else}} /staticimages/collection_logo.png {{/if}}" alt="" width="65" height="52">
+          <img src="{{points.[1].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
         </a>
       </li>
 
       <li>
         <a href="#">
-          <img src="{{#if allpoints.[3]}} {{allpoints.[3].imgs.[0].thumbnail65x52}} {{else}} /static/images/collection_logo.png {{/if}}" alt="" width="65" height="52">
+          <img src="{{points.[2].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
         </a>
       </li>
     {{else}}
-      {{#if allpoints.[2]}}
+      {{#if points.[1]}}
         <li>
           <a href="#">
-            <img src="{{#if allpoints.[1]}} {{allpoints.[1].imgs.[0].thumbnail65x52}} {{else}} /static/images/collection_logo.png {{/if}}" alt="" width="65" height="52">
+            <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
           </a>
         </li>
 
         <li>
           <a href="#">
-            <img src="{{#if allpoints.[2]}} {{allpoints.[2].imgs.[0].thumbnail135x52}} {{else}} /static/images/collection_logo.png {{/if}}" alt="" width="135" height="52">
+            <img src="{{points.[1].imgs.[0].thumbnail135x52}}" alt="" width="135" height="52">
           </a>
         </li>
       {{else}}
-        <li>
-          <a href="#">
-            <img src="{{#if allpoints.[1]}} {{allpoints.[1].imgs.[0].thumbnail205x52}} {{else}} /static/images/collection_logo.png {{/if}}" alt="" width="205" height="52">
-          </a>
-        </li>
+        {{#if points.[0]}}
+          <li>
+            <a href="#">
+              <img src="{{points.[0].imgs.[0].thumbnail205x52}}" alt="" width="205" height="52">
+            </a>
+          </li>
+        {{/if}}
       {{/if}}
     {{/if}}
   </ul>
-  {{/if}}
   <div class="body author-point">
     <img src="/media/{{author.avatar}}" alt="" class="avatar" width="29" height="30">
 
@@ -73,9 +77,8 @@
 {{#ifEquals type 'point'}}
 
   <div class="photo">
-    <a href="#" class="a-like a-like-ok" title="мне нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+    <a href="#" class="a-like a-like-ok" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
-    <a href="#" class="a-share-new a-share-new-ok enter" title="поделиться" data-toggle="tooltip" data-placement="bottom"></a>
 
     <div class="yasen-info">
       <span class="yp-title">{{ypi}} ЯПи</span>

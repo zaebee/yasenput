@@ -59,7 +59,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showPointDetail
   ###
   showPointDetail: (id, photo_id) ->
-    model = new Yapp.Points.Point id: id
+    model = new Yapp.Points.Point name: id
     model.set 'type', 'point'
     model.fetch(
       success: (model, response) ->

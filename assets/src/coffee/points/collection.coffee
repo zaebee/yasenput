@@ -39,10 +39,8 @@ class Yapp.Points.PointCollection extends Backbone.Collection
   # @method parse
   ###
   parse: (response) ->
-    return response.items
+    response
 
   url:(type) ->
     type = type or 'point'
     Yapp.API_BASE_URL + "/#{type}s/"
-
-  page: 1
