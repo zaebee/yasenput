@@ -70,6 +70,9 @@ Yapp.module 'Common',
         if $("li", p.root).length <= p.visible
           me.prev.hide()
           me.next.hide()
+        else
+          me.prev.show()
+          me.next.show()
 
         me.next.unbind("click.SliderPhotos").bind("click.SliderPhotos", () ->
           if me.flag or $(@).hasClass("disabled")

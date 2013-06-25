@@ -58,6 +58,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     requireLabels: '.require-labels'
     otherLabels: '.other-labels'
     selectedLabels: '.selected-labels'
+    placePhotos: '.place-photos'
 
   ###*
   # The view event triggers
@@ -65,16 +66,15 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   events: ->
     'click .p-close': 'hidePopup'
-    'focus #add-new-place-address': 'openMap',
 
-    'keyup #p-add-place-name': 'searchName',
+    #'keyup #p-add-place-name': 'searchName',
     'keyup #add-new-place-address': 'searchLocation',
-    'keyup input[name=tags]': 'doSearch',
+    #'keyup input[name=tags]': 'doSearch',
 
     'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
-    'focus .input-line input:text': 'showDropList',
-    'blur .input-line input:text': 'hideDropList',
+    'focus .drop-filter input:text': 'showDropList',
+    'blur .drop-filter input:text': 'hideDropList',
     'mousedown .drop-results > li': 'addFromList',
 
     'click #a-add-point': 'validatePoint'
@@ -98,18 +98,22 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
 
   ###*
-  # Method for open map if tab map clicked
-  # @method openMap
+  # 
+  # @method onRender
   ###
-  openMap: ->
-    $('a[href="#tab-map-place"]').tab 'show'
-
+  onRender: ->
+    @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
+    @photoSlider = @ui.placePhotos.data 'slider'
+    @photoSlider.init(
+      root: @ui.placePhotos
+      visible: 6
+    )
 
   ###*
   # Event for initialize ya map in tab
   # @method onInitMap
   ###
-  onInitMap:  ->
+  onInitMap: ->
     _this = @
     @popupMap = new ymaps.Map 'popup-map-place', (
       center: Yapp.myMap.getCenter()
@@ -232,42 +236,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.inputTags.parent().show()
     @ui.inputTags.focus()
 
-
-  ###*
-  # Search tags
-  # @method doSearch
-  ###
-  doSearch: (event) ->
-    event.preventDefault()
-    console.log('do Search!')
-    _this = @
-    #str = $.trim $(event.currentTarget).val()
-    switch event.which
-      when 13
-        event.preventDefault()
-        event.stopPropagation()
-        str = $.trim @ui.inputTags.val()
-        tagId = "new_#{_.uniqueId()}"
-        tag = id: tagId, name: str, class: 'other'
-
-        tags = @model.get('tags')
-        tags.push tag
-        console.log tags
-        @model.set 'tags', tags, silent:true
-        #@model.trigger('change')
-        @ui.selectedLabels.prepend """
-              <div class="label label-other" data-label-id="#{tag.id}" >#{tag.name}
-                <button class="remove-label"></button>
-              </div>
-              """
-        #$(event.currentTarget).val('').trigger('click')
-        @ui.inputTags.val ''
-
-        break
-      else
-        ''
-
-
   ###*
   # Load images to server
   # @method loadImage
@@ -282,18 +250,15 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       url: '/photos/add'
       type: 'POST'
       dataType: 'json'
-      data:
-        object_type: 12
       clearForm: false
-
       success: (data) ->
         _this.model.get('imgs').push data[0]
         _this.ui.photoList.html Templates.ProgressImage _this.model.toJSON()
         _this.ui.photoProgress.hide()
-
+        console.log _this.photoSlider
+        _this.photoSlider.reinit()
       beforeSend: (request) ->
         _this.ui.photoProgress.show()
-
       uploadProgress: (event, position, total, percentComplete) ->
         _this.ui.photoProgress.find('.value').css 'width', percentComplete + '%'
         _this.ui.photoProgress.find('.progress-count').text percentComplete + ' %'
@@ -339,7 +304,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     event.preventDefault()
     self = event.currentTarget
     if $(self).val().length > 0
-      $dropResult = $(self).closest(".drop-filter").find(".drop-results")
+      $dropResult = $(self).closest(".drop-filter").find '.drop-results'
       ymaps.geocode $(self).val(),
         boundedBy: Yapp.myMap.getBounds()
         strictBounds: false
@@ -370,8 +335,9 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method showDropList
   ###
   showDropList: (event) ->
-    $(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999)
-    $(event.currentTarget).closest('.input-line').css('z-index', 20)
+    #$(event.currentTarget).closest('.drop-filter').find('.drop-results').show().css('z-index', 999)
+    #$(event.currentTarget).closest('.input-line').css('z-index', 20)
+    $(event.currentTarget).closest('.drop-filter').find('.drop-results').show()
 
 
   ###*

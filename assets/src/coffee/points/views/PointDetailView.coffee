@@ -21,10 +21,10 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   template: Templates.PointDetailView
 
   ui: ->
-    'bigPhoto': '#big-photo'
-    'bigPhotoImg': '#big-photo > .bp-photo'
-    'allPhotos': '.item-photo'
-    'placePhotos': '.place-photos'
+    bigPhoto: '#big-photo'
+    bigPhotoImg: '#big-photo > .bp-photo'
+    allPhotos: '.item-photo'
+    placePhotos: '.place-photos'
 
   events: ->
    'click .p-place-desc .a-toggle-desc':'moreDescription'
