@@ -386,7 +386,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .a-edit, .create-account input[type=submit], #p-labels input[type=submit], .a-btn{background:#7f3e46; background: -webkit-gradient(linear, 0 0, 0 bottom, from(#944b54), to(#6b3239)); background: -webkit-linear-gradient(#944b54, #6b3239);background: -moz-linear-gradient(#944b54, #6b3239); background: -ms-linear-gradient(#944b54, #6b3239); background: -o-linear-gradient(#944b54, #6b3239); background: linear-gradient(#944b54, #6b3239); filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ff944b54,EndColorStr=#ff6b3239); -moz-box-shadow:0 1px 2px rgba(0, 0, 0, .75); -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, .75); box-shadow:0 1px 2px rgba(0, 0, 0, .75); color:#fff; position:relative}
 .a-edit:hover, .create-account input[type=submit]:hover, #p-labels input[type=submit]:hover, .a-btn:hover{background:#9c555e; background: -webkit-gradient(linear, 0 0, 0 bottom, from(#ad606a), to(#8e4b54)); background: -webkit-linear-gradient(#ad606a, #8e4b54);background: -moz-linear-gradient(#ad606a, #8e4b54); background: -ms-linear-gradient(#ad606a, #8e4b54); background: -o-linear-gradient(#ad606a, #8e4b54); background: linear-gradient(#ad606a, #8e4b54); filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffad606a,EndColorStr=#ff8e4b54)}
 .a-edit:active, .create-account input[type=submit]:active, #p-labels input[type=submit]:active, .a-btn:active{background:#6e343b; -moz-box-shadow:inset 1px 1px 1px rgba(0, 0, 0, .46), 0 1px rgba(0, 0, 0, .75); -webkit-box-shadow:inset 1px 1px 1px rgba(0, 0, 0, .46), 0 1px rgba(0, 0, 0, .75); box-shadow:inset 1px 1px 1px rgba(0, 0, 0, .46), 0 1px rgba(0, 0, 0, .75); top:1px}
-	
+
 .a-btn.marked{background:#43653f; -moz-box-shadow:inset 1px 1px 2px #2b4029; -webkit-box-shadow:inset 1px 1px 2px #2b4029; box-shadow:inset 1px 1px 2px #2b4029; filter:none}
 .a-btn.marked:hover{background:#54834e; -moz-box-shadow:inset 1px 1px 2px #375633; -webkit-box-shadow:inset 1px 1px 2px #375633; box-shadow:inset 1px 1px 2px #375633; filter:none}
 
@@ -1054,7 +1054,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.p-gallery .load-photo{left:auto; right:18px; top:3px}
 	.p-gallery .place-photos{padding:0}
 	.place-photos .photos-gallery{width:675px; overflow:hidden; margin-left:114px; padding-bottom:0}
-	.p-gallery .photos-gallery{width:550px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
+	.p-gallery .photos-gallery{width:560px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
 	.place-photos ul, .p-gallery .photos-gallery ul{width:12345em; position:relative}
 	.place-photos ul .item-photo, .p-gallery .photos-gallery ul .item-photo{margin:0}
 		.place-photos ul li, .p-gallery .photos-gallery li{margin-left:10px; float:left}
