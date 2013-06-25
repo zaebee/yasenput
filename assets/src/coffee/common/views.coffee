@@ -96,13 +96,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   modelEvents:
     'change': 'render'
 
-  ###*
-  # Passed additional user data
-  # @method templateHelpers
-  ###
-  templateHelpers: ->
-    user: Yapp.user.toJSON()
-
   addLabel: (event) ->
     $(event.currentTarget).hide()
     console.log 'add label'

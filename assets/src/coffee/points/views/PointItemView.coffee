@@ -63,5 +63,25 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   # @property events
   ###
   events:
-    "click .removePoint":"removePlace"
-    "click a.removePointConfirm": "removePlaceConfirm"
+    'click .photo .a-like': 'like'
+
+  like: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @model.like $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  successLike: (response, $target) ->
+    _this = @
+    likeusers = @model.get 'likeusers'
+    if $target.hasClass 'marked'
+      me = _.find likeusers, (user) -> user.id is _this.user.id
+      index = _.indexOf likeusers, me
+      likeusers.splice index, 1
+      @model.set 'likeusers', likeusers
+      @model.set 'likes_count', @model.get('likes_count') - 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
+    else
+      likeusers.push @user
+      @model.set 'likes_count', @model.get('likes_count') + 1
+      @model.set 'likesers', likeusers
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1

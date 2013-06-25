@@ -70,3 +70,22 @@ class Yapp.Points.Set extends Backbone.Model
     points = response.points
     response.allpoints = points
     response
+
+  ###*
+  # Like or unlike point. Frist arg is target that was clicked.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method like
+  ###
+  like: (target, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/collections/like"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          target: target
+        data:
+          collectionid: @get 'id'
+    )

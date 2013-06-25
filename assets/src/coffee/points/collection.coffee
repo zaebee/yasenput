@@ -18,7 +18,12 @@ class Yapp.Points.PointCollection extends Backbone.Collection
   # Set model as Yapp.Points.Point
   # @property model
   ###
-  model: Yapp.Points.Point
+  model: (attrs, options) ->
+    if attrs.type_of_item is 1 ## is point type
+      new Yapp.Points.Point attrs, options
+    else if attrs.type_of_item is 2 ## is collection type
+      #new Yapp.Points.Point attrs, options
+      new Yapp.Points.Set attrs, options
 
   ###*
   # The collection initializer
