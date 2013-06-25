@@ -44,9 +44,17 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointItemView'
+    @user = Yapp.user
 
   modelEvents:
     'change': 'render'
+
+  ###*
+  # Passed additional user data
+  # @method templateHelpers
+  ###
+  templateHelpers: ->
+    user: @user.toJSON()
 
   ###*
   # Before render method of the view. Add differnt class for point or set.

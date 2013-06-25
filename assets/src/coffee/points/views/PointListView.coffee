@@ -36,8 +36,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
     # add infiniScroll for point collection
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @loadResults,
-      #strict: true
-      scrollOffset: 600
+      scrollOffset: 350
       includePage: true
 
   ###*
