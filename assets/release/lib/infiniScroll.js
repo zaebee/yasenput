@@ -21,10 +21,8 @@
       error: function(){ },
       onFetch: function(){ },
       target: $(window),
-      param: "until",
       extraParams: {},
       pageSizeParam: "page_size",
-      untilAttr: "id",
       pageSize: pageSize,
       scrollOffset: 100,
       remove: false,
@@ -100,7 +98,6 @@
     function buildQueryParams(model) {
       var params = { };
 
-      params[self.options.param] = typeof(model[self.options.untilAttr]) === "function" ? model[self.options.untilAttr]() : model.get(self.options.untilAttr);
       params[self.options.pageSizeParam] = self.options.pageSize;
 
       if (self.options.includePage) {
