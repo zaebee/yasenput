@@ -79,6 +79,11 @@
                   {{/each}}
                 </ul>
               </div>
+              <div class="item-photo load-photo">
+                <form id="addImageForm" action="" method="POST" enctype="multipart/form-data">
+                  <input name="img" type="file">
+                </form>
+              </div>
 
               <!--
               <div class="item-photo load-photo">
@@ -639,6 +644,7 @@
       </div>
     </section>
 
+    {{#if tags}}
     <section class="p-block event-labels">
       <h4 class="title-block">Метки</h4>
 
@@ -648,6 +654,7 @@
         {{/each}}
       </div>
     </section>
+    {{/if}}
   </div>
 </div>
 
@@ -657,10 +664,13 @@
 <aside id="right-panel">
   <a href="#" class="a-btn a-add-collection">В коллекцию</a>
   <a href="#" class="a-btn a-add-path">Создать маршрут</a>
+  {{#ifEquals author.id user.id}}
   <a href="#" class="a-btn a-edit">Редактировать</a>
+  {{/ifEquals}}
 
   <div class="small-icons">
-    <a href="#" class="a-like" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></a><a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться на место" data-toggle="tooltip"></a>
+    <a href="#" class="a-like {{#ifBelong user likeusers}}marked{{/ifBelong}}" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></a>
+    <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться на место" data-toggle="tooltip"></a>
   </div>
 
   <div class="aside-social">

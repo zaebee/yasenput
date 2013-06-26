@@ -17,6 +17,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   initialize: ->
     console.log 'initialize PointDetailView'
     @bigPhotoTemplate = Templates.BigPhoto
+    @user = Yapp.user
 
   template: Templates.PointDetailView
 
@@ -30,6 +31,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
    'click .p-place-desc .a-toggle-desc':'moreDescription'
    'click .item-photo': 'showPhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
+   'click #right-panel .a-like': 'like'
 
   ###*
   # Passed additional user data
@@ -38,13 +40,13 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   templateHelpers: ->
     headDescription: @model.get('description').slice 0, 150
     tailDescription: @model.get('description').slice 150
-    user: Yapp.user.toJSON()
+    user: @user.toJSON()
 
   ###*
   # TODO
-  # @method onShow
+  # @method onRender
   ###
-  onShow: ->
+  onRender: ->
     @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
     @photoSlider = @ui.placePhotos.data 'slider'
 
@@ -53,7 +55,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
     @photoSlider.init(
       root: @ui.placePhotos
-      visible: 5
+      visible: 4
     )
 
   ###*
@@ -89,7 +91,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     $(activePhoto).addClass 'current'
-    @ui.bigPhoto.html @bigPhotoTemplate(photo)
+    @ui.bigPhoto.html @bigPhotoTemplate(photo)#, @user)
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
   ###*
@@ -108,3 +110,68 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       @photoSlider.reinit()
     @options.photoId = nextPhotoId
     @showPhoto()
+
+  ###*
+  # TODO
+  # @method like
+  ###
+  like: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @model.like $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  ###*
+  # TODO
+  # @method likePhoto
+  ###
+  likePhoto: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    $target = $(event.currentTarget)
+    photoId = $target.data 'photoId'
+    @model.likePhoto $target, photoId, @successLikePhoto, @
+
+  ###*
+  # TODO
+  # @method successLike
+  ###
+  successLike: (response, $target) ->
+    _this = @
+    likeusers = @model.get 'likeusers'
+    if $target.hasClass 'marked'
+      me = _.find likeusers, (user) -> user.id is _this.user.id
+      index = _.indexOf likeusers, me
+      likeusers.splice index, 1
+      @model.set
+        likeusers: likeusers
+        likes_count: @model.get('likes_count') - 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
+    else
+      likeusers.push @user
+      @model.set
+        likesers: likeusers
+        likes_count: @model.get('likes_count') + 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+
+  ###*
+  # TODO
+  # @method successLikePhoto
+  ###
+  successLikePhoto: (response, $target) ->
+    console.log 'success like photo'
+    _this = @
+    photo = response[0]
+    if $target.hasClass 'marked'
+      me = _.find photo.likeusers, (user) -> user.id is _this.user.id
+      #index = _.indexOf likeusers, me
+      #likeusers.splice index, 1
+      #@model.set
+      #likeusers: likeusers
+      #likes_count: @model.get('likes_count') - 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
+    else
+      #likeusers.push @user
+      #@model.set
+      #  likesers: likeusers
+      #  likes_count: @model.get('likes_count') + 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1

@@ -17,9 +17,10 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   initialize: ->
     console.log 'initialize SetDetailView'
     @bigPhotoTemplate = Templates.BigPhoto
+    @user = Yapp.user
 
     pointId = parseInt @options.pointId, 10
-    point = _.find @model.get('allpoints'), (point) -> point.id is pointId
+    point = _.find @model.get('points'), (point) -> point.id is pointId
     @activePoint = point or @model.get('allpoints')[0]
 
   template: Templates.SetDetailView
@@ -36,6 +37,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
    'click .item-photo': 'showPhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
    'click li.choose_place > a': 'choosePlace'
+   'click .stp-like': 'like'
 
   ###*
   # Passed additional user data
@@ -44,7 +46,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   templateHelpers: ->
     headDescription: @model.get('description').slice 0, 150
     tailDescription: @model.get('description').slice 150
-    user: Yapp.user.toJSON()
+    user: @user.toJSON()
 
     activePoint: @activePoint
 
@@ -61,7 +63,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
 
     @photoSlider.init(
       root: @ui.placePhotos
-      visible: 5
+      visible: 4
     )
 
   ###*
@@ -123,9 +125,44 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     #@options.photoId = nextPhotoId
     @showPhoto null, nextPhotoId
 
+  ###*
+  # TODO
+  # @method choosePlace
+  ###
   choosePlace: (event) ->
     event.preventDefault()
     pointId = $(event.currentTarget).data 'id'
     point = _.find @model.get('allpoints'), (point) -> point.id is pointId
     @activePoint = point
     @model.trigger('change')
+
+  ###*
+  # TODO
+  # @method like
+  ###
+  like: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @model.like $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  ###*
+  # TODO
+  # @method successLike
+  ###
+  successLike: (response, $target) ->
+    _this = @
+    likeusers = @model.get 'likeusers'
+    if $target.hasClass 'marked'
+      me = _.find likeusers, (user) -> user.id is _this.user.id
+      index = _.indexOf likeusers, me
+      likeusers.splice index, 1
+      @model.set
+        likeusers: likeusers
+        likes_count: @model.get('likes_count') - 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
+    else
+      likeusers.push @user
+      @model.set
+        likesers: likeusers
+        likes_count: @model.get('likes_count') + 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1

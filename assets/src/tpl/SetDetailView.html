@@ -54,6 +54,12 @@
                   </ul>
                 </div>
 
+                <div class="item-photo load-photo">
+                  <form id="addImageForm" action="" method="POST" enctype="multipart/form-data">
+                    <input name="img" type="file">
+                  </form>
+                </div>
+
                 <span class="photos-next"></span>
                 <span class="photos-prev"></span>
               </div>
@@ -236,7 +242,7 @@
     <aside class="stp-buttons">
     {{#if user.authorized}}
       <div class="c-buttons">
-        <a href="#" class="a-btn stp-like">Нравится</a>
+        <a href="#" class="a-btn stp-like {{#ifBelong user likeusers}}marked{{/ifBelong}}">Нравится</a>
         {{#ifEquals author.id user.id}}<a href="#" class="a-btn stp-edit">Редактировать</a>{{/ifEquals}}
       </div>
     {{/if}}

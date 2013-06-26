@@ -1077,7 +1077,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.p-gallery .load-photo{left:auto; right:18px; top:3px}
 	.p-gallery .place-photos{padding:0}
 	.place-photos .photos-gallery{width:675px; overflow:hidden; margin-left:114px; padding-bottom:0; height:104px;}
-	.p-gallery .photos-gallery{width:560px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
+	.p-gallery .photos-gallery{width:450px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
 	.place-photos ul, .p-gallery .photos-gallery ul{width:12345em; position:relative}
 	.place-photos ul .item-photo, .p-gallery .photos-gallery ul .item-photo{margin:0}
 		.place-photos ul li, .p-gallery .photos-gallery li{margin-left:10px; float:left}

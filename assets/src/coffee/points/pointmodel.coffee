@@ -80,7 +80,7 @@ class Yapp.Points.Point extends Backbone.Model
     )
 
   ###*
-  # Like or unlike point. Frist arg is target that was clicked.
+  # Like or unlike point. Fiist arg is target that was clicked.
   # Second is callback that will be call after success response.
   # Third is variable for binding this namespace.
   # @method like
@@ -96,6 +96,25 @@ class Yapp.Points.Point extends Backbone.Model
           target: target
         data:
           id: @get 'id'
+    )
+
+  ###*
+  # Like or unlike photo for point. Fiist arg is target that was clicked.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method likePhoto
+  ###
+  likePhoto: (target, photoId, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/like"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          target: target
+        data:
+          id: photoId
     )
 
   successSearch: (response, dropResult) ->
