@@ -216,7 +216,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   search: (query, successCallback, context) ->
     Yapp.request(
       'request'
-        url: Yapp.API_BASE_URL + "/points/search"
+        url: Yapp.API_BASE_URL + "/api/v1/search"
         type: 'GET'
         context: context
         successCallback: successCallback
