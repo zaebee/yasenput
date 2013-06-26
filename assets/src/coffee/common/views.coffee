@@ -71,6 +71,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.HeaderView'
+    @multisearchDropdown = Templates.MultisearchDropdown
 
   ###*
   # Required field for Marionette.View
@@ -98,7 +99,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     #'click .label-fields': 'showDropdown'
     'click .remove-label': 'removeLabel'
     'click .clear-input': 'clearSearchInput'
-    'blur .text-field': 'hideDropdown'
+    #'blur .text-field': 'hideDropdown'
     'keydown .text-field input': 'focusInput'
 
   modelEvents:
@@ -112,7 +113,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @setWidthInput()
     @ui.searchInput.show()
     @ui.searchInput.children().val('').focus()
-    #@ui.dropSearch.show()
+    @ui.dropSearch.show()
 
   removeLabel: (event) ->
     event.preventDefault()
@@ -128,26 +129,23 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   hideDropdown: (event) ->
     event.preventDefault()
+    $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
     @ui.dropSearch.hide()
     @ui.searchInput.hide()
     @ui.labelAdd.show()
 
   showDropdown: (response) ->
-    #if event
-    #  event.preventDefault()
-    #  event.stopPropagation()
+    $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
     @setWidthInput()
-    #@ui.searchInput.show()
-    #@ui.searchInput.children().val('').focus()
+    @ui.dropSearch.html @multisearchDropdown(response)
     @ui.dropSearch.show()
+    @setHeightSearchMenu()
 
   focusInput: (e) ->
     _this = @
     @delay(() ->
       if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27
         ## если не стрелка вверх-вниз, не ESC и не Enter, то запустить и выполнить поиск, здесь должен быть аякс и поиск выполнять на success после загрузки
-        #self.findMatch((""+me.val()).toLowerCase())
-        #console.log e.which, _this.ui.searchInput.children().val()
         query = _this.ui.searchInput.children().val()
         _this.search query, _this.showDropdown, _this
         return
@@ -168,6 +166,19 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         w2 += $(this).outerWidth true
     )
     @ui.searchInput.width w1 - w2 - 4
+
+  setHeightSearchMenu: -> ## установить высоту выпадающего меню в поиске
+      menu = @ui.dropSearch
+      menu.css 'height', 'auto'
+
+      height = menu.outerHeight()
+      offsetY = menu.offset().top - $(window).scrollTop()
+      windowHeight = $(window).height()
+
+      if windowHeight < height + offsetY + 60
+        menu.height windowHeight - offsetY - 60
+      else
+        menu.css 'height', 'auto'
 
   delay: ( ->
     timer = 0

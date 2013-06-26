@@ -39,6 +39,7 @@ Handlebars.registerHelper('eachKey', (keysArray, options)->
   return ret
 )
 
+
 ## add &shy; tags for long string
 Handlebars.registerHelper('addShy', (str, options)->
   if _.contains str, ' '
