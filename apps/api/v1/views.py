@@ -160,11 +160,6 @@ class PointsBaseView(View):
     
     
     def pointsList(self, points):
-        #points.extra(select = {'type_of_item': 1, 
-        #        'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-        #        'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-        #        'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-        #         })
         return HttpResponse(self.getSerializeCollections(points), mimetype="application/json")
 
 
@@ -218,25 +213,24 @@ class Search(PointsBaseView):
         tags = pointsreq[offset:limit]
         
         YpJson = YpSerialiser()
-        points = json.loads(YpJson.serialize(all_items, fields = ['id','name']))
+        points = json.loads(YpJson.serialize(all_items, fields = ['id','name', 'address']))
         tags = json.loads(YpJson.serialize(tags, fields = ['name','level']))
         users = json.loads(YpJson.serialize(users, fields = ['id','first_name', 'last_name']))
         return HttpResponse(simplejson.dumps({"points": points, "tags": tags, "users": users})) 
  
 class ItemsList(PointsBaseView):
-    #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        search_res_points = MainModels.Points.search.query(params.get('s', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
+        search_res_points = MainModels.Points.search.query(params.get('search', ''))
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('search', ''))
         search = SphinxQuerySet(index="main_points",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
-
+        params.
         form = forms.FiltersForm(params)
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
@@ -245,7 +239,7 @@ class ItemsList(PointsBaseView):
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-
+                'isliked': ''
                  }), search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})).order_by('ypi')[offset:limit]
         
         items = json.loads(self.getSerializeCollections(all_items))
