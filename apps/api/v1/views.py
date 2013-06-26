@@ -223,14 +223,22 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        search_res_points = MainModels.Points.search.query(params.get('search', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('search', ''))
+        search_res_points = MainModels.Points.search.query(params.get('search'))
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('search'))
         search = SphinxQuerySet(index="main_points",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
-        form = forms.FiltersForm(params)
+        #bottom left coords
+        coords_left = params.get('coord_left')
+        ln_left = json.loads(coords_left).get('ln')
+        lt_left = json.loads(coords_left).get('lt')
+        #top right coords
+        coords_right = params.get('coord_right')
+        ln_right = json.loads(coords_right).get('ln')
+        lt_right = json.loads(coords_right).get('lt')
+
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
@@ -238,7 +246,7 @@ class ItemsList(PointsBaseView):
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-                'isliked': ''
+                #'isliked': ''
                  }), search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})).order_by('ypi')[offset:limit]
         
         items = json.loads(self.getSerializeCollections(all_items))

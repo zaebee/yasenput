@@ -22,6 +22,8 @@ class Collections(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
 
+    priority = models.IntegerField(default=0, blank=False)
+
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     searchdelta = SphinxQuerySet(index="Collections_collections",
                                 mode = 'SPH_MATCH_EXTENDED2',
