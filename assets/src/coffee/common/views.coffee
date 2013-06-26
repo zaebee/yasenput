@@ -166,7 +166,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         query = _this.ui.searchInput.children().val()
         _this.search query, _this.showDropdown, _this
         return
-    1000
+    500
     )
 
   #установить ширину для инпута
