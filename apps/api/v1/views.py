@@ -230,7 +230,6 @@ class ItemsList(PointsBaseView):
                                 rankmode = 'SPH_RANK_NONE')
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
-        params.
         form = forms.FiltersForm(params)
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
