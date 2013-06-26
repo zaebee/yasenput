@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', include('apps.main.urls')),
+    url(r'^api/', include('apps.api.urls')),
     url(r'^addpoint', 'apps.main.views.addpoint'),
     url(r'^editpoint', 'apps.main.views.editpoint'),
     url(r'^loginauth', 'apps.main.views.loginauth'),
