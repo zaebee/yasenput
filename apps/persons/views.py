@@ -119,8 +119,7 @@ class SearchPerson(PersonsBaseView):
             points = users_list[offset:limit]
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, 
-                                                 fields=("username", "first_name", "last_name")), 
+            return HttpResponse(YpJson.serialize(points, fields=("username", "first_name", "last_name")), 
                                 mimetype="application/json")
         else:
             e = form.errors
