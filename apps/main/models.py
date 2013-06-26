@@ -166,6 +166,8 @@ class Points(models.Model):
     invalid = models.BooleanField(default=False)
     parking = models.BooleanField(default=False)
     
+    priority = models.IntegerField(default=0, blank=False)
+
     ypi = models.IntegerField(default=0, blank=True)
 
     author = models.ForeignKey(Person, null=True, serialize=True)
