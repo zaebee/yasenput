@@ -29,7 +29,8 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   events: ->
    'click .p-place-desc .a-toggle-desc':'moreDescription'
-   'click .item-photo': 'showPhoto'
+   'click .photos-gallery .item-photo': 'showPhoto'
+   'click .bp-photo .a-like': 'likePhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
    'click #right-panel .a-like': 'like'
 
