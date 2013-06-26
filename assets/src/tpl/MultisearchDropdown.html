@@ -13,7 +13,13 @@
   <ul class="item item-name">
     <li class="item-title">Название <sup>{{points.length}}</sup></li>
     {{#each points}}
-      <li><a href="#">{{name}} <i>{{address}}</i></a></li>
+    <li class="item-label" data-name="{{name}}" data-id="{{id}}" data-type="place">
+      {{#if address}}
+        <a class="nonav" href="/point/{{id}}">{{name}} <i>{{#if address}}{{splitAddr address ','}}{{/if}}</i></a>
+      {{else}}
+        <a class="nonav" href="/set/{{id}}">{{name}}</a>
+      {{/if}}
+    </li>
     {{/each}}
   </ul>
 {{/if}}
@@ -22,7 +28,7 @@
   <ul class="item item-labels">
     <li class="item-title">Метки <sup>{{tags.length}}</sup></li>
     {{#each tags}}
-      <li><a href="#">{{name}}</a></li>
+      <li class="item-label" data-name="{{name}}" data-id="{{id}}" data-type="tags"><a href="#">{{name}}</a></li>
     {{/each}}
   </ul>
 {{/if}}
@@ -31,7 +37,9 @@
   <ul class="item item-users">
     <li class="item-title">Пользователи <sup>{{users.length}}</sup></li>
     {{#each users}}
-      <li><a href="#">{{first_name}} {{last_name}}</a></li>
+    <li class="item-label" data-name="{{first_name}} {{last_name}}" data-id="{{id}}" data-type="user">
+      <a href="#">{{first_name}} {{last_name}}</a>
+    </li>
     {{/each}}
   </ul>
 {{/if}}

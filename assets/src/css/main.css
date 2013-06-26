@@ -142,7 +142,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 
 .drop-search{position:absolute; width:100%; max-height:629px; background:#fff; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; -moz-box-shadow:0 2px 3px rgba(0, 0, 0, .42); -webkit-box-shadow:0 2px 3px rgba(0, 0, 0, .42); box-shadow:0 2px 3px rgba(0, 0, 0, .42); left:0; top:100%; display:none; margin-top:4px; overflow:auto}
 	.drop-search .inner-wrap{position:relative}
-	.drop-search ul{padding:4px 0 0; font-size:13px; max-height:131px; overflow:hidden}
+	.drop-search ul{padding:4px 0 0; font-size:13px;/* max-height:131px;*/ overflow:hidden}
 	.drop-search ul.overflow-visible{overflow:visible; max-height:12345em}
 	.drop-search ul a{color:#984d56; display:inline-block; vertical-align:top; overflow:hidden; -o-text-overflow:ellipsis; text-overflow:ellipsis; text-decoration:none; padding:0 4px; height:18px}
 	.drop-search ul a:hover, .drop-search ul .selected a{color:#fff}
