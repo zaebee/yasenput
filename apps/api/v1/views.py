@@ -231,7 +231,7 @@ class ItemsList(PointsBaseView):
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
-        if params.get('coord_left') != '':
+        if params.get('coord_left'):
             ln_left = json.loads(params.get('coord_left')).get('ln')
             lt_left = json.loads(params.get('coord_left')).get('lt')
             #top right coords
