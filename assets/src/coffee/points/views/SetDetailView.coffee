@@ -105,7 +105,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
 
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     $(activePhoto).addClass 'current'
-    @ui.bigPhoto.html @bigPhotoTemplate(photo)
+    @ui.bigPhoto.html @bigPhotoTemplate _.extend(photo, user: @user.toJSON())
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
   ###*
