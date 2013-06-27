@@ -2,6 +2,7 @@
 __author__ = 'art'
 from django.db import models
 from apps.main.models import Person
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 
 class Tags(models.Model):
@@ -17,6 +18,11 @@ class Tags(models.Model):
     author = models.ForeignKey(Person, unique=False)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
+
+    search = SphinxSearch(weights={'name': 100})
+    searchdelta = SphinxQuerySet(index="tags_tags",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
     
     def __unicode__(self):
         return self.name

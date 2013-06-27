@@ -10,14 +10,24 @@ import os.path
 from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
-    avatar = ImageField(upload_to='avatar', verbose_name=u'Аватарка', blank=True, null=True)
-    followers = models.ManyToManyField(User, null=True, blank=True, related_name='person_users_followers', serialize=True)
+    avatar = ImageField(upload_to='avatar',
+                        verbose_name=u'Аватарка',
+                        blank=True, null=True)
+    followers = models.ManyToManyField(User, null=True,
+                                       blank=True,
+                                       related_name='person_users_followers',
+                                       serialize=True)
     #    def extra_person(self):
     #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_person",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
 
 
 def create_person(sender, **kwargs):
@@ -122,9 +132,8 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, 'x325')
         return im.url
 
-
-    def thumbnail130x130(self):
-        im = get_thumbnail(self.img, '130x130', crop="center center")
+    def thumbnail104x104(self):
+        im = get_thumbnail(self.img, '104x104', crop="center center")
         return im.url
 """
 class Points(models.Model):
@@ -156,9 +165,21 @@ class Points(models.Model):
     invalid = models.BooleanField(default=False)
     parking = models.BooleanField(default=False)
     
+    priority = models.IntegerField(default=0, blank=False)
+
+    ypi = models.IntegerField(default=0, blank=True)
+
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
+
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_points",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+
+
+    
 
     def _likes(self):
         return self.likeusers.count()
@@ -193,6 +214,7 @@ class PointsByUser(models.Model):
 
     reviews = models.ManyToManyField(Reviews, null=True, blank=True, related_name='pointsbyusers_reviews', serialize=True) #Отзывы, они же попадают в основную точку
 
+    #ypi = models.IntegerField(default=0, blank=True)
     author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)

@@ -12,7 +12,8 @@ from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from django.db.models import Q
-
+from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from pymorphy import get_morph
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -79,11 +80,31 @@ class SearchPerson(PersonsBaseView):
         
         form = forms.SearchForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Person.objects;           
+            #pointsreq = MainModels.Person.objects;           
             
             name = form.cleaned_data.get("s")
+            users_list = []
+            morph = get_morph('/home/tenoclock/yasenput/dicts')
             if name:
-                pointsreq = pointsreq.filter((Q(username__icontains=name) | Q(last_name__icontains=name) | Q(first_name__icontains=name)))
+                #pointsreq = MainModels.Person.search.query(params.get("s"))
+                #search = SphinxSearch()
+                search = SphinxQuerySet(index="auth_user")
+                name_morph = morph.normalize(name.upper())
+                file1 = open('file1.txt','w')
+                file1.write(str(list(name_morph)))
+                file1.close()
+                phrase_list = name.split(' ')
+                for phrase in phrase_list:
+                    if phrase != '':
+                        name_morph = morph.normalize(phrase.upper())
+                        for name_m in name_morph:
+                            search_query = search.query(name_m)
+                            for splited_item in search_query:
+                                if not MainModels.Person.objects.get(id = splited_item['id']) in users_list:
+                                   users_list.append(MainModels.Person.objects.get(id = splited_item['id']))
+                
+                        
+                
 
 
             content = form.cleaned_data.get("content") 
@@ -92,13 +113,13 @@ class SearchPerson(PersonsBaseView):
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(usfiliwers=Count('followers__id')).order_by('-usfiliwers', '-id')
             else:   
-                pointsreq  = pointsreq.order_by("username")
+                pointsreq  = users_list
                 
-            points = pointsreq[offset:limit]
+                
+            points = users_list[offset:limit]
             
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, 
-                                                 fields=("username", "first_name", "last_name")), 
+            return HttpResponse(YpJson.serialize(points, fields=("username", "first_name", "last_name")), 
                                 mimetype="application/json")
         else:
             e = form.errors

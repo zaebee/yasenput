@@ -4,20 +4,25 @@
 
 
 {% block wrap %}
+    <header id="header">
     {% block header %}
         {% include 'main/header.html' %}
     {% endblock %}
+    </header><!--/ #header-->
 
     {% block mainmap %}
-        {% include 'main/mainmap.html' %}
+      <div id="yandex-map" class="toggle-block main-map"></div>
     {% endblock %}
 
-    {% block content %}{% endblock %}
-    {% include 'main/content.html' %}
+    {% block content %}
+      <div id="content"></div>
+    {% endblock %}
 
-    {% block footer %}
+    <footer id="footer">
+      {% block footer %}
         {% include 'main/footer.html' %}
-    {% endblock %}
+      {% endblock %}
+    </footer>
 {% endblock %}
 
 {% block popups %}

@@ -35,31 +35,28 @@ class CollectionsBaseView(View):
 
 
 class LikeCollection(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
-
-        DEFAULT_LEVEL = 2
+    def post(self, request, *args, **kwargs):
 
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
-            
-            
+
             #list_of_collections.split()
             list_of_collections = params.__getitem__("collectionid").split(",")
             list_of_collections
             for coll_id in list_of_collections:
-                collection = Collections.objects.get(id = int(coll_id))
+                collection = Collections.objects.get(id=int(coll_id))
                 collection.save()
                 if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
                     collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
                 else:
                     collection.likeusers.add(MainModels.User.objects.get(username=request.user))
                 collection.save()
-            
+
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
@@ -75,12 +72,34 @@ class OneCollection(View):
             raise Http404
         return super(OneCollection, self).dispatch(request, *args, **kwargs)
 
-    http_method_names = ('post',)
+    http_method_names = ('get',)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         point = get_object_or_404(CollectionsModels.Collections, pk=kwargs.get("id"))
         YpJson = YpSerialiser()
-        return HttpResponse(YpJson.serialize([point], relations={'points': {'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)},'type':{}}}), mimetype="application/json")
+        relations = {
+            'likeusers': {'fields': ('first_name', 'last_name', 'avatar')},
+            'author': {'fields': ('first_name', 'last_name', 'avatar')},
+            'points': {
+                'relations': {
+                    'tags': {'fields': ('name', 'id', 'level')},
+                    'author': {'fields': ('first_name', 'last_name', 'avatar')},
+                    'imgs': {
+                        'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                        'relations': {
+                            'author': {'fields': ('last_name', 'first_name', 'avatar')},
+                            'likeusers': {'fields': ('last_name', 'first_name', 'avatar')},
+                            'comments': {
+                                'relations': {
+                                    'author': {'fields': ('first_name', 'last_name', 'avatar')}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return HttpResponse(YpJson.serialize([point], excludes=('points_by_user',), relations=relations), mimetype="application/json")
 
 
 class CollectionsList(View):
@@ -175,8 +194,8 @@ class CollectionsList(View):
                                                  fields=('id', 'name', 'description', 'likeusers', 'updated', 'points', 'author'),
                                                  relations={'points': {'fields': ('id', 'name', 'address', 'author', 'imgs'),
                                                                        'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},
-                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'),
-                                                                                              'limit': LIMITS.POINTS_LIST.IMAGES_COUNT},                    
+                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail104x104'),
+                                                                                              'limit': LIMITS.POINTS_LIST.IMAGES_COUNT},
                                                                                      },
                                                                        'limit': LIMITS.COLLECTIONS_LIST.POINTS_COUNT
                                                                        },
@@ -184,7 +203,7 @@ class CollectionsList(View):
                                                             'likeusers': {'fields': ('id', 'first_name', 'last_name', 'avatar'),
                                                                           'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}
                                                             }
-                                                 ), 
+                                                 ),
                                 mimetype="application/json")
         else:
             e = form.errors
@@ -205,7 +224,7 @@ class CollectionAdd(CollectionsBaseView):
         params = request.GET.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
-            
+
             collection = form.save(commit=False)
 
             person = MainModels.Person.objects.get(username=request.user)
@@ -220,7 +239,7 @@ class CollectionAdd(CollectionsBaseView):
             else:
                 collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
             #collection.save()
-            
+
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
@@ -241,8 +260,7 @@ class CollectionEdit(CollectionsBaseView):
         params = request.GET.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
-            
-            
+
             #list_of_collections.split()
             list_of_collections = params.__getitem__("collectionid").split(",")
             list_of_collections
@@ -258,7 +276,7 @@ class CollectionEdit(CollectionsBaseView):
                     else:
                         collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
                 collection.save()
-            
+
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
             e = form.errors
@@ -269,9 +287,9 @@ class CollectionEdit(CollectionsBaseView):
 
 class AddPoint(CollectionsBaseView):
     http_method_names = ('get',)
-    
+
     def post(self, request, *args, **kwargs):
-        
+
         errors = []
 
         params = request.POST

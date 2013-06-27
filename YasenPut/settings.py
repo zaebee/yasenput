@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import os.path
 from os import path
 
-try:
-    from .settings_local import *
-except:
-    pass
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -16,6 +11,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'info@yasenput.ru'
 EMAIL_HOST_PASSWORD = 'ya$enputinfo'
 
+SPHINX_API_VERSION = 0x119
 
 ADMINS = (
 # ('Artem Ushakov', 'artushakov@gmail.com'),
@@ -73,17 +69,26 @@ DECIMAL_SEPARATOR = '.'
 SITE_NAME = path.basename(path.realpath(path.curdir))
 SITE_ROOT = os.path.join(path.realpath(path.pardir), SITE_NAME)
 
-MEDIA_URL = '/assets/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 
-STATIC_URL = '/assets/'
-STATIC_ROOT = '/assets/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/release'))
+
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(SITE_ROOT, 'assets')),
     #    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets'
+DATABASE_ENGINE = 'mysql'
+DATABASE_HOST = '127.0.0.1'
+DATABASE_PORT = '3306'
+DATABASE_NAME = 'yasenput'
+DATABASE_USER = 'root'
+DATABASE_PASSWORD = ''
 
+SPHINX_SERVER = 'localhost'
+SPHINX_PORT = 3312
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -141,7 +146,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     #'django.contrib.comments',
     'social_auth',
     'sorl.thumbnail',
@@ -160,6 +165,8 @@ INSTALLED_APPS = (
     'apps.collections',
     'apps.reviews',
     'apps.descriptions',
+    'apps.djangosphinx',
+    'apps.api',
     'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
