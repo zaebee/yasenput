@@ -231,14 +231,24 @@ class ItemsList(PointsBaseView):
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
-        coords_left = params.get('coord_left')
-        ln_left = json.loads(coords_left).get('ln')
-        lt_left = json.loads(coords_left).get('lt')
+        ln_left = json.loads(params.get('coord_left')).get('ln')
+        lt_left = json.loads(params.get('coord_left')).get('lt')
         #top right coords
-        coords_right = params.get('coord_right')
-        ln_right = json.loads(coords_right).get('ln')
-        lt_right = json.loads(coords_right).get('lt')
-
+        ln_right = json.loads(params.get('coord_right')).get('ln')
+        lt_right = json.loads(params.get('coord_right')).get('lt')
+        search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+        search_res_sets_list = []
+        search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        for collection in search_res_sets.all():
+            trigger = 0
+            for point in collection.points.all():
+                if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
+                    trigger = 1
+            if trigger == 1:
+                search_res_sets_list.append(collection)
+        if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
+            search_res_sets = search_res_sets_list
+            search_res_points = search_res_points_list
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
@@ -247,7 +257,7 @@ class ItemsList(PointsBaseView):
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                 #'isliked': ''
-                 }), search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})).order_by('ypi')[offset:limit]
+                 }), search_res_sets).order_by('ypi')[offset:limit]
         
         items = json.loads(self.getSerializeCollections(all_items))
         return HttpResponse(json.dumps(items), mimetype="application/json")
