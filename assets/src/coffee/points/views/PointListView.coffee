@@ -45,6 +45,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onShow: ->
     @$el.find('[data-toggle=tooltip]').tooltip()
+    itemsInRow = Math.floor @$el.width() / 241
+    width = itemsInRow * 241
+    @$el.css 'width', width
     @$el.masonry(
       itemSelector: '.item',
       columnWidth: 241
