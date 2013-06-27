@@ -65,10 +65,6 @@ class Yapp.Points.Set extends Backbone.Model
   parse: (response) ->
     if _.isArray response
       response = response[0]
-
-    response.type = 'collection'
-    points = response.points
-    response.allpoints = points
     response
 
   ###*

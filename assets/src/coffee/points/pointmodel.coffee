@@ -128,11 +128,4 @@ class Yapp.Points.Point extends Backbone.Model
   parse: (response) ->
     if _.isArray response
       response = response[0]
-
-    if response.type_of_item is 2 ## is collection type
-      response.type = 'collection'
-      points = response.points
-      response.allpoints = points
-    if response.type_of_item is 1 ## is point type
-      response.type = 'point'
     response
