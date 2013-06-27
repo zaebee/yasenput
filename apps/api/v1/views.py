@@ -66,8 +66,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
+                                fields=['id', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                extras=['likes_count', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
@@ -224,11 +224,11 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
+        sets = "set"
         search_res_points = MainModels.Points.search.query(params.get('s', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
-        search = SphinxQuerySet(index="main_points",
-                                mode = 'SPH_MATCH_EXTENDED2',
-                                rankmode = 'SPH_RANK_NONE')
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        #search_res_sets_ex = search_res_sets
+       
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
@@ -240,7 +240,7 @@ class ItemsList(PointsBaseView):
             lt_right = json.loads(params.get('coord_right')).get('lt')
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
-            search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+            
             for collection in search_res_sets.all():
                 trigger = 0
                 for point in collection.points.all():
@@ -257,12 +257,15 @@ class ItemsList(PointsBaseView):
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-        all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1,
+        all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                 #'isliked': ''
                  }), search_res_sets).order_by('ypi')[offset:limit]
-        
+        i = offset
+        for item in all_items:
+            i = i+1
+            item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
         return HttpResponse(json.dumps(items), mimetype="application/json")
