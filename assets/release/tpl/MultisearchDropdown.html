@@ -9,6 +9,12 @@
   </ul>
 -->
 
+{{#if empty}}
+  <ul class="item">
+    <li class="drop-not-found">Ничего не найдено</li>
+  </ul>
+{{/if}}
+
 {{#if points}}
   <ul class="item item-name">
     <li class="item-title">Название <sup>{{points.length}}</sup></li>
