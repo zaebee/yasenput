@@ -11,6 +11,8 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'info@yasenput.ru'
 EMAIL_HOST_PASSWORD = 'ya$enputinfo'
 
+DICTS_PATH = '/home/tenoclock/yasenput/dicts'
+
 SPHINX_API_VERSION = 0x119
 
 ADMINS = (
