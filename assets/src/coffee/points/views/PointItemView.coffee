@@ -73,6 +73,12 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   events:
     'click .photo .a-like': 'like'
     'click .photo .a-collection': 'addToCollection'
+    'click .yp-title': 'toggleYpInfo'
+    'click .yp-info': 'toggleYpInfo'
+
+  ui:
+    ypInfo: '.yp-info'
+    ypTitle: '.yp-title'
 
   like: (event) ->
     if !@user.get 'authorized'
@@ -104,4 +110,8 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
       return
     event.preventDefault()
     $target = $(event.currentTarget)
-    @model.addToCollection $target, @successLike, @ ##targetElement, successCallback and context variables
+    #@model.addToCollection $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  toggleYpInfo: (event) ->
+    @ui.ypInfo.toggle()
+    @ui.ypTitle.toggle()

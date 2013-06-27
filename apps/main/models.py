@@ -168,7 +168,8 @@ class Points(models.Model):
     priority = models.IntegerField(default=0, blank=False)
 
     ypi = models.IntegerField(default=0, blank=True)
-
+    type_of_item = "point"
+    unid = '1'
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
