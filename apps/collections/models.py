@@ -2,7 +2,7 @@
 __author__ = 'art'
 from django.db import models
 from apps.main import models as MainModels
-from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 COMMENT_ALLOWED_MODELS = (
     ('12', 'main.Points'),
