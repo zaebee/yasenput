@@ -21,7 +21,7 @@ class Yapp.Points.Point extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Point"
 
-  idAttribute: 'name'
+  idAttribute: 'unid'
 
   urlRoot: ->
     Yapp.API_BASE_URL + "/points/"

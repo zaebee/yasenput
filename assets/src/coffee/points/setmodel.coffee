@@ -21,8 +21,9 @@ class Yapp.Points.Set extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Set"
 
+  idAttribute: 'unid'
+
   urlRoot: ->
-    type = @get 'type' ## point or collection
     Yapp.API_BASE_URL + "/collections/"
 
   ###*
