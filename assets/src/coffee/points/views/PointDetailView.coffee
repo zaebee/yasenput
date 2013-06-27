@@ -33,6 +33,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
    'click .bp-photo .a-like': 'likePhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
    'click #right-panel .a-like': 'like'
+   #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
   # Passed additional user data
