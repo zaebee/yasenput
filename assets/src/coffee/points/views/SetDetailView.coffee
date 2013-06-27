@@ -21,7 +21,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
 
     pointId = parseInt @options.pointId, 10
     point = _.find @model.get('points'), (point) -> point.id is pointId
-    @activePoint = point or @model.get('allpoints')[0]
+    @activePoint = point or @model.get('points')[0]
 
   template: Templates.SetDetailView
   className: 'popup p-collection'
@@ -132,7 +132,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   choosePlace: (event) ->
     event.preventDefault()
     pointId = $(event.currentTarget).data 'id'
-    point = _.find @model.get('allpoints'), (point) -> point.id is pointId
+    point = _.find @model.get('points'), (point) -> point.id is pointId
     @activePoint = point
     @model.trigger('change')
 

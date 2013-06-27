@@ -281,7 +281,7 @@
   <div class="aside-content">
     <div class="aside-viewport">
       <ol id="ol-collection">
-        {{#each allpoints}}
+        {{#each points}}
         <li class="choose_place {{#ifEquals id ../activePoint.id}}active{{/ifEquals}}" data-placemark-id="placemark-1">
           <a href="/set/{{../id}}/point/{{id}}" class="choose_place_a" data-id="{{id}}">{{name}}</a>
             <button type="button" class="remove-collection"></button>
