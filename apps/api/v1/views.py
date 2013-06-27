@@ -66,8 +66,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
+                                fields=['id', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                extras=['likes_count', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
@@ -263,6 +263,9 @@ class ItemsList(PointsBaseView):
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                 #'isliked': ''
                  }), search_res_sets).order_by('ypi')[offset:limit]
-        
+        i = offset
+        for item in all_items:
+            i = i+1
+            item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
         return HttpResponse(json.dumps(items), mimetype="application/json")
