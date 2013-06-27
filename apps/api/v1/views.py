@@ -247,12 +247,17 @@ class ItemsList(PointsBaseView):
                     if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
                         trigger = 1
                 if trigger == 1:
-                    search_res_sets_list.append(collection)
+                    search_res_sets_list.append(collection.id)
             if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
+                search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
+                search_res_points = search_res_points_list
+        
+        if params.get('user'):
+            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
+            search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
+            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets_list
                 search_res_points = search_res_points_list
-        if params.get('user'):
-            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
@@ -262,7 +267,7 @@ class ItemsList(PointsBaseView):
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                 #'isliked': ''
-                 }), search_res_sets).order_by('ypi')[offset:limit]
+                 }), search_res_sets).order_by('-ypi')[offset:limit]
         i = offset
         for item in all_items:
             i = i+1

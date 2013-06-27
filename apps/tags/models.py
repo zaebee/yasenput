@@ -2,7 +2,7 @@
 __author__ = 'art'
 from django.db import models
 from apps.main.models import Person
-from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 
 class Tags(models.Model):
