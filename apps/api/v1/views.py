@@ -15,6 +15,7 @@ from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
+import YasenPut.settings
 from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 from querysetjoin import QuerySetJoin
 from django.utils.encoding import smart_str
@@ -180,7 +181,7 @@ class Search(PointsBaseView):
         
         #users:
         users_list = []
-        morph = get_morph('/home/tenoclock/yasenput/dicts')
+        morph = get_morph(DICTS_PATH)
         search = SphinxQuerySet(index="auth_user")
         name_morph = morph.normalize(params.get("s").upper())
         phrase_list = params.get("s").split(' ')
