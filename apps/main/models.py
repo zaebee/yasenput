@@ -10,7 +10,7 @@ import os.path
 from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
-from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
