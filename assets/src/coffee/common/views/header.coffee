@@ -44,6 +44,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   events:
     'click .a-login': 'showAuthPopup'
+    'click .drop-add-head': 'showAuthPopup'
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
     'click .remove-label': 'removeLabel'
@@ -56,7 +57,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     'change': 'render'
 
   showAuthPopup: (event) ->
-    Yapp.vent.trigger 'user:notauthorized' ## handler for this event is in main.coffee file
+    if !@model.get 'authorized'
+      event.preventDefault()
+      event.stopPropagation()
+      Yapp.vent.trigger 'user:notauthorized' ## handler for this event is in main.coffee file
 
   addLabel: (event) ->
     event.preventDefault()
@@ -72,7 +76,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   focusInput: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    #@unbindTo('hideDropdown')
     #$("body").css 'overflow', 'hidden'
     @setWidthInput()
     @ui.searchInput.show()
@@ -97,7 +100,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.currentTarget)
     @ui.labelFields.children('.label-place, .label-user, .label-tags, .label-new').remove()
 
-  hideDropdown: ->
+  hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
     #$("body").css 'overflow', 'auto'
     @ui.dropSearch.hide()
