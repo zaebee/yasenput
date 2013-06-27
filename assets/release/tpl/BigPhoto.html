@@ -33,10 +33,11 @@
     <!-- hidden comments will be here -->
     <div class="hidden-content"></div>
 
+    {{#if user.authorized}}
     <div class="add-comment">
       <form action="#">
         <div class="ac-block">
-          <img src="/media/avatar/f3984dc5a78d4473b82b1e1b3a9a56df.jpeg" alt="" width="29" height="30" class="avatar">
+          <img src="{{user.avatar}}" alt="" width="29" height="30" class="avatar">
           <div class="ac-body">
             <div class="toggle-area">
               <textarea rows="3" cols="40" placeholder="Комментировать"></textarea>
@@ -46,6 +47,7 @@
         </div>
       </form>
     </div><!-- end .add-comment -->
+    {{/if}}
 
   </div><!-- end .toggle-block a-toggle-up -->
 </div><!-- end .bp-comments -->
