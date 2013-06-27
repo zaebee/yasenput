@@ -68,6 +68,7 @@ Yapp.on 'start', ->
     protocol = @protocol + '//'
     if href and href.slice(0, protocol.length) isnt protocol and href.indexOf('javascript:') isnt 0
       event.preventDefault()
+      event.stopPropagation()
       Backbone.history.navigate(href, true)
 
   @user = new Yapp.User.Profile(USER)
