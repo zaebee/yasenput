@@ -223,8 +223,8 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        search_res_points = MainModels.Points.search.query(params.get('search'))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('search'))
+        search_res_points = MainModels.Points.search.query(params.get('search', ''))
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('search', ''))
         search = SphinxQuerySet(index="main_points",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
