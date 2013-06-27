@@ -181,7 +181,7 @@ class Search(PointsBaseView):
         
         #users:
         users_list = []
-        morph = get_morph(DICTS_PATH)
+        morph = get_morph(YasenPut.settings.DICTS_PATH)
         search = SphinxQuerySet(index="auth_user")
         name_morph = morph.normalize(params.get("s").upper())
         phrase_list = params.get("s").split(' ')
