@@ -44,6 +44,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   events:
     'click .a-login': 'showAuthPopup'
+    'click .auth': 'showAuthPopup'
     'click .drop-add-head': 'showAuthPopup'
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
@@ -51,7 +52,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     'click .clear-input': 'clearSearchInput'
     'click .item-label': 'addLabel'
     'keydown .text-field input': 'keyupInput'
-    'blur .text-field': 'hideDropdown'
+    #'blur .text-field': 'hideDropdown'
 
   modelEvents:
     'change': 'render'
