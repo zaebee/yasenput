@@ -223,32 +223,36 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
-        search_res_points = MainModels.Points.search.query(params.get('search', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('search', ''))
+        search_res_points = MainModels.Points.search.query(params.get('s', ''))
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
         search = SphinxQuerySet(index="main_points",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
-        ln_left = json.loads(params.get('coord_left')).get('ln')
-        lt_left = json.loads(params.get('coord_left')).get('lt')
-        #top right coords
-        ln_right = json.loads(params.get('coord_right')).get('ln')
-        lt_right = json.loads(params.get('coord_right')).get('lt')
-        search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-        search_res_sets_list = []
-        search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
-        for collection in search_res_sets.all():
-            trigger = 0
-            for point in collection.points.all():
-                if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                    trigger = 1
-            if trigger == 1:
-                search_res_sets_list.append(collection)
-        if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
-            search_res_sets = search_res_sets_list
-            search_res_points = search_res_points_list
+        if params.get('coord_left') != '':
+            ln_left = json.loads(params.get('coord_left')).get('ln')
+            lt_left = json.loads(params.get('coord_left')).get('lt')
+            #top right coords
+            ln_right = json.loads(params.get('coord_right')).get('ln')
+            lt_right = json.loads(params.get('coord_right')).get('lt')
+            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            search_res_sets_list = []
+            search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+            for collection in search_res_sets.all():
+                trigger = 0
+                for point in collection.points.all():
+                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
+                        trigger = 1
+                if trigger == 1:
+                    search_res_sets_list.append(collection)
+            if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
+                search_res_sets = search_res_sets_list
+                search_res_points = search_res_points_list
+        #if params.get('user'):
+        #    search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
