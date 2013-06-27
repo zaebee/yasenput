@@ -224,8 +224,9 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         
         params = request.GET
+        sets = "set"
         search_res_points = MainModels.Points.search.query(params.get('s', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
         #search_res_sets_ex = search_res_sets
        
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
@@ -256,7 +257,7 @@ class ItemsList(PointsBaseView):
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-        all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1,
+        all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
