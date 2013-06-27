@@ -15,7 +15,7 @@ from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from django.db.models import Count
 from YasenPut.limit_config import LIMITS
-from djangosphinx.models import SphinxSearch, SphinxQuerySet
+from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 from querysetjoin import QuerySetJoin
 from django.utils.encoding import smart_str
 import random
@@ -250,8 +250,8 @@ class ItemsList(PointsBaseView):
             if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets_list
                 search_res_points = search_res_points_list
-        #if params.get('user'):
-        #    search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+        if params.get('user'):
+            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
