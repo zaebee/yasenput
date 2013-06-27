@@ -225,11 +225,9 @@ class ItemsList(PointsBaseView):
         
         params = request.GET
         search_res_points = MainModels.Points.search.query(params.get('s', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
-        search_res_sets_ex = search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
-        search = SphinxQuerySet(index="main_points",
-                                mode = 'SPH_MATCH_EXTENDED2',
-                                rankmode = 'SPH_RANK_NONE')
+        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        #search_res_sets_ex = search_res_sets
+       
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
@@ -242,7 +240,7 @@ class ItemsList(PointsBaseView):
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
             
-            for collection in search_res_sets_ex.all():
+            for collection in search_res_sets.all():
                 trigger = 0
                 for point in collection.points.all():
                     if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
