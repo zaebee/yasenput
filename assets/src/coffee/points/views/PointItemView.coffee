@@ -72,8 +72,12 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   ###
   events:
     'click .photo .a-like': 'like'
+    'click .photo .a-collection': 'addToCollection'
 
   like: (event) ->
+    if !@user.get 'authorized'
+      Yapp.vent.trigger 'user:notauthorized'
+      return
     event.preventDefault()
     $target = $(event.currentTarget)
     @model.like $target, @successLike, @ ##targetElement, successCallback and context variables
@@ -93,3 +97,11 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
       @model.set 'likes_count', @model.get('likes_count') + 1
       @model.set 'likesers', likeusers
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+
+  addToCollection: (event) ->
+    if !@user.get 'authorized'
+      Yapp.vent.trigger 'user:notauthorized'
+      return
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @model.addToCollection $target, @successLike, @ ##targetElement, successCallback and context variables

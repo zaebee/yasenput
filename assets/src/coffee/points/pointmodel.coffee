@@ -54,6 +54,9 @@ class Yapp.Points.Point extends Backbone.Model
     if attrs.latitude is ''
       invalid.push 'latitude'
 
+    if attrs.description is ''
+      invalid.push 'description'
+
     if not attrs.imgs or attrs.imgs.length is 0
       invalid.push 'photos'
 

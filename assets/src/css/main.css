@@ -924,7 +924,8 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #tab-photos-place.validation-error{border: 1px dashed red;}
 #tab-photos-place.validation-error{border: 1px dashed red;}
 .pop-labels.validation-error{border: 1px dashed red;}
-.input-line input[type=text].validation-error{
+.input-line input[type=text].validation-error,
+.input-line textarea.validation-error{
 	background-color: #FFE4E4;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#FFE4E4), to(#fff));
 	background-image: -moz-linear-gradient(top, #FFE4E4, #fff);

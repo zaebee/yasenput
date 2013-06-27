@@ -63,15 +63,21 @@ Yapp.addInitializer ->
 Yapp.on 'start', ->
   console.log 'starting application'
 
+  @user = new Yapp.User.Profile(USER)
+  @runApplication()
+
+  _this = @
   $(document).on 'click', 'a.nonav', (event) ->
     href = $(@).attr 'href'
     protocol = @protocol + '//'
     if href and href.slice(0, protocol.length) isnt protocol and href.indexOf('javascript:') isnt 0
       event.preventDefault()
-      Backbone.history.navigate(href, true)
-
-  @user = new Yapp.User.Profile(USER)
-  @runApplication()
+      event.stopPropagation()
+      ## show auth popup if user notauthorized
+      if !_this.user.get 'authorized'
+        Yapp.vent.trigger 'user:notauthorized'
+      else
+        Backbone.history.navigate href, true
 
 # init all modules for fully working application
 Yapp.runApplication = ->
@@ -84,6 +90,10 @@ Yapp.runApplication = ->
   else
     @Map.start()
     @Points.start()
+
+  # if user not authorized we show popup with login buttons
+  @vent.on 'user:notauthorized', ->
+    Yapp.popup.show new Yapp.Common.AuthPopupView
 
   # on logout we must go to start application point
   @vent.on 'logout', ->
