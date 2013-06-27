@@ -43,6 +43,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @property events
   ###
   events:
+    'click .a-login': 'showAuthPopup'
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
     'click .remove-label': 'removeLabel'
@@ -53,6 +54,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   modelEvents:
     'change': 'render'
+
+  showAuthPopup: (event) ->
+    Yapp.vent.trigger 'user:notauthorized' ## handler for this event is in main.coffee file
 
   addLabel: (event) ->
     event.preventDefault()
@@ -131,7 +135,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         event.stopPropagation()
         if $(".selected", @ui.dropSearch).length
           $(".selected a", @ui.dropSearch).click()
-        
+
         notFound = $(".drop-not-found", @ui.dropSearch)
         if notFound.length
           data =
@@ -163,10 +167,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     li = $("li:visible:has(a)", @ui.dropSearch).filter( ->
       return true
     )
-    
+
     if li.filter(".selected").length
       indexSelected = li.index(li.filter(".selected"))
-      
+
       if indexSelected < li.length - 1
         if dir is 1
           li.filter(".selected:first").removeClass("selected")
