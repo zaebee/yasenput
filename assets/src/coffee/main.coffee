@@ -73,11 +73,7 @@ Yapp.on 'start', ->
     if href and href.slice(0, protocol.length) isnt protocol and href.indexOf('javascript:') isnt 0
       event.preventDefault()
       event.stopPropagation()
-      ## show auth popup if user notauthorized
-      if !_this.user.get 'authorized'
-        Yapp.vent.trigger 'user:notauthorized'
-      else
-        Backbone.history.navigate href, true
+      Backbone.history.navigate href, true
 
 # init all modules for fully working application
 Yapp.runApplication = ->

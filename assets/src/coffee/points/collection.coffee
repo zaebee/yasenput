@@ -45,6 +45,5 @@ class Yapp.Points.PointCollection extends Backbone.Collection
   parse: (response) ->
     response
 
-  url:(type) ->
-    type = type or 'point'
-    Yapp.API_BASE_URL + "/#{type}s/"
+  url: ->
+    Yapp.API_BASE_URL + "/api/v1/yapens/"
