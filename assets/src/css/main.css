@@ -134,9 +134,9 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .label-name{background:#9884b9 !important}
 .label-user{background:#f5c05c !important}
 .remove-label, .label-add span{position:absolute; width:18px; height:18px; background-position:-423px -5px; border:0; border-left:solid 1px #e4bbc0; right:0; top:0; cursor:pointer}
-	.label-user .remove-label{border-left-color:#fbe6be}
 	.label-name .remove-label{border-left-color:#c8bdda}
 	.label-place .remove-label{border-left-color:#9ec1ff}
+	.label-user .remove-label{border-left-color:#fbe6be}
 .label-add{background:#e6e6e6 !important; color:#acacac !important; cursor:pointer}
 	.label-add span{font-size:15px; border:0 !important; text-align:center}
 

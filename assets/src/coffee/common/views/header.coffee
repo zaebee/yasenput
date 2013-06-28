@@ -65,29 +65,14 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   addLabel: (event) ->
     event.preventDefault()
-    #event.stopPropagation()
     $target = $(event.currentTarget)
     data =
       id: $target.data 'id'
       name: $target.data 'name'
       type: $target.data 'type'
+
     @ui.labelFields.children('.label-add').before @labelTemplate(data)
     @hideDropdown()
-
-  focusInput: (event) ->
-    event.preventDefault()
-    event.stopPropagation()
-    #$("body").css 'overflow', 'hidden'
-    @setWidthInput()
-    @ui.searchInput.show()
-    @ui.searchInput.children().val('').focus()
-    @ui.labelAdd.hide()
-    #@ui.dropSearch.show()
-
-  focusLabels: (event) ->
-    $target = $(event.target)
-    if $target.hasClass 'label-fields'
-      @focusInput(event)
 
   removeLabel: (event) ->
     event.preventDefault()
@@ -95,6 +80,19 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.currentTarget)
     $target.parent().remove()
     @ui.searchInput.children().focus()
+
+  focusInput: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    @ui.labelAdd.hide()
+    @setWidthInput()
+    @ui.searchInput.show()
+    @ui.searchInput.children().val('').focus()
+
+  focusLabels: (event) ->
+    $target = $(event.target)
+    if $target.hasClass 'label-fields'
+      @focusInput(event)
 
   clearSearchInput: (event) ->
     event.preventDefault()
@@ -121,10 +119,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   keyupInput: (e) ->
     @onKeyDownSpecial(e)
-
     @delay(() =>
-      if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27
-        ## если не стрелка вверх-вниз, не ESC и не Enter, то запустить и выполнить поиск, здесь должен быть аякс и поиск выполнять на success после загрузки
+      if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
+        ## если не стрелка вверх-вниз, не ESC и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
         if query
           @search query, @showDropdown, @
@@ -134,6 +131,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   onKeyDownSpecial: (event) ->
     switch event.which
+      when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
+        if @ui.searchInput.children().val() is ''
+          @ui.labelFields.children('.label:visible').last().hide()
+
       when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
         event.preventDefault()
         event.stopPropagation()
@@ -200,13 +201,13 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     w2 = 0
     t = 0
     @ui.labelFields.children(".label:visible").each((i) ->
-      offset = $(this).offset()
+      offset = $(@).offset()
       if offset.top isnt t
         t = offset.top
         w2 = 0
-        w2 += $(this).outerWidth true
+        w2 += $(@).outerWidth true
       else
-        w2 += $(this).outerWidth true
+        w2 += $(@).outerWidth true
     )
     @ui.searchInput.width w1 - w2 - 4
 
