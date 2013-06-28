@@ -74,17 +74,6 @@
     {# application.main #}
     <script src="{{ STATIC_URL }}js/application.js"></script>
 
-    <script type="text/javascript">
-      $(document).ready(function(){
-          $(window).scrollTop(400);
-      });
-    </script>
-
-    <!--
-    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&wizard=constructor&onload=Yapp.Map.init" type="text/javascript"></script>
-    <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=Yapp.Map.init"></script>
-    -->
-
     {% block postload_js %}{% endblock %}
 
     {# external #}

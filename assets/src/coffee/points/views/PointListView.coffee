@@ -39,6 +39,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       scrollOffset: 350
       includePage: true
 
+  onRender: ->
+    $(window).trigger 'scroll'
+
   ###*
   # Event method. It triggers when view fully rendered
   # @method onShow
