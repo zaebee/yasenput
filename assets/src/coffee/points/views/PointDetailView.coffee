@@ -62,7 +62,13 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   onShow: ->
     FB.XFBML.parse()
-    VK.Widgets.Like 'vk_like_point', {type: 'mini'}, 1000 + @model.get('id')
+    VK.Widgets.Like 'vk_like_point', {
+      type: 'mini'
+      pageTitle: @model.get('name')
+      pageDescription: @model.get('description')
+      pageImage: @model.get('imgs')[0].thumbnail104x104
+      text: "ЯсенПуть знает все - #{@model.get('name')}"
+    }, 1000 + @model.get('id')
 
   ###*
   # TODO
@@ -71,7 +77,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   moreDescription: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    $parent = $target.closest('.p-place-desc')
+    $parent = $target.closest '.p-place-desc'
     $('.hellip', $parent).toggle()
     $('.more-desc', $parent).toggleClass 'hidden'
     $target.toggleClass 'open'
