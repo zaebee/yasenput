@@ -12,9 +12,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.HeaderView'
-    @multisearchDropdown = Templates.MultisearchDropdown
+    @multisearchDropdownTemplate = Templates.MultisearchDropdown
     @labelTemplate = Templates.LabelTemplate
-    #@bindTo Yapp.vent, "user:notauthorized", @someCallback @
 
   ###*
   # Required field for Marionette.View
@@ -128,7 +127,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       response = empty: true
     $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
     @setWidthInput()
-    @ui.dropSearch.html @multisearchDropdown(response)
+    @ui.dropSearch.html @multisearchDropdownTemplate(response)
     @ui.dropSearch.show()
     @setHeightSearchMenu()
 

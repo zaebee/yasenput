@@ -20,12 +20,12 @@ Yapp.module 'Common',
         model: Yapp.user
       )
       # show footer info with social widgets
-      Yapp.footer.show new Yapp.Common.StubView(
-        model: Yapp.user
-        template: Templates.FooterView
+      Yapp.footer.show new Yapp.Common.FooterView(
+        #model: Yapp.user
       )
     )
 
+    ## common slider for point photos.
     @sliderPhotos =
       flag: null
       countHidden: 0
