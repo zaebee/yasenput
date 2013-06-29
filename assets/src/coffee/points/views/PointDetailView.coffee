@@ -60,6 +60,10 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       visible: 4
     )
 
+  onShow: ->
+    FB.XFBML.parse()
+    VK.Widgets.Like 'vk_like_point', {type: 'mini'}, 1000 + @model.get('id')
+
   ###*
   # TODO
   # @method moreDescription
@@ -154,6 +158,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
         likesers: likeusers
         likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @onShow()
 
   ###*
   # TODO
@@ -177,3 +182,4 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       #  likesers: likeusers
       #  likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @onShow()
