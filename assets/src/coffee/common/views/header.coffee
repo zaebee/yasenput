@@ -154,7 +154,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         event.stopPropagation()
         if $(".selected", @ui.dropSearch).length
           $(".selected a", @ui.dropSearch).click()
-        else
+        else if @ui.searchInput.children().val()
         #notFound = $(".drop-not-found", @ui.dropSearch)
           data =
             type: 'name'

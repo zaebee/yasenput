@@ -116,7 +116,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   onInitMap: ->
     _this = @
     @popupMap = new ymaps.Map 'popup-map-place', (
-      center: Yapp.myMap.getCenter()
+      center: Yapp.Map.yandexmap.getCenter()
       zoom: 11
     )
     @popupMap.controls.add('zoomControl')
@@ -306,7 +306,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     if $(self).val().length > 0
       $dropResult = $(self).closest(".drop-filter").find '.drop-results'
       ymaps.geocode $(self).val(),
-        boundedBy: Yapp.myMap.getBounds()
+        boundedBy: Yapp.Map.yandexmap.getBounds()
         strictBounds: false
       .then (res) ->
         results = []

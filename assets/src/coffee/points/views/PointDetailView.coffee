@@ -61,14 +61,16 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     )
 
   onShow: ->
-    FB.XFBML.parse()
-    VK.Widgets.Like 'vk_like_point', {
-      type: 'mini'
-      pageTitle: @model.get('name')
-      pageDescription: @model.get('description')
-      pageImage: @model.get('imgs')[0].thumbnail104x104
-      text: "ЯсенПуть знает все - #{@model.get('name')}"
-    }, 1000 + @model.get('id')
+    if window.FB isnt undefined
+      FB.XFBML.parse()
+    if window.VK isnt undefined
+      VK.Widgets.Like 'vk_like_point', {
+        type: 'mini'
+        pageTitle: @model.get('name')
+        pageDescription: @model.get('description')
+        pageImage: @model.get('imgs')[0].thumbnail104x104
+        text: "ЯсенПуть знает все - #{@model.get('name')}"
+      }, 1000 + @model.get('id')
 
   ###*
   # TODO
