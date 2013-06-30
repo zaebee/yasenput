@@ -36,12 +36,11 @@ class Yapp.Map.MapView extends Marionette.ItemView
     event.preventDefault()
     Yapp.execute('toggleMap')
 
-  setMap: ->
-    @map = Yapp.Map.yandexmap
+  setMap: (map) ->
+    @map = map
     @map.events.add 'actionend', @changeMap, @
 
   changeMap: (event) ->
-    console.log @
     center = @map.getCenter()
     ymaps.geocode(center, results:1).then((result) =>
       geoobject = result.geoObjects.get 0

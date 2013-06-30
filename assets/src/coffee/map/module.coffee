@@ -28,6 +28,6 @@ Yapp.module 'Map',
           pointCollection = new ymaps.GeoObjectCollection()
           map.geoObjects.add pointCollection
           @yandexmap = map
-          @trigger 'load:yandexmap'
+          @trigger 'load:yandexmap', @yandexmap
         )
     )

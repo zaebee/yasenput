@@ -33,6 +33,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
         data:
           content: 'popular'
     )
+    @listenTo Yapp.Map, 'load:yandexmap', @onInitMap
 
   ###*
   # Required field for Marionette.View
@@ -96,7 +97,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   hidePopup: ->
     Yapp.popup.close()
 
-
   ###*
   # 
   # @method onRender
@@ -110,13 +110,14 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     )
 
   ###*
-  # Event for initialize ya map in tab
+  # Event for initialize ya map in popup
   # @method onInitMap
   ###
-  onInitMap: ->
+  onInitMap: (map) ->
+    @map = map
     _this = @
     @popupMap = new ymaps.Map 'popup-map-place', (
-      center: Yapp.Map.yandexmap.getCenter()
+      center: map.getCenter()
       zoom: 11
     )
     @popupMap.controls.add('zoomControl')
@@ -166,7 +167,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   setLabels: (response) ->
     @model.set 'requireLabels', response.filter (label) -> label.level is 0
     @model.set 'additionalLabels', response.filter (label) -> label.level is 1
-    @triggerMethod('init:map')
 
   ###*
   # Add required labels attrbite for empty model to render in template
@@ -302,11 +302,11 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   searchLocation: (event) ->
     event.preventDefault()
-    self = event.currentTarget
-    if $(self).val().length > 0
-      $dropResult = $(self).closest(".drop-filter").find '.drop-results'
-      ymaps.geocode $(self).val(),
-        boundedBy: Yapp.Map.yandexmap.getBounds()
+    $target = $(event.currentTarget)
+    if $target.val().length > 0
+      $dropResult = $target.closest(".drop-filter").find '.drop-results'
+      ymaps.geocode $target.val(),
+        boundedBy: @map.getBounds()
         strictBounds: false
       .then (res) ->
         results = []
