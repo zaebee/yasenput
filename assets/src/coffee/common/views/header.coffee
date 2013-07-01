@@ -12,9 +12,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.HeaderView'
-    @multisearchDropdown = Templates.MultisearchDropdown
+    @multisearchDropdownTemplate = Templates.MultisearchDropdown
     @labelTemplate = Templates.LabelTemplate
-    #@bindTo Yapp.vent, "user:notauthorized", @someCallback @
 
   ###*
   # Required field for Marionette.View
@@ -43,15 +42,20 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @property events
   ###
   events:
-    'click .a-login': 'showAuthPopup'
-    'click .drop-add-head': 'showAuthPopup'
+    'click .drop-add-head, .auth, a-login': 'showAuthPopup'
+
+    'click .item-label': 'addLabel'
+    'click .remove-label': 'removeLabel'
+
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
-    'click .remove-label': 'removeLabel'
     'click .clear-input': 'clearSearchInput'
-    'click .item-label': 'addLabel'
+
+    'click #multisearchForm input[type=submit]': 'submitSearch'
+    'submit @multisearchForm': 'submitSearch'
+
     'keydown .text-field input': 'keyupInput'
-    'blur .text-field': 'hideDropdown'
+    #'blur .text-field': 'hideDropdown'
 
   modelEvents:
     'change': 'render'
@@ -64,29 +68,21 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   addLabel: (event) ->
     event.preventDefault()
-    #event.stopPropagation()
     $target = $(event.currentTarget)
     data =
       id: $target.data 'id'
       name: $target.data 'name'
       type: $target.data 'type'
-    @ui.labelFields.children('.label-add').before @labelTemplate(data)
+
+    switch data.type
+      when 'tags'
+        @ui.labelFields.children('.label-add').before @labelTemplate(data)
+      when 'place'
+        return
+      when 'user'
+        @ui.labelFields.children('.label-user').remove()
+        @ui.labelFields.children('.label-add').before @labelTemplate(data)
     @hideDropdown()
-
-  focusInput: (event) ->
-    event.preventDefault()
-    event.stopPropagation()
-    #$("body").css 'overflow', 'hidden'
-    @setWidthInput()
-    @ui.searchInput.show()
-    @ui.searchInput.children().val('').focus()
-    @ui.labelAdd.hide()
-    #@ui.dropSearch.show()
-
-  focusLabels: (event) ->
-    $target = $(event.target)
-    if $target.hasClass 'label-fields'
-      @focusInput(event)
 
   removeLabel: (event) ->
     event.preventDefault()
@@ -95,35 +91,51 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target.parent().remove()
     @ui.searchInput.children().focus()
 
+  focusInput: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    @ui.labelAdd.hide()
+    @setWidthInput()
+    @ui.searchInput.show()
+    @ui.searchInput.children().val('').focus()
+
+  focusLabels: (event) ->
+    $target = $(event.target)
+    if $target.hasClass 'label-fields'
+      @focusInput(event)
+
   clearSearchInput: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    @ui.labelFields.children('.label-place, .label-user, .label-tags, .label-new').remove()
+    @ui.labelFields.children('.label-name, .label-place, .label-user, .label-tags, .label-new').remove()
+
+  submitSearch: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    console.log event
 
   hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
-    #$("body").css 'overflow', 'auto'
     @ui.dropSearch.hide()
+    @ui.dropSearch.find('li').removeClass 'selected'
     @ui.searchInput.hide()
     @ui.labelAdd.show()
-    @ui.dropSearch.find('li').removeClass 'selected'
 
+  ## callback for show dropdown list adter success search request on server
   showDropdown: (response) ->
     if _.isEmpty _.flatten response
       response = empty: true
     $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
-    #$("body").css 'overflow', 'hidden'
     @setWidthInput()
-    @ui.dropSearch.html @multisearchDropdown(response)
+    @ui.dropSearch.html @multisearchDropdownTemplate(response)
     @ui.dropSearch.show()
     @setHeightSearchMenu()
 
   keyupInput: (e) ->
     @onKeyDownSpecial(e)
-
     @delay(() =>
-      if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27
-        ## если не стрелка вверх-вниз, не ESC и не Enter, то запустить и выполнить поиск, здесь должен быть аякс и поиск выполнять на success после загрузки
+      if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
+        ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
         if query
           @search query, @showDropdown, @
@@ -133,21 +145,23 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   onKeyDownSpecial: (event) ->
     switch event.which
+      when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
+        if @ui.searchInput.children().val() is ''
+          @ui.labelFields.children('.label:visible').last().hide()
+
       when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
         event.preventDefault()
         event.stopPropagation()
         if $(".selected", @ui.dropSearch).length
           $(".selected a", @ui.dropSearch).click()
-
-        notFound = $(".drop-not-found", @ui.dropSearch)
-        if notFound.length
+        else if @ui.searchInput.children().val()
+        #notFound = $(".drop-not-found", @ui.dropSearch)
           data =
-            type: 'new'
+            type: 'name'
             id: 0
             name: @ui.searchInput.children().val()
-
+          @ui.labelFields.children('.label-name').remove()
           @ui.labelFields.children('.label-add').before @labelTemplate(data)
-          notFound.remove()
         @hideDropdown()
         break
       when 27 ## закрыть на ESC
@@ -170,7 +184,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     li = $("li:visible:has(a)", @ui.dropSearch).filter( ->
       return true
     )
-
     if li.filter(".selected").length
       indexSelected = li.index(li.filter(".selected"))
 
@@ -199,13 +212,13 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     w2 = 0
     t = 0
     @ui.labelFields.children(".label:visible").each((i) ->
-      offset = $(this).offset()
+      offset = $(@).offset()
       if offset.top isnt t
         t = offset.top
         w2 = 0
-        w2 += $(this).outerWidth true
+        w2 += $(@).outerWidth true
       else
-        w2 += $(this).outerWidth true
+        w2 += $(@).outerWidth true
     )
     @ui.searchInput.width w1 - w2 - 4
 

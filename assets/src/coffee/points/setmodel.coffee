@@ -63,11 +63,6 @@ class Yapp.Points.Set extends Backbone.Model
     if invalid.length > 0
       return invalid
 
-  parse: (response) ->
-    if _.isArray response
-      response = response[0]
-    response
-
   ###*
   # Like or unlike point. Frist arg is target that was clicked.
   # Second is callback that will be call after success response.
@@ -86,3 +81,8 @@ class Yapp.Points.Set extends Backbone.Model
         data:
           collectionid: @get 'id'
     )
+
+  parse: (response) ->
+    if _.isArray response
+      response = response[0]
+    response

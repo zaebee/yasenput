@@ -19,7 +19,7 @@
   <ul class="item item-name">
     <li class="item-title">Название <sup>{{points.length}}</sup></li>
     {{#each points}}
-    <li class="item-label" data-name="{{name}}" data-id="{{id}}" data-type="place">
+    <li class="item-label" data-name="{{name}}" data-id="{{id}}" data-type="name">
       {{#if address}}
         <a class="nonav" href="/point/{{id}}">{{name}} <i>{{#if address}}{{splitAddr address ','}}{{/if}}</i></a>
       {{else}}

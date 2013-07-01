@@ -39,12 +39,18 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       scrollOffset: 350
       includePage: true
 
+  onRender: ->
+    $(window).trigger 'scroll'
+
   ###*
   # Event method. It triggers when view fully rendered
   # @method onShow
   ###
   onShow: ->
     @$el.find('[data-toggle=tooltip]').tooltip()
+    itemsInRow = Math.floor @$el.width() / 241
+    width = itemsInRow * 241
+    @$el.css 'width', width
     @$el.masonry(
       itemSelector: '.item',
       columnWidth: 241

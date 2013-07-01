@@ -33,6 +33,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
    'click .bp-photo .a-like': 'likePhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
    'click #right-panel .a-like': 'like'
+   #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
   # Passed additional user data
@@ -59,6 +60,18 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       visible: 4
     )
 
+  onShow: ->
+    if window.FB isnt undefined
+      FB.XFBML.parse()
+    if window.VK isnt undefined
+      VK.Widgets.Like 'vk_like_point', {
+        type: 'mini'
+        pageTitle: @model.get('name')
+        pageDescription: @model.get('description')
+        pageImage: @model.get('imgs')[0].thumbnail104x104
+        text: "ЯсенПуть знает все - #{@model.get('name')}"
+      }, 1000 + @model.get('id')
+
   ###*
   # TODO
   # @method moreDescription
@@ -66,7 +79,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   moreDescription: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    $parent = $target.closest('.p-place-desc')
+    $parent = $target.closest '.p-place-desc'
     $('.hellip', $parent).toggle()
     $('.more-desc', $parent).toggleClass 'hidden'
     $target.toggleClass 'open'
@@ -153,6 +166,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
         likesers: likeusers
         likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @onShow()
 
   ###*
   # TODO
@@ -176,3 +190,4 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       #  likesers: likeusers
       #  likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @onShow()

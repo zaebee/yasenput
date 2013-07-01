@@ -82,6 +82,11 @@ class Yapp.Points.Point extends Backbone.Model
         successCallback: @successSearch
     )
 
+  successSearch: (response, dropResult) ->
+    _.each(response, (item) ->
+      dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
+    )
+
   ###*
   # Like or unlike point. Fiist arg is target that was clicked.
   # Second is callback that will be call after success response.
@@ -118,11 +123,6 @@ class Yapp.Points.Point extends Backbone.Model
           target: target
         data:
           id: photoId
-    )
-
-  successSearch: (response, dropResult) ->
-    _.each(response, (item) ->
-      dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
     )
 
   parse: (response) ->

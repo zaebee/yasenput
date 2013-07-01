@@ -7,8 +7,8 @@
 Yapp = window.Yapp
 
 ###*
-# Stub view for showing stub template
-# @class Yapp.Map.StubView
+# View for showing stub yandex map
+# @class Yapp.Map.MapView
 # @extends Marionette.ItemView
 # @constructor
 ###
@@ -25,6 +25,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Map.MapView'
+    #_.bindAll @
+    @user = Yapp.user
+    @listenTo Yapp.Map, 'load:yandexmap', @setMap
 
   events:
     'click .a-toggle': 'toggleMap'
@@ -32,3 +35,16 @@ class Yapp.Map.MapView extends Marionette.ItemView
   toggleMap: (event) ->
     event.preventDefault()
     Yapp.execute('toggleMap')
+
+  setMap: (map) ->
+    @map = map
+    @map.events.add 'actionend', @changeMap, @
+
+  changeMap: (event) ->
+    center = @map.getCenter()
+    ymaps.geocode(center, results:1).then((result) =>
+      geoobject = result.geoObjects.get 0
+      location = geoobject.properties.get('text').split(', ').slice 0, 3
+      location = _.object ['country', 'region', 'city'], location
+      @user.set location: location
+    )
