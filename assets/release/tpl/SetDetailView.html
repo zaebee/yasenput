@@ -218,22 +218,6 @@
     {{#if user.authorized}}
       <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
     {{/if}}
-    <div class="stats">
-      <span>
-        <span class="ico-want-small"></span>
-        {{activePoint.visits}}
-      </span>
-
-      <span>
-        <span class="ico-like-small"></span>
-        {{activePoint.likes}}
-      </span>
-
-      <span>
-        <span class="ico-comment-small"></span>
-        {{activePoint.comments}}
-      </span>
-    </div>
   </footer>
 </div><!-- end .cleatfix-body -->
 
@@ -281,7 +265,7 @@
   <div class="aside-content">
     <div class="aside-viewport">
       <ol id="ol-collection">
-        {{#each allpoints}}
+        {{#each points}}
         <li class="choose_place {{#ifEquals id ../activePoint.id}}active{{/ifEquals}}" data-placemark-id="placemark-1">
           <a href="/set/{{../id}}/point/{{id}}" class="choose_place_a" data-id="{{id}}">{{name}}</a>
             <button type="button" class="remove-collection"></button>
