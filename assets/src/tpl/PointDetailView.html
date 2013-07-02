@@ -72,15 +72,18 @@
                         <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
                       </a>
 
-                      <button type="button"  class="complaint-photo"></button>
-                      <button type="button"  class="remove-photo"></button>
+                      {{#ifEquals author.id ../user.id}}
+                        <button type="button" title="Удалить фото" class="remove-photo"></button>
+                      {{else}}
+                        <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+                      {{/ifEquals}}
                     </div>
                   </li>
                   {{/each}}
                 </ul>
               </div>
               <div class="item-photo load-photo">
-                <form id="addImageForm" action="" method="POST" enctype="multipart/form-data">
+                <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
                   <input name="img" type="file">
                 </form>
               </div>

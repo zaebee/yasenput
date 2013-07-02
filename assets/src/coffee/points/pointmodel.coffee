@@ -132,9 +132,9 @@ class Yapp.Points.Point extends Backbone.Model
   # Second is callback that will be call after success response.
   # Third is comment message.
   # Fourth is variable for binding this namespace.
-  # @method likePhoto
+  # @method addCommentPhoto
   ###
-  addCommentPhoto: (photoId, txt, successCallback, context)->
+  addCommentPhoto: (photoId, txt, successCallback, context) ->
     Yapp.request(
       'request'
         url: Yapp.API_BASE_URL + "/comments/add"
@@ -148,12 +148,12 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Remove comment for photo.
-  # First is comment id that will be removed.
+  # First arg is comment id that will be removed.
   # Second is callback that will be call after success response.
   # Third is variable for binding this namespace.
-  # @method likePhoto
+  # @method removeCommentPhoto
   ###
-  removeCommentPhoto: (commentId, successCallback, context)->
+  removeCommentPhoto: (commentId, successCallback, context) ->
     Yapp.request(
       'request'
         url: Yapp.API_BASE_URL + "/comments/del"
@@ -164,6 +164,48 @@ class Yapp.Points.Point extends Backbone.Model
           commentId: commentId
         data:
           id: commentId
+    )
+
+  ###*
+  # Add photo.
+  # First arg is formData files
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method addPhoto
+  ###
+  addPhoto: (formData, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/point/#{@get('id')}/add"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        processData: false
+        contentType: false
+        params:
+          id: @get 'id'
+        data: formData
+    )
+
+  ###*
+  # Remove photo.
+  # First arg is photoId for removing
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method removePhoto
+  ###
+  removePhoto: (photoId, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/del"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          id: photoId
+        data:
+          id: photoId
+
     )
 
   parse: (response) ->

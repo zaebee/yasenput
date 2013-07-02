@@ -4,7 +4,8 @@
   <div class="bp-add-like">
     <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
     <span class="bp-name">{{author.first_name}} {{author.last_name}}</span>
-    <a href="#" class="a-like" data-photo-id="{{id}}"></a>
+
+    <a href="#" class="a-like {{#ifBelong user likeusers}}marked{{/ifBelong}}" data-photo-id="{{id}}"></a>
     <span class="count-like">{{likes_count}}</span>
   </div>
 </div>
@@ -25,7 +26,9 @@
 
       <div class="action">
         <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
+        {{#ifEquals author.id ../user.id}}
         <a href="#" class="a-remove-comment" data-toggle="tooltip" title="удалить комментарий"></a>
+        {{/ifEquals}}
       </div>
     </div>
     {{/each}}

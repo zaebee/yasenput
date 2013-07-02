@@ -29,17 +29,19 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     commentArea: '.toggleArea textarea'
 
   events: ->
-   'click .p-place-desc .a-toggle-desc':'moreDescription'
-   'click .photos-gallery .item-photo': 'showPhoto'
-   'click .bp-photo .a-like': 'likePhoto'
-   'click #big-photo > .bp-photo': 'nextPhoto'
-   'click #right-panel .a-like': 'like'
+    'click .p-place-desc .a-toggle-desc':'moreDescription'
+    'click .photos-gallery .item-photo': 'showPhoto'
+    'click .bp-photo .a-like': 'likePhoto'
+    'click #big-photo > .bp-photo': 'nextPhoto'
+    'click #right-panel .a-like': 'like'
 
-   'click #commentForm textarea': 'focusCommentTextarea'
-   'click .a-remove-comment': 'removeComment'
-   #'blur #commentForm textarea': 'unfocusCommentTextarea'
-   'submit #commentForm': 'submitCommentForm'
-   #'touchend #big-photo > .bp-photo': 'nextPhoto'
+    'click #commentForm textarea': 'focusCommentTextarea'
+    'click .a-remove-comment': 'removeComment'
+    #'blur #commentForm textarea': 'unfocusCommentTextarea'
+    'submit #commentForm': 'submitCommentForm'
+    'change #addPhotoForm input:file': 'addPhoto'
+    'click .remove-photo': 'removePhoto'
+    #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
   # Passed additional user data
@@ -65,12 +67,13 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 4
     )
+    @renderSocial()
 
   ###*
   # TODO
   # @method onShow
   ###
-  onShow: ->
+  renderSocial: ->
     if window.FB isnt undefined
       FB.XFBML.parse()
     if window.VK isnt undefined
@@ -173,7 +176,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     event.preventDefault()
     event.stopPropagation()
     $target = $(event.currentTarget)
-    photoId = $target.data 'photoId'
+    photoId = $target.data 'photo-id'
     @model.likePhoto $target, photoId, @successLikePhoto, @
 
   ###*
@@ -196,8 +199,29 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     event.preventDefault()
     $target = $(event.currentTarget)
     commentId = $target.parents('.item-comment').data 'comment-id'
-    console.log commentId
     @model.removeCommentPhoto commentId, @successRemoveComment, @
+
+  ###*
+  # TODO
+  # @method loadImage
+  ###
+  addPhoto: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    form = $('#addPhotoForm')[0]
+    formData = new FormData form
+    @model.addPhoto formData, @successAddPhoto, @
+
+  ###*
+  # TODO
+  # @method loadImage
+  ###
+  removePhoto: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    $target = $(event.currentTarget)
+    photoId = $target.parents('.item-photo').data 'photo-id'
+    @model.removePhoto photoId, @successRemovePhoto, @
 
   ###*
   # TODO
@@ -220,31 +244,34 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
         likesers: likeusers
         likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
-    @onShow()
 
   ###*
   # TODO
   # @method successLikePhoto
   ###
   successLikePhoto: (response, $target) ->
-    console.log 'success like photo'
-    _this = @
     photo = response[0]
+    _this = @
+
+    imgs = @model.get 'imgs'
+    img = _.find imgs, (img) -> img.id is photo.id
+    index = _.indexOf imgs, img
+    imgs.splice index, 1
+    likeusers = img.likeusers
     if $target.hasClass 'marked'
-      me = _.find photo.likeusers, (user) -> user.id is _this.user.id
-      #index = _.indexOf likeusers, me
-      #likeusers.splice index, 1
-      #@model.set
-      #likeusers: likeusers
-      #likes_count: @model.get('likes_count') - 1
+      me = _.find likeusers, (user) -> user.id is _this.user.id
+      index = _.indexOf likeusers, me
+      likeusers.splice index, 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      #likeusers.push @user
-      #@model.set
-      #  likesers: likeusers
-      #  likes_count: @model.get('likes_count') + 1
+      likeusers.push @user
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
-    @onShow()
+
+    img.likeusers = likeusers
+    imgs.push img
+    @options.photoId = img.id
+    @model.set 'imgs', imgs
+    @model.trigger 'change'
 
   ###*
   # Callback for success response from server after adding comment
@@ -273,4 +300,28 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     photo.comments = comments
 
     @user.set 'count_commented_objects', @user.get('count_commented_objects') - 1
+    @model.trigger 'change'
+
+  ###*
+  # Callback for success response from server after adding photo
+  # @method successAddPhoto
+  ###
+  successAddPhoto: (response) ->
+    imgs = @model.get('imgs')
+    imgs.push response[0]
+    @model.set 'imgs', imgs
+    @model.trigger 'change'
+
+  ###*
+  # Callback for success response from server after removing photo
+  # @method successRemovePhoto
+  ###
+  successRemovePhoto: (response, photoId) ->
+    _this = @
+    imgs = @model.get('imgs')
+    img = _.find imgs, (img) -> img.id is photoId
+    index = _.indexOf imgs, img
+    imgs.splice index, 1
+    @model.set 'imgs', imgs
+    @options.photoId = imgs[0].id
     @model.trigger 'change'
