@@ -158,9 +158,9 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     nextPhotoId = $(activePhoto).parent('li').next().children().data 'photo-id'
 
-    if nextPhotoId and @photoSlider.next.is ':visible'
+    if nextPhotoId and @photoSlider.next.is(':visible') and !@photoSlider.next.hasClass 'disabled'
       @photoSlider.move(1)
-    else if @photoSlider.next.is ':visible'
+    else if !nextPhotoId
       @photoSlider.reinit()
     @options.photoId = nextPhotoId
     @showPhoto()
