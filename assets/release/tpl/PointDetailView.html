@@ -72,15 +72,18 @@
                         <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
                       </a>
 
-                      <button type="button"  class="complaint-photo"></button>
-                      <button type="button"  class="remove-photo"></button>
+                      {{#ifEquals author.id ../user.id}}
+                        <button type="button" title="Удалить фото" class="remove-photo"></button>
+                      {{else}}
+                        <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+                      {{/ifEquals}}
                     </div>
                   </li>
                   {{/each}}
                 </ul>
               </div>
               <div class="item-photo load-photo">
-                <form id="addImageForm" action="" method="POST" enctype="multipart/form-data">
+                <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
                   <input name="img" type="file">
                 </form>
               </div>
@@ -406,6 +409,7 @@
   </div>
 
   <div class="tabs-content p-common-content">
+    <!--
     <section class="p-block event-labels">
       <h4 class="title-block">Коллекции с этим местом</h4>
 
@@ -417,7 +421,7 @@
       <div class="clearfix body">
         <div class="scroll-photos">
           <ul class="ul-collection-list">
-            <li><!-- ucl-  ul-collection-list -->
+            <li>
               <div class="ucl-item">
                 <div class="photo">
                   <div class="yasen-info">
@@ -542,7 +546,7 @@
               </div>
             </li>
 
-            <li><!-- ucl-  ul-collection-list -->
+            <li>
               <div class="ucl-item">
                 <div class="photo">
                   <div class="yasen-info">
@@ -629,7 +633,9 @@
         </div>
       </div>
     </section>
+    -->
 
+    <!--
     <section class="p-block peoples">
       <h4 class="title-block">Это место хотят посетить</h4>
 
@@ -643,6 +649,7 @@
         <a href="#" class="a-toggle">все пользователи <span>&darr;</span></a>
       </div>
     </section>
+    -->
 
     {{#if tags}}
     <section class="p-block event-labels">
@@ -677,7 +684,7 @@
     <div class="share">
       <div id="vk_like_point"></div>
       <br>
-      <div class="fb-like" data-href="http://yp.dev.me/point/{{id}}" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+      <div class="fb-like" data-href="http://yasenput.ru/point/{{id}}" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
     </div>
   </div>
 
