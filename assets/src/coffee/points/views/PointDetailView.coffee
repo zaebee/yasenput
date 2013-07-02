@@ -37,10 +37,11 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
     'click #commentForm textarea': 'focusCommentTextarea'
     'click .a-remove-comment': 'removeComment'
-    #'blur #commentForm textarea': 'unfocusCommentTextarea'
     'submit #commentForm': 'submitCommentForm'
+
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
+    #'blur #commentForm textarea': 'unfocusCommentTextarea'
     #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
@@ -255,8 +256,8 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
     imgs = @model.get 'imgs'
     img = _.find imgs, (img) -> img.id is photo.id
-    index = _.indexOf imgs, img
-    imgs.splice index, 1
+    indexImg = _.indexOf imgs, img
+    imgs.splice indexImg, 1
     likeusers = img.likeusers
     if $target.hasClass 'marked'
       me = _.find likeusers, (user) -> user.id is _this.user.id
@@ -268,9 +269,9 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
     img.likeusers = likeusers
-    imgs.push img
-    @options.photoId = img.id
+    imgs.splice indexImg, 0, img
     @model.set 'imgs', imgs
+    @options.photoId = img.id
     @model.trigger 'change'
 
   ###*

@@ -32,6 +32,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @type Object
   ###
   defaults: ->
+    priority: 0
     name: ''
     address: ''
     description: ''
@@ -60,8 +61,8 @@ class Yapp.Points.Point extends Backbone.Model
     if not attrs.imgs or attrs.imgs.length is 0
       invalid.push 'photos'
 
-    #if not attrs.tags or attrs.tags.length is 0
-    #invalid.push 'tags'
+    if not attrs.tags or attrs.tags.length is 0
+      invalid.push 'tags'
 
     if invalid.length > 0
       return invalid

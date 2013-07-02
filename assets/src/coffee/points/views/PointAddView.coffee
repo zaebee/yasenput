@@ -108,8 +108,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 6
     )
-    if not @map
-      @onInitMap(Yapp.Map.yandexmap)
+    #if not @map
+    #  @onInitMap(Yapp.Map.yandexmap)
 
   ###*
   # Event for initialize ya map in popup
