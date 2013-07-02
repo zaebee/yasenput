@@ -108,8 +108,9 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Like or unlike photo for point. Fiist arg is target that was clicked.
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # Second is photo id that was liked/unliked.
+  # Third is callback that will be call after success response.
+  # Fourth is variable for binding this namespace.
   # @method likePhoto
   ###
   likePhoto: (target, photoId, successCallback, context) ->
@@ -123,6 +124,46 @@ class Yapp.Points.Point extends Backbone.Model
           target: target
         data:
           id: photoId
+    )
+
+  ###*
+  # Add comment for photo.
+  # First is photo id that comment was added.
+  # Second is callback that will be call after success response.
+  # Third is comment message.
+  # Fourth is variable for binding this namespace.
+  # @method likePhoto
+  ###
+  addCommentPhoto: (photoId, txt, successCallback, context)->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/comments/add"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        data:
+          photo: photoId
+          txt: txt
+    )
+
+  ###*
+  # Remove comment for photo.
+  # First is comment id that will be removed.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method likePhoto
+  ###
+  removeCommentPhoto: (commentId, successCallback, context)->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/comments/del"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          commentId: commentId
+        data:
+          id: commentId
     )
 
   parse: (response) ->
