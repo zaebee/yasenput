@@ -72,19 +72,25 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                fields=['id', 'name', 'isliked', 'description', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
                                 extras=['likes_count', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
-                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
-                                                    'relations': {'comments': {
-                                                        'fields': ['id', 'txt', 'created', 'author'],
-                                                        'relations': {
-                                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}
-                                                        }
-                                                    },
+                                                    'relations': {
+                                                        'comments': {
+                                                            'fields': ['id', 'txt', 'created', 'author'],
+                                                            'relations': {
+                                                                'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}
+                                                            }
+                                                        },
+                                                        'likeusers': {
+                                                            'fields': ['id', 'first_name', 'last_name'],
+                                                        },
+                                                        'author': {
+                                                            'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                        },
                                                     },
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
