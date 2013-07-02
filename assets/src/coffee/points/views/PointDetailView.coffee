@@ -27,6 +27,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     allPhotos: '.item-photo'
     placePhotos: '.place-photos'
     commentArea: '.toggleArea textarea'
+    map: '.map'
 
   events: ->
     'click .p-place-desc .a-toggle-desc':'moreDescription'
@@ -41,6 +42,8 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
+
+    'click a[href=#tab-map]': 'renderMap'
     #'blur #commentForm textarea': 'unfocusCommentTextarea'
     #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
@@ -58,12 +61,10 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   # @method onRender
   ###
   onRender: ->
+    @$el.find('[data-toggle=tooltip]').tooltip()
     @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
     @photoSlider = @ui.placePhotos.data 'slider'
-
-    @$el.find('[data-toggle=tooltip]').tooltip()
     @showPhoto()
-
     @photoSlider.init(
       root: @ui.placePhotos
       visible: 4
@@ -72,7 +73,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method onShow
+  # @method renderSocial
   ###
   renderSocial: ->
     if window.FB isnt undefined
@@ -85,6 +86,29 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
         pageImage: @model.get('imgs')[0].thumbnail104x104
         text: "ЯсенПуть знает все - #{@model.get('name')}"
       }, 1000 + @model.get('id')
+
+  ###*
+  # TODO
+  # @method renderMap
+  ###
+  renderMap: (event) ->
+    if not @map
+      @ui.map.height 500
+      coords = [@model.get('latitude'), @model.get('longitude')]
+      icon =  @model.get('icon') ? '/media/icons/place-none.png'
+      @map = new ymaps.Map 'popup-map', (
+        center: coords
+        zoom: 14
+      )
+      placemark = new ymaps.Placemark(coords,
+        id: @model.get 'id'
+        {
+          iconImageHref: icon
+          iconImageSize: [32, 36]
+          iconImageOffset: [-16, -38]
+        }
+      )
+      @map.geoObjects.add placemark
 
   ###*
   # TODO
