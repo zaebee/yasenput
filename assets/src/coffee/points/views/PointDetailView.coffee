@@ -117,6 +117,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $(activePhoto).addClass 'current'
     @ui.bigPhoto.html @bigPhotoTemplate _.extend(photo, user:@user.toJSON())
     @ui.bigPhoto.find('[data-toggle=tooltip]').tooltip()
+    @options.photoId = photoId
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
   ###*
