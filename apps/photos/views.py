@@ -88,7 +88,7 @@ class PhotosAdd(PhotosBaseView):
         if self.model is None:
             return None
         pk = self.args[0]
-        return get_object_or_404(self.model,pk=pk)
+        return get_object_or_404(self.model, pk=pk)
 
     def post(self, request, *args, **kwargs):
         object = self.get_object()
