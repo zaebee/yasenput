@@ -24,8 +24,8 @@
       </div>
 
       <div class="action">
-        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-        <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+        <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
+        <a href="#" class="a-remove-comment" data-toggle="tooltip" title="удалить комментарий"></a>
       </div>
     </div>
     {{/each}}
@@ -35,12 +35,12 @@
 
     {{#if user.authorized}}
     <div class="add-comment">
-      <form action="#">
+      <form action="#" id="commentForm">
         <div class="ac-block">
           <img src="{{user.avatar}}" alt="" width="29" height="30" class="avatar">
           <div class="ac-body">
             <div class="toggle-area">
-              <textarea rows="3" cols="40" placeholder="Комментировать"></textarea>
+              <textarea data-photo-id="{{id}}" rows="3" cols="40" placeholder="Комментировать"></textarea>
               <input type="submit" value="">
             </div>
           </div>

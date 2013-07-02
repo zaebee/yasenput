@@ -26,6 +26,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     bigPhotoImg: '#big-photo > .bp-photo'
     allPhotos: '.item-photo'
     placePhotos: '.place-photos'
+    commentArea: '.toggleArea textarea'
 
   events: ->
    'click .p-place-desc .a-toggle-desc':'moreDescription'
@@ -33,6 +34,11 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
    'click .bp-photo .a-like': 'likePhoto'
    'click #big-photo > .bp-photo': 'nextPhoto'
    'click #right-panel .a-like': 'like'
+
+   'click #commentForm textarea': 'focusCommentTextarea'
+   'click .a-remove-comment': 'removeComment'
+   #'blur #commentForm textarea': 'unfocusCommentTextarea'
+   'submit #commentForm': 'submitCommentForm'
    #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
@@ -60,6 +66,10 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       visible: 4
     )
 
+  ###*
+  # TODO
+  # @method onShow
+  ###
   onShow: ->
     if window.FB isnt undefined
       FB.XFBML.parse()
@@ -106,6 +116,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     $(activePhoto).addClass 'current'
     @ui.bigPhoto.html @bigPhotoTemplate _.extend(photo, user:@user.toJSON())
+    @ui.bigPhoto.find('[data-toggle=tooltip]').tooltip()
     Yapp.Points.router.navigate $(activePhoto).children().attr 'href'
 
   ###*
@@ -127,6 +138,25 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
+  # @method focusCommentTextarea
+  ###
+  focusCommentTextarea: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    $target.parent().addClass 'focus'
+
+  ###*
+  # TODO
+  # @method unfocusCommentTextarea
+  ###
+  unfocusCommentTextarea: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    $target.parent().removeClass 'focus'
+    $target.val ''
+
+  ###*
+  # TODO
   # @method like
   ###
   like: (event) ->
@@ -144,6 +174,29 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     photoId = $target.data 'photoId'
     @model.likePhoto $target, photoId, @successLikePhoto, @
+
+  ###*
+  # TODO
+  # @method submitCommentForm
+  ###
+  submitCommentForm: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    txt = @$('textarea').val()
+    if txt
+      photoId = @$('textarea').data 'photo-id'
+      @model.addCommentPhoto photoId, txt, @successAddComment, @
+
+  ###*
+  # TODO
+  # @method removeComment
+  ###
+  removeComment: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    commentId = $target.parents('.item-comment').data 'comment-id'
+    console.log commentId
+    @model.removeCommentPhoto commentId, @successRemoveComment, @
 
   ###*
   # TODO
@@ -191,3 +244,32 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       #  likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
     @onShow()
+
+  ###*
+  # Callback for success response from server after adding comment
+  # @method successLikePhoto
+  ###
+  successAddComment: (response) ->
+    photoId = @$('textarea').data 'photo-id'
+    photo = _.find @model.get('imgs'), (photo) -> photo.id is photoId
+    photo.comments.push _.extend(response[0], author: @user.toJSON())
+    @user.set 'count_commented_objects', @user.get('count_commented_objects') + 1
+    @model.trigger 'change'
+
+  ###*
+  # Callback for success response from server after removing comment
+  # @method successLikePhoto
+  ###
+  successRemoveComment: (response, commentId) ->
+    _this = @
+    photoId = @$('textarea').data 'photo-id'
+    photo = _.find @model.get('imgs'), (photo) -> photo.id is photoId
+
+    comments = photo.comments
+    comment = _.find comments, (comment) -> comment.id is commentId
+    index = _.indexOf comments, comment
+    comments.splice index, 1
+    photo.comments = comments
+
+    @user.set 'count_commented_objects', @user.get('count_commented_objects') - 1
+    @model.trigger 'change'
