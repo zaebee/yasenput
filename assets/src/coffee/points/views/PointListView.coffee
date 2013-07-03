@@ -22,6 +22,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   template: Templates.PointListView
   className: 'items'
+  id: 'items'
 
   itemView: Yapp.Points.PointItemView
   emptyView: Yapp.Points.PointEmptyView
@@ -38,9 +39,14 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       success: @loadResults,
       scrollOffset: 350
       includePage: true
+      extraParams:
+        content: @options.content_type
 
   onRender: ->
     $(window).trigger 'scroll'
+
+  onClose: ->
+    @infiniScroll.destroy()
 
   ###*
   # Event method. It triggers when view fully rendered
@@ -48,14 +54,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onShow: ->
     @$el.find('[data-toggle=tooltip]').tooltip()
-    itemsInRow = Math.floor @$el.width() / 241
-    width = itemsInRow * 241
-    @$el.css 'width', width
-    @$el.masonry(
-      itemSelector: '.item',
+    @wall = new Masonry @el,
       columnWidth: 241
-    )
-    @$el.masonry 'reload'
+      isFitWidth: true
 
   ###*
   # Success callback after collection fetch for infiniScroll

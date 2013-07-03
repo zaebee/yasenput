@@ -9,7 +9,7 @@ window.Yapp = new Marionette.Application()
 window.Yapp.API_BASE_URL = '/api'
 window.Yapp.API_BASE_URL = ''
 window.Yapp.YA_MAP_URL = 'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&wizard=constructor'
-window.Yapp.DEBUG = true
+window.Yapp.DEBUG = window.DEBUG or true
 
 jQuery(document).ajaxSend (event, xhr, settings) ->
   getCookie = (name) ->

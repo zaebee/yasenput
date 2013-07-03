@@ -52,15 +52,11 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   # @method onShow
   ###
   onShow: ->
-    _this = @
+    content_type = @options.content_type
 
     @panelContainer.show new Yapp.Points.PointPanelView
       model: Yapp.user
-      content_type: @options.content_type or 'popular'
-
-    if @options.content_type is 'new'
-      @pointCollection.comparator = (point) ->
-        -new Date point.get('updated')
+      content_type: content_type
 
     console.log 'loading points collection'
     @pointCollection.fetch(
@@ -71,8 +67,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
         if response.error or response.errors
           console.error response
         else
-          # sort collection if is new and render points
-          @pointCollection.sort()
           @popularContainer.show new Yapp.Points.PointListView
             collection: @pointCollection
+            content_type: content_type
     )
