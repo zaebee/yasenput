@@ -25,9 +25,10 @@
       </div>
 
       <div class="action">
-        <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
         {{#ifEquals author.id ../user.id}}
-        <a href="#" class="a-remove-comment" data-toggle="tooltip" title="удалить комментарий"></a>
+          <a href="#" class="a-remove-comment" data-toggle="tooltip" title="удалить комментарий"></a>
+        {{else}}
+          <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
         {{/ifEquals}}
       </div>
     </div>
