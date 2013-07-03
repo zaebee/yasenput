@@ -73,6 +73,7 @@ module.exports = function(grunt) {
       release: {
         files: {
           'debug/js/application.js': [
+            'debug/js/release-only.js',
             'debug/js/config.js',
             'debug/js/templates.js',
             'debug/js/helpers.js',
@@ -122,7 +123,7 @@ module.exports = function(grunt) {
         files: [
           {expand: true, cwd: 'src/images/', src: ['**'], dest: 'release/images'},
           {expand: true, cwd: 'src/lib/', src: ['**'], dest: 'release/lib'},
-          {expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'release/tpl'}
+          //{expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'release/tpl'}
         ]
       }
     },
