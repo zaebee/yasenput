@@ -55,6 +55,18 @@ module.exports = function(grunt) {
             'debug/js/**/router.js',
             'debug/js/**/controller.js',
             'debug/js/main.js'
+          ],
+          'debug/js/libs.js': [
+            'src/lib/json2.js',
+            'src/lib/masonry.min.js',
+            'src/lib/jquery.form.js',
+            'src/lib/bootstrap-tooltip.js',
+            'src/lib/bootstrap-tab.js',
+            'src/lib/handlebars.js',
+            'src/lib/lodash.min.js',
+            'src/lib/backbone-min.js',
+            'src/lib/backbone.marionette.min.js',
+            'src/lib/infiniScroll.js',
           ]
         }
       },
@@ -139,7 +151,7 @@ module.exports = function(grunt) {
         }
       },
       compile: {
-        src: 'debug/js/application.js',
+        src: ['debug/js/libs.js', 'debug/js/application.js'],
         dest: 'release/js/application.js'
       }
     },
