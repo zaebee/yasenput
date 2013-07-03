@@ -123,7 +123,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response) ->
-    if _.isEmpty _.flatten response
+    if _.isEmpty _.flatten _.values response
       response = empty: true
     $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
     @setWidthInput()
