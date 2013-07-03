@@ -670,7 +670,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.bp-comments .add-comment .ac-block{padding:8px 0 0 !important}
 	#big-photo .bp-photo .bp-add-like .a-like.marked{background-position:-717px -477px;}
 	#big-photo .bp-photo .bp-add-like .a-like.marked:hover{background-position:-717px -502px;}
-	.bp-comments .item-comment{padding:8px 24px 4px 0; overflow:hidden; position:relative}
+	.bp-comments .item-comment{padding:8px 24px 4px 0; position:relative}
 		.bp-comments .item-comment .avatar{margin:0 9px}
 		.bp-comments .item-comment .comment-body{overflow:hidden; font-size:11px}
 		.bp-comments .item-comment .comment-author{color:#984d56}

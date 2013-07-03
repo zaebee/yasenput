@@ -15,7 +15,7 @@
     {% block postload_css %}{% endblock %}
 
     <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
   </head>
 
   <body class="front">
@@ -51,25 +51,15 @@
     {% block popups %}{% endblock %}
 
     <script src="{{ STATIC_URL }}lib/json2.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery.masonry.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
     <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
-
     <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
     <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
-
     <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
-
-    {# backbone #}
-    <script src="{{ STATIC_URL }}lib/underscore.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone.marionette.js"></script>
+    <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
+    <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
     <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
-
-    <!--
-    <script src="{{ STATIC_URL }}lib/backbone.touch.js"></script>
-    -->
-
-    {% block preload_js %}{% endblock %}
 
     {# application.main #}
     <script src="{{ STATIC_URL }}js/application.js"></script>

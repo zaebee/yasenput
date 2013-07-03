@@ -49,6 +49,7 @@ Yapp.addInitializer ->
         type: options.type
         dataType: options.dataType or 'json'
         processData: options.processData
+        contentType: options.contentType
         data: options.data
         success: (response) ->
           console.log ['response from API: ', response]

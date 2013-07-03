@@ -4,7 +4,8 @@
   <div class="bp-add-like">
     <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
     <span class="bp-name">{{author.first_name}} {{author.last_name}}</span>
-    <a href="#" class="a-like" data-photo-id="{{id}}"></a>
+
+    <a href="#" class="a-like {{#ifBelong user likeusers}}marked{{/ifBelong}}" data-photo-id="{{id}}"></a>
     <span class="count-like">{{likes_count}}</span>
   </div>
 </div>
@@ -24,8 +25,10 @@
       </div>
 
       <div class="action">
-        <a href="#" class="a-complaint-comment" data-tooltip="пожаловаться на комментарий"></a>
-        <a href="#" class="a-remove-comment" data-tooltip="удалить комментарий"></a>
+        <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
+        {{#ifEquals author.id ../user.id}}
+        <a href="#" class="a-remove-comment" data-toggle="tooltip" title="удалить комментарий"></a>
+        {{/ifEquals}}
       </div>
     </div>
     {{/each}}
@@ -35,12 +38,12 @@
 
     {{#if user.authorized}}
     <div class="add-comment">
-      <form action="#">
+      <form action="#" id="commentForm">
         <div class="ac-block">
           <img src="{{user.avatar}}" alt="" width="29" height="30" class="avatar">
           <div class="ac-body">
             <div class="toggle-area">
-              <textarea rows="3" cols="40" placeholder="Комментировать"></textarea>
+              <textarea data-photo-id="{{id}}" rows="3" cols="40" placeholder="Комментировать"></textarea>
               <input type="submit" value="">
             </div>
           </div>
