@@ -14,7 +14,7 @@
           <input name="address" type="text" placeholder="Выберите или введите на карте адрес места..." class="input-map-txt" data-key="address" autocomplete="off" id="add-new-place-address" value="{{address}}">
           <ul class="drop-results"></ul>
         </div>
-        <input type="text" placeholder="Введите координаты..." class="input-map-coords">
+        <!--<input type="text" placeholder="Введите координаты..." class="input-map-coords">-->
 
       </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="required">*</div>
 
         <!--<div class="drop-filter">-->
-          <input name="name" type="text" placeholder="Введите название места..." id="p-add-place-name" data-key="name" autocomplete="off" class="search-matches">
+          <input name="name" type="text" placeholder="Введите название места..." id="add-new-place-name" data-key="name" autocomplete="off" class="search-matches">
           <ul class="drop-results"></ul>
         <!--</div>-->
       </div>
@@ -60,7 +60,7 @@
                     <span>+</span>
                   </div>
 
-                  <span class="text-field"><input type="text"></span>
+                  <span class="text-field"><input name="tags" type="text"></span>
                 </div>
 
                 <input type="button" value=" " class="clear-selected">
@@ -72,7 +72,9 @@
 
           <div class="labels-field">
             {{#each additionalLabels}}
-            <div class="label label-place" data-label-id="{{id}}">{{name}}</div>
+            <div class="label label-place" data-label-id="{{id}}">{{name}}
+              <button class="remove-label"></button>
+            </div>
             {{/each}}
           </div>
         </div>

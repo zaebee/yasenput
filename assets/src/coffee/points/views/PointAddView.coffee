@@ -56,8 +56,11 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     photoList: '#item-photo-list'
     photoProgress: '.photo-loading'
 
-    requireLabels: '.require-labels'
-    otherLabels: '.other-labels'
+    requireLabels: '.ctp-labels'
+    moreLabels: '.ctp-more-labels'
+    labelAddButton: '.label-add'
+    labelsHeader: '.add-place-choose-type-place h4'
+
     selectedLabels: '.selected-labels'
     placePhotos: '.place-photos'
 
@@ -68,27 +71,26 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   events: ->
     'click .p-close': 'hidePopup'
 
-    #'keyup #p-add-place-name': 'searchName',
     'keyup #add-new-place-address': 'searchLocation',
-    #'keyup input[name=tags]': 'doSearch',
 
-    'change #p-add-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
+    'change #add-new-place-name, #add-new-place-address, #add-new-place-description': 'setValue',
 
     'focus .drop-filter input:text': 'showDropList',
     'blur .drop-filter input:text': 'hideDropList',
     'mousedown .drop-results > li': 'addFromList',
 
     'click #a-add-point': 'validatePoint'
-    'click .require-labels .label': 'addRequireLabel'
-    'click .other-labels .label': 'addOtherLabel'
 
-    'click .remove-label': 'removeLabel'
+    'click .ctp-item-label': 'addRequireLabel'
+    'click .ctp-more-labels .label-place': 'addMoreLabel'
+    'click .h4 .remove-label': 'showRequireLabel'
+
+    'click .selected-labels .remove-label': 'removeLabel'
     'click .clear-selected': 'clearLabels'
     'click .selected-labels': 'showInput'
 
     'change .load-photo input:file': 'loadImage',
     'click .remove-photo': 'removePhoto',
-
 
   ###*
   # Method for hide popup
@@ -98,7 +100,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     Yapp.popup.close()
 
   ###*
-  # 
+  #
   # @method onRender
   ###
   onRender: ->
@@ -108,16 +110,15 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 6
     )
-    #if not @map
-    #  @onInitMap(Yapp.Map.yandexmap)
 
   ###*
   # Event for initialize ya map in popup
   # @method onInitMap
   ###
   onInitMap: (map) ->
+    if window.ymaps is undefined and !@map
+      return
     @map = map
-    _this = @
     @popupMap = new ymaps.Map 'popup-map-place', (
       center: map.getCenter()
       zoom: 11
@@ -125,12 +126,12 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @popupMap.controls.add('zoomControl')
     placemark = {}
 
-    @popupMap.events.add 'click', (event) ->
-      _this.popupMap.geoObjects.remove(placemark)
+    @popupMap.events.add 'click', (event) =>
+      @popupMap.geoObjects.remove placemark
       coords = event.get('coordPosition')
-      _this.popupMap.geoObjects.each (geoObject) ->
+      @popupMap.geoObjects.each (geoObject) =>
         if geoObject.properties.get('id') is 'map-point'
-          _this.popupMap.geoObjects.remove(geoObject)
+          @popupMap.geoObjects.remove(geoObject)
           return false
 
       placemark = new ymaps.Placemark coords, {
@@ -140,23 +141,22 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
         iconImageSize: [32, 36],
         iconImageOffset: [-16, -38]
       }
-      _this.popupMap.geoObjects.add(placemark)
-      ymaps.geocode(coords).then (res) ->
+      @popupMap.geoObjects.add placemark
+      ymaps.geocode(coords).then (res) =>
         i = true
-        res.geoObjects.each (obj) ->
+        res.geoObjects.each (obj) =>
           if i
-            $('#add-new-place-address').val obj.properties.get('metaDataProperty.GeocoderMetaData.text')
+            $('#add-new-place-address').val obj.properties.get 'metaDataProperty.GeocoderMetaData.text'
           i = false
-        _this.$el.find('#add-new-place-address').change()
+        @$el.find('#add-new-place-address').change()
 
-      _this.popupMap.setCenter coords, 14, (
+      @popupMap.setCenter coords, 14, (
         checkZoomRange: true
         duration:1000
       )
-
       longitude = coords[1]
       latitude = coords[0]
-      _this.model.set(
+      @model.set(
         'longitude': longitude
         'latitude': latitude
         {silent: true}
@@ -167,33 +167,50 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method setLabels
   ###
   setLabels: (response) ->
-    @model.set 'requireLabels', response.filter (label) -> label.level is 0
-    @model.set 'additionalLabels', response.filter (label) -> label.level is 1
+    @model.set
+      'requireLabels': response.filter (label) -> label.level is 0
+      'additionalLabels': response.filter (label) -> label.level is 1
+    @onInitMap Yapp.Map.yandexmap
 
   ###*
   # Add required labels attrbite for empty model to render in template
   # @method addRequireLabel
   ###
   addRequireLabel: (event) ->
-    @ui.inputTags.parent().hide()
-    @ui.requireLabels.append @ui.selectedLabels.find('.label-require')
-    @ui.selectedLabels.prepend event.target
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @ui.requireLabels.hide()
+    @ui.moreLabels.show()
+    text = @ui.labelsHeader.text()
+    labelId = $target.find('.placemark').data 'label-id'
+    labelName = $target.find('.ctp-item-title').text()
+    @ui.labelsHeader.html "#{text} <div class='label label-required'>#{labelName}<button class='remove-label'></button></div>"
     @model.get('tags').push(
-      id: $(event.target).data 'label-id'
-      name: $(event.target).text()
+      id: labelId
+      name: labelName
       class: 'require'
     )
+
+  showRequireLabel: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    @clearLabels event
+    @ui.requireLabels.show()
+    @ui.moreLabels.hide()
+    @ui.labelsHeader.find('div').remove()
+    @model.set 'tags', [], silent:true
 
   ###*
   # Add other labels attrbite for empty model to render in template
   # @method addOtherLabel
   ###
-  addOtherLabel: (event) ->
-    @ui.inputTags.parent().hide()
-    @ui.selectedLabels.prepend event.target
+  addMoreLabel: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @ui.selectedLabels.prepend($target)
     @model.get('tags').push(
-      id: $(event.target).data 'label-id'
-      name: $(event.target).text()
+      id: $target.data 'label-id'
+      name: $target.text()
       class: 'other'
     )
 
@@ -203,19 +220,15 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   removeLabel: (event) ->
     event.preventDefault()
-    $label = $(event.target).parent()
-    if $label.hasClass 'label-require'
-      @ui.requireLabels.append $label
-    else
-      @ui.otherLabels.append $label
-
-    if @ui.selectedLabels.find('.label').length is 0
-      @ui.inputTags.parent().show()
+    event.stopPropagation()
+    $label = $(event.currentTarget).parent()
+    @ui.moreLabels.find('.labels-field').append $label
 
     tags = @model.get 'tags'
-    @model.set 'tags', tags.filter (tag) ->
-      return tag.id isnt $label.data 'label-id'
-
+    @model.set
+      tags: tags.filter (tag) ->
+        return tag.id isnt $label.data 'label-id'
+      {silent:true}
 
   ###*
   # Remove all label from input list
@@ -223,11 +236,15 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   clearLabels: (event) ->
     event.preventDefault()
-    @ui.requireLabels.append @ui.selectedLabels.find('.label-require')
-    @ui.otherLabels.append @ui.selectedLabels.find('.label-other')
-    @ui.inputTags.parent().show()
-    @model.set 'tags', [], silent:true
-
+    @ui.moreLabels.find('.labels-field').append @ui.selectedLabels.find '.label-place'
+    #@model.set 'tags', [], silent:true
+    tags = @model.get 'tags'
+    @ui.labelAddButton.show()
+    @ui.inputTags.parent().hide()
+    @model.set
+      tags: tags.filter (tag) ->
+        return tag.class is 'require'
+      {silent:true}
 
   ###*
   # Show input for tags autocomplete
@@ -235,7 +252,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   showInput: (event) ->
     event.preventDefault()
-    @ui.inputTags.parent().show()
+    @ui.inputTags.parent().css 'display', 'inline'
+    @ui.labelAddButton.hide()
     @ui.inputTags.focus()
 
   ###*
@@ -244,28 +262,24 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   loadImage: (event) ->
     event.preventDefault()
-    _this = @
     if event.currentTarget.files.length is 0
       return
-
     @ui.form.ajaxSubmit(
       url: '/photos/add'
       type: 'POST'
       dataType: 'json'
       clearForm: false
-      success: (data) ->
-        _this.model.get('imgs').push data[0]
-        _this.ui.photoList.html Templates.ProgressImage _this.model.toJSON()
-        _this.ui.photoProgress.hide()
-        console.log _this.photoSlider
-        _this.photoSlider.reinit()
-      beforeSend: (request) ->
-        _this.ui.photoProgress.show()
-      uploadProgress: (event, position, total, percentComplete) ->
-        _this.ui.photoProgress.find('.value').css 'width', percentComplete + '%'
-        _this.ui.photoProgress.find('.progress-count').text percentComplete + ' %'
+      success: (data) =>
+        @model.get('imgs').push data[0]
+        @ui.photoList.html Templates.ProgressImage @model.toJSON()
+        @ui.photoProgress.hide()
+        @photoSlider.reinit()
+      beforeSend: (request) =>
+        @ui.photoProgress.show()
+      uploadProgress: (event, position, total, percentComplete) =>
+        @ui.photoProgress.find('.value').css 'width', percentComplete + '%'
+        @ui.photoProgress.find('.progress-count').text percentComplete + ' %'
     )
-
 
   ###*
   # Remove photo from list
@@ -275,7 +289,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     event.preventDefault()
     console.log event.target
 
-
   ###*
   # Set value for address and place name
   # @method setValue
@@ -284,19 +297,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     inputValue = $.trim  $(event.currentTarget).val()
     key = $(event.currentTarget).attr 'data-key'
     @model.set key, inputValue, silent:true
-
-
-  ###*
-  # Search names for poins
-  # @method searchName
-  ###
-  searchName: (event) ->
-    searchStr = $.trim $(event.currentTarget).val()
-    event.preventDefault()
-    if searchStr.length > 0
-      $dropResult = $(event.currentTarget).closest(".drop-filter").find(".drop-results")
-      $dropResult.find('li').remove()
-      @model.search(searchStr, $dropResult)
 
   ###*
   # Search coordinates for points
@@ -341,7 +341,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     #$(event.currentTarget).closest('.input-line').css('z-index', 20)
     $(event.currentTarget).closest('.drop-filter').find('.drop-results').show()
 
-
   ###*
   #
   # @method hideDropList
@@ -349,7 +348,6 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   hideDropList: (event) ->
     $(event.currentTarget).closest('.drop-filter').find('.drop-results').hide().css('z-index', 20)
     $(event.currentTarget).closest('.input-line').css('z-index', 1)
-
 
   ###*
   #
@@ -431,11 +429,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @$el.find("[data-key]").removeClass('validation-error')
     @$el.find("[data-key=#{key}]").addClass('validation-error') for key in errors
 
-
   ###*
   # Callback for success saving point model
   # @method successSave
   ###
-  successSave: ->
+  successSave: (response) ->
     Yapp.popup.close()
-    console.log 'success'
+    console.log response, 'success'
