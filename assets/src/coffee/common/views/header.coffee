@@ -52,7 +52,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     'click .clear-input': 'clearSearchInput'
 
     'click #multisearchForm input[type=submit]': 'submitSearch'
-    'submit @multisearchForm': 'submitSearch'
+    'submit #multisearchForm': 'submitSearch'
 
     'keydown .text-field input': 'keyupInput'
     #'blur .text-field': 'hideDropdown'
@@ -112,7 +112,28 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   submitSearch: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    console.log event
+    $user = @ui.labelFields.find '.label-user'
+    $tags = @ui.labelFields.find '.label-tags'
+
+    query = @ui.labelFields.find('.label-name').val()
+    userId = $user.data 'id'
+    tagsId = _map $tags, (el) -> $(el).data('id')
+    console.log userId, tagsId
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/api/v1/yapens"
+        type: 'GET'
+        context: @
+        successCallback: successSubmit
+        data:
+          s: query
+          tags: tagsId.join ','
+          user: userId
+    )
+
+  successSubmit: (response) ->
+    console.log response
+
 
   hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)

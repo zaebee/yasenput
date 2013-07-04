@@ -83,7 +83,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
     'click .ctp-item-label': 'addRequireLabel'
     'click .ctp-more-labels .label-place': 'addMoreLabel'
-    'click .h4 .remove-label': 'showRequireLabel'
+    'click h4 .remove-label': 'showRequireLabel'
 
     'click .selected-labels .remove-label': 'removeLabel'
     'click .clear-selected': 'clearLabels'
@@ -419,6 +419,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
           longitude: @model.get 'longitude'
           latitude: @model.get 'latitude'
           ypi: 0
+          priority: 0
     )
 
   ###*
@@ -434,5 +435,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method successSave
   ###
   successSave: (response) ->
+    model = new Yapp.Points.Point response[0]
+    @collection.add model
     Yapp.popup.close()
-    console.log response, 'success'
+    console.log model, 'success'

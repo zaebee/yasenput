@@ -53,9 +53,11 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method addPoint
   ###
   addPoint: ->
-    #@showContent()
+    if !@layout
+      @showContent()
     Yapp.popup.show new Yapp.Points.PointAddView
       id: 'p-add-place'
+      collection: @layout.pointCollection
 
   ###*
   # Method for the point detail showing function
