@@ -170,6 +170,8 @@ class Points(models.Model):
 
     ypi = models.IntegerField(default=0, blank=True)
     type_of_item = "point"
+    sets = ''
+
     unid = '1'
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
