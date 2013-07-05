@@ -49,10 +49,11 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
+    'click .label-fields .label-name': 'editInput'
     'click .clear-input': 'clearSearchInput'
 
     'click #multisearchForm input[type=submit]': 'submitSearch'
-    'submit @multisearchForm': 'submitSearch'
+    'submit #multisearchForm': 'submitSearch'
 
     'keydown .text-field input': 'keyupInput'
     #'blur .text-field': 'hideDropdown'
@@ -76,12 +77,19 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     switch data.type
       when 'tags'
+        tags = @ui.labelFields.children '.label-tags'
+        _.each tags, (tag) ->
+          if $(tag).data('id') is data.id
+            $(tag).remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
+        @submitSearch(event)
       when 'place'
         return
       when 'user'
         @ui.labelFields.children('.label-user').remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
+        @submitSearch(event)
+
     @hideDropdown()
 
   removeLabel: (event) ->
@@ -104,22 +112,54 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     if $target.hasClass 'label-fields'
       @focusInput(event)
 
+  editInput: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    $target = $(event.currentTarget)
+    text = $target.text().trim()
+    $target.remove()
+    @ui.labelAdd.hide()
+    @setWidthInput()
+    @ui.searchInput.show()
+    @ui.searchInput.children().val(text).focus()
+
   clearSearchInput: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
     @ui.labelFields.children('.label-name, .label-place, .label-user, .label-tags, .label-new').remove()
 
   submitSearch: (event) ->
-    event.preventDefault()
-    event.stopPropagation()
-    console.log event
+    if event
+      event.preventDefault()
+      event.stopPropagation()
+    $user = @ui.labelFields.find '.label-user'
+    $tags = @ui.labelFields.find '.label-tags'
+
+    query = @ui.labelFields.find('.label-name').text().trim()
+    userId = $user.data 'id'
+    tagsId = _.map $tags, (el) -> $(el).data('id')
+
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/api/v1/yapens"
+        type: 'GET'
+        context: @
+        successCallback: (response) =>
+          @trigger 'update:multisearch', response
+        data:
+          s: query
+          tags: tagsId.join ','
+          user: userId
+    )
+    @ui.searchInput.children().val('')
 
   hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
     @ui.dropSearch.hide()
     @ui.dropSearch.find('li').removeClass 'selected'
-    @ui.searchInput.hide()
     @ui.labelAdd.show()
+    @ui.searchInput.hide()
+    @ui.searchInput.children().blur()
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response) ->
@@ -138,7 +178,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
         if query
-          @search query, @showDropdown, @
+          @searchXHR = @search query, @showDropdown, @
         return
     500
     )
@@ -147,21 +187,25 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     switch event.which
       when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
         if @ui.searchInput.children().val() is ''
-          @ui.labelFields.children('.label:visible').last().hide()
+          @ui.labelFields.children('.label:visible').last().remove()
 
       when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
         event.preventDefault()
         event.stopPropagation()
-        if $(".selected", @ui.dropSearch).length
-          $(".selected a", @ui.dropSearch).click()
+        clearTimeout 0
+        ## abort search request if exists
+        if @searchXHR isnt undefined
+          @searchXHR.abort()
+        ## added selected item into multisearch input
+        if $('.selected', @ui.dropSearch).length
+          $('.selected a', @ui.dropSearch).click()
         else if @ui.searchInput.children().val()
-        #notFound = $(".drop-not-found", @ui.dropSearch)
           data =
             type: 'name'
-            id: 0
             name: @ui.searchInput.children().val()
           @ui.labelFields.children('.label-name').remove()
           @ui.labelFields.children('.label-add').before @labelTemplate(data)
+          @submitSearch(event)
         @hideDropdown()
         break
       when 27 ## закрыть на ESC

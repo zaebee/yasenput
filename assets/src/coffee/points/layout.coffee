@@ -61,7 +61,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
     console.log 'loading points collection'
     @pointCollection.fetch(
       data:
-        content: @options.content_type or 'popular'
+        content: content_type
       success: (collection, response) =>
         console.log ['server response: ', response]
         if response.error or response.errors

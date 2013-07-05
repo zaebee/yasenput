@@ -71,9 +71,9 @@ class PointsBaseView(View):
 
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
-        return YpJson.serialize(collections,
-                                fields=['id', 'name', 'isliked', 'description', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
+        return YpJson.serialize(collections, 
+                                fields=['id', 'name', 'sets', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                extras=['likes_count', 'sets', 'isliked', 'type_of_item', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
 
@@ -361,7 +361,7 @@ class PointsSearch(PointsBaseView):
                 errors.append(er +':'+e[er][0])
 
             return JsonHTTPResponse({"status": 0, "txt": ", ".join(errors)})
-
+#draw the yapens
 class PointsList(PointsBaseView):
     #COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
     http_method_names = ('get',)
@@ -385,7 +385,7 @@ class PointsList(PointsBaseView):
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-
+                'sets': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                  }), search_res_sets.extra(select = {'type_of_item': 2, "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})).order_by('ypi')[offset:limit]
             another_all = list(all_items)
             items = json.loads(self.getSerializeCollections(all_items))
