@@ -141,6 +141,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     query = @ui.labelFields.find('.label-name').text().trim()
     userId = $user.data 'id'
     tagsId = _.map $tags, (el) -> $(el).data('id')
+    searchOptions = @buildSearchOptions
+      user: userId
+      tags: tagsId.join ','
+      s: query
 
     Yapp.request(
       'request'
@@ -148,11 +152,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         type: 'GET'
         context: @
         successCallback: (response) =>
-          @trigger 'update:multisearch', response
-        data:
-          s: query
-          tags: tagsId.join ','
-          user: userId
+          @trigger 'update:multisearch', response, searchOptions
+        data: searchOptions
     )
     @ui.searchInput.children().val('')
 
@@ -309,3 +310,18 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         data:
           s: query
     )
+
+  ###*
+  # Returns params dict from multisearch query for load filtered collection
+  # @method buildQueryParams
+  ###
+  buildSearchOptions: (options) ->
+    @searchOptions = {}
+    if options.user
+      @searchOptions.user = options.user
+    if options.tags
+      @searchOptions.tags = options.tags
+    if options.s
+      @searchOptions.s = options.s
+
+    return @searchOptions

@@ -34,15 +34,16 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
     _.bindAll @, 'loadResults', 'updateCollection'
-    Yapp.Common.headerView.on 'update:multisearch', @updateCollection
+    Yapp.Common.headerView.on 'update:multisearch', @updateCollection,
 
     # add infiniScroll for point collection
+    @extraParams = @options.content_type
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @loadResults,
       scrollOffset: 350
       includePage: true
       extraParams:
-        content: @options.content_type
+        content: @extraParams
 
   onRender: ->
     $(window).trigger 'scroll'
@@ -74,8 +75,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   loadResults: (collection, response) ->
     @onShow()
 
-  updateCollection: (response) ->
-    @onClose()
+  updateCollection: (response, searchOptions) ->
+    @extraParams = _.extend @extraParams, searchOptions
+    #@close()
     yapens = new Yapp.Points.PointCollection response
     @collection.reset yapens.models
     yapens.reset()
