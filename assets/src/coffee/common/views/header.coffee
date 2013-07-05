@@ -35,6 +35,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     searchInput: '.text-field'
     labelAdd: '.label-add'
     removeLAbel: '.remove-label'
+    searchOverlay: '.drop-search-overlay'
 
   ###*
   # The view event triggers
@@ -43,6 +44,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   events:
     'click .drop-add-head, .auth, a-login': 'showAuthPopup'
+    'click .drop-search-overlay': 'hideDropdown'
 
     'click .item-label': 'addLabel'
     'click .remove-label': 'removeLabel'
@@ -105,6 +107,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.labelAdd.hide()
     @setWidthInput()
     @ui.searchInput.show()
+    @ui.searchOverlay.show()
     @ui.searchInput.children().val('').focus()
 
   focusLabels: (event) ->
@@ -160,6 +163,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.labelAdd.show()
     @ui.searchInput.hide()
     @ui.searchInput.children().blur()
+    @ui.searchOverlay.hide()
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response) ->
