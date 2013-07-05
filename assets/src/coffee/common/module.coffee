@@ -16,11 +16,13 @@ Yapp.module 'Common',
         controller: new Yapp.Common.Controller
 
       # show main navbar with user info
-      Yapp.header.show new Yapp.Common.HeaderView
+      @headerView = new Yapp.Common.HeaderView
         model: Yapp.user
+      Yapp.header.show @headerView
 
       # show footer info with social widgets
-      Yapp.footer.show new Yapp.Common.FooterView
+      @footerView = new Yapp.Common.FooterView
+      Yapp.footer.show @footerView
     )
 
     ## common slider for point photos.

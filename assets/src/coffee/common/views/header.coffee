@@ -76,12 +76,17 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     switch data.type
       when 'tags'
+        @ui.labelFields.children('.label-add').find("[data-id=#{data.id}]").remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
+        @submitSearch(event)
       when 'place'
         return
       when 'user'
         @ui.labelFields.children('.label-user').remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
+        @submitSearch(event)
+
+    @ui.searchInput.children().val('')
     @hideDropdown()
 
   removeLabel: (event) ->
@@ -110,37 +115,36 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.labelFields.children('.label-name, .label-place, .label-user, .label-tags, .label-new').remove()
 
   submitSearch: (event) ->
-    event.preventDefault()
-    event.stopPropagation()
+    if event
+      event.preventDefault()
+      event.stopPropagation()
     $user = @ui.labelFields.find '.label-user'
     $tags = @ui.labelFields.find '.label-tags'
 
-    query = @ui.labelFields.find('.label-name').val()
+    query = @ui.labelFields.find('.label-name').text().trim()
     userId = $user.data 'id'
-    tagsId = _map $tags, (el) -> $(el).data('id')
-    console.log userId, tagsId
+    tagsId = _.map $tags, (el) -> $(el).data('id')
+
     Yapp.request(
       'request'
         url: Yapp.API_BASE_URL + "/api/v1/yapens"
         type: 'GET'
         context: @
-        successCallback: successSubmit
+        successCallback: (response) =>
+          @trigger 'update:multisearch', response
         data:
           s: query
           tags: tagsId.join ','
           user: userId
     )
 
-  successSubmit: (response) ->
-    console.log response
-
-
   hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
     @ui.dropSearch.hide()
     @ui.dropSearch.find('li').removeClass 'selected'
-    @ui.searchInput.hide()
     @ui.labelAdd.show()
+    @ui.searchInput.hide()
+    @ui.searchInput.children().blur()
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response) ->
@@ -159,7 +163,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
         if query
-          @search query, @showDropdown, @
+          @searchXHR = @search query, @showDropdown, @
         return
     500
     )
@@ -168,18 +172,21 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     switch event.which
       when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
         if @ui.searchInput.children().val() is ''
-          @ui.labelFields.children('.label:visible').last().hide()
+          @ui.labelFields.children('.label:visible').last().remove()
 
       when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
+        ## abort search request if exists
         event.preventDefault()
         event.stopPropagation()
-        if $(".selected", @ui.dropSearch).length
-          $(".selected a", @ui.dropSearch).click()
+        clearTimeout 0
+        if @searchXHR isnt undefined
+          @searchXHR.abort()
+        if $('.selected', @ui.dropSearch).length
+          $('.selected a', @ui.dropSearch).click()
         else if @ui.searchInput.children().val()
-        #notFound = $(".drop-not-found", @ui.dropSearch)
+          @submitSearch(event)
           data =
             type: 'name'
-            id: 0
             name: @ui.searchInput.children().val()
           @ui.labelFields.children('.label-name').remove()
           @ui.labelFields.children('.label-add').before @labelTemplate(data)
