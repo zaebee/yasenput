@@ -15,7 +15,7 @@
     {% block postload_css %}{% endblock %}
 
     <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
   </head>
 
   <body class="front">
@@ -26,7 +26,7 @@
           id: {{user.id}},
           first_name: '{{ user.first_name }}',
           last_name: '{{ user.last_name }}',
-          avatar: '{{ user.person.avatar.url }}',
+          avatar: '{{ user.person.avatar }}',
           last_state: 'pins',
           count_liked_objects: {{ count_liked_objects }},
           count_commented_objects: {{ count_commented_objects }},
@@ -51,47 +51,25 @@
     {% block popups %}{% endblock %}
 
     <script src="{{ STATIC_URL }}lib/json2.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery.masonry.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
     <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
-
     <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
     <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
-
     <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
-
-    {# backbone #}
-    <script src="{{ STATIC_URL }}lib/underscore.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone.marionette.js"></script>
+    <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
+    <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
     <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
-
-    {% block preload_js %}{% endblock %}
 
     {# application.main #}
     <script src="{{ STATIC_URL }}js/application.js"></script>
 
-    <script type="text/javascript">
-      $(document).ready(function(){
-          $(window).scrollTop(400);
-      });
-    </script>
-
-    <!--
-    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&wizard=constructor&onload=Yapp.Map.init" type="text/javascript"></script>
-    <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=Yapp.Map.init"></script>
-    -->
-
     {% block postload_js %}{% endblock %}
 
     {# external #}
-    <!--
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
 
     <script type="text/javascript">
-      //VK init
-      VK.init({apiId: {{ VKONTAKTE_APP_ID }}, onlyWidgets: true});
-      VK.Widgets.Like("vk_like", {type: "mini"});
-
       //FB init
       (function(d, s, id) {
           var js, fjs = d.getElementsByTagName(s)[0];
@@ -100,7 +78,13 @@
           js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1";
           fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
+
+      //VK init
+      VK.init({apiId: {{ VKONTAKTE_APP_ID }}, onlyWidgets: true});
+      VK.Widgets.Like("vk_like", {type: "mini"}, 1000);
+
     </script>
+    <!--
     -->
 
     {# include 'includes/metrika.html' #}

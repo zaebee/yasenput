@@ -3,7 +3,7 @@
 
   <div class="head-search">
     <div class="search">
-      <form action="#">
+      <form action="#" id="multisearchForm">
         <input type="submit" value="Найти">
 
         <div class="label-fields">
@@ -37,35 +37,15 @@
         <button type="button" class="clear-input"></button>
       </form>
 
-      <div class="drop-search">
-        <button type="button"  class="toggle-panel"></button>
-
-        <div class="inner-wrap">
-          <ul class="item item-place">
-            <li class="item-title">Местоположения <sup>15</sup></li>
-          </ul>
-
-          <ul class="item item-name">
-            <li class="item-title">Название <sup>15</sup></li>
-          </ul>
-
-          <ul class="item item-labels">
-            <li class="item-title">Метки <sup>15</sup></li>
-          </ul>
-
-          <ul class="item item-users">
-            <li class="item-title">Пользователи <sup>15</sup></li>
-          </ul>
-        </div>
-      </div>
+      <div class="drop-search" style="display:none;"></div>
     </div>
   </div>
 
   <div class="head-nav">
     <div>
       <ul>
-        <li class="head-nav-current-item">Коллекции</li>
-        <li><a href="#">Все сразу</a></li>
+        <li class="head-nav-current-item">Все сразу</li>
+        <li><a href="#">Коллекции</a></li>
         <li><a href="#">Места</a></li>
         <li><a href="#">События</a></li>
         <li><a href="#">Маршруты</a></li>
@@ -79,14 +59,14 @@
     <div>
       <div class="drop-add-head">
         <a href="/point/add" class="nonav" data-target="p-add-place">Добавить место</a>
-        <a href="/event/add" data-target="p-add-event">Добавить событие</a>
+        <!--<a href="/event/add" data-target="p-add-event">Добавить событие</a>-->
       </div>
     </div>
   </div>
 
   {{#if authorized}}
     <div class="auth user">
-      <img src="{{avatar}}" alt="" class="avatar" width="29" height="30">
+      <img src="/media/{{avatar}}" alt="" class="avatar" width="29" height="30">
       <div class="user-body">
         <div class="user-name">{{first_name}} {{last_name}}<div class="drop-logout"><a href="/logout/" class="a-logout">Выход</a></div></div>
         <div class="user-likes">
@@ -101,7 +81,7 @@
     <div class="auth">
       <img src="/static/images/guest.png" alt="" class="avatar" width="29" height="30">
       <div class="user-body">
-          <a href="/login/vkontakte-oauth2" class="a-login">Вход</a>
+        <span href="#" class="a-login">Вход</span>
       </div>
     </div>
   {{/if}}

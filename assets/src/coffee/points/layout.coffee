@@ -45,34 +45,29 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.MainLayout'
+    @pointCollection = new Yapp.Points.PointCollection()
 
   ###*
   # Event method. It triggers when layout fully rendered and load all data
   # @method onShow
   ###
   onShow: ->
-    _this = @
-    pointCollection = new Yapp.Points.PointCollection()
+    content_type = @options.content_type
 
     @panelContainer.show new Yapp.Points.PointPanelView
       model: Yapp.user
-      content_type: @options.content_type or 'popular'
-
-    if @options.content_type is 'new'
-      pointCollection.comparator = (point) ->
-        -new Date point.get('updated')
+      content_type: content_type
 
     console.log 'loading points collection'
-    pointCollection.fetch(
+    @pointCollection.fetch(
       data:
-        content: @options.content_type or 'popular'
-      success: (collection, response) ->
+        content: content_type
+      success: (collection, response) =>
         console.log ['server response: ', response]
         if response.error or response.errors
           console.error response
         else
-          # sort collection if is new and render points
-          pointCollection.sort()
-          _this.popularContainer.show new Yapp.Points.PointListView
-            collection: pointCollection
+          @popularContainer.show new Yapp.Points.PointListView
+            collection: @pointCollection
+            content_type: content_type
     )

@@ -44,7 +44,7 @@
                     <li>
                       <div class="item-photo" data-set-id="{{../id}}" data-photo-id="{{id}}">
                         <a href="/set/{{../id}}/point/{{../activePoint.id}}/photo/{{id}}">
-                          <img src="{{thumbnail130x130}}" alt="" width="104" height="104">
+                          <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
                         </a>
                           <button class="remove-photo"></button>
                           <button class="complaint-photo"></button>
@@ -52,6 +52,12 @@
                     </li>
                     {{/each}}
                   </ul>
+                </div>
+
+                <div class="item-photo load-photo">
+                  <form id="addImageForm" action="" method="POST" enctype="multipart/form-data">
+                    <input name="img" type="file">
+                  </form>
                 </div>
 
                 <span class="photos-next"></span>
@@ -212,22 +218,6 @@
     {{#if user.authorized}}
       <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
     {{/if}}
-    <div class="stats">
-      <span>
-        <span class="ico-want-small"></span>
-        {{activePoint.visits}}
-      </span>
-
-      <span>
-        <span class="ico-like-small"></span>
-        {{activePoint.likes}}
-      </span>
-
-      <span>
-        <span class="ico-comment-small"></span>
-        {{activePoint.comments}}
-      </span>
-    </div>
   </footer>
 </div><!-- end .cleatfix-body -->
 
@@ -236,7 +226,7 @@
     <aside class="stp-buttons">
     {{#if user.authorized}}
       <div class="c-buttons">
-        <a href="#" class="a-btn stp-like">Нравится</a>
+        <a href="#" class="a-btn stp-like {{#ifBelong user likeusers}}marked{{/ifBelong}}">Нравится</a>
         {{#ifEquals author.id user.id}}<a href="#" class="a-btn stp-edit">Редактировать</a>{{/ifEquals}}
       </div>
     {{/if}}
@@ -275,7 +265,7 @@
   <div class="aside-content">
     <div class="aside-viewport">
       <ol id="ol-collection">
-        {{#each allpoints}}
+        {{#each points}}
         <li class="choose_place {{#ifEquals id ../activePoint.id}}active{{/ifEquals}}" data-placemark-id="placemark-1">
           <a href="/set/{{../id}}/point/{{id}}" class="choose_place_a" data-id="{{id}}">{{name}}</a>
             <button type="button" class="remove-collection"></button>

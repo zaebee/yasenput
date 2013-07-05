@@ -39,6 +39,15 @@ Handlebars.registerHelper('eachKey', (keysArray, options)->
   return ret
 )
 
+
+## split string
+Handlebars.registerHelper('splitAddr', (str, limiter, options)->
+  str = str.split limiter
+  str[2]
+  #new Handlebars.SafeString "#{strBegin}&shy;#{strEnd}"
+)
+
+
 ## add &shy; tags for long string
 Handlebars.registerHelper('addShy', (str, options)->
   if _.contains str, ' '

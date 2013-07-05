@@ -44,16 +44,24 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointItemView'
+    @user = Yapp.user
 
   modelEvents:
     'change': 'render'
+
+  ###*
+  # Passed additional user data
+  # @method templateHelpers
+  ###
+  templateHelpers: ->
+    user: @user.toJSON()
 
   ###*
   # Before render method of the view. Add differnt class for point or set.
   # @method onBeforeRender
   ###
   onBeforeRender: ->
-    if @model.get('type') is 'collection'
+    if @model.get('type_of_item') is 'set'
       @$el.addClass 'item-collection'
     else
       @$el.addClass 'item-place'
@@ -63,5 +71,47 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   # @property events
   ###
   events:
-    "click .removePoint":"removePlace"
-    "click a.removePointConfirm": "removePlaceConfirm"
+    'click .photo .a-like': 'like'
+    'click .photo .a-collection': 'addToCollection'
+    'click .yp-title': 'toggleYpInfo'
+    'click .yp-info': 'toggleYpInfo'
+
+  ui:
+    ypInfo: '.yp-info'
+    ypTitle: '.yp-title'
+
+  like: (event) ->
+    if !@user.get 'authorized'
+      Yapp.vent.trigger 'user:notauthorized'
+      return
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @model.like $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  successLike: (response, $target) ->
+    _this = @
+    likeusers = @model.get 'likeusers'
+    if $target.hasClass 'marked'
+      me = _.find likeusers, (user) -> user.id is _this.user.id
+      index = _.indexOf likeusers, me
+      likeusers.splice index, 1
+      @model.set 'likeusers', likeusers
+      @model.set 'likes_count', @model.get('likes_count') - 1
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
+    else
+      likeusers.push @user
+      @model.set 'likes_count', @model.get('likes_count') + 1
+      @model.set 'likesers', likeusers
+      @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+
+  addToCollection: (event) ->
+    if !@user.get 'authorized'
+      Yapp.vent.trigger 'user:notauthorized'
+      return
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    #@model.addToCollection $target, @successLike, @ ##targetElement, successCallback and context variables
+
+  toggleYpInfo: (event) ->
+    @ui.ypInfo.toggle()
+    @ui.ypTitle.toggle()

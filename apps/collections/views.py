@@ -35,15 +35,13 @@ class CollectionsBaseView(View):
 
 
 class LikeCollection(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
-
-        DEFAULT_LEVEL = 2
+    def post(self, request, *args, **kwargs):
 
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
 
@@ -51,7 +49,7 @@ class LikeCollection(CollectionsBaseView):
             list_of_collections = params.__getitem__("collectionid").split(",")
             list_of_collections
             for coll_id in list_of_collections:
-                collection = Collections.objects.get(id = int(coll_id))
+                collection = Collections.objects.get(id=int(coll_id))
                 collection.save()
                 if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
                     collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
@@ -87,7 +85,7 @@ class OneCollection(View):
                     'tags': {'fields': ('name', 'id', 'level')},
                     'author': {'fields': ('first_name', 'last_name', 'avatar')},
                     'imgs': {
-                        'extras': ('thumbnail130x130', 'thumbnail207', 'thumbnail560'),
+                        'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
                         'relations': {
                             'author': {'fields': ('last_name', 'first_name', 'avatar')},
                             'likeusers': {'fields': ('last_name', 'first_name', 'avatar')},
@@ -196,7 +194,7 @@ class CollectionsList(View):
                                                  fields=('id', 'name', 'description', 'likeusers', 'updated', 'points', 'author'),
                                                  relations={'points': {'fields': ('id', 'name', 'address', 'author', 'imgs'),
                                                                        'relations': {'author': {'fields': ('first_name', 'last_name', 'avatar')},
-                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail130x130'),
+                                                                                     'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail104x104'),
                                                                                               'limit': LIMITS.POINTS_LIST.IMAGES_COUNT},
                                                                                      },
                                                                        'limit': LIMITS.COLLECTIONS_LIST.POINTS_COUNT

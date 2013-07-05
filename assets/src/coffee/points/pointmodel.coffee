@@ -21,7 +21,7 @@ class Yapp.Points.Point extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Point"
 
-  idAttribute: 'name'
+  idAttribute: 'unid'
 
   urlRoot: ->
     Yapp.API_BASE_URL + "/points/"
@@ -32,6 +32,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @type Object
   ###
   defaults: ->
+    priority: 0
     name: ''
     address: ''
     description: ''
@@ -53,6 +54,9 @@ class Yapp.Points.Point extends Backbone.Model
 
     if attrs.latitude is ''
       invalid.push 'latitude'
+
+    if attrs.description is ''
+      invalid.push 'description'
 
     if not attrs.imgs or attrs.imgs.length is 0
       invalid.push 'photos'
@@ -84,14 +88,128 @@ class Yapp.Points.Point extends Backbone.Model
       dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
     )
 
+  ###*
+  # Like or unlike point. Fiist arg is target that was clicked.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method like
+  ###
+  like: (target, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/points/like"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          target: target
+        data:
+          id: @get 'id'
+    )
+
+  ###*
+  # Like or unlike photo for point. Fiist arg is target that was clicked.
+  # Second is photo id that was liked/unliked.
+  # Third is callback that will be call after success response.
+  # Fourth is variable for binding this namespace.
+  # @method likePhoto
+  ###
+  likePhoto: (target, photoId, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/like"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          target: target
+        data:
+          id: photoId
+    )
+
+  ###*
+  # Add comment for photo.
+  # First is photo id that comment was added.
+  # Second is callback that will be call after success response.
+  # Third is comment message.
+  # Fourth is variable for binding this namespace.
+  # @method addCommentPhoto
+  ###
+  addCommentPhoto: (photoId, txt, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/comments/add"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        data:
+          photo: photoId
+          txt: txt
+    )
+
+  ###*
+  # Remove comment for photo.
+  # First arg is comment id that will be removed.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method removeCommentPhoto
+  ###
+  removeCommentPhoto: (commentId, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/comments/del"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          commentId: commentId
+        data:
+          id: commentId
+    )
+
+  ###*
+  # Add photo.
+  # First arg is formData files
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method addPhoto
+  ###
+  addPhoto: (formData, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/point/#{@get('id')}/add"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        processData: false
+        contentType: false
+        params:
+          id: @get 'id'
+        data: formData
+    )
+
+  ###*
+  # Remove photo.
+  # First arg is photoId for removing
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method removePhoto
+  ###
+  removePhoto: (photoId, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/photos/del"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          id: photoId
+        data:
+          id: photoId
+
+    )
+
   parse: (response) ->
     if _.isArray response
       response = response[0]
-
-    if response.type_of_item is 2 ## is collection type
-      response.type = 'collection'
-      points = response.points
-      response.allpoints = points
-    if response.type_of_item is 1 ## is point type
-      response.type = 'point'
     response

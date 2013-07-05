@@ -22,6 +22,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   template: Templates.PointListView
   className: 'items'
+  id: 'items'
 
   itemView: Yapp.Points.PointItemView
   emptyView: Yapp.Points.PointEmptyView
@@ -32,13 +33,24 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
-    _.bindAll @, 'loadResults'
+    _.bindAll @, 'loadResults', 'updateCollection'
+    Yapp.Common.headerView.on 'update:multisearch', @updateCollection
+
     # add infiniScroll for point collection
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @loadResults,
-      #strict: true
-      scrollOffset: 600
+      scrollOffset: 350
       includePage: true
+      extraParams:
+        content: @options.content_type
+
+  onRender: ->
+    $(window).trigger 'scroll'
+
+  onClose: ->
+    console.log 'onClose'
+    @infiniScroll.destroy()
+    @wall.destroy()
 
   ###*
   # Event method. It triggers when view fully rendered
@@ -46,11 +58,14 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onShow: ->
     @$el.find('[data-toggle=tooltip]').tooltip()
-    @$el.masonry(
-      itemSelector: '.item',
+    @wall = new Masonry @el,
       columnWidth: 241
-    )
-    @$el.masonry 'reload'
+      isFitWidth: true
+
+  onCompositeCollectionRendered: ->
+    if @wall
+      console.log 'reloadWall'
+      @wall.reload()
 
   ###*
   # Success callback after collection fetch for infiniScroll
@@ -58,3 +73,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   loadResults: (collection, response) ->
     @onShow()
+
+  updateCollection: (response) ->
+    @onClose()
+    yapens = new Yapp.Points.PointCollection response
+    @collection.reset yapens.models
+    yapens.reset()

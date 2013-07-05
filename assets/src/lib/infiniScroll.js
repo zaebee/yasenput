@@ -101,7 +101,7 @@
       params[self.options.pageSizeParam] = self.options.pageSize;
 
       if (self.options.includePage) {
-        params["page"] = page + 1;
+        params["p"] = page + 1;
       }
 
       return params;

@@ -75,7 +75,7 @@ a:hover{color:#333}
 	#header .logo{display:table-cell; vertical-align:top; width:154px; height:27px; background:url(../images/logo-yasen.png) 10px 0 no-repeat; text-decoration:none;text-indent:-9999px; overflow:hidden; padding:0 0 0 10px; }
 sup{position:relative; font-size:.75em; top:-.5em}
 .avatar{float:left}
-.auth{display:table-cell; vertical-align:top; width:1px; white-space:nowrap; padding-right:11px}
+.auth{display:table-cell; vertical-align:top; width:1px; white-space:nowrap; padding-right:11px; cursor:pointer;}
 	.auth .avatar{float:none; display:inline-block; .display:inline; .zoom:1; vertical-align:top; margin:-1px 6px 0 0}
 	.auth .user-body{display:inline-block; .display:inline; .zoom:1; vertical-align:top}
 	.user-name{color:#984d56; position:relative}
@@ -134,15 +134,16 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .label-name{background:#9884b9 !important}
 .label-user{background:#f5c05c !important}
 .remove-label, .label-add span{position:absolute; width:18px; height:18px; background-position:-423px -5px; border:0; border-left:solid 1px #e4bbc0; right:0; top:0; cursor:pointer}
-	.label-user .remove-label{border-left-color:#fbe6be}
 	.label-name .remove-label{border-left-color:#c8bdda}
 	.label-place .remove-label{border-left-color:#9ec1ff}
+	.label-user .remove-label{border-left-color:#fbe6be}
+	.labels-field .remove-label{display:none;}
 .label-add{background:#e6e6e6 !important; color:#acacac !important; cursor:pointer}
 	.label-add span{font-size:15px; border:0 !important; text-align:center}
 
 .drop-search{position:absolute; width:100%; max-height:629px; background:#fff; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; -moz-box-shadow:0 2px 3px rgba(0, 0, 0, .42); -webkit-box-shadow:0 2px 3px rgba(0, 0, 0, .42); box-shadow:0 2px 3px rgba(0, 0, 0, .42); left:0; top:100%; display:none; margin-top:4px; overflow:auto}
 	.drop-search .inner-wrap{position:relative}
-	.drop-search ul{padding:4px 0 0; font-size:13px; max-height:131px; overflow:hidden}
+	.drop-search ul{padding:4px 0 0; font-size:13px;/* max-height:131px;*/ overflow:hidden}
 	.drop-search ul.overflow-visible{overflow:visible; max-height:12345em}
 	.drop-search ul a{color:#984d56; display:inline-block; vertical-align:top; overflow:hidden; -o-text-overflow:ellipsis; text-overflow:ellipsis; text-decoration:none; padding:0 4px; height:18px}
 	.drop-search ul a:hover, .drop-search ul .selected a{color:#fff}
@@ -313,7 +314,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .a-want:hover{background-position:-71px -75px; color:#fff}
 .a-want.marked{background-position:-71px -111px; color:#fff}
 .a-want.marked:hover{background-position:-71px -147px; color:#fff}
-.a-like, .a-comment{width:30px; height:27px; display:inline-block; .display:inline; .zoom:1; vertical-align:top; background-position:-1px -39px; text-decoration:none}
+.a-like, .a-comment{width:30px; height:27px; display:inline-block; .display:inline; .zoom:1; vertical-align:top; background-position:-1px -39px; text-decoration:none;}
 .a-like:hover{background-position:-1px -75px;}
 .a-like.marked{background-position:-1px -111px;}
 .a-like.marked:hover{background-position:-1px -147px;}
@@ -373,7 +374,8 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	#footer .apps{float:left; width:26.8%; padding:7px 0 0}
 .app-android{float:left; width:113px; height:25px; text-decoration:none; background-position:0 -236px; margin:0 4% 0 0}
 .app-store{float:left; width:77px; height:25px; text-decoration:none; background-position:-121px -236px}
-#footer .share{float:left; width:auto; padding-top:9px}
+#footer .share{float:left; width:220px; padding-top:9px}
+    #vk_like {float:left;}
 .f-social{float:right; width:8%; margin:9px 40px 0 -10px}
 	.f-social a{float:right; width:23px; height:22px; text-decoration:none; margin:0 0 0 6px}
 .a-vk{background-position:-300px -71px}
@@ -669,7 +671,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.bp-comments .add-comment .ac-block{padding:8px 0 0 !important}
 	#big-photo .bp-photo .bp-add-like .a-like.marked{background-position:-717px -477px;}
 	#big-photo .bp-photo .bp-add-like .a-like.marked:hover{background-position:-717px -502px;}
-	.bp-comments .item-comment{padding:8px 24px 4px 0; overflow:hidden; position:relative}
+	.bp-comments .item-comment{padding:8px 24px 4px 0; position:relative}
 		.bp-comments .item-comment .avatar{margin:0 9px}
 		.bp-comments .item-comment .comment-body{overflow:hidden; font-size:11px}
 		.bp-comments .item-comment .comment-author{color:#984d56}
@@ -741,7 +743,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 /*   05.03.2013   */
 
 .a-collection, .a-edit-new{background-color:transparent; background-image: url(../images/sprite.png); background-repeat:no-repeat}
-.a-collection{position:absolute; left:4px; top:4px; width:88px; height:28px; background-position:0 -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; color:#fff; text-decoration:none; padding-left:29px; line-height:26px; font-size:13.5px; font-family: 'pf_agora_slab_prolight'}
+.a-collection{position:absolute; left:4px; top:4px; width:88px; height:28px; background-position:0 -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; color:#fff; text-decoration:none; padding-left:29px; line-height:26px; font-size:13.5px; font-family: 'pf_agora_slab_prolight';}
 .a-collection:hover{background-position:0 -721px; color:#fff}
 .a-collection:active, .a-collection.marked{background-position0 -757px;}
 .a-collection.marked:hover{background-position:0 -793px;}
@@ -788,9 +790,9 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .p-desc-collection{margin:0 0 10px; font-size:13px; line-height:16px; color:#888}
 #edit-place .p-photos{padding-bottom:10px}
 
-.yasen-info{position:absolute; left:0; bottom:0; width:100%; font-size:8px !important; color:#fff; font-family: Verdana, sans-serif}
+.yasen-info{position:absolute; left:0; bottom:0; width:100%; font-size:8px !important; color:#fff; font-family: Verdana, sans-serif;cursor:pointer;}
 .yp-title{cursor:pointer; background:url(../images/sprite.png) -297px -687px no-repeat; padding:0 0 0 23px; width:41px; height:22px; line-height:22px; color:#fff; float:left}
-.yp-info{height:18px; width:100%; color:#fff; padding:4px 0 0; display:none}
+.yp-info{height:18px; width:100%; color:#fff; padding:4px 0 0; display:none;cursor:pointer;}
 .no-rgba.yp-info{background:url(../images/overlay-black.png)}
 .rgba .yp-info{background:rgba(0, 0, 0, .4)}
 	.yp-info i{display:inline-block; .display:inline; .zoom:1; vertical-align:middle; height:16px; background-image:url(../images/sprite.png); margin:0 2px 0 0}
@@ -923,7 +925,8 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #tab-photos-place.validation-error{border: 1px dashed red;}
 #tab-photos-place.validation-error{border: 1px dashed red;}
 .pop-labels.validation-error{border: 1px dashed red;}
-.input-line input[type=text].validation-error{
+.input-line input[type=text].validation-error,
+.input-line textarea.validation-error{
 	background-color: #FFE4E4;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#FFE4E4), to(#fff));
 	background-image: -moz-linear-gradient(top, #FFE4E4, #fff);
@@ -1034,6 +1037,16 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .details-path{background:#fff; border:solid 1px #c5c5c5; border-radius:2px; margin:10px 0; color:#666; display:none}
 .dp-top{background:#f3f3f4; padding:10px}
 .black{color:#333}
+.p-gallery .photos-prev:after,
+.p-gallery .photos-next:after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -15px;
+    display: block;
+    width: 40px;
+    height: 40px;
+}
 	.details-path .black{font-size:14px}
 .ol-details-path{padding:0 3px}
 .ol-details-path > li{background:none; filter:none; border-top:solid 1px #dbdbdb; padding:13px 0 0 45px; font-size:14px; color:#333; cursor:default; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; height:auto; min-height:36px; display:block; white-space:normal; width:auto; margin:0}
@@ -1076,7 +1089,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.p-gallery .load-photo{left:auto; right:18px; top:3px}
 	.p-gallery .place-photos{padding:0}
 	.place-photos .photos-gallery{width:675px; overflow:hidden; margin-left:114px; padding-bottom:0; height:104px;}
-	.p-gallery .photos-gallery{width:560px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
+	.p-gallery .photos-gallery{width:450px; overflow:hidden; margin-left:0; padding:3px 3px 10px}
 	.place-photos ul, .p-gallery .photos-gallery ul{width:12345em; position:relative}
 	.place-photos ul .item-photo, .p-gallery .photos-gallery ul .item-photo{margin:0}
 		.place-photos ul li, .p-gallery .photos-gallery li{margin-left:10px; float:left}

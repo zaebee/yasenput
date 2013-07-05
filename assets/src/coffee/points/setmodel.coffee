@@ -21,8 +21,9 @@ class Yapp.Points.Set extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Set"
 
+  idAttribute: 'unid'
+
   urlRoot: ->
-    type = @get 'type' ## point or collection
     Yapp.API_BASE_URL + "/collections/"
 
   ###*
@@ -62,11 +63,26 @@ class Yapp.Points.Set extends Backbone.Model
     if invalid.length > 0
       return invalid
 
+  ###*
+  # Like or unlike point. Frist arg is target that was clicked.
+  # Second is callback that will be call after success response.
+  # Third is variable for binding this namespace.
+  # @method like
+  ###
+  like: (target, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/collections/like"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        params:
+          target: target
+        data:
+          collectionid: @get 'id'
+    )
+
   parse: (response) ->
     if _.isArray response
       response = response[0]
-
-    response.type = 'collection'
-    points = response.points
-    response.allpoints = points
     response

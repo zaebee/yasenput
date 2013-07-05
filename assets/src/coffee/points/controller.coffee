@@ -20,6 +20,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.Controller'
+    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
 
   ###*
   # The stub for all point's pins showing function
@@ -28,7 +29,6 @@ class Yapp.Points.Controller extends Marionette.Controller
   showContent: (content_type) ->
     console.log "Show content #{content_type} in Points module"
     Yapp.popup.close()
-    @layout = new Yapp.Points.MainLayout({content_type: content_type})
     Yapp.content.show @layout
 
   ###*
@@ -36,31 +36,34 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showPopular
   ###
   showPopular: ->
-    @showContent 'popular'
+    @layout.options.content_type = 'ypi'
+    Yapp.content.show @layout
 
   ###*
   # The stub for popular pins showing function
   # @method showNew
   ###
   showNew: ->
-    @showContent 'new'
+    @layout.options.content_type = 'updated'
+    Yapp.content.show @layout
 
   ###*
   # The stub for adding point function
   # @method addPoint
   ###
   addPoint: ->
-    #@showContent()
+    if !@layout
+      @showContent()
     Yapp.popup.show new Yapp.Points.PointAddView
       id: 'p-add-place'
+      collection: @layout.pointCollection
 
   ###*
   # Method for the point detail showing function
   # @method showPointDetail
   ###
   showPointDetail: (id, photo_id) ->
-    model = new Yapp.Points.Point name: id
-    model.set 'type', 'point'
+    model = new Yapp.Points.Point unid: id
     model.fetch(
       success: (model, response) ->
         Yapp.popup.show new Yapp.Points.PointDetailView
@@ -73,8 +76,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showSetDetail
   ###
   showSetDetail: (id, point_id, photo_id) ->
-    model = new Yapp.Points.Set id: id
-    model.set 'type', 'collection'
+    model = new Yapp.Points.Set unid: id
     model.fetch(
       success: (model, response) ->
         Yapp.popup.show new Yapp.Points.SetDetailView

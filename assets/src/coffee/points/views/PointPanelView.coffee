@@ -26,10 +26,13 @@ class Yapp.Points.PointPanelView extends Marionette.ItemView
   modelEvents:
     'change': 'render'
 
+  className: 'tabs'
+  tagName: 'menu'
+
   ###*
   # Passed additional data for render active tab menu
   # @method templateHelpers
   ###
   templateHelpers: ->
-    active: @options.content_type or 'popular'
+    active: @options.content_type or 'ypi'
 
