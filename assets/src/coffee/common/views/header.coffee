@@ -49,6 +49,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     'click .label-add': 'focusInput'
     'click .label-fields': 'focusLabels'
+    'click .label-fields .label-name': 'editInput'
     'click .clear-input': 'clearSearchInput'
 
     'click #multisearchForm input[type=submit]': 'submitSearch'
@@ -110,6 +111,17 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.target)
     if $target.hasClass 'label-fields'
       @focusInput(event)
+
+  editInput: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    $target = $(event.currentTarget)
+    text = $target.text().trim()
+    $target.remove()
+    @ui.labelAdd.hide()
+    @setWidthInput()
+    @ui.searchInput.show()
+    @ui.searchInput.children().val(text).focus()
 
   clearSearchInput: (event) ->
     event.preventDefault()
