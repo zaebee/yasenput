@@ -460,4 +460,4 @@ class PointAdd(LoggedPointsBaseView):
                     if set_t not in sets_l:
                         sets_l.append(set_t)
         #point = json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':point[0].latitude, 'longitude': point[0].longitude, 'address':point[0].address, 'likes_count': point[0].likes_count, })
+        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':str(point[0].latitude), 'longitude': str(point[0].longitude), 'address':point[0].address, 'likes_count': point[0].likes_count, })
