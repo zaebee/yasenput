@@ -34,38 +34,44 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
     _.bindAll @, 'loadResults', 'updateCollection'
-    Yapp.Common.headerView.on 'update:multisearch', @updateCollection,
+    @listenTo Yapp.Common.headerView, 'update:multisearch', @updateCollection,
 
     # add infiniScroll for point collection
-    @extraParams = @options.content_type
+    @extraParams = content: @options.content_type
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @loadResults,
       scrollOffset: 350
       includePage: true
-      extraParams:
-        content: @extraParams
+      extraParams: @extraParams
 
   onRender: ->
+    console.log 'onRender trigger'
     $(window).trigger 'scroll'
 
   onClose: ->
-    console.log 'onClose'
-    @infiniScroll.destroy()
+    console.log 'onClose trigger'
     @wall.destroy()
+    @infiniScroll.destroy()
+    @remove()
 
   ###*
   # Event method. It triggers when view fully rendered
   # @method onShow
   ###
   onShow: ->
+    console.log 'onShow trigger'
     @$el.find('[data-toggle=tooltip]').tooltip()
-    @wall = new Masonry @el,
-      columnWidth: 241
-      isFitWidth: true
+    if @wall
+      @wall.reload()
+    else
+      @wall = new Masonry @el,
+        columnWidth: 241
+        isFitWidth: true
 
   onCompositeCollectionRendered: ->
+    console.log 'onCompositeCollectionRendered trigger'
+    @$el.find('[data-toggle=tooltip]').tooltip()
     if @wall
-      console.log 'reloadWall'
       @wall.reload()
 
   ###*
@@ -77,7 +83,13 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
 
   updateCollection: (response, searchOptions) ->
     @extraParams = _.extend @extraParams, searchOptions
-    #@close()
     yapens = new Yapp.Points.PointCollection response
     @collection.reset yapens.models
     yapens.reset()
+
+    @infiniScroll.destroy()
+    @infiniScroll = new Backbone.InfiniScroll @collection,
+      success: @loadResults,
+      scrollOffset: 350
+      includePage: true
+      extraParams: @extraParams

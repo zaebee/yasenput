@@ -20,7 +20,6 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.Controller'
-    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
 
   ###*
   # The stub for all point's pins showing function
@@ -29,6 +28,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   showContent: (content_type) ->
     console.log "Show content #{content_type} in Points module"
     Yapp.popup.close()
+    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
     Yapp.content.show @layout
 
   ###*
