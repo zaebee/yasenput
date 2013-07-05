@@ -76,7 +76,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     switch data.type
       when 'tags'
-        @ui.labelFields.children('.label-add').find("[data-id=#{data.id}]").remove()
+        tags = @ui.labelFields.children '.label-tags'
+        _.each tags, (tag) ->
+          if $(tag).data('id') is data.id
+            $(tag).remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
         @submitSearch(event)
       when 'place'
@@ -86,7 +89,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
         @submitSearch(event)
 
-    @ui.searchInput.children().val('')
     @hideDropdown()
 
   removeLabel: (event) ->
@@ -137,6 +139,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           tags: tagsId.join ','
           user: userId
     )
+    @ui.searchInput.children().val('')
 
   hideDropdown: (event) ->
     $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
@@ -175,21 +178,22 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           @ui.labelFields.children('.label:visible').last().remove()
 
       when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
-        ## abort search request if exists
         event.preventDefault()
         event.stopPropagation()
         clearTimeout 0
+        ## abort search request if exists
         if @searchXHR isnt undefined
           @searchXHR.abort()
+        ## added selected item into multisearch input
         if $('.selected', @ui.dropSearch).length
           $('.selected a', @ui.dropSearch).click()
         else if @ui.searchInput.children().val()
-          @submitSearch(event)
           data =
             type: 'name'
             name: @ui.searchInput.children().val()
           @ui.labelFields.children('.label-name').remove()
           @ui.labelFields.children('.label-add').before @labelTemplate(data)
+          @submitSearch(event)
         @hideDropdown()
         break
       when 27 ## закрыть на ESC
