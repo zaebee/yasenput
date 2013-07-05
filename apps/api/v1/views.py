@@ -23,6 +23,7 @@ import random
 import json
 from pymorphy import get_morph
 from django.db import connection
+from datetime import datetime 
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -235,7 +236,7 @@ class Search(PointsBaseView):
 class ItemsList(PointsBaseView):
     http_method_names = ('get',)
     def get(self, request, *args, **kwargs):
-        
+        item_list_start_time = datetime.now()
         params = request.GET
         sets = "set"
         search_res_points = MainModels.Points.search.query(params.get('s', ''))
@@ -246,7 +247,7 @@ class ItemsList(PointsBaseView):
         errors = []
         #bottom left coords
         
-        
+
         if params.get('user'):
             search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
             search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
@@ -295,11 +296,28 @@ class ItemsList(PointsBaseView):
                 #'isliked': ''
                  }), search_res_sets).order_by('-' + sort)[offset:limit]
 
+        try:
+            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+        except IOError:
+            file_log = open('logs/search/'+str(datetime.today().date()) + '.log','w')
+            file_log.write('OPENED at ' + str(datetime.today().date()))
+            file_log.close()
+            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+        if params.get("s"):
+            log_text = '\n' + str(search_res_points.count()) + (6-len(str(search_res_points.count())))*' ' + ' | ' + str(search_res_sets.count()) + (6-len(str(search_res_sets.count())))*' ' + ' | ' + str(datetime.now()) + ' | ' + params.get("s").encode('utf-8')
+            log.write(log_text)
+        log.close()
+
         i = offset
         for item in all_items:
             i = i+1
             item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
+        item_list_end_time = datetime.now()
+        log_time = open('logs/time/'+str(datetime.today().date())+'.log', 'ab+')
+        if params.get("s"):
+            log_time.write('\n' + str(item_list_end_time-item_list_start_time) + ' | ' + params.get("s").encode('utf-8'))
+        log_time.close()
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
 class PointAddByUser(LoggedPointsBaseView):
@@ -442,4 +460,4 @@ class PointAdd(LoggedPointsBaseView):
                     if set_t not in sets_l:
                         sets_l.append(set_t)
         #point = json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l))[:3], 'name': point[0].name, 'description':point[0].description, 'latitude':point[0].latitude, 'longitude': point[0].longitude, 'address':point[0].address, 'likes_count': point[0].likes_count, })
+        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':point[0].latitude, 'longitude': point[0].longitude, 'address':point[0].address, 'likes_count': point[0].likes_count, })
