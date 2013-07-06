@@ -56,13 +56,13 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.PointListView'
-    _.bindAll @, 'loadResults', 'updateCollection'
+    _.bindAll @, 'onShow', 'updateCollection'
     @listenTo Yapp.Common.headerView, 'update:multisearch', @updateCollection,
 
     # add infiniScroll for point collection
     @extraParams = content: @options.content_type
     @infiniScroll = new Backbone.InfiniScroll @collection,
-      success: @loadResults,
+      success: @onShow
       scrollOffset: 350
       includePage: true
       extraParams: @extraParams
@@ -115,9 +115,6 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   # @param {Object} searchOptions Search params getted from multisearch input
   # @event updateCollection
   ###
-  loadResults: (collection, response) ->
-    @onShow()
-
   updateCollection: (response, searchOptions) ->
     @extraParams = _.extend @extraParams, searchOptions
     yapens = new Yapp.Points.PointCollection response
@@ -126,7 +123,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
 
     @infiniScroll.destroy()
     @infiniScroll = new Backbone.InfiniScroll @collection,
-      success: @loadResults,
+      success: @onShow
       scrollOffset: 350
       includePage: true
       extraParams: @extraParams

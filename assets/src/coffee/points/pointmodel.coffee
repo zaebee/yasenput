@@ -216,6 +216,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @param {Number} photoId Photo id that will be removed
   # @param {Function} successCallback Callback that will be call after success response
   # @param {Object} context variable for binding this namespace
+  # @method removePhoto
   ###
   removePhoto: (photoId, successCallback, context) ->
     Yapp.request(

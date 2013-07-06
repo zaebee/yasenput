@@ -46,9 +46,6 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
     console.log 'initializing Yapp.Points.PointItemView'
     @user = Yapp.user
 
-  modelEvents:
-    'change': 'render'
-
   ###*
   # Passed additional user data
   # @method templateHelpers
@@ -65,6 +62,13 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
       @$el.addClass 'item-collection'
     else
       @$el.addClass 'item-place'
+
+  onClose: ->
+    console.log 'onClose item trigger'
+    @remove()
+
+  modelEvents:
+    'change': 'render'
 
   ###*
   # The view event triggers

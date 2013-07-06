@@ -41,7 +41,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     dropSearch: '.drop-search'
     clearInput: '.clear-input'
     searchInput: '.text-field'
-    labelAdd: '.label-add'
+    labelAddButton: '.label-add'
     removeLAbel: '.remove-label'
     searchOverlay: '.drop-search-overlay'
 
@@ -117,8 +117,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   focusInput: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    @ui.labelAdd.hide()
-    @setWidthInput()
+    @ui.labelAddButton.hide()
+    @_setWidthInput()
     @ui.searchInput.show()
     @ui.searchOverlay.show()
     @ui.searchInput.children().val('').focus()
@@ -134,8 +134,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.currentTarget)
     text = $target.text().trim()
     $target.remove()
-    @ui.labelAdd.hide()
-    @setWidthInput()
+    @ui.labelAddButton.hide()
+    @_setWidthInput()
     @ui.searchInput.show()
     @ui.searchInput.children().val(text).focus()
 
@@ -171,10 +171,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.searchInput.children().val('')
 
   hideDropdown: (event) ->
-    $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
+    $(window).unbind 'resize', $.proxy(@_setHeightSearchMenu, @)
     @ui.dropSearch.hide()
     @ui.dropSearch.find('li').removeClass 'selected'
-    @ui.labelAdd.show()
+    @ui.labelAddButton.show()
     @ui.searchInput.hide()
     @ui.searchInput.children().blur()
     @ui.searchOverlay.hide()
@@ -183,15 +183,15 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   showDropdown: (response) ->
     if _.isEmpty _.flatten _.values response
       response = empty: true
-    $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
-    @setWidthInput()
+    $(window).bind 'resize', $.proxy(@_setHeightSearchMenu, @)
+    @_setWidthInput()
     @ui.dropSearch.html @multisearchDropdownTemplate(response)
     @ui.dropSearch.show()
-    @setHeightSearchMenu()
+    @_setHeightSearchMenu()
 
   keyupInput: (e) ->
-    @onKeyDownSpecial(e)
-    @delay(() =>
+    @_onKeyDownSpecial(e)
+    @_delay(() =>
       if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
         ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
@@ -319,7 +319,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         menu.css 'height', 'auto'
 
   ###*
-  # Set or clear timer for call function. 
+  # Set or clear timer for call function.
   # @method _delay
   # @private
   ###
@@ -334,7 +334,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###*
   # Search tags, points, users, etc on server api.
   # @param {String} query Query string for search names
-  # @param {Function} successCallback A callback function on the success response from server api 
+  # @param {Function} successCallback A callback function on the success response from server api
   # @param {Object} context Context variable for scope binding in successCallback
   # @method search
   ###
