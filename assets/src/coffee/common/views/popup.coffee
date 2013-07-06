@@ -21,7 +21,18 @@ class Yapp.Common.PopupView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Common.PopupView'
 
+  ###*
+  # @property id
+  # @type String
+  # @default 'p-common'
+  ###
   id: 'p-common'
+
+  ###*
+  # @property className
+  # @type String
+  # @default 'popup'
+  ###
   className: 'popup'
 
   onBeforeRender: ->

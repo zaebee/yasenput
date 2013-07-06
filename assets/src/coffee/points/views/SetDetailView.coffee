@@ -14,6 +14,10 @@ Yapp = window.Yapp
 ###
 class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
 
+  ###*
+  # Init method of the view
+  # @method initialize
+  ###
   initialize: ->
     console.log 'initialize SetDetailView'
     @bigPhotoTemplate = Templates.BigPhoto

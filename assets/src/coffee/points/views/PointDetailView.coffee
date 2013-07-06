@@ -32,7 +32,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   template: Templates.PointDetailView
 
   ###*
-  # Ui emenents for view
+  # Ui elements for view
   # @type Object
   # @property ui
   ###
@@ -52,7 +52,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   events: ->
     'click .p-place-desc .a-toggle-desc':'moreDescription'
     'click .photos-gallery .item-photo': 'showPhoto'
-    'click .bp-photo .a-like': 'likePhoto'
     'click #big-photo > .bp-photo': 'nextPhoto'
     'click #right-panel .a-like': 'like'
 
@@ -60,6 +59,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click .a-remove-comment': 'removeComment'
     'submit #commentForm': 'submitCommentForm'
 
+    'click .bp-photo .a-like': 'likePhoto'
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
 
@@ -89,13 +89,14 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 4
     )
-    @renderSocial()
+    @_renderSocial()
 
   ###*
-  # TODO
-  # @method renderSocial
+  # Show social buttons on right sidebar
+  # @method _renderSocial
+  # @private
   ###
-  renderSocial: ->
+  _renderSocial: ->
     if window.FB isnt undefined
       FB.XFBML.parse()
     if window.VK isnt undefined
@@ -248,7 +249,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method loadImage
+  # @method addPhoto
   ###
   addPhoto: (event) ->
     event.preventDefault()
@@ -259,7 +260,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method loadImage
+  # @method removePhoto
   ###
   removePhoto: (event) ->
     event.preventDefault()
