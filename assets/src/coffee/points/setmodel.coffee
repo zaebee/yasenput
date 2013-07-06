@@ -9,10 +9,10 @@ Yapp = window.Yapp
 ###*
 # Set model
 # @class Yapp.Points.Set
-# @extends Backbone.Model
+# @extends Yapp.Points.Point
 # @constructor
 ###
-class Yapp.Points.Set extends Backbone.Model
+class Yapp.Points.Set extends Yapp.Points.Point
 
   ###*
   # The model initializer
@@ -25,20 +25,6 @@ class Yapp.Points.Set extends Backbone.Model
 
   urlRoot: ->
     Yapp.API_BASE_URL + "/collections/"
-
-  ###*
-  # Defaults data of soft model
-  # @property defaults
-  # @type Object
-  ###
-  defaults: ->
-    name: ''
-    address: ''
-    description: ''
-    longitude: ''
-    latitude: ''
-    imgs: []
-    tags: []
 
   validate: (attrs, options) ->
     invalid = []
@@ -81,8 +67,3 @@ class Yapp.Points.Set extends Backbone.Model
         data:
           collectionid: @get 'id'
     )
-
-  parse: (response) ->
-    if _.isArray response
-      response = response[0]
-    response
