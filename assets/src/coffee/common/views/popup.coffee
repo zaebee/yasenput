@@ -1,4 +1,12 @@
 ###*
+# Submodule for all common functionality
+# @module Yapp
+# @submodule Common
+###
+
+Yapp = window.Yapp
+
+###*
 # Stub view for showing popup
 # @class Yapp.Common.PopupView
 # @extends Marionette.ItemView

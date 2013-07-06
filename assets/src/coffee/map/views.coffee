@@ -14,9 +14,26 @@ Yapp = window.Yapp
 ###
 class Yapp.Map.MapView extends Marionette.ItemView
 
+  ###*
+  # Required field for Marionette.View
+  # @property template
+  # @type Object
+  # @default Templates.MapView
+  ###
   template: Templates.MapView
 
+  ###*
+  # @property tagName
+  # @type String
+  # @default 'div'
+  ###
   tagName: 'div'
+
+  ###*
+  # @property className
+  # @type String
+  # @default 'map'
+  ###
   className: 'map'
 
   ###*
@@ -25,21 +42,38 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Map.MapView'
-    #_.bindAll @
     @user = Yapp.user
     @listenTo Yapp.Map, 'load:yandexmap', @setMap
 
+  ###*
+  # The view event triggers
+  # @type Object
+  # @property events
+  ###
   events:
     'click .a-toggle': 'toggleMap'
 
+  ###*
+  # Toggle/untoggle map on expand arrow click.
+  # @event toggleMap
+  ###
   toggleMap: (event) ->
     event.preventDefault()
     Yapp.execute('toggleMap')
 
+  ###*
+  # Fired when an ymaps fully load and load:yandexmap event occur.
+  # @param {Object} map Instance on main map with yandex loaded.
+  # @event setMap
+  ###
   setMap: (map) ->
     @map = map
     @map.events.add 'actionend', @changeMap, @
 
+  ###*
+  # Fired when an yandex map actionend event occur.
+  # @event changeMap
+  ###
   changeMap: (event) ->
     center = @map.getCenter()
     ymaps.geocode(center, results:1).then((result) =>

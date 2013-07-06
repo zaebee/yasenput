@@ -21,10 +21,33 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   # @default Templates.PointListView
   ###
   template: Templates.PointListView
+
+  ###*
+  # @property className
+  # @type String
+  # @default 'items'
+  ###
   className: 'items'
+
+  ###*
+  # @property id
+  # @type String
+  # @default 'items'
+  ###
   id: 'items'
 
+  ###*
+  # @property itemView
+  # @type Object
+  # @default itemView
+  ###
   itemView: Yapp.Points.PointItemView
+
+  ###*
+  # @property emptyView
+  # @type Object
+  # @default emptyView
+  ###
   emptyView: Yapp.Points.PointEmptyView
 
   ###*
@@ -44,10 +67,18 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       includePage: true
       extraParams: @extraParams
 
+  ###*
+  # After render method of the view
+  # @event onRender
+  ###
   onRender: ->
     console.log 'onRender trigger'
     $(window).trigger 'scroll'
 
+  ###*
+  # After close method of the view.
+  # @event onClose
+  ###
   onClose: ->
     console.log 'onClose trigger'
     @wall.destroy()
@@ -55,8 +86,8 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
     @remove()
 
   ###*
-  # Event method. It triggers when view fully rendered
-  # @method onShow
+  # Fired when view fully rendered.
+  # @event onShow
   ###
   onShow: ->
     console.log 'onShow trigger'
@@ -68,6 +99,10 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
         columnWidth: 241
         isFitWidth: true
 
+  ###*
+  # Fired when collection fully rendered.
+  # @event onCompositeCollectionRendered
+  ###
   onCompositeCollectionRendered: ->
     console.log 'onCompositeCollectionRendered trigger'
     @$el.find('[data-toggle=tooltip]').tooltip()
@@ -75,8 +110,10 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       @wall.reload()
 
   ###*
-  # Success callback after collection fetch for infiniScroll
-  # @method onShow
+  # Fired when update:multisrearch in Yapp.Common.headerView occur.
+  # @param {Object} response Response data from server api
+  # @param {Object} searchOptions Search params getted from multisearch input
+  # @event updateCollection
   ###
   loadResults: (collection, response) ->
     @onShow()

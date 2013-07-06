@@ -1,4 +1,12 @@
 ###*
+# Submodule for all common functionality
+# @module Yapp
+# @submodule Common
+###
+
+Yapp = window.Yapp
+
+###*
 # Header view for showing toop panel and multisearch
 # @class Yapp.Common.HeaderView
 # @extends Marionette.ItemView
@@ -17,16 +25,16 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ###*
   # Required field for Marionette.View
-  # @property template
   # @type Object
+  # @property template
   # @default Templates.HeaderView
   ###
   template: Templates.HeaderView
 
   ###*
   # Ui emenents for view
-  # @property ui
   # @type Object
+  # @property ui
   ###
   ui:
     labelFields: '.label-fields'
@@ -60,6 +68,11 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     'keydown .text-field input': 'keyupInput'
     #'blur .text-field': 'hideDropdown'
 
+  ###*
+  # The view model event triggers
+  # @type Object
+  # @property modelEvents
+  ###
   modelEvents:
     'change': 'render'
 
@@ -188,13 +201,19 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     500
     )
 
-  onKeyDownSpecial: (event) ->
+  ###*
+  # Handles keypressed by special keys such as Enter, Escape,
+  # Backspace, up/down arrows.
+  # @method _onKeyDownSpecial
+  # @private
+  ###
+  _onKeyDownSpecial: (event) ->
     switch event.which
-      when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
+      when 8 ## if Backspace pressed with focused serach input then remove last label
         if @ui.searchInput.children().val() is ''
           @ui.labelFields.children('.label:visible').last().remove()
 
-      when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
+      when 13 ## if Enter pressed with opened dropdown menu then show selected item and hide dropdown
         event.preventDefault()
         event.stopPropagation()
         clearTimeout 0
@@ -213,23 +232,29 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           @submitSearch(event)
         @hideDropdown()
         break
-      when 27 ## закрыть на ESC
+      when 27 ## close on ESC
         event.preventDefault()
         event.stopPropagation()
         @hideDropdown()
         break
-      when 38 ## стрелка вверх на клаве
+      when 38 ## up arrow
         event.preventDefault()
         event.stopPropagation()
-        @selectDropLi(-1)
+        @_selectDropLi(-1)
         break
-      when 40 ## стрелка вниз на клаве
+      when 40 ## down arrow
         event.preventDefault()
         event.stopPropagation()
-        @selectDropLi(1)
+        @_selectDropLi(1)
         break
 
-  selectDropLi: (dir) -> ## поиск меток по стрелочкам с клавы
+  ###*
+  # Highlights labels by up/down arrow pressed
+  # @method _selectDropLi
+  # @param {Number} dir A prev or next index
+  # @private
+  ###
+  _selectDropLi: (dir) ->
     li = $("li:visible:has(a)", @ui.dropSearch).filter( ->
       return true
     )
@@ -255,8 +280,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       else
         li.last().addClass("selected").focus()
 
-  #установить ширину для инпута
-  setWidthInput: ->
+  ###*
+  # Set width for multisearch input on focus
+  # @method _setWidthInput
+  # @private
+  ###
+  _setWidthInput: ->
     w1 = @ui.labelFields.width() - 6
     w2 = 0
     t = 0
@@ -271,8 +300,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     )
     @ui.searchInput.width w1 - w2 - 4
 
-  ## установить высоту выпадающего меню в поиске
-  setHeightSearchMenu: ->
+  ###*
+  # Set height for dropdown menu in multisearch input
+  # @method _setHeightSearchMenu
+  # @private
+  ###
+  _setHeightSearchMenu: ->
       menu = @ui.dropSearch
       menu.css 'height', 'auto'
 
@@ -285,7 +318,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       else
         menu.css 'height', 'auto'
 
-  delay: ( ->
+  ###*
+  # Set or clear timer for call function. 
+  # @method _delay
+  # @private
+  ###
+  _delay: ( ->
     timer = 0
     (callback, ms) ->
       clearTimeout (timer)
@@ -295,9 +333,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ###*
   # Search tags, points, users, etc on server api.
-  # First argument is query string
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # @param {String} query Query string for search names
+  # @param {Function} successCallback A callback function on the success response from server api 
+  # @param {Object} context Context variable for scope binding in successCallback
   # @method search
   ###
   search: (query, successCallback, context) ->
@@ -312,7 +350,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     )
 
   ###*
-  # Returns params dict from multisearch query for load filtered collection
+  # Returns dict params from multisearch input for load filtered collection
+  # @param {Object} options Search options passed from multisearch input
   # @method buildQueryParams
   ###
   buildSearchOptions: (options) ->

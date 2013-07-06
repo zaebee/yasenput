@@ -32,6 +32,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
 
   ###*
   # List of layout regions
+  # @type Object
   # @property regions
   ###
   regions:
@@ -48,8 +49,8 @@ class Yapp.Points.MainLayout extends Marionette.Layout
     @pointCollection = new Yapp.Points.PointCollection()
 
   ###*
-  # Event method. It triggers when layout fully rendered and load all data
-  # @method onShow
+  # Fired when layout fully rendered. Loads pointCollection data and renders it
+  # @event onShow
   ###
   onShow: ->
     content_type = @options.content_type

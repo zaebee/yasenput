@@ -25,16 +25,30 @@ class Yapp.Common.FooterView extends Marionette.ItemView
   # Required field for Marionette.View
   # @property template
   # @type Object
-  # @default Templates.HeaderView
+  # @default Templates.FooterView
   ###
   template: Templates.FooterView
 
+  ###*
+  # The view event triggers
+  # @type Object
+  # @property events
+  ###
   events:
     'click .a-toggle': 'toggleFooter'
 
+  ###*
+  # The view model event triggers
+  # @type Object
+  # @property modelEvents
+  ###
   modelEvents:
     'change': 'render'
 
+  ###*
+  # Hide/show footer panel on click arrow
+  # @method toggleFooter
+  ###
   toggleFooter: (event) ->
     event.preventDefault()
     $('body').toggleClass 'hide-footer'
