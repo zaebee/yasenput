@@ -214,8 +214,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
     $target.insertBefore @ui.itemTypeNav.children().first()
     $target.addClass 'head-nav-current-item'
-    models = $target.data 'models'
-    @buildSearchOptions models: models
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,
@@ -380,12 +378,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   buildSearchOptions: (options) ->
     searchOptions = {}
-    if options.user
-      searchOptions.user = options.user
-    if options.tags
-      searchOptions.tags = options.tags
-    if options.s
-      searchOptions.s = options.s
-    searchOptions.models = options.models or ''
+    searchOptions.user = options.user
+    searchOptions.tags = options.tags
+    searchOptions.s = options.s
+    searchOptions.models = options.models
 
     Yapp.updateSettings searchOptions

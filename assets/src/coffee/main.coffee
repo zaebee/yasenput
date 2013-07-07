@@ -17,8 +17,11 @@ Yapp.addInitializer ->
     for key of settings
       if settings.hasOwnProperty(key)
         if @settings[key] isnt settings[key]
+          if !_.isEmpty settings[key]
+            @settings[key] = settings[key]
+          else
+            delete @settings[key]
           changedSettings[key] = settings[key]
-          @settings[key] = settings[key]
           changed = true
     if changed
       @vent.trigger 'change:settings', changedSettings
