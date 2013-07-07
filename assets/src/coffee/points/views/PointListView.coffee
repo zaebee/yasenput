@@ -60,7 +60,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
     @listenTo Yapp.Common.headerView, 'update:multisearch', @updateCollection,
 
     # add infiniScroll for point collection
-    @extraParams = content: @options.content_type
+    @extraParams = Yapp.settings
     @infiniScroll = new Backbone.InfiniScroll @collection,
       success: @onShow
       scrollOffset: 350

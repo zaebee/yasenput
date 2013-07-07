@@ -54,6 +54,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   ###
   onShow: ->
     content_type = @options.content_type
+    Yapp.updateSettings content: content_type
 
     @panelContainer.show new Yapp.Points.PointPanelView
       model: Yapp.user
@@ -61,8 +62,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
 
     console.log 'loading points collection'
     @pointCollection.fetch(
-      data:
-        content: content_type
+      data: Yapp.settings
       success: (collection, response) =>
         console.log ['server response: ', response]
         if response.error or response.errors
