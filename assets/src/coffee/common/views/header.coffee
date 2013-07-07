@@ -44,6 +44,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     labelAddButton: '.label-add'
     removeLAbel: '.remove-label'
     searchOverlay: '.drop-search-overlay'
+    itemTypeNav: '.head-nav ul'
 
   ###*
   # The view event triggers
@@ -64,9 +65,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     'click #multisearchForm input[type=submit]': 'submitSearch'
     'submit #multisearchForm': 'submitSearch'
-
     'keydown .text-field input': 'keyupInput'
-    #'blur .text-field': 'hideDropdown'
+
+    'click .head-nav li' : 'selectItemType'
+    #'mouseleave .head-nav ul' : 'submitSearch'
 
   ###*
   # The view model event triggers
@@ -150,14 +152,17 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       event.stopPropagation()
     $user = @ui.labelFields.find '.label-user'
     $tags = @ui.labelFields.find '.label-tags'
+    $models = @ui.itemTypeNav.find '.head-nav-current-item'
 
     query = @ui.labelFields.find('.label-name').text().trim()
     userId = $user.data 'id'
     tagsId = _.map $tags, (el) -> $(el).data('id')
-    searchOptions = @buildSearchOptions
+    models = $models.data 'models'
+    @buildSearchOptions
       user: userId
       tags: tagsId.join ','
       s: query
+      models: models
 
     Yapp.request(
       'request'
@@ -165,8 +170,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         type: 'GET'
         context: @
         successCallback: (response) =>
-          @trigger 'update:multisearch', response, searchOptions
-        data: searchOptions
+          @trigger 'update:multisearch', response, Yapp.settings
+        data: Yapp.settings
     )
     @ui.searchInput.children().val('')
 
@@ -180,12 +185,14 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.searchOverlay.hide()
 
   ## callback for show dropdown list adter success search request on server
-  showDropdown: (response) ->
+  showDropdown: (response, geoObjectCollection) ->
+    response = _.extend response, geoObjectCollection
     if _.isEmpty _.flatten _.values response
       response = empty: true
     $(window).bind 'resize', $.proxy(@_setHeightSearchMenu, @)
     @_setWidthInput()
     @ui.dropSearch.html @multisearchDropdownTemplate(response)
+    @ui.searchOverlay.show()
     @ui.dropSearch.show()
     @_setHeightSearchMenu()
 
@@ -201,10 +208,19 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     500
     )
 
+  selectItemType: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
+    $target.insertBefore @ui.itemTypeNav.children().first()
+    $target.addClass 'head-nav-current-item'
+    models = $target.data 'models'
+    @buildSearchOptions models: models
+
   ###*
   # Handles keypressed by special keys such as Enter, Escape,
   # Backspace, up/down arrows.
-  # @method _onKeyDownSpecial
+  # @event _onKeyDownSpecial
   # @private
   ###
   _onKeyDownSpecial: (event) ->
@@ -214,13 +230,13 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           @ui.labelFields.children('.label:visible').last().remove()
 
       when 13 ## if Enter pressed with opened dropdown menu then show selected item and hide dropdown
-        event.preventDefault()
-        event.stopPropagation()
-        clearTimeout 0
         ## abort search request if exists
+        ## added selected item into multisearch input
         if @searchXHR isnt undefined
           @searchXHR.abort()
-        ## added selected item into multisearch input
+        clearTimeout 0
+        event.preventDefault()
+        event.stopPropagation()
         if $('.selected', @ui.dropSearch).length
           $('.selected a', @ui.dropSearch).click()
         else if @ui.searchInput.children().val()
@@ -339,28 +355,37 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @method search
   ###
   search: (query, successCallback, context) ->
-    Yapp.request(
-      'request'
-        url: Yapp.API_BASE_URL + "/api/v1/search"
-        type: 'GET'
-        context: context
-        successCallback: successCallback
-        data:
-          s: query
-    )
+    geoCoder = Yapp.Map.geocode query,
+      json: true
+      boundedBy: Yapp.Map.yandexmap.getBounds()
+      strictBounds : true
+    geoCoder.then (response) =>
+      @searchXHR = Yapp.request(
+        'request'
+          url: Yapp.API_BASE_URL + "/api/v1/search"
+          type: 'GET'
+          context: context
+          successCallback: successCallback
+          params:
+            geoObjectCollection: response
+          data:
+            s: query
+      )
+    @searchXHR
 
   ###*
   # Returns dict params from multisearch input for load filtered collection
   # @param {Object} options Search options passed from multisearch input
-  # @method buildQueryParams
+  # @method buildSearchOptions
   ###
   buildSearchOptions: (options) ->
-    @searchOptions = {}
+    searchOptions = {}
     if options.user
-      @searchOptions.user = options.user
+      searchOptions.user = options.user
     if options.tags
-      @searchOptions.tags = options.tags
+      searchOptions.tags = options.tags
     if options.s
-      @searchOptions.s = options.s
+      searchOptions.s = options.s
+    searchOptions.models = options.models or ''
 
-    return @searchOptions
+    Yapp.updateSettings searchOptions
