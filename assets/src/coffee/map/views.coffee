@@ -76,9 +76,24 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   changeMap: (event) ->
     center = @map.getCenter()
-    ymaps.geocode(center, results:1).then((result) =>
-      geoobject = result.geoObjects.get 0
-      location = geoobject.properties.get('text').split(', ').slice 0, 3
-      location = _.object ['country', 'region', 'city'], location
-      @user.set location: location
+    geoCoder = Yapp.Map.geocode center,
+      results:1
+      json:true
+    geoCoder.then((result) =>
+      geoObject = result.GeoObjectCollection.featureMember[0].GeoObject
+      geoMetaData = geoObject.metaDataProperty.GeocoderMetaData
+
+      country = geoMetaData.AddressDetails.Country
+      region = country.AdministrativeArea
+      locality =
+        if country.Locality then country.Locality
+        else if region and region.Locality then region.Locality
+        else if region and region.SubAdministrativeArea and region.SubAdministrativeArea.Locality then region.SubAdministrativeArea.Locality
+        else if region and region.SubAdministrativeArea then region.SubAdministrativeArea
+        else false
+
+      @user.set location:
+        country: country.CountryName
+        region: if region then region.AdministrativeAreaName else ''
+        city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
     )
