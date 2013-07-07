@@ -9,6 +9,20 @@ Yapp = window.Yapp
 # Application initializer
 Yapp.addInitializer ->
   console.log 'application initializing'
+  @settings = {}
+
+  @updateSettings = (settings) ->
+    changedSettings = {}
+    changed = false
+    for key of settings
+      if settings.hasOwnProperty(key)
+        if @settings[key] isnt settings[key]
+          changedSettings[key] = settings[key]
+          @settings[key] = settings[key]
+          changed = true
+    if changed
+      @vent.trigger 'change:settings', changedSettings
+
   ## TODO: set page content for showing big ajax-loader
   # application regions
   @addRegions(
