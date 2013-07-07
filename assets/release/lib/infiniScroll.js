@@ -22,7 +22,6 @@
       onFetch: function(){ },
       target: $(window),
       extraParams: {},
-      pageSizeParam: "page_size",
       pageSize: pageSize,
       scrollOffset: 100,
       remove: false,
@@ -97,8 +96,6 @@
 
     function buildQueryParams(model) {
       var params = { };
-
-      params[self.options.pageSizeParam] = self.options.pageSize;
 
       if (self.options.includePage) {
         params["p"] = page + 1;

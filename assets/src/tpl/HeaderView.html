@@ -38,17 +38,18 @@
       </form>
 
       <div class="drop-search" style="display:none;"></div>
+      <div class="drop-search-overlay" style="display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1"></div>
     </div>
   </div>
 
   <div class="head-nav">
     <div>
       <ul>
-        <li class="head-nav-current-item">Все сразу</li>
-        <li><a href="#">Коллекции</a></li>
-        <li><a href="#">Места</a></li>
-        <li><a href="#">События</a></li>
-        <li><a href="#">Маршруты</a></li>
+        <li class="head-nav-current-item"><a href="#">Все сразу</a></li>
+        <li data-models="sets"><a href="#">Коллекции</a></li>
+        <li data-models="points"><a href="#">Места</a></li>
+        <li data-models="events"><a href="#">События</a></li>
+        <li data-models="routes"><a href="#">Маршруты</a></li>
       </ul>
     </div>
   </div>

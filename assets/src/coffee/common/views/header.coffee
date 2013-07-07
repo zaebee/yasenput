@@ -1,4 +1,12 @@
 ###*
+# Submodule for all common functionality
+# @module Yapp
+# @submodule Common
+###
+
+Yapp = window.Yapp
+
+###*
 # Header view for showing toop panel and multisearch
 # @class Yapp.Common.HeaderView
 # @extends Marionette.ItemView
@@ -17,24 +25,26 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ###*
   # Required field for Marionette.View
-  # @property template
   # @type Object
+  # @property template
   # @default Templates.HeaderView
   ###
   template: Templates.HeaderView
 
   ###*
   # Ui emenents for view
-  # @property ui
   # @type Object
+  # @property ui
   ###
   ui:
     labelFields: '.label-fields'
     dropSearch: '.drop-search'
     clearInput: '.clear-input'
     searchInput: '.text-field'
-    labelAdd: '.label-add'
+    labelAddButton: '.label-add'
     removeLAbel: '.remove-label'
+    searchOverlay: '.drop-search-overlay'
+    itemTypeNav: '.head-nav ul'
 
   ###*
   # The view event triggers
@@ -43,6 +53,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   events:
     'click .drop-add-head, .auth, a-login': 'showAuthPopup'
+    'click .drop-search-overlay': 'hideDropdown'
 
     'click .item-label': 'addLabel'
     'click .remove-label': 'removeLabel'
@@ -54,10 +65,16 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
     'click #multisearchForm input[type=submit]': 'submitSearch'
     'submit #multisearchForm': 'submitSearch'
-
     'keydown .text-field input': 'keyupInput'
-    #'blur .text-field': 'hideDropdown'
 
+    'click .head-nav li' : 'selectItemType'
+    #'mouseleave .head-nav ul' : 'submitSearch'
+
+  ###*
+  # The view model event triggers
+  # @type Object
+  # @property modelEvents
+  ###
   modelEvents:
     'change': 'render'
 
@@ -102,9 +119,10 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   focusInput: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    @ui.labelAdd.hide()
-    @setWidthInput()
+    @ui.labelAddButton.hide()
+    @_setWidthInput()
     @ui.searchInput.show()
+    @ui.searchOverlay.show()
     @ui.searchInput.children().val('').focus()
 
   focusLabels: (event) ->
@@ -118,8 +136,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.currentTarget)
     text = $target.text().trim()
     $target.remove()
-    @ui.labelAdd.hide()
-    @setWidthInput()
+    @ui.labelAddButton.hide()
+    @_setWidthInput()
     @ui.searchInput.show()
     @ui.searchInput.children().val(text).focus()
 
@@ -134,10 +152,17 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       event.stopPropagation()
     $user = @ui.labelFields.find '.label-user'
     $tags = @ui.labelFields.find '.label-tags'
+    $models = @ui.itemTypeNav.find '.head-nav-current-item'
 
     query = @ui.labelFields.find('.label-name').text().trim()
     userId = $user.data 'id'
     tagsId = _.map $tags, (el) -> $(el).data('id')
+    models = $models.data 'models'
+    @buildSearchOptions
+      user: userId
+      tags: tagsId.join ','
+      s: query
+      models: models
 
     Yapp.request(
       'request'
@@ -145,35 +170,35 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         type: 'GET'
         context: @
         successCallback: (response) =>
-          @trigger 'update:multisearch', response
-        data:
-          s: query
-          tags: tagsId.join ','
-          user: userId
+          @trigger 'update:multisearch', response, Yapp.settings
+        data: Yapp.settings
     )
     @ui.searchInput.children().val('')
 
   hideDropdown: (event) ->
-    $(window).unbind 'resize', $.proxy(@setHeightSearchMenu, @)
+    $(window).unbind 'resize', $.proxy(@_setHeightSearchMenu, @)
     @ui.dropSearch.hide()
     @ui.dropSearch.find('li').removeClass 'selected'
-    @ui.labelAdd.show()
+    @ui.labelAddButton.show()
     @ui.searchInput.hide()
     @ui.searchInput.children().blur()
+    @ui.searchOverlay.hide()
 
   ## callback for show dropdown list adter success search request on server
-  showDropdown: (response) ->
+  showDropdown: (response, geoObjectCollection) ->
+    response = _.extend response, geoObjectCollection
     if _.isEmpty _.flatten _.values response
       response = empty: true
-    $(window).bind 'resize', $.proxy(@setHeightSearchMenu, @)
-    @setWidthInput()
+    $(window).bind 'resize', $.proxy(@_setHeightSearchMenu, @)
+    @_setWidthInput()
     @ui.dropSearch.html @multisearchDropdownTemplate(response)
+    @ui.searchOverlay.show()
     @ui.dropSearch.show()
-    @setHeightSearchMenu()
+    @_setHeightSearchMenu()
 
   keyupInput: (e) ->
-    @onKeyDownSpecial(e)
-    @delay(() =>
+    @_onKeyDownSpecial(e)
+    @_delay(() =>
       if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
         ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
         query = @ui.searchInput.children().val()
@@ -183,20 +208,33 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     500
     )
 
-  onKeyDownSpecial: (event) ->
+  selectItemType: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
+    $target.insertBefore @ui.itemTypeNav.children().first()
+    $target.addClass 'head-nav-current-item'
+
+  ###*
+  # Handles keypressed by special keys such as Enter, Escape,
+  # Backspace, up/down arrows.
+  # @event _onKeyDownSpecial
+  # @private
+  ###
+  _onKeyDownSpecial: (event) ->
     switch event.which
-      when 8 ## если нажали Backspace при фокусе на инпут, то удалять лейбл
+      when 8 ## if Backspace pressed with focused serach input then remove last label
         if @ui.searchInput.children().val() is ''
           @ui.labelFields.children('.label:visible').last().remove()
 
-      when 13 ## если нажали Enter при открытом списке, то отправить запрос и закрыть список
-        event.preventDefault()
-        event.stopPropagation()
-        clearTimeout 0
+      when 13 ## if Enter pressed with opened dropdown menu then show selected item and hide dropdown
         ## abort search request if exists
+        ## added selected item into multisearch input
         if @searchXHR isnt undefined
           @searchXHR.abort()
-        ## added selected item into multisearch input
+        clearTimeout 0
+        event.preventDefault()
+        event.stopPropagation()
         if $('.selected', @ui.dropSearch).length
           $('.selected a', @ui.dropSearch).click()
         else if @ui.searchInput.children().val()
@@ -208,23 +246,29 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           @submitSearch(event)
         @hideDropdown()
         break
-      when 27 ## закрыть на ESC
+      when 27 ## close on ESC
         event.preventDefault()
         event.stopPropagation()
         @hideDropdown()
         break
-      when 38 ## стрелка вверх на клаве
+      when 38 ## up arrow
         event.preventDefault()
         event.stopPropagation()
-        @selectDropLi(-1)
+        @_selectDropLi(-1)
         break
-      when 40 ## стрелка вниз на клаве
+      when 40 ## down arrow
         event.preventDefault()
         event.stopPropagation()
-        @selectDropLi(1)
+        @_selectDropLi(1)
         break
 
-  selectDropLi: (dir) -> ## поиск меток по стрелочкам с клавы
+  ###*
+  # Highlights labels by up/down arrow pressed
+  # @method _selectDropLi
+  # @param {Number} dir A prev or next index
+  # @private
+  ###
+  _selectDropLi: (dir) ->
     li = $("li:visible:has(a)", @ui.dropSearch).filter( ->
       return true
     )
@@ -250,8 +294,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       else
         li.last().addClass("selected").focus()
 
-  #установить ширину для инпута
-  setWidthInput: ->
+  ###*
+  # Set width for multisearch input on focus
+  # @method _setWidthInput
+  # @private
+  ###
+  _setWidthInput: ->
     w1 = @ui.labelFields.width() - 6
     w2 = 0
     t = 0
@@ -266,8 +314,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     )
     @ui.searchInput.width w1 - w2 - 4
 
-  ## установить высоту выпадающего меню в поиске
-  setHeightSearchMenu: ->
+  ###*
+  # Set height for dropdown menu in multisearch input
+  # @method _setHeightSearchMenu
+  # @private
+  ###
+  _setHeightSearchMenu: ->
       menu = @ui.dropSearch
       menu.css 'height', 'auto'
 
@@ -280,7 +332,12 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       else
         menu.css 'height', 'auto'
 
-  delay: ( ->
+  ###*
+  # Set or clear timer for call function.
+  # @method _delay
+  # @private
+  ###
+  _delay: ( ->
     timer = 0
     (callback, ms) ->
       clearTimeout (timer)
@@ -290,18 +347,40 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ###*
   # Search tags, points, users, etc on server api.
-  # First argument is query string
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # @param {String} query Query string for search names
+  # @param {Function} successCallback A callback function on the success response from server api
+  # @param {Object} context Context variable for scope binding in successCallback
   # @method search
   ###
   search: (query, successCallback, context) ->
-    Yapp.request(
-      'request'
-        url: Yapp.API_BASE_URL + "/api/v1/search"
-        type: 'GET'
-        context: context
-        successCallback: successCallback
-        data:
-          s: query
-    )
+    geoCoder = Yapp.Map.geocode query,
+      json: true
+      boundedBy: Yapp.Map.yandexmap.getBounds()
+      strictBounds : true
+    geoCoder.then (response) =>
+      @searchXHR = Yapp.request(
+        'request'
+          url: Yapp.API_BASE_URL + "/api/v1/search"
+          type: 'GET'
+          context: context
+          successCallback: successCallback
+          params:
+            geoObjectCollection: response
+          data:
+            s: query
+      )
+    @searchXHR
+
+  ###*
+  # Returns dict params from multisearch input for load filtered collection
+  # @param {Object} options Search options passed from multisearch input
+  # @method buildSearchOptions
+  ###
+  buildSearchOptions: (options) ->
+    searchOptions = {}
+    searchOptions.user = options.user
+    searchOptions.tags = options.tags
+    searchOptions.s = options.s
+    searchOptions.models = options.models
+
+    Yapp.updateSettings searchOptions

@@ -43,6 +43,11 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   template: Templates.PointAddView
 
+  ###*
+  # Ui elements for view
+  # @type Object
+  # @property ui
+  ###
   ui:
     form: '#pointAddForm'
     addButton: '#a-add-point'
@@ -100,8 +105,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     Yapp.popup.close()
 
   ###*
-  #
-  # @method onRender
+  # After render method of the view
+  # @event onRender
   ###
   onRender: ->
     @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
@@ -112,8 +117,9 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     )
 
   ###*
-  # Event for initialize ya map in popup
-  # @method onInitMap
+  # Fired when an ymaps fully load and load:yandexmap event occur.
+  # @param {Object} map Instance on main map with yandex loaded.
+  # @event onInitMap
   ###
   onInitMap: (map) ->
     if window.ymaps is undefined and !@map
@@ -164,6 +170,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
   ###*
   # Callback for setting labels attribute and render this labels list in template
+  # @param {Object} response Response data from server api /tags/list/ method
   # @method setLabels
   ###
   setLabels: (response) ->
@@ -173,8 +180,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @onInitMap Yapp.Map.yandexmap
 
   ###*
-  # Add required labels attrbite for empty model to render in template
-  # @method addRequireLabel
+  # Add required labels attrbite for empty model on click label icon
+  # @event addRequireLabel
   ###
   addRequireLabel: (event) ->
     event.preventDefault()
@@ -191,6 +198,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       class: 'require'
     )
 
+  ###*
+  # Show all label icons on click selected label remove button
+  # @event showRequireLabel
+  ###
   showRequireLabel: (event) ->
     event.preventDefault()
     event.stopPropagation()
@@ -201,8 +212,9 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @model.set 'tags', [], silent:true
 
   ###*
-  # Add other labels attrbite for empty model to render in template
-  # @method addOtherLabel
+  # Add other labels attrbite for empty model on click label div
+  # Add this one to text input
+  # @event addOtherLabel
   ###
   addMoreLabel: (event) ->
     event.preventDefault()
@@ -215,8 +227,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     )
 
   ###*
-  # Remove label from input list
-  # @method removeLabel
+  # Remove label from input list on click remove button
+  # @event removeLabel
   ###
   removeLabel: (event) ->
     event.preventDefault()
@@ -232,7 +244,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
   ###*
   # Remove all label from input list
-  # @method clearLabels
+  # @event clearLabels
   ###
   clearLabels: (event) ->
     event.preventDefault()
@@ -248,7 +260,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
   ###*
   # Show input for tags autocomplete
-  # @method showInput
+  # @event showInput
   ###
   showInput: (event) ->
     event.preventDefault()
@@ -257,8 +269,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @ui.inputTags.focus()
 
   ###*
-  # Load images to server
-  # @method loadImage
+  # Load images to server  during api method /photos/add
+  # @event loadImage
   ###
   loadImage: (event) ->
     event.preventDefault()
@@ -283,7 +295,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
   ###*
   # Remove photo from list
-  # @method removePhoto
+  # @event removePhoto
   ###
   removePhoto: (event) ->
     event.preventDefault()
@@ -291,7 +303,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
 
   ###*
   # Set value for address and place name
-  # @method setValue
+  # @event setValue
   ###
   setValue: (event) ->
     inputValue = $.trim  $(event.currentTarget).val()
@@ -299,8 +311,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @model.set key, inputValue, silent:true
 
   ###*
-  # Search coordinates for points
-  # @method searchLocation
+  # Search coordinates for points on keyup using yandex map api
+  # @event searchLocation
   ###
   searchLocation: (event) ->
     event.preventDefault()

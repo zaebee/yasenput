@@ -23,6 +23,7 @@ import random
 import json
 from pymorphy import get_morph
 from django.db import connection
+from datetime import datetime 
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -39,7 +40,7 @@ class PointsBaseView(View):
     def getSerializePoints(self, points):
         YpJson = YpSerialiser()
         return YpJson.serialize(points, 
-                                fields=['main_img', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
+                                fields=['main_img', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
                                         'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking', 
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
@@ -70,7 +71,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'sets', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                fields=['id', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
                                 extras=['likes_count', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
@@ -235,7 +236,7 @@ class Search(PointsBaseView):
 class ItemsList(PointsBaseView):
     http_method_names = ('get',)
     def get(self, request, *args, **kwargs):
-        
+        item_list_start_time = datetime.now()
         params = request.GET
         sets = "set"
         search_res_points = MainModels.Points.search.query(params.get('s', ''))
@@ -245,6 +246,29 @@ class ItemsList(PointsBaseView):
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         #bottom left coords
+        
+
+        if params.get('user'):
+            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
+            search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
+            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0):
+                search_res_sets = search_res_sets_list
+                search_res_points = search_res_points_list
+        sort = 'ypi'
+        if params.get('content'):
+            sort = params.get('content')
+        page = params.get('p', 1) or 1
+        limit = COUNT_ELEMENTS * int(page)
+        offset = (int(page) - 1) * COUNT_ELEMENTS
+        #sets_list = connection.cursor()
+        #sets_list.execute('SELECT count(*) from collections_collections, collections_collections_points, main_points where collections_collections_points.collections_id = collections_collections.id and collections_collections_points.points_id=main_points.id')
+        #search_res_points[0].sets =  sets_list.fetchone()
+        #search_res_points[1].sets =  sets_list.fetchone()
+        if params.get('tags'):
+            tags = params.get('tags')
+            tags = tags.split(',')
+            search_res_points = search_res_points.filter(tags_id = tags)
+
         if params.get('coord_left'):
             ln_left = json.loads(params.get('coord_left')).get('ln')
             lt_left = json.loads(params.get('coord_left')).get('lt')
@@ -264,38 +288,36 @@ class ItemsList(PointsBaseView):
             if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
                 search_res_points = search_res_points_list
-        
-        if params.get('user'):
-            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
-            search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0):
-                search_res_sets = search_res_sets_list
-                search_res_points = search_res_points_list
-        sort = 'ypi'
-        if params.get('content'):
-            sort = params.get('content')
-        page = params.get('p', 1) or 1
-        limit = COUNT_ELEMENTS * int(page)
-        offset = (int(page) - 1) * COUNT_ELEMENTS
-        #sets_list = connection.cursor()
-        #sets_list.execute('SELECT count(*) from collections_collections, collections_collections_points, main_points where collections_collections_points.collections_id = collections_collections.id and collections_collections_points.points_id=main_points.id')
-        #search_res_points[0].sets =  sets_list.fetchone()
-        #search_res_points[1].sets =  sets_list.fetchone()
-        if params.get('tags'):
-            pass
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-                'sets': 1
+                
                 #'isliked': ''
                  }), search_res_sets).order_by('-' + sort)[offset:limit]
+
+        try:
+            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+        except IOError:
+            file_log = open('logs/search/'+str(datetime.today().date()) + '.log','w')
+            file_log.write('OPENED at ' + str(datetime.today().date()))
+            file_log.close()
+            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+        if params.get("s"):
+            log_text = '\n' + str(search_res_points.count()) + (6-len(str(search_res_points.count())))*' ' + ' | ' + str(search_res_sets.count()) + (6-len(str(search_res_sets.count())))*' ' + ' | ' + str(datetime.now()) + ' | ' + params.get("s").encode('utf-8')
+            log.write(log_text)
+        log.close()
 
         i = offset
         for item in all_items:
             i = i+1
             item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
+        item_list_end_time = datetime.now()
+        log_time = open('logs/time/'+str(datetime.today().date())+'.log', 'ab+')
+        if params.get("s"):
+            log_time.write('\n' + str(item_list_end_time-item_list_start_time) + ' | ' + params.get("s").encode('utf-8'))
+        log_time.close()
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
 class PointAddByUser(LoggedPointsBaseView):
@@ -430,6 +452,12 @@ class PointAdd(LoggedPointsBaseView):
                 #'isliked': ''
                  })
         YpJson = YpSerialiser()
-        sets_list = CollectionsModels.Collections.objects.filter(id = '1')
+        sets_list = CollectionsModels.Collections.objects.all()
+        sets_l = []
+        for set_t in sets_list.all():
+            for point_t in set_t.points.all():
+                if point_t.id == point[0].id:
+                    if set_t not in sets_l:
+                        sets_l.append(set_t)
         #point = json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_list))[:3], 'name': point[0].name, 'description':point[0].description, 'latitude':point[0].latitude, 'longitude': point[0].longitude, 'address':point[0].address, 'likes_count': point[0].likes_count, })
+        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':str(point[0].latitude), 'longitude': str(point[0].longitude), 'address':point[0].address, 'likes_count': point[0].likes_count, })

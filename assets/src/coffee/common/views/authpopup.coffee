@@ -31,13 +31,14 @@ class Yapp.Common.AuthPopupView extends Yapp.Common.PopupView
 
   ###*
   # The view event triggers
+  # @type Object
   # @property events
   ###
   events: ->
     'click .p-close': 'hidePopup'
 
   ###*
-  # Method for hide popup
+  # Method for hide auth popup
   # @method hidePopup
   ###
   hidePopup: ->

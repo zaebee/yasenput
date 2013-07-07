@@ -32,6 +32,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
 
   ###*
   # List of layout regions
+  # @type Object
   # @property regions
   ###
   regions:
@@ -48,11 +49,12 @@ class Yapp.Points.MainLayout extends Marionette.Layout
     @pointCollection = new Yapp.Points.PointCollection()
 
   ###*
-  # Event method. It triggers when layout fully rendered and load all data
-  # @method onShow
+  # Fired when layout fully rendered. Loads pointCollection data and renders it
+  # @event onShow
   ###
   onShow: ->
     content_type = @options.content_type
+    Yapp.updateSettings content: content_type
 
     @panelContainer.show new Yapp.Points.PointPanelView
       model: Yapp.user
@@ -60,8 +62,7 @@ class Yapp.Points.MainLayout extends Marionette.Layout
 
     console.log 'loading points collection'
     @pointCollection.fetch(
-      data:
-        content: content_type
+      data: Yapp.settings
       success: (collection, response) =>
         console.log ['server response: ', response]
         if response.error or response.errors

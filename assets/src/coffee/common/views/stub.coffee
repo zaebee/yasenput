@@ -21,5 +21,10 @@ class Yapp.Common.StubView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Common.StubView'
 
+  ###*
+  # The view model event triggers
+  # @type Object
+  # @property modelEvents
+  ###
   modelEvents:
     'change': 'render'

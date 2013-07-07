@@ -22,7 +22,7 @@ class Collections(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
 
-    priority = models.IntegerField(default=0, blank=False)
+    priority = models.IntegerField(default=0, blank=True)
     type_of_item = "set"
     unid = '1'
     search = SphinxSearch(weights={'name': 100, 'description': 80})

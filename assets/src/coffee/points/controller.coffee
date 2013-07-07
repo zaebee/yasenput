@@ -20,16 +20,17 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.Controller'
-    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
 
   ###*
   # The stub for all point's pins showing function
-  # @method showContent
+  # @method showLayout
   ###
-  showContent: (content_type) ->
+  showLayout: (content_type) ->
     console.log "Show content #{content_type} in Points module"
     Yapp.popup.close()
+    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
     Yapp.content.show @layout
+    @layout
 
   ###*
   # The stub for popular pins showing function
@@ -53,7 +54,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   addPoint: ->
     if !@layout
-      @showContent()
+      @showLayout()
     Yapp.popup.show new Yapp.Points.PointAddView
       id: 'p-add-place'
       collection: @layout.pointCollection
@@ -70,6 +71,7 @@ class Yapp.Points.Controller extends Marionette.Controller
           model: model
           photoId: photo_id
     )
+    model
 
   ###*
   # The stub for the set detail showing function
@@ -84,13 +86,14 @@ class Yapp.Points.Controller extends Marionette.Controller
           pointId: point_id
           photoId: photo_id
     )
+    model
 
   ###*
   # Method for the point showing function with selected photo
   # @method showPointPhoto
   ###
   showPointPhoto: (id, photo_id) ->
-    @showContent()
+    @showLayout()
     @showPointDetail id, photo_id
 
   ###*
@@ -98,5 +101,5 @@ class Yapp.Points.Controller extends Marionette.Controller
   # @method showSetPhoto
   ###
   showSetPhoto: (id, point_id, photo_id) ->
-    @showContent()
+    @showLayout()
     @showSetDetail id, point_id, photo_id
