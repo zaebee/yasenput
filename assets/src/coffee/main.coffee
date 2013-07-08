@@ -17,7 +17,7 @@ Yapp.addInitializer ->
     for key of settings
       if settings.hasOwnProperty(key)
         if @settings[key] isnt settings[key]
-          if !_.isEmpty settings[key]
+          if _.isNumber(settings[key]) or !_.isEmpty settings[key]
             @settings[key] = settings[key]
           else
             delete @settings[key]
@@ -98,12 +98,8 @@ Yapp.runApplication = ->
 
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
-  if @user.get('last_state') is 'pins'
-    @Points.start()
-    @Map.start()
-  else
-    @Map.start()
-    @Points.start()
+  @Map.start()
+  @Points.start()
 
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->

@@ -32,12 +32,14 @@ Yapp.module 'Map',
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
             zoom: 12
           )
+          #coords = map.getBounds()
+          #coords = _.zipObject ['coord_left','coord_right'], _(coords).map((el) -> JSON.stringify(_.zipObject(['lt','ln'], el))).value()
+          #Yapp.updateSettings coords
           Yapp.user.set location: ymaps.geolocation
           map.controls.add('zoomControl').add('typeSelector')
           pointCollection = new ymaps.GeoObjectCollection()
           map.geoObjects.add pointCollection
           @yandexmap = map
           @trigger 'load:yandexmap', @yandexmap
-          #callbacks.run()
         )
     )
