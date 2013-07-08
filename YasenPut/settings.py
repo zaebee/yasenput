@@ -16,7 +16,7 @@ DICTS_PATH = '/home/tenoclock/yasenput/dicts'
 SPHINX_API_VERSION = 0x119
 
 ADMINS = (
-# ('Artem Ushakov', 'artushakov@gmail.com'), тест
+# ('Artem Ushakov', 'artushakov@gmail.com'), тест 2
 )
 
 MANAGERS = ADMINS
