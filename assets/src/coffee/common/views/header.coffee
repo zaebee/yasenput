@@ -122,6 +122,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target.parent().remove()
     @ui.searchInput.children().focus()
     @ui.logo.width if @ui.search.outerHeight() > 26 then 27 else 154
+    @submitSearch(event)
 
   focusInput: (event) ->
     event.preventDefault()
@@ -153,6 +154,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $target = $(event.currentTarget)
     @ui.labelFields.children('.label-name, .label-place, .label-user, .label-tags, .label-new').remove()
     @ui.logo.width if @ui.search.outerHeight() > 26 then 27 else 154
+    @submitSearch(event)
 
   submitSearch: (event) ->
     if event
