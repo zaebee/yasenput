@@ -1,4 +1,4 @@
-<div class="label label-{{type}}" data-id="{{id}}" data-type="{{type}}">
+<div class="label label-{{type}}" data-id="{{id}}" data-type="{{type}}" {{#ifEquals type 'place'}}data-left-corner="{{coordLeft}}" data-right-corner="{{coordRight}}"{{/ifEquals}}>
   {{name}}
   <button class="remove-label"></button>
 </div>

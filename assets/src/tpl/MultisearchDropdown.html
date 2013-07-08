@@ -11,7 +11,7 @@
   <ul class="item item-place">
     <li class="item-title">Местоположения <sup>{{GeoObjectCollection.featureMember.length}}</sup></li>
     {{#each GeoObjectCollection.featureMember}}
-    <li class="item-place" data-left-corner="{{GeoObject.boundedBy.Envelope.lowerCorner}}" data-right-corner="{{GeoObject.boundedBy.Envelope.upperCorner}}" data-location="{{GeoObject.Point.pos}}" data-type="place">
+    <li class="item-label" data-name="{{GeoObject.name}}" data-left-corner="{{GeoObject.boundedBy.Envelope.lowerCorner}}" data-right-corner="{{GeoObject.boundedBy.Envelope.upperCorner}}" data-location="{{GeoObject.Point.pos}}" data-type="place">
       <a href="#">{{GeoObject.name}} <i>{{GeoObject.description}}</i></a>
     </li>
     {{/each}}

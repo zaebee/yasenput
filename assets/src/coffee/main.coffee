@@ -17,7 +17,7 @@ Yapp.addInitializer ->
     for key of settings
       if settings.hasOwnProperty(key)
         if @settings[key] isnt settings[key]
-          if !_.isEmpty settings[key]
+          if _.isNumber(settings[key]) or !_.isEmpty settings[key]
             @settings[key] = settings[key]
           else
             delete @settings[key]
