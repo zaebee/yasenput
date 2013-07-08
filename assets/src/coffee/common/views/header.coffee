@@ -166,9 +166,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     coordLeft = $place.data 'left-corner'
     coordRight = $place.data 'right-corner'
     if !_.isEmpty(coordRight) and !_.isEmpty(coordLeft)
-      coordLeft = _.zipObject ['lt', 'ln'], coordLeft.split ' '
+      coordLeft = _.zipObject ['ln', 'lt'], _(coordLeft.split ' ').map((el) -> parseFloat(el)).value()
       coordLeft = JSON.stringify coordLeft
-      coordRight= _.zipObject ['lt', 'ln'], coordRight.split ' '
+      coordRight= _.zipObject ['ln', 'lt'], _(coordRight.split ' ').map((el) -> parseFloat(el)).value()
       coordRight = JSON.stringify coordRight
 
     query = @ui.labelFields.find('.label-name').text().trim()
