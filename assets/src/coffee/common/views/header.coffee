@@ -107,6 +107,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         data.coordRight = $target.data 'right-corner'
         @ui.labelFields.children('.label-place').remove()
         @ui.labelFields.prepend @labelTemplate(data)
+        @submitSearch(event)
       when 'user'
         @ui.labelFields.children('.label-user').remove()
         @ui.labelFields.children('.label-add').before @labelTemplate(data)
@@ -162,17 +163,25 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     $tags = @ui.labelFields.find '.label-tags'
     $models = @ui.itemTypeNav.find '.head-nav-current-item'
 
-    coordLeft = $place.data('left-corner').split ' '
-    coordRight = $place.data('right-corner').split ' '
+    coordLeft = $place.data 'left-corner'
+    coordRight = $place.data 'right-corner'
+    if !_.isEmpty(coordRight) and !_.isEmpty(coordLeft)
+      coordLeft = _.zipObject ['lt', 'ln'], coordLeft.split ' '
+      coordLeft = JSON.stringify coordLeft
+      coordRight= _.zipObject ['lt', 'ln'], coordRight.split ' '
+      coordRight = JSON.stringify coordRight
+
     query = @ui.labelFields.find('.label-name').text().trim()
     userId = $user.data 'id'
     tagsId = _.map $tags, (el) -> $(el).data('id')
     models = $models.data 'models'
-    @buildSearchOptions
+    Yapp.updateSettings
       user: userId
       tags: tagsId.join ','
       s: query
       models: models
+      coord_left: coordLeft
+      coord_right: coordRight
 
     Yapp.request(
       'request'
@@ -197,7 +206,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response, geoObjectCollection) ->
-    response = _.extend response, geoObjectCollection
+    response = _.extend response, places: geoObjectCollection.featureMember
     if _.isEmpty _.flatten _.values response
       response = empty: true
     $(window).bind 'resize', $.proxy(@_setHeightSearchMenu, @)
@@ -376,22 +385,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           context: context
           successCallback: successCallback
           params:
-            geoObjectCollection: response
+            geoObjectCollection: response.GeoObjectCollection
           data:
             s: query
       )
     @searchXHR
-
-  ###*
-  # Returns dict params from multisearch input for load filtered collection
-  # @param {Object} options Search options passed from multisearch input
-  # @method buildSearchOptions
-  ###
-  buildSearchOptions: (options) ->
-    searchOptions = {}
-    searchOptions.user = options.user
-    searchOptions.tags = options.tags
-    searchOptions.s = options.s
-    searchOptions.models = options.models
-
-    Yapp.updateSettings searchOptions
