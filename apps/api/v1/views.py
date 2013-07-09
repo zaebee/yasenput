@@ -468,7 +468,7 @@ class PointAdd(LoggedPointsBaseView):
                 isliked = 0
         else: 
             isliked = 0
-        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments'], 
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
         'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
         'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
