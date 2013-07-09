@@ -101,7 +101,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
     )
 
   ###*
-  # Fired when pointCollection reset. Publisher of this event belong to Yapp.Points.Layout
+  # Fired when pointCollection reset. Publisher of this event belong to Yapp.Points.PointListView
   ###
   updatePointCollection: (collection) ->
     console.log  collection, 'collection reset'
