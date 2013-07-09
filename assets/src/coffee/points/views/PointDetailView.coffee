@@ -315,12 +315,12 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     imgs.splice indexImg, 1
     likeusers = img.likeusers
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
+      me = _.find likeusers, (user) => user.id is @user.get 'id'
       index = _.indexOf likeusers, me
       likeusers.splice index, 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
+      likeusers.push @user.toJSON()
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
     img.likeusers = likeusers
@@ -345,7 +345,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   # @method successLikePhoto
   ###
   successRemoveComment: (response, commentId) ->
-    _this = @
     photoId = @$('textarea').data 'photo-id'
     photo = _.find @model.get('imgs'), (photo) -> photo.id is photoId
 
@@ -373,7 +372,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   # @method successRemovePhoto
   ###
   successRemovePhoto: (response, photoId) ->
-    _this = @
     imgs = @model.get('imgs')
     img = _.find imgs, (img) -> img.id is photoId
     index = _.indexOf imgs, img

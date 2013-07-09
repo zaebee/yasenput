@@ -230,22 +230,24 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successLike
   ###
   successLike: (response, $target) ->
-    _this = @
     likeusers = @model.get 'likeusers'
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
+      me = _.find likeusers, (user) => user.id is @user.get 'id'
       index = _.indexOf likeusers, me
       likeusers.splice index, 1
+      console.log likeusers
       @model.set
         likeusers: likeusers
         likes_count: @model.get('likes_count') - 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
+      likeusers.push @user.toJSON()
+      console.log likeusers
       @model.set
         likesers: likeusers
         likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @model.trigger 'change'
 
   ###*
   # TODO
@@ -308,7 +310,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   ###
   successLikePhoto: (response, $target) ->
     photo = response[0]
-    _this = @
 
     imgs = @activePoint.imgs
     img = _.find imgs, (img) -> img.id is photo.id
@@ -316,12 +317,12 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     imgs.splice indexImg, 1
     likeusers = img.likeusers
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
+      me = _.find likeusers, (user) => user.id is @user.get 'id'
       index = _.indexOf likeusers, me
       likeusers.splice index, 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
+      likeusers.push @user.toJSON()
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
     img.likeusers = likeusers
@@ -347,7 +348,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successLikePhoto
   ###
   successRemoveComment: (response, commentId) ->
-    _this = @
     photoId = @$('textarea').data 'photo-id'
     photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
 
@@ -376,7 +376,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successRemovePhoto
   ###
   successRemovePhoto: (response, photoId) ->
-    _this = @
     imgs = @activePoint.imgs
     img = _.find imgs, (img) -> img.id is photoId
     index = _.indexOf imgs, img
