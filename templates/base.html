@@ -56,19 +56,24 @@
 
     {% block popups %}{% endblock %}
 
-    <script src="{{ STATIC_URL }}lib/json2.js"></script>
-    <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
-    <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
-    <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
-    <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
-    <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
-    <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
+    {% if ASSETS_DEBUG %}
+      <script src="{{ STATIC_URL }}lib/json2.js"></script>
+      <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
+      <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
+      <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
+      <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
+      <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
+      <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
 
-    {# application.main #}
-    <script src="{{ STATIC_URL }}js/application.js"></script>
+      {# application.main #}
+      <script src="{{ STATIC_URL }}js/application.js"></script>
+    {% else %}
+      {# application.main #}
+      <script src="{{ STATIC_URL }}js/application.js"></script>
+    {% endif %}
 
     {% block postload_js %}{% endblock %}
 
