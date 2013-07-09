@@ -213,15 +213,12 @@ class CollectionsList(View):
 
 
 class CollectionAdd(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
-    def get(self, request, *args, **kwargs):
-
-        DEFAULT_LEVEL = 2
-
+    def post(self, request, *args, **kwargs):
         errors = []
 
-        params = request.GET.copy()
+        params = request.POST.copy()
         form = forms.AddCollectionForm(params)
         if form.is_valid():
 
@@ -231,13 +228,6 @@ class CollectionAdd(CollectionsBaseView):
             collection.author = person
             collection.save()
             #points = MainModels.Points.objects.all()
-            f = open('file1.txt', 'w')
-            f.write(params.__getitem__("secondid"))
-            f.close()
-            if (params.__getitem__("secondid") == '0'):
-                collection.points.add(MainModels.Points.objects.get(id=params.__getitem__("pointid")))
-            else:
-                collection.points_by_user.add(MainModels.PointsByUser.objects.get(id=params.__getitem__("secondid")))
             #collection.save()
 
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
@@ -286,7 +276,7 @@ class CollectionEdit(CollectionsBaseView):
 
 
 class AddPoint(CollectionsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('post',)
 
     def post(self, request, *args, **kwargs):
 
