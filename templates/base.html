@@ -30,6 +30,12 @@
           last_state: 'pins',
           count_liked_objects: {{ count_liked_objects }},
           count_commented_objects: {{ count_commented_objects }},
+          collections: [ {% for collection in collections %}
+            {
+              id: {{ collection.id }},
+              name: '{{ collection.name }}'
+            },
+          {% endfor %} ]
         };
       </script>
     {% else %}

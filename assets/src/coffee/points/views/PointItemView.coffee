@@ -15,6 +15,14 @@ Yapp = window.Yapp
 class Yapp.Points.PointItemView extends Marionette.ItemView
 
   ###*
+  # Init method of the view
+  # @method initialize
+  ###
+  initialize: ->
+    console.log 'initializing Yapp.Points.PointItemView'
+    @user = Yapp.user
+
+  ###*
   # It wraps all instances of view into tr tag before render
   # @property tagName
   # @type String
@@ -39,12 +47,25 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   template:Templates.PointItemView
 
   ###*
-  # Init method of the view
-  # @method initialize
+  # The view model event triggers
+  # @property modelEvents
   ###
-  initialize: ->
-    console.log 'initializing Yapp.Points.PointItemView'
-    @user = Yapp.user
+  modelEvents:
+    'change': 'render'
+
+  ###*
+  # The view event triggers
+  # @property events
+  ###
+  events:
+    'click .photo .a-like': 'like'
+    'click .photo .a-collection': 'addToCollection'
+    'click .yp-title': 'toggleYpInfo'
+    'click .yp-info': 'toggleYpInfo'
+
+  ui:
+    ypInfo: '.yp-info'
+    ypTitle: '.yp-title'
 
   ###*
   # Passed additional user data
@@ -66,23 +87,6 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
   onClose: ->
     console.log 'onClose item trigger'
     @remove()
-
-  modelEvents:
-    'change': 'render'
-
-  ###*
-  # The view event triggers
-  # @property events
-  ###
-  events:
-    'click .photo .a-like': 'like'
-    'click .photo .a-collection': 'addToCollection'
-    'click .yp-title': 'toggleYpInfo'
-    'click .yp-info': 'toggleYpInfo'
-
-  ui:
-    ypInfo: '.yp-info'
-    ypTitle: '.yp-title'
 
   like: (event) ->
     if !@user.get 'authorized'
@@ -114,7 +118,8 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
       return
     event.preventDefault()
     $target = $(event.currentTarget)
-    #@model.addToCollection $target, @successLike, @ ##targetElement, successCallback and context variables
+    addToCollectionView = new Yapp.Points.AddToCollectionView model: @model
+    Yapp.popup.show addToCollectionView
 
   toggleYpInfo: (event) ->
     @ui.ypInfo.toggle()

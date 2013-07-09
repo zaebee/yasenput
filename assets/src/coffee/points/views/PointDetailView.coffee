@@ -64,6 +64,8 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click .remove-photo': 'removePhoto'
 
     'click a[href=#tab-map]': 'renderMap'
+    'click .a-add-collection': 'addCollection'
+    'click .a-complaint-comment': 'complaintComment'
     #'blur #commentForm textarea': 'unfocusCommentTextarea'
     #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
@@ -204,6 +206,22 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     $target.parent().removeClass 'focus'
     $target.val ''
+
+  addCollection: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    addToCollectionView = new Yapp.Points.AddToCollectionView
+      model: @model
+      target: $target
+    Yapp.popup.regions.alerts.show addToCollectionView
+
+  complaintComment: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    complaintCommentView = new Yapp.Common.ComplaintCommentView
+      model: @model
+      target: $target
+    Yapp.popup.regions.alerts.show complaintCommentView
 
   ###*
   # TODO
