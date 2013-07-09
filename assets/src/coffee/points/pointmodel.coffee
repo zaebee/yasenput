@@ -36,7 +36,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @default Yapp.API_BASE_URL + '/points/'
   ###
   urlRoot: ->
-    Yapp.API_BASE_URL + "/points/"
+    Yapp.API_BASE_URL + "/api/v1/points/"
 
   ###*
   # Defaults data of point model
@@ -117,9 +117,10 @@ class Yapp.Points.Point extends Backbone.Model
   # @method like
   ###
   like: (target, successCallback, context) ->
+    id = @get 'id'
     Yapp.request(
       'request'
-        url: Yapp.API_BASE_URL + "/points/like"
+        url: Yapp.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'
         context: context
         successCallback: successCallback
@@ -226,10 +227,30 @@ class Yapp.Points.Point extends Backbone.Model
         context: context
         successCallback: successCallback
         params:
-          id: photoId
+          photoId: photoId
         data:
           id: photoId
+    )
 
+  ###*
+  # Add point into exists set.
+  # @param {Number} setId Set id for adding point
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
+  # @method addToSet
+  ###
+  addToSet: (setId) -> #, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/collections/addpoint"
+        type: 'POST'
+        #context: context
+        #successCallback: successCallback
+        params:
+          setId: setId
+        data:
+          id: setId
+          point: @get 'id'
     )
 
   parse: (response) ->

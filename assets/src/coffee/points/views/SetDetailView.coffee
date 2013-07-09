@@ -52,6 +52,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     'bigPhotoImg': '#big-photo > .bp-photo'
     'allPhotos': '.item-photo'
     'placePhotos': '.place-photos'
+    map: '.map'
 
   ###*
   # The view event triggers
@@ -72,6 +73,8 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     'click .bp-photo .a-like': 'likePhoto'
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
+
+    'click a[href=#tab-map]': 'renderMap'
 
   ###*
   # Passed additional user data, splited description and current active point
@@ -98,6 +101,29 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 4
     )
+
+  ###*
+  # TODO
+  # @event renderMap
+  ###
+  renderMap: (event) ->
+    if not @map
+      @ui.map.height 500
+      coords = [@activePoint.latitude, @activePoint.longitude]
+      icon =  @activePoint.icon ? '/media/icons/place-none.png'
+      @map = new ymaps.Map 'popup-map', (
+        center: coords
+        zoom: 14
+      )
+      placemark = new ymaps.Placemark(coords,
+        id: @model.get 'id'
+        {
+          iconImageHref: icon
+          iconImageSize: [32, 36]
+          iconImageOffset: [-16, -38]
+        }
+      )
+      @map.geoObjects.add placemark
 
   ###*
   # TODO
@@ -169,6 +195,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     point = _.find @model.get('points'), (point) -> point.id is pointId
     @activePoint = point
     @model.trigger('change')
+    delete @map
 
   ###*
   # TODO
@@ -203,22 +230,24 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successLike
   ###
   successLike: (response, $target) ->
-    _this = @
     likeusers = @model.get 'likeusers'
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
+      me = _.find likeusers, (user) => user.id is @user.get 'id'
       index = _.indexOf likeusers, me
       likeusers.splice index, 1
+      console.log likeusers
       @model.set
         likeusers: likeusers
         likes_count: @model.get('likes_count') - 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
+      likeusers.push @user.toJSON()
+      console.log likeusers
       @model.set
         likesers: likeusers
         likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
+    @model.trigger 'change'
 
   ###*
   # TODO
@@ -281,7 +310,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   ###
   successLikePhoto: (response, $target) ->
     photo = response[0]
-    _this = @
 
     imgs = @activePoint.imgs
     img = _.find imgs, (img) -> img.id is photo.id
@@ -289,12 +317,12 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     imgs.splice indexImg, 1
     likeusers = img.likeusers
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
+      me = _.find likeusers, (user) => user.id is @user.get 'id'
       index = _.indexOf likeusers, me
       likeusers.splice index, 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
+      likeusers.push @user.toJSON()
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
     img.likeusers = likeusers
@@ -320,7 +348,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successLikePhoto
   ###
   successRemoveComment: (response, commentId) ->
-    _this = @
     photoId = @$('textarea').data 'photo-id'
     photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
 
@@ -349,7 +376,6 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
   # @method successRemovePhoto
   ###
   successRemovePhoto: (response, photoId) ->
-    _this = @
     imgs = @activePoint.imgs
     img = _.find imgs, (img) -> img.id is photoId
     index = _.indexOf imgs, img
