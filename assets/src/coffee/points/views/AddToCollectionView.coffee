@@ -101,9 +101,13 @@ class Yapp.Points.AddToCollectionView extends Yapp.Common.PopupView
     if !_.isEmpty setIds
       statusOk = false
 
-      $.when.apply(@, _.map(setIds, @model.addToSet, @model)).done( () =>
-        success = _(arguments).every( (response) -> response[1] is 'success')
-        responses = _(arguments).map( (response) -> response[0])
+      $.when.apply(@, _.map(setIds, @model.addToSet, @model)).done( (response) =>
+        if _.isArray response
+          result = arguments
+        else
+          result = [arguments]
+        success = _(result).every( (response) -> response[1] is 'success')
+        responses = _(result).map( (response) -> response[0])
         if success
           @successAddToSet responses.value(), setIds
       )
@@ -115,6 +119,7 @@ class Yapp.Points.AddToCollectionView extends Yapp.Common.PopupView
   # @method successAddToSet
   ###
   successAddToSet: (response, setIds) ->
+    console.log response, setIds
     ## TODO will need validate response
     @ui.closeButton.click()
 
