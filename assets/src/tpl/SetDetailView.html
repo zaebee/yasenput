@@ -194,28 +194,22 @@
           </form>
         </div>
       </div><!-- end #tab-desc -->
+    </div><!-- .tabs.content -->
 
-      <div class="tabs-content p-common-content" style="display: none">
-        <section class="p-block peoples">
-          <h4 class="title-block">Это место хотят посетить</h4>
-          <div class="clearfix toggle-block">
-            <div class="clearfix hidden-content"></div>
-            <a href="#" class="a-toggle">Ещё пользователи <span>&darr;</span></a>
+    {{#if activePoint.tags}}
+    <div class="tabs-content p-common-content">
+      <section class="p-block event-labels">
+          <h4 class="title-block">Метки</h4>
+
+          <div class="body">
+            {{#each activePoint.tags}}
+              <div class="label">{{name}}</div>
+            {{/each}}
           </div>
-        </section>
-
-        <section class="p-block event-labels">
-            <h4 class="title-block">Метки</h4>
-
-            <div class="body">
-              {{#each activePoint.tags}}
-                <div class="label">{{name}}</div>
-              {{/each}}
-            </div>
-        </section>
-      </div><!-- end .tabs-content -->
-    </div>
-  </div>
+      </section>
+    </div><!-- end .p-common-content -->
+    {{/if}}
+  </div><!-- end .wide-box -->
 
   <footer>
     {{#if user.authorized}}
