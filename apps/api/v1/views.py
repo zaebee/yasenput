@@ -271,11 +271,11 @@ class ItemsList(PointsBaseView):
             search_res_points = search_res_points.filter(tags_id = tags)
 
         if params.get('coord_left'):
-            ln_left = json.loads(params.get('coord_left')).get('ln')
-            lt_left = json.loads(params.get('coord_left')).get('lt')
+            ln_left = float(json.loads(params.get('coord_left')).get('ln'))
+            lt_left = float(json.loads(params.get('coord_left')).get('lt'))
             #top right coords
-            ln_right = json.loads(params.get('coord_right')).get('ln')
-            lt_right = json.loads(params.get('coord_right')).get('lt')
+            ln_right = float(json.loads(params.get('coord_right')).get('ln'))
+            lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
             

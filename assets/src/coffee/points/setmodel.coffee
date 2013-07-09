@@ -9,10 +9,10 @@ Yapp = window.Yapp
 ###*
 # Set model
 # @class Yapp.Points.Set
-# @extends Backbone.Model
+# @extends Yapp.Points.Point
 # @constructor
 ###
-class Yapp.Points.Set extends Backbone.Model
+class Yapp.Points.Set extends Yapp.Points.Point
 
   ###*
   # The model initializer
@@ -27,38 +27,23 @@ class Yapp.Points.Set extends Backbone.Model
     Yapp.API_BASE_URL + "/collections/"
 
   ###*
-  # Defaults data of soft model
+  # Defaults data of point model
   # @property defaults
   # @type Object
   ###
   defaults: ->
     name: ''
-    address: ''
     description: ''
-    longitude: ''
-    latitude: ''
-    imgs: []
-    tags: []
+    ypi: 0
+    priority: 0
 
   validate: (attrs, options) ->
     invalid = []
     if attrs.name is ''
       invalid.push 'name'
 
-    if attrs.address is ''
-      invalid.push 'address'
-
-    if attrs.longitude is ''
-      invalid.push 'longitude'
-
-    if attrs.latitude is ''
-      invalid.push 'latitude'
-
-    if not attrs.imgs or attrs.imgs.length is 0
-      invalid.push 'photos'
-
-    if not attrs.tags or attrs.tags.length is 0
-      invalid.push 'tags'
+    if attrs.description is ''
+      invalid.push 'description'
 
     if invalid.length > 0
       return invalid
@@ -82,7 +67,22 @@ class Yapp.Points.Set extends Backbone.Model
           collectionid: @get 'id'
     )
 
-  parse: (response) ->
-    if _.isArray response
-      response = response[0]
-    response
+  ###*
+  # Create new empty set.
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
+  # @method create
+  ###
+  create: (successCallback, context) ->
+    if @isValid()
+      Yapp.request(
+        'request'
+          url: Yapp.API_BASE_URL + "/collections/add"
+          type: 'POST'
+          context: context
+          successCallback: successCallback
+          params:
+            set: @
+          data: @attributes
+      )
+

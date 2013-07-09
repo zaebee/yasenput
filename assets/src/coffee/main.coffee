@@ -9,6 +9,23 @@ Yapp = window.Yapp
 # Application initializer
 Yapp.addInitializer ->
   console.log 'application initializing'
+  @settings = {}
+
+  @updateSettings = (settings) ->
+    changedSettings = {}
+    changed = false
+    for key of settings
+      if settings.hasOwnProperty(key)
+        if @settings[key] isnt settings[key]
+          if _.isNumber(settings[key]) or !_.isEmpty settings[key]
+            @settings[key] = settings[key]
+          else
+            delete @settings[key]
+          changedSettings[key] = settings[key]
+          changed = true
+    if changed
+      @vent.trigger 'change:settings', changedSettings
+
   ## TODO: set page content for showing big ajax-loader
   # application regions
   @addRegions(
@@ -81,12 +98,8 @@ Yapp.runApplication = ->
 
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
-  if @user.get('last_state') is 'pins'
-    @Points.start()
-    @Map.start()
-  else
-    @Map.start()
-    @Points.start()
+  @Map.start()
+  @Points.start()
 
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->

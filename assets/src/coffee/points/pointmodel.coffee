@@ -21,13 +21,25 @@ class Yapp.Points.Point extends Backbone.Model
   initialize: ->
     console.log "initializing Yapp.Points.Point"
 
+  ###*
+  # Set unigue attribute for model
+  # @property idAttribute
+  # @type String
+  # @default 'unid'
+  ###
   idAttribute: 'unid'
 
+  ###*
+  # Set url for model instance
+  # @property urlRoot
+  # @type String
+  # @default Yapp.API_BASE_URL + '/points/'
+  ###
   urlRoot: ->
-    Yapp.API_BASE_URL + "/points/"
+    Yapp.API_BASE_URL + "/api/v1/points/"
 
   ###*
-  # Defaults data of soft model
+  # Defaults data of point model
   # @property defaults
   # @type Object
   ###
@@ -69,6 +81,8 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Send request on server for searching point addresses
+  # @param {String} searchStr query string for server api search
+  # @param {Object} $dropResult document node element that will be passed on successCallback for attach results
   # @method search
   ###
   search: (searchStr, $dropResult) ->
@@ -77,27 +91,36 @@ class Yapp.Points.Point extends Backbone.Model
         type: 'GET'
         url: '/points/search/',
         params:
-          dropResult: $dropResult
+          $dropResult: $dropResult
         data:
           s:searchStr
-        successCallback: @successSearch
-    )
-
-  successSearch: (response, dropResult) ->
-    _.each(response, (item) ->
-      dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
+        successCallback: @_successSearch
     )
 
   ###*
-  # Like or unlike point. Fiist arg is target that was clicked.
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # Callback for success search response on sever api method'/points/search/'
+  # @param {Object} response Response data from server api
+  # @param {Object} $dropResult document node element for append response data
+  # @method successSearch
+  # @private
+  ###
+  _successSearch: (response, $dropResult) ->
+    _.each(response, (item) ->
+      $dropResult.append "<li data-point-id=#{item.id}>#{item.name}</li>"
+    )
+
+  ###*
+  # Like or unlike point.
+  # @param {Object} target Target that was clicked
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method like
   ###
   like: (target, successCallback, context) ->
+    id = @get 'id'
     Yapp.request(
       'request'
-        url: Yapp.API_BASE_URL + "/points/like"
+        url: Yapp.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'
         context: context
         successCallback: successCallback
@@ -108,10 +131,11 @@ class Yapp.Points.Point extends Backbone.Model
     )
 
   ###*
-  # Like or unlike photo for point. Fiist arg is target that was clicked.
-  # Second is photo id that was liked/unliked.
-  # Third is callback that will be call after success response.
-  # Fourth is variable for binding this namespace.
+  # Like or unlike photo for point.
+  # @param {Object} target Target that was clicked
+  # @param {Number} photoId Photo id that was liked/unliked
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method likePhoto
   ###
   likePhoto: (target, photoId, successCallback, context) ->
@@ -129,10 +153,10 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Add comment for photo.
-  # First is photo id that comment was added.
-  # Second is callback that will be call after success response.
-  # Third is comment message.
-  # Fourth is variable for binding this namespace.
+  # @param {Number} photoId Photo id is commented by
+  # @param {String} txt Comment text
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method addCommentPhoto
   ###
   addCommentPhoto: (photoId, txt, successCallback, context) ->
@@ -149,9 +173,9 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Remove comment for photo.
-  # First arg is comment id that will be removed.
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # @param {Number} commentId Comment id that will be removed
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method removeCommentPhoto
   ###
   removeCommentPhoto: (commentId, successCallback, context) ->
@@ -168,10 +192,10 @@ class Yapp.Points.Point extends Backbone.Model
     )
 
   ###*
-  # Add photo.
-  # First arg is formData files
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # Add photo for point model.
+  # @param {Object} formData FormData contains image file
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method addPhoto
   ###
   addPhoto: (formData, successCallback, context) ->
@@ -190,9 +214,9 @@ class Yapp.Points.Point extends Backbone.Model
 
   ###*
   # Remove photo.
-  # First arg is photoId for removing
-  # Second is callback that will be call after success response.
-  # Third is variable for binding this namespace.
+  # @param {Number} photoId Photo id that will be removed
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
   # @method removePhoto
   ###
   removePhoto: (photoId, successCallback, context) ->
@@ -203,10 +227,30 @@ class Yapp.Points.Point extends Backbone.Model
         context: context
         successCallback: successCallback
         params:
-          id: photoId
+          photoId: photoId
         data:
           id: photoId
+    )
 
+  ###*
+  # Add point into exists set.
+  # @param {Number} setId Set id for adding point
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
+  # @method addToSet
+  ###
+  addToSet: (setId) -> #, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/collections/addpoint"
+        type: 'POST'
+        #context: context
+        #successCallback: successCallback
+        params:
+          setId: setId
+        data:
+          id: setId
+          point: @get 'id'
     )
 
   parse: (response) ->

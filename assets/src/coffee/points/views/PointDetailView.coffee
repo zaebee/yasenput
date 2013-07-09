@@ -14,13 +14,28 @@ Yapp = window.Yapp
 ###
 class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
+  ###*
+  # Init method of the view
+  # @method initialize
+  ###
   initialize: ->
     console.log 'initialize PointDetailView'
     @bigPhotoTemplate = Templates.BigPhoto
     @user = Yapp.user
 
+  ###*
+  # Required field for Marionette.View
+  # @property template
+  # @type Object
+  # @default Templates.PointDetailView
+  ###
   template: Templates.PointDetailView
 
+  ###*
+  # Ui elements for view
+  # @type Object
+  # @property ui
+  ###
   ui: ->
     bigPhoto: '#big-photo'
     bigPhotoImg: '#big-photo > .bp-photo'
@@ -29,10 +44,14 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     commentArea: '.toggleArea textarea'
     map: '.map'
 
+  ###*
+  # The view event triggers
+  # @type Object
+  # @property events
+  ###
   events: ->
     'click .p-place-desc .a-toggle-desc':'moreDescription'
     'click .photos-gallery .item-photo': 'showPhoto'
-    'click .bp-photo .a-like': 'likePhoto'
     'click #big-photo > .bp-photo': 'nextPhoto'
     'click #right-panel .a-like': 'like'
 
@@ -40,15 +59,18 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click .a-remove-comment': 'removeComment'
     'submit #commentForm': 'submitCommentForm'
 
+    'click .bp-photo .a-like': 'likePhoto'
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
 
     'click a[href=#tab-map]': 'renderMap'
+    'click .a-add-collection': 'addCollection'
+    'click .a-complaint-comment': 'complaintComment'
     #'blur #commentForm textarea': 'unfocusCommentTextarea'
     #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
-  # Passed additional user data
+  # Passed additional user data, splited description.
   # @method templateHelpers
   ###
   templateHelpers: ->
@@ -57,8 +79,8 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     user: @user.toJSON()
 
   ###*
-  # TODO
-  # @method onRender
+  # After render method of the view
+  # @event onRender
   ###
   onRender: ->
     @$el.find('[data-toggle=tooltip]').tooltip()
@@ -69,13 +91,14 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 4
     )
-    @renderSocial()
+    @_renderSocial()
 
   ###*
-  # TODO
-  # @method renderSocial
+  # Show social buttons on right sidebar
+  # @method _renderSocial
+  # @private
   ###
-  renderSocial: ->
+  _renderSocial: ->
     if window.FB isnt undefined
       FB.XFBML.parse()
     if window.VK isnt undefined
@@ -89,7 +112,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method renderMap
+  # @event renderMap
   ###
   renderMap: (event) ->
     if not @map
@@ -112,7 +135,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method moreDescription
+  # @event moreDescription
   ###
   moreDescription: (event) ->
     event.preventDefault()
@@ -184,6 +207,22 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target.parent().removeClass 'focus'
     $target.val ''
 
+  addCollection: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    addToCollectionView = new Yapp.Points.AddToCollectionView
+      model: @model
+      target: $target
+    Yapp.popup.regions.alerts.show addToCollectionView
+
+  complaintComment: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    complaintCommentView = new Yapp.Common.ComplaintCommentView
+      model: @model
+      target: $target
+    Yapp.popup.regions.alerts.show complaintCommentView
+
   ###*
   # TODO
   # @method like
@@ -228,7 +267,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method loadImage
+  # @method addPhoto
   ###
   addPhoto: (event) ->
     event.preventDefault()
@@ -239,7 +278,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
 
   ###*
   # TODO
-  # @method loadImage
+  # @method removePhoto
   ###
   removePhoto: (event) ->
     event.preventDefault()
@@ -249,29 +288,21 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     @model.removePhoto photoId, @successRemovePhoto, @
 
   ###*
-  # TODO
+  # Callback for success response from server after like point
   # @method successLike
   ###
   successLike: (response, $target) ->
-    _this = @
-    likeusers = @model.get 'likeusers'
+    point = response[0]
+    @model.set
+      isliked: point.isliked
+      likes_count: point.likes_count
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
-      index = _.indexOf likeusers, me
-      likeusers.splice index, 1
-      @model.set
-        likeusers: likeusers
-        likes_count: @model.get('likes_count') - 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
-      @model.set
-        likesers: likeusers
-        likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
   ###*
-  # TODO
+  # Callback for success response from server after like photo
   # @method successLikePhoto
   ###
   successLikePhoto: (response, $target) ->
