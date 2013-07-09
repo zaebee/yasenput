@@ -21,10 +21,14 @@ class Yapp.Points.Set extends Yapp.Points.Point
   initialize: ->
     console.log "initializing Yapp.Points.Set"
 
-  idAttribute: 'unid'
-
+  ###*
+  # Set url for model instance
+  # @property urlRoot
+  # @type String
+  # @default Yapp.API_BASE_URL + '/collections/'
+  ###
   urlRoot: ->
-    Yapp.API_BASE_URL + "/collections/"
+    Yapp.API_BASE_URL + "/api/v1/sets/"
 
   ###*
   # Defaults data of point model
