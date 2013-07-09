@@ -463,6 +463,13 @@ class PointAdd(LoggedPointsBaseView):
                         sets_l.append(set_t)
         imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],}})
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+        tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
+        reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                               },
+                                                       'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                      }})
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({'id':id,
          'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
@@ -474,7 +481,9 @@ class PointAdd(LoggedPointsBaseView):
          'likes_count': point[0].likes_count,
          'invalid':point[0].invalid, 
          'imgs':json.loads(imgs)[0]['imgs'],
-         'author':json.loads(author)[0]['author'],})
+         'author':json.loads(author)[0]['author'],
+         'tags': json.loads(tags)[0]['tags'],
+         'reviews': json.loads(reviews)[0]['reviews']})
 
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)
