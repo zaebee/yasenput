@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
+from apps.photos.models import *
 from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
@@ -460,8 +461,20 @@ class PointAdd(LoggedPointsBaseView):
                 if point_t.id == point[0].id:
                     if set_t not in sets_l:
                         sets_l.append(set_t)
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],}})
+        author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':str(point[0].latitude), 'longitude': str(point[0].longitude), 'address':point[0].address, 'likes_count': point[0].likes_count, })
+        return JsonHTTPResponse({'id':id,
+         'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
+         'name': point[0].name, 
+         'description':point[0].description,
+         'latitude':str(point[0].latitude), 
+         'longitude': str(point[0].longitude),
+         'address':point[0].address,
+         'likes_count': point[0].likes_count,
+         'invalid':point[0].invalid, 
+         'imgs':json.loads(imgs)[0]['imgs'],
+         'author':json.loads(author)[0]['author'],})
 
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)
