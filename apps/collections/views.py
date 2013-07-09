@@ -214,7 +214,7 @@ class CollectionsList(View):
 
 class CollectionAdd(CollectionsBaseView):
     http_method_names = ('get',)
-
+    #TO DO добавление через POST!
     def get(self, request, *args, **kwargs):
 
         DEFAULT_LEVEL = 2

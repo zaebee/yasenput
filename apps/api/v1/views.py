@@ -461,7 +461,17 @@ class PointAdd(LoggedPointsBaseView):
                 if point_t.id == point[0].id:
                     if set_t not in sets_l:
                         sets_l.append(set_t)
-        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],}})
+        if request.user.is_authenticated():
+            if request.user in point[0].likeusers.all():
+                isliked = 1
+            else:
+                isliked = 0
+        else: 
+            isliked = 0
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments'], 
+        'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
+        'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
+        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
@@ -471,7 +481,8 @@ class PointAdd(LoggedPointsBaseView):
                                                        'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                       }})
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id,
+        return JsonHTTPResponse({
+         'id':id,
          'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
          'name': point[0].name, 
          'description':point[0].description,
@@ -483,7 +494,8 @@ class PointAdd(LoggedPointsBaseView):
          'imgs':json.loads(imgs)[0]['imgs'],
          'author':json.loads(author)[0]['author'],
          'tags': json.loads(tags)[0]['tags'],
-         'reviews': json.loads(reviews)[0]['reviews']})
+         'reviews': json.loads(reviews)[0]['reviews'],
+         'isliked': str(isliked)})
 
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)
