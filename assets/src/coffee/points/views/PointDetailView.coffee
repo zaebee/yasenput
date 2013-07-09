@@ -292,21 +292,13 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   # @method successLike
   ###
   successLike: (response, $target) ->
-    _this = @
-    likeusers = @model.get 'likeusers'
+    point = response[0]
+    @model.set
+      isliked: point.isliked
+      likes_count: point.likes_count
     if $target.hasClass 'marked'
-      me = _.find likeusers, (user) -> user.id is _this.user.id
-      index = _.indexOf likeusers, me
-      likeusers.splice index, 1
-      @model.set
-        likeusers: likeusers
-        likes_count: @model.get('likes_count') - 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') - 1
     else
-      likeusers.push @user
-      @model.set
-        likesers: likeusers
-        likes_count: @model.get('likes_count') + 1
       @user.set 'count_liked_objects', @user.get('count_liked_objects') + 1
 
   ###*

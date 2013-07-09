@@ -495,7 +495,7 @@ class PointAdd(LoggedPointsBaseView):
          'author':json.loads(author)[0]['author'],
          'tags': json.loads(tags)[0]['tags'],
          'reviews': json.loads(reviews)[0]['reviews'],
-         'isliked': str(isliked)})
+         'isliked': int(isliked)})
 
 class LikePoint(PointsBaseView):
     http_method_names = ('post',)

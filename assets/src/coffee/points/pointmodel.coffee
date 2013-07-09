@@ -36,7 +36,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @default Yapp.API_BASE_URL + '/points/'
   ###
   urlRoot: ->
-    Yapp.API_BASE_URL + "/points/"
+    Yapp.API_BASE_URL + "/api/v1/points/"
 
   ###*
   # Defaults data of point model
@@ -117,9 +117,10 @@ class Yapp.Points.Point extends Backbone.Model
   # @method like
   ###
   like: (target, successCallback, context) ->
+    id = @get 'id'
     Yapp.request(
       'request'
-        url: Yapp.API_BASE_URL + "/points/like"
+        url: Yapp.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'
         context: context
         successCallback: successCallback
