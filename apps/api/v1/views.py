@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
+from apps.photos.models import *
 from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
@@ -454,10 +455,125 @@ class PointAdd(LoggedPointsBaseView):
         YpJson = YpSerialiser()
         sets_list = CollectionsModels.Collections.objects.all()
         sets_l = []
+        #TO DO не перебором!!!
         for set_t in sets_list.all():
             for point_t in set_t.points.all():
                 if point_t.id == point[0].id:
                     if set_t not in sets_l:
                         sets_l.append(set_t)
-        #point = json.loads(self.getSerializeCollections(point))
-        return JsonHTTPResponse({'id':id, 'sets':json.loads(self.getSerializeCollections(sets_l[:3])), 'name': point[0].name, 'description':point[0].description, 'latitude':str(point[0].latitude), 'longitude': str(point[0].longitude), 'address':point[0].address, 'likes_count': point[0].likes_count, })
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked', 'thumbnail207_height'],}})
+        author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+        tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
+        reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                               },
+                                                       'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                      }})
+        #point imlens.ru= json.loads(self.getSerializeCollections(point))
+        return JsonHTTPResponse({'id':id,
+         'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
+         'name': point[0].name, 
+         'description':point[0].description,
+         'latitude':str(point[0].latitude), 
+         'longitude': str(point[0].longitude),
+         'address':point[0].address,
+         'likes_count': point[0].likes_count,
+         'invalid':point[0].invalid, 
+         'imgs':json.loads(imgs)[0]['imgs'],
+         'author':json.loads(author)[0]['author'],
+         'tags': json.loads(tags)[0]['tags'],
+         'reviews': json.loads(reviews)[0]['reviews']})
+
+class LikePoint(PointsBaseView):
+    http_method_names = ('post',)
+
+
+    def post(self, request, *args, **kwargs):
+        form = forms.LikePointsForm(request.POST)
+        if form.is_valid():
+            pk = form.cleaned_data["id"]
+            try:
+                person = MainModels.Person.objects.get(username=request.user)
+                id_point = form.cleaned_data.get("id_point", 0)
+                if id_point:
+                    point = get_object_or_404(MainModels.PointsByUser, pk=pk)
+                    count = MainModels.PointsByUser.objects.filter(id=pk, likeusers__id=person.id).count()
+                else:
+                    point = get_object_or_404(MainModels.Points, pk=pk)
+                    count = MainModels.Points.objects.filter(id=pk, likeusers__id=person.id).count()
+                if count > 0:
+                    point.likeusers.remove(person)
+                else:
+                    point.likeusers.add(person)
+                point.save()
+                if id_point:
+                    point = MainModels.PointsByUser.objects.filter(id=pk).extra(**self.getPointsByUserSelect(request))
+                else:
+                    point = MainModels.Points.objects.filter(id=pk).extra(**self.getPointsSelect(request))
+            except:
+                return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
+            else:
+                return self.pointsList(point)
+        else:
+            return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
+
+class PointEdit(LoggedPointsBaseView):
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        DEFAULT_LEVEL = 2
+
+        errors = []
+
+        params = request.GET
+        form = forms.IdForm(params)
+        if not form.is_valid():
+            return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id места"})
+
+        form = forms.AddPointForm(params, instance=MainModels.Points.objects.get(pk=form.cleaned_data['id']))
+        if form.is_valid():
+            point = form.save(commit=False)
+
+            person = MainModels.Person.objects.get(username=request.user)
+            point.author = person
+            point.save()
+
+            params_form = forms.ExtendedAddForm(params)
+            if params_form.is_valid():
+
+                tags = params.getlist("tags[]")
+                if tags:
+                    for tag in tags:
+                        new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count == 0 and tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person, content_object=point)
+                        else:new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+
+            point.save()
+
+            # params["id"] = point.id
+            return self.pointsList([point])
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
+
+
+class PointDel(LoggedPointsBaseView):
+    http_method_names = ('post',)
+
+    def post(self, request):
+        form = forms.IdForm(request.POST)
+        if form.is_valid():
+            pk = form.cleaned_data["id"]
+            point = get_object_or_404(MainModels.Points, pk=pk)
+
+            CommentsModels.Comments.objects(content_object=point).delete()
+            point.delete()
+            return JsonHTTPResponse({"id":pk, "status": 1, "txt":"Ошибка удаления"})
+        return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})
