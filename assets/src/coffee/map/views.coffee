@@ -43,7 +43,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Map.MapView'
     @user = Yapp.user
+    _.bindAll @, 'updatePointCollection'
     @listenTo Yapp.Map, 'load:yandexmap', @setMap
+    @listenTo Yapp.Points, 'update:collection', @updatePointCollection
 
   ###*
   # The view event triggers
@@ -97,3 +99,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
         region: if region then region.AdministrativeAreaName else ''
         city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
     )
+
+  ###*
+  # Fired when pointCollection reset. Publisher of this event belong to Yapp.Points.Layout
+  ###
+  updatePointCollection: (model) ->
+    return
