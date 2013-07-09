@@ -47,7 +47,6 @@ class Yapp.Points.MainLayout extends Marionette.Layout
   initialize: ->
     console.log 'initializing Yapp.Points.MainLayout'
     @pointCollection = new Yapp.Points.PointCollection()
-    @pointCollection.on 'reset', (model) => Yapp.Points.trigger 'update:collection', model
 
   ###*
   # Fired when layout fully rendered. Loads pointCollection data and renders it
