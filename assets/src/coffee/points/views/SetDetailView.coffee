@@ -52,6 +52,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     'bigPhotoImg': '#big-photo > .bp-photo'
     'allPhotos': '.item-photo'
     'placePhotos': '.place-photos'
+    map: '.map'
 
   ###*
   # The view event triggers
@@ -72,6 +73,8 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     'click .bp-photo .a-like': 'likePhoto'
     'change #addPhotoForm input:file': 'addPhoto'
     'click .remove-photo': 'removePhoto'
+
+    'click a[href=#tab-map]': 'renderMap'
 
   ###*
   # Passed additional user data, splited description and current active point
@@ -98,6 +101,29 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
       root: @ui.placePhotos
       visible: 4
     )
+
+  ###*
+  # TODO
+  # @event renderMap
+  ###
+  renderMap: (event) ->
+    if not @map
+      @ui.map.height 500
+      coords = [@activePoint.latitude, @activePoint.longitude]
+      icon =  @activePoint.icon ? '/media/icons/place-none.png'
+      @map = new ymaps.Map 'popup-map', (
+        center: coords
+        zoom: 14
+      )
+      placemark = new ymaps.Placemark(coords,
+        id: @model.get 'id'
+        {
+          iconImageHref: icon
+          iconImageSize: [32, 36]
+          iconImageOffset: [-16, -38]
+        }
+      )
+      @map.geoObjects.add placemark
 
   ###*
   # TODO
@@ -169,6 +195,7 @@ class Yapp.Points.SetDetailView extends Yapp.Common.PopupView
     point = _.find @model.get('points'), (point) -> point.id is pointId
     @activePoint = point
     @model.trigger('change')
+    delete @map
 
   ###*
   # TODO
