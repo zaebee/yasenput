@@ -541,7 +541,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .popup .tabs-content .tabs-content{background:#fff; padding:0; margin:0}
 .p-photos{margin:0 -16px -10px 0}
 #tab-photos-event .p-photos, #tab-photos-place .p-photos{padding-top:1px; margin-bottom:0}
-.remove-photo, .complaint-photo{position:absolute; top:0; right:0; text-decoration:none; border:0; background-position:-613px -74px; cursor:pointer; width:20px; height:20px; z-index:20; display:none}
+.remove-photo, .complaint-photo{position:absolute; top:0; right:0; text-decoration:none; border:0; background-position:-613px -74px; cursor:pointer; width:20px; height:20px; z-index:20;}
 .item-photo:hover .remove-photo, .item-photo:hover .complaint-photo{display:block}
 .remove-photo:hover{background-position:-647px -74px;}
 .complaint-photo{background-position:-679px -43px;}
@@ -636,7 +636,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	#tooltip .body, #tooltipAddPath .body, #tooltipSortable .body{background:url(../images/bg-tooltip-2.png) 50% -45px no-repeat; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; padding:0 5px; height:21px; line-height:21px; white-space:nowrap}
 	#tooltipAddPath .body, #tooltipSortable .body{padding:4px 5px; height:auto; line-height:15px; text-align:center}
 
-#complaint-place, #complaint-comment, #complaint-photo{position:absolute; z-index:12345; width:332px; left:50%; top:50px; text-align:left; display:none}
+#complaint-place, #complaint-comment, #complaint-photo{position:absolute; z-index:12345; width:332px; left:50%; top:50px; text-align:left;}
 	#complaint-place .line, #complaint-comment .line, #complaint-photo .line{padding:0 0 12px}
 		#complaint-place .line label, #complaint-comment .line label, #complaint-photo .line label{display:block; margin:0 0 6px}
 		#complaint-place .line input[type=text], #complaint-place .line textarea, #complaint-comment .line textarea, #complaint-photo .line input[type=text], #complaint-photo .line textarea, #complaint-place .small-map-place input[type=text]{display:block; width:280px; padding:2px 6px; border:solid 1px #c4cec3; font:11px/16px arial, sans-serif; height:16px}
@@ -761,7 +761,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .items .a-collection, .items .a-edit-new, .items .a-like{visibility:hidden}
 .items .photo:hover .a-collection, .items .photo:hover .a-edit-new, .items .photo:hover .a-like, .items .photo:hover .a-share-new{visibility:visible}
 
-#new-collection{position:relative; z-index:12345; width:332px; left:50%; top:120px; text-align:left; display:none; font-size:14px; margin:0 0 40px -166px;}
+#new-collection{position:relative; z-index:12345; width:332px; left:50%; top:120px; text-align:left; font-size:14px; margin:0 0 40px -166px;}
 	#new-collection .line{padding:0 0 12px}
 		#new-collection .line label{display:block; margin:6px 0 8px}
 		#new-collection .line label:first-child{display:block; margin-top:0}
