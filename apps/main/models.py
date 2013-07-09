@@ -197,6 +197,8 @@ class Points(models.Model):
         return self.name
 
 
+
+
 class PointsByUser(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
@@ -232,7 +234,7 @@ class Routes(models.Model):
         verbose_name_plural = u'Маршруты'
 
     name = models.CharField('Название', max_length=255)
-    points = models.ManyToManyField(Points, blank=True, serialize=True)
+    points = models.ManyToManyField(Points, through='Position', blank=True, serialize=True)
     description = models.TextField('Описание', null=True, default=0)
     type = models.ManyToManyField(TypePoints, null=True, blank=True)
     categories = models.ManyToManyField(Categories, null=True, blank=True)
@@ -255,6 +257,10 @@ class Routes(models.Model):
     def __unicode__(self):
         return self.name
 
+class Position(models.Model):
+    point = models.ForeignKey(Points)
+    route = models.ForeignKey(Routes)
+    position = models.IntegerField(default=1)
 
 class Events(models.Model):
     from apps.tags.models import Tags

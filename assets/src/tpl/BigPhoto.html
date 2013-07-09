@@ -5,7 +5,7 @@
     <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
     <span class="bp-name">{{author.first_name}} {{author.last_name}}</span>
 
-    <a href="#" class="a-like {{#ifBelong user likeusers}}marked{{/ifBelong}}" data-photo-id="{{id}}"></a>
+    <a href="#" class="a-like {{#if isliked}}marked{{/if}}" data-photo-id="{{id}}"></a>
     <span class="count-like">{{likes_count}}</span>
   </div>
 </div>

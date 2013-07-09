@@ -34,3 +34,6 @@ class Collections(models.Model):
         return self.likeusers.count()
 
     likes = property(_likes)
+
+    def __unicode__(self):
+        return self.name

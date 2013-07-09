@@ -24,34 +24,59 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     @body = 'body'
     @wrapper = '#popups'
     @overlay = '#overlay'
+    @regionManager = new Marionette.RegionManager()
+    @regions = @regionManager.addRegions
+      alerts: '#alerts'
+
+  ###*
+  # Override this method to change how the region show the DOM element.
+  # @method open
+  ###
+  open: (view) ->
+    @$el.append view.el
 
   ###*
   # Override this method to change how the region finds the DOM element that it manages. Add event to close popup. Return a jQuery selector object.
   # @method getEl
   ###
   getEl: (selector) ->
-    _this = @
     $el = $(selector)
-    $el.click (event) ->
+    $el.unbind('click').bind('click', (event) =>
       if $(event.target).hasClass 'scroll-box'
-        _this.close()
+        @close()
+    )
     $el
 
   ###*
   # Event method. It triggers when view fully rendered. Show popup overlays.
-  # @method onShow
+  # @event onShow
   ###
   onShow: ->
     $(@body).css 'overflow', 'hidden'
     $(@overlay).show()
     $(@wrapper).show()
 
+    @regions.alerts.on 'show', (view) =>
+      ## set position for alert region depends on $target offset
+      $target = view.options.target
+      css =
+        margin: 0
+        left: '70%'
+        top: $target.offset().top
+        position: 'absolute'
+      view.$el.css css
+      ## change popup close handler. If dont change event will close all popups
+      view.ui.closeButton.unbind('click').bind 'click', () ->
+        view.close()
+
   ###*
   # Event method. Hide popup overlays.
-  # @method onClose
+  # @event onClose
   ###
   onClose: ->
-    $(@body).css 'overflow', 'initial'
+    @regions.alerts.off()
+    @regions.alerts.close()
     $(@overlay).hide()
     $(@wrapper).hide()
+    $(@body).css 'overflow', 'initial'
     Yapp.Common.router.navigate('/')
