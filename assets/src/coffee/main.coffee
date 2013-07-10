@@ -32,6 +32,7 @@ Yapp.addInitializer ->
     header:'#header'
     map:'#yandex-map'
     content:'#content'
+    routePanel:'#panel-add-path'
     footer:'#footer'
     popup: Yapp.Common.PopupRegion
   )
