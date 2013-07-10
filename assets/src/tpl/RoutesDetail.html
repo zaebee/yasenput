@@ -1,0 +1,32 @@
+<div class="dp-top">
+  Ехать на машине
+  <div class="black">{{safe totalTime}} - {{safe totalDistance}}</div>
+</div>
+
+<ol class="ol-details-path">
+  {{# each ways}}
+  <li>
+    <div class="path-name-place">{{point.name}}, {{point.address}}</div>
+    
+    {{#if segments}}
+    <ul>
+      {{#each segments}}
+        <li>
+          {{#ifEquals direct 'прямо'}}
+            <img src="/static/images/arrow-direct.png" alt="ехать {{direct}}" width="18" height="18">
+          {{/ifEquals}}
+          {{#ifEquals direct 'налево'}}
+            <img src="/static/images/arrow-left.png" alt="ехать {{direct}}" width="18" height="18">
+          {{/ifEquals}}
+          {{#ifEquals direct 'направо'}}
+            <img src="/static/images/arrow-right.png" alt="ехать {{direct}}" width="18" height="18">
+          {{/ifEquals}}
+          <div class="black">{{direct}} {{street}}</div>
+          {{safe distance}}
+        </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+  </li>
+  {{/each}}
+</ol>
