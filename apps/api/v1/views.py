@@ -673,5 +673,11 @@ class Route(View):
 
         route.save()
 
+        return JsonHTTPResponse('ok')
+
+    def get(self, request, *args, **kwargs):
+        route = MainModels.Routes.objects.get(id = kwargs.get('id'))
+        return JsonHTTPResponse('ok')
+
 
 
