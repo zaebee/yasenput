@@ -135,15 +135,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     data = $target.data()
     @ui.msgHint.hide()
     index = @collection.length
-    @ui.addPathPlace.append """<li data-point-id='#{data.pointId}'>
-        <h4>#{data.title}</h4>
-        <p>#{data.desc}</p>
-        <input type='button' value='' class='remove-item-path' data-point-id='#{data.pointId}'>
-      </li>"""
     point = new Yapp.Points.Point unid: data.pointId
     point.fetch(
       success: (response) =>
         @collection.add point
+        if @collection.length isnt index
+          @ui.addPathPlace.append """
+            <li data-point-id='#{data.pointId}'>
+              <h4>#{data.title}</h4>
+              <p>#{data.desc}</p>
+              <input type='button' value='' class='remove-item-path' data-point-id='#{data.pointId}'>
+            </li>"""
     )
     @hideDropdown()
 
@@ -179,13 +181,12 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     else if @collection.length > 1
       @ui.msgHint.hide()
       @ui.addPathButton.removeClass 'disabled'
-    if @route
-      @buildPath()
+      @buildPath() if @route
 
   resortCollection: (index, pointId) ->
     point = @collection.get pointId
     @_insertTo index, point, @collection.models
-    @buildPath()
+    @buildPath() if @route
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,
