@@ -167,14 +167,14 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.actionButton.hide()
     @collection.reset()
     @collection.trigger 'remove'
-    if @route
-      Yapp.Map.yandexmap.geoObjects.remove @route
 
   updateBar: (model) ->
     if @collection.length is 0
       @ui.msgHint.show()
       @ui.addPathButton.addClass 'disabled'
-      @route = null
+      if @route
+        Yapp.Map.yandexmap.geoObjects.remove @route
+        @route = null
     else if @collection.length is 1
       @ui.msgHint.hide()
       @ui.addPathButton.addClass 'disabled'
