@@ -676,8 +676,21 @@ class Route(View):
         return JsonHTTPResponse('ok')
 
     def get(self, request, *args, **kwargs):
-        route = MainModels.Routes.objects.get(id = kwargs.get('id'))
-        return JsonHTTPResponse('ok')
+        route = MainModels.Routes.objects.filter(id = kwargs.get('id'))
+        YpJson = YpSerialiser()
+        author = YpJson.serialize(route, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+        positions = MainModels.Position.objects.filter(route = kwargs.get('id'))
+        points = YpJson.serialize(positions, fields=['route', 'point'])
+
+        return JsonHTTPResponse({
+            'id':route[0].id,
+            'name':route[0].name,
+            'description':route[0].description,
+            'coords':route[0].coords,
+            'author':json.loads(author)[0]['author'],
+            'points':json.loads(points)[0],
+
+            })
 
 
 
