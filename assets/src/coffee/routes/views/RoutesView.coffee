@@ -51,6 +51,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     'click .title-add-path': 'toggleRouteBar'
     'click .btn-clear-map': 'clearMap'
     'click .drop-filter-clear': 'hideDropdown'
+    'click .btn-save': 'savePath'
 
   ###*
   # The view model event triggers
@@ -180,12 +181,11 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       totalTime: route.getHumanTime()
       totalDistance: route.getHumanLength()
     @ui.detailsPath.show()
+    @routeCollection = routeCollection
     @route = route
 
   routeUpdate: (route, listeners) ->
-    #listeners.removeAll()
     @buildDetailPath route
-    #console.log route
 
   loadPoint: (event) ->
     event.preventDefault()
@@ -217,6 +217,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
   toggleRouteBar: (event) ->
     @$('.aside-content').slideToggle()
+    $('#panel-add-path').height(if not $('#panel-add-path').height() then 'auto' else 0)
 
   clearMap: (event) ->
     event.preventDefault()
@@ -246,6 +247,14 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     point = @collection.get pointId
     @_insertTo index, point, @collection.models
     @buildPath() if @route
+
+  savePath: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    routesSaveView = new Yapp.Routes.RoutesSaveView
+      collection: @collection
+      target: $target
+    Yapp.popup.show routesSaveView
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,
