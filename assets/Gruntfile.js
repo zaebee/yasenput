@@ -60,6 +60,7 @@ module.exports = function(grunt) {
             'src/lib/json2.js',
             'src/lib/masonry.min.js',
             'src/lib/jquery.form.js',
+            'src/lib/jquery-sortable-min.js',
             'src/lib/bootstrap-tooltip.js',
             'src/lib/bootstrap-tab.js',
             'src/lib/handlebars.js',
