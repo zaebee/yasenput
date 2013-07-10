@@ -1033,7 +1033,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .line-add-path-btn{margin:10px 0}
 .btn-add-path.disabled{cursor:default; opacity:.6}
 
-.title-add-path{position:fixed; left:0; top:10px; width:310px; height:38px; line-height:38px; padding:0 0 0 10px; color:#fff; background:#aabfa8; font-size:18px; border-radius:0 6px 0 0; font-weight:normal; -moz-box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); -webkit-box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); z-index:130; text-align:left}
+.title-add-path{position:fixed; left:0; top:10px; width:310px; height:38px; line-height:38px; padding:0 0 0 10px; color:#fff; background:#aabfa8; font-size:18px; border-radius:0 6px 0 0; font-weight:normal; -moz-box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); -webkit-box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); box-shadow:inset 0 -1px 1px rgba(1, 1, 1, .26); z-index:130; text-align:left;cursor:pointer;}
 
 #action-btn{white-space:nowrap; margin:20px 0 10; display:none}
 #action-btn a{margin:0 4px 0 0}
@@ -1143,3 +1143,22 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 
 /**/
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+position: absolute!important;
+opacity: 1;
+z-index: 2000;
+}
+
+ol.ol-add-path-places li.placeholder {
+position: relative!important;
+/** More li styles **/
+}
+ol.ol-add-path-places li.placeholder:before {
+position: absolute!important;
+/** Define arrowhead **/
+}

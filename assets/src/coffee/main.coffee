@@ -101,6 +101,7 @@ Yapp.runApplication = ->
   ## TODO: replace by smth like if $('#big-loader').length
   @Map.start()
   @Points.start()
+  @Routes.start()
 
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->
