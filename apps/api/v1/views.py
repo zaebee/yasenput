@@ -689,7 +689,6 @@ class Route(View):
             'coords':route[0].coords,
             'author':json.loads(author)[0]['author'],
             'points':json.loads(points)[0],
-
             })
 
 
