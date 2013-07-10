@@ -26,5 +26,7 @@ class Yapp.Routes.Controller extends Marionette.Controller
   # @method showRoutes
   ###
   showRoutes: ->
+    Yapp.content.close()
+    Yapp.popup.close()
     routesView = new Yapp.Routes.RoutesView
     Yapp.routePanel.show routesView

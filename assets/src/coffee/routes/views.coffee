@@ -20,13 +20,15 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
-    _.bindAll @, 'updateBar', 'resortCollection'
+    _.bindAll @, 'updateBar', 'resortCollection', 'createCluster'
     @search = Yapp.Common.headerView.search
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
     @collection = new Yapp.Points.PointCollection
+
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
+    @listenTo Yapp.Map, 'load:yandexmap', @createCluster
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -48,6 +50,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     'click .remove-item-path': 'removePointFromPath'
     'click .title-add-path': 'toggleRouteBar'
     'click .btn-clear-map': 'clearMap'
+    'click .drop-filter-clear': 'hideDropdown'
 
   ###*
   # The view model event triggers
@@ -59,10 +62,12 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
   onShow: ->
     $('body').addClass 'page-map'
+    $('#panel-add-path').show()
     @_dragPoints()
 
   onClose: ->
     $('body').removeClass 'page-map'
+    $('#panel-add-path').hide()
 
   hideDropdown: (event) ->
     @ui.dropResults.hide()
@@ -87,6 +92,37 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     500
     )
 
+  createCluster: ->
+    clusterIcons = [{
+      href: '/media/icons/cluster_small.png',
+      size: [32, 32],
+      offset: [-23, -23],
+    }, {
+      href: '/media/icons/cluster_big.png',
+      size: [59, 59]
+      offset: [-29, -29]
+    }]
+
+    $.get('/api/v1/map_yapens/').success( (response) =>
+      result = response
+      clusterer = new ymaps.Clusterer
+        clusterIcons: clusterIcons
+
+      myCollection = new ymaps.GeoObjectCollection()
+      placemarks = _.map(result, (el) ->
+        tag = _(el.tags).find (tag) -> tag.icon isnt ''
+        new ymaps.Placemark [el.latitude, el.longitude], {
+          id: 'map-point' + el.id
+        }, {
+          iconImageHref: "/media/#{tag.icons}"
+          iconImageSize: [32, 36]
+          iconImageOffset: [-16, -38]
+        }
+      )
+      clusterer.add placemarks
+      Yapp.Map.yandexmap.geoObjects.add clusterer
+    )
+
   buildPath: (event) ->
     if event
       event.preventDefault()
@@ -95,39 +131,61 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       @ui.addPathButton.addClass 'disabled'
       if @route
         Yapp.Map.yandexmap.geoObjects.remove @route
+      ## off all event trigger on yandex router object
+      if @listeners
+        @listeners.removeAll()
       paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
       ymaps.route(paths, mapStateAutoApply: true).then( (route) =>
-        @route = route
-        ways = route.getPaths()
-        wayLength = ways.getLength()
-        @routeCollection = []
-        for wayIndex in _.range(wayLength)
-          point = @collection.models[wayIndex]
-          way = ways.get wayIndex
-          segments = way.getSegments()
-          _segments = []
-          for segment in segments
-            _segments.push
-              street: segment.getStreet()
-              direct: segment.getHumanAction()
-              distance: segment.getHumanLength()
-              time: segment.getHumanTime()
-          @routeCollection.push
-            order: wayIndex
-            point: point.toJSON()
-            way: way.properties.getAll()
-            segments: _segments
-        @routeCollection.push point: @collection.last().toJSON()
-        @ui.detailsPath.html @detailsPathTemplate
-          ways: @routeCollection
-          totalTime: route.getHumanTime()
-          totalDistance: route.getHumanLength()
-        @ui.detailsPath.show()
+        @route = @buildDetailPath(route)
         Yapp.Map.yandexmap.geoObjects.add @route
+        ## start route editor and add event for path updates
+        @route.editor.start editWayPoints: false
+        @listeners = @route.events.group()
+        @listeners.add('update', (event) =>
+          @routeUpdate @route, @listeners
+        )
+        window.ROUTE = route
         @ui.lineAddPathButton.hide()
         @ui.actionButton.show()
         @ui.addPathButton.removeClass 'disabled'
       )
+
+  buildDetailPath: (route) ->
+    route.getWayPoints().options.set
+      visible: false
+    ways = route.getPaths()
+    wayLength = ways.getLength()
+    routeCollection = []
+    ## build routeCollection with bindings yandex paths to Point model
+    for wayIndex in _.range(wayLength)
+      point = @collection.models[wayIndex]
+      way = ways.get wayIndex
+      segments = way.getSegments()
+      _segments = []
+      for segment in segments
+        _segments.push
+          street: segment.getStreet()
+          direct: segment.getHumanAction()
+          distance: segment.getHumanLength()
+          time: segment.getHumanTime()
+      routeCollection.push
+        order: wayIndex
+        point: point.toJSON()
+        way: way.properties.getAll()
+        segments: _segments
+    routeCollection.push point: @collection.last().toJSON()
+    ## render our route
+    @ui.detailsPath.html @detailsPathTemplate
+      ways: routeCollection
+      totalTime: route.getHumanTime()
+      totalDistance: route.getHumanLength()
+    @ui.detailsPath.show()
+    @route = route
+
+  routeUpdate: (route, listeners) ->
+    #listeners.removeAll()
+    @buildDetailPath route
+    #console.log route
 
   loadPoint: (event) ->
     event.preventDefault()
@@ -140,6 +198,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       success: (response) =>
         @collection.add point
         if @collection.length isnt index
+          Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
           @ui.addPathPlace.append """
             <li data-point-id='#{data.pointId}'>
               <h4>#{data.title}</h4>
