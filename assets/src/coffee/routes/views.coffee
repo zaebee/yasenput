@@ -172,6 +172,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     if @collection.length is 0
       @ui.msgHint.show()
       @ui.addPathButton.addClass 'disabled'
+      @route = null
     else if @collection.length is 1
       @ui.msgHint.hide()
       @ui.addPathButton.addClass 'disabled'
