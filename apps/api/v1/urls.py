@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import *
-from apps.api.v1.views import Search, ItemsList, PointAdd, LikePoint
+from apps.api.v1.views import Search, ItemsList, MapItemsList, PointAdd, LikePoint
 from apps.collections.views import *
 
 urlpatterns = patterns('',
@@ -12,4 +12,5 @@ urlpatterns = patterns('',
     url(r'^sets/(?P<id>\d+)$/like/', LikeCollection.as_view()),
     url(r'^sets/(?P<id>\d+)/points/(?P<point_id>\d+)/$', CollectionAdd.as_view()),
     url(r'^sets/(?P<id>\d+)/$', OneCollection.as_view()),
+    url(r'^map_yapens/*$', MapItemsList.as_view()),
 )

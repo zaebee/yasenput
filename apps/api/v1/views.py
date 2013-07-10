@@ -298,12 +298,12 @@ class ItemsList(PointsBaseView):
                  }), search_res_sets).order_by('-' + sort)[offset:limit]
 
         try:
-            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+            log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','ab+')
         except IOError:
-            file_log = open('logs/search/'+str(datetime.today().date()) + '.log','w')
+            file_log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','w')
             file_log.write('OPENED at ' + str(datetime.today().date()))
             file_log.close()
-            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+            log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','ab+')
         if params.get("s"):
             log_text = '\n' + str(search_res_points.count()) + (6-len(str(search_res_points.count())))*' ' + ' | ' + str(search_res_sets.count()) + (6-len(str(search_res_sets.count())))*' ' + ' | ' + str(datetime.now()) + ' | ' + params.get("s").encode('utf-8')
             log.write(log_text)
@@ -315,11 +315,52 @@ class ItemsList(PointsBaseView):
             item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
         item_list_end_time = datetime.now()
-        log_time = open('logs/time/'+str(datetime.today().date())+'.log', 'ab+')
+        log_time = open(YasenPut.settings.SITE_ROOT + '/logs/time/'+str(datetime.today().date())+'.log', 'ab+')
         if params.get("s"):
             log_time.write('\n' + str(item_list_end_time-item_list_start_time) + ' | ' + params.get("s").encode('utf-8'))
         log_time.close()
         return HttpResponse(json.dumps(items), mimetype="application/json")
+
+class MapItemsList(PointsBaseView):
+    http_method_names = ('get',)
+    def get(self, request, *args, **kwargs):
+        params = request.GET
+        search_res_points = MainModels.Points.search.query(params.get('s', ''))
+       
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
+        errors = []
+        
+        if params.get('user'):
+            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
+            
+        sort = 'ypi'
+        if params.get('content'):
+            sort = params.get('content')
+        page = params.get('p', 1) or 1
+        limit = COUNT_ELEMENTS * int(page)
+        offset = (int(page) - 1) * COUNT_ELEMENTS
+        if params.get('tags'):
+            tags = params.get('tags')
+            tags = tags.split(',')
+            search_res_points = search_res_points.filter(tags_id = tags)
+
+        if params.get('coord_left'):
+            ln_left = float(json.loads(params.get('coord_left')).get('ln'))
+            lt_left = float(json.loads(params.get('coord_left')).get('lt'))
+            #top right coords
+            ln_right = float(json.loads(params.get('coord_right')).get('ln'))
+            lt_right = float(json.loads(params.get('coord_right')).get('lt'))
+            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            search_res_sets_list = []
+            search_res_points = search_res_points_list
+
+       
+        YpJson = YpSerialiser()
+        items = json.loads(YpJson.serialize(list(search_res_points), fields = ['id','name', 'longitude', 'latitude', 'tags'], 
+            relations={'tags': {'fields': ['name', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT}}))
+        return HttpResponse(json.dumps(items), mimetype="application/json")
+
 
 class PointAddByUser(LoggedPointsBaseView):
     http_method_names = ('post')
@@ -482,7 +523,7 @@ class PointAdd(LoggedPointsBaseView):
                                                       }})
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
-         'id':id,
+         'id':int(id),
          'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
          'name': point[0].name, 
          'description':point[0].description,
