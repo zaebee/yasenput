@@ -25,6 +25,7 @@ import json
 from pymorphy import get_morph
 from django.db import connection
 from datetime import datetime 
+import ast
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -632,3 +633,45 @@ class PointDel(LoggedPointsBaseView):
             point.delete()
             return JsonHTTPResponse({"id":pk, "status": 1, "txt":"Ошибка удаления"})
         return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})
+
+class Route(View):
+    http_method_names = ('post','get','put')
+
+    def post(self, request):
+        params = request.POST
+        route_dict =  params.dict()
+        name = route_dict['name']
+        description = route_dict['desc']
+        points_list = ast.literal_eval(route_dict['points_list'])
+        author = MainModels.Person.objects.get(username=request.user)
+        coords = ast.literal_eval(route_dict['coords'])
+
+        route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
+        
+        for point in points_list:
+            dot = MainModels.Points.objects.get(id = point.get('id'))
+            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+
+        route.save()
+
+        return JsonHTTPResponse('ok')
+
+    def put(self, request, *args, **kwargs):
+        params = request.PUT
+        route_dict =  params.dict()
+        name = route_dict['name']
+        description = route_dict['desc']
+        points_list = ast.literal_eval(route_dict['points_list'])
+        author = MainModels.Person.objects.get(username=request.user)
+        coords = ast.literal_eval(route_dict['coords'])
+
+        route = MainModels.Routes.objects.get(id = kwargs.get('id'))
+        
+        for point in points_list:
+            dot = MainModels.Points.objects.get(id = point.get('id'))
+            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+
+        route.save()
+
+
+
