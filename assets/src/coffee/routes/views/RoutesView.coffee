@@ -69,6 +69,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $('body').removeClass 'page-map'
     $('#panel-add-path').hide()
 
+  ###*
+  # TODO
+  # @method hideDropdown
+  ###
   hideDropdown: (event) ->
     @ui.dropResults.hide()
     @ui.dropResults.empty()
@@ -80,6 +84,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.dropResults.html @dropdownTemplate(response)
     @ui.dropResults.show().css 'top', '83px'
 
+  ###*
+  # TODO
+  # @method keyupInput
+  ###
   keyupInput: (e) ->
     @_onKeyDownSpecial(e)
     @_delay(() =>
@@ -92,37 +100,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     500
     )
 
-  createCluster: ->
-    clusterIcons = [{
-      href: '/media/icons/cluster_small.png',
-      size: [32, 32],
-      offset: [-23, -23],
-    }, {
-      href: '/media/icons/cluster_big.png',
-      size: [59, 59]
-      offset: [-29, -29]
-    }]
-
-    $.get('/api/v1/map_yapens/').success( (response) =>
-      result = response
-      clusterer = new ymaps.Clusterer
-        clusterIcons: clusterIcons
-
-      myCollection = new ymaps.GeoObjectCollection()
-      placemarks = _.map(result, (el) ->
-        tag = _(el.tags).find (tag) -> tag.icon isnt ''
-        new ymaps.Placemark [el.latitude, el.longitude], {
-          id: 'map-point' + el.id
-        }, {
-          iconImageHref: "/media/#{tag.icons}"
-          iconImageSize: [32, 36]
-          iconImageOffset: [-16, -38]
-        }
-      )
-      clusterer.add placemarks
-      Yapp.Map.yandexmap.geoObjects.add clusterer
-    )
-
+  ###*
+  # TODO
+  # @method buildPath
+  ###
   buildPath: (event) ->
     if event
       event.preventDefault()
@@ -150,9 +131,13 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         @ui.addPathButton.removeClass 'disabled'
       )
 
+  ###*
+  # TODO
+  # @method buildDetailPath
+  ###
   buildDetailPath: (route) ->
-    route.getWayPoints().options.set
-      visible: false
+    #route.getWayPoints().options.set
+    #  visible: false
     ways = route.getPaths()
     wayLength = ways.getLength()
     routeCollection = []
@@ -184,9 +169,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @routeCollection = routeCollection
     @route = route
 
+  ###*
+  # TODO
+  # @method routeUpdate
+  ###
   routeUpdate: (route, listeners) ->
     @buildDetailPath route
 
+  ###*
+  # TODO
+  # @method loadPoint
+  ###
   loadPoint: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
@@ -208,6 +201,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     )
     @hideDropdown()
 
+  ###*
+  # TODO
+  # @method removePointFromPath
+  ###
   removePointFromPath: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
@@ -215,10 +212,18 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection.remove pointId
     $target.parent().remove()
 
+  ###*
+  # TODO
+  # @method toggleRouteBar
+  ###
   toggleRouteBar: (event) ->
     @$('.aside-content').slideToggle()
     $('#panel-add-path').height(if not $('#panel-add-path').height() then 'auto' else 0)
 
+  ###*
+  # TODO
+  # @method clearMap
+  ###
   clearMap: (event) ->
     event.preventDefault()
     @ui.addPathPlace.empty()
@@ -228,6 +233,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection.reset()
     @collection.trigger 'remove'
 
+  ###*
+  # TODO
+  # @method updateBar
+  ###
   updateBar: (model) ->
     if @collection.length is 0
       @ui.msgHint.show()
@@ -243,11 +252,19 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       @ui.addPathButton.removeClass 'disabled'
       @buildPath() if @route
 
+  ###*
+  # TODO
+  # @method resortCollection
+  ###
   resortCollection: (index, pointId) ->
     point = @collection.get pointId
     @_insertTo index, point, @collection.models
     @buildPath() if @route
 
+  ###*
+  # TODO
+  # @method savePath
+  ###
   savePath: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
