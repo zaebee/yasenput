@@ -243,7 +243,10 @@ class Routes(models.Model):
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
     coords = models.TextField('Все координаты')
-
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    unid = '1'
+    ypi = models.IntegerField(default=0, blank=True)
+    type_of_item = 'route'
     def _likes(self):
         return self.likeusers.count()
 
