@@ -241,7 +241,7 @@ class ItemsList(PointsBaseView):
         item_list_start_time = datetime.now()
         params = request.GET
         sets = "set"
-        models = []
+        models = ['points','sets']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
