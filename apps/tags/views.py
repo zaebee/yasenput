@@ -80,7 +80,7 @@ class TagsList(TagsBaseView):
             tags = pointsreq[offset:limit]
 
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(tags, fields=("name","level", "icons")), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(tags, fields=("name","level", "icons", "style", "parent", "onmainmap")), mimetype="application/json")
         else:
             e = form.errors
             for er in e:

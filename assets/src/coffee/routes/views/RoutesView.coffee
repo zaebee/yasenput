@@ -20,7 +20,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
-    _.bindAll @, 'updateBar', 'resortCollection', 'createCluster'
+    _.bindAll @, 'updateBar', 'resortCollection'
     @search = Yapp.Common.headerView.search
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
@@ -28,7 +28,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
-    @listenTo Yapp.Map, 'load:yandexmap', @createCluster
 
   template: Templates.RoutesView
   className: 'pap-wrap'
