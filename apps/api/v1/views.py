@@ -665,31 +665,45 @@ class Route(View):
         author = MainModels.Person.objects.get(username=request.user)
         coords = ast.literal_eval(route_dict['coords'])
 
-        route = MainModels.Routes.objects.get(id = kwargs.get('id'))
-        
+        route = MainModels.Routes.objects.get(id=kwargs.get('id'))
+
         for point in points_list:
-            dot = MainModels.Points.objects.get(id = point.get('id'))
+            dot = MainModels.Points.objects.get(id=point.get('id'))
             pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
 
         route.save()
-
         return JsonHTTPResponse('ok')
 
     def get(self, request, *args, **kwargs):
-        route = MainModels.Routes.objects.filter(id = kwargs.get('id'))
+        id = kwargs.get('id', None)
         YpJson = YpSerialiser()
-        author = YpJson.serialize(route, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
-        positions = MainModels.Position.objects.filter(route = kwargs.get('id'))
-        points = YpJson.serialize(positions, fields=['route', 'point'])
-
-        return JsonHTTPResponse({
-            'id':route[0].id,
-            'name':route[0].name,
-            'description':route[0].description,
-            'coords':route[0].coords,
-            'author':json.loads(author)[0]['author'],
-            'points':json.loads(points)[0],
-            })
-
-
-
+        if not id:
+            result = []
+        try:
+            route = MainModels.Routes.objects.get(id=id)
+            author = YpJson.serialize([route],
+                                      fields=['author', 'name', 'description', 'coords', 'points'],
+                                      relations={
+                                          'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                          'points': {
+                                              'fields': ['route', 'position'],
+                                              'relation': {
+                                                  'position_set': {'fields': ['route', 'position']},
+                                              },
+                                          },
+                                      })
+            positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
+            points = YpJson.serialize(positions, fields=['position', 'point'],
+                                      relations={'point': {'fields': ['id', 'name', 'latitude', 'longitude', 'address']}}
+                                     )
+            result = {
+                'id':route.id,
+                'name':route.name,
+                'description':route.description,
+                'coords':route.coords,
+                'author':json.loads(author)[0]['author'],
+                'points':json.loads(points),
+            }
+        except MainModels.Routes.DoesNotExist:
+            result = []
+        return JsonHTTPResponse(result)
