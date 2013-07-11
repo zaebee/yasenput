@@ -16,6 +16,9 @@ Yapp.module 'Map',
       @router = new Yapp.Map.Router
         controller: new Yapp.Map.Controller
 
+      @mapView = new Yapp.Map.MapView
+      Yapp.map.show @mapView
+
       ## icons for yandex map geoObject cluster
       @clusterIcons =  [{
           href: '/media/icons/cluster_small.png',
@@ -43,8 +46,6 @@ Yapp.module 'Map',
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
             zoom: 12
           )
-          #coords = map.getBounds()
-          #coords = _.zipObject ['coord_left','coord_right'], _(coords).map((el) -> JSON.stringify(_.zipObject(['lt','ln'], el))).value()
           #Yapp.updateSettings coords
           Yapp.user.set location: ymaps.geolocation
           map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
@@ -55,12 +56,12 @@ Yapp.module 'Map',
 
           @pointIconLayout = ymaps.templateLayoutFactory.createClass(
             """
-            <div data-toggle="tooltip" data-placement="bottom" title="Добавить в маршрут" class="placemark for-add-place" id="placemark-$[properties.point.id]">
+            <div class="placemark for-add-place" id="placemark-$[properties.point.id]">
               <!--<img src="/media/$[properties.tag.icons]">-->
               <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
 
-              <a href="#" class="a-add-place nonav" data-title="$[properties.point.name]" data-desc="$[properties.point.description]" data-id-place="$[properties.point.id]">
-                <span class="p-num"></span>
+              <a href="#" class="a-add-place" data-point-id="$[properties.point.id]" data-title="$[properties.point.name]" data-desc="$[properties.point.address]">
+                <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">+</span>
               </a>
 
               <div class="name-place" style="overflow: hidden;">$[properties.point.name]</div>
@@ -69,12 +70,16 @@ Yapp.module 'Map',
             build: ->
               ## необходим вызов родительского метода, чтобы добавить содержимое макета в DOM
               @constructor.superclass.build.call @
-              $('.placemark').bind('mouseover', @onMouseOver)
-              $('.placemark').bind('mouseout', @onMouseOut)
+              $('.placemark').bind('mouseenter', @onMouseOver)
+              $('.placemark').bind('mouseleave', @onMouseOut)
+              @events.add 'click', (event) ->
+                Yapp.vent.trigger 'click:placemark', event
 
             clear: ->
-              $('.placemark').unbind('mouseover', @onMouseOver)
-              $('.placemark').unbind('mouseout', @onMouseOut)
+              $('.placemark').unbind('mouseenter', @onMouseOver)
+              $('.placemark').unbind('mouseleave', @onMouseOut)
+              @events.remove 'click', (event) ->
+                Yapp.vent.trigger 'click:placemark', event
               @constructor.superclass.clear.call @
 
             onMouseOut: ->
