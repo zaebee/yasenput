@@ -278,7 +278,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .m-shop-services{background-position:-694px -723px;}
 .m-tip{background-position:-662px -724px;}
 
-.placemark{position:absolute; width:33px; height:36px; background-position:-393px -237px; left:50%; text-align:center}
+.placemark{position:absolute; width:33px; height:36px; background-position:-393px -237px; left:50%; text-align:center;left:-16px;top:-38px}
 .placemark-wide{width:44px; background-position:-330px -237px;}
 	.placemark .m-ico{float:left; margin:-1px -7px 0 2px}
 	.placemark-wide .num{float:left; width:20px; text-align:center; height:28px; line-height:28px; white-space:nowrap; font-size:11px; color:#fff}
@@ -1010,7 +1010,8 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 .c-edit-inputs input{display:block; margin:0 0 4px; width:780px; height:18px; padding:2px 10px; background:#fff; border:solid 1px #a9b6a8}
 
-#panel-add-path{position:absolute; left:0; top:38px; bottom:0px; padding:10px 0; z-index:125; width:320px; text-align:left}
+#panel-add-path{position:absolute; left:0; top:38px; bottom:0px; padding:10px 0; z-index:125; width:320px; text-align:left; display:none;}
+    .page-map #panel-add-path{display:block;}
 	#panel-add-path .aside-content{width:316px; padding:0 40px 10px 0; max-height:100%; overflow:auto}
 .pap-wrap{overflow:hidden; width:320px; height:100%; padding-bottom:20px}
 .pap-viewport{width:319px; background:#cedecd; border-bottom:solid 1px #a8b9a8; border-right:solid 1px #9fb29d; border-radius:0 0 6px 0; width:299px; height:100%; padding:10px 10px 2px}
