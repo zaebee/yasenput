@@ -25,6 +25,8 @@ import json
 from pymorphy import get_morph
 from django.db import connection
 from datetime import datetime 
+import ast
+from django.http import QueryDict
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -72,8 +74,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections, 
-                                fields=['id', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus'],
+                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
+                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus',],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT}, 
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 
@@ -240,37 +242,43 @@ class ItemsList(PointsBaseView):
         item_list_start_time = datetime.now()
         params = request.GET
         sets = "set"
-        search_res_points = MainModels.Points.search.query(params.get('s', ''))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        models = ['points','sets']
+        search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
+        if params.get('models'):
+            models = params.get('models').split(',')
+        if 'points' in models:
+            search_res_points = MainModels.Points.search.query(params.get('s', ''))
+        if 'sets' in models:
+            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        if 'routes' in models:
+            search_res_routes = MainModels.Routes.search.query(params.get('s','')).extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
         #search_res_sets_ex = search_res_sets
        
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
-        #bottom left coords
-        
-
         if params.get('user'):
             search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
             search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0):
+            search_res_routes_list = search_res_routes.filter(author_id = params.get('user'))
+            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0 | (Count(search_res_routes_list)>0)):
                 search_res_sets = search_res_sets_list
                 search_res_points = search_res_points_list
+                search_res_routes = search_res_routes_list
         sort = 'ypi'
         if params.get('content'):
             sort = params.get('content')
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-        #sets_list = connection.cursor()
-        #sets_list.execute('SELECT count(*) from collections_collections, collections_collections_points, main_points where collections_collections_points.collections_id = collections_collections.id and collections_collections_points.points_id=main_points.id')
-        #search_res_points[0].sets =  sets_list.fetchone()
-        #search_res_points[1].sets =  sets_list.fetchone()
         if params.get('tags'):
             tags = params.get('tags')
             tags = tags.split(',')
             search_res_points = search_res_points.filter(tags_id = tags)
+            search_res_routes = MainModels.Routes.search.none()
+            search_res_sets = CollectionsModels.Collections.search.none()
 
         if params.get('coord_left'):
+            #top left coords
             ln_left = float(json.loads(params.get('coord_left')).get('ln'))
             lt_left = float(json.loads(params.get('coord_left')).get('lt'))
             #top right coords
@@ -286,8 +294,17 @@ class ItemsList(PointsBaseView):
                         trigger = 1
                 if trigger == 1:
                     search_res_sets_list.append(collection.id)
+            search_res_routes_list = []
+            for route in search_res_routes.all():
+                trigger = 0
+                for point in route.points.all():
+                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
+                        trigger = 1
+                if trigger == 1:
+                    search_res_routes_list.append(route.id)
             if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
+                search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
@@ -295,15 +312,18 @@ class ItemsList(PointsBaseView):
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                 
                 #'isliked': ''
-                 }), search_res_sets).order_by('-' + sort)[offset:limit]
+                 }), search_res_sets, search_res_routes.extra(select={
+                 'p':'SELECT count(*) from main_points'
+                 })).order_by('-' + sort)[offset:limit]
 
+        #WRITE SOME LOGS:
         try:
-            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+            log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','ab+')
         except IOError:
-            file_log = open('logs/search/'+str(datetime.today().date()) + '.log','w')
+            file_log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','w')
             file_log.write('OPENED at ' + str(datetime.today().date()))
             file_log.close()
-            log = open('logs/search/'+str(datetime.today().date()) + '.log','ab+')
+            log = open(YasenPut.settings.SITE_ROOT + '/logs/search/'+str(datetime.today().date()) + '.log','ab+')
         if params.get("s"):
             log_text = '\n' + str(search_res_points.count()) + (6-len(str(search_res_points.count())))*' ' + ' | ' + str(search_res_sets.count()) + (6-len(str(search_res_sets.count())))*' ' + ' | ' + str(datetime.now()) + ' | ' + params.get("s").encode('utf-8')
             log.write(log_text)
@@ -315,11 +335,53 @@ class ItemsList(PointsBaseView):
             item.unid = i
         items = json.loads(self.getSerializeCollections(all_items))
         item_list_end_time = datetime.now()
-        log_time = open('logs/time/'+str(datetime.today().date())+'.log', 'ab+')
+        log_time = open(YasenPut.settings.SITE_ROOT + '/logs/time/'+str(datetime.today().date())+'.log', 'ab+')
         if params.get("s"):
             log_time.write('\n' + str(item_list_end_time-item_list_start_time) + ' | ' + params.get("s").encode('utf-8'))
         log_time.close()
+        #END OF LOGS WRITING
         return HttpResponse(json.dumps(items), mimetype="application/json")
+
+class MapItemsList(PointsBaseView):
+    http_method_names = ('get',)
+    def get(self, request, *args, **kwargs):
+        params = request.GET
+        search_res_points = MainModels.Points.search.query(params.get('s', ''))
+       
+        COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
+        errors = []
+        
+        if params.get('user'):
+            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
+            
+        sort = 'ypi'
+        if params.get('content'):
+            sort = params.get('content')
+        page = params.get('p', 1) or 1
+        limit = COUNT_ELEMENTS * int(page)
+        offset = (int(page) - 1) * COUNT_ELEMENTS
+        if params.get('tags'):
+            tags = params.get('tags')
+            tags = tags.split(',')
+            search_res_points = search_res_points.filter(tags_id = tags)
+
+        if params.get('coord_left'):
+            ln_left = float(json.loads(params.get('coord_left')).get('ln'))
+            lt_left = float(json.loads(params.get('coord_left')).get('lt'))
+            #top right coords
+            ln_right = float(json.loads(params.get('coord_right')).get('ln'))
+            lt_right = float(json.loads(params.get('coord_right')).get('lt'))
+            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            search_res_sets_list = []
+            search_res_points = search_res_points_list
+
+       
+        YpJson = YpSerialiser()
+        items = json.loads(YpJson.serialize(list(search_res_points), fields = ['id','name', 'longitude', 'latitude', 'tags'], 
+            relations={'tags': {'fields': ['name', 'icons'],
+                                                    'limit': LIMITS.POINTS_LIST.TAGS_COUNT}}))
+        return HttpResponse(json.dumps(items), mimetype="application/json")
+
 
 class PointAddByUser(LoggedPointsBaseView):
     http_method_names = ('post')
@@ -482,7 +544,7 @@ class PointAdd(LoggedPointsBaseView):
                                                       }})
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
-         'id':id,
+         'id':int(id),
          'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
          'name': point[0].name, 
          'description':point[0].description,
@@ -591,3 +653,85 @@ class PointDel(LoggedPointsBaseView):
             point.delete()
             return JsonHTTPResponse({"id":pk, "status": 1, "txt":"Ошибка удаления"})
         return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})
+
+class Route(View):
+    http_method_names = ('post','get','put')
+
+    def post(self, request):
+        params = request.POST
+        route_dict =  params.dict()
+        name = route_dict['name']
+        description = route_dict['desc']
+        points_list = ast.literal_eval(route_dict['points_list'])
+        author = MainModels.Person.objects.get(username=request.user)
+        coords = ast.literal_eval(route_dict['coords'])
+
+        route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
+        
+        for point in points_list:
+            dot = MainModels.Points.objects.get(id = point.get('id'))
+            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+
+        route.save()
+
+        return JsonHTTPResponse('ok')
+
+    def put(self, request, *args, **kwargs):
+        params = QueryDict(request.body, request.encoding)
+        route_dict =  params.dict()
+        name = route_dict['name']
+        description = route_dict['desc']
+        points_list = ast.literal_eval(route_dict['points_list'])
+        author = MainModels.Person.objects.get(username=request.user)
+        coords = ast.literal_eval(route_dict['coords'])
+
+        route = MainModels.Routes.objects.get(id=kwargs.get('id'))
+        if route.author != MainModels.Person.objects.get(username=request.user):
+            route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
+        else:
+            route.name = name
+            route.description = description
+            route.points_list = points_list
+            route.coords = coords
+
+
+        for point in points_list:
+            dot = MainModels.Points.objects.get(id=point.get('id'))
+            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+
+        route.save()
+        return JsonHTTPResponse('ok')
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        YpJson = YpSerialiser()
+        if not id:
+            result = []
+        try:
+            route = MainModels.Routes.objects.get(id=id)
+            author = YpJson.serialize([route],
+                                      fields=['author', 'name', 'description', 'coords', 'points'],
+                                      relations={
+                                          'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                          'points': {
+                                              'fields': ['route', 'position'],
+                                              'relation': {
+                                                  'position_set': {'fields': ['route', 'position']},
+                                              },
+                                          },
+                                      })
+            positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
+            points = YpJson.serialize(positions, fields=['position', 'point'],
+                                      relations={'point': {'fields': ['id', 'name', 'latitude', 'longitude', 'address']}}
+                                     )
+            result = {
+                'id':route.id,
+                'name':route.name,
+                'description':route.description,
+                'coords':route.coords,
+                'author':json.loads(author)[0]['author'],
+                'points':json.loads(points),
+            }
+        except MainModels.Routes.DoesNotExist:
+            result = []
+        return JsonHTTPResponse(result)

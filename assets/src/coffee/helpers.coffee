@@ -69,3 +69,8 @@ Handlebars.registerHelper('addShy', (str, options)->
     new Handlebars.SafeString "#{strBegin}&shy;#{strEnd}"
 )
 
+## returns safe string
+Handlebars.registerHelper('safe', (str, options)->
+  new Handlebars.SafeString str
+)
+

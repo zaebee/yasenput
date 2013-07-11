@@ -32,6 +32,7 @@ Yapp.addInitializer ->
     header:'#header'
     map:'#yandex-map'
     content:'#content'
+    routePanel:'#panel-add-path'
     footer:'#footer'
     popup: Yapp.Common.PopupRegion
   )
@@ -100,6 +101,7 @@ Yapp.runApplication = ->
   ## TODO: replace by smth like if $('#big-loader').length
   @Map.start()
   @Points.start()
+  @Routes.start()
 
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->

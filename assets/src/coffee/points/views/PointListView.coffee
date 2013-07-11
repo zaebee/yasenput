@@ -91,6 +91,8 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onShow: ->
     console.log 'onShow trigger'
+    ## this need for MapView
+    Yapp.Points.trigger 'update:collection', @collection
     @$el.find('[data-toggle=tooltip]').tooltip()
     if @wall
       @wall.reload()

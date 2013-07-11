@@ -43,7 +43,21 @@ class Yapp.Map.MapView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Map.MapView'
     @user = Yapp.user
+    @iconTemplate = Templates.IconTemplate
+    _.bindAll @, 'updatePointCollection'
     @listenTo Yapp.Map, 'load:yandexmap', @setMap
+    @listenTo Yapp.Points, 'update:collection', @updatePointCollection
+
+    $.get('/api/v1/map_yapens/').success (response) =>
+      @pointsByTag = _.partial @_filteredPoints, response
+    Yapp.request(
+      'request'
+        url: '/tags/list'
+        context: @
+        successCallback: @renderIcons
+        data:
+          content: 'popular'
+    )
 
   ###*
   # The view event triggers
@@ -52,6 +66,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   events:
     'click .a-toggle': 'toggleMap'
+    'click .m-ico': 'showCluster'
 
   ###*
   # Toggle/untoggle map on expand arrow click.
@@ -97,3 +112,65 @@ class Yapp.Map.MapView extends Marionette.ItemView
         region: if region then region.AdministrativeAreaName else ''
         city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
     )
+
+  ###*
+  # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
+  # @event updatePointCollection
+  ###
+  updatePointCollection: (collection) ->
+    console.log  collection, 'collection reset'
+
+  ###*
+  # TODO
+  # @event renderIcons
+  ###
+  renderIcons: (response) ->
+    icons = @iconTemplate icons: response
+    @$('.m-ico-group').html icons
+    @$el.find('[data-toggle=tooltip]').tooltip()
+
+  ###*
+  # TODO
+  # @method _filteredPoints
+  # @private
+  ###
+  _filteredPoints: (points, tagId) ->
+    _(points).filter( (point) ->
+        return _(point.tags).some {id: tagId}
+    ).value()
+
+  ###*
+  # TODO
+  # @method createCluster
+  ###
+  createCluster: (tagId) ->
+    if @clusterer
+      Yapp.Map.yandexmap.geoObjects.remove @clusterer
+    @clusterer = new ymaps.Clusterer
+      clusterIcons: Yapp.Map.clusterIcons
+
+    points = @pointsByTag tagId
+    placemarks = _.map(points, (el) ->
+      tag = _(el.tags).find (tag) -> tag.icon isnt ''
+      new ymaps.Placemark [el.latitude, el.longitude], {
+        id: 'map-point' + el.id
+        point: el
+        tag: tag
+      }, {
+        iconLayout: Yapp.Map.pointIconLayout
+      }
+    )
+    @clusterer.add placemarks
+    Yapp.Map.yandexmap.geoObjects.add @clusterer
+
+  showCluster: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    if $target.parent().hasClass 'active'
+      Yapp.Map.yandexmap.geoObjects.remove @clusterer
+      $target.parent().removeClass 'active'
+      return
+    @$('.m-ico-group a').removeClass 'active'
+    $target.parent().addClass 'active'
+    tagId = $target.data 'id'
+    @createCluster tagId

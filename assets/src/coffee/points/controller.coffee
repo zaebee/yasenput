@@ -28,6 +28,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   showLayout: (content_type) ->
     console.log "Show content #{content_type} in Points module"
     Yapp.popup.close()
+    Yapp.routePanel.close()
     @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
     Yapp.content.show @layout
     @layout

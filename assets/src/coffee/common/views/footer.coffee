@@ -28,6 +28,7 @@ class Yapp.Common.FooterView extends Marionette.ItemView
   # @default Templates.FooterView
   ###
   template: Templates.FooterView
+  className: 'f-body'
 
   ###*
   # The view event triggers
