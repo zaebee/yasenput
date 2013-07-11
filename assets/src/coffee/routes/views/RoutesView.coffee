@@ -20,7 +20,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
-    _.bindAll @, 'updateBar', 'resortCollection'
+    _.bindAll @, 'updateBar', 'resortCollection', 'loadPointFromPlacemark'
     @search = Yapp.Common.headerView.search
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
@@ -28,6 +28,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
+    @listenTo Yapp.vent, 'click:placemark', @loadPointFromPlacemark
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -193,13 +194,37 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         if @collection.length isnt index
           Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
           @ui.addPathPlace.append """
-            <li data-point-id='#{data.pointId}'>
-              <h4>#{data.title}</h4>
-              <p>#{data.desc}</p>
-              <input type='button' value='' class='remove-item-path' data-point-id='#{data.pointId}'>
+            <li data-point-id="#{point.get('id')}">
+              <h4>#{point.get('name')}</h4>
+              <p>#{point.get('address')}</p>
+              <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
             </li>"""
     )
     @hideDropdown()
+
+  ###*
+  # TODO
+  # @method loadPointFromPlacemark
+  ###
+  loadPointFromPlacemark: (event) ->
+    event.preventDefault()
+    geoPoint = event.originalEvent.target.getData()
+    point = geoPoint.properties.get 'point'
+    @ui.msgHint.hide()
+    index = @collection.length
+    point = new Yapp.Points.Point unid: point.id
+    point.fetch(
+      success: (response) =>
+        @collection.add point
+        if @collection.length isnt index
+          Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
+          @ui.addPathPlace.append """
+            <li data-point-id="#{point.get('id')}">
+              <h4>#{point.get('name')}</h4>
+              <p>#{point.get('address')}</p>
+              <input type="button" value='' class='remove-item-path' data-point-id="#{point.get('id')}">
+            </li>"""
+    )
 
   ###*
   # TODO
