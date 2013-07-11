@@ -169,6 +169,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
           direct: segment.getHumanAction()
           distance: segment.getHumanLength()
           time: segment.getHumanTime()
+          coords: segment.getCoordinates()[1]
       routeCollection.push
         order: wayIndex
         point: point.toJSON()
