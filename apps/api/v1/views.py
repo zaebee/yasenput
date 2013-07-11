@@ -273,6 +273,8 @@ class ItemsList(PointsBaseView):
             tags = params.get('tags')
             tags = tags.split(',')
             search_res_points = search_res_points.filter(tags_id = tags)
+            search_res_routes = MainModels.Routes.search.none()
+            search_res_sets = CollectionsModels.Collections.search.none()
 
         if params.get('coord_left'):
             #top left coords
