@@ -52,6 +52,11 @@
     <div id="wrap">
       {% block wrap %}{% endblock %}
     </div>
+
+    {% block aside %}
+      <aside id="panel-add-path"></aside>
+    {% endblock %}
+
     <div id="overlay"></div>
 
     {% block popups %}{% endblock %}
@@ -60,6 +65,7 @@
       <script src="{{ STATIC_URL }}lib/json2.js"></script>
       <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
       <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
+      <script src="{{ STATIC_URL }}lib/jquery-sortable-min.js"></script>
       <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
       <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
       <script src="{{ STATIC_URL }}lib/handlebars.js"></script>

@@ -236,15 +236,17 @@ class Routes(models.Model):
     name = models.CharField('Название', max_length=255)
     points = models.ManyToManyField(Points, through='Position', blank=True, serialize=True)
     description = models.TextField('Описание', null=True, default=0)
-    type = models.ManyToManyField(TypePoints, null=True, blank=True)
-    categories = models.ManyToManyField(Categories, null=True, blank=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='routes_users_likes', serialize=False)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='routes_users_visits',
                                         serialize=False)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
-
+    coords = models.TextField('Все координаты')
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    unid = '1'
+    ypi = models.IntegerField(default=0, blank=True)
+    type_of_item = 'route'
     def _likes(self):
         return self.likeusers.count()
 
