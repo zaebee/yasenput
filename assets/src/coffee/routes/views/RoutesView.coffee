@@ -192,7 +192,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       success: (response) =>
         @collection.add point
         if @collection.length isnt index
-          Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
+          Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))])
           @ui.addPathPlace.append """
             <li data-point-id="#{point.get('id')}">
               <h4>#{point.get('name')}</h4>
@@ -217,7 +217,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       success: (response) =>
         @collection.add point
         if @collection.length isnt index
-          Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
+          Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))])
           @ui.addPathPlace.append """
             <li data-point-id="#{point.get('id')}">
               <h4>#{point.get('name')}</h4>
