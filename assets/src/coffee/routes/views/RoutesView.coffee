@@ -80,6 +80,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $('body').removeClass 'page-map'
     $('#header').show()
     $('#panel-add-path').hide()
+    if @route
+      Yapp.Map.yandexmap.geoObjects.remove @route
 
   ###*
   # Passed additional user data.
