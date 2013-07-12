@@ -655,7 +655,7 @@ class PointDel(LoggedPointsBaseView):
         return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})
 
 class Route(View):
-    http_method_names = ('post','get','put')
+    http_method_names = ('post','get','put','delete')
 
     def post(self, request):
         params = request.POST
@@ -702,6 +702,15 @@ class Route(View):
         route.save()
         return JsonHTTPResponse('ok')
 
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        route = MainModels.Routes.objects.get(id=id)
+        if route.author == MainModels.Person.objects.get(username=request.user):
+            MainModels.Position.objects.filter(route = route).delete()
+            route.delete()
+
+        return JsonHTTPResponse('route deleted')
+
     def get(self, request, *args, **kwargs):
         id = kwargs.get('id', None)
         YpJson = YpSerialiser()
@@ -735,3 +744,17 @@ class Route(View):
         except MainModels.Routes.DoesNotExist:
             result = []
         return JsonHTTPResponse(result)
+
+class RouteLike(View):
+    http_method_names = ('post')
+
+    def post(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        route = MainModels.Routes.objects.get(id=id)
+
+        if MainModels.Person.objects.get(username=request.user) in route.likeusers:
+            route.likeusers.remove(MainModels.Person.objects.get(username=request.user))
+        else:
+            route.likeusers.add(MainModels.Person.objects.get(username=request.user))
+        point.save()
+        return JsonHTTPResponse('like')
