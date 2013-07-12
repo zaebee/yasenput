@@ -1013,7 +1013,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #panel-add-path{position:absolute; left:0; top:38px; bottom:0px; padding:10px 0; z-index:125; width:320px; text-align:left; display:none;}
     .page-map #panel-add-path{display:block;}
 	#panel-add-path .aside-content{width:316px; padding:0 40px 10px 0; max-height:100%; overflow:auto}
-.pap-wrap{overflow:hidden; height:100%;width:320px; padding-bottom:20px}
+.pap-wrap{overflow:hidden; height:100%;width:321px; padding-bottom:20px}
 .pap-viewport{width:319px; background:#cedecd; border-bottom:solid 1px #a8b9a8; border-right:solid 1px #9fb29d; border-radius:0 0 6px 0; width:299px; height:100%; padding:10px 10px 2px}
 .pap-viewport{width:319px; background:#cedecd; border-bottom:solid 1px #a8b9a8; border-right:solid 1px #9fb29d; border-radius:0 0 6px 0; width:299px; height:100%; padding:10px 10px 2px}
 
