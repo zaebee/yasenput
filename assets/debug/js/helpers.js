@@ -7,6 +7,20 @@
     }
   });
 
+  Handlebars.registerHelper('ifContains', function(v1, v2, options) {
+    var contain;
+
+    if (v2 === void 0) {
+      return false;
+    }
+    contain = _.contains(v2, v1);
+    if (contain) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
   Handlebars.registerHelper('ifBelong', function(v1, v2, options) {
     var belong, item, _i, _len;
 
@@ -64,6 +78,10 @@
       strEnd = str.slice(10);
       return new Handlebars.SafeString("" + strBegin + "&shy;" + strEnd);
     }
+  });
+
+  Handlebars.registerHelper('safe', function(str, options) {
+    return new Handlebars.SafeString(str);
   });
 
 }).call(this);

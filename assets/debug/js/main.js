@@ -39,6 +39,7 @@
       header: '#header',
       map: '#yandex-map',
       content: '#content',
+      routePanel: '#panel-add-path',
       footer: '#footer',
       popup: Yapp.Common.PopupRegion
     });
@@ -107,6 +108,7 @@
     this.Common.start();
     this.Map.start();
     this.Points.start();
+    this.Routes.start();
     this.vent.on('user:notauthorized', function() {
       return Yapp.popup.show(new Yapp.Common.AuthPopupView);
     });

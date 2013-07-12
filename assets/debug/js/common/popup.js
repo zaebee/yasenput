@@ -40,7 +40,21 @@
       console.log('initializing Yapp.Common.PopupRegion');
       this.body = 'body';
       this.wrapper = '#popups';
-      return this.overlay = '#overlay';
+      this.overlay = '#overlay';
+      this.regionManager = new Marionette.RegionManager();
+      return this.regions = this.regionManager.addRegions({
+        alerts: '#alerts'
+      });
+    };
+
+    /**
+    # Override this method to change how the region show the DOM element.
+    # @method open
+    */
+
+
+    PopupRegion.prototype.open = function(view) {
+      return this.$el.append(view.el);
     };
 
     /**
@@ -50,11 +64,11 @@
 
 
     PopupRegion.prototype.getEl = function(selector) {
-      var $el, _this;
+      var $el,
+        _this = this;
 
-      _this = this;
       $el = $(selector);
-      $el.click(function(event) {
+      $el.unbind('click').bind('click', function(event) {
         if ($(event.target).hasClass('scroll-box')) {
           return _this.close();
         }
@@ -64,26 +78,45 @@
 
     /**
     # Event method. It triggers when view fully rendered. Show popup overlays.
-    # @method onShow
+    # @event onShow
     */
 
 
     PopupRegion.prototype.onShow = function() {
+      var _this = this;
+
       $(this.body).css('overflow', 'hidden');
       $(this.overlay).show();
-      return $(this.wrapper).show();
+      $(this.wrapper).show();
+      return this.regions.alerts.on('show', function(view) {
+        var $target, css;
+
+        $target = view.options.target;
+        css = {
+          margin: 0,
+          left: '70%',
+          top: $target.offset().top,
+          position: 'absolute'
+        };
+        view.$el.css(css);
+        return view.ui.closeButton.unbind('click').bind('click', function() {
+          return view.close();
+        });
+      });
     };
 
     /**
     # Event method. Hide popup overlays.
-    # @method onClose
+    # @event onClose
     */
 
 
     PopupRegion.prototype.onClose = function() {
-      $(this.body).css('overflow', 'initial');
+      this.regions.alerts.off();
+      this.regions.alerts.close();
       $(this.overlay).hide();
       $(this.wrapper).hide();
+      $(this.body).css('overflow', 'initial');
       return Yapp.Common.router.navigate('/');
     };
 

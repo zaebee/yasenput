@@ -29,6 +29,17 @@
     }
 
     /**
+    # Init method of the view
+    # @method initialize
+    */
+
+
+    PointItemView.prototype.initialize = function() {
+      console.log('initializing Yapp.Points.PointItemView');
+      return this.user = Yapp.user;
+    };
+
+    /**
     # It wraps all instances of view into tr tag before render
     # @property tagName
     # @type String
@@ -59,14 +70,31 @@
     PointItemView.prototype.template = Templates.PointItemView;
 
     /**
-    # Init method of the view
-    # @method initialize
+    # The view model event triggers
+    # @property modelEvents
     */
 
 
-    PointItemView.prototype.initialize = function() {
-      console.log('initializing Yapp.Points.PointItemView');
-      return this.user = Yapp.user;
+    PointItemView.prototype.modelEvents = {
+      'change': 'render'
+    };
+
+    /**
+    # The view event triggers
+    # @property events
+    */
+
+
+    PointItemView.prototype.events = {
+      'click .photo .a-like': 'like',
+      'click .photo .a-collection': 'addToCollection',
+      'click .yp-title': 'toggleYpInfo',
+      'click .yp-info': 'toggleYpInfo'
+    };
+
+    PointItemView.prototype.ui = {
+      ypInfo: '.yp-info',
+      ypTitle: '.yp-title'
     };
 
     /**
@@ -98,28 +126,6 @@
     PointItemView.prototype.onClose = function() {
       console.log('onClose item trigger');
       return this.remove();
-    };
-
-    PointItemView.prototype.modelEvents = {
-      'change': 'render'
-    };
-
-    /**
-    # The view event triggers
-    # @property events
-    */
-
-
-    PointItemView.prototype.events = {
-      'click .photo .a-like': 'like',
-      'click .photo .a-collection': 'addToCollection',
-      'click .yp-title': 'toggleYpInfo',
-      'click .yp-info': 'toggleYpInfo'
-    };
-
-    PointItemView.prototype.ui = {
-      ypInfo: '.yp-info',
-      ypTitle: '.yp-title'
     };
 
     PointItemView.prototype.like = function(event) {
@@ -157,14 +163,18 @@
     };
 
     PointItemView.prototype.addToCollection = function(event) {
-      var $target;
+      var $target, addToCollectionView;
 
       if (!this.user.get('authorized')) {
         Yapp.vent.trigger('user:notauthorized');
         return;
       }
       event.preventDefault();
-      return $target = $(event.currentTarget);
+      $target = $(event.currentTarget);
+      addToCollectionView = new Yapp.Points.AddToCollectionView({
+        model: this.model
+      });
+      return Yapp.popup.show(addToCollectionView);
     };
 
     PointItemView.prototype.toggleYpInfo = function(event) {

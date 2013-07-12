@@ -1,5 +1,45 @@
 this["Templates"] = this["Templates"] || {};
 
+this["Templates"]["AddToCollectionView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n    <div class=\"line\">\r\n      <label>Выберите из уже созданных коллекций:</label>\r\n      <div class=\"wide-box\">\r\n        <div class=\"small-viewport\">\r\n          ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.collections), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Выбрать\" class=\"a-btn a-to-collection nonav\">\r\n    ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n          <label class=\"custom-checkbox\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n            <input type=\"checkbox\" value=\"\" name=\"collection\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n            ";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\r\n          </label>\r\n          ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"p-top\">\r\n  <h3>Новая коллекция</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form >\r\n    <div class=\"line\">\r\n      <label for=\"input-add-new\">Создайте новую коллекцию</label>\r\n      <input type=\"text\" placeholder=\"Введите название коллекции...\" id=\"input-add-new-name\">\r\n    </div>\r\n\r\n    <div class=\"line\">\r\n      <input type=\"text\" placeholder=\"Введите описание коллекции...\" id=\"input-add-new-desc\">\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Создать\" class=\"a-btn a-add-collection nonav\">\r\n\r\n    <br><br>\r\n\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.collections), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      \r\n  </form>\r\n</div>\r\n";
+  return buffer;
+  });
+
 this["Templates"]["AuthPopupView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
@@ -12,7 +52,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["Templates"]["BigPhoto"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -88,8 +128,7 @@ function program8(depth0,data) {
     + " "
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span>\r\n\r\n    <a href=\"#\" class=\"a-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data};
-  stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
+  stack2 = helpers['if'].call(depth0, depth0.isliked, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-photo-id=\"";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -109,13 +148,22 @@ function program8(depth0,data) {
   return buffer;
   });
 
+this["Templates"]["ComplaintCommentView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<div class=\"p-top\">\r\n  <h3>Пожаловаться на комментарий</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form action=\"#\">\r\n    <p>Почему Вы жалуетесь на комментарий?</p>\r\n    \r\n    <div class=\"line\">\r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Спам\r\n      </label>\r\n      \r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Оскорбление\r\n      </label>\r\n      \r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Другое\r\n      </label>\r\n    </div>\r\n    <div class=\"line\">\r\n      <textarea rows=\"3\" cols=\"30\" onfocus=\"if(this.value == this.defaultValue) this.value ='';\" onblur=\"if(this.value == '') this.value = this.defaultValue;\">Добавить текст</textarea>\r\n    </div>\r\n    \r\n    <input type=\"submit\" value=\"Пожаловаться\" class=\"a-btn\">\r\n  </form>\r\n</div>\r\n";
+  });
+
 this["Templates"]["FooterView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<footer id=\"footer\">\r\n  <div class=\"f-body\">\r\n    <a href=\"#\" class=\"a-toggle\" title=\"переключить панель\">&nbsp;</a>\r\n\r\n    <ul>\r\n      <li><a href=\"#\" class=\"aboutProject nonav\">О проекте</a></li>\r\n      <li><a href=\"#\" class=\"contacts nonav\">Контакты</a></li>\r\n      <li><a href=\"#\">Соглашение</a></li>\r\n    </ul>\r\n\r\n    <div class=\"apps\">\r\n      <a href=\"#\" class=\"app-android\">&nbsp;</a>\r\n      <a href=\"#\" class=\"app-store\">&nbsp;</a>\r\n    </div>\r\n\r\n    <div class=\"share\">\r\n      <div id=\"vk_like\"></div>\r\n      <div class=\"fb-like\" data-href=\"http://yasenput.ru\" data-send=\"false\" data-layout=\"button_count\" data-width=\"450\" data-show-faces=\"false\" data-font=\"verdana\"></div>\r\n    </div>\r\n\r\n    <div class=\"f-social\">\r\n      <a href=\"http://vk.com/yasenput\" target=\"_blank\" class=\"a-vk\">&nbsp;</a>\r\n      <a href=\"http://www.facebook.com/yasenput\" target=\"_blank\" class=\"a-fb\">&nbsp;</a>\r\n    </div>\r\n  </div>\r\n</footer>\r\n";
+  return "<a href=\"#\" class=\"a-toggle\" title=\"переключить панель\">&nbsp;</a>\r\n\r\n<ul>\r\n  <li><a href=\"#\" class=\"aboutProject nonav\">О проекте</a></li>\r\n  <li><a href=\"#\" class=\"contacts nonav\">Контакты</a></li>\r\n  <li><a href=\"#\">Соглашение</a></li>\r\n</ul>\r\n\r\n<div class=\"apps\">\r\n  <a href=\"#\" class=\"app-android\">&nbsp;</a>\r\n  <a href=\"#\" class=\"app-store\">&nbsp;</a>\r\n</div>\r\n\r\n<div class=\"share\">\r\n  <div id=\"vk_like\"></div>\r\n  <div class=\"fb-like\" data-href=\"http://yasenput.ru\" data-send=\"false\" data-layout=\"button_count\" data-width=\"450\" data-show-faces=\"false\" data-font=\"verdana\"></div>\r\n</div>\r\n\r\n<div class=\"f-social\">\r\n  <a href=\"http://vk.com/yasenput\" target=\"_blank\" class=\"a-vk\">&nbsp;</a>\r\n  <a href=\"http://www.facebook.com/yasenput\" target=\"_blank\" class=\"a-fb\">&nbsp;</a>\r\n</div>\r\n";
   });
 
 this["Templates"]["HeaderView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -192,7 +240,7 @@ function program9(depth0,data) {
   buffer += "\r\n\r\n          ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.city), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n          <div class=\"label label-add\">\r\n            Добавить\r\n            <span>+</span>\r\n          </div>\r\n\r\n          <span class=\"text-field\"><input type=\"text\"></span>\r\n        </div>\r\n        <button type=\"button\" class=\"clear-input\"></button>\r\n      </form>\r\n\r\n      <div class=\"drop-search\" style=\"display:none;\"></div>\r\n      <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"head-nav\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n        <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n        <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n        <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n        <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"add-block-head\">\r\n    <i class=\"ico-add\"></i>\r\n\r\n    <div>\r\n      <div class=\"drop-add-head\">\r\n        <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n        <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  ";
+  buffer += "\r\n          <div class=\"label label-add\">\r\n            Добавить\r\n            <span>+</span>\r\n          </div>\r\n\r\n          <span class=\"text-field\"><input type=\"text\"></span>\r\n        </div>\r\n        <button type=\"button\" class=\"clear-input\"></button>\r\n      </form>\r\n\r\n      <div class=\"drop-search\" style=\"display:none;\"></div>\r\n      <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"head-nav\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n        <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n        <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n        <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n        <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"add-block-head\">\r\n    <i class=\"ico-add\"></i>\r\n\r\n    <div>\r\n      <div class=\"drop-add-head\">\r\n        <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n        <a href=\"/routes\" class=\"nonav\" data-target=\"p-add-event\">Добавить маршрут</a>\r\n        <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  ";
   stack2 = helpers['if'].call(depth0, depth0.authorized, {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n</div>\r\n\r\n";
@@ -249,7 +297,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div id=\"mainmap\" style=\"width: 100%; height: 477px;\"></div>\r\n\r\n<div class=\"m-ico-group\"></div>\r\n\r\n<div class=\"toggle-bottom\">\r\n  <a href=\"#\" class=\"a-toggle\">Развернуть карту</a>\r\n</div>\r\n";
+  return "<div id=\"mainmap\" style=\"width: 100%;\"></div>\r\n\r\n<div class=\"m-ico-group\"></div>\r\n\r\n<div class=\"toggle-bottom\">\r\n  <a href=\"#\" class=\"a-toggle\">Развернуть карту</a>\r\n</div>\r\n";
   });
 
 this["Templates"]["MultisearchDropdown"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -615,8 +663,7 @@ function program17(depth0,data) {
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n\r\n  <div class=\"small-icons\">\r\n    <a href=\"#\" class=\"a-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data};
-  stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
+  stack2 = helpers['if'].call(depth0, depth0.isliked, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-placement=\"bottom\" data-original-title=\"Нравится\" data-toggle=\"tooltip\"></a>\r\n    <a href=\"#\" class=\"a-complaint\" data-placement=\"bottom\" data-original-title=\"Пожаловаться на место\" data-toggle=\"tooltip\"></a>\r\n  </div>\r\n\r\n  <div class=\"aside-social\">\r\n    <div class=\"share\">\r\n      <div id=\"vk_like_point\"></div>\r\n      <br>\r\n      <div class=\"fb-like\" data-href=\"http://yasenput.ru/point/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -724,7 +771,7 @@ function program28(depth0,data) {
   buffer += "\r\n\r\n          ";
   stack2 = helpers['if'].call(depth0, depth0.invalid, {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n        </div>\r\n\r\n        <div class=\"mode\">\r\n          <h4 class=\"title-block\">\r\n            <a href=\"#\" class=\"a-remove-mode\" title=\"Удалить\" data-toggle=\"tooltip\"></a>\r\n            <a href=\"#\" class=\"a-edit-mode\" title=\"Редактировать\" data-toggle=\"tooltip\"></a>\r\n            Режим работы\r\n          </h4>\r\n\r\n          <textarea rows=\"7\" cols=\"60\" id=\"mode-field\" readonly>\r\n          Понедельник - с 8:00 до 17:00\r\n          Вторник - с 8:00 до 17:00\r\n          Среда - с 8:00 до 17:00\r\n          Четверг - с 8:00 до 17:00\r\n          Пятница - с 8:00 до 17:00\r\n          Суббота - выходной\r\n          Воскресение - выходной</textarea>\r\n        </div>\r\n\r\n        <div class=\"add-new-section\">\r\n          <h4 class=\"title-block\">Создайте новый раздел</h4>\r\n\r\n          <div class=\"add-new-section-body\">\r\n            <input type=\"text\" placeholder=\"Введите название, например, режим работы..\">\r\n            <textarea cols=\"50\" rows=\"4\" placeholder=\"Введите подробное описание...\"></textarea>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div id=\"tab-events\" class=\"tab-pane\">\r\n      <div class=\"calendar\">\r\n        <select id=\"c-year-2\">\r\n          <option value=\"1\">2013</option>\r\n          <option value=\"2\">2012</option>\r\n          <option value=\"3\">2011</option>\r\n          <option value=\"4\">2010</option>\r\n        </select>\r\n\r\n        <select id=\"c-month-2\">\r\n          <option value=\"1\">Январь</option>\r\n          <option value=\"2\">Февраль</option>\r\n          <option value=\"3\">Март</option>\r\n          <option value=\"4\">Апрель</option>\r\n          <option value=\"5\">Май</option>\r\n          <option value=\"6\">Июнь</option>\r\n          <option value=\"7\">Июль</option>\r\n          <option value=\"8\">Август</option>\r\n          <option value=\"9\">Сентябрь</option>\r\n          <option value=\"10\">Октябрь</option>\r\n          <option value=\"11\">Ноябрь</option>\r\n          <option value=\"12\">Декабрь</option>\r\n        </select>\r\n\r\n        <ul class=\"c-days\">\r\n          <li><a href=\"#\">1</a></li>\r\n          <li><a href=\"#\">2</a></li>\r\n          <li><a href=\"#\">3</a></li>\r\n          <li><a href=\"#\" class=\"active\">4</a></li>\r\n          <li><a href=\"#\">5</a></li>\r\n          <li><a href=\"#\">6</a></li>\r\n          <li><a href=\"#\">7</a></li>\r\n          <li><span>8</span></li>\r\n          <li><span>9</span></li>\r\n          <li><a href=\"#\">10</a></li>\r\n          <li><a href=\"#\">11</a></li>\r\n          <li><a href=\"#\">12</a></li>\r\n          <li><a href=\"#\">13</a></li>\r\n          <li><a href=\"#\">14</a></li>\r\n          <li><a href=\"#\">15</a></li>\r\n          <li><a href=\"#\">16</a></li>\r\n          <li><a href=\"#\">17</a></li>\r\n          <li><span>18</span></li>\r\n          <li><a href=\"#\">19</a></li>\r\n          <li><a href=\"#\">20</a></li>\r\n          <li><a href=\"#\">21</a></li>\r\n          <li><a href=\"#\">22</a></li>\r\n          <li><a href=\"#\">23</a></li>\r\n          <li><a href=\"#\">24</a></li>\r\n          <li><a href=\"#\">25</a></li>\r\n          <li><a href=\"#\">26</a></li>\r\n          <li><a href=\"#\">27</a></li>\r\n          <li><a href=\"#\">28</a></li>\r\n          <li><a href=\"#\">29</a></li>\r\n          <li><a href=\"#\">30</a></li>\r\n          <li><span>31</span></li>\r\n          <li><a href=\"#\"></a></li>\r\n        </ul>\r\n      </div>\r\n\r\n      <div class=\"toggle-block\">\r\n        <ul class=\"event-list\">\r\n          <li>\r\n            <a href=\"#\" class=\"fl photo\">\r\n              <img src=\"temp/img-1.jpg\" alt=\"\">\r\n            </a>\r\n\r\n            <div class=\"body\">\r\n              <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n              <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n              <div class=\"addr\">Вологодская область, Вологда</div>\r\n              <div class=\"stats\">\r\n                <span>\r\n                  <span class=\"ico-want-small\"></span>\r\n                  15\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-like-small\"></span>\r\n                  23\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-comment-small\"></span>\r\n                  2\r\n                </span>\r\n              </div>\r\n\r\n              <div class=\"short-desc\">\r\n                <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                <div class=\"body\">\r\n                  <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                  <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </li>\r\n\r\n          <li class=\"even\">\r\n            <a href=\"#\" class=\"fl photo\">\r\n              <img src=\"temp/img-2.jpg\" alt=\"\">\r\n            </a>\r\n\r\n            <div class=\"body\">\r\n              <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n              <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n              <div class=\"addr\">Вологодская область, Вологда</div>\r\n              <div class=\"stats\">\r\n                <span>\r\n                  <span class=\"ico-want-small\"></span>\r\n                  15\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-like-small\"></span>\r\n                  23\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-comment-small\"></span>\r\n                  2\r\n                </span>\r\n              </div>\r\n\r\n              <div class=\"short-desc\">\r\n                <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                <div class=\"body\">\r\n                  <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                  <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </li>\r\n        </ul>\r\n\r\n        <div class=\"hidden-content\">\r\n          <ul class=\"event-list\">\r\n            <li>\r\n              <a href=\"#\" class=\"fl photo\">\r\n                <img src=\"temp/img-1.jpg\" alt=\"\">\r\n              </a>\r\n\r\n              <div class=\"body\">\r\n                <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n                <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n                <div class=\"addr\">Вологодская область, Вологда</div>\r\n                <div class=\"stats\">\r\n                  <span>\r\n                    <span class=\"ico-want-small\"></span>\r\n                    15\r\n                  </span>\r\n\r\n                  <span>\r\n                    <span class=\"ico-like-small\"></span>\r\n                    23\r\n                  </span>\r\n\r\n                  <span>\r\n                    <span class=\"ico-comment-small\"></span>\r\n                    2\r\n                  </span>\r\n                </div>\r\n\r\n                <div class=\"short-desc\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                  <div class=\"body\">\r\n                    <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                    <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n\r\n        <a href=\"#\" class=\"a-toggle\">все события <span>&darr;</span></a>\r\n      </div>\r\n\r\n      <a href=\"#\" class=\"btn btn-event\"><b>+</b> Событие</a>\r\n    </div>\r\n    -->\r\n  </div>\r\n\r\n  <div class=\"tabs-content p-common-content\">\r\n    <!--\r\n    <section class=\"p-block event-labels\">\r\n      <h4 class=\"title-block\">Коллекции с этим местом</h4>\r\n\r\n      <menu class=\"p-nav-collection\">\r\n        <a href=\"#\" class=\"prev\">&larr; предыдущие</a>\r\n        <a href=\"#\" class=\"next\">следующие &rarr;</a>\r\n      </menu>\r\n\r\n      <div class=\"clearfix body\">\r\n        <div class=\"scroll-photos\">\r\n          <ul class=\"ul-collection-list\">\r\n            <li>\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n\r\n            <li>\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </section>\r\n    -->\r\n\r\n    <!--\r\n    <section class=\"p-block peoples\">\r\n      <h4 class=\"title-block\">Это место хотят посетить</h4>\r\n\r\n      <div class=\"clearfix toggle-block\">\r\n        <a href=\"#\"><img src=\"temp/avatar.jpg\" alt=\"\"></a>\r\n\r\n        <div class=\"clearfix hidden-content\">\r\n          <a href=\"#\"><img src=\"temp/avatar.jpg\" alt=\"\"></a>\r\n        </div>\r\n\r\n        <a href=\"#\" class=\"a-toggle\">все пользователи <span>&darr;</span></a>\r\n      </div>\r\n    </section>\r\n    -->\r\n\r\n    ";
+  buffer += "\r\n        </div>\r\n\r\n        <div class=\"mode\">\r\n          <h4 class=\"title-block\">\r\n            <a href=\"#\" class=\"a-remove-mode\" title=\"Удалить\" data-toggle=\"tooltip\"></a>\r\n            <a href=\"#\" class=\"a-edit-mode\" title=\"Редактировать\" data-toggle=\"tooltip\"></a>\r\n            Режим работы\r\n          </h4>\r\n\r\n          <textarea rows=\"7\" cols=\"60\" id=\"mode-field\" readonly>\r\n          Понедельник - с 8:00 до 17:00\r\n          Вторник - с 8:00 до 17:00\r\n          Среда - с 8:00 до 17:00\r\n          Четверг - с 8:00 до 17:00\r\n          Пятница - с 8:00 до 17:00\r\n          Суббота - выходной\r\n          Воскресение - выходной</textarea>\r\n        </div>\r\n\r\n        <div class=\"add-new-section\">\r\n          <h4 class=\"title-block\">Создайте новый раздел</h4>\r\n\r\n          <div class=\"add-new-section-body\">\r\n            <input type=\"text\" placeholder=\"Введите название, например, режим работы..\">\r\n            <textarea cols=\"50\" rows=\"4\" placeholder=\"Введите подробное описание...\"></textarea>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    -->\r\n  </div>\r\n\r\n  <div class=\"tabs-content p-common-content\">\r\n    ";
   stack2 = helpers['if'].call(depth0, depth0.tags, {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </div>\r\n</div>\r\n\r\n</div>\r\n\r\n";
@@ -746,7 +793,11 @@ function program1(depth0,data) {
   options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
+  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
   if (stack2 = helpers.ypi) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.ypi; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -775,10 +826,10 @@ function program1(depth0,data) {
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\" class=\"a-photo nonav\">\r\n      ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </a>\r\n  </div>\r\n\r\n  <ul class=\"photo-preview a-photo nonav\">\r\n    ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\"/media/"
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -801,6 +852,12 @@ function program2(depth0,data) {
 
 function program4(depth0,data) {
   
+  
+  return "\r\n    <a href=\"#\" class=\"a-edit-new\" data-toggle=\"tooltip\" title=\"отредактировать\" data-placement=\"bottom\"></a>\r\n    ";
+  }
+
+function program6(depth0,data) {
+  
   var buffer = "", stack1;
   buffer += "\r\n        <img src=\""
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.thumbnail207)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -810,13 +867,13 @@ function program4(depth0,data) {
   return buffer;
   }
 
-function program6(depth0,data) {
+function program8(depth0,data) {
   
   
   return "\r\n        <img src=\"/static/images/collection_logo.png\" alt=\"\" width=\"65\" height=\"52\">\r\n      ";
   }
 
-function program8(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n      <li>\r\n        <a href=\"#\">\r\n          <img src=\""
@@ -829,16 +886,16 @@ function program8(depth0,data) {
   return buffer;
   }
 
-function program10(depth0,data) {
+function program12(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\r\n      ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[1]), {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[1]), {hash:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    ";
   return buffer;
   }
-function program11(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        <li>\r\n          <a href=\"#\">\r\n            <img src=\""
@@ -849,16 +906,16 @@ function program11(depth0,data) {
   return buffer;
   }
 
-function program13(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\r\n        ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      ";
   return buffer;
   }
-function program14(depth0,data) {
+function program16(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n          <li>\r\n            <a href=\"#\">\r\n              <img src=\""
@@ -867,14 +924,18 @@ function program14(depth0,data) {
   return buffer;
   }
 
-function program16(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n  <div class=\"photo\">\r\n    <a href=\"#\" class=\"a-like a-like-ok ";
   options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    <a href=\"#\" class=\"a-collection nonav\" title=\"добавить в коллекцию\" data-toggle=\"tooltip\" data-placement=\"bottom\">В коллекцию</a>\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
+  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    <a href=\"#\" class=\"a-collection nonav\" title=\"добавить в коллекцию\" data-toggle=\"tooltip\" data-placement=\"bottom\">В коллекцию</a>\r\n    ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
   if (stack2 = helpers.ypi) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.ypi; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -924,7 +985,7 @@ function program16(depth0,data) {
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type_of_item, "set", options) : helperMissing.call(depth0, "ifEquals", depth0.type_of_item, "set", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n\r\n";
-  options = {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type_of_item, "point", options) : helperMissing.call(depth0, "ifEquals", depth0.type_of_item, "point", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n";
@@ -994,6 +1055,175 @@ function program1(depth0,data) {
   return buffer;
   });
 
+this["Templates"]["RoutesDetail"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n  <li>\r\n    <div class=\"path-name-place\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + ", "
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.address)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</div>\r\n    \r\n    ";
+  stack2 = helpers['if'].call(depth0, depth0.segments, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n  </li>\r\n  ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <ul>\r\n      ";
+  stack1 = helpers.each.call(depth0, depth0.segments, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    </ul>\r\n    ";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n        <li>\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "прямо", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "прямо", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "налево", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "налево", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "направо", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "направо", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          <div class=\"black\">";
+  if (stack2 = helpers.direct) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.direct; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + " ";
+  if (stack2 = helpers.street) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.street; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "</div>\r\n          ";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.distance, options) : helperMissing.call(depth0, "safe", depth0.distance, options)))
+    + "\r\n        </li>\r\n      ";
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-direct.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+function program6(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-left.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+function program8(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-right.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"dp-top\">\r\n  Ехать на машине\r\n  <div class=\"black\">";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.totalTime, options) : helperMissing.call(depth0, "safe", depth0.totalTime, options)))
+    + " - ";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.totalDistance, options) : helperMissing.call(depth0, "safe", depth0.totalDistance, options)))
+    + "</div>\r\n</div>\r\n\r\n<ol class=\"ol-details-path\">\r\n  ";
+  stack2 = helpers.each.call(depth0, depth0.ways, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n</ol>\r\n";
+  return buffer;
+  });
+
+this["Templates"]["RoutesDropdown"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  ";
+  stack1 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  <li data-title=\"";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-desc=\"";
+  if (stack1 = helpers.address) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.address; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-point-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</li>\r\n  ";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  
+  return "\r\n  <li class=\"\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n";
+  }
+
+  stack1 = helpers['if'].call(depth0, depth0.points, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n\r\n";
+  return buffer;
+  });
+
+this["Templates"]["RoutesSaveView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<div class=\"p-top\">\r\n  <h3>Новый маршрут</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form >\r\n    <div class=\"line\">\r\n      <label for=\"input-add-new\">Создайте новый маршрут </label>\r\n      <input type=\"text\" placeholder=\"Введите название маршрута...\" id=\"input-add-new-name\">\r\n    </div>\r\n\r\n    <div class=\"line\">\r\n      <input type=\"text\" placeholder=\"Введите описание маршрута...\" id=\"input-add-new-desc\">\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Создать\" class=\"a-btn a-add-collection\">\r\n  </form>\r\n</div>\r\n";
+  });
+
+this["Templates"]["RoutesView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<h1 class=\"title-add-path\">Формирование маршрута</h1>\r\n<div class=\"aside-content\">\r\n  <div class=\"pap-viewport\">\r\n    <div class=\"field-enter-place\">\r\n      <div class=\"drop-filter search-matches\">\r\n        <input type=\"text\" class=\"route-input\" placeholder=\"Добавить месторасположение...\">\r\n        \r\n        <input type=\"button\" class=\"drop-filter-clear\">\r\n        \r\n        <ul class=\"drop-results\">\r\n          <li class=\"not-matches hidden\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n          <li data-title=\"Тест\" data-desc=\"Тестовый\" data-id-place=\"90\">Тестовый Текст</li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n    \r\n    <div class=\"msg-hint\">\r\n      Добавляйте места на карту через строку мультипоиска на карте или через строку поиска в окне &laquo;Формирование маршрута&raquo;\r\n    </div>\r\n    \r\n    <ol class=\"ol-add-path-places\"></ol>\r\n    \r\n    <div class=\"line-add-path-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-add-path disabled\">Создать маршрут</a>\r\n      <a href=\"/\" class=\"nonav a-btn btn-return\">Вернуться на главную</a>\r\n    </div>\r\n    \r\n    <div class=\"line-add-path-btn\" id=\"action-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-clear-map\">Очистить карту</a><a href=\"#\" class=\"a-btn btn-save\">Сохранить</a><a href=\"#\" class=\"a-btn btn-print\">Печать</a>\r\n    </div>\r\n    \r\n    <div class=\"details-path\"></div>\r\n  </div>\r\n</div>\r\n";
+  });
+
 this["Templates"]["SetDetailView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1047,48 +1277,57 @@ function program6(depth0,data) {
 
 function program8(depth0,data) {
   
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n    <div class=\"tabs-content p-common-content\">\r\n      <section class=\"p-block event-labels\">\r\n          <h4 class=\"title-block\">Метки</h4>\r\n\r\n          <div class=\"body\">\r\n            ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          </div>\r\n      </section>\r\n    </div><!-- end .p-common-content -->\r\n    ";
+  return buffer;
+  }
+function program9(depth0,data) {
+  
   var buffer = "", stack1;
-  buffer += "\r\n                <div class=\"label\">";
+  buffer += "\r\n              <div class=\"label\">";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n              ";
+    + "</div>\r\n            ";
   return buffer;
   }
 
-function program10(depth0,data) {
+function program11(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n      <div class=\"c-buttons\">\r\n        <a href=\"#\" class=\"a-btn stp-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\">Нравится</a>\r\n        ";
-  options = {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      </div>\r\n    ";
   return buffer;
   }
-function program11(depth0,data) {
+function program12(depth0,data) {
   
   
   return "marked";
   }
 
-function program13(depth0,data) {
+function program14(depth0,data) {
   
   
   return "<a href=\"#\" class=\"a-btn stp-edit\">Редактировать</a>";
   }
 
-function program15(depth0,data) {
+function program16(depth0,data) {
   
   
   return "\r\n      ";
   }
 
-function program17(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        коллекцию добавил\r\n        <a href=\"#\">"
@@ -1099,7 +1338,7 @@ function program17(depth0,data) {
   return buffer;
   }
 
-function program19(depth0,data) {
+function program20(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        <span class=\"hellip\">…</span>\r\n        <span class=\"hidden more-desc\">";
@@ -1110,11 +1349,11 @@ function program19(depth0,data) {
   return buffer;
   }
 
-function program21(depth0,data,depth1) {
+function program22(depth0,data,depth1) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n        <li class=\"choose_place ";
-  options = {hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(23, program23, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.id, ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", depth0.id, ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-placemark-id=\"placemark-1\">\r\n          <a href=\"/set/"
@@ -1134,7 +1373,7 @@ function program21(depth0,data,depth1) {
     + "</a>\r\n            <button type=\"button\" class=\"remove-collection\"></button>\r\n          </li>\r\n        ";
   return buffer;
   }
-function program22(depth0,data) {
+function program23(depth0,data) {
   
   
   return "active";
@@ -1158,23 +1397,23 @@ function program22(depth0,data) {
     + "\r\n        </span>\r\n      </div>\r\n  </header>\r\n\r\n  <div class=\"wide-box\">\r\n    <ul class=\"p-tabs\">\r\n      <li class=\"active\"><a href=\"#tab-photo\" data-toggle=\"tab\">Фотография</a></li>\r\n      <li><a href=\"#tab-map\" data-toggle=\"tab\">На карте</a></li>\r\n      <li><a href=\"#tab-desc\" data-toggle=\"tab\">Описание</a></li>\r\n\r\n      <li><div class=\"shadow\"></div></li>\r\n    </ul>\r\n\r\n    <div class=\"tabs-content\">\r\n\r\n      <div id=\"tab-photo\" class=\"tab-pane active\">\r\n        <div class=\"tabs-content\">\r\n          <div class=\"toggle-block\">\r\n            <div class=\"clearfix p-gallery\">\r\n              <div class=\"clearfix place-photos\">\r\n                <div class=\"photos-gallery\">\r\n                  <ul>\r\n                    ";
   stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.imgs), {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n                  </ul>\r\n                </div>\r\n\r\n                <div class=\"item-photo load-photo\">\r\n                  <form id=\"addPhotoForm\" action=\"\" method=\"POST\" enctype=\"multipart/form-data\">\r\n                    <input name=\"img\" type=\"file\">\r\n                  </form>\r\n                </div>\r\n\r\n                <span class=\"photos-next\"></span>\r\n                <span class=\"photos-prev\"></span>\r\n              </div>\r\n\r\n              <div id=\"big-photo\"></div><!-- end #big-photo -->\r\n\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div><!-- end #tab-photo -->\r\n\r\n      <div id=\"tab-map\" class=\"tab-pane\">\r\n        <div class=\"map\">\r\n            <div id=\"popup-map-1\" style=\"width:560px; height:510px\"></div>\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->\r\n\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->\r\n            <div class=\"m-ico-group\">\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hotel\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-cafe\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-restoran\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-turism\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-azs\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-active-rest\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-sto\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-commerc\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hunting\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-events\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-shop\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-fishing\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-monument\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-church\"></span>\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div id=\"near-objects\">\r\n          <h4 class=\"title-block\">Ближайшие гостинницы</h4>\r\n\r\n          <ol>\r\n            <li>\r\n              <h5>Место номер один</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер два</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер три</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер четыре</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер пять</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n          </ol>\r\n        </div>\r\n\r\n      </div><!-- end #tab-map -->\r\n\r\n      <div id=\"tab-desc\" class=\"tab-pane\">\r\n        <div class=\"toggle-block\">\r\n          <ul class=\"ul-desc\"></ul>\r\n          <div class=\"hidden-content\">\r\n            <ul class=\"ul-desc\"></ul>\r\n          </div>\r\n\r\n          <a href=\"#\" class=\"a-toggle\">Ещё описания <span>&darr;</span></a>\r\n        </div>\r\n\r\n        <div class=\"add-comment\">\r\n          <form action=\"#\">\r\n            <div class=\"ac-block\">\r\n              <img src=\"/media/"
+  buffer += "\r\n                  </ul>\r\n                </div>\r\n\r\n                <div class=\"item-photo load-photo\">\r\n                  <form id=\"addPhotoForm\" action=\"\" method=\"POST\" enctype=\"multipart/form-data\">\r\n                    <input name=\"img\" type=\"file\">\r\n                  </form>\r\n                </div>\r\n\r\n                <span class=\"photos-next\"></span>\r\n                <span class=\"photos-prev\"></span>\r\n              </div>\r\n\r\n              <div id=\"big-photo\"></div><!-- end #big-photo -->\r\n\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div><!-- end #tab-photo -->\r\n\r\n      <div id=\"tab-map\" class=\"tab-pane\">\r\n        <div class=\"map\">\r\n            <div id=\"popup-map\" style=\"width:560px; height:510px\"></div>\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->\r\n\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->\r\n            <div class=\"m-ico-group\">\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hotel\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-cafe\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-restoran\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-turism\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-azs\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-active-rest\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-sto\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-commerc\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hunting\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-events\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-shop\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-fishing\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-monument\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-church\"></span>\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div id=\"near-objects\">\r\n          <h4 class=\"title-block\">Ближайшие гостинницы</h4>\r\n\r\n          <ol>\r\n            <li>\r\n              <h5>Место номер один</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер два</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер три</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер четыре</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер пять</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n          </ol>\r\n        </div>\r\n\r\n      </div><!-- end #tab-map -->\r\n\r\n      <div id=\"tab-desc\" class=\"tab-pane\">\r\n        <div class=\"toggle-block\">\r\n          <ul class=\"ul-desc\"></ul>\r\n          <div class=\"hidden-content\">\r\n            <ul class=\"ul-desc\"></ul>\r\n          </div>\r\n\r\n          <a href=\"#\" class=\"a-toggle\">Ещё описания <span>&darr;</span></a>\r\n        </div>\r\n\r\n        <div class=\"add-comment\">\r\n          <form action=\"#\">\r\n            <div class=\"ac-block\">\r\n              <img src=\"/media/"
     + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n              <div class=\"ac-body\">\r\n                <div class=\"toggle-area\">\r\n                  <textarea rows=\"3\" cols=\"40\"></textarea>\r\n                  <input type=\"submit\" value=\" \">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </div>\r\n      </div><!-- end #tab-desc -->\r\n\r\n      <div class=\"tabs-content p-common-content\" style=\"display: none\">\r\n        <section class=\"p-block peoples\">\r\n          <h4 class=\"title-block\">Это место хотят посетить</h4>\r\n          <div class=\"clearfix toggle-block\">\r\n            <div class=\"clearfix hidden-content\"></div>\r\n            <a href=\"#\" class=\"a-toggle\">Ещё пользователи <span>&darr;</span></a>\r\n          </div>\r\n        </section>\r\n\r\n        <section class=\"p-block event-labels\">\r\n            <h4 class=\"title-block\">Метки</h4>\r\n\r\n            <div class=\"body\">\r\n              ";
-  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+    + "\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n              <div class=\"ac-body\">\r\n                <div class=\"toggle-area\">\r\n                  <textarea rows=\"3\" cols=\"40\"></textarea>\r\n                  <input type=\"submit\" value=\" \">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </div>\r\n      </div><!-- end #tab-desc -->\r\n    </div><!-- .tabs.content -->\r\n\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n            </div>\r\n        </section>\r\n      </div><!-- end .tabs-content -->\r\n    </div>\r\n  </div>\r\n\r\n  <footer>\r\n    ";
+  buffer += "\r\n  </div><!-- end .wide-box -->\r\n\r\n  <footer>\r\n    ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </footer>\r\n</div><!-- end .cleatfix-body -->\r\n\r\n<header id=\"c-top-panel\">\r\n  <div class=\"inner-wrap\">\r\n    <aside class=\"stp-buttons\">\r\n    ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      <div class=\"c-edit-buttons\">\r\n        <!--<a href=\"#\" class=\"a-btn stp-remove\">Удалить</a>-->\r\n        <a href=\"#\" class=\"a-btn stp-save\">Сохранить</a>\r\n      </div>\r\n    </aside>\r\n\r\n    <div class=\"ctp-head\">\r\n      <h1>";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "</h1>\r\n      ";
-  options = {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),data:data};
+  options = {hash:{},inverse:self.program(18, program18, data),fn:self.program(16, program16, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.author, "new", options) : helperMissing.call(depth0, "ifEquals", depth0.author, "new", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </div>\r\n\r\n    <div class=\"ctp-content\">\r\n      ";
@@ -1182,7 +1421,7 @@ function program22(depth0,data) {
   else { stack2 = depth0.headDescription; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\r\n      ";
-  stack2 = helpers['if'].call(depth0, depth0.tailDescription, {hash:{},inverse:self.noop,fn:self.program(19, program19, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.tailDescription, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </div>\r\n\r\n    <div class=\"c-edit-inputs\">\r\n      <input type=\"text\" value=\"";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1193,7 +1432,7 @@ function program22(depth0,data) {
   else { stack2 = depth0.description; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\">\r\n    </div>\r\n  </div>\r\n</header>\r\n\r\n<aside id=\"c-left-panel\">\r\n  <div class=\"aside-content\">\r\n    <div class=\"aside-viewport\">\r\n      <ol id=\"ol-collection\">\r\n        ";
-  stack2 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.programWithDepth(21, program21, data, depth0),data:data});
+  stack2 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.programWithDepth(22, program22, data, depth0),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      </ol>\r\n    </div>\r\n\r\n    <a href=\"#\" class=\"clp-up\"></a> <!-- clp- collection left panel  -->\r\n    <a href=\"#\" class=\"clp-down\"></a>\r\n  </div>\r\n</aside>\r\n";
   return buffer;

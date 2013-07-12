@@ -124,6 +124,7 @@
 
     PointListView.prototype.onShow = function() {
       console.log('onShow trigger');
+      Yapp.Points.trigger('update:collection', this.collection);
       this.$el.find('[data-toggle=tooltip]').tooltip();
       if (this.wall) {
         return this.wall.reload();

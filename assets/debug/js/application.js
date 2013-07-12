@@ -77,6 +77,46 @@
 
 this["Templates"] = this["Templates"] || {};
 
+this["Templates"]["AddToCollectionView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n    <div class=\"line\">\r\n      <label>Выберите из уже созданных коллекций:</label>\r\n      <div class=\"wide-box\">\r\n        <div class=\"small-viewport\">\r\n          ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.collections), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Выбрать\" class=\"a-btn a-to-collection nonav\">\r\n    ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n          <label class=\"custom-checkbox\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n            <input type=\"checkbox\" value=\"\" name=\"collection\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n            ";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\r\n          </label>\r\n          ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"p-top\">\r\n  <h3>Новая коллекция</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form >\r\n    <div class=\"line\">\r\n      <label for=\"input-add-new\">Создайте новую коллекцию</label>\r\n      <input type=\"text\" placeholder=\"Введите название коллекции...\" id=\"input-add-new-name\">\r\n    </div>\r\n\r\n    <div class=\"line\">\r\n      <input type=\"text\" placeholder=\"Введите описание коллекции...\" id=\"input-add-new-desc\">\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Создать\" class=\"a-btn a-add-collection nonav\">\r\n\r\n    <br><br>\r\n\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.collections), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      \r\n  </form>\r\n</div>\r\n";
+  return buffer;
+  });
+
 this["Templates"]["AuthPopupView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
@@ -89,7 +129,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["Templates"]["BigPhoto"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -165,8 +205,7 @@ function program8(depth0,data) {
     + " "
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span>\r\n\r\n    <a href=\"#\" class=\"a-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data};
-  stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
+  stack2 = helpers['if'].call(depth0, depth0.isliked, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-photo-id=\"";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -186,13 +225,22 @@ function program8(depth0,data) {
   return buffer;
   });
 
+this["Templates"]["ComplaintCommentView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<div class=\"p-top\">\r\n  <h3>Пожаловаться на комментарий</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form action=\"#\">\r\n    <p>Почему Вы жалуетесь на комментарий?</p>\r\n    \r\n    <div class=\"line\">\r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Спам\r\n      </label>\r\n      \r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Оскорбление\r\n      </label>\r\n      \r\n      <label class=\"custom-radio\">\r\n        <input type=\"radio\" value=\"\" name=\"radio-1\">\r\n        Другое\r\n      </label>\r\n    </div>\r\n    <div class=\"line\">\r\n      <textarea rows=\"3\" cols=\"30\" onfocus=\"if(this.value == this.defaultValue) this.value ='';\" onblur=\"if(this.value == '') this.value = this.defaultValue;\">Добавить текст</textarea>\r\n    </div>\r\n    \r\n    <input type=\"submit\" value=\"Пожаловаться\" class=\"a-btn\">\r\n  </form>\r\n</div>\r\n";
+  });
+
 this["Templates"]["FooterView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<footer id=\"footer\">\r\n  <div class=\"f-body\">\r\n    <a href=\"#\" class=\"a-toggle\" title=\"переключить панель\">&nbsp;</a>\r\n\r\n    <ul>\r\n      <li><a href=\"#\" class=\"aboutProject nonav\">О проекте</a></li>\r\n      <li><a href=\"#\" class=\"contacts nonav\">Контакты</a></li>\r\n      <li><a href=\"#\">Соглашение</a></li>\r\n    </ul>\r\n\r\n    <div class=\"apps\">\r\n      <a href=\"#\" class=\"app-android\">&nbsp;</a>\r\n      <a href=\"#\" class=\"app-store\">&nbsp;</a>\r\n    </div>\r\n\r\n    <div class=\"share\">\r\n      <div id=\"vk_like\"></div>\r\n      <div class=\"fb-like\" data-href=\"http://yasenput.ru\" data-send=\"false\" data-layout=\"button_count\" data-width=\"450\" data-show-faces=\"false\" data-font=\"verdana\"></div>\r\n    </div>\r\n\r\n    <div class=\"f-social\">\r\n      <a href=\"http://vk.com/yasenput\" target=\"_blank\" class=\"a-vk\">&nbsp;</a>\r\n      <a href=\"http://www.facebook.com/yasenput\" target=\"_blank\" class=\"a-fb\">&nbsp;</a>\r\n    </div>\r\n  </div>\r\n</footer>\r\n";
+  return "<a href=\"#\" class=\"a-toggle\" title=\"переключить панель\">&nbsp;</a>\r\n\r\n<ul>\r\n  <li><a href=\"#\" class=\"aboutProject nonav\">О проекте</a></li>\r\n  <li><a href=\"#\" class=\"contacts nonav\">Контакты</a></li>\r\n  <li><a href=\"#\">Соглашение</a></li>\r\n</ul>\r\n\r\n<div class=\"apps\">\r\n  <a href=\"#\" class=\"app-android\">&nbsp;</a>\r\n  <a href=\"#\" class=\"app-store\">&nbsp;</a>\r\n</div>\r\n\r\n<div class=\"share\">\r\n  <div id=\"vk_like\"></div>\r\n  <div class=\"fb-like\" data-href=\"http://yasenput.ru\" data-send=\"false\" data-layout=\"button_count\" data-width=\"450\" data-show-faces=\"false\" data-font=\"verdana\"></div>\r\n</div>\r\n\r\n<div class=\"f-social\">\r\n  <a href=\"http://vk.com/yasenput\" target=\"_blank\" class=\"a-vk\">&nbsp;</a>\r\n  <a href=\"http://www.facebook.com/yasenput\" target=\"_blank\" class=\"a-fb\">&nbsp;</a>\r\n</div>\r\n";
   });
 
 this["Templates"]["HeaderView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -269,7 +317,7 @@ function program9(depth0,data) {
   buffer += "\r\n\r\n          ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.city), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n          <div class=\"label label-add\">\r\n            Добавить\r\n            <span>+</span>\r\n          </div>\r\n\r\n          <span class=\"text-field\"><input type=\"text\"></span>\r\n        </div>\r\n        <button type=\"button\" class=\"clear-input\"></button>\r\n      </form>\r\n\r\n      <div class=\"drop-search\" style=\"display:none;\"></div>\r\n      <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"head-nav\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n        <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n        <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n        <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n        <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"add-block-head\">\r\n    <i class=\"ico-add\"></i>\r\n\r\n    <div>\r\n      <div class=\"drop-add-head\">\r\n        <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n        <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  ";
+  buffer += "\r\n          <div class=\"label label-add\">\r\n            Добавить\r\n            <span>+</span>\r\n          </div>\r\n\r\n          <span class=\"text-field\"><input type=\"text\"></span>\r\n        </div>\r\n        <button type=\"button\" class=\"clear-input\"></button>\r\n      </form>\r\n\r\n      <div class=\"drop-search\" style=\"display:none;\"></div>\r\n      <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"head-nav\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n        <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n        <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n        <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n        <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"add-block-head\">\r\n    <i class=\"ico-add\"></i>\r\n\r\n    <div>\r\n      <div class=\"drop-add-head\">\r\n        <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n        <a href=\"/routes\" class=\"nonav\" data-target=\"p-add-event\">Добавить маршрут</a>\r\n        <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  ";
   stack2 = helpers['if'].call(depth0, depth0.authorized, {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n</div>\r\n\r\n";
@@ -326,7 +374,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div id=\"mainmap\" style=\"width: 100%; height: 477px;\"></div>\r\n\r\n<div class=\"m-ico-group\"></div>\r\n\r\n<div class=\"toggle-bottom\">\r\n  <a href=\"#\" class=\"a-toggle\">Развернуть карту</a>\r\n</div>\r\n";
+  return "<div id=\"mainmap\" style=\"width: 100%;\"></div>\r\n\r\n<div class=\"m-ico-group\"></div>\r\n\r\n<div class=\"toggle-bottom\">\r\n  <a href=\"#\" class=\"a-toggle\">Развернуть карту</a>\r\n</div>\r\n";
   });
 
 this["Templates"]["MultisearchDropdown"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -692,8 +740,7 @@ function program17(depth0,data) {
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n\r\n  <div class=\"small-icons\">\r\n    <a href=\"#\" class=\"a-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data};
-  stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
+  stack2 = helpers['if'].call(depth0, depth0.isliked, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-placement=\"bottom\" data-original-title=\"Нравится\" data-toggle=\"tooltip\"></a>\r\n    <a href=\"#\" class=\"a-complaint\" data-placement=\"bottom\" data-original-title=\"Пожаловаться на место\" data-toggle=\"tooltip\"></a>\r\n  </div>\r\n\r\n  <div class=\"aside-social\">\r\n    <div class=\"share\">\r\n      <div id=\"vk_like_point\"></div>\r\n      <br>\r\n      <div class=\"fb-like\" data-href=\"http://yasenput.ru/point/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -801,7 +848,7 @@ function program28(depth0,data) {
   buffer += "\r\n\r\n          ";
   stack2 = helpers['if'].call(depth0, depth0.invalid, {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n        </div>\r\n\r\n        <div class=\"mode\">\r\n          <h4 class=\"title-block\">\r\n            <a href=\"#\" class=\"a-remove-mode\" title=\"Удалить\" data-toggle=\"tooltip\"></a>\r\n            <a href=\"#\" class=\"a-edit-mode\" title=\"Редактировать\" data-toggle=\"tooltip\"></a>\r\n            Режим работы\r\n          </h4>\r\n\r\n          <textarea rows=\"7\" cols=\"60\" id=\"mode-field\" readonly>\r\n          Понедельник - с 8:00 до 17:00\r\n          Вторник - с 8:00 до 17:00\r\n          Среда - с 8:00 до 17:00\r\n          Четверг - с 8:00 до 17:00\r\n          Пятница - с 8:00 до 17:00\r\n          Суббота - выходной\r\n          Воскресение - выходной</textarea>\r\n        </div>\r\n\r\n        <div class=\"add-new-section\">\r\n          <h4 class=\"title-block\">Создайте новый раздел</h4>\r\n\r\n          <div class=\"add-new-section-body\">\r\n            <input type=\"text\" placeholder=\"Введите название, например, режим работы..\">\r\n            <textarea cols=\"50\" rows=\"4\" placeholder=\"Введите подробное описание...\"></textarea>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div id=\"tab-events\" class=\"tab-pane\">\r\n      <div class=\"calendar\">\r\n        <select id=\"c-year-2\">\r\n          <option value=\"1\">2013</option>\r\n          <option value=\"2\">2012</option>\r\n          <option value=\"3\">2011</option>\r\n          <option value=\"4\">2010</option>\r\n        </select>\r\n\r\n        <select id=\"c-month-2\">\r\n          <option value=\"1\">Январь</option>\r\n          <option value=\"2\">Февраль</option>\r\n          <option value=\"3\">Март</option>\r\n          <option value=\"4\">Апрель</option>\r\n          <option value=\"5\">Май</option>\r\n          <option value=\"6\">Июнь</option>\r\n          <option value=\"7\">Июль</option>\r\n          <option value=\"8\">Август</option>\r\n          <option value=\"9\">Сентябрь</option>\r\n          <option value=\"10\">Октябрь</option>\r\n          <option value=\"11\">Ноябрь</option>\r\n          <option value=\"12\">Декабрь</option>\r\n        </select>\r\n\r\n        <ul class=\"c-days\">\r\n          <li><a href=\"#\">1</a></li>\r\n          <li><a href=\"#\">2</a></li>\r\n          <li><a href=\"#\">3</a></li>\r\n          <li><a href=\"#\" class=\"active\">4</a></li>\r\n          <li><a href=\"#\">5</a></li>\r\n          <li><a href=\"#\">6</a></li>\r\n          <li><a href=\"#\">7</a></li>\r\n          <li><span>8</span></li>\r\n          <li><span>9</span></li>\r\n          <li><a href=\"#\">10</a></li>\r\n          <li><a href=\"#\">11</a></li>\r\n          <li><a href=\"#\">12</a></li>\r\n          <li><a href=\"#\">13</a></li>\r\n          <li><a href=\"#\">14</a></li>\r\n          <li><a href=\"#\">15</a></li>\r\n          <li><a href=\"#\">16</a></li>\r\n          <li><a href=\"#\">17</a></li>\r\n          <li><span>18</span></li>\r\n          <li><a href=\"#\">19</a></li>\r\n          <li><a href=\"#\">20</a></li>\r\n          <li><a href=\"#\">21</a></li>\r\n          <li><a href=\"#\">22</a></li>\r\n          <li><a href=\"#\">23</a></li>\r\n          <li><a href=\"#\">24</a></li>\r\n          <li><a href=\"#\">25</a></li>\r\n          <li><a href=\"#\">26</a></li>\r\n          <li><a href=\"#\">27</a></li>\r\n          <li><a href=\"#\">28</a></li>\r\n          <li><a href=\"#\">29</a></li>\r\n          <li><a href=\"#\">30</a></li>\r\n          <li><span>31</span></li>\r\n          <li><a href=\"#\"></a></li>\r\n        </ul>\r\n      </div>\r\n\r\n      <div class=\"toggle-block\">\r\n        <ul class=\"event-list\">\r\n          <li>\r\n            <a href=\"#\" class=\"fl photo\">\r\n              <img src=\"temp/img-1.jpg\" alt=\"\">\r\n            </a>\r\n\r\n            <div class=\"body\">\r\n              <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n              <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n              <div class=\"addr\">Вологодская область, Вологда</div>\r\n              <div class=\"stats\">\r\n                <span>\r\n                  <span class=\"ico-want-small\"></span>\r\n                  15\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-like-small\"></span>\r\n                  23\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-comment-small\"></span>\r\n                  2\r\n                </span>\r\n              </div>\r\n\r\n              <div class=\"short-desc\">\r\n                <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                <div class=\"body\">\r\n                  <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                  <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </li>\r\n\r\n          <li class=\"even\">\r\n            <a href=\"#\" class=\"fl photo\">\r\n              <img src=\"temp/img-2.jpg\" alt=\"\">\r\n            </a>\r\n\r\n            <div class=\"body\">\r\n              <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n              <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n              <div class=\"addr\">Вологодская область, Вологда</div>\r\n              <div class=\"stats\">\r\n                <span>\r\n                  <span class=\"ico-want-small\"></span>\r\n                  15\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-like-small\"></span>\r\n                  23\r\n                </span>\r\n\r\n                <span>\r\n                  <span class=\"ico-comment-small\"></span>\r\n                  2\r\n                </span>\r\n              </div>\r\n\r\n              <div class=\"short-desc\">\r\n                <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                <div class=\"body\">\r\n                  <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                  <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </li>\r\n        </ul>\r\n\r\n        <div class=\"hidden-content\">\r\n          <ul class=\"event-list\">\r\n            <li>\r\n              <a href=\"#\" class=\"fl photo\">\r\n                <img src=\"temp/img-1.jpg\" alt=\"\">\r\n              </a>\r\n\r\n              <div class=\"body\">\r\n                <time datetime=\"2013-02-06\">1-6 февраля</time>\r\n\r\n                <h3><a href=\"#\">IT Форум 2013</a></h3>\r\n                <div class=\"addr\">Вологодская область, Вологда</div>\r\n                <div class=\"stats\">\r\n                  <span>\r\n                    <span class=\"ico-want-small\"></span>\r\n                    15\r\n                  </span>\r\n\r\n                  <span>\r\n                    <span class=\"ico-like-small\"></span>\r\n                    23\r\n                  </span>\r\n\r\n                  <span>\r\n                    <span class=\"ico-comment-small\"></span>\r\n                    2\r\n                  </span>\r\n                </div>\r\n\r\n                <div class=\"short-desc\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n                  <div class=\"body\">\r\n                    <a href=\"#\" class=\"a-author\">Товарищ SinteZ</a>\r\n\r\n                    <p>Наряду с храмом Покрова на Рву в Москве</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n\r\n        <a href=\"#\" class=\"a-toggle\">все события <span>&darr;</span></a>\r\n      </div>\r\n\r\n      <a href=\"#\" class=\"btn btn-event\"><b>+</b> Событие</a>\r\n    </div>\r\n    -->\r\n  </div>\r\n\r\n  <div class=\"tabs-content p-common-content\">\r\n    <!--\r\n    <section class=\"p-block event-labels\">\r\n      <h4 class=\"title-block\">Коллекции с этим местом</h4>\r\n\r\n      <menu class=\"p-nav-collection\">\r\n        <a href=\"#\" class=\"prev\">&larr; предыдущие</a>\r\n        <a href=\"#\" class=\"next\">следующие &rarr;</a>\r\n      </menu>\r\n\r\n      <div class=\"clearfix body\">\r\n        <div class=\"scroll-photos\">\r\n          <ul class=\"ul-collection-list\">\r\n            <li>\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n\r\n            <li>\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n\r\n              <div class=\"ucl-item\">\r\n                <div class=\"photo\">\r\n                  <div class=\"yasen-info\">\r\n                    <div class=\"yp-info\">\r\n                      <i class=\"yp-like\"></i><small>12</small>\r\n                    </div>\r\n                  </div>\r\n\r\n                  <a href=\"#\" class=\"a-photo\"><img src=\"temp/photo-166x132.jpg\" alt=\"\" width=\"166\" height=\"132\"></a>\r\n                </div>\r\n\r\n                <ul class=\"photo-preview\">\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n\r\n                  <li>\r\n                    <a href=\"#\">\r\n                      <img src=\"temp/img-51x41.jpg\" alt=\"\" width=\"51\" height=\"41\">\r\n                    </a>\r\n                  </li>\r\n                </ul>\r\n\r\n                <div class=\"body\">\r\n                  <img src=\"temp/avatar.jpg\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n                  <div class=\"collection-short-desc\">\r\n                    <h3>Путешествие в лето</h3>\r\n                    <p>Коллекция Андрея Короткова</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </section>\r\n    -->\r\n\r\n    <!--\r\n    <section class=\"p-block peoples\">\r\n      <h4 class=\"title-block\">Это место хотят посетить</h4>\r\n\r\n      <div class=\"clearfix toggle-block\">\r\n        <a href=\"#\"><img src=\"temp/avatar.jpg\" alt=\"\"></a>\r\n\r\n        <div class=\"clearfix hidden-content\">\r\n          <a href=\"#\"><img src=\"temp/avatar.jpg\" alt=\"\"></a>\r\n        </div>\r\n\r\n        <a href=\"#\" class=\"a-toggle\">все пользователи <span>&darr;</span></a>\r\n      </div>\r\n    </section>\r\n    -->\r\n\r\n    ";
+  buffer += "\r\n        </div>\r\n\r\n        <div class=\"mode\">\r\n          <h4 class=\"title-block\">\r\n            <a href=\"#\" class=\"a-remove-mode\" title=\"Удалить\" data-toggle=\"tooltip\"></a>\r\n            <a href=\"#\" class=\"a-edit-mode\" title=\"Редактировать\" data-toggle=\"tooltip\"></a>\r\n            Режим работы\r\n          </h4>\r\n\r\n          <textarea rows=\"7\" cols=\"60\" id=\"mode-field\" readonly>\r\n          Понедельник - с 8:00 до 17:00\r\n          Вторник - с 8:00 до 17:00\r\n          Среда - с 8:00 до 17:00\r\n          Четверг - с 8:00 до 17:00\r\n          Пятница - с 8:00 до 17:00\r\n          Суббота - выходной\r\n          Воскресение - выходной</textarea>\r\n        </div>\r\n\r\n        <div class=\"add-new-section\">\r\n          <h4 class=\"title-block\">Создайте новый раздел</h4>\r\n\r\n          <div class=\"add-new-section-body\">\r\n            <input type=\"text\" placeholder=\"Введите название, например, режим работы..\">\r\n            <textarea cols=\"50\" rows=\"4\" placeholder=\"Введите подробное описание...\"></textarea>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    -->\r\n  </div>\r\n\r\n  <div class=\"tabs-content p-common-content\">\r\n    ";
   stack2 = helpers['if'].call(depth0, depth0.tags, {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </div>\r\n</div>\r\n\r\n</div>\r\n\r\n";
@@ -823,7 +870,11 @@ function program1(depth0,data) {
   options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
+  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
   if (stack2 = helpers.ypi) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.ypi; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -852,10 +903,10 @@ function program1(depth0,data) {
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\" class=\"a-photo nonav\">\r\n      ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </a>\r\n  </div>\r\n\r\n  <ul class=\"photo-preview a-photo nonav\">\r\n    ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\"/media/"
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -878,6 +929,12 @@ function program2(depth0,data) {
 
 function program4(depth0,data) {
   
+  
+  return "\r\n    <a href=\"#\" class=\"a-edit-new\" data-toggle=\"tooltip\" title=\"отредактировать\" data-placement=\"bottom\"></a>\r\n    ";
+  }
+
+function program6(depth0,data) {
+  
   var buffer = "", stack1;
   buffer += "\r\n        <img src=\""
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.thumbnail207)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -887,13 +944,13 @@ function program4(depth0,data) {
   return buffer;
   }
 
-function program6(depth0,data) {
+function program8(depth0,data) {
   
   
   return "\r\n        <img src=\"/static/images/collection_logo.png\" alt=\"\" width=\"65\" height=\"52\">\r\n      ";
   }
 
-function program8(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n      <li>\r\n        <a href=\"#\">\r\n          <img src=\""
@@ -906,16 +963,16 @@ function program8(depth0,data) {
   return buffer;
   }
 
-function program10(depth0,data) {
+function program12(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\r\n      ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[1]), {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[1]), {hash:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    ";
   return buffer;
   }
-function program11(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        <li>\r\n          <a href=\"#\">\r\n            <img src=\""
@@ -926,16 +983,16 @@ function program11(depth0,data) {
   return buffer;
   }
 
-function program13(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = "", stack1, stack2;
   buffer += "\r\n        ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      ";
   return buffer;
   }
-function program14(depth0,data) {
+function program16(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n          <li>\r\n            <a href=\"#\">\r\n              <img src=\""
@@ -944,14 +1001,18 @@ function program14(depth0,data) {
   return buffer;
   }
 
-function program16(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n  <div class=\"photo\">\r\n    <a href=\"#\" class=\"a-like a-like-ok ";
   options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    <a href=\"#\" class=\"a-collection nonav\" title=\"добавить в коллекцию\" data-toggle=\"tooltip\" data-placement=\"bottom\">В коллекцию</a>\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
+  buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    <a href=\"#\" class=\"a-collection nonav\" title=\"добавить в коллекцию\" data-toggle=\"tooltip\" data-placement=\"bottom\">В коллекцию</a>\r\n    ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
   if (stack2 = helpers.ypi) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.ypi; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -1001,7 +1062,7 @@ function program16(depth0,data) {
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type_of_item, "set", options) : helperMissing.call(depth0, "ifEquals", depth0.type_of_item, "set", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n\r\n";
-  options = {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type_of_item, "point", options) : helperMissing.call(depth0, "ifEquals", depth0.type_of_item, "point", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n";
@@ -1071,6 +1132,175 @@ function program1(depth0,data) {
   return buffer;
   });
 
+this["Templates"]["RoutesDetail"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n  <li>\r\n    <div class=\"path-name-place\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + ", "
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.address)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</div>\r\n    \r\n    ";
+  stack2 = helpers['if'].call(depth0, depth0.segments, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n  </li>\r\n  ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <ul>\r\n      ";
+  stack1 = helpers.each.call(depth0, depth0.segments, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    </ul>\r\n    ";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n        <li>\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "прямо", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "прямо", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "налево", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "налево", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          ";
+  options = {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.direct, "направо", options) : helperMissing.call(depth0, "ifEquals", depth0.direct, "направо", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          <div class=\"black\">";
+  if (stack2 = helpers.direct) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.direct; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + " ";
+  if (stack2 = helpers.street) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.street; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "</div>\r\n          ";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.distance, options) : helperMissing.call(depth0, "safe", depth0.distance, options)))
+    + "\r\n        </li>\r\n      ";
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-direct.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+function program6(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-left.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+function program8(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n            <img src=\"/static/images/arrow-right.png\" alt=\"ехать ";
+  if (stack1 = helpers.direct) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.direct; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" width=\"18\" height=\"18\">\r\n          ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"dp-top\">\r\n  Ехать на машине\r\n  <div class=\"black\">";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.totalTime, options) : helperMissing.call(depth0, "safe", depth0.totalTime, options)))
+    + " - ";
+  options = {hash:{},data:data};
+  buffer += escapeExpression(((stack1 = helpers.safe),stack1 ? stack1.call(depth0, depth0.totalDistance, options) : helperMissing.call(depth0, "safe", depth0.totalDistance, options)))
+    + "</div>\r\n</div>\r\n\r\n<ol class=\"ol-details-path\">\r\n  ";
+  stack2 = helpers.each.call(depth0, depth0.ways, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n</ol>\r\n";
+  return buffer;
+  });
+
+this["Templates"]["RoutesDropdown"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  ";
+  stack1 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  <li data-title=\"";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-desc=\"";
+  if (stack1 = helpers.address) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.address; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-point-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</li>\r\n  ";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  
+  return "\r\n  <li class=\"\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n";
+  }
+
+  stack1 = helpers['if'].call(depth0, depth0.points, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n\r\n";
+  return buffer;
+  });
+
+this["Templates"]["RoutesSaveView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<div class=\"p-top\">\r\n  <h3>Новый маршрут</h3>\r\n  <input type=\"button\" class=\"p-close\" value=\" \">\r\n</div>\r\n\r\n<div class=\"p-body\">\r\n  <form >\r\n    <div class=\"line\">\r\n      <label for=\"input-add-new\">Создайте новый маршрут </label>\r\n      <input type=\"text\" placeholder=\"Введите название маршрута...\" id=\"input-add-new-name\">\r\n    </div>\r\n\r\n    <div class=\"line\">\r\n      <input type=\"text\" placeholder=\"Введите описание маршрута...\" id=\"input-add-new-desc\">\r\n    </div>\r\n\r\n    <input type=\"submit\" value=\"Создать\" class=\"a-btn a-add-collection\">\r\n  </form>\r\n</div>\r\n";
+  });
+
+this["Templates"]["RoutesView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<h1 class=\"title-add-path\">Формирование маршрута</h1>\r\n<div class=\"aside-content\">\r\n  <div class=\"pap-viewport\">\r\n    <div class=\"field-enter-place\">\r\n      <div class=\"drop-filter search-matches\">\r\n        <input type=\"text\" class=\"route-input\" placeholder=\"Добавить месторасположение...\">\r\n        \r\n        <input type=\"button\" class=\"drop-filter-clear\">\r\n        \r\n        <ul class=\"drop-results\">\r\n          <li class=\"not-matches hidden\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n          <li data-title=\"Тест\" data-desc=\"Тестовый\" data-id-place=\"90\">Тестовый Текст</li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n    \r\n    <div class=\"msg-hint\">\r\n      Добавляйте места на карту через строку мультипоиска на карте или через строку поиска в окне &laquo;Формирование маршрута&raquo;\r\n    </div>\r\n    \r\n    <ol class=\"ol-add-path-places\"></ol>\r\n    \r\n    <div class=\"line-add-path-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-add-path disabled\">Создать маршрут</a>\r\n      <a href=\"/\" class=\"nonav a-btn btn-return\">Вернуться на главную</a>\r\n    </div>\r\n    \r\n    <div class=\"line-add-path-btn\" id=\"action-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-clear-map\">Очистить карту</a><a href=\"#\" class=\"a-btn btn-save\">Сохранить</a><a href=\"#\" class=\"a-btn btn-print\">Печать</a>\r\n    </div>\r\n    \r\n    <div class=\"details-path\"></div>\r\n  </div>\r\n</div>\r\n";
+  });
+
 this["Templates"]["SetDetailView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1124,48 +1354,57 @@ function program6(depth0,data) {
 
 function program8(depth0,data) {
   
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n    <div class=\"tabs-content p-common-content\">\r\n      <section class=\"p-block event-labels\">\r\n          <h4 class=\"title-block\">Метки</h4>\r\n\r\n          <div class=\"body\">\r\n            ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          </div>\r\n      </section>\r\n    </div><!-- end .p-common-content -->\r\n    ";
+  return buffer;
+  }
+function program9(depth0,data) {
+  
   var buffer = "", stack1;
-  buffer += "\r\n                <div class=\"label\">";
+  buffer += "\r\n              <div class=\"label\">";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n              ";
+    + "</div>\r\n            ";
   return buffer;
   }
 
-function program10(depth0,data) {
+function program11(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n      <div class=\"c-buttons\">\r\n        <a href=\"#\" class=\"a-btn stp-like ";
-  options = {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data};
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\">Нравится</a>\r\n        ";
-  options = {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      </div>\r\n    ";
   return buffer;
   }
-function program11(depth0,data) {
+function program12(depth0,data) {
   
   
   return "marked";
   }
 
-function program13(depth0,data) {
+function program14(depth0,data) {
   
   
   return "<a href=\"#\" class=\"a-btn stp-edit\">Редактировать</a>";
   }
 
-function program15(depth0,data) {
+function program16(depth0,data) {
   
   
   return "\r\n      ";
   }
 
-function program17(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        коллекцию добавил\r\n        <a href=\"#\">"
@@ -1176,7 +1415,7 @@ function program17(depth0,data) {
   return buffer;
   }
 
-function program19(depth0,data) {
+function program20(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n        <span class=\"hellip\">…</span>\r\n        <span class=\"hidden more-desc\">";
@@ -1187,11 +1426,11 @@ function program19(depth0,data) {
   return buffer;
   }
 
-function program21(depth0,data,depth1) {
+function program22(depth0,data,depth1) {
   
   var buffer = "", stack1, stack2, options;
   buffer += "\r\n        <li class=\"choose_place ";
-  options = {hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(23, program23, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.id, ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", depth0.id, ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" data-placemark-id=\"placemark-1\">\r\n          <a href=\"/set/"
@@ -1211,7 +1450,7 @@ function program21(depth0,data,depth1) {
     + "</a>\r\n            <button type=\"button\" class=\"remove-collection\"></button>\r\n          </li>\r\n        ";
   return buffer;
   }
-function program22(depth0,data) {
+function program23(depth0,data) {
   
   
   return "active";
@@ -1235,23 +1474,23 @@ function program22(depth0,data) {
     + "\r\n        </span>\r\n      </div>\r\n  </header>\r\n\r\n  <div class=\"wide-box\">\r\n    <ul class=\"p-tabs\">\r\n      <li class=\"active\"><a href=\"#tab-photo\" data-toggle=\"tab\">Фотография</a></li>\r\n      <li><a href=\"#tab-map\" data-toggle=\"tab\">На карте</a></li>\r\n      <li><a href=\"#tab-desc\" data-toggle=\"tab\">Описание</a></li>\r\n\r\n      <li><div class=\"shadow\"></div></li>\r\n    </ul>\r\n\r\n    <div class=\"tabs-content\">\r\n\r\n      <div id=\"tab-photo\" class=\"tab-pane active\">\r\n        <div class=\"tabs-content\">\r\n          <div class=\"toggle-block\">\r\n            <div class=\"clearfix p-gallery\">\r\n              <div class=\"clearfix place-photos\">\r\n                <div class=\"photos-gallery\">\r\n                  <ul>\r\n                    ";
   stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.imgs), {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n                  </ul>\r\n                </div>\r\n\r\n                <div class=\"item-photo load-photo\">\r\n                  <form id=\"addPhotoForm\" action=\"\" method=\"POST\" enctype=\"multipart/form-data\">\r\n                    <input name=\"img\" type=\"file\">\r\n                  </form>\r\n                </div>\r\n\r\n                <span class=\"photos-next\"></span>\r\n                <span class=\"photos-prev\"></span>\r\n              </div>\r\n\r\n              <div id=\"big-photo\"></div><!-- end #big-photo -->\r\n\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div><!-- end #tab-photo -->\r\n\r\n      <div id=\"tab-map\" class=\"tab-pane\">\r\n        <div class=\"map\">\r\n            <div id=\"popup-map-1\" style=\"width:560px; height:510px\"></div>\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->\r\n\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->\r\n            <div class=\"m-ico-group\">\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hotel\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-cafe\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-restoran\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-turism\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-azs\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-active-rest\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-sto\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-commerc\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hunting\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-events\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-shop\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-fishing\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-monument\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-church\"></span>\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div id=\"near-objects\">\r\n          <h4 class=\"title-block\">Ближайшие гостинницы</h4>\r\n\r\n          <ol>\r\n            <li>\r\n              <h5>Место номер один</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер два</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер три</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер четыре</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер пять</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n          </ol>\r\n        </div>\r\n\r\n      </div><!-- end #tab-map -->\r\n\r\n      <div id=\"tab-desc\" class=\"tab-pane\">\r\n        <div class=\"toggle-block\">\r\n          <ul class=\"ul-desc\"></ul>\r\n          <div class=\"hidden-content\">\r\n            <ul class=\"ul-desc\"></ul>\r\n          </div>\r\n\r\n          <a href=\"#\" class=\"a-toggle\">Ещё описания <span>&darr;</span></a>\r\n        </div>\r\n\r\n        <div class=\"add-comment\">\r\n          <form action=\"#\">\r\n            <div class=\"ac-block\">\r\n              <img src=\"/media/"
+  buffer += "\r\n                  </ul>\r\n                </div>\r\n\r\n                <div class=\"item-photo load-photo\">\r\n                  <form id=\"addPhotoForm\" action=\"\" method=\"POST\" enctype=\"multipart/form-data\">\r\n                    <input name=\"img\" type=\"file\">\r\n                  </form>\r\n                </div>\r\n\r\n                <span class=\"photos-next\"></span>\r\n                <span class=\"photos-prev\"></span>\r\n              </div>\r\n\r\n              <div id=\"big-photo\"></div><!-- end #big-photo -->\r\n\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div><!-- end #tab-photo -->\r\n\r\n      <div id=\"tab-map\" class=\"tab-pane\">\r\n        <div class=\"map\">\r\n            <div id=\"popup-map\" style=\"width:560px; height:510px\"></div>\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->\r\n\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->\r\n            <div class=\"m-ico-group\">\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hotel\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-cafe\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-restoran\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-turism\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-azs\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-active-rest\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-sto\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-commerc\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hunting\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-events\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-shop\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-fishing\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-monument\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-church\"></span>\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div id=\"near-objects\">\r\n          <h4 class=\"title-block\">Ближайшие гостинницы</h4>\r\n\r\n          <ol>\r\n            <li>\r\n              <h5>Место номер один</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер два</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер три</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер четыре</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер пять</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n          </ol>\r\n        </div>\r\n\r\n      </div><!-- end #tab-map -->\r\n\r\n      <div id=\"tab-desc\" class=\"tab-pane\">\r\n        <div class=\"toggle-block\">\r\n          <ul class=\"ul-desc\"></ul>\r\n          <div class=\"hidden-content\">\r\n            <ul class=\"ul-desc\"></ul>\r\n          </div>\r\n\r\n          <a href=\"#\" class=\"a-toggle\">Ещё описания <span>&darr;</span></a>\r\n        </div>\r\n\r\n        <div class=\"add-comment\">\r\n          <form action=\"#\">\r\n            <div class=\"ac-block\">\r\n              <img src=\"/media/"
     + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n              <div class=\"ac-body\">\r\n                <div class=\"toggle-area\">\r\n                  <textarea rows=\"3\" cols=\"40\"></textarea>\r\n                  <input type=\"submit\" value=\" \">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </div>\r\n      </div><!-- end #tab-desc -->\r\n\r\n      <div class=\"tabs-content p-common-content\" style=\"display: none\">\r\n        <section class=\"p-block peoples\">\r\n          <h4 class=\"title-block\">Это место хотят посетить</h4>\r\n          <div class=\"clearfix toggle-block\">\r\n            <div class=\"clearfix hidden-content\"></div>\r\n            <a href=\"#\" class=\"a-toggle\">Ещё пользователи <span>&darr;</span></a>\r\n          </div>\r\n        </section>\r\n\r\n        <section class=\"p-block event-labels\">\r\n            <h4 class=\"title-block\">Метки</h4>\r\n\r\n            <div class=\"body\">\r\n              ";
-  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+    + "\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n              <div class=\"ac-body\">\r\n                <div class=\"toggle-area\">\r\n                  <textarea rows=\"3\" cols=\"40\"></textarea>\r\n                  <input type=\"submit\" value=\" \">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </div>\r\n      </div><!-- end #tab-desc -->\r\n    </div><!-- .tabs.content -->\r\n\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n            </div>\r\n        </section>\r\n      </div><!-- end .tabs-content -->\r\n    </div>\r\n  </div>\r\n\r\n  <footer>\r\n    ";
+  buffer += "\r\n  </div><!-- end .wide-box -->\r\n\r\n  <footer>\r\n    ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n  </footer>\r\n</div><!-- end .cleatfix-body -->\r\n\r\n<header id=\"c-top-panel\">\r\n  <div class=\"inner-wrap\">\r\n    <aside class=\"stp-buttons\">\r\n    ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      <div class=\"c-edit-buttons\">\r\n        <!--<a href=\"#\" class=\"a-btn stp-remove\">Удалить</a>-->\r\n        <a href=\"#\" class=\"a-btn stp-save\">Сохранить</a>\r\n      </div>\r\n    </aside>\r\n\r\n    <div class=\"ctp-head\">\r\n      <h1>";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "</h1>\r\n      ";
-  options = {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),data:data};
+  options = {hash:{},inverse:self.program(18, program18, data),fn:self.program(16, program16, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.author, "new", options) : helperMissing.call(depth0, "ifEquals", depth0.author, "new", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </div>\r\n\r\n    <div class=\"ctp-content\">\r\n      ";
@@ -1259,7 +1498,7 @@ function program22(depth0,data) {
   else { stack2 = depth0.headDescription; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\r\n      ";
-  stack2 = helpers['if'].call(depth0, depth0.tailDescription, {hash:{},inverse:self.noop,fn:self.program(19, program19, data),data:data});
+  stack2 = helpers['if'].call(depth0, depth0.tailDescription, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </div>\r\n\r\n    <div class=\"c-edit-inputs\">\r\n      <input type=\"text\" value=\"";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1270,7 +1509,7 @@ function program22(depth0,data) {
   else { stack2 = depth0.description; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "\">\r\n    </div>\r\n  </div>\r\n</header>\r\n\r\n<aside id=\"c-left-panel\">\r\n  <div class=\"aside-content\">\r\n    <div class=\"aside-viewport\">\r\n      <ol id=\"ol-collection\">\r\n        ";
-  stack2 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.programWithDepth(21, program21, data, depth0),data:data});
+  stack2 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.programWithDepth(22, program22, data, depth0),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n      </ol>\r\n    </div>\r\n\r\n    <a href=\"#\" class=\"clp-up\"></a> <!-- clp- collection left panel  -->\r\n    <a href=\"#\" class=\"clp-down\"></a>\r\n  </div>\r\n</aside>\r\n";
   return buffer;
@@ -1278,6 +1517,20 @@ function program22(depth0,data) {
 (function() {
   Handlebars.registerHelper('ifEquals', function(v1, v2, options) {
     if ((v1 != null ? v1.toString() : void 0) === (v2 != null ? v2.toString() : void 0)) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
+  Handlebars.registerHelper('ifContains', function(v1, v2, options) {
+    var contain;
+
+    if (v2 === void 0) {
+      return false;
+    }
+    contain = _.contains(v2, v1);
+    if (contain) {
       return options.fn(this);
     } else {
       return options.inverse(this);
@@ -1341,6 +1594,10 @@ function program22(depth0,data) {
       strEnd = str.slice(10);
       return new Handlebars.SafeString("" + strBegin + "&shy;" + strEnd);
     }
+  });
+
+  Handlebars.registerHelper('safe', function(str, options) {
+    return new Handlebars.SafeString(str);
   });
 
 }).call(this);
@@ -1461,6 +1718,19 @@ function program22(depth0,data) {
         this.router = new Yapp.Map.Router({
           controller: new Yapp.Map.Controller
         });
+        this.mapView = new Yapp.Map.MapView;
+        Yapp.map.show(this.mapView);
+        this.clusterIcons = [
+          {
+            href: '/media/icons/cluster_small.png',
+            size: [32, 32],
+            offset: [-23, -23]
+          }, {
+            href: '/media/icons/cluster_big.png',
+            size: [59, 59],
+            offset: [-29, -29]
+          }
+        ];
         this.geocode = function(request, options) {
           var dfd;
 
@@ -1471,8 +1741,9 @@ function program22(depth0,data) {
             return dfd.resolve();
           }
         };
+        this.mapDeferred = $.Deferred();
         return $.getScript(Yapp.YA_MAP_URL, function() {
-          return ymaps.ready(function() {
+          return _this.mapDeferred.promise(ymaps.ready(function() {
             var map, pointCollection;
 
             console.log('Init Yandex map');
@@ -1483,12 +1754,53 @@ function program22(depth0,data) {
             Yapp.user.set({
               location: ymaps.geolocation
             });
-            map.controls.add('zoomControl').add('typeSelector');
+            map.controls.add('zoomControl', {
+              right: 5,
+              top: 80
+            }).add('typeSelector');
             pointCollection = new ymaps.GeoObjectCollection();
             map.geoObjects.add(pointCollection);
             _this.yandexmap = map;
-            return _this.trigger('load:yandexmap', _this.yandexmap);
-          });
+            _this.trigger('load:yandexmap', _this.yandexmap);
+            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">+</span>\n  </a>\n\n  <div class=\"name-place\" style=\"overflow: hidden;\">$[properties.point.name]</div>\n</div>", {
+              build: function() {
+                this.constructor.superclass.build.call(this);
+                $('.placemark').bind('mouseenter', this.onMouseOver);
+                $('.placemark').bind('mouseleave', this.onMouseOut);
+                return this.events.add('click', function(event) {
+                  return Yapp.vent.trigger('click:placemark', event);
+                });
+              },
+              clear: function() {
+                $('.placemark').unbind('mouseenter', this.onMouseOver);
+                $('.placemark').unbind('mouseleave', this.onMouseOut);
+                this.events.remove('click', function(event) {
+                  return Yapp.vent.trigger('click:placemark', event);
+                });
+                return this.constructor.superclass.clear.call(this);
+              },
+              onMouseOut: function() {
+                var me;
+
+                me = $(this);
+                return $(".name-place", this).stop().animate({
+                  width: 0
+                }, 150, function() {
+                  return me.removeClass('hover');
+                });
+              },
+              onMouseOver: function() {
+                var w;
+
+                $(this).addClass('hover');
+                w = $(".name-place", this).data("width") || $(".name-place", this).outerWidth();
+                return $(".name-place", this).data("width", w).width(0).stop().animate({
+                  width: w - 29
+                }, 200);
+              }
+            });
+            return _this.mapDeferred.resolve();
+          }));
         });
       });
     }
@@ -1511,6 +1823,28 @@ function program22(depth0,data) {
         console.log('initializing Points Module');
         return this.router = new Yapp.Points.Router({
           controller: new Yapp.Points.Controller()
+        });
+      });
+    }
+  });
+
+}).call(this);
+
+/**
+# Routes module.
+# @bmodule Yapp
+# @Routes
+*/
+
+
+(function() {
+  Yapp.module('Routes', {
+    startWithParent: false,
+    define: function() {
+      return this.addInitializer(function() {
+        console.log('initializing Routes Module');
+        return this.router = new Yapp.Routes.Router({
+          controller: new Yapp.Routes.Controller
         });
       });
     }
@@ -1579,7 +1913,21 @@ function program22(depth0,data) {
       console.log('initializing Yapp.Common.PopupRegion');
       this.body = 'body';
       this.wrapper = '#popups';
-      return this.overlay = '#overlay';
+      this.overlay = '#overlay';
+      this.regionManager = new Marionette.RegionManager();
+      return this.regions = this.regionManager.addRegions({
+        alerts: '#alerts'
+      });
+    };
+
+    /**
+    # Override this method to change how the region show the DOM element.
+    # @method open
+    */
+
+
+    PopupRegion.prototype.open = function(view) {
+      return this.$el.append(view.el);
     };
 
     /**
@@ -1589,11 +1937,11 @@ function program22(depth0,data) {
 
 
     PopupRegion.prototype.getEl = function(selector) {
-      var $el, _this;
+      var $el,
+        _this = this;
 
-      _this = this;
       $el = $(selector);
-      $el.click(function(event) {
+      $el.unbind('click').bind('click', function(event) {
         if ($(event.target).hasClass('scroll-box')) {
           return _this.close();
         }
@@ -1603,26 +1951,45 @@ function program22(depth0,data) {
 
     /**
     # Event method. It triggers when view fully rendered. Show popup overlays.
-    # @method onShow
+    # @event onShow
     */
 
 
     PopupRegion.prototype.onShow = function() {
+      var _this = this;
+
       $(this.body).css('overflow', 'hidden');
       $(this.overlay).show();
-      return $(this.wrapper).show();
+      $(this.wrapper).show();
+      return this.regions.alerts.on('show', function(view) {
+        var $target, css;
+
+        $target = view.options.target;
+        css = {
+          margin: 0,
+          left: '70%',
+          top: $target.offset().top,
+          position: 'absolute'
+        };
+        view.$el.css(css);
+        return view.ui.closeButton.unbind('click').bind('click', function() {
+          return view.close();
+        });
+      });
     };
 
     /**
     # Event method. Hide popup overlays.
-    # @method onClose
+    # @event onClose
     */
 
 
     PopupRegion.prototype.onClose = function() {
-      $(this.body).css('overflow', 'initial');
+      this.regions.alerts.off();
+      this.regions.alerts.close();
       $(this.overlay).hide();
       $(this.wrapper).hide();
+      $(this.body).css('overflow', 'initial');
       return Yapp.Common.router.navigate('/');
     };
 
@@ -1775,7 +2142,7 @@ function program22(depth0,data) {
 
 
     Point.prototype.urlRoot = function() {
-      return Yapp.API_BASE_URL + "/points/";
+      return Yapp.API_BASE_URL + "/api/v1/points/";
     };
 
     /**
@@ -1875,8 +2242,11 @@ function program22(depth0,data) {
 
 
     Point.prototype.like = function(target, successCallback, context) {
+      var id;
+
+      id = this.get('id');
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/points/like",
+        url: Yapp.API_BASE_URL + ("/api/v1/points/" + id + "/like/"),
         type: 'POST',
         context: context,
         successCallback: successCallback,
@@ -2001,10 +2371,33 @@ function program22(depth0,data) {
         context: context,
         successCallback: successCallback,
         params: {
-          id: photoId
+          photoId: photoId
         },
         data: {
           id: photoId
+        }
+      });
+    };
+
+    /**
+    # Add point into exists set.
+    # @param {Number} setId Set id for adding point
+    # @param {Function} successCallback Callback that will be call after success response
+    # @param {Object} context variable for binding this namespace
+    # @method addToSet
+    */
+
+
+    Point.prototype.addToSet = function(setId) {
+      return Yapp.request('request', {
+        url: Yapp.API_BASE_URL + "/collections/addpoint",
+        type: 'POST',
+        params: {
+          setId: setId
+        },
+        data: {
+          id: setId,
+          point: this.get('id')
         }
       });
     };
@@ -2062,10 +2455,32 @@ function program22(depth0,data) {
       return console.log("initializing Yapp.Points.Set");
     };
 
-    Set.prototype.idAttribute = 'unid';
+    /**
+    # Set url for model instance
+    # @property urlRoot
+    # @type String
+    # @default Yapp.API_BASE_URL + '/collections/'
+    */
+
 
     Set.prototype.urlRoot = function() {
-      return Yapp.API_BASE_URL + "/collections/";
+      return Yapp.API_BASE_URL + "/api/v1/sets/";
+    };
+
+    /**
+    # Defaults data of point model
+    # @property defaults
+    # @type Object
+    */
+
+
+    Set.prototype.defaults = function() {
+      return {
+        name: '',
+        description: '',
+        ypi: 0,
+        priority: 0
+      };
     };
 
     Set.prototype.validate = function(attrs, options) {
@@ -2075,20 +2490,8 @@ function program22(depth0,data) {
       if (attrs.name === '') {
         invalid.push('name');
       }
-      if (attrs.address === '') {
-        invalid.push('address');
-      }
-      if (attrs.longitude === '') {
-        invalid.push('longitude');
-      }
-      if (attrs.latitude === '') {
-        invalid.push('latitude');
-      }
-      if (!attrs.imgs || attrs.imgs.length === 0) {
-        invalid.push('photos');
-      }
-      if (!attrs.tags || attrs.tags.length === 0) {
-        invalid.push('tags');
+      if (attrs.description === '') {
+        invalid.push('description');
       }
       if (invalid.length > 0) {
         return invalid;
@@ -2116,6 +2519,29 @@ function program22(depth0,data) {
           collectionid: this.get('id')
         }
       });
+    };
+
+    /**
+    # Create new empty set.
+    # @param {Function} successCallback Callback that will be call after success response
+    # @param {Object} context variable for binding this namespace
+    # @method create
+    */
+
+
+    Set.prototype.create = function(successCallback, context) {
+      if (this.isValid()) {
+        return Yapp.request('request', {
+          url: Yapp.API_BASE_URL + "/collections/add",
+          type: 'POST',
+          context: context,
+          successCallback: successCallback,
+          params: {
+            set: this
+          },
+          data: this.attributes
+        });
+      }
     };
 
     return Set;
@@ -2452,9 +2878,25 @@ function program22(depth0,data) {
 
 
     MapView.prototype.initialize = function() {
+      var _this = this;
+
       console.log('initializing Yapp.Map.MapView');
       this.user = Yapp.user;
-      return this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      this.iconTemplate = Templates.IconTemplate;
+      _.bindAll(this, 'updatePointCollection');
+      this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      this.listenTo(Yapp.Points, 'update:collection', this.updatePointCollection);
+      $.get('/api/v1/map_yapens/').success(function(response) {
+        return _this.pointsByTag = _.partial(_this._filteredPoints, response);
+      });
+      return Yapp.request('request', {
+        url: '/tags/list',
+        context: this,
+        successCallback: this.renderIcons,
+        data: {
+          content: 'popular'
+        }
+      });
     };
 
     /**
@@ -2465,7 +2907,8 @@ function program22(depth0,data) {
 
 
     MapView.prototype.events = {
-      'click .a-toggle': 'toggleMap'
+      'click .a-toggle': 'toggleMap',
+      'click .m-ico': 'showCluster'
     };
 
     /**
@@ -2524,9 +2967,194 @@ function program22(depth0,data) {
       });
     };
 
+    /**
+    # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
+    # @event updatePointCollection
+    */
+
+
+    MapView.prototype.updatePointCollection = function(collection) {
+      return console.log(collection, 'collection reset');
+    };
+
+    /**
+    # TODO
+    # @event renderIcons
+    */
+
+
+    MapView.prototype.renderIcons = function(response) {
+      var icons;
+
+      icons = this.iconTemplate({
+        icons: response
+      });
+      this.$('.m-ico-group').html(icons);
+      return this.$el.find('[data-toggle=tooltip]').tooltip();
+    };
+
+    /**
+    # TODO
+    # @method _filteredPoints
+    # @private
+    */
+
+
+    MapView.prototype._filteredPoints = function(points, tagId) {
+      return _(points).filter(function(point) {
+        return _(point.tags).some({
+          id: tagId
+        });
+      }).value();
+    };
+
+    /**
+    # TODO
+    # @method createCluster
+    */
+
+
+    MapView.prototype.createCluster = function(tagId) {
+      var placemarks, points;
+
+      if (this.clusterer) {
+        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
+      }
+      this.clusterer = new ymaps.Clusterer({
+        clusterIcons: Yapp.Map.clusterIcons
+      });
+      points = this.pointsByTag(tagId);
+      placemarks = _.map(points, function(el) {
+        var tag;
+
+        tag = _(el.tags).find(function(tag) {
+          return tag.icon !== '';
+        });
+        return new ymaps.Placemark([el.latitude, el.longitude], {
+          id: 'map-point' + el.id,
+          point: el,
+          tag: tag
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        });
+      });
+      this.clusterer.add(placemarks);
+      return Yapp.Map.yandexmap.geoObjects.add(this.clusterer);
+    };
+
+    MapView.prototype.showCluster = function(event) {
+      var $target, tagId;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      if ($target.parent().hasClass('active')) {
+        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
+        $target.parent().removeClass('active');
+        return;
+      }
+      this.$('.m-ico-group a').removeClass('active');
+      $target.parent().addClass('active');
+      tagId = $target.data('id');
+      return this.createCluster(tagId);
+    };
+
     return MapView;
 
   })(Marionette.ItemView);
+
+}).call(this);
+
+/**
+# Submodule for all common functionality
+# @module Yapp
+# @submodule Common
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # Popup view for the comment complaint report
+  # @class Yapp.Common.ComplaintCommentView
+  # @extends Yapp.Common.PopupView
+  # @constructor
+  */
+
+
+  Yapp.Common.ComplaintCommentView = (function(_super) {
+    __extends(ComplaintCommentView, _super);
+
+    function ComplaintCommentView() {
+      _ref = ComplaintCommentView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # Init method of the view
+    # @method initialize
+    */
+
+
+    ComplaintCommentView.prototype.initialize = function() {
+      console.log('initialize ComplaintCommentView');
+      return this.user = Yapp.user;
+    };
+
+    /**
+    # Required field for Marionette.View
+    # @property template
+    # @type Object
+    # @default Templates.ComplaintCommentView
+    */
+
+
+    ComplaintCommentView.prototype.template = Templates.ComplaintCommentView;
+
+    ComplaintCommentView.prototype.id = 'complaint-comment';
+
+    ComplaintCommentView.prototype.className = 'popup popup-alert';
+
+    /**
+    # Ui elements for view
+    # @type Object
+    # @property ui
+    */
+
+
+    ComplaintCommentView.prototype.ui = {
+      closeButton: '.p-close'
+    };
+
+    /**
+    # The view event triggers
+    # @type Object
+    # @property events
+    */
+
+
+    ComplaintCommentView.prototype.events = {
+      'click .p-close': 'hidePopup'
+    };
+
+    /**
+    # Method for hide popup
+    # @method hidePopup
+    */
+
+
+    ComplaintCommentView.prototype.hidePopup = function(event) {
+      event.preventDefault();
+      return Yapp.popup.close();
+    };
+
+    return ComplaintCommentView;
+
+  })(Yapp.Common.PopupView);
 
 }).call(this);
 
@@ -2658,6 +3286,8 @@ function program22(depth0,data) {
 
 
     FooterView.prototype.template = Templates.FooterView;
+
+    FooterView.prototype.className = 'f-body';
 
     /**
     # The view event triggers
@@ -3264,6 +3894,216 @@ function program22(depth0,data) {
     return StubView;
 
   })(Marionette.ItemView);
+
+}).call(this);
+
+/**
+# Submodule for all points functionality
+# @module Yapp
+# @submodule Points
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # Composite view for the add to collection popup
+  # @class Yapp.Points.AddToCollectionView
+  # @extends Yapp.Common.PopupView
+  # @constructor
+  */
+
+
+  Yapp.Points.AddToCollectionView = (function(_super) {
+    __extends(AddToCollectionView, _super);
+
+    function AddToCollectionView() {
+      _ref = AddToCollectionView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # Init method of the view
+    # @method initialize
+    */
+
+
+    AddToCollectionView.prototype.initialize = function() {
+      console.log('initialize AddToCollectionView');
+      _.bindAll(this, 'render');
+      this.user = Yapp.user;
+      return this.listenTo(this.user, 'change:collections', this.render);
+    };
+
+    /**
+    # Required field for Marionette.View
+    # @property template
+    # @type Object
+    # @default Templates.AddToCollectionView
+    */
+
+
+    AddToCollectionView.prototype.template = Templates.AddToCollectionView;
+
+    AddToCollectionView.prototype.id = 'new-collection';
+
+    /**
+    # Ui elements for view
+    # @type Object
+    # @property ui
+    */
+
+
+    AddToCollectionView.prototype.ui = {
+      inputName: '#input-add-new-name',
+      inputDescription: '#input-add-new-desc',
+      closeButton: '.p-close'
+    };
+
+    /**
+    # The view event triggers
+    # @type Object
+    # @property events
+    */
+
+
+    AddToCollectionView.prototype.events = {
+      'click .p-close': 'hidePopup',
+      'click .custom-checkbox': 'toggleCheckbox',
+      'click .a-add-collection': 'createSet',
+      'click .a-to-collection': 'addToSet'
+    };
+
+    AddToCollectionView.prototype.onShow = function() {
+      return this.ui.inputName.focus();
+    };
+
+    /**
+    # Fired when .p-close click hide popup
+    # @event hidePopup
+    */
+
+
+    AddToCollectionView.prototype.hidePopup = function(event) {
+      event.preventDefault();
+      return Yapp.popup.close();
+    };
+
+    AddToCollectionView.prototype.toggleCheckbox = function(event) {
+      var $target;
+
+      $target = $(event.currentTarget);
+      if ($("input[type=checkbox]", $target).is(':checked')) {
+        return $target.addClass('checked');
+      } else {
+        return $target.removeClass('checked');
+      }
+    };
+
+    /**
+    # Fired when .a-add-collection click. Create new empty set.
+    # @event createSet
+    */
+
+
+    AddToCollectionView.prototype.createSet = function(event) {
+      var set, setDescription, setName;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setName = this.ui.inputName.val().trim();
+      setDescription = this.ui.inputDescription.val().trim();
+      if (!_.isEmpty(setName) && !_.isEmpty(setDescription)) {
+        set = new Yapp.Points.Set({
+          name: setName,
+          description: setDescription
+        });
+        return set.create(this.successCreateSet, this);
+      } else if (_.isEmpty(setName)) {
+        return this.ui.inputName.focus();
+      } else if (_.isEmpty(setDescription)) {
+        return this.ui.inputDescription.focus();
+      }
+    };
+
+    /**
+    # Fired when .a-to-collection click. Add point into exists set.
+    # @event addToSet
+    */
+
+
+    AddToCollectionView.prototype.addToSet = function(event) {
+      var setIds, statusOk,
+        _this = this;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setIds = _.map($('[type=checkbox]:checked'), function(el) {
+        return $(el).data('id');
+      });
+      if (!_.isEmpty(setIds)) {
+        statusOk = false;
+        return $.when.apply(this, _.map(setIds, this.model.addToSet, this.model)).done(function(response) {
+          var responses, result, success;
+
+          if (_.isArray(response)) {
+            result = arguments;
+          } else {
+            result = [arguments];
+          }
+          success = _(result).every(function(response) {
+            return response[1] === 'success';
+          });
+          responses = _(result).map(function(response) {
+            return response[0];
+          });
+          if (success) {
+            return _this.successAddToSet(responses.value(), setIds);
+          }
+        });
+      }
+    };
+
+    /**
+    # Callback for success adding point into exists set
+    # @param {Object} response Response data recieved from server api
+    # @param {Array} setIds Collection id array that point was added
+    # @method successAddToSet
+    */
+
+
+    AddToCollectionView.prototype.successAddToSet = function(response, setIds) {
+      console.log(response, setIds);
+      return this.ui.closeButton.click();
+    };
+
+    /**
+    # Callback for success adding point into exists set
+    # @param {Object} response Response data recieved from server api
+    # @param {Object} set New set instance
+    # @method successCreateSet
+    */
+
+
+    AddToCollectionView.prototype.successCreateSet = function(response, set) {
+      console.log(response, set);
+      this.ui.inputDescription.val('');
+      this.ui.inputName.val('');
+      this.user.get('collections').push({
+        id: set.get('id'),
+        name: set.get('name')
+      });
+      return this.user.trigger('change:collections');
+    };
+
+    return AddToCollectionView;
+
+  })(Yapp.Common.PopupView);
 
 }).call(this);
 
@@ -3950,7 +4790,9 @@ function program22(depth0,data) {
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
         'click .remove-photo': 'removePhoto',
-        'click a[href=#tab-map]': 'renderMap'
+        'click a[href=#tab-map]': 'renderMap',
+        'click .a-add-collection': 'addCollection',
+        'click .a-complaint-comment': 'complaintComment'
       };
     };
 
@@ -4149,6 +4991,30 @@ function program22(depth0,data) {
       return $target.val('');
     };
 
+    PointDetailView.prototype.addCollection = function(event) {
+      var $target, addToCollectionView;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      addToCollectionView = new Yapp.Points.AddToCollectionView({
+        model: this.model,
+        target: $target
+      });
+      return Yapp.popup.regions.alerts.show(addToCollectionView);
+    };
+
+    PointDetailView.prototype.complaintComment = function(event) {
+      var $target, complaintCommentView;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      complaintCommentView = new Yapp.Common.ComplaintCommentView({
+        model: this.model,
+        target: $target
+      });
+      return Yapp.popup.regions.alerts.show(complaintCommentView);
+    };
+
     /**
     # TODO
     # @method like
@@ -4251,27 +5117,16 @@ function program22(depth0,data) {
 
 
     PointDetailView.prototype.successLike = function(response, $target) {
-      var index, likeusers, me, _this;
+      var point;
 
-      _this = this;
-      likeusers = this.model.get('likeusers');
+      point = response[0];
+      this.model.set({
+        isliked: point.isliked,
+        likes_count: point.likes_count
+      });
       if ($target.hasClass('marked')) {
-        me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
-        });
-        index = _.indexOf(likeusers, me);
-        likeusers.splice(index, 1);
-        this.model.set({
-          likeusers: likeusers,
-          likes_count: this.model.get('likes_count') - 1
-        });
         return this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
-        this.model.set({
-          likesers: likeusers,
-          likes_count: this.model.get('likes_count') + 1
-        });
         return this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
     };
@@ -4283,7 +5138,8 @@ function program22(depth0,data) {
 
 
     PointDetailView.prototype.successLikePhoto = function(response, $target) {
-      var img, imgs, index, indexImg, likeusers, me, photo, _this;
+      var img, imgs, index, indexImg, likeusers, me, photo,
+        _this = this;
 
       photo = response[0];
       _this = this;
@@ -4296,13 +5152,13 @@ function program22(depth0,data) {
       likeusers = img.likeusers;
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
       img.likeusers = likeusers;
@@ -4339,9 +5195,8 @@ function program22(depth0,data) {
 
 
     PointDetailView.prototype.successRemoveComment = function(response, commentId) {
-      var comment, comments, index, photo, photoId, _this;
+      var comment, comments, index, photo, photoId;
 
-      _this = this;
       photoId = this.$('textarea').data('photo-id');
       photo = _.find(this.model.get('imgs'), function(photo) {
         return photo.id === photoId;
@@ -4379,9 +5234,8 @@ function program22(depth0,data) {
 
 
     PointDetailView.prototype.successRemovePhoto = function(response, photoId) {
-      var img, imgs, index, _this;
+      var img, imgs, index;
 
-      _this = this;
       imgs = this.model.get('imgs');
       img = _.find(imgs, function(img) {
         return img.id === photoId;
@@ -4430,6 +5284,17 @@ function program22(depth0,data) {
     }
 
     /**
+    # Init method of the view
+    # @method initialize
+    */
+
+
+    PointItemView.prototype.initialize = function() {
+      console.log('initializing Yapp.Points.PointItemView');
+      return this.user = Yapp.user;
+    };
+
+    /**
     # It wraps all instances of view into tr tag before render
     # @property tagName
     # @type String
@@ -4460,14 +5325,31 @@ function program22(depth0,data) {
     PointItemView.prototype.template = Templates.PointItemView;
 
     /**
-    # Init method of the view
-    # @method initialize
+    # The view model event triggers
+    # @property modelEvents
     */
 
 
-    PointItemView.prototype.initialize = function() {
-      console.log('initializing Yapp.Points.PointItemView');
-      return this.user = Yapp.user;
+    PointItemView.prototype.modelEvents = {
+      'change': 'render'
+    };
+
+    /**
+    # The view event triggers
+    # @property events
+    */
+
+
+    PointItemView.prototype.events = {
+      'click .photo .a-like': 'like',
+      'click .photo .a-collection': 'addToCollection',
+      'click .yp-title': 'toggleYpInfo',
+      'click .yp-info': 'toggleYpInfo'
+    };
+
+    PointItemView.prototype.ui = {
+      ypInfo: '.yp-info',
+      ypTitle: '.yp-title'
     };
 
     /**
@@ -4499,28 +5381,6 @@ function program22(depth0,data) {
     PointItemView.prototype.onClose = function() {
       console.log('onClose item trigger');
       return this.remove();
-    };
-
-    PointItemView.prototype.modelEvents = {
-      'change': 'render'
-    };
-
-    /**
-    # The view event triggers
-    # @property events
-    */
-
-
-    PointItemView.prototype.events = {
-      'click .photo .a-like': 'like',
-      'click .photo .a-collection': 'addToCollection',
-      'click .yp-title': 'toggleYpInfo',
-      'click .yp-info': 'toggleYpInfo'
-    };
-
-    PointItemView.prototype.ui = {
-      ypInfo: '.yp-info',
-      ypTitle: '.yp-title'
     };
 
     PointItemView.prototype.like = function(event) {
@@ -4558,14 +5418,18 @@ function program22(depth0,data) {
     };
 
     PointItemView.prototype.addToCollection = function(event) {
-      var $target;
+      var $target, addToCollectionView;
 
       if (!this.user.get('authorized')) {
         Yapp.vent.trigger('user:notauthorized');
         return;
       }
       event.preventDefault();
-      return $target = $(event.currentTarget);
+      $target = $(event.currentTarget);
+      addToCollectionView = new Yapp.Points.AddToCollectionView({
+        model: this.model
+      });
+      return Yapp.popup.show(addToCollectionView);
     };
 
     PointItemView.prototype.toggleYpInfo = function(event) {
@@ -4705,6 +5569,7 @@ function program22(depth0,data) {
 
     PointListView.prototype.onShow = function() {
       console.log('onShow trigger');
+      Yapp.Points.trigger('update:collection', this.collection);
       this.$el.find('[data-toggle=tooltip]').tooltip();
       if (this.wall) {
         return this.wall.reload();
@@ -4908,7 +5773,8 @@ function program22(depth0,data) {
         'bigPhoto': '#big-photo',
         'bigPhotoImg': '#big-photo > .bp-photo',
         'allPhotos': '.item-photo',
-        'placePhotos': '.place-photos'
+        'placePhotos': '.place-photos',
+        map: '.map'
       };
     };
 
@@ -4931,7 +5797,8 @@ function program22(depth0,data) {
         'submit #commentForm': 'submitCommentForm',
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
-        'click .remove-photo': 'removePhoto'
+        'click .remove-photo': 'removePhoto',
+        'click a[href=#tab-map]': 'renderMap'
       };
     };
 
@@ -4965,6 +5832,34 @@ function program22(depth0,data) {
         root: this.ui.placePhotos,
         visible: 4
       });
+    };
+
+    /**
+    # TODO
+    # @event renderMap
+    */
+
+
+    SetDetailView.prototype.renderMap = function(event) {
+      var coords, icon, placemark, _ref1;
+
+      if (!this.map) {
+        this.ui.map.height(500);
+        coords = [this.activePoint.latitude, this.activePoint.longitude];
+        icon = (_ref1 = this.activePoint.icon) != null ? _ref1 : '/media/icons/place-none.png';
+        this.map = new ymaps.Map('popup-map', {
+          center: coords,
+          zoom: 14
+        });
+        placemark = new ymaps.Placemark(coords, {
+          id: this.model.get('id')
+        }, {
+          iconImageHref: icon,
+          iconImageSize: [32, 36],
+          iconImageOffset: [-16, -38]
+        });
+        return this.map.geoObjects.add(placemark);
+      }
     };
 
     /**
@@ -5074,7 +5969,8 @@ function program22(depth0,data) {
         return point.id === pointId;
       });
       this.activePoint = point;
-      return this.model.trigger('change');
+      this.model.trigger('change');
+      return delete this.map;
     };
 
     /**
@@ -5127,29 +6023,32 @@ function program22(depth0,data) {
 
 
     SetDetailView.prototype.successLike = function(response, $target) {
-      var index, likeusers, me, _this;
+      var index, likeusers, me,
+        _this = this;
 
-      _this = this;
       likeusers = this.model.get('likeusers');
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
+        console.log(likeusers);
         this.model.set({
           likeusers: likeusers,
           likes_count: this.model.get('likes_count') - 1
         });
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
+        console.log(likeusers);
         this.model.set({
           likesers: likeusers,
           likes_count: this.model.get('likes_count') + 1
         });
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
+      return this.model.trigger('change');
     };
 
     /**
@@ -5240,10 +6139,10 @@ function program22(depth0,data) {
 
 
     SetDetailView.prototype.successLikePhoto = function(response, $target) {
-      var img, imgs, index, indexImg, likeusers, me, photo, _this;
+      var img, imgs, index, indexImg, likeusers, me, photo,
+        _this = this;
 
       photo = response[0];
-      _this = this;
       imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photo.id;
@@ -5253,13 +6152,13 @@ function program22(depth0,data) {
       likeusers = img.likeusers;
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
       img.likeusers = likeusers;
@@ -5297,9 +6196,8 @@ function program22(depth0,data) {
 
 
     SetDetailView.prototype.successRemoveComment = function(response, commentId) {
-      var comment, comments, index, photo, photoId, _this;
+      var comment, comments, index, photo, photoId;
 
-      _this = this;
       photoId = this.$('textarea').data('photo-id');
       photo = _.find(this.activePoint.imgs, function(photo) {
         return photo.id === photoId;
@@ -5337,9 +6235,8 @@ function program22(depth0,data) {
 
 
     SetDetailView.prototype.successRemovePhoto = function(response, photoId) {
-      var img, imgs, index, _this;
+      var img, imgs, index;
 
-      _this = this;
       imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photoId;
@@ -5354,6 +6251,708 @@ function program22(depth0,data) {
     return SetDetailView;
 
   })(Yapp.Common.PopupView);
+
+}).call(this);
+
+/**
+# Submodule for all routes functionality
+# @module Yapp
+# @submodule Routes
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # Popup view for the save route 
+  # @class Yapp.Routes.RoutesSaveView
+  # @extends Yapp.Common.PopupView
+  # @constructor
+  */
+
+
+  Yapp.Routes.RoutesSaveView = (function(_super) {
+    __extends(RoutesSaveView, _super);
+
+    function RoutesSaveView() {
+      _ref = RoutesSaveView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # Init method of the view
+    # @method initialize
+    */
+
+
+    RoutesSaveView.prototype.initialize = function() {
+      console.log('initialize RoutesSaveView');
+      _.bindAll(this, 'render');
+      return this.user = Yapp.user;
+    };
+
+    /**
+    # Required field for Marionette.View
+    # @property template
+    # @type Object
+    # @default Templates.AddToCollectionView
+    */
+
+
+    RoutesSaveView.prototype.template = Templates.RoutesSaveView;
+
+    RoutesSaveView.prototype.id = 'new-collection';
+
+    /**
+    # Ui elements for view
+    # @type Object
+    # @property ui
+    */
+
+
+    RoutesSaveView.prototype.ui = {
+      inputName: '#input-add-new-name',
+      inputDescription: '#input-add-new-desc',
+      closeButton: '.p-close'
+    };
+
+    /**
+    # The view event triggers
+    # @type Object
+    # @property events
+    */
+
+
+    RoutesSaveView.prototype.events = {
+      'click .p-close': 'hidePopup',
+      'click .a-add-collection': 'createRoute'
+    };
+
+    RoutesSaveView.prototype.onShow = function() {
+      return this.ui.inputName.focus();
+    };
+
+    /**
+    # Fired when .p-close click hide popup
+    # @event hidePopup
+    */
+
+
+    RoutesSaveView.prototype.hidePopup = function(event) {
+      event.preventDefault();
+      return Yapp.popup.close();
+    };
+
+    /**
+    # Fired when .a-add-collection click. Create new empty set.
+    # @event createSet
+    */
+
+
+    RoutesSaveView.prototype.createRoute = function(event) {
+      var set, setDescription, setName;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setName = this.ui.inputName.val().trim();
+      setDescription = this.ui.inputDescription.val().trim();
+      if (!_.isEmpty(setName) && !_.isEmpty(setDescription)) {
+        set = new Yapp.Points.Set({
+          name: setName,
+          description: setDescription
+        });
+        return set.create(this.successCreateRoute, this);
+      } else if (_.isEmpty(setName)) {
+        return this.ui.inputName.focus();
+      } else if (_.isEmpty(setDescription)) {
+        return this.ui.inputDescription.focus();
+      }
+    };
+
+    /**
+    # Callback for success adding point into exists set
+    # @param {Object} response Response data recieved from server api
+    # @param {Object} set New set instance
+    # @method successCreateSet
+    */
+
+
+    RoutesSaveView.prototype.successCreateRoute = function(response, set) {
+      console.log(response, set);
+      this.ui.inputDescription.val('');
+      this.ui.inputName.val('');
+      this.user.get('collections').push({
+        id: set.get('id'),
+        name: set.get('name')
+      });
+      return this.user.trigger('change:collections');
+    };
+
+    return RoutesSaveView;
+
+  })(Yapp.Common.PopupView);
+
+}).call(this);
+
+/**
+# Submodule for all routes functionality
+# @module Yapp
+# @submodule Routes
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # View for showing routes sidebar template
+  # @class Yapp.Common.RoutesView
+  # @extends Marionette.ItemView
+  # @constructor
+  */
+
+
+  Yapp.Routes.RoutesView = (function(_super) {
+    __extends(RoutesView, _super);
+
+    function RoutesView() {
+      _ref = RoutesView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # Initialize method of view
+    # @method initialize
+    */
+
+
+    RoutesView.prototype.initialize = function() {
+      console.log('initializing Yapp.Routes.RoutesView');
+      _.bindAll(this, 'updateBar', 'resortCollection', 'loadPointFromPlacemark');
+      this.search = Yapp.Common.headerView.search;
+      this.dropdownTemplate = Templates.RoutesDropdown;
+      this.detailsPathTemplate = Templates.RoutesDetail;
+      this.collection = new Yapp.Points.PointCollection;
+      this.collection.on('add remove', this.updateBar, this);
+      this.collection.on('resort:collection', this.resortCollection, this);
+      return this.listenTo(Yapp.vent, 'click:placemark', this.loadPointFromPlacemark);
+    };
+
+    RoutesView.prototype.template = Templates.RoutesView;
+
+    RoutesView.prototype.className = 'pap-wrap';
+
+    RoutesView.prototype.ui = {
+      routeInput: '.route-input',
+      addPathButton: '.btn-add-path',
+      dropResults: '.drop-results',
+      addPathPlace: '.ol-add-path-places',
+      msgHint: '.msg-hint',
+      detailsPath: '.details-path',
+      actionButton: '#action-btn',
+      lineAddPathButton: '.line-add-path-btn'
+    };
+
+    RoutesView.prototype.events = {
+      'keydown input.route-input': 'keyupInput',
+      'click .btn-add-path': 'buildPath',
+      'click .drop-results li': 'loadPoint',
+      'click .remove-item-path': 'removePointFromPath',
+      'click .title-add-path': 'toggleRouteBar',
+      'click .btn-clear-map': 'clearMap',
+      'click .drop-filter-clear': 'hideDropdown',
+      'click .btn-save': 'savePath'
+    };
+
+    /**
+    # The view model event triggers
+    # @type Object
+    # @property modelEvents
+    */
+
+
+    RoutesView.prototype.modelEvents = {
+      'change': 'render'
+    };
+
+    RoutesView.prototype.onShow = function() {
+      $('body').addClass('page-map');
+      $('#panel-add-path').show();
+      return this._dragPoints();
+    };
+
+    RoutesView.prototype.onClose = function() {
+      $('body').removeClass('page-map');
+      return $('#panel-add-path').hide();
+    };
+
+    /**
+    # TODO
+    # @method hideDropdown
+    */
+
+
+    RoutesView.prototype.hideDropdown = function(event) {
+      this.ui.dropResults.hide();
+      this.ui.dropResults.empty();
+      this.ui.routeInput.val('');
+      return this.ui.routeInput.focus();
+    };
+
+    RoutesView.prototype.showDropdown = function(response, geoObjectCollection) {
+      this.ui.dropResults.html(this.dropdownTemplate(response));
+      return this.ui.dropResults.show().css('top', '83px');
+    };
+
+    /**
+    # TODO
+    # @method keyupInput
+    */
+
+
+    RoutesView.prototype.keyupInput = function(e) {
+      var _this = this;
+
+      this._onKeyDownSpecial(e);
+      return this._delay(function() {
+        var query;
+
+        if (e.which !== 38 && e.which !== 40 && e.which !== 13 && e.which !== 27 && e.which !== 8) {
+          query = _this.ui.routeInput.val();
+          if (query) {
+            _this.searchXHR = _this.search(query, _this.showDropdown, _this);
+          }
+        }
+      }, 500);
+    };
+
+    /**
+    # TODO
+    # @method buildPath
+    */
+
+
+    RoutesView.prototype.buildPath = function(event) {
+      var paths,
+        _this = this;
+
+      if (event) {
+        event.preventDefault();
+      }
+      if (!this.ui.addPathButton.hasClass('disabled')) {
+        this.ui.addPathButton.addClass('disabled');
+        if (this.route) {
+          Yapp.Map.yandexmap.geoObjects.remove(this.route);
+        }
+        if (this.listeners) {
+          this.listeners.removeAll();
+        }
+        paths = _(this.collection.models).map(function(point) {
+          return [point.get('latitude'), point.get('longitude')];
+        }).value();
+        return ymaps.route(paths, {
+          mapStateAutoApply: true
+        }).then(function(route) {
+          _this.route = _this.buildDetailPath(route);
+          Yapp.Map.yandexmap.geoObjects.add(_this.route);
+          _this.route.editor.start({
+            editWayPoints: false
+          });
+          _this.listeners = _this.route.events.group();
+          _this.listeners.add('update', function(event) {
+            return _this.routeUpdate(_this.route, _this.listeners);
+          });
+          window.ROUTE = route;
+          _this.ui.lineAddPathButton.hide();
+          _this.ui.actionButton.show();
+          return _this.ui.addPathButton.removeClass('disabled');
+        });
+      }
+    };
+
+    /**
+    # TODO
+    # @method buildDetailPath
+    */
+
+
+    RoutesView.prototype.buildDetailPath = function(route) {
+      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments;
+
+      ways = route.getPaths();
+      wayLength = ways.getLength();
+      routeCollection = [];
+      _ref1 = _.range(wayLength);
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        wayIndex = _ref1[_i];
+        point = this.collection.models[wayIndex];
+        way = ways.get(wayIndex);
+        segments = way.getSegments();
+        _segments = [];
+        for (_j = 0, _len1 = segments.length; _j < _len1; _j++) {
+          segment = segments[_j];
+          _segments.push({
+            street: segment.getStreet(),
+            direct: segment.getHumanAction(),
+            distance: segment.getHumanLength(),
+            time: segment.getHumanTime(),
+            coords: segment.getCoordinates()[1]
+          });
+        }
+        routeCollection.push({
+          order: wayIndex,
+          point: point.toJSON(),
+          way: way.properties.getAll(),
+          segments: _segments
+        });
+      }
+      routeCollection.push({
+        point: this.collection.last().toJSON()
+      });
+      this.ui.detailsPath.html(this.detailsPathTemplate({
+        ways: routeCollection,
+        totalTime: route.getHumanTime(),
+        totalDistance: route.getHumanLength()
+      }));
+      this.ui.detailsPath.show();
+      this.routeCollection = routeCollection;
+      return this.route = route;
+    };
+
+    /**
+    # TODO
+    # @method routeUpdate
+    */
+
+
+    RoutesView.prototype.routeUpdate = function(route, listeners) {
+      return this.buildDetailPath(route);
+    };
+
+    /**
+    # TODO
+    # @method loadPoint
+    */
+
+
+    RoutesView.prototype.loadPoint = function(event) {
+      var $target, data, index, point,
+        _this = this;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      data = $target.data();
+      this.ui.msgHint.hide();
+      index = this.collection.length;
+      point = new Yapp.Points.Point({
+        unid: data.pointId
+      });
+      point.fetch({
+        success: function(response) {
+          _this.collection.add(point);
+          if (_this.collection.length !== index) {
+            Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')]);
+            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+          }
+        }
+      });
+      return this.hideDropdown();
+    };
+
+    /**
+    # TODO
+    # @method loadPointFromPlacemark
+    */
+
+
+    RoutesView.prototype.loadPointFromPlacemark = function(event) {
+      var geoPoint, index, point,
+        _this = this;
+
+      event.preventDefault();
+      geoPoint = event.originalEvent.target.getData();
+      point = geoPoint.properties.get('point');
+      this.ui.msgHint.hide();
+      index = this.collection.length;
+      point = new Yapp.Points.Point({
+        unid: point.id
+      });
+      return point.fetch({
+        success: function(response) {
+          _this.collection.add(point);
+          if (_this.collection.length !== index) {
+            Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')]);
+            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class='remove-item-path' data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+          }
+        }
+      });
+    };
+
+    /**
+    # TODO
+    # @method removePointFromPath
+    */
+
+
+    RoutesView.prototype.removePointFromPath = function(event) {
+      var $target, pointId;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      pointId = $target.data('point-id');
+      this.collection.remove(pointId);
+      return $target.parent().remove();
+    };
+
+    /**
+    # TODO
+    # @method toggleRouteBar
+    */
+
+
+    RoutesView.prototype.toggleRouteBar = function(event) {
+      this.$('.aside-content').slideToggle();
+      return $('#panel-add-path').height(!$('#panel-add-path').height() ? 'auto' : 0);
+    };
+
+    /**
+    # TODO
+    # @method clearMap
+    */
+
+
+    RoutesView.prototype.clearMap = function(event) {
+      event.preventDefault();
+      this.ui.addPathPlace.empty();
+      this.ui.detailsPath.empty();
+      this.ui.lineAddPathButton.show();
+      this.ui.actionButton.hide();
+      this.collection.reset();
+      return this.collection.trigger('remove');
+    };
+
+    /**
+    # TODO
+    # @method updateBar
+    */
+
+
+    RoutesView.prototype.updateBar = function(model) {
+      if (this.collection.length === 0) {
+        this.ui.msgHint.show();
+        this.ui.addPathButton.addClass('disabled');
+        if (this.route) {
+          Yapp.Map.yandexmap.geoObjects.remove(this.route);
+          return this.route = null;
+        }
+      } else if (this.collection.length === 1) {
+        this.ui.msgHint.hide();
+        return this.ui.addPathButton.addClass('disabled');
+      } else if (this.collection.length > 1) {
+        this.ui.msgHint.hide();
+        this.ui.addPathButton.removeClass('disabled');
+        if (this.route) {
+          return this.buildPath();
+        }
+      }
+    };
+
+    /**
+    # TODO
+    # @method resortCollection
+    */
+
+
+    RoutesView.prototype.resortCollection = function(index, pointId) {
+      var point;
+
+      point = this.collection.get(pointId);
+      this._insertTo(index, point, this.collection.models);
+      if (this.route) {
+        return this.buildPath();
+      }
+    };
+
+    /**
+    # TODO
+    # @method savePath
+    */
+
+
+    RoutesView.prototype.savePath = function(event) {
+      var $target, routesSaveView;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      routesSaveView = new Yapp.Routes.RoutesSaveView({
+        collection: this.collection,
+        target: $target
+      });
+      return Yapp.popup.show(routesSaveView);
+    };
+
+    /**
+    # Handles keypressed by special keys such as Enter, Escape,
+    # Backspace, up/down arrows.
+    # @event _onKeyDownSpecial
+    # @private
+    */
+
+
+    RoutesView.prototype._onKeyDownSpecial = function(event) {
+      switch (event.which) {
+        case 8:
+          break;
+        case 13:
+          if (this.searchXHR !== void 0) {
+            this.searchXHR.abort();
+          }
+          clearTimeout(0);
+          event.preventDefault();
+          event.stopPropagation();
+          if ($('.hover', this.ui.dropResults).length) {
+            $('.hover', this.ui.dropResults).click();
+          }
+          this.hideDropdown();
+          break;
+        case 27:
+          event.preventDefault();
+          event.stopPropagation();
+          this.hideDropdown();
+          break;
+        case 38:
+          event.preventDefault();
+          event.stopPropagation();
+          this._selectDropLi(-1);
+          break;
+        case 40:
+          event.preventDefault();
+          event.stopPropagation();
+          this._selectDropLi(1);
+          break;
+      }
+    };
+
+    /**
+    # Set or clear timer for call function.
+    # @method _delay
+    # @private
+    */
+
+
+    RoutesView.prototype._delay = (function() {
+      var timer;
+
+      timer = 0;
+      return function(callback, ms) {
+        clearTimeout(timer);
+        timer = setTimeout(callback, ms);
+      };
+    })();
+
+    RoutesView.prototype._insertTo = function(index, el, array) {
+      var _idx;
+
+      _idx = array.indexOf(el);
+      array.splice(_idx, 1);
+      return array.splice(index, 0, el);
+    };
+
+    /**
+    # Highlights labels by up/down arrow pressed
+    # @method _selectDropLi
+    # @param {Number} dir A prev or next index
+    # @private
+    */
+
+
+    RoutesView.prototype._selectDropLi = function(dir) {
+      var indexSelected, li;
+
+      li = $("li:visible", this.ui.dropResults).filter(function() {
+        return true;
+      });
+      if (li.filter(".hover").length) {
+        indexSelected = li.index(li.filter(".hover"));
+        if (indexSelected < li.length - 1) {
+          if (dir === 1) {
+            li.filter(".hover:first").removeClass("hover");
+            return li.eq(indexSelected + 1).addClass("hover").focus();
+          } else {
+            li.filter(".hover:first").removeClass("hover");
+            return li.eq(indexSelected - 1).addClass("hover").focus();
+          }
+        } else {
+          li.filter(".hover:first").removeClass("hover");
+          if (dir === 1) {
+            return li.eq(0).addClass("hover").focus();
+          } else {
+            return li.eq(indexSelected - 1).addClass("hover").focus();
+          }
+        }
+      } else {
+        if (dir === 1) {
+          return li.eq(0).addClass("hover").focus();
+        } else {
+          return li.last().addClass("hover").focus();
+        }
+      }
+    };
+
+    RoutesView.prototype._dragPoints = function() {
+      var _this = this;
+
+      return $("ol.ol-add-path-places").sortable({
+        group: 'simple_with_animation',
+        pullPlaceholder: false,
+        onDrop: function(item, targetContainer, _super) {
+          var clonedItem;
+
+          clonedItem = $('<li/>').css({
+            height: 0
+          });
+          item.before(clonedItem);
+          clonedItem.animate({
+            'height': item.height()
+          });
+          item.animate(clonedItem.position(), function() {
+            clonedItem.detach();
+            return _super(item);
+          });
+          return _this.collection.trigger('resort:collection', item.index() - 1, item.data('point-id'));
+        },
+        onDragStart: function($item, container, _super) {
+          var offset, pointer;
+
+          offset = $item.offset();
+          pointer = container.rootGroup.pointer;
+          this.adjustment = {
+            left: pointer.left - offset.left,
+            top: pointer.top - offset.top
+          };
+          return _super($item, container);
+        },
+        onDrag: function($item, position) {
+          return $item.css({
+            left: position.left - this.adjustment.left,
+            top: position.top - this.adjustment.top
+          });
+        }
+      });
+    };
+
+    return RoutesView;
+
+  })(Marionette.ItemView);
 
 }).call(this);
 
@@ -5534,6 +7133,62 @@ function program22(depth0,data) {
 }).call(this);
 
 /**
+# Submodule for all routes functionality
+# @module Yapp
+# @submodule Routes
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # Router for Routes module
+  # @class Yapp.Map.Router
+  # @extends Marionette.AppRouter
+  # @constructor
+  */
+
+
+  Yapp.Routes.Router = (function(_super) {
+    __extends(Router, _super);
+
+    function Router() {
+      _ref = Router.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # The router initialize method
+    # @method initialize
+    */
+
+
+    Router.prototype.initialize = function() {
+      return console.log('initializing Yapp.Routes.Router');
+    };
+
+    /**
+    # It determine route list of the router
+    # @property appRoutes
+    */
+
+
+    Router.prototype.appRoutes = {
+      "routes": "showRoutes"
+    };
+
+    return Router;
+
+  })(Marionette.AppRouter);
+
+}).call(this);
+
+/**
 # Submodule for all common functionality
 # @module Yapp
 # @submodule Common
@@ -5618,8 +7273,7 @@ function program22(depth0,data) {
 
 
     Controller.prototype.initialize = function() {
-      console.log('initializing Yapp.Map.Controller');
-      return Yapp.map.show(new Yapp.Map.MapView());
+      return console.log('initializing Yapp.Map.Controller');
     };
 
     /**
@@ -5630,6 +7284,50 @@ function program22(depth0,data) {
 
     Controller.prototype.showMap = function() {
       return Yapp.execute('toggleMap', 'open');
+    };
+
+    /**
+    # Add collection on the map
+    # @method addOnePoint
+    */
+
+
+    Controller.prototype.addCollection = function(collection, map) {
+      var placemark;
+
+      if (map == null) {
+        map = Yapp.map;
+      }
+      placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+        id: point.get('id') + '_' + point.get('point_id')
+      }, {
+        iconImageHref: '/' + point.get('icon'),
+        iconImageSize: [32, 36],
+        iconImageOffset: [-16, -38]
+      });
+      return this.myGeoObjectsArr.push(placemark);
+    };
+
+    /**
+    # Add one point on the map
+    # @method addOnePoint
+    */
+
+
+    Controller.prototype.addOnePoint = function(point, map) {
+      var placemark;
+
+      if (map == null) {
+        map = Yapp.map;
+      }
+      placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+        id: point.get('id') + '_' + point.get('point_id')
+      }, {
+        iconImageHref: '/' + point.get('icon' != null ? 'icon' : '/media/icons/place-none.png'),
+        iconImageSize: [32, 36],
+        iconImageOffset: [-16, -38]
+      });
+      return this.myGeoObjectsArr.push(placemark);
     };
 
     return Controller;
@@ -5687,6 +7385,7 @@ function program22(depth0,data) {
     Controller.prototype.showLayout = function(content_type) {
       console.log("Show content " + content_type + " in Points module");
       Yapp.popup.close();
+      Yapp.routePanel.close();
       this.layout = new Yapp.Points.MainLayout({
         content_type: 'ypi'
       });
@@ -5808,6 +7507,67 @@ function program22(depth0,data) {
 }).call(this);
 
 /**
+# Submodule for all routes functionality
+# @module Yapp
+# @submodule Routes
+*/
+
+
+(function() {
+  var Yapp, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Yapp = window.Yapp;
+
+  /**
+  # Controller for Routes module
+  # @class Yapp.Routes.Controller
+  # @extends Marionette.Controller
+  # @constructor
+  */
+
+
+  Yapp.Routes.Controller = (function(_super) {
+    __extends(Controller, _super);
+
+    function Controller() {
+      _ref = Controller.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    /**
+    # The controller initializer
+    # @method initialize
+    */
+
+
+    Controller.prototype.initialize = function() {
+      return console.log('initializing Yapp.Routes.Controller');
+    };
+
+    /**
+    # The stub for the routes showing function
+    # @method showRoutes
+    */
+
+
+    Controller.prototype.showRoutes = function() {
+      var routesView;
+
+      Yapp.content.close();
+      Yapp.popup.close();
+      routesView = new Yapp.Routes.RoutesView;
+      return Yapp.routePanel.show(routesView);
+    };
+
+    return Controller;
+
+  })(Marionette.Controller);
+
+}).call(this);
+
+/**
 # Main application module. It's Marionette.Application instance and namespace of all project classes
 # @module Yapp
 # @main
@@ -5848,6 +7608,7 @@ function program22(depth0,data) {
       header: '#header',
       map: '#yandex-map',
       content: '#content',
+      routePanel: '#panel-add-path',
       footer: '#footer',
       popup: Yapp.Common.PopupRegion
     });
@@ -5916,6 +7677,7 @@ function program22(depth0,data) {
     this.Common.start();
     this.Map.start();
     this.Points.start();
+    this.Routes.start();
     this.vent.on('user:notauthorized', function() {
       return Yapp.popup.show(new Yapp.Common.AuthPopupView);
     });

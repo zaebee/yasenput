@@ -48,6 +48,8 @@
 
     FooterView.prototype.template = Templates.FooterView;
 
+    FooterView.prototype.className = 'f-body';
+
     /**
     # The view event triggers
     # @type Object

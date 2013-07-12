@@ -63,9 +63,25 @@
 
 
     MapView.prototype.initialize = function() {
+      var _this = this;
+
       console.log('initializing Yapp.Map.MapView');
       this.user = Yapp.user;
-      return this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      this.iconTemplate = Templates.IconTemplate;
+      _.bindAll(this, 'updatePointCollection');
+      this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      this.listenTo(Yapp.Points, 'update:collection', this.updatePointCollection);
+      $.get('/api/v1/map_yapens/').success(function(response) {
+        return _this.pointsByTag = _.partial(_this._filteredPoints, response);
+      });
+      return Yapp.request('request', {
+        url: '/tags/list',
+        context: this,
+        successCallback: this.renderIcons,
+        data: {
+          content: 'popular'
+        }
+      });
     };
 
     /**
@@ -76,7 +92,8 @@
 
 
     MapView.prototype.events = {
-      'click .a-toggle': 'toggleMap'
+      'click .a-toggle': 'toggleMap',
+      'click .m-ico': 'showCluster'
     };
 
     /**
@@ -133,6 +150,97 @@
           }
         });
       });
+    };
+
+    /**
+    # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
+    # @event updatePointCollection
+    */
+
+
+    MapView.prototype.updatePointCollection = function(collection) {
+      return console.log(collection, 'collection reset');
+    };
+
+    /**
+    # TODO
+    # @event renderIcons
+    */
+
+
+    MapView.prototype.renderIcons = function(response) {
+      var icons;
+
+      icons = this.iconTemplate({
+        icons: response
+      });
+      this.$('.m-ico-group').html(icons);
+      return this.$el.find('[data-toggle=tooltip]').tooltip();
+    };
+
+    /**
+    # TODO
+    # @method _filteredPoints
+    # @private
+    */
+
+
+    MapView.prototype._filteredPoints = function(points, tagId) {
+      return _(points).filter(function(point) {
+        return _(point.tags).some({
+          id: tagId
+        });
+      }).value();
+    };
+
+    /**
+    # TODO
+    # @method createCluster
+    */
+
+
+    MapView.prototype.createCluster = function(tagId) {
+      var placemarks, points;
+
+      if (this.clusterer) {
+        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
+      }
+      this.clusterer = new ymaps.Clusterer({
+        clusterIcons: Yapp.Map.clusterIcons
+      });
+      points = this.pointsByTag(tagId);
+      placemarks = _.map(points, function(el) {
+        var tag;
+
+        tag = _(el.tags).find(function(tag) {
+          return tag.icon !== '';
+        });
+        return new ymaps.Placemark([el.latitude, el.longitude], {
+          id: 'map-point' + el.id,
+          point: el,
+          tag: tag
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        });
+      });
+      this.clusterer.add(placemarks);
+      return Yapp.Map.yandexmap.geoObjects.add(this.clusterer);
+    };
+
+    MapView.prototype.showCluster = function(event) {
+      var $target, tagId;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      if ($target.parent().hasClass('active')) {
+        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
+        $target.parent().removeClass('active');
+        return;
+      }
+      this.$('.m-ico-group a').removeClass('active');
+      $target.parent().addClass('active');
+      tagId = $target.data('id');
+      return this.createCluster(tagId);
     };
 
     return MapView;

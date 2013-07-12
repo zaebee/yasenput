@@ -57,7 +57,7 @@
 
 
     Point.prototype.urlRoot = function() {
-      return Yapp.API_BASE_URL + "/points/";
+      return Yapp.API_BASE_URL + "/api/v1/points/";
     };
 
     /**
@@ -157,8 +157,11 @@
 
 
     Point.prototype.like = function(target, successCallback, context) {
+      var id;
+
+      id = this.get('id');
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/points/like",
+        url: Yapp.API_BASE_URL + ("/api/v1/points/" + id + "/like/"),
         type: 'POST',
         context: context,
         successCallback: successCallback,
@@ -283,10 +286,33 @@
         context: context,
         successCallback: successCallback,
         params: {
-          id: photoId
+          photoId: photoId
         },
         data: {
           id: photoId
+        }
+      });
+    };
+
+    /**
+    # Add point into exists set.
+    # @param {Number} setId Set id for adding point
+    # @param {Function} successCallback Callback that will be call after success response
+    # @param {Object} context variable for binding this namespace
+    # @method addToSet
+    */
+
+
+    Point.prototype.addToSet = function(setId) {
+      return Yapp.request('request', {
+        url: Yapp.API_BASE_URL + "/collections/addpoint",
+        type: 'POST',
+        params: {
+          setId: setId
+        },
+        data: {
+          id: setId,
+          point: this.get('id')
         }
       });
     };

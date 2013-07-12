@@ -38,10 +38,32 @@
       return console.log("initializing Yapp.Points.Set");
     };
 
-    Set.prototype.idAttribute = 'unid';
+    /**
+    # Set url for model instance
+    # @property urlRoot
+    # @type String
+    # @default Yapp.API_BASE_URL + '/collections/'
+    */
+
 
     Set.prototype.urlRoot = function() {
-      return Yapp.API_BASE_URL + "/collections/";
+      return Yapp.API_BASE_URL + "/api/v1/sets/";
+    };
+
+    /**
+    # Defaults data of point model
+    # @property defaults
+    # @type Object
+    */
+
+
+    Set.prototype.defaults = function() {
+      return {
+        name: '',
+        description: '',
+        ypi: 0,
+        priority: 0
+      };
     };
 
     Set.prototype.validate = function(attrs, options) {
@@ -51,20 +73,8 @@
       if (attrs.name === '') {
         invalid.push('name');
       }
-      if (attrs.address === '') {
-        invalid.push('address');
-      }
-      if (attrs.longitude === '') {
-        invalid.push('longitude');
-      }
-      if (attrs.latitude === '') {
-        invalid.push('latitude');
-      }
-      if (!attrs.imgs || attrs.imgs.length === 0) {
-        invalid.push('photos');
-      }
-      if (!attrs.tags || attrs.tags.length === 0) {
-        invalid.push('tags');
+      if (attrs.description === '') {
+        invalid.push('description');
       }
       if (invalid.length > 0) {
         return invalid;
@@ -92,6 +102,29 @@
           collectionid: this.get('id')
         }
       });
+    };
+
+    /**
+    # Create new empty set.
+    # @param {Function} successCallback Callback that will be call after success response
+    # @param {Object} context variable for binding this namespace
+    # @method create
+    */
+
+
+    Set.prototype.create = function(successCallback, context) {
+      if (this.isValid()) {
+        return Yapp.request('request', {
+          url: Yapp.API_BASE_URL + "/collections/add",
+          type: 'POST',
+          context: context,
+          successCallback: successCallback,
+          params: {
+            set: this
+          },
+          data: this.attributes
+        });
+      }
     };
 
     return Set;

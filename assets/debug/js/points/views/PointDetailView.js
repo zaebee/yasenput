@@ -87,7 +87,9 @@
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
         'click .remove-photo': 'removePhoto',
-        'click a[href=#tab-map]': 'renderMap'
+        'click a[href=#tab-map]': 'renderMap',
+        'click .a-add-collection': 'addCollection',
+        'click .a-complaint-comment': 'complaintComment'
       };
     };
 
@@ -286,6 +288,30 @@
       return $target.val('');
     };
 
+    PointDetailView.prototype.addCollection = function(event) {
+      var $target, addToCollectionView;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      addToCollectionView = new Yapp.Points.AddToCollectionView({
+        model: this.model,
+        target: $target
+      });
+      return Yapp.popup.regions.alerts.show(addToCollectionView);
+    };
+
+    PointDetailView.prototype.complaintComment = function(event) {
+      var $target, complaintCommentView;
+
+      event.preventDefault();
+      $target = $(event.currentTarget);
+      complaintCommentView = new Yapp.Common.ComplaintCommentView({
+        model: this.model,
+        target: $target
+      });
+      return Yapp.popup.regions.alerts.show(complaintCommentView);
+    };
+
     /**
     # TODO
     # @method like
@@ -388,27 +414,16 @@
 
 
     PointDetailView.prototype.successLike = function(response, $target) {
-      var index, likeusers, me, _this;
+      var point;
 
-      _this = this;
-      likeusers = this.model.get('likeusers');
+      point = response[0];
+      this.model.set({
+        isliked: point.isliked,
+        likes_count: point.likes_count
+      });
       if ($target.hasClass('marked')) {
-        me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
-        });
-        index = _.indexOf(likeusers, me);
-        likeusers.splice(index, 1);
-        this.model.set({
-          likeusers: likeusers,
-          likes_count: this.model.get('likes_count') - 1
-        });
         return this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
-        this.model.set({
-          likesers: likeusers,
-          likes_count: this.model.get('likes_count') + 1
-        });
         return this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
     };
@@ -420,7 +435,8 @@
 
 
     PointDetailView.prototype.successLikePhoto = function(response, $target) {
-      var img, imgs, index, indexImg, likeusers, me, photo, _this;
+      var img, imgs, index, indexImg, likeusers, me, photo,
+        _this = this;
 
       photo = response[0];
       _this = this;
@@ -433,13 +449,13 @@
       likeusers = img.likeusers;
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
       img.likeusers = likeusers;
@@ -476,9 +492,8 @@
 
 
     PointDetailView.prototype.successRemoveComment = function(response, commentId) {
-      var comment, comments, index, photo, photoId, _this;
+      var comment, comments, index, photo, photoId;
 
-      _this = this;
       photoId = this.$('textarea').data('photo-id');
       photo = _.find(this.model.get('imgs'), function(photo) {
         return photo.id === photoId;
@@ -516,9 +531,8 @@
 
 
     PointDetailView.prototype.successRemovePhoto = function(response, photoId) {
-      var img, imgs, index, _this;
+      var img, imgs, index;
 
-      _this = this;
       imgs = this.model.get('imgs');
       img = _.find(imgs, function(img) {
         return img.id === photoId;

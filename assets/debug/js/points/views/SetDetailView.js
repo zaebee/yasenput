@@ -78,7 +78,8 @@
         'bigPhoto': '#big-photo',
         'bigPhotoImg': '#big-photo > .bp-photo',
         'allPhotos': '.item-photo',
-        'placePhotos': '.place-photos'
+        'placePhotos': '.place-photos',
+        map: '.map'
       };
     };
 
@@ -101,7 +102,8 @@
         'submit #commentForm': 'submitCommentForm',
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
-        'click .remove-photo': 'removePhoto'
+        'click .remove-photo': 'removePhoto',
+        'click a[href=#tab-map]': 'renderMap'
       };
     };
 
@@ -135,6 +137,34 @@
         root: this.ui.placePhotos,
         visible: 4
       });
+    };
+
+    /**
+    # TODO
+    # @event renderMap
+    */
+
+
+    SetDetailView.prototype.renderMap = function(event) {
+      var coords, icon, placemark, _ref1;
+
+      if (!this.map) {
+        this.ui.map.height(500);
+        coords = [this.activePoint.latitude, this.activePoint.longitude];
+        icon = (_ref1 = this.activePoint.icon) != null ? _ref1 : '/media/icons/place-none.png';
+        this.map = new ymaps.Map('popup-map', {
+          center: coords,
+          zoom: 14
+        });
+        placemark = new ymaps.Placemark(coords, {
+          id: this.model.get('id')
+        }, {
+          iconImageHref: icon,
+          iconImageSize: [32, 36],
+          iconImageOffset: [-16, -38]
+        });
+        return this.map.geoObjects.add(placemark);
+      }
     };
 
     /**
@@ -244,7 +274,8 @@
         return point.id === pointId;
       });
       this.activePoint = point;
-      return this.model.trigger('change');
+      this.model.trigger('change');
+      return delete this.map;
     };
 
     /**
@@ -297,29 +328,32 @@
 
 
     SetDetailView.prototype.successLike = function(response, $target) {
-      var index, likeusers, me, _this;
+      var index, likeusers, me,
+        _this = this;
 
-      _this = this;
       likeusers = this.model.get('likeusers');
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
+        console.log(likeusers);
         this.model.set({
           likeusers: likeusers,
           likes_count: this.model.get('likes_count') - 1
         });
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
+        console.log(likeusers);
         this.model.set({
           likesers: likeusers,
           likes_count: this.model.get('likes_count') + 1
         });
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
+      return this.model.trigger('change');
     };
 
     /**
@@ -410,10 +444,10 @@
 
 
     SetDetailView.prototype.successLikePhoto = function(response, $target) {
-      var img, imgs, index, indexImg, likeusers, me, photo, _this;
+      var img, imgs, index, indexImg, likeusers, me, photo,
+        _this = this;
 
       photo = response[0];
-      _this = this;
       imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photo.id;
@@ -423,13 +457,13 @@
       likeusers = img.likeusers;
       if ($target.hasClass('marked')) {
         me = _.find(likeusers, function(user) {
-          return user.id === _this.user.id;
+          return user.id === _this.user.get('id');
         });
         index = _.indexOf(likeusers, me);
         likeusers.splice(index, 1);
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
       } else {
-        likeusers.push(this.user);
+        likeusers.push(this.user.toJSON());
         this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
       }
       img.likeusers = likeusers;
@@ -467,9 +501,8 @@
 
 
     SetDetailView.prototype.successRemoveComment = function(response, commentId) {
-      var comment, comments, index, photo, photoId, _this;
+      var comment, comments, index, photo, photoId;
 
-      _this = this;
       photoId = this.$('textarea').data('photo-id');
       photo = _.find(this.activePoint.imgs, function(photo) {
         return photo.id === photoId;
@@ -507,9 +540,8 @@
 
 
     SetDetailView.prototype.successRemovePhoto = function(response, photoId) {
-      var img, imgs, index, _this;
+      var img, imgs, index;
 
-      _this = this;
       imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photoId;

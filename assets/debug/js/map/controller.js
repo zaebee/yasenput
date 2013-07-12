@@ -35,8 +35,7 @@
 
 
     Controller.prototype.initialize = function() {
-      console.log('initializing Yapp.Map.Controller');
-      return Yapp.map.show(new Yapp.Map.MapView());
+      return console.log('initializing Yapp.Map.Controller');
     };
 
     /**
@@ -47,6 +46,50 @@
 
     Controller.prototype.showMap = function() {
       return Yapp.execute('toggleMap', 'open');
+    };
+
+    /**
+    # Add collection on the map
+    # @method addOnePoint
+    */
+
+
+    Controller.prototype.addCollection = function(collection, map) {
+      var placemark;
+
+      if (map == null) {
+        map = Yapp.map;
+      }
+      placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+        id: point.get('id') + '_' + point.get('point_id')
+      }, {
+        iconImageHref: '/' + point.get('icon'),
+        iconImageSize: [32, 36],
+        iconImageOffset: [-16, -38]
+      });
+      return this.myGeoObjectsArr.push(placemark);
+    };
+
+    /**
+    # Add one point on the map
+    # @method addOnePoint
+    */
+
+
+    Controller.prototype.addOnePoint = function(point, map) {
+      var placemark;
+
+      if (map == null) {
+        map = Yapp.map;
+      }
+      placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+        id: point.get('id') + '_' + point.get('point_id')
+      }, {
+        iconImageHref: '/' + point.get('icon' != null ? 'icon' : '/media/icons/place-none.png'),
+        iconImageSize: [32, 36],
+        iconImageOffset: [-16, -38]
+      });
+      return this.myGeoObjectsArr.push(placemark);
     };
 
     return Controller;
