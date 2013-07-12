@@ -630,8 +630,7 @@ class PointEdit(LoggedPointsBaseView):
                         point.tags.add(new_tag)
 
             point.save()
-
-            # params["id"] = point.id
+            
             return self.pointsList([point])
         else:
             e = form.errors
