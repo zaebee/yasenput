@@ -288,60 +288,9 @@ class Events(models.Model):
     def __unicode__(self):
         return self.name    
 
-#class
-
 
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
 
     class Admin:
         pass
-
-        #
-        #@receiver(pre_update)
-        #def update_person_details(sender, **kwargs):
-        #    person = kwargs.get('user')
-        #    details = kwargs.get('details')
-        #    load_person_avatar(sender, person, kwargs.get('response'))
-        #
-        #def load_person_avatar(sender, person, info):
-        #    image_url = None
-        #
-        #    if sender.name == 'vkontakte-oauth2':
-        #        vk_response = info.get('response')
-        #        if vk_response:
-        #            image_url = vk_response.get('user_photo') # If photo is absent user_photo is absent too
-        #
-        #    elif sender.name == 'odnoklassniki':
-        #        image_url = info.get('pic_2')
-        #        if 'stub' in image_url: # No real image
-        #            image_url = None
-        #
-        #    elif sender.name == 'mailru-oauth2':
-        #        if info.get('has_pic'):
-        #            image_url = info.get('pic_big')
-        #
-        #    elif sender.name == 'twitter':
-        #        image_url = info.get('profile_image_url')
-        #        if not 'default_profile' in image_url:
-        #            image_url = image_url.replace('_normal', '_bigger')
-        #        else: # No real image
-        #            image_url = None
-        #
-        #    elif sender.name == 'yandex-oauth2':
-        #        image_url = info.get('userpic')
-        #
-        #    elif sender.name == 'facebook':
-        #        image_url = 'http://graph.facebook.com/%s/picture?type=large' % info.get('id')
-        #
-        #    if image_url:
-        #        try:
-        #            image_content = urlopen(image_url)
-        #            # Facebook default image check
-        #            if sender.name == 'facebook' and 'image/gif' in str(image_content.info()):
-        #                return
-        #            image_name = default_storage.get_available_name(person.avatar.field.upload_to + '/' + str(person.id) + '.' + image_content.headers.subtype)
-        #            person.avatar.save(image_name, ContentFile(image_content.read()))
-        #            person.save()
-        #        except Exception:
-        #            pass # Here we completely do not care about errors

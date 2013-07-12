@@ -26,6 +26,7 @@ from pymorphy import get_morph
 from django.db import connection
 from datetime import datetime 
 import ast
+from django.http import QueryDict
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -273,6 +274,8 @@ class ItemsList(PointsBaseView):
             tags = params.get('tags')
             tags = tags.split(',')
             search_res_points = search_res_points.filter(tags_id = tags)
+            search_res_routes = MainModels.Routes.search.none()
+            search_res_sets = CollectionsModels.Collections.search.none()
 
         if params.get('coord_left'):
             #top left coords
@@ -674,7 +677,7 @@ class Route(View):
         return JsonHTTPResponse('ok')
 
     def put(self, request, *args, **kwargs):
-        params = request.PUT
+        params = QueryDict(request.body, request.encoding)
         route_dict =  params.dict()
         name = route_dict['name']
         description = route_dict['desc']
@@ -683,6 +686,14 @@ class Route(View):
         coords = ast.literal_eval(route_dict['coords'])
 
         route = MainModels.Routes.objects.get(id=kwargs.get('id'))
+        if route.author != MainModels.Person.objects.get(username=request.user):
+            route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
+        else:
+            route.name = name
+            route.description = description
+            route.points_list = points_list
+            route.coords = coords
+
 
         for point in points_list:
             dot = MainModels.Points.objects.get(id=point.get('id'))

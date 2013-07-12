@@ -20,7 +20,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
-    _.bindAll @, 'updateBar', 'resortCollection', 'createCluster'
+    _.bindAll @, 'updateBar', 'resortCollection', 'loadPointFromPlacemark'
     @search = Yapp.Common.headerView.search
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
@@ -28,7 +28,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
-    @listenTo Yapp.Map, 'load:yandexmap', @createCluster
+    @listenTo Yapp.vent, 'click:placemark', @loadPointFromPlacemark
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -70,6 +70,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $('body').removeClass 'page-map'
     $('#panel-add-path').hide()
 
+  ###*
+  # TODO
+  # @method hideDropdown
+  ###
   hideDropdown: (event) ->
     @ui.dropResults.hide()
     @ui.dropResults.empty()
@@ -81,6 +85,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.dropResults.html @dropdownTemplate(response)
     @ui.dropResults.show().css 'top', '83px'
 
+  ###*
+  # TODO
+  # @method keyupInput
+  ###
   keyupInput: (e) ->
     @_onKeyDownSpecial(e)
     @_delay(() =>
@@ -93,37 +101,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     500
     )
 
-  createCluster: ->
-    clusterIcons = [{
-      href: '/media/icons/cluster_small.png',
-      size: [32, 32],
-      offset: [-23, -23],
-    }, {
-      href: '/media/icons/cluster_big.png',
-      size: [59, 59]
-      offset: [-29, -29]
-    }]
-
-    $.get('/api/v1/map_yapens/').success( (response) =>
-      result = response
-      clusterer = new ymaps.Clusterer
-        clusterIcons: clusterIcons
-
-      myCollection = new ymaps.GeoObjectCollection()
-      placemarks = _.map(result, (el) ->
-        tag = _(el.tags).find (tag) -> tag.icon isnt ''
-        new ymaps.Placemark [el.latitude, el.longitude], {
-          id: 'map-point' + el.id
-        }, {
-          iconImageHref: "/media/#{tag.icons}"
-          iconImageSize: [32, 36]
-          iconImageOffset: [-16, -38]
-        }
-      )
-      clusterer.add placemarks
-      Yapp.Map.yandexmap.geoObjects.add clusterer
-    )
-
+  ###*
+  # TODO
+  # @method buildPath
+  ###
   buildPath: (event) ->
     if event
       event.preventDefault()
@@ -151,9 +132,13 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         @ui.addPathButton.removeClass 'disabled'
       )
 
+  ###*
+  # TODO
+  # @method buildDetailPath
+  ###
   buildDetailPath: (route) ->
-    route.getWayPoints().options.set
-      visible: false
+    #route.getWayPoints().options.set
+    #  visible: false
     ways = route.getPaths()
     wayLength = ways.getLength()
     routeCollection = []
@@ -185,9 +170,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @routeCollection = routeCollection
     @route = route
 
+  ###*
+  # TODO
+  # @method routeUpdate
+  ###
   routeUpdate: (route, listeners) ->
     @buildDetailPath route
 
+  ###*
+  # TODO
+  # @method loadPoint
+  ###
   loadPoint: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
@@ -201,14 +194,42 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         if @collection.length isnt index
           Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
           @ui.addPathPlace.append """
-            <li data-point-id='#{data.pointId}'>
-              <h4>#{data.title}</h4>
-              <p>#{data.desc}</p>
-              <input type='button' value='' class='remove-item-path' data-point-id='#{data.pointId}'>
+            <li data-point-id="#{point.get('id')}">
+              <h4>#{point.get('name')}</h4>
+              <p>#{point.get('address')}</p>
+              <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
             </li>"""
     )
     @hideDropdown()
 
+  ###*
+  # TODO
+  # @method loadPointFromPlacemark
+  ###
+  loadPointFromPlacemark: (event) ->
+    event.preventDefault()
+    geoPoint = event.originalEvent.target.getData()
+    point = geoPoint.properties.get 'point'
+    @ui.msgHint.hide()
+    index = @collection.length
+    point = new Yapp.Points.Point unid: point.id
+    point.fetch(
+      success: (response) =>
+        @collection.add point
+        if @collection.length isnt index
+          Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')])
+          @ui.addPathPlace.append """
+            <li data-point-id="#{point.get('id')}">
+              <h4>#{point.get('name')}</h4>
+              <p>#{point.get('address')}</p>
+              <input type="button" value='' class='remove-item-path' data-point-id="#{point.get('id')}">
+            </li>"""
+    )
+
+  ###*
+  # TODO
+  # @method removePointFromPath
+  ###
   removePointFromPath: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
@@ -216,10 +237,18 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection.remove pointId
     $target.parent().remove()
 
+  ###*
+  # TODO
+  # @method toggleRouteBar
+  ###
   toggleRouteBar: (event) ->
     @$('.aside-content').slideToggle()
     $('#panel-add-path').height(if not $('#panel-add-path').height() then 'auto' else 0)
 
+  ###*
+  # TODO
+  # @method clearMap
+  ###
   clearMap: (event) ->
     event.preventDefault()
     @ui.addPathPlace.empty()
@@ -229,6 +258,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection.reset()
     @collection.trigger 'remove'
 
+  ###*
+  # TODO
+  # @method updateBar
+  ###
   updateBar: (model) ->
     if @collection.length is 0
       @ui.msgHint.show()
@@ -244,11 +277,19 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       @ui.addPathButton.removeClass 'disabled'
       @buildPath() if @route
 
+  ###*
+  # TODO
+  # @method resortCollection
+  ###
   resortCollection: (index, pointId) ->
     point = @collection.get pointId
     @_insertTo index, point, @collection.models
     @buildPath() if @route
 
+  ###*
+  # TODO
+  # @method savePath
+  ###
   savePath: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
