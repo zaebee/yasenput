@@ -40,7 +40,7 @@ a:hover{color:#333}
 
 #wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-top:477px; padding-bottom:60px}
 
-#wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-bottom:60px; padding-top:107px;}
+#wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-bottom:60px; padding-top:67px;}
 #wrap.map-opened {padding-top:477px;}
 
 #mainmap {height: 477px;}
@@ -58,7 +58,7 @@ a:hover{color:#333}
 .main-map .ymaps-controls-lefttop{top:65px !important; left:35px !important; position:absolute !important}
 */
 
-.main-map {position:fixed; height:107px; z-index:3; width:100%; top:0; left:0;background: url(../images/bg.jpg);}
+.main-map {position:fixed; height:74px; z-index:3; width:100%; top:0; left:0;background: url(../images/bg.jpg);}
 .main-map.map-opened {height:477px;}
 .main-map.map-opened .map {height:477px;}
 .main-map .toggle-bottom{position:absolute; left:0; bottom:-2px; width:100%; background:url(../images/map-shadow.png) 0 0 repeat-x; z-index:2; height:12px}
@@ -70,7 +70,7 @@ a:hover{color:#333}
 .main-map .ymaps-group{left:40px !important; top:93px !important}
 .main-map .ymaps-controls-righttop{top:93px !important; right:35px !important; position:absolute !important}
 .main-map .ymaps-controls-lefttop{top:93px !important; left:35px !important; position:absolute !important}
-.map {height:107px; overflow:hidden;}
+.map {height:74px; overflow:hidden;}
 
 #header{position:fixed; z-index:123; top:9px; left:0; width:100%; min-width:980px; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box; padding:0 40px}
 	#header .wrap{background:url(../images/bg.jpg) repeat; border:solid 1px #d8e5cf; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px; min-height:28px; padding:10px 0; display:table; width:100%}
@@ -905,7 +905,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .page-map #header nav{width:276px}
 .page-map #header nav > ul > .item-pathes a{-moz-border-radius:0 3px 3px 0; -webkit-border-radius:0 3px 3px 0; border-radius:0 3px 3px 0}
 .page-map .map{position:relative; height:100%; width:100%}
-.page-map .m-ico-group{left:330px !important; bottom:50px !important}
+.page-map .m-ico-group{left:340px !important; bottom:50px !important}
 .page-map.hide-footer .m-ico-group{bottom:10px !important}
 .page-map #wrap{width:100%; height:100%; padding:0 !important; margin:0 !important}
 .page-map .ymaps-b-zoom_hints-pos_right{left:10px !important; top:135px !important}
@@ -1013,7 +1013,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #panel-add-path{position:absolute; left:0; top:38px; bottom:0px; padding:10px 0; z-index:125; width:320px; text-align:left; display:none;}
     .page-map #panel-add-path{display:block;}
 	#panel-add-path .aside-content{width:316px; padding:0 40px 10px 0; max-height:100%; overflow:auto}
-.pap-wrap{overflow:hidden; width:320px; height:100%; padding-bottom:20px}
+.pap-wrap{overflow:hidden; height:100%;width:320px; padding-bottom:20px}
 .pap-viewport{width:319px; background:#cedecd; border-bottom:solid 1px #a8b9a8; border-right:solid 1px #9fb29d; border-radius:0 0 6px 0; width:299px; height:100%; padding:10px 10px 2px}
 .pap-viewport{width:319px; background:#cedecd; border-bottom:solid 1px #a8b9a8; border-right:solid 1px #9fb29d; border-radius:0 0 6px 0; width:299px; height:100%; padding:10px 10px 2px}
 
@@ -1147,27 +1147,120 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.add-new-section-body input, .add-new-section-body textarea{width:532px; padding:3px 10px; border:solid 1px #c3cfc3; display:block; margin:0 0 6px; background:#fff; font:13px/18px "Trebuchet MS", "Helvetica CY", sans-serif}
 
 
-
-
-
-
-/**/
-
+/* styles for routes drag'n'drop*/
 body.dragging, body.dragging * {
-  cursor: move !important;
+    cursor: move !important;
 }
 
 .dragged {
-position: absolute!important;
-opacity: 1;
-z-index: 2000;
+    position: absolute!important;
+    opacity: 1;
+    z-index: 2000;
 }
 
 ol.ol-add-path-places li.placeholder {
-position: relative!important;
-/** More li styles **/
+    position: relative!important;
 }
 ol.ol-add-path-places li.placeholder:before {
-position: absolute!important;
-/** Define arrowhead **/
+    position: absolute!important;
 }
+
+
+/*10.07.2013*/
+.title-add-path {
+	top: 10px;
+	left: 10px;
+	border-radius: 6px 6px 0 0;
+}
+#panel-add-path {
+	top: 0;
+	left: 10px;
+}
+.pap-viewport {
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: #D8E5CF;
+	border-radius: 0 0 6px 6px;
+	width: 299px;
+	background-color: #e6f2e6;
+}
+
+.header_small {
+	padding: 10px;
+	border-width: 1px 1px 0 1px;
+	border-style: solid;
+	border-color: #D8E5CF;
+	border-radius: 6px 6px 0 0;
+	width: 299px;
+	height: 38px;
+	background-color: #e6f2e6;
+	z-index:130;
+}
+.header_small .button_brown {
+	display: block;
+	float:left;
+	margin: 2px 10px 0 0;
+	border-left:solid 1px #b38b90;
+	border-right:solid 1px #70383e;
+	border-radius: 3px;
+	padding-top: 3px;
+	height:24px;
+	width:114px;
+	background:#7f3e46;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#944b54), to(#6b3239));
+	background: -webkit-linear-gradient(#944b54, #6b3239);
+	background: -moz-linear-gradient(#944b54, #6b3239);
+	background: -ms-linear-gradient(#944b54, #6b3239);
+	background: -o-linear-gradient(#944b54, #6b3239);
+	background: linear-gradient(#944b54, #6b3239);
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ff944b54,EndColorStr=#ff6b3239);
+	text-align:center;
+	text-decoration:none;
+	font-size: 16px;
+	color:#fff;
+}
+.header_small .button_brown:hover{
+	background:#9c555e;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#ad606a), to(#8e4b54));
+	background: -webkit-linear-gradient(#ad606a, #8e4b54);
+	background: -moz-linear-gradient(#ad606a, #8e4b54);
+	background: -ms-linear-gradient(#ad606a, #8e4b54);
+	background: -o-linear-gradient(#ad606a, #8e4b54);
+	background: linear-gradient(#ad606a, #8e4b54); filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffad606a,EndColorStr=#ff8e4b54);
+}
+.logo_small {
+	display: block;
+	float: left;
+	width: 30px;
+	height: 30px;
+	background: url(../images/logo_small.png) no-repeat 0 0;
+	text-indent: -9999px;
+}
+.header_small .logo_small {
+	margin: 2px 10px 0 0;
+}
+.header_small .auth {
+	position: static;
+	float: left;
+}
+.title-add-path {
+	position:fixed;
+	left:0;
+	top:10px;
+	width:310px;
+	height:38px;
+	line-height:38px;
+	padding:0 0 0 10px;
+	color:#fff;
+	background:#aabfa8;
+	font-size:18px;
+	border-radius:0 6px 0 0;
+	font-weight:normal;
+	text-align:left
+}
+
+#panel-add-path .aside-content {
+	/*overflow: visible;*/
+}
+
+/**/

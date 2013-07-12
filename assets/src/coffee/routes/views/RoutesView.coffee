@@ -101,7 +101,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response, geoObjectCollection) ->
     @ui.dropResults.html @dropdownTemplate(response)
-    @ui.dropResults.show().css 'top', '83px'
+    @ui.dropResults.show().css top: '104px', left: '21px'
 
   ###*
   # TODO
