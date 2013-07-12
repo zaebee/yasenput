@@ -483,9 +483,7 @@
         _this = this;
 
       geoCoder = Yapp.Map.geocode(query, {
-        json: true,
-        boundedBy: Yapp.Map.yandexmap.getBounds(),
-        strictBounds: true
+        json: true
       });
       geoCoder.then(function(response) {
         return _this.searchXHR = Yapp.request('request', {
@@ -494,7 +492,7 @@
           context: context,
           successCallback: successCallback,
           params: {
-            geoObjectCollection: response.GeoObjectCollection
+            geoObjectCollection: response ? response.GeoObjectCollection : {}
           },
           data: {
             s: query

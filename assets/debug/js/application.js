@@ -3813,9 +3813,7 @@ function program23(depth0,data) {
         _this = this;
 
       geoCoder = Yapp.Map.geocode(query, {
-        json: true,
-        boundedBy: Yapp.Map.yandexmap.getBounds(),
-        strictBounds: true
+        json: true
       });
       geoCoder.then(function(response) {
         return _this.searchXHR = Yapp.request('request', {
@@ -3824,7 +3822,7 @@ function program23(depth0,data) {
           context: context,
           successCallback: successCallback,
           params: {
-            geoObjectCollection: response.GeoObjectCollection
+            geoObjectCollection: response ? response.GeoObjectCollection : {}
           },
           data: {
             s: query
@@ -6486,12 +6484,14 @@ function program23(depth0,data) {
 
     RoutesView.prototype.onShow = function() {
       $('body').addClass('page-map');
+      $('#header').hide();
       $('#panel-add-path').show();
       return this._dragPoints();
     };
 
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
+      $('#header').show();
       return $('#panel-add-path').hide();
     };
 
@@ -6559,9 +6559,7 @@ function program23(depth0,data) {
         paths = _(this.collection.models).map(function(point) {
           return [point.get('latitude'), point.get('longitude')];
         }).value();
-        return ymaps.route(paths, {
-          mapStateAutoApply: true
-        }).then(function(route) {
+        return ymaps.route(paths).then(function(route) {
           _this.route = _this.buildDetailPath(route);
           Yapp.Map.yandexmap.geoObjects.add(_this.route);
           _this.route.editor.start({
@@ -6660,7 +6658,7 @@ function program23(depth0,data) {
         success: function(response) {
           _this.collection.add(point);
           if (_this.collection.length !== index) {
-            Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')]);
+            Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
             return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
           }
         }
@@ -6690,7 +6688,7 @@ function program23(depth0,data) {
         success: function(response) {
           _this.collection.add(point);
           if (_this.collection.length !== index) {
-            Yapp.Map.yandexmap.setCenter([point.get('latitude'), point.get('longitude')]);
+            Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
             return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class='remove-item-path' data-point-id=\"" + (point.get('id')) + "\">\n</li>");
           }
         }
@@ -6767,8 +6765,9 @@ function program23(depth0,data) {
     };
 
     /**
-    # TODO
-    # @method resortCollection
+    # Fired when resort:collection occur
+    # Rebuild yandex route on map
+    # @event resortCollection
     */
 
 
@@ -6783,8 +6782,9 @@ function program23(depth0,data) {
     };
 
     /**
-    # TODO
-    # @method savePath
+    # Fired on .btn-save click
+    # Show alert region with popup for saving route
+    # @event savePath
     */
 
 
@@ -6859,6 +6859,16 @@ function program23(depth0,data) {
       };
     })();
 
+    /**
+    # Insert element in array on index position
+    # @method _insertTo
+    # @param {Number} index Position where will bw insert element
+    # @param {Oject} el Element that insert in array
+    # @param {Array} array Array for inserting
+    # @private
+    */
+
+
     RoutesView.prototype._insertTo = function(index, el, array) {
       var _idx;
 
@@ -6878,25 +6888,25 @@ function program23(depth0,data) {
     RoutesView.prototype._selectDropLi = function(dir) {
       var indexSelected, li;
 
-      li = $("li:visible", this.ui.dropResults).filter(function() {
+      li = $('li:visible', this.ui.dropResults).filter(function() {
         return true;
       });
-      if (li.filter(".hover").length) {
-        indexSelected = li.index(li.filter(".hover"));
+      if (li.filter('.hover').length) {
+        indexSelected = li.index(li.filter('.hover'));
         if (indexSelected < li.length - 1) {
           if (dir === 1) {
-            li.filter(".hover:first").removeClass("hover");
-            return li.eq(indexSelected + 1).addClass("hover").focus();
+            li.filter(".hover:first").removeClass('hover');
+            return li.eq(indexSelected + 1).addClass('hover').focus();
           } else {
             li.filter(".hover:first").removeClass("hover");
-            return li.eq(indexSelected - 1).addClass("hover").focus();
+            return li.eq(indexSelected - 1).addClass('hover').focus();
           }
         } else {
-          li.filter(".hover:first").removeClass("hover");
+          li.filter('.hover:first').removeClass('hover');
           if (dir === 1) {
-            return li.eq(0).addClass("hover").focus();
+            return li.eq(0).addClass('hover').focus();
           } else {
-            return li.eq(indexSelected - 1).addClass("hover").focus();
+            return li.eq(indexSelected - 1).addClass('hover').focus();
           }
         }
       } else {
@@ -6907,6 +6917,13 @@ function program23(depth0,data) {
         }
       }
     };
+
+    /**
+    # Initialize sortable plugin for dragable points in route bar
+    # @method _dragPoints
+    # @private
+    */
+
 
     RoutesView.prototype._dragPoints = function() {
       var _this = this;
@@ -7558,7 +7575,8 @@ function program23(depth0,data) {
       Yapp.content.close();
       Yapp.popup.close();
       routesView = new Yapp.Routes.RoutesView;
-      return Yapp.routePanel.show(routesView);
+      Yapp.routePanel.show(routesView);
+      return Yapp.Map.yandexmap.container.fitToViewport();
     };
 
     return Controller;

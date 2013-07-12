@@ -50,7 +50,8 @@
       Yapp.content.close();
       Yapp.popup.close();
       routesView = new Yapp.Routes.RoutesView;
-      return Yapp.routePanel.show(routesView);
+      Yapp.routePanel.show(routesView);
+      return Yapp.Map.yandexmap.container.fitToViewport();
     };
 
     return Controller;
