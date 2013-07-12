@@ -21,6 +21,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
     _.bindAll @, 'updateBar', 'resortCollection', 'loadPointFromPlacemark'
+    @user = Yapp.user
     @search = Yapp.Common.headerView.search
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
@@ -61,16 +62,33 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   modelEvents:
     'change': 'render'
 
+  ###*
+  # Fired when region is showed
+  # @event onShow
+  ###
   onShow: ->
     $('body').addClass 'page-map'
     $('#header').hide()
     $('#panel-add-path').show()
     @_dragPoints()
 
+  ###*
+  # After close method of the view.
+  # @event onClose
+  ###
   onClose: ->
     $('body').removeClass 'page-map'
     $('#header').show()
     $('#panel-add-path').hide()
+    if @route
+      Yapp.Map.yandexmap.geoObjects.remove @route
+
+  ###*
+  # Passed additional user data.
+  # @method templateHelpers
+  ###
+  templateHelpers: ->
+    user: @user.toJSON()
 
   ###*
   # TODO
@@ -85,7 +103,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response, geoObjectCollection) ->
     @ui.dropResults.html @dropdownTemplate(response)
-    @ui.dropResults.show().css 'top', '83px'
+    @ui.dropResults.show().css top: '104px', left: '21px'
 
   ###*
   # TODO

@@ -29,25 +29,31 @@ class Yapp.Points.Controller extends Marionette.Controller
     console.log "Show content #{content_type} in Points module"
     Yapp.popup.close()
     Yapp.routePanel.close()
-    @layout = new Yapp.Points.MainLayout({content_type: 'ypi'})
+    @layout = new Yapp.Points.MainLayout content_type: content_type or 'ypi'
     Yapp.content.show @layout
     @layout
 
   ###*
-  # The stub for popular pins showing function
+  # The view for popular pins showing function
   # @method showPopular
   ###
   showPopular: ->
-    @layout.options.content_type = 'ypi'
-    Yapp.content.show @layout
+    if @layout
+      @layout.options.content_type = 'ypi'
+      Yapp.content.show @layout
+    else
+      @showLayout 'ypi'
 
   ###*
-  # The stub for popular pins showing function
+  # The view for popular pins showing function
   # @method showNew
   ###
   showNew: ->
-    @layout.options.content_type = 'updated'
-    Yapp.content.show @layout
+    if @layout
+      @layout.options.content_type = 'updated'
+      Yapp.content.show @layout
+    else
+      @showLayout 'updated'
 
   ###*
   # The stub for adding point function
