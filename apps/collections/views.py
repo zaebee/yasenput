@@ -50,12 +50,10 @@ class LikeCollection(CollectionsBaseView):
             list_of_collections
             for coll_id in list_of_collections:
                 collection = Collections.objects.get(id=int(coll_id))
-                collection.save()
                 if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
                     collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
                 else:
                     collection.likeusers.add(MainModels.User.objects.get(username=request.user))
-                collection.save()
 
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
