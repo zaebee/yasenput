@@ -48,6 +48,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
     @listenTo Yapp.Map, 'load:yandexmap', @setMap
     @listenTo Yapp.Points, 'update:collection', @updatePointCollection
 
+    ## need for creating clusterers filtered by tag
     $.get('/api/v1/map_yapens/').success (response) =>
       @pointsByTag = _.partial @_filteredPoints, response
     Yapp.request(
@@ -134,22 +135,20 @@ class Yapp.Map.MapView extends Marionette.ItemView
   # @method _filteredPoints
   # @private
   ###
-  _filteredPoints: (points, tagId) ->
+  _filteredPoints: (points, tagIds) ->
     _(points).filter( (point) ->
-        return _(point.tags).some {id: tagId}
+        pointTagsId = _.pluck point.tags, 'id'
+        intersection = _.intersection pointTagsId, tagIds
+        if !_.isEmpty intersection
+          point
     ).value()
 
   ###*
   # TODO
-  # @method createCluster
+  # @method getPlaceMarks
   ###
-  createCluster: (tagId) ->
-    if @clusterer
-      Yapp.Map.yandexmap.geoObjects.remove @clusterer
-    @clusterer = new ymaps.Clusterer
-      clusterIcons: Yapp.Map.clusterIcons
-
-    points = @pointsByTag tagId
+  getPlaceMarks: (tagIds) ->
+    points = @pointsByTag tagIds
     placemarks = _.map(points, (el) ->
       tag = _(el.tags).find (tag) -> tag.icon isnt ''
       new ymaps.Placemark [el.latitude, el.longitude], {
@@ -160,17 +159,34 @@ class Yapp.Map.MapView extends Marionette.ItemView
         iconLayout: Yapp.Map.pointIconLayout
       }
     )
-    @clusterer.add placemarks
-    Yapp.Map.yandexmap.geoObjects.add @clusterer
 
+  ###*
+  # TODO
+  # @method createCluster
+  ###
+  createCluster: (tagIds) ->
+    if @clusterer
+      @clusterer.removeAll()
+    else
+      @clusterer = new ymaps.Clusterer
+        clusterIcons: Yapp.Map.clusterIcons
+      Yapp.Map.yandexmap.geoObjects.add @clusterer
+
+    placemarks = @getPlaceMarks tagIds
+    @clusterer.add placemarks
+    @clusterer.refresh()
+
+  ###*
+  # TODO
+  # @event showCluster
+  ###
   showCluster: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
     if $target.parent().hasClass 'active'
-      Yapp.Map.yandexmap.geoObjects.remove @clusterer
       $target.parent().removeClass 'active'
-      return
-    @$('.m-ico-group a').removeClass 'active'
-    $target.parent().addClass 'active'
-    tagId = $target.data 'id'
-    @createCluster tagId
+    else
+      $target.parent().addClass 'active'
+    $activeTags = @$('.m-ico-group a.active').children()
+    tagIds = _.map $activeTags, (tag) -> $(tag).data 'id'
+    @createCluster tagIds

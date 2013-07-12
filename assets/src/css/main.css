@@ -1063,7 +1063,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
     height: 40px;
 }
 	.details-path .black{font-size:14px}
-.ol-details-path{padding:0 3px}
+.ol-details-path{padding:0 3px; margin-bottom:30px;}
 .ol-details-path > li{background:none; filter:none; border-top:solid 1px #dbdbdb; padding:13px 0 0 45px; font-size:14px; color:#333; cursor:default; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; height:auto; min-height:36px; display:block; white-space:normal; width:auto; margin:0}
 .ol-details-path > li:before{top:14px}
 .ol-details-path > li:first-child{border-top:0}
