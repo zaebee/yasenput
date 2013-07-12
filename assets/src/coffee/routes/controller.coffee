@@ -30,3 +30,4 @@ class Yapp.Routes.Controller extends Marionette.Controller
     Yapp.popup.close()
     routesView = new Yapp.Routes.RoutesView
     Yapp.routePanel.show routesView
+    Yapp.Map.yandexmap.container.fitToViewport()
