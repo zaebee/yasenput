@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from apps.points import forms
 from apps.main import models as MainModels
+from apps.reviews import models as ReviewsModels
 from apps.photos.models import *
 from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
@@ -630,7 +631,7 @@ class PointEdit(LoggedPointsBaseView):
                         point.tags.add(new_tag)
 
             point.save()
-            
+
             return self.pointsList([point])
         else:
             e = form.errors
@@ -757,3 +758,28 @@ class RouteLike(View):
             route.likeusers.add(MainModels.Person.objects.get(username=request.user))
         point.save()
         return JsonHTTPResponse('like')
+
+class AddReviewToPoint(View):
+    http_method_names = ('post')
+
+    def post(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        point = MainModels.Points.objects.get(id=id)
+        point_reviews = point.reviews
+        params = request.POST
+        review_text = params.get('review')
+        rating = params.get('rating')
+        author = MainModels.Person.objects.get(username=request.user)
+        if point_reviews.filter(author = author):
+            last_review = point_reviews.objects.filter(author = author).order_by('-updated')[0]
+            if datetime.now() - last_review.updated < datetime.timedelta(days=1):
+                review = last_review
+                review.review = review_text
+            else:
+                review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+        else:
+            review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+        review.save()
+        point.reviews.add(review)
+
+        return JsonHTTPResponse('review added')

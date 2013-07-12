@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import *
-from apps.api.v1.views import Search, ItemsList, MapItemsList, PointAdd, LikePoint, Route, RouteLike
+from apps.api.v1.views import *
 from apps.collections.views import *
 
 urlpatterns = patterns('',
@@ -16,4 +16,6 @@ urlpatterns = patterns('',
     url(r'^route/(?P<id>\d+)/like/$', RouteLike.as_view()),
     url(r'^route/(?P<id>\d+)/$', Route.as_view()),
     url(r'^route/*$', Route.as_view()),
+    url(r'^points/(?P<id>\d+)/reviews/', AddReviewToPoint.as_view()),
+
 )
