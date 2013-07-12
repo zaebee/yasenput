@@ -149,7 +149,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   getPlaceMarks: (tagIds) ->
     points = @pointsByTag tagIds
-    placemarks = _.map(points, (el) ->
+    placemarks = _.map points, (el) ->
       tag = _(el.tags).find (tag) -> tag.icon isnt ''
       new ymaps.Placemark [el.latitude, el.longitude], {
         id: 'map-point' + el.id
@@ -158,7 +158,6 @@ class Yapp.Map.MapView extends Marionette.ItemView
       }, {
         iconLayout: Yapp.Map.pointIconLayout
       }
-    )
 
   ###*
   # TODO
@@ -172,8 +171,8 @@ class Yapp.Map.MapView extends Marionette.ItemView
         clusterIcons: Yapp.Map.clusterIcons
       Yapp.Map.yandexmap.geoObjects.add @clusterer
 
-    placemarks = @getPlaceMarks tagIds
-    @clusterer.add placemarks
+    @placemarks = @getPlaceMarks tagIds
+    @clusterer.add @placemarks
     @clusterer.refresh()
 
   ###*
