@@ -63,11 +63,13 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
   onShow: ->
     $('body').addClass 'page-map'
+    $('#header').hide()
     $('#panel-add-path').show()
     @_dragPoints()
 
   onClose: ->
     $('body').removeClass 'page-map'
+    $('#header').show()
     $('#panel-add-path').hide()
 
   ###*
@@ -117,7 +119,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       if @listeners
         @listeners.removeAll()
       paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
-      ymaps.route(paths, mapStateAutoApply: true).then( (route) =>
+      #ymaps.route(paths, mapStateAutoApply: true).then( (route) =>
+      ymaps.route(paths).then( (route) =>
         @route = @buildDetailPath(route)
         Yapp.Map.yandexmap.geoObjects.add @route
         ## start route editor and add event for path updates
