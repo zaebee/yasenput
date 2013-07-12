@@ -20,16 +20,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.RoutesView'
-    _.bindAll @, 'updateBar', 'resortCollection', 'loadPointFromPlacemark'
+    _.bindAll @, 'updateBar', 'resortCollection', 'loadPoint'
     @user = Yapp.user
     @search = Yapp.Common.headerView.search
+    @collection = new Yapp.Points.PointCollection
+
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
-    @collection = new Yapp.Points.PointCollection
 
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
-    @listenTo Yapp.vent, 'click:placemark', @loadPointFromPlacemark
+    @listenTo Yapp.vent, 'click:addplacemark', @loadPoint
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -222,30 +223,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
             </li>"""
     )
     @hideDropdown()
-
-  ###*
-  # TODO
-  # @method loadPointFromPlacemark
-  ###
-  loadPointFromPlacemark: (event) ->
-    event.preventDefault()
-    geoPoint = event.originalEvent.target.getData()
-    point = geoPoint.properties.get 'point'
-    @ui.msgHint.hide()
-    index = @collection.length
-    point = new Yapp.Points.Point unid: point.id
-    point.fetch(
-      success: (response) =>
-        @collection.add point
-        if @collection.length isnt index
-          Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))])
-          @ui.addPathPlace.append """
-            <li data-point-id="#{point.get('id')}">
-              <h4>#{point.get('name')}</h4>
-              <p>#{point.get('address')}</p>
-              <input type="button" value='' class='remove-item-path' data-point-id="#{point.get('id')}">
-            </li>"""
-    )
 
   ###*
   # TODO
