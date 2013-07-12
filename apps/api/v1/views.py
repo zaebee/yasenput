@@ -376,21 +376,21 @@ class MapItemsList(PointsBaseView):
             search_res_sets_list = []
             search_res_points = search_res_points_list
 
-       
+
         YpJson = YpSerialiser()
-        items = json.loads(YpJson.serialize(list(search_res_points), fields = ['id','name', 'longitude', 'latitude', 'tags'], 
-            relations={'tags': {'fields': ['name', 'icons'],
+        items = json.loads(YpJson.serialize(list(search_res_points), fields = ['id','name', 'longitude', 'latitude', 'tags'],
+            relations={'tags': {'fields': ['name', 'icons', 'style'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT}}))
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
 
 class PointAddByUser(LoggedPointsBaseView):
     http_method_names = ('post')
-    
+
     def post(self, request, *args, **kwargs):
         errors = []
         params = request.POST
-        
+
         point_id = kwargs.get("id", None)
         if not point_id:
             form = forms.IdForm(params)
@@ -654,50 +654,54 @@ class PointDel(LoggedPointsBaseView):
             return JsonHTTPResponse({"id":pk, "status": 1, "txt":"Ошибка удаления"})
         return JsonHTTPResponse({"id":0, "status": 1, "txt":"Ошибка удаления"})
 
+
 class Route(View):
     http_method_names = ('post','get','put','delete')
 
     def post(self, request):
-        params = request.POST
-        route_dict =  params.dict()
-        name = route_dict['name']
-        description = route_dict['desc']
-        points_list = ast.literal_eval(route_dict['points_list'])
+        data = request.POST.get('model', None)
+        route_dict = json.loads(data)
         author = MainModels.Person.objects.get(username=request.user)
-        coords = ast.literal_eval(route_dict['coords'])
 
-        route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
-        
-        for point in points_list:
-            dot = MainModels.Points.objects.get(id = point.get('id'))
-            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+        points = route_dict.pop('points')
+        route_dict.update({'author': author})
+        route = MainModels.Routes.objects.create(**route_dict)
 
-        route.save()
-
-        return JsonHTTPResponse('ok')
+        for point in points:
+            dot = MainModels.Points.objects.get(id=point.get('id'))
+            MainModels.Position.objects.create(point=dot,
+                                               route=route,
+                                               position=point.get('position'))
+        result = {
+            'status': 200,
+            'id': route.id,
+            'message': 'success create route'
+        }
+        return JsonHTTPResponse(result)
 
     def put(self, request, *args, **kwargs):
-        params = QueryDict(request.body, request.encoding)
-        route_dict =  params.dict()
-        name = route_dict['name']
-        description = route_dict['desc']
-        points_list = ast.literal_eval(route_dict['points_list'])
-        author = MainModels.Person.objects.get(username=request.user)
-        coords = ast.literal_eval(route_dict['coords'])
+        id = kwargs.get('id')
+        route_dict = QueryDict(request.body, request.encoding)
+        route_dict = route_dict.get('model', None)
+        user = MainModels.Person.objects.get(username=request.user)
 
-        route = MainModels.Routes.objects.get(id=kwargs.get('id'))
-        if route.author != MainModels.Person.objects.get(username=request.user):
-            route = MainModels.Routes.objects.create(name = name, description = description, author=author, coords = route_dict['coords'])
-        else:
-            route.name = name
-            route.description = description
-            route.points_list = points_list
-            route.coords = coords
+        points = route_dict.pop('points')
+        route_dict.update({
+            'author': user,
+            'id': id
+        })
+        try:
+            route = MainModels.Routes.objects.get(id=id)
+        except:
+            route = MainModels.Routes.objects.create(**route_dict)
+        #route = MainModels.Routes.objects.update(**route_dict)
+        #coords = ast.literal_eval(route_dict['coords'])
 
-
-        for point in points_list:
-            dot = MainModels.Points.objects.get(id=point.get('id'))
-            pos = MainModels.Position.objects.create(point=dot, route=route, position=point.get('order'))
+        #ids = (point['id'] for point in points)
+        #new_points = MainModels.Points.objects.filter(id__in=ids)
+        for point in points:
+            dot = MainModels.Points.objects.filter(id=point.get('id'))
+            route.position_set.create(point=dot, position=point.get('order'))
 
         route.save()
         return JsonHTTPResponse('ok')
