@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^point', 'apps.main.views.index'),
     url(r'^set', 'apps.main.views.index'),
     url(r'^map', 'apps.main.views.index'),
+    url(r'^new', 'apps.main.views.index'),
+    url(r'^popular', 'apps.main.views.index'),
     url(r'^add_collection', 'apps.main.views.index'),
 
 )
