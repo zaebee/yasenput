@@ -57,14 +57,13 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     $(@wrapper).show()
 
     @regions.alerts.on 'show', (view) =>
-      ## set position for alert region depends on $target offset
-      $target = view.options.target
       css =
-        margin: 0
-        left: '70%'
-        top: $target.offset().top
-        position: 'absolute'
+        margin: '0 0 0 292px'
+        top: '240px'
+        position: 'fixed'
+        display: 'none'
       view.$el.css css
+      view.$el.fadeIn 500
       ## change popup close handler. If dont change event will close all popups
       view.ui.closeButton.unbind('click').bind 'click', () ->
         view.close()

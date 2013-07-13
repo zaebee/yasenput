@@ -565,21 +565,8 @@ audio:not([controls]) {
   z-index: 1010;
   display: none;
   max-width: 276px;
-  padding: 1px;
   text-align: left;
   white-space: normal;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-     -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  -webkit-background-clip: padding-box;
-     -moz-background-clip: padding;
-          background-clip: padding-box;
 }
 
 .popover.top {
@@ -598,7 +585,7 @@ audio:not([controls]) {
   margin-left: -10px;
 }
 
-.popover-title {
+.popover-titles {
   padding: 8px 14px;
   margin: 0;
   font-size: 14px;
@@ -616,7 +603,6 @@ audio:not([controls]) {
 }
 
 .popover-content {
-  padding: 9px 14px;
 }
 
 .popover .arrow,
@@ -667,6 +653,7 @@ audio:not([controls]) {
   bottom: -10px;
   left: 1px;
   border-right-color: #ffffff;
+  border-right-color: #effbee;
   border-left-width: 0;
 }
 
