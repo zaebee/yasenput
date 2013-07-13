@@ -52,7 +52,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
   # @event onShow
   ###
   onShow: ->
-    $(@body).css 'overflow', 'hidden'
+    $(@body).css 'overflow-y', 'hidden'
     $(@overlay).show()
     $(@wrapper).show()
 
@@ -78,5 +78,5 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     @regions.alerts.close()
     $(@overlay).hide()
     $(@wrapper).hide()
-    $(@body).css 'overflow', 'initial'
+    $(@body).css 'overflow-y', 'auto'
     Yapp.Common.router.navigate('/')

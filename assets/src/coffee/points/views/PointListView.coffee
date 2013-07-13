@@ -100,6 +100,9 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       @wall = new Masonry @el,
         columnWidth: 241
         isFitWidth: true
+    hasVScroll = document.body.scrollHeight > document.body.clientHeight
+    if !hasVScroll
+      $(window).trigger 'scroll'
 
   ###*
   # Fired when collection fully rendered.

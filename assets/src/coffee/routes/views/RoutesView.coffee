@@ -123,8 +123,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     )
 
   ###*
-  # TODO
-  # @method buildPath
+  # Fired when .btn-add-path button is clicked
+  # @event buildPath
   ###
   buildPath: (event) ->
     if event
@@ -167,9 +167,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @method buildDetailPath
   ###
   buildDetailPath: (route) ->
-    route.getWayPoints().each( (point) ->
+    route.getWayPoints().each (point) ->
       point.properties.set 'class', 'place-added'
-    )
     route.getWayPoints().options.set 'iconLayout', Yapp.Map.pointIconLayout
     ways = route.getPaths()
     wayLength = ways.getLength()
