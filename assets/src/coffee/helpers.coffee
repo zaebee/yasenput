@@ -30,12 +30,12 @@ Handlebars.registerHelper('ifBelong', (v1, v2, options) ->
 )
 
 
-##  format an ISO date using jquery.dateformat.js
-##  dateformat syntax example: new Date("2011-07-18T15:50:52").format("mm yyyy")
+##  format an ISO date using moment.js
+##  dateformat syntax example: moment("2011-07-18T15:50:52").format("mm yyyy")
 Handlebars.registerHelper('dateFormat', (context, block) ->
-  if window.dateFormat
-    f = block.hash.format or "MMM Do, YYYY"
-    return new Date(context).format(f)
+  if window.moment
+    f = block.hash.format or 'D MMMM YYYY в HH:mm'
+    return moment(context).format f
   else
     return context   #dateformat plugin nut available. return data as is.
 )
