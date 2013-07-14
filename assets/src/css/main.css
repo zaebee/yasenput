@@ -293,6 +293,16 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .for-add-place.place-added:hover .a-add-place{background-position:-429px -237px;}
 
 .top-panel{margin:0 0 10px; padding:0 40px; position:relative}
+.spinner {
+    position: fixed;
+    width: 4%;
+    height: 32px;
+    background: url(../images/ajax-loader3.gif) transparent no-repeat center center;
+    left: 8%;
+    top: 33px;
+    display:none;
+    z-index:140;
+}
 .no-boxshadow .top-panel{border-bottom:solid 1px #b7c1b7}
 .boxshadow .top-panel{-moz-box-shadow:0 5px 6px #b7c1b7; -webkit-box-shadow:0 5px 6px #b7c1b7; box-shadow:0 5px 6px #b7c1b7;}
 .tabs{height:26px;}
