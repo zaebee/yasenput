@@ -59,7 +59,7 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     @regions.alerts.on 'show', (view) =>
       css =
         margin: '0 0 0 292px'
-        top: '240px'
+        top: '195px'
         position: 'fixed'
         display: 'none'
       view.$el.css css

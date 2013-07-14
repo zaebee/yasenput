@@ -38,9 +38,7 @@ a:hover{color:#333}
 .clearfix:after, .clearfix:before{content:"";clear:both;display:table; font-size:0; line-height:0}
 .hidden{display:none !important}
 
-#wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-top:477px; padding-bottom:60px}
-
-#wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-bottom:60px; padding-top:67px;}
+#wrap{position:relative; margin:0; text-align:left; min-width:980px; padding-bottom:60px; padding-top:74px;}
 #wrap.map-opened {padding-top:477px;}
 
 #mainmap {height: 477px;}
@@ -365,7 +363,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .boxshadow #footer{-moz-box-shadow:0 -4px 5px rgba(0, 0, 0, .2); -webkit-box-shadow:0 -4px 5px rgba(0, 0, 0, .2); box-shadow:0 -4px 5px rgba(0, 0, 0, .2)}
 .hide-footer #footer{bottom:-40px}
 .hide-footer #wrap{padding-bottom:20px}
-	#footer .a-toggle{position:absolute; top:-18px; left:40px; text-decoration:none; background-position:0 -195px; width:35px; height:18px}
+	#footer .a-toggle{position:absolute; top:-18px; left:-145px; text-decoration:none; background-position:0 -195px; width:35px; height:18px}
 	#footer .a-toggle:hover{background-position:-50px -195px}
 	.hide-footer #footer .a-toggle{background-position:-119px -195px}
 	.hide-footer #footer .a-toggle:hover{background-position:-166px -195px}
@@ -809,10 +807,6 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	.photo-preview li{float:left; margin:0 3px 3px 0; width:67px; height:54px}
 	.photo-preview img{border:solid 1px #c3c3c3; float:left}
 
-#right-panel .a-like{width:20px; height:19px; background-position:-717px -428px; position:relative; top:-1px}
-#right-panel .a-like:hover{background-position:-717px -453px}
-#right-panel .a-like.marked{background-position:-717px -477px;}
-#right-panel .a-like.marked:hover{background-position:-717px -502px;}
 #right-panel .small-icons{padding:10px 0 8px}
 	#right-panel .small-icons a, #right-panel .small-icons i{display:inline-block; .display:inline; .zoom:1; vertical-align:top; margin:0 4px 4px 0}
 	#right-panel .small-icons i{background-image:url(../images/sprite.png);}
@@ -887,6 +881,31 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 #add-new-label a{margin:0 8px 10px 0; width:130px; height:35px; line-height:15px; font-size:16px}
 	#add-new-label a span{display:table-cell;.display:block; width:130px; height:35px; vertical-align:middle; text-align:center}
 
+.a-up {
+    font-family: "Trebuchet MS", "Helvetica CY", sans-serif;
+    font-size: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 39px;
+    background: #6f5e4e;
+    -moz-border-radius: 2px 2px 0 0;
+    -webkit-border-radius: 2px 2px 0 0;
+    border-radius: 2px 2px 0 0;
+    width: auto;
+    padding: 5px 25px;
+    color: #fff;
+    text-decoration: none;
+    z-index: 1234;
+    line-height: 18px;
+    display: none;
+}
+.a-up:hover {
+    background: #a58e78;
+    color: #fff;
+}
+.hide-footer .a-up {
+    bottom:0;
+}
 /*  */
 
 .ymaps-default-cluster ymaps {
@@ -1262,5 +1281,140 @@ ol.ol-add-path-places li.placeholder:before {
 #panel-add-path .aside-content {
 	/*overflow: visible;*/
 }
+/**/
 
+
+/*btn*/
+.button {
+	display: inline-block;
+	cursor: pointer;
+}
+.button_green {
+	margin-bottom: 1px;
+	padding: 2px 4px;
+	border: 1px solid #b2c0b1;
+	border-radius: 2px;
+	background-color: #cedecd;
+	-moz-box-shadow: 0 1px 0 rgba(158,170,157,1);
+  -webkit-box-shadow: 0 1px 0 rgba(158,170,157,1);
+  box-shadow: 0 1px 0 rgba(158,170,157,1);
+	font-size: 11px;
+	color: #728972;
+}
+.button_green:hover {
+	background-color: #d5e6d4;
+}
+
+.button-wrap_right {
+	text-align: right;
+}
+
+.bp-comments .ico-vote-small {
+	display: inline-block;
+	height: 14px;
+	width: 11px;
+	background-image: url(../images/sprite.png);
+}
+
+.bp-comments_review {
+	background: #FFF;
+}
+.bp-comments_review .item-comment .comment-body {
+	font-size: 13px;
+}
+.bp-comments_review .item-comment .comment-date {
+	margin: 3px 0 2px;
+	font-size: 12px !important;
+}
+.bp-comments .comment-date .ico-vote-small {
+	margin: 0 5px -3px 2px;
+}
+.bp-comments_review .add-comment textarea {
+	margin-bottom: 10px;
+	border-radius: 2px;
+	border: 1px solid #d0cfcf;
+	height: 45px;
+	font-size: 13px;
+	color: #666;
+}
+.bp-comments_review .add-comment .button {
+	display: block;
+	float: right;
+	margin-right: 10px;
+}
+
+.add-new-section-body textarea {
+	min-width: 544px;
+	max-width: 544px;
+}
+
+.vote {
+	margin: 0 0 5px 50px;
+	overflow: hidden;
+}
+.vote__label {
+	display: block;
+	float: left;
+	margin-right: 4px;
+	font-size: 13px;
+	color: #666;
+}
+.vote__raiting {
+	height: 35px;
+}
+.vote-wrap {
+  margin-top: 2px;
+  height: 22px;
+  overflow: hidden;
+}
+.vote-block {
+	position: relative;
+}
+.vote-hover {
+  float: left;
+  cursor:  pointer;
+}
+.vote-stars {
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: url(../images/stars.png) no-repeat 0 0 !important;
+}
+.vote-active {
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: url(../images/stars-active.png) no-repeat 0 0 !important;
+}
+.vote-result {
+  color: #ccc;
+  font-size: 14px;
+  margin-top: 12px;
+  padding-left: 190px;
+}
+.vote-success {
+  display: none;
+}
+
+.item-comment_green {
+	background-color: #effbee;
+}
+
+.basic-icons {
+	margin-bottom: 20px;
+}
+
+#right-panel .a-btn {
+	margin: 0 0 4px;
+}
+#right-panel .a-complaint {
+	display: inline-block;
+	margin: 0;
+	width: 30px;
+	height: 27px;
+	background-position: -332px -310px;
+}
+#right-panel .a-complaint:hover {
+	background-position: -370px -310px;
+}
 /**/

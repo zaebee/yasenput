@@ -20,6 +20,8 @@ class Yapp.Common.FooterView extends Marionette.ItemView
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.FooterView'
+    _.bindAll @, 'onScroll'
+    $(window).on 'scroll', @onScroll
 
   ###*
   # Required field for Marionette.View
@@ -37,6 +39,7 @@ class Yapp.Common.FooterView extends Marionette.ItemView
   ###
   events:
     'click .a-toggle': 'toggleFooter'
+    'click .a-up': 'scrollTop'
 
   ###*
   # The view model event triggers
@@ -47,9 +50,29 @@ class Yapp.Common.FooterView extends Marionette.ItemView
     'change': 'render'
 
   ###*
+  # Fired when .a-toggle click occur
   # Hide/show footer panel on click arrow
-  # @method toggleFooter
+  # @event toggleFooter
   ###
   toggleFooter: (event) ->
     event.preventDefault()
     $('body').toggleClass 'hide-footer'
+
+  ###*
+  # Fired when .a-up click occur
+  # Scroll on top document
+  # @event scrollTop
+  ###
+  scrollTop: (event) ->
+    event.preventDefault()
+    $('body').animate scrollTop: 0, 'slow'
+
+  ###*
+  # Hide/show .a-up button in page has or no vertical scroll
+  # @event onScroll
+  ###
+  onScroll: (event) ->
+    if document.body.scrollTop > 60
+      @$('.a-up').show()
+    else
+      @$('.a-up').hide()
