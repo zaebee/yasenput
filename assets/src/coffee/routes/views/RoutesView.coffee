@@ -8,7 +8,7 @@ Yapp = window.Yapp
 
 ###*
 # View for showing routes sidebar template
-# @class Yapp.Common.RoutesView
+# @class Yapp.Routes.RoutesView
 # @extends Marionette.ItemView
 # @constructor
 ###
@@ -151,20 +151,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     if @listeners
       @listeners.removeAll()
     paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
-    Yapp.Map.route(paths).then( (route) =>
+    Yapp.Map.route(paths).then (route) =>
       @route = @buildDetailPath(route)
-      window.route = route
       Yapp.Map.yandexmap.geoObjects.add @route
       ## start route editor and add event for path updates
       @route.editor.start editWayPoints: false
       @listeners = @route.events.group()
-      @listeners.add('update', (event) =>
-        @routeUpdate @route, @listeners
-      )
+      @listeners.add 'update', (event) =>
+        @buildDetailPath @route
       @ui.lineAddPathButton.hide()
       @ui.actionButton.show()
       @ui.addPathButton.removeClass 'disabled'
-    )
 
   ###*
   # TODO
@@ -191,11 +188,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
           time: segment.getHumanTime()
           coords: segment.getCoordinates()[1]
       routeCollection.push
-        order: wayIndex
+        position: wayIndex
         point: point.toJSON()
-        way: way.properties.getAll()
         segments: _segments
-    routeCollection.push point: @collection.last().toJSON(), order: wayLength + 1
+    routeCollection.push point: @collection.last().toJSON(), position: wayLength
     ## render our route
     @ui.detailsPath.html @detailsPathTemplate
       ways: routeCollection
@@ -204,13 +200,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.detailsPath.show()
     @routeCollection = routeCollection
     @route = route
-
-  ###*
-  # TODO
-  # @method routeUpdate
-  ###
-  routeUpdate: (route, listeners) ->
-    @buildDetailPath route
 
   ###*
   # TODO
@@ -307,7 +296,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     event.preventDefault()
     $target = $(event.currentTarget)
     routesSaveView = new Yapp.Routes.RoutesSaveView
-      collection: @collection
+      routeCollection: @routeCollection
+      route: @route
     Yapp.popup.show routesSaveView
     Yapp.Routes.router.trigger 'route'
 

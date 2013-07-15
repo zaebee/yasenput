@@ -22,6 +22,9 @@ class Yapp.Routes.RoutesSaveView extends Yapp.Common.PopupView
     console.log 'initialize RoutesSaveView'
     _.bindAll @, 'render'
     @user = Yapp.user
+    @model = new Yapp.Routes.Route
+    @routeCollection = @options.routeCollection
+    @route = @options.route
 
   ###*
   # Required field for Marionette.View
@@ -65,19 +68,28 @@ class Yapp.Routes.RoutesSaveView extends Yapp.Common.PopupView
 
   ###*
   # Fired when .a-add-collection click. Create new empty set.
-  # @event createSet
+  # @event createRoute
   ###
   createRoute: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    setName = @ui.inputName.val().trim()
-    setDescription = @ui.inputDescription.val().trim()
-    if !_.isEmpty(setName) and !_.isEmpty(setDescription)
-      set = new Yapp.Points.Set name:setName, description: setDescription
-      set.create @successCreateRoute, @
-    else if _.isEmpty setName
+    routeName = @ui.inputName.val().trim()
+    routeDescription = @ui.inputDescription.val().trim()
+    coords = JSON.stringify  @route.requestPoints
+    if !_.isEmpty(routeName) and !_.isEmpty(routeDescription)
+      @model.set
+        name: routeName
+        description: routeDescription
+        points: @routeCollection
+        coords: coords
+      @model.save(
+        success: (response) =>
+          if response.status is 200
+            Yapp.popup.close()
+      )
+    else if _.isEmpty routeName
       @ui.inputName.focus()
-    else if _.isEmpty setDescription
+    else if _.isEmpty routeDescription
       @ui.inputDescription.focus()
 
   ###*

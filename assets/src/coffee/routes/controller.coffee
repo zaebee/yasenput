@@ -22,7 +22,7 @@ class Yapp.Routes.Controller extends Marionette.Controller
     console.log 'initializing Yapp.Routes.Controller'
 
   ###*
-  # The stub for the routes showing function
+  # The view for the routes showing function
   # @method showRoutes
   ###
   showRoutes: ->
