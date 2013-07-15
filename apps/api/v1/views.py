@@ -691,7 +691,8 @@ class Route(View):
         route = MainModels.Routes.objects.create(**route_dict)
 
         for point in points:
-            dot = MainModels.Points.objects.get(id=point.get('id'))
+            point_id = point['point']['id']
+            dot = MainModels.Points.objects.get(id=point_id)
             MainModels.Position.objects.create(point=dot,
                                                route=route,
                                                position=point.get('position'))
@@ -704,8 +705,9 @@ class Route(View):
 
     def put(self, request, *args, **kwargs):
         id = kwargs.get('id')
-        route_dict = QueryDict(request.body, request.encoding)
-        route_dict = route_dict.get('model', None)
+        data = QueryDict(request.body, request.encoding)
+        data = data.get('model', None)
+        route_dict = json.loads(data)
         user = MainModels.Person.objects.get(username=request.user)
 
         points = route_dict.pop('points')
@@ -717,14 +719,14 @@ class Route(View):
             route = MainModels.Routes.objects.get(id=id)
         except:
             route = MainModels.Routes.objects.create(**route_dict)
-        #route = MainModels.Routes.objects.update(**route_dict)
-        #coords = ast.literal_eval(route_dict['coords'])
-
-        #ids = (point['id'] for point in points)
-        #new_points = MainModels.Points.objects.filter(id__in=ids)
+        if user != route.author:
+            route_dict.pop('id')
+            route = MainModels.Routes.objects.create(**route_dict)
+        MainModels.Position.objects.filter(route=route).delete()
         for point in points:
-            dot = MainModels.Points.objects.filter(id=point.get('id'))
-            route.position_set.create(point=dot, position=point.get('order'))
+            point_id = point['point']['id']
+            dot = MainModels.Points.objects.get(id=point_id)
+            route.position_set.create(point=dot, position=point.get('position'))
 
         route.save()
         return JsonHTTPResponse('ok')
@@ -733,7 +735,7 @@ class Route(View):
         id = kwargs.get('id', None)
         route = MainModels.Routes.objects.get(id=id)
         if route.author == MainModels.Person.objects.get(username=request.user):
-            MainModels.Position.objects.filter(route = route).delete()
+            MainModels.Position.objects.filter(route=route).delete()
             route.delete()
 
         return JsonHTTPResponse('route deleted')
