@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.views.generic.base import View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+#from django.contrib.auth.decorators import login_required
+#from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
 from django.utils import simplejson
 from apps.events import forms
 from apps.tags import models as TagsModels
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
-from querysetjoin import QuerySetJoin
-import json
+#from querysetjoin import QuerySetJoin
+#import json
 
 
 RESPONSE_LIMITS = {"search": 5, "list": 15}
@@ -25,7 +25,7 @@ def SerializeHTTPResponse(json):
 class TagsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
 
-    @method_decorator(login_required)
+    #@method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
             raise Http404
@@ -80,7 +80,7 @@ class TagsList(TagsBaseView):
             tags = pointsreq[offset:limit]
 
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(tags, fields=("name","level", "icons")), mimetype="application/json")
+            return HttpResponse(YpJson.serialize(tags, fields=("name","level", "icons", "style", "parent", "onmainmap")), mimetype="application/json")
         else:
             e = form.errors
             for er in e:

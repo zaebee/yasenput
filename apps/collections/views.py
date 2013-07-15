@@ -16,6 +16,10 @@ from YasenPut.limit_config import LIMITS
 from django.utils.encoding import smart_str
 import sys
 import json
+import time
+
+import logging
+logger = logging.getLogger(__name__)
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -50,12 +54,10 @@ class LikeCollection(CollectionsBaseView):
             list_of_collections
             for coll_id in list_of_collections:
                 collection = Collections.objects.get(id=int(coll_id))
-                collection.save()
                 if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
                     collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
                 else:
                     collection.likeusers.add(MainModels.User.objects.get(username=request.user))
-                collection.save()
 
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
         else:
@@ -66,6 +68,7 @@ class LikeCollection(CollectionsBaseView):
 
 
 class OneCollection(View):
+    log = logger
 
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -99,7 +102,10 @@ class OneCollection(View):
                 }
             }
         }
-        return HttpResponse(YpJson.serialize([point], excludes=('points_by_user',), relations=relations), mimetype="application/json")
+        t0 = time.time()
+        point = YpJson.serialize([point], excludes=('points_by_user',), relations=relations)
+        self.log.info('Serialize collection detail complete (%.2f sec.) point id: %s' % (time.time()-t0, kwargs.get('id')))
+        return HttpResponse(point, mimetype="application/json")
 
 
 class CollectionsList(View):

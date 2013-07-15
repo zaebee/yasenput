@@ -17,13 +17,13 @@ class Tags(models.Model):
     onmainmap = models.BooleanField(verbose_name='Выводить на карту', default=False)
     author = models.ForeignKey(Person, unique=False)
     parent = models.IntegerField(default = 0, blank = True)
-    created = models.DateTimeField('Создан', auto_now_add=True)
+    created = models.DateTimeField('Создан', auto_now=True)
     updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
 
     search = SphinxSearch(weights={'name': 100})
     searchdelta = SphinxQuerySet(index="tags_tags",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
-    
+
     def __unicode__(self):
         return self.name

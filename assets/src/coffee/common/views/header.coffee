@@ -377,8 +377,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   search: (query, successCallback, context) ->
     geoCoder = Yapp.Map.geocode query,
       json: true
-      boundedBy: Yapp.Map.yandexmap.getBounds()
-      strictBounds : true
     geoCoder.then (response) =>
       @searchXHR = Yapp.request(
         'request'
@@ -387,7 +385,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
           context: context
           successCallback: successCallback
           params:
-            geoObjectCollection: response.GeoObjectCollection
+            geoObjectCollection: if response then response.GeoObjectCollection else {}
           data:
             s: query
       )

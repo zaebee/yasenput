@@ -20,6 +20,7 @@ class Yapp.Points.Router extends Marionette.AppRouter
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.Router'
+    @on 'route', -> Yapp.Common.router.trigger 'route'
 
   ###*
   # It determine route list of the router
