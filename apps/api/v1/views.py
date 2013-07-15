@@ -243,7 +243,7 @@ class ItemsList(PointsBaseView):
         item_list_start_time = datetime.now()
         params = request.GET
         sets = "set"
-        models = ['points','sets']
+        models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
@@ -329,6 +329,7 @@ class ItemsList(PointsBaseView):
             log_text = '\n' + str(search_res_points.count()) + (6-len(str(search_res_points.count())))*' ' + ' | ' + str(search_res_sets.count()) + (6-len(str(search_res_sets.count())))*' ' + ' | ' + str(datetime.now()) + ' | ' + params.get("s").encode('utf-8')
             log.write(log_text)
         log.close()
+
 
         i = offset
         for item in all_items:
@@ -467,41 +468,41 @@ class PointAddByUser(LoggedPointsBaseView):
                 errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
-class PointAdd(LoggedPointsBaseView):
+class PointAdd(PointsBaseView):
     http_method_names = ('post', 'get')
 
     def post(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
 
         errors = []
+        if request.user.is_authenticated():
+            params = request.POST.copy()
+            form = forms.AddPointForm(params)
+            if form.is_valid():
+                point = form.save(commit=False)
 
-        params = request.POST.copy()
-        form = forms.AddPointForm(params)
-        if form.is_valid():
-            point = form.save(commit=False)
-
-            person = MainModels.Person.objects.get(username=request.user)
-            point.author = person
-            point.save()
-            tags = params.getlist("tags[]")
-            if tags:
-                for tag in tags:
-                    new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.get(id=tag)
-                    elif new_tag.count() == 0:
-                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
-                    else:
-                        new_tag = new_tag[0]
-                    point.tags.add(new_tag)
-
+                person = MainModels.Person.objects.get(username=request.user)
+                point.author = person
                 point.save()
-            
-            return PointAddByUser().post(request, id=point.id)
-        else:
-            e = form.errors
-            for er in e:
-                errors.append(er + ':' + e[er][0])
+                tags = params.getlist("tags[]")
+                if tags:
+                    for tag in tags:
+                        new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.get(id=tag)
+                        elif new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
+                        else:
+                            new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+
+                    point.save()
+                
+                return PointAddByUser().post(request, id=point.id)
+            else:
+                e = form.errors
+                for er in e:
+                    errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
     def get(self, request, *args, **kwargs):
