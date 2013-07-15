@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 
+import time
 from django.template.context import RequestContext
-from django.shortcuts import render_to_response
-from apps.main.models import Areas, Regions, HeadDescriptions, Categories, Points, TypePoints, Routes, Person, Events
+from django.shortcuts import render_to_response, render
+from apps.main.models import Categories, Points, Routes, Person, Events
 from apps.collections.models import Collections
 from apps.comments.models import Comments
 from apps.photos.models import Photos
@@ -20,6 +21,9 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.conf import settings
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class YpSerialiser(Serializer):
     def end_object(self, obj):
@@ -30,7 +34,7 @@ class YpSerialiser(Serializer):
         if hasattr(obj, 'currentvisit'):
             self._fields['currentvisit'] = obj.currentvisit
         if self._extras:
-            self._fields.update(self._extras)			
+            self._fields.update(self._extras)
         self.objects.append(self._fields)
         self._fields = None
         self._extras = None
@@ -38,18 +42,13 @@ class YpSerialiser(Serializer):
 
 @csrf_exempt
 def index(request):
-    # if (request.META['REMOTE_ADDR'] in ['127.0.0.1', '213.176.243.173', '176.65.96.188', '95.53.199.47', '92.101.171.155', '91.202.196.154']) or (request.user.is_authenticated()):
     template_name = 'main/main.html'
-    # else:
-    #     template_name = 'off.html'
-    areas = Areas.objects.all()
-    heads = HeadDescriptions.objects.all()
-    categories = Categories.objects.all()
     countvisitpoints = 0
     count_liked_objects = 0
     count_commented_objects = 0
     collections = Collections.objects.filter(author__id=0)
     if request.user.is_authenticated():
+        t0 = time.time()
         user = User.objects.get(username=request.user)
         countvisitpoints = Points.objects.filter(visitusers__id=user.id).count()
         count_liked_objects = (Points.objects.filter(likeusers__id=user.id).count() +
@@ -57,25 +56,18 @@ def index(request):
                                 Events.objects.filter(likeusers__id=user.id).count())
         count_commented_objects = Comments.objects.filter(author__id=user.id).count()
         collections = Collections.objects.filter(author__id=user.id)
+        logger.info('index view queries complete (%.2f sec.)' % (time.time()-t0))
     tagsRequire = Tags.objects.filter(level=0).all()
     tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
-    regions = Regions.objects.all()
-    typepoints = TypePoints.objects.all()
-    cnt = ceil(float(typepoints.count())/3)
-    for i in range(len(typepoints)):
-        if (i % int(cnt) + 1) == int(cnt):
-            typepoints[i].ul = True
-        else:
-            typepoints[i].ul = False
-    return render_to_response(template_name,
-                              {'areas': areas, 'collections': collections, 'heads': heads, 'categories': categories,
-                               'countvisitpoints': countvisitpoints, 'regions': regions,
+    return render(request, template_name,
+                              {'collections': collections,
+                               'countvisitpoints': countvisitpoints,
                                'count_liked_objects': count_liked_objects,
-                               'count_commented_objects': count_commented_objects, 
-                               'typepoints': typepoints, 'tagsRequire': tagsRequire,
+                               'count_commented_objects': count_commented_objects,
+                               'tagsRequire': tagsRequire,
                                'tagsOther': tagsOther,
                                'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
-                              context_instance=RequestContext(request))
+                              )
 
 
 def addpoint(request):
