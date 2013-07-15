@@ -324,6 +324,52 @@ function program9(depth0,data) {
   return buffer;
   });
 
+this["Templates"]["IconTemplate"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n<a href=\"#\" data-toggle=\"tooltip\" title=\"";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-placement=\"top\" data-type-ico=\"";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n  <span class=\"m-ico ";
+  stack1 = helpers['if'].call(depth0, depth0.style, {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"></span>\r\n</a>\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var stack1;
+  if (stack1 = helpers.style) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.style; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  return escapeExpression(stack1);
+  }
+
+function program4(depth0,data) {
+  
+  
+  return "m-dostoprimechatelnost";
+  }
+
+  stack1 = helpers.each.call(depth0, depth0.icons, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
+  });
+
 this["Templates"]["LabelTemplate"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1295,10 +1341,36 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["Templates"]["RoutesView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\r\n  <div class=\"auth user\">\r\n    <a href=\"#\" target=\"_blank\"><img src=\"/media/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\"></a>\r\n    <div class=\"user-body\">\r\n      <div class=\"user-name\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " "
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</div>\r\n      <div class=\"user-likes\">\r\n        <span class=\"ico ico-like-small\"></span>\r\n        "
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.count_liked_objects)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        <span class=\"ico ico-comment-small\"></span>\r\n        "
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.count_commented_objects)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n      </div>\r\n    </div>\r\n  </div>\r\n  ";
+  return buffer;
+  }
 
+function program3(depth0,data) {
+  
+  
+  return "\r\n    <div class=\"auth\">\r\n      <img src=\"/static/images/guest.png\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n      <div class=\"user-body\">\r\n        <span href=\"#\" class=\"a-login\">Вход</span>\r\n      </div>\r\n    </div>\r\n  ";
+  }
 
-  return "<h1 class=\"title-add-path\">Формирование маршрута</h1>\r\n<div class=\"aside-content\">\r\n  <div class=\"pap-viewport\">\r\n    <div class=\"field-enter-place\">\r\n      <div class=\"drop-filter search-matches\">\r\n        <input type=\"text\" class=\"route-input\" placeholder=\"Добавить месторасположение...\">\r\n        \r\n        <input type=\"button\" class=\"drop-filter-clear\">\r\n        \r\n        <ul class=\"drop-results\">\r\n          <li class=\"not-matches hidden\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n          <li data-title=\"Тест\" data-desc=\"Тестовый\" data-id-place=\"90\">Тестовый Текст</li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n    \r\n    <div class=\"msg-hint\">\r\n      Добавляйте места на карту через строку мультипоиска на карте или через строку поиска в окне &laquo;Формирование маршрута&raquo;\r\n    </div>\r\n    \r\n    <ol class=\"ol-add-path-places\"></ol>\r\n    \r\n    <div class=\"line-add-path-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-add-path disabled\">Создать маршрут</a>\r\n      <a href=\"/\" class=\"nonav a-btn btn-return\">Вернуться на главную</a>\r\n    </div>\r\n    \r\n    <div class=\"line-add-path-btn\" id=\"action-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-clear-map\">Очистить карту</a><a href=\"#\" class=\"a-btn btn-save\">Сохранить</a><a href=\"#\" class=\"a-btn btn-print\">Печать</a>\r\n    </div>\r\n    \r\n    <div class=\"details-path\"></div>\r\n  </div>\r\n</div>\r\n";
+  buffer += "<header class=\"header_small\">\r\n  <a href=\"/\" class=\"logo_small nonav\">ясен путь</a>\r\n  <a href=\"/\" class=\"button_brown nonav\">На главную</a>\r\n  ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n</header>\r\n\r\n<div class=\"aside-content\">\r\n  <div class=\"pap-viewport\">\r\n    <div class=\"field-enter-place\">\r\n      <div class=\"drop-filter search-matches\">\r\n        <input type=\"text\" class=\"route-input\" placeholder=\"Добавить месторасположение...\">\r\n        \r\n        <input type=\"button\" class=\"drop-filter-clear\">\r\n        \r\n        <ul class=\"drop-results\">\r\n          <li class=\"not-matches hidden\">Такое местоположение не найдено. Введите другое местоположение</li>\r\n          <li data-title=\"Тест\" data-desc=\"Тестовый\" data-id-place=\"90\">Тестовый Текст</li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n    \r\n    <div class=\"msg-hint\">\r\n      Добавляйте места на карту через строку мультипоиска на карте или через строку поиска в окне &laquo;Формирование маршрута&raquo;\r\n    </div>\r\n    \r\n    <ol class=\"ol-add-path-places\"></ol>\r\n    \r\n    <div class=\"line-add-path-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-add-path disabled\">Создать маршрут</a>\r\n    </div>\r\n    \r\n    <div class=\"line-add-path-btn\" id=\"action-btn\">\r\n      <a href=\"#\" class=\"a-btn btn-clear-map\">Очистить карту</a><a href=\"#\" class=\"a-btn btn-save\">Сохранить</a><a href=\"#\" class=\"a-btn btn-print\">Печать</a>\r\n    </div>\r\n    \r\n    <div class=\"details-path\"></div>\r\n  </div>\r\n</div>\r\n";
+  return buffer;
   });
 
 this["Templates"]["SetDetailView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -2057,12 +2129,12 @@ function program23(depth0,data) {
 
     PopupView.prototype.className = 'popup';
 
-    PopupView.prototype.onBeforeRender = function() {
-      return console.log('before render PopupView');
-    };
-
     PopupView.prototype.modelEvents = {
       'change': 'render'
+    };
+
+    PopupView.prototype.onBeforeRender = function() {
+      return console.log('before render PopupView');
     };
 
     /**
@@ -2974,7 +3046,20 @@ function program23(depth0,data) {
 
 
     MapView.prototype.updatePointCollection = function(collection) {
-      return console.log(collection, 'collection reset');
+      var _this = this;
+
+      return Yapp.Map.mapDeferred.then(function() {
+        console.log(collection, 'collection');
+        if (_this.clusterer) {
+          Yapp.Map.yandexmap.geoObjects.remove(_this.clusterer);
+        }
+        _this.clusterer = new ymaps.Clusterer({
+          clusterIcons: Yapp.Map.clusterIcons
+        });
+        return collection.each(function(point) {
+          return console.log(point, 'point');
+        });
+      });
     };
 
     /**
@@ -6436,6 +6521,7 @@ function program23(depth0,data) {
     RoutesView.prototype.initialize = function() {
       console.log('initializing Yapp.Routes.RoutesView');
       _.bindAll(this, 'updateBar', 'resortCollection', 'loadPointFromPlacemark');
+      this.user = Yapp.user;
       this.search = Yapp.Common.headerView.search;
       this.dropdownTemplate = Templates.RoutesDropdown;
       this.detailsPathTemplate = Templates.RoutesDetail;
@@ -6482,6 +6568,12 @@ function program23(depth0,data) {
       'change': 'render'
     };
 
+    /**
+    # Fired when region is showed
+    # @event onShow
+    */
+
+
     RoutesView.prototype.onShow = function() {
       $('body').addClass('page-map');
       $('#header').hide();
@@ -6489,10 +6581,31 @@ function program23(depth0,data) {
       return this._dragPoints();
     };
 
+    /**
+    # After close method of the view.
+    # @event onClose
+    */
+
+
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
       $('#header').show();
-      return $('#panel-add-path').hide();
+      $('#panel-add-path').hide();
+      if (this.route) {
+        return Yapp.Map.yandexmap.geoObjects.remove(this.route);
+      }
+    };
+
+    /**
+    # Passed additional user data.
+    # @method templateHelpers
+    */
+
+
+    RoutesView.prototype.templateHelpers = function() {
+      return {
+        user: this.user.toJSON()
+      };
     };
 
     /**
@@ -6510,7 +6623,10 @@ function program23(depth0,data) {
 
     RoutesView.prototype.showDropdown = function(response, geoObjectCollection) {
       this.ui.dropResults.html(this.dropdownTemplate(response));
-      return this.ui.dropResults.show().css('top', '83px');
+      return this.ui.dropResults.show().css({
+        top: '104px',
+        left: '21px'
+      });
     };
 
     /**
@@ -7404,32 +7520,40 @@ function program23(depth0,data) {
       Yapp.popup.close();
       Yapp.routePanel.close();
       this.layout = new Yapp.Points.MainLayout({
-        content_type: 'ypi'
+        content_type: content_type || 'ypi'
       });
       Yapp.content.show(this.layout);
       return this.layout;
     };
 
     /**
-    # The stub for popular pins showing function
+    # The view for popular pins showing function
     # @method showPopular
     */
 
 
     Controller.prototype.showPopular = function() {
-      this.layout.options.content_type = 'ypi';
-      return Yapp.content.show(this.layout);
+      if (this.layout) {
+        this.layout.options.content_type = 'ypi';
+        return Yapp.content.show(this.layout);
+      } else {
+        return this.showLayout('ypi');
+      }
     };
 
     /**
-    # The stub for popular pins showing function
+    # The view for popular pins showing function
     # @method showNew
     */
 
 
     Controller.prototype.showNew = function() {
-      this.layout.options.content_type = 'updated';
-      return Yapp.content.show(this.layout);
+      if (this.layout) {
+        this.layout.options.content_type = 'updated';
+        return Yapp.content.show(this.layout);
+      } else {
+        return this.showLayout('updated');
+      }
     };
 
     /**
@@ -7576,7 +7700,9 @@ function program23(depth0,data) {
       Yapp.popup.close();
       routesView = new Yapp.Routes.RoutesView;
       Yapp.routePanel.show(routesView);
-      return Yapp.Map.yandexmap.container.fitToViewport();
+      if (Yapp.Map.yandexmap) {
+        return Yapp.Map.yandexmap.container.fitToViewport();
+      }
     };
 
     return Controller;

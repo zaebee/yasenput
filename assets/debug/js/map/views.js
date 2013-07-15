@@ -159,7 +159,20 @@
 
 
     MapView.prototype.updatePointCollection = function(collection) {
-      return console.log(collection, 'collection reset');
+      var _this = this;
+
+      return Yapp.Map.mapDeferred.then(function() {
+        console.log(collection, 'collection');
+        if (_this.clusterer) {
+          Yapp.Map.yandexmap.geoObjects.remove(_this.clusterer);
+        }
+        _this.clusterer = new ymaps.Clusterer({
+          clusterIcons: Yapp.Map.clusterIcons
+        });
+        return collection.each(function(point) {
+          return console.log(point, 'point');
+        });
+      });
     };
 
     /**

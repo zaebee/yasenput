@@ -56,12 +56,12 @@
 
     PopupView.prototype.className = 'popup';
 
-    PopupView.prototype.onBeforeRender = function() {
-      return console.log('before render PopupView');
-    };
-
     PopupView.prototype.modelEvents = {
       'change': 'render'
+    };
+
+    PopupView.prototype.onBeforeRender = function() {
+      return console.log('before render PopupView');
     };
 
     /**

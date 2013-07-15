@@ -37,6 +37,7 @@
     RoutesView.prototype.initialize = function() {
       console.log('initializing Yapp.Routes.RoutesView');
       _.bindAll(this, 'updateBar', 'resortCollection', 'loadPointFromPlacemark');
+      this.user = Yapp.user;
       this.search = Yapp.Common.headerView.search;
       this.dropdownTemplate = Templates.RoutesDropdown;
       this.detailsPathTemplate = Templates.RoutesDetail;
@@ -83,6 +84,12 @@
       'change': 'render'
     };
 
+    /**
+    # Fired when region is showed
+    # @event onShow
+    */
+
+
     RoutesView.prototype.onShow = function() {
       $('body').addClass('page-map');
       $('#header').hide();
@@ -90,10 +97,31 @@
       return this._dragPoints();
     };
 
+    /**
+    # After close method of the view.
+    # @event onClose
+    */
+
+
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
       $('#header').show();
-      return $('#panel-add-path').hide();
+      $('#panel-add-path').hide();
+      if (this.route) {
+        return Yapp.Map.yandexmap.geoObjects.remove(this.route);
+      }
+    };
+
+    /**
+    # Passed additional user data.
+    # @method templateHelpers
+    */
+
+
+    RoutesView.prototype.templateHelpers = function() {
+      return {
+        user: this.user.toJSON()
+      };
     };
 
     /**
@@ -111,7 +139,10 @@
 
     RoutesView.prototype.showDropdown = function(response, geoObjectCollection) {
       this.ui.dropResults.html(this.dropdownTemplate(response));
-      return this.ui.dropResults.show().css('top', '83px');
+      return this.ui.dropResults.show().css({
+        top: '104px',
+        left: '21px'
+      });
     };
 
     /**

@@ -118,7 +118,28 @@ class Yapp.Map.MapView extends Marionette.ItemView
   # @event updatePointCollection
   ###
   updatePointCollection: (collection) ->
-    console.log  collection, 'collection reset'
+    Yapp.Map.mapDeferred.then =>
+      console.log collection, 'collection'
+      if @clusterer
+        Yapp.Map.yandexmap.geoObjects.remove @clusterer
+      @clusterer = new ymaps.Clusterer
+        clusterIcons: Yapp.Map.clusterIcons
+      collection.each (point) ->
+        console.log point, 'point'
+#      placemarks = _.map(collection, (el) ->
+#        console.log el
+#        tag = _(el.tags).find (tag) -> tag.icon isnt ''
+#        new ymaps.Placemark [el.latitude, el.longitude], {
+#          id: 'map-point' + el.id
+#          point: el
+#          tag: tag
+#        }, {
+#          iconLayout: Yapp.Map.pointIconLayout
+#        }
+#      )
+#      @clusterer.add placemarks
+#      Yapp.Map.yandexmap.geoObjects.add @clusterer
+#      console.log  collection, 'collection reset'
 
   ###*
   # TODO

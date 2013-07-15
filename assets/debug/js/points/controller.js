@@ -49,32 +49,40 @@
       Yapp.popup.close();
       Yapp.routePanel.close();
       this.layout = new Yapp.Points.MainLayout({
-        content_type: 'ypi'
+        content_type: content_type || 'ypi'
       });
       Yapp.content.show(this.layout);
       return this.layout;
     };
 
     /**
-    # The stub for popular pins showing function
+    # The view for popular pins showing function
     # @method showPopular
     */
 
 
     Controller.prototype.showPopular = function() {
-      this.layout.options.content_type = 'ypi';
-      return Yapp.content.show(this.layout);
+      if (this.layout) {
+        this.layout.options.content_type = 'ypi';
+        return Yapp.content.show(this.layout);
+      } else {
+        return this.showLayout('ypi');
+      }
     };
 
     /**
-    # The stub for popular pins showing function
+    # The view for popular pins showing function
     # @method showNew
     */
 
 
     Controller.prototype.showNew = function() {
-      this.layout.options.content_type = 'updated';
-      return Yapp.content.show(this.layout);
+      if (this.layout) {
+        this.layout.options.content_type = 'updated';
+        return Yapp.content.show(this.layout);
+      } else {
+        return this.showLayout('updated');
+      }
     };
 
     /**

@@ -51,7 +51,9 @@
       Yapp.popup.close();
       routesView = new Yapp.Routes.RoutesView;
       Yapp.routePanel.show(routesView);
-      return Yapp.Map.yandexmap.container.fitToViewport();
+      if (Yapp.Map.yandexmap) {
+        return Yapp.Map.yandexmap.container.fitToViewport();
+      }
     };
 
     return Controller;
