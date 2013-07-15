@@ -16,6 +16,10 @@ from YasenPut.limit_config import LIMITS
 from django.utils.encoding import smart_str
 import sys
 import json
+import time
+
+import logging
+logger = logging.getLogger(__name__)
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -64,6 +68,7 @@ class LikeCollection(CollectionsBaseView):
 
 
 class OneCollection(View):
+    log = logger
 
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -97,7 +102,10 @@ class OneCollection(View):
                 }
             }
         }
-        return HttpResponse(YpJson.serialize([point], excludes=('points_by_user',), relations=relations), mimetype="application/json")
+        t0 = time.time()
+        point = YpJson.serialize([point], excludes=('points_by_user',), relations=relations)
+        self.log.info('Serialize collection detail complete (%.2f sec.) point id: %s' % (time.time()-t0, kwargs.get('id')))
+        return HttpResponse(point, mimetype="application/json")
 
 
 class CollectionsList(View):
