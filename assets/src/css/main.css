@@ -303,6 +303,11 @@ sup{position:relative; font-size:.75em; top:-.5em}
     display:none;
     z-index:140;
 }
+.page-map .spinner {
+    top:47px;
+    left:4%;
+}
+
 .no-boxshadow .top-panel{border-bottom:solid 1px #b7c1b7}
 .boxshadow .top-panel{-moz-box-shadow:0 5px 6px #b7c1b7; -webkit-box-shadow:0 5px 6px #b7c1b7; box-shadow:0 5px 6px #b7c1b7;}
 .tabs{height:26px;}
