@@ -162,7 +162,8 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.drop-search .item-labels .hidden{display:inline-block !important}
 	.drop-search .hidden-li, .drop-search .item-labels .hidden.hidden-li{display:none !important}
 
-.m-ico-group{position:absolute; left:40px; bottom:14px; z-index:5}
+.m-ico-group{position:absolute; left:40px; bottom:14px; z-index:5;display:none;}
+    .map-opened .m-ico-group, .page-map .m-ico-group {display:block;}
 	.m-ico-group a{float:left; width:29px; height:28px; background-position:-218px -237px; text-align:center; margin:2px 2px 0 0}
 	.m-ico-group a:hover{background-position:-252px -237px;}
 	.m-ico-group a:active, .m-ico-group a.active{background-position:-285px -237px;}
