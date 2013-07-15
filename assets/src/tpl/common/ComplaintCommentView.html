@@ -1,0 +1,32 @@
+<div class="p-top">
+  <h3>Пожаловаться на комментарий</h3>
+  <input type="button" class="p-close" value=" ">
+</div>
+
+<div class="p-body">
+  <form action="#">
+    <p>Почему Вы жалуетесь на комментарий?</p>
+    
+    <div class="line">
+      <label class="custom-radio">
+        <input type="radio" value="" name="radio-1">
+        Спам
+      </label>
+      
+      <label class="custom-radio">
+        <input type="radio" value="" name="radio-1">
+        Оскорбление
+      </label>
+      
+      <label class="custom-radio">
+        <input type="radio" value="" name="radio-1">
+        Другое
+      </label>
+    </div>
+    <div class="line">
+      <textarea rows="3" cols="30" onfocus="if(this.value == this.defaultValue) this.value ='';" onblur="if(this.value == '') this.value = this.defaultValue;">Добавить текст</textarea>
+    </div>
+    
+    <input type="submit" value="Пожаловаться" class="a-btn">
+  </form>
+</div>

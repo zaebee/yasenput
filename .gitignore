@@ -21,3 +21,4 @@ build
 dist
 *.egg-info
 *.sql
+/assets/node_modules/*

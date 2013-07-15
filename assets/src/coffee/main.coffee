@@ -85,7 +85,12 @@ Yapp.on 'start', ->
   @user = new Yapp.User.Profile(USER)
   @runApplication()
 
-  _this = @
+  $(document).ajaxStart( ->
+    $('.spinner').show()
+  ).ajaxStop( ->
+    $('.spinner').hide()
+  )
+
   $(document).on 'click', 'a.nonav', (event) ->
     href = $(@).attr 'href'
     protocol = @protocol + '//'

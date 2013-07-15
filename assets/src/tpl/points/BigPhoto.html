@@ -1,0 +1,57 @@
+<div class="bp-photo" data-photo-id="{{id}}">
+  <img src="{{thumbnail560}}" alt="" class="main-photo">
+
+  <div class="bp-add-like">
+    <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
+    <span class="bp-name">{{author.first_name}} {{author.last_name}}</span>
+
+    <a href="#" class="a-like {{#if isliked}}marked{{/if}}" data-photo-id="{{id}}"></a>
+    <span class="count-like">{{likes_count}}</span>
+  </div>
+</div>
+
+<div class="bp-comments">
+  <div class="toggle-block a-toggle-up">
+    <a href="#" class="a-toggle">все комментарии <span>&darr;</span></a>
+
+    {{#each comments}}
+    <div class="item-comment" data-comment-id="{{id}}">
+      <img src="/media/{{author.avatar}}" alt="" width="29" height="30" class="avatar">
+
+      <div class="comment-body">
+        <div class="comment-author">{{author.first_name}} {{author.last_name}}</div>
+        <p>{{txt}}</p>
+        <div class="comment-date">{{dateFormat created}}</div>
+      </div>
+
+      <div class="action">
+        {{#ifEquals author.id ../user.id}}
+          <a href="#" class="a-remove-comment" data-toggle="tooltip" data-content="Вы уверены, что хотите удалить комментарий?" title="удалить комментарий"></a>
+        {{else}}
+          <a href="#" class="a-complaint-comment" data-toggle="tooltip" title="пожаловаться на комментарий"></a>
+        {{/ifEquals}}
+      </div>
+    </div>
+    {{/each}}
+
+    <!-- hidden comments will be here -->
+    <div class="hidden-content"></div>
+
+    {{#if user.authorized}}
+    <div class="add-comment">
+      <form action="#" id="commentForm">
+        <div class="ac-block">
+          <img src="/media/{{user.avatar}}" alt="" width="29" height="30" class="avatar">
+          <div class="ac-body">
+            <div class="toggle-area">
+              <textarea data-photo-id="{{id}}" rows="3" cols="40" placeholder="Комментировать"></textarea>
+              <input type="submit" value="">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div><!-- end .add-comment -->
+    {{/if}}
+
+  </div><!-- end .toggle-block a-toggle-up -->
+</div><!-- end .bp-comments -->
