@@ -306,6 +306,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       collection: @collection
       target: $target
     Yapp.popup.show routesSaveView
+    Yapp.Routes.router.trigger 'route'
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,

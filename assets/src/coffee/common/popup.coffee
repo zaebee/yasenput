@@ -78,4 +78,4 @@ class Yapp.Common.PopupRegion extends Backbone.Marionette.Region
     $(@overlay).hide()
     $(@wrapper).hide()
     $(@body).css 'overflow-y', 'auto'
-    Yapp.Common.router.navigate('/')
+    Yapp.Common.router.previous()
