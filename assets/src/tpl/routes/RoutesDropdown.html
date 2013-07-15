@@ -1,8 +1,31 @@
-{{#if points}}
-  {{# each points}}
-  <li data-title="{{name}}" data-desc="{{address}}" data-point-id="{{id}}">{{name}}</li>
-  {{/each}}
-{{else}}
-  <li class="">Такое местоположение не найдено. Введите другое местоположение</li>
+<button type="button"  class="toggle-panel"></button>
+
+<div class="inner-wrap">
+{{#if empty}}
+  <ul class="item">
+    <li class="drop-not-found">Ничего не найдено</li>
+  </ul>
 {{/if}}
 
+<!--
+{{#if places}}
+  <ul class="item item-place">
+    <li class="item-title">Местоположения <sup>{{places.length}}</sup></li>
+    {{#each places}}
+    <li class="item-label" data-name="{{GeoObject.name}}" data-left-corner="{{GeoObject.boundedBy.Envelope.lowerCorner}}" data-right-corner="{{GeoObject.boundedBy.Envelope.upperCorner}}" data-location="{{GeoObject.Point.pos}}" data-type="place">
+      <a href="#">{{GeoObject.name}} <i>{{GeoObject.description}}</i></a>
+    </li>
+    {{/each}}
+  </ul>
+{{/if}}
+-->
+
+{{#if points}}
+  <ul class="item item-name">
+    <li class="item-title">Название <sup>{{points.length}}</sup></li>
+    {{# each points}}
+    <li class="item-label" data-title="{{name}}" data-desc="{{address}}" data-point-id="{{id}}"><a href="#">{{name}}</a></li>
+    {{/each}}
+  </ul>
+{{/if}}
+</div>

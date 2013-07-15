@@ -38,7 +38,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ui:
     routeInput: '.route-input'
     addPathButton: '.btn-add-path'
-    dropResults: '.drop-results'
+    dropResults: '.drop-search-a'
     addPathPlace: '.ol-add-path-places'
     msgHint: '.msg-hint'
     detailsPath: '.details-path'
@@ -48,7 +48,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   events:
     'keydown input.route-input': 'keyupInput'
     'click .btn-add-path': 'buildPath'
-    'click .drop-results li': 'loadPoint'
+    'click .drop-search-a li.item-label': 'loadPoint'
     'click .remove-item-path': 'removePointFromPath'
     'click .title-add-path': 'toggleRouteBar'
     'click .btn-clear-map': 'clearMap'
@@ -103,8 +103,12 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response, geoObjectCollection) ->
-    @ui.dropResults.html @dropdownTemplate(response)
-    @ui.dropResults.show().css top: '104px', left: '21px'
+    response.tags = response.users = []
+    response = _.extend response, places: geoObjectCollection.featureMember
+    if _.isEmpty _.flatten _.values response
+      response = empty: true
+    @ui.dropResults.html @dropdownTemplate response
+    @ui.dropResults.show()
 
   ###*
   # TODO
@@ -259,7 +263,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   clearMap: (event) ->
     event.preventDefault()
     @ui.addPathPlace.empty()
-    @ui.detailsPath.empty()
+    @ui.detailsPath.empty().hide()
     @ui.lineAddPathButton.show()
     @ui.actionButton.hide()
     @collection.reset()
@@ -304,7 +308,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $target = $(event.currentTarget)
     routesSaveView = new Yapp.Routes.RoutesSaveView
       collection: @collection
-      target: $target
     Yapp.popup.show routesSaveView
     Yapp.Routes.router.trigger 'route'
 
@@ -326,8 +329,8 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         clearTimeout 0
         event.preventDefault()
         event.stopPropagation()
-        if $('.hover', @ui.dropResults).length
-          $('.hover', @ui.dropResults).click()
+        if $('.selected', @ui.dropResults).length
+          $('.selected', @ui.dropResults).click()
         @hideDropdown()
         break
       when 27 ## close on ESC
@@ -379,29 +382,29 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @private
   ###
   _selectDropLi: (dir) ->
-    li = $('li:visible', @ui.dropResults).filter ->
+    li = $('li.item-label:visible', @ui.dropResults).filter ->
       return true
-    if li.filter('.hover').length
-      indexSelected = li.index(li.filter('.hover'))
+    if li.filter('.selected').length
+      indexSelected = li.index li.filter('.selected')
 
       if indexSelected < li.length - 1
         if dir is 1
-          li.filter(".hover:first").removeClass('hover')
-          li.eq(indexSelected+1).addClass('hover').focus()
+          li.filter(".selected:first").removeClass('selected')
+          li.eq(indexSelected+1).addClass('selected').focus()
         else
-          li.filter(".hover:first").removeClass("hover")
-          li.eq(indexSelected-1).addClass('hover').focus()
+          li.filter(".selected:first").removeClass("selected")
+          li.eq(indexSelected-1).addClass('selected').focus()
       else
-        li.filter('.hover:first').removeClass('hover')
+        li.filter('.selected:first').removeClass('selected')
         if dir is 1
-          li.eq(0).addClass('hover').focus()
+          li.eq(0).addClass('selected').focus()
         else
-          li.eq(indexSelected-1).addClass('hover').focus()
+          li.eq(indexSelected-1).addClass('selected').focus()
     else
       if dir is 1
-        li.eq(0).addClass("hover").focus()
+        li.eq(0).addClass("selected").focus()
       else
-        li.last().addClass("hover").focus()
+        li.last().addClass("selected").focus()
 
   ###*
   # Initialize sortable plugin for dragable points in route bar
