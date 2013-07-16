@@ -35,6 +35,28 @@ class Yapp.Routes.Controller extends Marionette.Controller
       Yapp.Map.yandexmap.container.fitToViewport()
 
   ###*
+  # The stub for the set detail showing function
+  # @method showRouteDetail
+  ###
+  showRouteDetail: (id, point_id, photo_id) ->
+    model = new Yapp.Routes.Route unid: id
+    model.fetch(
+      success: (model, response) ->
+        Yapp.popup.show new Yapp.Routes.RouteDetailView
+          model: model
+          pointId: point_id
+          photoId: photo_id
+    )
+    model
+
+  ###*
+  # Method for the set showing function with selected photo
+  # @method showRoutePhoto
+  ###
+  showRoutePhoto: (id, point_id, photo_id) ->
+    @showRouteDetail id, point_id, photo_id
+
+  ###*
   # The view for the routes editing function
   # @method editRoute
   ###
