@@ -535,7 +535,7 @@ class PointAdd(PointsBaseView):
         imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
         'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
-        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_height', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
