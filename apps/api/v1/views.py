@@ -299,10 +299,10 @@ class ItemsList(PointsBaseView):
                 if str(points_l) != '[]':
                     search_res_routes_list.append(int(route.id))
                 
-            #if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
-            search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
-            search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
-            search_res_points = search_res_points_list
+            if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
+                search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
+                search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
+                search_res_points = search_res_points_list
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
