@@ -94,12 +94,11 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
     ## this need for MapView
     Yapp.Points.trigger 'update:collection', @collection
     @$el.find('[data-toggle=tooltip]').tooltip()
-    if @wall
-      @wall.reload()
-    else
-      @wall = new Masonry @el,
-        columnWidth: 241
-        isFitWidth: true
+    if @wall then @wall.reload() else @wall = new Masonry @el,
+      columnWidth: 241
+      isFitWidth: true
+    hasVScroll = document.body.scrollHeight > document.body.clientHeight
+    $(window).trigger 'scroll' if !hasVScroll
 
   ###*
   # Fired when collection fully rendered.
@@ -108,8 +107,7 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   onCompositeCollectionRendered: ->
     console.log 'onCompositeCollectionRendered trigger'
     @$el.find('[data-toggle=tooltip]').tooltip()
-    if @wall
-      @wall.reload()
+    @wall.reload() if @wall
 
   ###*
   # Fired when update:multisrearch in Yapp.Common.headerView occur.

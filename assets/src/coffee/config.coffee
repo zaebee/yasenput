@@ -4,6 +4,7 @@
 # @main
 ###
 
+window.Backbone.emulateJSON = true
 window.Yapp = new Marionette.Application()
 
 window.Yapp.API_BASE_URL = '/api'

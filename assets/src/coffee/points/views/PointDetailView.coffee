@@ -56,7 +56,9 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click #right-panel .a-like': 'like'
 
     'click #commentForm textarea': 'focusCommentTextarea'
-    'click .a-remove-comment': 'removeComment'
+    'click .a-remove-comment': 'showRemoveCommentPopover'
+    'click .item-comment .a-yes': 'removeComment'
+    'click .item-comment .a-no, .item-comment .p-close': 'hideRemoveCommentPopover'
     'submit #commentForm': 'submitCommentForm'
 
     'click .bp-photo .a-like': 'likePhoto'
@@ -212,7 +214,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     addToCollectionView = new Yapp.Points.AddToCollectionView
       model: @model
-      target: $target
     Yapp.popup.regions.alerts.show addToCollectionView
 
   complaintComment: (event) ->
@@ -220,7 +221,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     complaintCommentView = new Yapp.Common.ComplaintCommentView
       model: @model
-      target: $target
     Yapp.popup.regions.alerts.show complaintCommentView
 
   ###*
@@ -254,6 +254,24 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     if txt
       photoId = @$('textarea').data 'photo-id'
       @model.addCommentPhoto photoId, txt, @successAddComment, @
+
+  ###*
+  # TODO
+  # @method hideRemoveCommentPopover
+  ###
+  hideRemoveCommentPopover: (event) ->
+    event.preventDefault()
+    $target = $(event.currentTarget)
+    $target.parents('.popover').hide()
+
+  ###*
+  # TODO
+  # @method showRemoveCommentPopover
+  ###
+  showRemoveCommentPopover: (event) ->
+    $target = $(event.currentTarget)
+    $target.popover 'toggle'
+    event.preventDefault()
 
   ###*
   # TODO

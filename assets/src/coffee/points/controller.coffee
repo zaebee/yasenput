@@ -20,6 +20,7 @@ class Yapp.Points.Controller extends Marionette.Controller
   ###
   initialize: ->
     console.log 'initializing Yapp.Points.Controller'
+    @listenTo Yapp.vent, 'click:nameplacemark', @showPointDetail
 
   ###*
   # The stub for all point's pins showing function
