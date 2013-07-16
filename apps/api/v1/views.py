@@ -711,16 +711,16 @@ class Route(View):
         user = MainModels.Person.objects.get(username=request.user)
 
         points = route_dict.pop('points')
+        route_dict.pop('unid')
         route_dict.update({
             'author': user,
-            'id': id
         })
+        MainModels.Routes.objects.filter(id=id).update(**route_dict)
         try:
             route = MainModels.Routes.objects.get(id=id)
         except:
             route = MainModels.Routes.objects.create(**route_dict)
         if user != route.author:
-            route_dict.pop('id')
             route = MainModels.Routes.objects.create(**route_dict)
         MainModels.Position.objects.filter(route=route).delete()
         for point in points:
