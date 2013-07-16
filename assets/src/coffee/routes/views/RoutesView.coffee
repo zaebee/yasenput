@@ -113,7 +113,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.dropResults.hide()
     @ui.dropResults.empty()
     @ui.routeInput.val ''
-    @ui.routeInput.focus()
 
   ## callback for show dropdown list adter success search request on server
   showDropdown: (response, geoObjectCollection) ->
@@ -231,21 +230,22 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     event.preventDefault()
     $target = $(event.currentTarget)
     data = $target.data()
-    @ui.msgHint.hide()
     length = @collection.length
     point = new Yapp.Points.Point unid: data.pointId
-    point.fetch(
-      success: (response) =>
-        @collection.add point
-        if @collection.length isnt length
-          Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
-          @ui.addPathPlace.append """
-            <li data-point-id="#{point.get('id')}">
-              <h4>#{point.get('name')}</h4>
-              <p>#{point.get('address')}</p>
-              <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
-            </li>"""
-    )
+    if !@collection.findWhere(id: data.pointId)
+      point.fetch(
+        success: (response) =>
+          @collection.add point
+          @ui.msgHint.hide()
+          if @collection.length isnt length
+            Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
+            @ui.addPathPlace.append """
+              <li data-point-id="#{point.get('id')}">
+                <h4>#{point.get('name')}</h4>
+                <p>#{point.get('address')}</p>
+                <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
+              </li>"""
+      )
     @hideDropdown()
 
   ###*
@@ -311,6 +311,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   savePath: (event) ->
     event.preventDefault()
+    if !@user.get 'authorized'
+      Yapp.vent.trigger 'user:notauthorized'
+      return
     routesSaveView = new Yapp.Routes.RoutesSaveView
       routeCollection: @routeCollection
       model: @model

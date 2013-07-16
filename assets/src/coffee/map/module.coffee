@@ -82,11 +82,21 @@ Yapp.module 'Map',
             ###
             build: ->
               ## необходим вызов родительского метода, чтобы добавить содержимое макета в DOM
+              #_.bindAll @, 'onMouseOver', 'onMouseOut'
               @constructor.superclass.build.call @
-              $('.placemark').unbind('mouseenter').bind 'mouseenter', @onMouseOver
-              $('.placemark').unbind('mouseleave').bind 'mouseleave', @onMouseOut
-              $('.a-add-place').unbind('click').bind 'click', @onClickAddPlace
-              $('.name-place').unbind('click').bind 'click', @onClickNamePlace
+              rootElement = @getElement()
+              addPlaceElement = rootElement.getElementsByClassName 'a-add-place'
+              namePlaceElement = rootElement.getElementsByClassName 'name-place'
+              #$('[data-toggle=tooltip]', @getElement()).tooltip()
+
+              @eventsGroup = @events.group()
+              @eventsGroup.add 'click', @onClickPlacemark, rootElement
+              @eventsGroup.add 'click', @onClickAddPlace, addPlaceElement
+              @eventsGroup.add 'click', @onClickNamePlace, namePlaceElement
+
+              $(rootElement).unbind('click').bind 'click', @onClickPlacemark
+              $(addPlaceElement).unbind('click').bind 'click', @onClickAddPlace
+              $(namePlaceElement).unbind('click').bind 'click', @onClickNamePlace
 
             ###*
             #
@@ -94,37 +104,28 @@ Yapp.module 'Map',
             # @method clear
             ###
             clear: ->
-              $('.placemark').unbind 'mouseenter', @onMouseOver
-              $('.placemark').unbind 'mouseleave', @onMouseOut
-              $('.a-add-place').unbind 'click', @onClickAddPlace
-              $('.name-place').unbind 'click', @onClickNamePlace
+              @eventsGroup.removeAll()
+              #$('[data-toggle=tooltip]', @getElement()).tooltip('destroy')
 
-            ###*
-            # Fired when triggered mouseleave event
-            # @event onMouseOut
-            ###
-            onMouseOut: ->
-              #$('[data-toggle=tooltip]', @).tooltip('destroy')
-              me = $(@)
-              $(".name-place", @).stop().animate width: 0, 150, ->
-                me.removeClass 'hover'
-
-            ###*
-            # Fired when triggered mouseenter event
-            # @event onMouseOver
-            ###
-            onMouseOver: ->
-              #$('[data-toggle=tooltip]', @).tooltip()
-              $(@).addClass 'hover'
-              w = $(".name-place", @).data("width") or $(".name-place", @).outerWidth()
-              $(".name-place", @).data("width", w).width(0).stop().animate
-                width: w - 29, 200
+            onClickPlacemark: (event) ->
+              event.preventDefault()
+              event.stopPropagation()
+              if $('.placemark', @).hasClass 'hover'
+                me = $('.placemark', @)
+                $('.name-place', @).stop().animate width: 0, 150, ->
+                  me.removeClass 'hover'
+              else
+                $('.placemark', @).addClass 'hover'
+                w = $('.name-place', @).data('width') or $('.name-place', @).outerWidth()
+                $('.name-place', @).data('width', w).width(0).stop().animate
+                  width: w - 29, 200
 
             ###*
             # Fired when .a-add-place clicked
             # @event onClickAddPlace
             ###
             onClickAddPlace: (event) ->
+              event.preventDefault()
               Yapp.vent.trigger 'click:addplacemark', event
 
             ###*
@@ -132,6 +133,8 @@ Yapp.module 'Map',
             # @event onClickNamePlace
             ###
             onClickNamePlace: (event) ->
+              event.preventDefault()
+              event.stopPropagation()
               $target = $(event.currentTarget)
               pointId = $target.data 'id'
               Yapp.vent.trigger 'click:nameplacemark', pointId

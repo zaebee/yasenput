@@ -236,6 +236,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
     $target.insertBefore @ui.itemTypeNav.children().first()
     $target.addClass 'head-nav-current-item'
+    @submitSearch(event)
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,
