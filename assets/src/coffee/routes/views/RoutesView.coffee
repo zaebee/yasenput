@@ -83,6 +83,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   onShow: ->
     $('body').addClass 'page-map'
+    $(window).on 'resize', ->
+      if Yapp.Map.yandexmap
+        Yapp.Map.yandexmap.container.fitToViewport()
     $('#header').hide()
     $('#panel-add-path').show()
     @_dragPoints()
@@ -93,6 +96,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   onClose: ->
     $('body').removeClass 'page-map'
+    $(window).off 'resize', ->
+      if Yapp.Map.yandexmap
+        Yapp.Map.yandexmap.container.fitToViewport()
     $('#header').show()
     $('#panel-add-path').hide()
     if @route
