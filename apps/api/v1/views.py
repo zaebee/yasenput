@@ -297,7 +297,7 @@ class ItemsList(PointsBaseView):
             for route in search_res_routes.all():
                 points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
                 if str(points_l) != '[]':
-                    search_res_routes_list.append(int(collection.id))
+                    search_res_routes_list.append(int(route.id))
                 
             if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
@@ -519,8 +519,10 @@ class PointAdd(PointsBaseView):
         for set_t in sets_list.all():
             for point_t in set_t.points.all():
                 if point_t.id == point[0].id:
-                    if set_t not in sets_l:
-                        sets_l.append(set_t)
+                    sets_l.append(set_t.id)
+        f = open('sets_in_det.txt','w')
+        f.write(str(sets_l))
+        f.close()
         if request.user.is_authenticated():
             if request.user in point[0].likeusers.all():
                 isliked = 1
@@ -528,6 +530,8 @@ class PointAdd(PointsBaseView):
                 isliked = 0
         else: 
             isliked = 0
+
+        sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
         imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
         'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
@@ -543,7 +547,7 @@ class PointAdd(PointsBaseView):
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
          'id':int(id),
-         'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
+         'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
          'name': point[0].name, 
          'description':point[0].description,
          'latitude':str(point[0].latitude), 
