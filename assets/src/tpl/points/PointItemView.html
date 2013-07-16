@@ -79,7 +79,7 @@
 {{#ifEquals type_of_item 'point'}}
   <div class="photo">
     <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
-    <a href="#" class="a-collection nonav" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
+    <a href="#" class="a-collection" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
     {{#ifEquals user.id author.id}}
     <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
     {{/ifEquals}}
