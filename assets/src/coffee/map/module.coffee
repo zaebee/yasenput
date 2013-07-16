@@ -30,25 +30,25 @@ Yapp.module 'Map',
           offset: [-29, -29]
         }]
 
+      dfd = $.Deferred()
       ## ymaps wrapper for emulate geocode deferred behavior if ymaps is undefined
       @geocode = (request, options) ->
         if window.ymaps isnt undefined
-          ymaps.geocode(request, options)
+          ymaps.geocode request, options
         else
-          dfd = $.Deferred()
-          dfd.resolve()
+          dfd
 
       ## ymaps wrapper for emulate route deferred behavior if ymaps is undefined
       @route = (feature, options) ->
         if window.ymaps isnt undefined
           ymaps.route feature, options
         else
-          dfd = $.Deferred()
-          dfd.resolve()
+          dfd
 
       # getting ya map script and binding it on #mainmap dom object
       $.getScript Yapp.YA_MAP_URL, =>
         ymaps.ready( =>
+          dfd.resolve()
           console.log 'Init Yandex map'
           map = new ymaps.Map 'mainmap', (
             center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
@@ -72,7 +72,7 @@ Yapp.module 'Map',
                 <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
               </a>
 
-              <div class="name-place" style="overflow: hidden;" data-id="$[properties.point.id]">$[properties.point.name]</div>
+              <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
             </div>
             """,
             ###*
@@ -104,7 +104,7 @@ Yapp.module 'Map',
             # @event onMouseOut
             ###
             onMouseOut: ->
-              $('[data-toggle=tooltip]', @).tooltip('destroy')
+              #$('[data-toggle=tooltip]', @).tooltip('destroy')
               me = $(@)
               $(".name-place", @).stop().animate width: 0, 150, ->
                 me.removeClass 'hover'
@@ -114,7 +114,7 @@ Yapp.module 'Map',
             # @event onMouseOver
             ###
             onMouseOver: ->
-              $('[data-toggle=tooltip]', @).tooltip()
+              #$('[data-toggle=tooltip]', @).tooltip()
               $(@).addClass 'hover'
               w = $(".name-place", @).data("width") or $(".name-place", @).outerWidth()
               $(".name-place", @).data("width", w).width(0).stop().animate
@@ -135,6 +135,7 @@ Yapp.module 'Map',
               $target = $(event.currentTarget)
               pointId = $target.data 'id'
               Yapp.vent.trigger 'click:nameplacemark', pointId
+              Yapp.Common.router.trigger 'route'
           )
         )
     )

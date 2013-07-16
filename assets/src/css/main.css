@@ -162,7 +162,8 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.drop-search .item-labels .hidden{display:inline-block !important}
 	.drop-search .hidden-li, .drop-search .item-labels .hidden.hidden-li{display:none !important}
 
-.m-ico-group{position:absolute; left:40px; bottom:14px; z-index:5}
+.m-ico-group{position:absolute; left:40px; bottom:14px; z-index:5;display:none;}
+    .map-opened .m-ico-group, .page-map .m-ico-group {display:block;}
 	.m-ico-group a{float:left; width:29px; height:28px; background-position:-218px -237px; text-align:center; margin:2px 2px 0 0}
 	.m-ico-group a:hover{background-position:-252px -237px;}
 	.m-ico-group a:active, .m-ico-group a.active{background-position:-285px -237px;}
@@ -303,6 +304,11 @@ sup{position:relative; font-size:.75em; top:-.5em}
     display:none;
     z-index:140;
 }
+.page-map .spinner {
+    top:47px;
+    left:4%;
+}
+
 .no-boxshadow .top-panel{border-bottom:solid 1px #b7c1b7}
 .boxshadow .top-panel{-moz-box-shadow:0 5px 6px #b7c1b7; -webkit-box-shadow:0 5px 6px #b7c1b7; box-shadow:0 5px 6px #b7c1b7;}
 .tabs{height:26px;}
@@ -1426,5 +1432,58 @@ ol.ol-add-path-places li.placeholder:before {
 }
 #right-panel .a-complaint:hover {
 	background-position: -370px -310px;
+}
+/**/
+
+.drop-search-a{position:absolute; z-index: 10;width:100%; max-height:629px; background:#fff; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; -moz-box-shadow:0 2px 3px rgba(0, 0, 0, .42); -webkit-box-shadow:0 2px 3px rgba(0, 0, 0, .42); box-shadow:0 2px 3px rgba(0, 0, 0, .42); left:0; top:100%; display:none; margin-top:4px; overflow:auto}
+.drop-search-a .inner-wrap{position:relative}
+.drop-search-a ul{padding:4px 0 0; font-size:13px; overflow:hidden}
+.drop-search-a ul.overflow-visible{overflow:visible; max-height:12345em}
+.drop-search-a ul a{color:#984d56; display:inline-block; vertical-align:top; overflow:hidden; -o-text-overflow:ellipsis; text-overflow:ellipsis; text-decoration:none; padding:0 4px; height:18px}
+.drop-search-a ul a:hover, .drop-search-a ul .selected a{color:#fff}
+.drop-search-a .item-place{border:0 !important}
+.drop-search-a .item-labels{white-space:normal}
+.drop-search-a li{height:18px; line-height:18px; margin:0 3px 3px}
+	.drop-search-a .item-labels li{display:inline-block;  vertical-align:top; }
+.drop-search-a .item-title{margin:0 3px 8px; color:#fff; font-size:13px/18px Verdana, "Geneva CY", "DejaVu Sans", sans-serif; padding:0 6px; display:block !important}
+.item-place .item-title, .drop-search-a .item-place a:hover, .drop-search-a .item-place .selected a{background:#78a8ff}
+.item-name .item-title, .drop-search-a .item-name a:hover, .drop-search-a .item-name .selected a{background:#9884b9}
+.item-labels .item-title, .drop-search-a .item-labels a:hover, .drop-search-a .item-labels .selected a{background:#daa0a7}
+.item-users .item-title, .drop-search-a .item-users a:hover, .drop-search-a .item-users .selected a{background:#f5c05c}
+.drop-search-a .toggle-panel{position:absolute; left:50%; top:100%; margin:0 0 0 -18px; width:38px; height:22px; background-position:-240px -195px; border:0; cursor:pointer; display:none}
+.show-more-results{border:0; background:none; height:18px; margin:0 0 3px; cursor:pointer}
+.drop-search-a .item-labels .hidden{display:inline-block !important}
+.drop-search-a .hidden-li, .drop-search-a .item-labels .hidden.hidden-li{display:none !important}
+
+.search_way .clear-input {
+	right: 3px;
+}
+.search_way .label-fields {
+	margin-right: 22px;
+	padding-left: 4px;
+	font-size: 13px;
+}
+.search_way .text-field {
+	position: absolute;
+	background-color: #FFF;
+}
+
+/*13.07.2012*/
+.pap-viewport {
+	padding-bottom: 100px;
+}
+#panel-add-path .aside-content {
+	min-height: 100%;
+}
+.drop-search-a ul a{
+	padding:2px 4px;
+	height: auto;
+}
+.drop-search-a li{
+	line-height:13px;
+	height: auto;
+}
+.drop-search-a .item-title {
+	line-height: 18px;
 }
 /**/
