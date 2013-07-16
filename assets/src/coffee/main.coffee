@@ -111,6 +111,7 @@ Yapp.runApplication = ->
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->
     Yapp.popup.show new Yapp.Common.AuthPopupView
+    Yapp.Common.router.trigger 'route'
 
   # on logout we must go to start application point
   @vent.on 'logout', ->

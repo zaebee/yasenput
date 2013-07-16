@@ -23,6 +23,8 @@ class Yapp.Points.PointCollection extends Backbone.Collection
       new Yapp.Points.Point attrs, options
     else if attrs.type_of_item is 'set' ## is collection type
       new Yapp.Points.Set attrs, options
+    else if attrs.type_of_item is 'route' ## is route type
+      new Yapp.Routes.Route attrs, options
 
   ###*
   # The collection initializer

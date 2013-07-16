@@ -20,11 +20,16 @@ class Yapp.Common.Router extends Marionette.AppRouter
   ###
   initialize: ->
     console.log 'initializing Yapp.Common.Router'
+    _.bindAll @, 'storeRoute'
+    @on 'all', @storeRoute
+    @history = []
 
-  ###*
-  # It determine route list of the router
-  # @property appRoutes
-  ###
-  appRoutes:
-    ## TODO if you need you can add some common urls
-    "user": "something"
+  storeRoute: ->
+    @history.push Backbone.history.fragment
+
+  previous: ->
+    if @history.length > 1
+      @navigate @history[@history.length-2], false
+    else
+       @navigate '', false
+    @trigger 'route'
