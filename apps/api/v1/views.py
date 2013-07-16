@@ -305,22 +305,17 @@ class ItemsList(PointsBaseView):
             search_res_sets_list = []
 
             for collection in search_res_sets.all():
-                trigger = 0
-                for point in collection.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_sets_list.append(collection.id)
+                points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if str(points_l) != '[]':
+                    search_res_sets_list.append(int(collection.id))
+                
             search_res_routes_list = []
             for route in search_res_routes.all():
-                trigger = 0
-                for point in route.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_routes_list.append(route.id)
-            t0 = time.time()
-            if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
+                points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if str(points_l) != '[]':
+                    search_res_routes_list.append(int(collection.id))
+                
+            if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
                 search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
@@ -550,9 +545,8 @@ class PointAdd(PointsBaseView):
         imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
         'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
-        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_height', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-        t0 = time.time()
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
@@ -812,3 +806,12 @@ class AddReviewToPoint(View):
         point.reviews.add(review)
 
         return JsonHTTPResponse('review added')
+
+class GetTags(View):
+    http_method_names = ('get')
+
+    def get(self, request):
+        tags_l = TagsModels.Tags.objects.all()
+        YpJson = YpSerialiser()
+        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent']))
+        return JsonHTTPResponse(tags)

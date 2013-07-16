@@ -21,4 +21,6 @@ urlpatterns = patterns('',
     url(r'^route/(?P<id>\d+)/$', Route.as_view()),
     url(r'^route/(?P<id>\d+)/like/$', RouteLike.as_view()),
 
+    url(r'^tags/$', GetTags.as_view()),
+
 )
