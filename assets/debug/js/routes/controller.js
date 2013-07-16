@@ -39,7 +39,7 @@
     };
 
     /**
-    # The stub for the routes showing function
+    # The view for the routes showing function
     # @method showRoutes
     */
 
@@ -49,8 +49,74 @@
 
       Yapp.content.close();
       Yapp.popup.close();
-      routesView = new Yapp.Routes.RoutesView;
+      routesView = new Yapp.Routes.RoutesView({
+        model: new Yapp.Routes.Route
+      });
       Yapp.routePanel.show(routesView);
+      if (Yapp.Map.yandexmap) {
+        return Yapp.Map.yandexmap.container.fitToViewport();
+      }
+    };
+
+    /**
+    # The stub for the set detail showing function
+    # @method showRouteDetail
+    */
+
+
+    Controller.prototype.showRouteDetail = function(id, point_id, photo_id) {
+      var model;
+
+      model = new Yapp.Routes.Route({
+        unid: id
+      });
+      model.fetch({
+        success: function(model, response) {
+          return Yapp.popup.show(new Yapp.Routes.RouteDetailView({
+            model: model,
+            pointId: point_id,
+            photoId: photo_id
+          }));
+        }
+      });
+      return model;
+    };
+
+    /**
+    # Method for the set showing function with selected photo
+    # @method showRoutePhoto
+    */
+
+
+    Controller.prototype.showRoutePhoto = function(id, point_id, photo_id) {
+      return this.showRouteDetail(id, point_id, photo_id);
+    };
+
+    /**
+    # The view for the routes editing function
+    # @method editRoute
+    */
+
+
+    Controller.prototype.editRoute = function(id) {
+      var route,
+        _this = this;
+
+      Yapp.content.close();
+      Yapp.popup.close();
+      route = new Yapp.Routes.Route({
+        unid: id
+      });
+      route.fetch({
+        success: function(response) {
+          var routesView;
+
+          routesView = new Yapp.Routes.RoutesView({
+            model: route
+          });
+          return Yapp.routePanel.show(routesView);
+        }
+      });
       if (Yapp.Map.yandexmap) {
         return Yapp.Map.yandexmap.container.fitToViewport();
       }

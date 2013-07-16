@@ -35,7 +35,10 @@
 
 
     Router.prototype.initialize = function() {
-      return console.log('initializing Yapp.Routes.Router');
+      console.log('initializing Yapp.Routes.Router');
+      return this.on('route', function() {
+        return Yapp.Common.router.trigger('route');
+      });
     };
 
     /**
@@ -45,7 +48,11 @@
 
 
     Router.prototype.appRoutes = {
-      "routes": "showRoutes"
+      "routes": "showRoutes",
+      "routes/:id": "showRouteDetail",
+      "routes/:id/point/:id": "showRoutePhoto",
+      "routes/:id/point/:point_id/photo/:photo_id": "showRoutePhoto",
+      "routes/:id/edit": "editRoute"
     };
 
     return Router;

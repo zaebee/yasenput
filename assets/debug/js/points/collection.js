@@ -39,6 +39,8 @@
         return new Yapp.Points.Point(attrs, options);
       } else if (attrs.type_of_item === 'set') {
         return new Yapp.Points.Set(attrs, options);
+      } else if (attrs.type_of_item === 'route') {
+        return new Yapp.Routes.Route(attrs, options);
       }
     };
 

@@ -1,7 +1,7 @@
 /**
-# Submodule for all points functionality
+# Submodule for all route functionality
 # @module Yapp
-# @submodule Points
+# @submodule routes
 */
 
 
@@ -14,17 +14,17 @@
 
   /**
   # Set model
-  # @class Yapp.Points.Set
+  # @class Yapp.Routes.Route
   # @extends Yapp.Points.Point
   # @constructor
   */
 
 
-  Yapp.Points.Set = (function(_super) {
-    __extends(Set, _super);
+  Yapp.Routes.Route = (function(_super) {
+    __extends(Route, _super);
 
-    function Set() {
-      _ref = Set.__super__.constructor.apply(this, arguments);
+    function Route() {
+      _ref = Route.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
@@ -34,39 +34,40 @@
     */
 
 
-    Set.prototype.initialize = function() {
-      return console.log("initializing Yapp.Points.Set");
+    Route.prototype.initialize = function() {
+      return console.log("initializing Yapp.Routes.Route");
     };
 
     /**
     # Set url for model instance
     # @property urlRoot
     # @type String
-    # @default Yapp.API_BASE_URL + '/collections/'
+    # @default Yapp.API_BASE_URL + '/route/'
     */
 
 
-    Set.prototype.urlRoot = function() {
-      return Yapp.API_BASE_URL + "/api/v1/sets/";
+    Route.prototype.urlRoot = function() {
+      return Yapp.API_BASE_URL + "/api/v1/route/";
     };
 
     /**
-    # Defaults data of set model
+    # Defaults data of point model
     # @property defaults
     # @type Object
     */
 
 
-    Set.prototype.defaults = function() {
+    Route.prototype.defaults = function() {
       return {
         name: '',
         description: '',
         ypi: 0,
-        priority: 0
+        points: [],
+        coords: ''
       };
     };
 
-    Set.prototype.validate = function(attrs, options) {
+    Route.prototype.validate = function(attrs, options) {
       var invalid;
 
       invalid = [];
@@ -82,16 +83,16 @@
     };
 
     /**
-    # Like or unlike set. Frist arg is target that was clicked.
+    # Like or unlike route. Frist arg is target that was clicked.
     # Second is callback that will be call after success response.
     # Third is variable for binding this namespace.
     # @method like
     */
 
 
-    Set.prototype.like = function(target, successCallback, context) {
+    Route.prototype.like = function(target, successCallback, context) {
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/collections/like",
+        url: Yapp.API_BASE_URL + "/route/like",
         type: 'POST',
         context: context,
         successCallback: successCallback,
@@ -99,7 +100,7 @@
           target: target
         },
         data: {
-          collectionid: this.get('id')
+          routeid: this.get('id')
         }
       });
     };
@@ -112,7 +113,7 @@
     */
 
 
-    Set.prototype.create = function(successCallback, context) {
+    Route.prototype.create = function(successCallback, context) {
       if (this.isValid()) {
         return Yapp.request('request', {
           url: Yapp.API_BASE_URL + "/collections/add",
@@ -127,7 +128,7 @@
       }
     };
 
-    return Set;
+    return Route;
 
   })(Yapp.Points.Point);
 

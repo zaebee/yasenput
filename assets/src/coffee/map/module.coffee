@@ -29,18 +29,25 @@ Yapp.module 'Map',
           size: [59, 59]
           offset: [-29, -29]
         }]
+      dfd = $.Deferred()
+      ## ymaps wrapper for emulate geocode deferred behavior if ymaps is undefined
+      @geocode = (request, options) ->
+        if window.ymaps isnt undefined
+          ymaps.geocode request, options
+        else
+          dfd
       ## ymaps wrapper for emulate route deferred behavior if ymaps is undefined
       @route = (feature, options) ->
         if window.ymaps isnt undefined
           ymaps.route feature, options
         else
-          dfd = $.Deferred()
-          dfd.resolve()
+          dfd
       @mapDeferred = $.Deferred()
       # getting ya map script and binding it on #mainmap dom object
       $.getScript Yapp.YA_MAP_URL, =>
         @mapDeferred.promise(
           ymaps.ready( =>
+            dfd.resolve()
             console.log 'Init Yandex map'
             map = new ymaps.Map 'mainmap', (
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
@@ -53,17 +60,16 @@ Yapp.module 'Map',
             map.geoObjects.add pointCollection
             @yandexmap = map
             @trigger 'load:yandexmap', @yandexmap
+
             @pointIconLayout = ymaps.templateLayoutFactory.createClass(
               """
               <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
                 <!--<img src="/media/$[properties.tag.icons]">-->
                 <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
-
                 <a href="#" class="a-add-place" data-point-id="$[properties.point.id]" data-title="$[properties.point.name]" data-desc="$[properties.point.address]">
                   <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
                 </a>
-
-                <div class="name-place" style="overflow: hidden;" data-id="$[properties.point.id]">$[properties.point.name]</div>
+                <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
               </div>
               """,
               ###*
@@ -78,7 +84,6 @@ Yapp.module 'Map',
                 $('.placemark').unbind('mouseleave').bind 'mouseleave', @onMouseOut
                 $('.a-add-place').unbind('click').bind 'click', @onClickAddPlace
                 $('.name-place').unbind('click').bind 'click', @onClickNamePlace
-
               ###*
               #
               # Clear placemark custom events
@@ -95,7 +100,7 @@ Yapp.module 'Map',
               # @event onMouseOut
               ###
               onMouseOut: ->
-                $('[data-toggle=tooltip]', @).tooltip('destroy')
+                #$('[data-toggle=tooltip]', @).tooltip('destroy')
                 me = $(@)
                 $(".name-place", @).stop().animate width: 0, 150, ->
                   me.removeClass 'hover'
@@ -105,7 +110,7 @@ Yapp.module 'Map',
               # @event onMouseOver
               ###
               onMouseOver: ->
-                $('[data-toggle=tooltip]', @).tooltip()
+                #$('[data-toggle=tooltip]', @).tooltip()
                 $(@).addClass 'hover'
                 w = $(".name-place", @).data("width") or $(".name-place", @).outerWidth()
                 $(".name-place", @).data("width", w).width(0).stop().animate
@@ -117,7 +122,6 @@ Yapp.module 'Map',
               ###
               onClickAddPlace: (event) ->
                 Yapp.vent.trigger 'click:addplacemark', event
-
               ###*
               # Fired when .name-place clicked
               # @event onClickNamePlace
@@ -126,7 +130,9 @@ Yapp.module 'Map',
                 $target = $(event.currentTarget)
                 pointId = $target.data 'id'
                 Yapp.vent.trigger 'click:nameplacemark', pointId
+                Yapp.Common.router.trigger 'route'
             )
+            @mapDeferred.resolve()
           )
         )
     )

@@ -162,16 +162,35 @@
       var _this = this;
 
       return Yapp.Map.mapDeferred.then(function() {
-        console.log(collection, 'collection');
-        if (_this.clusterer) {
-          Yapp.Map.yandexmap.geoObjects.remove(_this.clusterer);
+        var collectionFiltered, placemarks, placemarks2;
+
+        if (_this.clusterer2) {
+          Yapp.Map.yandexmap.geoObjects.remove(_this.clusterer2);
         }
-        _this.clusterer = new ymaps.Clusterer({
+        _this.clusterer2 = new ymaps.Clusterer({
           clusterIcons: Yapp.Map.clusterIcons
         });
-        return collection.each(function(point) {
-          return console.log(point, 'point');
+        collectionFiltered = _.filter(collection.models, function(point) {
+          return point.get('type_of_item') === "point";
         });
+        placemarks2 = [];
+        placemarks = _.map(collectionFiltered, function(point) {
+          var pl;
+
+          pl = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+            id: 'map-point' + point.get('id')
+          }, {
+            iconImageHref: 'media/icons/place-none.png',
+            iconImageSize: [44, 74],
+            iconImageOffset: [-22, -74]
+          });
+          return placemarks2.push(pl);
+        });
+        console.log(placemarks2);
+        _this.clusterer2.add(placemarks2);
+        window.cl = _this.clusterer2;
+        console.log(_this.clusterer2);
+        return console.log(placemarks);
       });
     };
 
@@ -198,31 +217,29 @@
     */
 
 
-    MapView.prototype._filteredPoints = function(points, tagId) {
+    MapView.prototype._filteredPoints = function(points, tagIds) {
       return _(points).filter(function(point) {
-        return _(point.tags).some({
-          id: tagId
-        });
+        var intersection, pointTagsId;
+
+        pointTagsId = _.pluck(point.tags, 'id');
+        intersection = _.intersection(pointTagsId, tagIds);
+        if (!_.isEmpty(intersection)) {
+          return point;
+        }
       }).value();
     };
 
     /**
     # TODO
-    # @method createCluster
+    # @method getPlaceMarks
     */
 
 
-    MapView.prototype.createCluster = function(tagId) {
+    MapView.prototype.getPlaceMarks = function(tagIds) {
       var placemarks, points;
 
-      if (this.clusterer) {
-        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
-      }
-      this.clusterer = new ymaps.Clusterer({
-        clusterIcons: Yapp.Map.clusterIcons
-      });
-      points = this.pointsByTag(tagId);
-      placemarks = _.map(points, function(el) {
+      points = this.pointsByTag(tagIds);
+      return placemarks = _.map(points, function(el) {
         var tag;
 
         tag = _(el.tags).find(function(tag) {
@@ -236,24 +253,49 @@
           iconLayout: Yapp.Map.pointIconLayout
         });
       });
-      this.clusterer.add(placemarks);
-      return Yapp.Map.yandexmap.geoObjects.add(this.clusterer);
     };
 
+    /**
+    # TODO
+    # @method createCluster
+    */
+
+
+    MapView.prototype.createCluster = function(tagIds) {
+      if (this.clusterer) {
+        this.clusterer.removeAll();
+      } else {
+        this.clusterer = new ymaps.Clusterer({
+          clusterIcons: Yapp.Map.clusterIcons
+        });
+        Yapp.Map.yandexmap.geoObjects.add(this.clusterer);
+      }
+      this.placemarks = this.getPlaceMarks(tagIds);
+      this.clusterer.add(this.placemarks);
+      return this.clusterer.refresh();
+    };
+
+    /**
+    # TODO
+    # @event showCluster
+    */
+
+
     MapView.prototype.showCluster = function(event) {
-      var $target, tagId;
+      var $activeTags, $target, tagIds;
 
       event.preventDefault();
       $target = $(event.currentTarget);
       if ($target.parent().hasClass('active')) {
-        Yapp.Map.yandexmap.geoObjects.remove(this.clusterer);
         $target.parent().removeClass('active');
-        return;
+      } else {
+        $target.parent().addClass('active');
       }
-      this.$('.m-ico-group a').removeClass('active');
-      $target.parent().addClass('active');
-      tagId = $target.data('id');
-      return this.createCluster(tagId);
+      $activeTags = this.$('.m-ico-group a.active').children();
+      tagIds = _.map($activeTags, function(tag) {
+        return $(tag).data('id');
+      });
+      return this.createCluster(tagIds);
     };
 
     return MapView;

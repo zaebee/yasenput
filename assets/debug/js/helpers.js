@@ -43,9 +43,9 @@
   Handlebars.registerHelper('dateFormat', function(context, block) {
     var f;
 
-    if (window.dateFormat) {
-      f = block.hash.format || "MMM Do, YYYY";
-      return new Date(context).format(f);
+    if (window.moment) {
+      f = block.hash.format || 'D MMMM YYYY в HH:mm';
+      return moment(context).format(f);
     } else {
       return context;
     }

@@ -1,7 +1,7 @@
 /**
 # Submodule for all points functionality
 # @module Yapp
-# @submodule Points
+# @submodule Routes
 */
 
 
@@ -13,18 +13,18 @@
   Yapp = window.Yapp;
 
   /**
-  # Composite view for the point popup
-  # @class Yapp.Points.PointDetailView
+  # Composite view for the set popup
+  # @class Yapp.Routes.RouteDetailView
   # @extends Yapp.Common.PopupView
   # @constructor
   */
 
 
-  Yapp.Points.PointDetailView = (function(_super) {
-    __extends(PointDetailView, _super);
+  Yapp.Routes.RouteDetailView = (function(_super) {
+    __extends(RouteDetailView, _super);
 
-    function PointDetailView() {
-      _ref = PointDetailView.__super__.constructor.apply(this, arguments);
+    function RouteDetailView() {
+      _ref = RouteDetailView.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
@@ -34,21 +34,37 @@
     */
 
 
-    PointDetailView.prototype.initialize = function() {
-      console.log('initialize PointDetailView');
+    RouteDetailView.prototype.initialize = function() {
+      var point, pointId;
+
+      console.log('initialize RouteDetailView');
       this.bigPhotoTemplate = Templates.BigPhoto;
-      return this.user = Yapp.user;
+      this.user = Yapp.user;
+      pointId = parseInt(this.options.pointId, 10);
+      point = _.find(this.model.get('points'), function(point) {
+        return point.point.id === pointId;
+      });
+      return this.activePoint = point || this.model.get('points')[0].point;
     };
 
     /**
     # Required field for Marionette.View
     # @property template
     # @type Object
-    # @default Templates.PointDetailView
+    # @default Templates.RouteDetailView
     */
 
 
-    PointDetailView.prototype.template = Templates.PointDetailView;
+    RouteDetailView.prototype.template = Templates.SetDetailView;
+
+    /**
+    # @property className
+    # @type String
+    # @default 'popup p-collection'
+    */
+
+
+    RouteDetailView.prototype.className = 'popup p-collection';
 
     /**
     # Ui elements for view
@@ -57,13 +73,12 @@
     */
 
 
-    PointDetailView.prototype.ui = function() {
+    RouteDetailView.prototype.ui = function() {
       return {
-        bigPhoto: '#big-photo',
-        bigPhotoImg: '#big-photo > .bp-photo',
-        allPhotos: '.item-photo',
-        placePhotos: '.place-photos',
-        commentArea: '.toggleArea textarea',
+        'bigPhoto': '#big-photo',
+        'bigPhotoImg': '#big-photo > .bp-photo',
+        'allPhotos': '.item-photo',
+        'placePhotos': '.place-photos',
         map: '.map'
       };
     };
@@ -75,37 +90,35 @@
     */
 
 
-    PointDetailView.prototype.events = function() {
+    RouteDetailView.prototype.events = function() {
       return {
         'click .p-place-desc .a-toggle-desc': 'moreDescription',
         'click .photos-gallery .item-photo': 'showPhoto',
         'click #big-photo > .bp-photo': 'nextPhoto',
-        'click #right-panel .a-like': 'like',
+        'click li.choose_place > a': 'choosePlace',
+        'click .stp-like': 'like',
         'click #commentForm textarea': 'focusCommentTextarea',
-        'click .a-remove-comment': 'showRemoveCommentPopover',
-        'click .item-comment .a-yes': 'removeComment',
-        'click .item-comment .a-no, .item-comment .p-close': 'hideRemoveCommentPopover',
+        'click .a-remove-comment': 'removeComment',
         'submit #commentForm': 'submitCommentForm',
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
         'click .remove-photo': 'removePhoto',
-        'click a[href=#tab-map]': 'renderMap',
-        'click .a-add-collection': 'addCollection',
-        'click .a-complaint-comment': 'complaintComment'
+        'click a[href=#tab-map]': 'renderMap'
       };
     };
 
     /**
-    # Passed additional user data, splited description.
+    # Passed additional user data, splited description and current active point
     # @method templateHelpers
     */
 
 
-    PointDetailView.prototype.templateHelpers = function() {
+    RouteDetailView.prototype.templateHelpers = function() {
       return {
         headDescription: this.model.get('description').slice(0, 150),
         tailDescription: this.model.get('description').slice(150),
-        user: this.user.toJSON()
+        user: this.user.toJSON(),
+        activePoint: this.activePoint
       };
     };
 
@@ -115,38 +128,15 @@
     */
 
 
-    PointDetailView.prototype.onRender = function() {
-      this.$el.find('[data-toggle=tooltip]').tooltip();
+    RouteDetailView.prototype.onRender = function() {
       this.ui.placePhotos.data('slider', Yapp.Common.sliderPhotos);
       this.photoSlider = this.ui.placePhotos.data('slider');
+      this.$el.find('[data-toggle=tooltip]').tooltip();
       this.showPhoto();
-      this.photoSlider.init({
+      return this.photoSlider.init({
         root: this.ui.placePhotos,
         visible: 4
       });
-      return this._renderSocial();
-    };
-
-    /**
-    # Show social buttons on right sidebar
-    # @method _renderSocial
-    # @private
-    */
-
-
-    PointDetailView.prototype._renderSocial = function() {
-      if (window.FB !== void 0) {
-        FB.XFBML.parse();
-      }
-      if (window.VK !== void 0) {
-        return VK.Widgets.Like('vk_like_point', {
-          type: 'mini',
-          pageTitle: this.model.get('name'),
-          pageDescription: this.model.get('description'),
-          pageImage: this.model.get('imgs')[0].thumbnail104x104,
-          text: "ЯсенПуть знает все - " + (this.model.get('name'))
-        }, 1000 + this.model.get('id'));
-      }
     };
 
     /**
@@ -155,13 +145,13 @@
     */
 
 
-    PointDetailView.prototype.renderMap = function(event) {
+    RouteDetailView.prototype.renderMap = function(event) {
       var coords, icon, placemark, _ref1;
 
       if (!this.map) {
         this.ui.map.height(500);
-        coords = [this.model.get('latitude'), this.model.get('longitude')];
-        icon = (_ref1 = this.model.get('icon')) != null ? _ref1 : '/media/icons/place-none.png';
+        coords = [this.activePoint.latitude, this.activePoint.longitude];
+        icon = (_ref1 = this.activePoint.icon) != null ? _ref1 : '/media/icons/place-none.png';
         this.map = new ymaps.Map('popup-map', {
           center: coords,
           zoom: 14
@@ -179,11 +169,11 @@
 
     /**
     # TODO
-    # @event moreDescription
+    # @method moreDescription
     */
 
 
-    PointDetailView.prototype.moreDescription = function(event) {
+    RouteDetailView.prototype.moreDescription = function(event) {
       var $parent, $target;
 
       event.preventDefault();
@@ -205,25 +195,34 @@
     */
 
 
-    PointDetailView.prototype.showPhoto = function(event) {
-      var $target, activePhoto, photo, photoId;
+    RouteDetailView.prototype.showPhoto = function(event, photoId) {
+      var $target, activePhoto, photo;
 
       this.ui.allPhotos.removeClass('current');
       if (event) {
         event.preventDefault();
         $target = $(event.currentTarget);
         photoId = $target.data('photo-id');
-        photo = _.find(this.model.get('imgs'), function(photo) {
+        photo = _.find(this.activePoint.imgs, function(photo) {
+          return photo.id === photoId;
+        });
+      } else if (photoId) {
+        photoId = parseInt(photoId, 10);
+        photo = _.find(this.activePoint.imgs, function(photo) {
           return photo.id === photoId;
         });
       } else if (this.options.photoId) {
         photoId = parseInt(this.options.photoId, 10);
-        photo = _.find(this.model.get('imgs'), function(photo) {
+        photo = _.find(this.activePoint.imgs, function(photo) {
           return photo.id === photoId;
         });
+        this.options.photoId = false;
       } else {
-        photo = this.model.get('imgs')[0];
-        photoId = photo.id;
+        photoId = parseInt(this.options.photoId, 10);
+        photo = _.find(this.activePoint.imgs, function(photo) {
+          return photo.id === photoId;
+        });
+        photoId = 0;
       }
       activePhoto = _.find(this.ui.allPhotos, function(el) {
         return $(el).data('photo-id') === photoId;
@@ -233,8 +232,7 @@
         user: this.user.toJSON()
       })));
       this.ui.bigPhoto.find('[data-toggle=tooltip]').tooltip();
-      this.options.photoId = photoId;
-      return Yapp.Points.router.navigate($(activePhoto).children().attr('href'));
+      return Yapp.Routes.router.navigate($(activePhoto).children().attr('href'));
     };
 
     /**
@@ -243,7 +241,7 @@
     */
 
 
-    PointDetailView.prototype.nextPhoto = function(event) {
+    RouteDetailView.prototype.nextPhoto = function(event) {
       var $target, activePhoto, nextPhotoId, photoId;
 
       $target = $(event.currentTarget);
@@ -252,13 +250,31 @@
         return $(el).data('photo-id') === photoId;
       });
       nextPhotoId = $(activePhoto).parent('li').next().children().data('photo-id');
-      if (nextPhotoId && this.photoSlider.next.is(':visible') && !this.photoSlider.next.hasClass('disabled')) {
+      if (nextPhotoId && this.photoSlider.next.is(':visible')) {
         this.photoSlider.move(1);
-      } else if (!nextPhotoId) {
+      } else if (this.photoSlider.next.is(':visible')) {
         this.photoSlider.reinit();
       }
-      this.options.photoId = nextPhotoId;
-      return this.showPhoto();
+      return this.showPhoto(null, nextPhotoId);
+    };
+
+    /**
+    # TODO
+    # @method choosePlace
+    */
+
+
+    RouteDetailView.prototype.choosePlace = function(event) {
+      var point, pointId;
+
+      event.preventDefault();
+      pointId = $(event.currentTarget).data('id');
+      point = _.find(this.model.get('points'), function(point) {
+        return point.point.id === pointId;
+      });
+      this.activePoint = point;
+      this.model.trigger('change');
+      return delete this.map;
     };
 
     /**
@@ -267,7 +283,7 @@
     */
 
 
-    PointDetailView.prototype.focusCommentTextarea = function(event) {
+    RouteDetailView.prototype.focusCommentTextarea = function(event) {
       var $target;
 
       event.preventDefault();
@@ -281,7 +297,7 @@
     */
 
 
-    PointDetailView.prototype.unfocusCommentTextarea = function(event) {
+    RouteDetailView.prototype.unfocusCommentTextarea = function(event) {
       var $target;
 
       event.preventDefault();
@@ -290,35 +306,13 @@
       return $target.val('');
     };
 
-    PointDetailView.prototype.addCollection = function(event) {
-      var $target, addToCollectionView;
-
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      addToCollectionView = new Yapp.Points.AddToCollectionView({
-        model: this.model
-      });
-      return Yapp.popup.regions.alerts.show(addToCollectionView);
-    };
-
-    PointDetailView.prototype.complaintComment = function(event) {
-      var $target, complaintCommentView;
-
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      complaintCommentView = new Yapp.Common.ComplaintCommentView({
-        model: this.model
-      });
-      return Yapp.popup.regions.alerts.show(complaintCommentView);
-    };
-
     /**
     # TODO
     # @method like
     */
 
 
-    PointDetailView.prototype.like = function(event) {
+    RouteDetailView.prototype.like = function(event) {
       var $target;
 
       event.preventDefault();
@@ -328,11 +322,46 @@
 
     /**
     # TODO
+    # @method successLike
+    */
+
+
+    RouteDetailView.prototype.successLike = function(response, $target) {
+      var index, likeusers, me,
+        _this = this;
+
+      likeusers = this.model.get('likeusers');
+      if ($target.hasClass('marked')) {
+        me = _.find(likeusers, function(user) {
+          return user.id === _this.user.get('id');
+        });
+        index = _.indexOf(likeusers, me);
+        likeusers.splice(index, 1);
+        console.log(likeusers);
+        this.model.set({
+          likeusers: likeusers,
+          likes_count: this.model.get('likes_count') - 1
+        });
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
+      } else {
+        likeusers.push(this.user.toJSON());
+        console.log(likeusers);
+        this.model.set({
+          likesers: likeusers,
+          likes_count: this.model.get('likes_count') + 1
+        });
+        this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
+      }
+      return this.model.trigger('change');
+    };
+
+    /**
+    # TODO
     # @method likePhoto
     */
 
 
-    PointDetailView.prototype.likePhoto = function(event) {
+    RouteDetailView.prototype.likePhoto = function(event) {
       var $target, photoId;
 
       event.preventDefault();
@@ -348,7 +377,7 @@
     */
 
 
-    PointDetailView.prototype.submitCommentForm = function(event) {
+    RouteDetailView.prototype.submitCommentForm = function(event) {
       var $target, photoId, txt;
 
       event.preventDefault();
@@ -362,39 +391,11 @@
 
     /**
     # TODO
-    # @method hideRemoveCommentPopover
-    */
-
-
-    PointDetailView.prototype.hideRemoveCommentPopover = function(event) {
-      var $target;
-
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      return $target.parents('.popover').hide();
-    };
-
-    /**
-    # TODO
-    # @method showRemoveCommentPopover
-    */
-
-
-    PointDetailView.prototype.showRemoveCommentPopover = function(event) {
-      var $target;
-
-      $target = $(event.currentTarget);
-      $target.popover('toggle');
-      return event.preventDefault();
-    };
-
-    /**
-    # TODO
     # @method removeComment
     */
 
 
-    PointDetailView.prototype.removeComment = function(event) {
+    RouteDetailView.prototype.removeComment = function(event) {
       var $target, commentId;
 
       event.preventDefault();
@@ -409,7 +410,7 @@
     */
 
 
-    PointDetailView.prototype.addPhoto = function(event) {
+    RouteDetailView.prototype.addPhoto = function(event) {
       var $target, form, formData;
 
       event.preventDefault();
@@ -425,7 +426,7 @@
     */
 
 
-    PointDetailView.prototype.removePhoto = function(event) {
+    RouteDetailView.prototype.removePhoto = function(event) {
       var $target, photoId;
 
       event.preventDefault();
@@ -436,39 +437,17 @@
     };
 
     /**
-    # Callback for success response from server after like point
-    # @method successLike
-    */
-
-
-    PointDetailView.prototype.successLike = function(response, $target) {
-      var point;
-
-      point = response[0];
-      this.model.set({
-        isliked: point.isliked,
-        likes_count: point.likes_count
-      });
-      if ($target.hasClass('marked')) {
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') - 1);
-      } else {
-        return this.user.set('count_liked_objects', this.user.get('count_liked_objects') + 1);
-      }
-    };
-
-    /**
     # Callback for success response from server after like photo
     # @method successLikePhoto
     */
 
 
-    PointDetailView.prototype.successLikePhoto = function(response, $target) {
+    RouteDetailView.prototype.successLikePhoto = function(response, $target) {
       var img, imgs, index, indexImg, likeusers, me, photo,
         _this = this;
 
       photo = response[0];
-      _this = this;
-      imgs = this.model.get('imgs');
+      imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photo.id;
       });
@@ -488,7 +467,7 @@
       }
       img.likeusers = likeusers;
       imgs.splice(indexImg, 0, img);
-      this.model.set('imgs', imgs);
+      this.activePoint.imgs = imgs;
       this.options.photoId = img.id;
       return this.model.trigger('change');
     };
@@ -499,16 +478,17 @@
     */
 
 
-    PointDetailView.prototype.successAddComment = function(response) {
+    RouteDetailView.prototype.successAddComment = function(response) {
       var photo, photoId;
 
       photoId = this.$('textarea').data('photo-id');
-      photo = _.find(this.model.get('imgs'), function(photo) {
+      photo = _.find(this.activePoint.imgs, function(photo) {
         return photo.id === photoId;
       });
       photo.comments.push(_.extend(response[0], {
         author: this.user.toJSON()
       }));
+      this.options.photoId = photo.id;
       this.user.set('count_commented_objects', this.user.get('count_commented_objects') + 1);
       return this.model.trigger('change');
     };
@@ -519,11 +499,11 @@
     */
 
 
-    PointDetailView.prototype.successRemoveComment = function(response, commentId) {
+    RouteDetailView.prototype.successRemoveComment = function(response, commentId) {
       var comment, comments, index, photo, photoId;
 
       photoId = this.$('textarea').data('photo-id');
-      photo = _.find(this.model.get('imgs'), function(photo) {
+      photo = _.find(this.activePoint.imgs, function(photo) {
         return photo.id === photoId;
       });
       comments = photo.comments;
@@ -533,6 +513,7 @@
       index = _.indexOf(comments, comment);
       comments.splice(index, 1);
       photo.comments = comments;
+      this.options.photoId = photo.id;
       this.user.set('count_commented_objects', this.user.get('count_commented_objects') - 1);
       return this.model.trigger('change');
     };
@@ -543,12 +524,11 @@
     */
 
 
-    PointDetailView.prototype.successAddPhoto = function(response) {
+    RouteDetailView.prototype.successAddPhoto = function(response) {
       var imgs;
 
-      imgs = this.model.get('imgs');
+      imgs = this.activePoint.imgs;
       imgs.push(response[0]);
-      this.model.set('imgs', imgs);
       return this.model.trigger('change');
     };
 
@@ -558,21 +538,21 @@
     */
 
 
-    PointDetailView.prototype.successRemovePhoto = function(response, photoId) {
+    RouteDetailView.prototype.successRemovePhoto = function(response, photoId) {
       var img, imgs, index;
 
-      imgs = this.model.get('imgs');
+      imgs = this.activePoint.imgs;
       img = _.find(imgs, function(img) {
         return img.id === photoId;
       });
       index = _.indexOf(imgs, img);
       imgs.splice(index, 1);
-      this.model.set('imgs', imgs);
+      this.activePoint.imgs = imgs;
       this.options.photoId = imgs[0].id;
       return this.model.trigger('change');
     };
 
-    return PointDetailView;
+    return RouteDetailView;
 
   })(Yapp.Common.PopupView);
 

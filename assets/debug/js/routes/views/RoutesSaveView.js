@@ -37,7 +37,9 @@
     RoutesSaveView.prototype.initialize = function() {
       console.log('initialize RoutesSaveView');
       _.bindAll(this, 'render');
-      return this.user = Yapp.user;
+      this.user = Yapp.user;
+      this.routeCollection = this.options.routeCollection;
+      return this.route = this.options.route;
     };
 
     /**
@@ -94,26 +96,36 @@
 
     /**
     # Fired when .a-add-collection click. Create new empty set.
-    # @event createSet
+    # @event createRoute
     */
 
 
     RoutesSaveView.prototype.createRoute = function(event) {
-      var set, setDescription, setName;
+      var coords, routeDescription, routeName,
+        _this = this;
 
       event.preventDefault();
       event.stopPropagation();
-      setName = this.ui.inputName.val().trim();
-      setDescription = this.ui.inputDescription.val().trim();
-      if (!_.isEmpty(setName) && !_.isEmpty(setDescription)) {
-        set = new Yapp.Points.Set({
-          name: setName,
-          description: setDescription
+      routeName = this.ui.inputName.val().trim();
+      routeDescription = this.ui.inputDescription.val().trim();
+      coords = JSON.stringify(this.route.requestPoints);
+      if (!_.isEmpty(routeName) && !_.isEmpty(routeDescription)) {
+        this.model.set({
+          name: routeName,
+          description: routeDescription,
+          points: this.routeCollection,
+          coords: coords
         });
-        return set.create(this.successCreateRoute, this);
-      } else if (_.isEmpty(setName)) {
+        return this.model.save().success(function(response) {
+          Yapp.Map.yandexmap.geoObjects.remove(_this.route);
+          _this.model.collection.reset();
+          _this.model.clear();
+          Yapp.popup.close();
+          return Yapp.Routes.router.navigate('routes', true);
+        });
+      } else if (_.isEmpty(routeName)) {
         return this.ui.inputName.focus();
-      } else if (_.isEmpty(setDescription)) {
+      } else if (_.isEmpty(routeDescription)) {
         return this.ui.inputDescription.focus();
       }
     };

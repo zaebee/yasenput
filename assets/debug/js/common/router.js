@@ -35,17 +35,23 @@
 
 
     Router.prototype.initialize = function() {
-      return console.log('initializing Yapp.Common.Router');
+      console.log('initializing Yapp.Common.Router');
+      _.bindAll(this, 'storeRoute');
+      this.on('all', this.storeRoute);
+      return this.history = [];
     };
 
-    /**
-    # It determine route list of the router
-    # @property appRoutes
-    */
+    Router.prototype.storeRoute = function() {
+      return this.history.push(Backbone.history.fragment);
+    };
 
-
-    Router.prototype.appRoutes = {
-      "user": "something"
+    Router.prototype.previous = function() {
+      if (this.history.length > 1) {
+        this.navigate(this.history[this.history.length - 2], false);
+      } else {
+        this.navigate('', false);
+      }
+      return this.trigger('route');
     };
 
     return Router;

@@ -123,16 +123,22 @@
 
 
     PointListView.prototype.onShow = function() {
+      var hasVScroll;
+
       console.log('onShow trigger');
       Yapp.Points.trigger('update:collection', this.collection);
       this.$el.find('[data-toggle=tooltip]').tooltip();
       if (this.wall) {
-        return this.wall.reload();
+        this.wall.reload();
       } else {
-        return this.wall = new Masonry(this.el, {
+        this.wall = new Masonry(this.el, {
           columnWidth: 241,
           isFitWidth: true
         });
+      }
+      hasVScroll = document.body.scrollHeight > document.body.clientHeight;
+      if (!hasVScroll) {
+        return $(window).trigger('scroll');
       }
     };
 

@@ -35,7 +35,8 @@
 
 
     Controller.prototype.initialize = function() {
-      return console.log('initializing Yapp.Points.Controller');
+      console.log('initializing Yapp.Points.Controller');
+      return this.listenTo(Yapp.vent, 'click:nameplacemark', this.showPointDetail);
     };
 
     /**

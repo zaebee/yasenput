@@ -247,7 +247,7 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         params = request.GET
         sets = "set"
-        models = ['points','sets']
+        models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
@@ -337,6 +337,7 @@ class ItemsList(PointsBaseView):
                  })).order_by('-' + sort)[offset:limit]
 
         self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
+
 
         i = offset
         for item in all_items:
@@ -474,7 +475,7 @@ class PointAddByUser(LoggedPointsBaseView):
                 errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
-class PointAdd(LoggedPointsBaseView):
+class PointAdd(PointsBaseView):
     http_method_names = ('post', 'get')
     log = logger
 
@@ -482,34 +483,34 @@ class PointAdd(LoggedPointsBaseView):
         DEFAULT_LEVEL = 2
 
         errors = []
+        if request.user.is_authenticated():
+            params = request.POST.copy()
+            form = forms.AddPointForm(params)
+            if form.is_valid():
+                point = form.save(commit=False)
 
-        params = request.POST.copy()
-        form = forms.AddPointForm(params)
-        if form.is_valid():
-            point = form.save(commit=False)
-
-            person = MainModels.Person.objects.get(username=request.user)
-            point.author = person
-            point.save()
-            tags = params.getlist("tags[]")
-            if tags:
-                for tag in tags:
-                    new_tag = TagsModels.Tags.objects.filter(name=tag)
-                    if tag.isdigit():
-                        new_tag = TagsModels.Tags.objects.get(id=tag)
-                    elif new_tag.count() == 0:
-                        new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
-                    else:
-                        new_tag = new_tag[0]
-                    point.tags.add(new_tag)
-
+                person = MainModels.Person.objects.get(username=request.user)
+                point.author = person
                 point.save()
-            
-            return PointAddByUser().post(request, id=point.id)
-        else:
-            e = form.errors
-            for er in e:
-                errors.append(er + ':' + e[er][0])
+                tags = params.getlist("tags[]")
+                if tags:
+                    for tag in tags:
+                        new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if tag.isdigit():
+                            new_tag = TagsModels.Tags.objects.get(id=tag)
+                        elif new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
+                        else:
+                            new_tag = new_tag[0]
+                        point.tags.add(new_tag)
+
+                    point.save()
+                
+                return PointAddByUser().post(request, id=point.id)
+            else:
+                e = form.errors
+                for er in e:
+                    errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
     def get(self, request, *args, **kwargs):
@@ -690,7 +691,8 @@ class Route(View):
         route = MainModels.Routes.objects.create(**route_dict)
 
         for point in points:
-            dot = MainModels.Points.objects.get(id=point.get('id'))
+            point_id = point['point']['id']
+            dot = MainModels.Points.objects.get(id=point_id)
             MainModels.Position.objects.create(point=dot,
                                                route=route,
                                                position=point.get('position'))
@@ -703,27 +705,28 @@ class Route(View):
 
     def put(self, request, *args, **kwargs):
         id = kwargs.get('id')
-        route_dict = QueryDict(request.body, request.encoding)
-        route_dict = route_dict.get('model', None)
+        data = QueryDict(request.body, request.encoding)
+        data = data.get('model', None)
+        route_dict = json.loads(data)
         user = MainModels.Person.objects.get(username=request.user)
 
         points = route_dict.pop('points')
+        route_dict.pop('unid')
         route_dict.update({
             'author': user,
-            'id': id
         })
+        MainModels.Routes.objects.filter(id=id).update(**route_dict)
         try:
             route = MainModels.Routes.objects.get(id=id)
         except:
             route = MainModels.Routes.objects.create(**route_dict)
-        #route = MainModels.Routes.objects.update(**route_dict)
-        #coords = ast.literal_eval(route_dict['coords'])
-
-        #ids = (point['id'] for point in points)
-        #new_points = MainModels.Points.objects.filter(id__in=ids)
+        if user != route.author:
+            route = MainModels.Routes.objects.create(**route_dict)
+        MainModels.Position.objects.filter(route=route).delete()
         for point in points:
-            dot = MainModels.Points.objects.filter(id=point.get('id'))
-            route.position_set.create(point=dot, position=point.get('order'))
+            point_id = point['point']['id']
+            dot = MainModels.Points.objects.get(id=point_id)
+            route.position_set.create(point=dot, position=point.get('position'))
 
         route.save()
         return JsonHTTPResponse('ok')
@@ -732,7 +735,7 @@ class Route(View):
         id = kwargs.get('id', None)
         route = MainModels.Routes.objects.get(id=id)
         if route.author == MainModels.Person.objects.get(username=request.user):
-            MainModels.Position.objects.filter(route = route).delete()
+            MainModels.Position.objects.filter(route=route).delete()
             route.delete()
 
         return JsonHTTPResponse('route deleted')

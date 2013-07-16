@@ -120,25 +120,44 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   updatePointCollection: (collection) ->
     Yapp.Map.mapDeferred.then =>
-      console.log collection, 'collection'
       if @clusterer
         Yapp.Map.yandexmap.geoObjects.remove @clusterer
       @clusterer = new ymaps.Clusterer
         clusterIcons: Yapp.Map.clusterIcons
-      collection.each (point) ->
-        console.log point, 'point'
-#      placemarks = _.map(collection, (el) ->
-#        console.log el
-#        tag = _(el.tags).find (tag) -> tag.icon isnt ''
-#        new ymaps.Placemark [el.latitude, el.longitude], {
-#          id: 'map-point' + el.id
-#          point: el
-#          tag: tag
-#        }, {
-#          iconLayout: Yapp.Map.pointIconLayout
-#        }
-#      )
+      collectionFiltered = _.filter collection.models, (point) ->
+        point.get('type_of_item') == "point"
+      placemarks = _.map collectionFiltered, (point) ->
+#          tag = _(point.get tags).find (tag) -> tag.icon isnt ''
+        new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+          id: 'map-point' + point.get 'id'
+#              point: point
+#              tag: tag
+          }, {
+            iconImageHref: 'media/icons/place-none.png',
+            iconImageSize: [44, 74],
+            iconImageOffset: [-22, -74]
+          }
+        placemarks2.push pl
+      console.log placemarks2
+      @clusterer2.add placemarks2
+      window.cl = @clusterer2
+      console.log @clusterer2
+#      Yapp.Map.yandexmap.geoObjects.add @clusterer2
+#      placemarks = []
+#      collection.each (point) ->
+#        if point.type_of_item = "point"
+#          console.log point, 'point'
+#          tag = _(point.tags).find (tag) -> tag.icon isnt ''
+#          placemarks.push new ymaps.Placemark [point.get 'latitude', point.get 'longitude'], {
+#              id: 'map-point' + point.id
+#              point: point
+#              tag: tag
+#            }, {
+#              iconLayout: Yapp.Map.pointIconLayout
+#            }
+      console.log placemarks
 #      @clusterer.add placemarks
+#      Yapp.Map.yandexmap.geoObjects.add placemarks
 #      Yapp.Map.yandexmap.geoObjects.add @clusterer
 #      console.log  collection, 'collection reset'
 

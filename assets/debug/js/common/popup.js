@@ -85,20 +85,20 @@
     PopupRegion.prototype.onShow = function() {
       var _this = this;
 
-      $(this.body).css('overflow', 'hidden');
+      $(this.body).css('overflow-y', 'hidden');
       $(this.overlay).show();
       $(this.wrapper).show();
       return this.regions.alerts.on('show', function(view) {
-        var $target, css;
+        var css;
 
-        $target = view.options.target;
         css = {
-          margin: 0,
-          left: '70%',
-          top: $target.offset().top,
-          position: 'absolute'
+          margin: '0 0 0 292px',
+          top: '195px',
+          position: 'fixed',
+          display: 'none'
         };
         view.$el.css(css);
+        view.$el.fadeIn(500);
         return view.ui.closeButton.unbind('click').bind('click', function() {
           return view.close();
         });
@@ -116,8 +116,8 @@
       this.regions.alerts.close();
       $(this.overlay).hide();
       $(this.wrapper).hide();
-      $(this.body).css('overflow', 'initial');
-      return Yapp.Common.router.navigate('/');
+      $(this.body).css('overflow-y', 'auto');
+      return Yapp.Common.router.previous();
     };
 
     return PopupRegion;

@@ -85,12 +85,14 @@
   });
 
   Yapp.on('start', function() {
-    var _this;
-
     console.log('starting application');
     this.user = new Yapp.User.Profile(USER);
     this.runApplication();
-    _this = this;
+    $(document).ajaxStart(function() {
+      return $('.spinner').show();
+    }).ajaxStop(function() {
+      return $('.spinner').hide();
+    });
     return $(document).on('click', 'a.nonav', function(event) {
       var href, protocol;
 
@@ -110,7 +112,8 @@
     this.Points.start();
     this.Routes.start();
     this.vent.on('user:notauthorized', function() {
-      return Yapp.popup.show(new Yapp.Common.AuthPopupView);
+      Yapp.popup.show(new Yapp.Common.AuthPopupView);
+      return Yapp.Common.router.trigger('route');
     });
     this.vent.on('logout', function() {
       return window.location.replace('/');

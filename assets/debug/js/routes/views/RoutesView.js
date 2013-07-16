@@ -14,7 +14,7 @@
 
   /**
   # View for showing routes sidebar template
-  # @class Yapp.Common.RoutesView
+  # @class Yapp.Routes.RoutesView
   # @extends Marionette.ItemView
   # @constructor
   */
@@ -35,16 +35,23 @@
 
 
     RoutesView.prototype.initialize = function() {
+      var _this = this;
+
       console.log('initializing Yapp.Routes.RoutesView');
-      _.bindAll(this, 'updateBar', 'resortCollection', 'loadPointFromPlacemark');
+      _.bindAll(this, 'updateBar', 'resortCollection', 'loadPoint');
       this.user = Yapp.user;
       this.search = Yapp.Common.headerView.search;
+      this.collection = new Yapp.Points.PointCollection;
+      this.model.collection = this.collection;
+      _.each(this.model.get('points'), function(el) {
+        return _this.collection.add(new Yapp.Points.Point(el.point));
+      });
       this.dropdownTemplate = Templates.RoutesDropdown;
       this.detailsPathTemplate = Templates.RoutesDetail;
-      this.collection = new Yapp.Points.PointCollection;
       this.collection.on('add remove', this.updateBar, this);
       this.collection.on('resort:collection', this.resortCollection, this);
-      return this.listenTo(Yapp.vent, 'click:placemark', this.loadPointFromPlacemark);
+      this.listenTo(Yapp.vent, 'click:addplacemark', this.loadPoint);
+      return this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
     };
 
     RoutesView.prototype.template = Templates.RoutesView;
@@ -54,7 +61,7 @@
     RoutesView.prototype.ui = {
       routeInput: '.route-input',
       addPathButton: '.btn-add-path',
-      dropResults: '.drop-results',
+      dropResults: '.drop-search-a',
       addPathPlace: '.ol-add-path-places',
       msgHint: '.msg-hint',
       detailsPath: '.details-path',
@@ -65,9 +72,8 @@
     RoutesView.prototype.events = {
       'keydown input.route-input': 'keyupInput',
       'click .btn-add-path': 'buildPath',
-      'click .drop-results li': 'loadPoint',
+      'click .drop-search-a li.item-label': 'loadPoint',
       'click .remove-item-path': 'removePointFromPath',
-      'click .title-add-path': 'toggleRouteBar',
       'click .btn-clear-map': 'clearMap',
       'click .drop-filter-clear': 'hideDropdown',
       'click .btn-save': 'savePath'
@@ -82,6 +88,18 @@
 
     RoutesView.prototype.modelEvents = {
       'change': 'render'
+    };
+
+    RoutesView.prototype.setMap = function() {
+      var _this = this;
+
+      if (!_.isEmpty(this.model.get('points'))) {
+        this.collection.trigger('add');
+        _.each(this.collection.models, function(point) {
+          return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+        });
+        return this.$('.btn-add-path').click();
+      }
     };
 
     /**
@@ -138,11 +156,17 @@
     };
 
     RoutesView.prototype.showDropdown = function(response, geoObjectCollection) {
-      this.ui.dropResults.html(this.dropdownTemplate(response));
-      return this.ui.dropResults.show().css({
-        top: '104px',
-        left: '21px'
+      response.tags = response.users = [];
+      response = _.extend(response, {
+        places: geoObjectCollection.featureMember
       });
+      if (_.isEmpty(_.flatten(_.values(response)))) {
+        response = {
+          empty: true
+        };
+      }
+      this.ui.dropResults.html(this.dropdownTemplate(response));
+      return this.ui.dropResults.show();
     };
 
     /**
@@ -168,8 +192,8 @@
     };
 
     /**
-    # TODO
-    # @method buildPath
+    # Fired when .btn-add-path button is clicked
+    # @event buildPath
     */
 
 
@@ -180,33 +204,48 @@
       if (event) {
         event.preventDefault();
       }
-      if (!this.ui.addPathButton.hasClass('disabled')) {
+      if (this.ui.addPathButton.hasClass('disabled')) {
+        this.ui.addPathButton.tooltip('show');
+        setTimeout(function() {
+          _this.ui.addPathButton.tooltip('hide');
+          return _this.ui.addPathButton.tooltip('destroy');
+        }, 1200);
         this.ui.addPathButton.addClass('disabled');
-        if (this.route) {
-          Yapp.Map.yandexmap.geoObjects.remove(this.route);
-        }
-        if (this.listeners) {
-          this.listeners.removeAll();
-        }
+        return;
+      }
+      if (this.route) {
+        Yapp.Map.yandexmap.geoObjects.remove(this.route);
+      }
+      if (this.listeners) {
+        this.listeners.removeAll();
+      }
+      if (!_.isEmpty(this.model.get('coords'))) {
+        paths = JSON.parse(this.model.get('coords'));
+        this.model.set('coords', [], {
+          silent: true
+        });
+      } else {
         paths = _(this.collection.models).map(function(point) {
           return [point.get('latitude'), point.get('longitude')];
         }).value();
-        return ymaps.route(paths).then(function(route) {
-          _this.route = _this.buildDetailPath(route);
-          Yapp.Map.yandexmap.geoObjects.add(_this.route);
-          _this.route.editor.start({
-            editWayPoints: false
-          });
-          _this.listeners = _this.route.events.group();
-          _this.listeners.add('update', function(event) {
-            return _this.routeUpdate(_this.route, _this.listeners);
-          });
-          window.ROUTE = route;
-          _this.ui.lineAddPathButton.hide();
-          _this.ui.actionButton.show();
-          return _this.ui.addPathButton.removeClass('disabled');
+        this.model.set('coords', [], {
+          silent: true
         });
       }
+      return Yapp.Map.route(paths).then(function(route) {
+        _this.route = _this.buildDetailPath(route);
+        Yapp.Map.yandexmap.geoObjects.add(_this.route);
+        _this.route.editor.start({
+          editWayPoints: false
+        });
+        _this.listeners = _this.route.events.group();
+        _this.listeners.add('update', function(event) {
+          return _this.buildDetailPath(_this.route);
+        });
+        _this.ui.lineAddPathButton.hide();
+        _this.ui.actionButton.show();
+        return _this.ui.addPathButton.removeClass('disabled');
+      });
     };
 
     /**
@@ -216,8 +255,17 @@
 
 
     RoutesView.prototype.buildDetailPath = function(route) {
-      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments;
+      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments,
+        _this = this;
 
+      if (!_.isEmpty(this.model.get('points'))) {
+        route.options.set('mapStateAutoApply', true);
+      }
+      route.getWayPoints().each(function(point, index) {
+        point.properties.set('class', 'place-added');
+        return point.properties.set('point', _this.collection.models[index].toJSON());
+      });
+      route.getWayPoints().options.set('iconLayout', Yapp.Map.pointIconLayout);
       ways = route.getPaths();
       wayLength = ways.getLength();
       routeCollection = [];
@@ -239,14 +287,14 @@
           });
         }
         routeCollection.push({
-          order: wayIndex,
+          position: wayIndex,
           point: point.toJSON(),
-          way: way.properties.getAll(),
           segments: _segments
         });
       }
       routeCollection.push({
-        point: this.collection.last().toJSON()
+        point: this.collection.last().toJSON(),
+        position: wayLength
       });
       this.ui.detailsPath.html(this.detailsPathTemplate({
         ways: routeCollection,
@@ -260,36 +308,26 @@
 
     /**
     # TODO
-    # @method routeUpdate
-    */
-
-
-    RoutesView.prototype.routeUpdate = function(route, listeners) {
-      return this.buildDetailPath(route);
-    };
-
-    /**
-    # TODO
     # @method loadPoint
     */
 
 
     RoutesView.prototype.loadPoint = function(event) {
-      var $target, data, index, point,
+      var $target, data, length, point,
         _this = this;
 
       event.preventDefault();
       $target = $(event.currentTarget);
       data = $target.data();
       this.ui.msgHint.hide();
-      index = this.collection.length;
+      length = this.collection.length;
       point = new Yapp.Points.Point({
         unid: data.pointId
       });
       point.fetch({
         success: function(response) {
           _this.collection.add(point);
-          if (_this.collection.length !== index) {
+          if (_this.collection.length !== length) {
             Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
             return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
           }
@@ -300,58 +338,24 @@
 
     /**
     # TODO
-    # @method loadPointFromPlacemark
-    */
-
-
-    RoutesView.prototype.loadPointFromPlacemark = function(event) {
-      var geoPoint, index, point,
-        _this = this;
-
-      event.preventDefault();
-      geoPoint = event.originalEvent.target.getData();
-      point = geoPoint.properties.get('point');
-      this.ui.msgHint.hide();
-      index = this.collection.length;
-      point = new Yapp.Points.Point({
-        unid: point.id
-      });
-      return point.fetch({
-        success: function(response) {
-          _this.collection.add(point);
-          if (_this.collection.length !== index) {
-            Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
-            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class='remove-item-path' data-point-id=\"" + (point.get('id')) + "\">\n</li>");
-          }
-        }
-      });
-    };
-
-    /**
-    # TODO
     # @method removePointFromPath
     */
 
 
     RoutesView.prototype.removePointFromPath = function(event) {
-      var $target, pointId;
+      var $target, point, pointId;
 
       event.preventDefault();
       $target = $(event.currentTarget);
       pointId = $target.data('point-id');
-      this.collection.remove(pointId);
+      point = this.collection.findWhere({
+        id: pointId
+      });
+      this.collection.remove(point);
+      this.model.set('coords', [], {
+        silent: true
+      });
       return $target.parent().remove();
-    };
-
-    /**
-    # TODO
-    # @method toggleRouteBar
-    */
-
-
-    RoutesView.prototype.toggleRouteBar = function(event) {
-      this.$('.aside-content').slideToggle();
-      return $('#panel-add-path').height(!$('#panel-add-path').height() ? 'auto' : 0);
     };
 
     /**
@@ -363,9 +367,10 @@
     RoutesView.prototype.clearMap = function(event) {
       event.preventDefault();
       this.ui.addPathPlace.empty();
-      this.ui.detailsPath.empty();
+      this.ui.detailsPath.empty().hide();
       this.ui.lineAddPathButton.show();
       this.ui.actionButton.hide();
+      this.model.set('coords', []);
       this.collection.reset();
       return this.collection.trigger('remove');
     };
@@ -406,7 +411,9 @@
     RoutesView.prototype.resortCollection = function(index, pointId) {
       var point;
 
-      point = this.collection.get(pointId);
+      point = this.collection.findWhere({
+        id: pointId
+      });
       this._insertTo(index, point, this.collection.models);
       if (this.route) {
         return this.buildPath();
@@ -421,15 +428,16 @@
 
 
     RoutesView.prototype.savePath = function(event) {
-      var $target, routesSaveView;
+      var routesSaveView;
 
       event.preventDefault();
-      $target = $(event.currentTarget);
       routesSaveView = new Yapp.Routes.RoutesSaveView({
-        collection: this.collection,
-        target: $target
+        routeCollection: this.routeCollection,
+        model: this.model,
+        route: this.route
       });
-      return Yapp.popup.show(routesSaveView);
+      Yapp.popup.show(routesSaveView);
+      return Yapp.Routes.router.trigger('route');
     };
 
     /**
@@ -451,8 +459,8 @@
           clearTimeout(0);
           event.preventDefault();
           event.stopPropagation();
-          if ($('.hover', this.ui.dropResults).length) {
-            $('.hover', this.ui.dropResults).click();
+          if ($('.selected', this.ui.dropResults).length) {
+            $('.selected', this.ui.dropResults).click();
           }
           this.hideDropdown();
           break;
@@ -520,32 +528,32 @@
     RoutesView.prototype._selectDropLi = function(dir) {
       var indexSelected, li;
 
-      li = $('li:visible', this.ui.dropResults).filter(function() {
+      li = $('li.item-label:visible', this.ui.dropResults).filter(function() {
         return true;
       });
-      if (li.filter('.hover').length) {
-        indexSelected = li.index(li.filter('.hover'));
+      if (li.filter('.selected').length) {
+        indexSelected = li.index(li.filter('.selected'));
         if (indexSelected < li.length - 1) {
           if (dir === 1) {
-            li.filter(".hover:first").removeClass('hover');
-            return li.eq(indexSelected + 1).addClass('hover').focus();
+            li.filter(".selected:first").removeClass('selected');
+            return li.eq(indexSelected + 1).addClass('selected').focus();
           } else {
-            li.filter(".hover:first").removeClass("hover");
-            return li.eq(indexSelected - 1).addClass('hover').focus();
+            li.filter(".selected:first").removeClass("selected");
+            return li.eq(indexSelected - 1).addClass('selected').focus();
           }
         } else {
-          li.filter('.hover:first').removeClass('hover');
+          li.filter('.selected:first').removeClass('selected');
           if (dir === 1) {
-            return li.eq(0).addClass('hover').focus();
+            return li.eq(0).addClass('selected').focus();
           } else {
-            return li.eq(indexSelected - 1).addClass('hover').focus();
+            return li.eq(indexSelected - 1).addClass('selected').focus();
           }
         }
       } else {
         if (dir === 1) {
-          return li.eq(0).addClass("hover").focus();
+          return li.eq(0).addClass("selected").focus();
         } else {
-          return li.last().addClass("hover").focus();
+          return li.last().addClass("selected").focus();
         }
       }
     };
