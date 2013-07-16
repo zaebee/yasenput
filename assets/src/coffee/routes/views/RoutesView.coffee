@@ -24,13 +24,16 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @user = Yapp.user
     @search = Yapp.Common.headerView.search
     @collection = new Yapp.Points.PointCollection
+    @model.collection = @collection
+    _.each @model.get('points'), (el) =>
+      @collection.add new Yapp.Points.Point(el.point)
 
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
-
     @collection.on 'add remove', @updateBar, @
     @collection.on 'resort:collection', @resortCollection, @
     @listenTo Yapp.vent, 'click:addplacemark', @loadPoint
+    @listenTo Yapp.Map, 'load:yandexmap', @setMap
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -50,7 +53,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     'click .btn-add-path': 'buildPath'
     'click .drop-search-a li.item-label': 'loadPoint'
     'click .remove-item-path': 'removePointFromPath'
-    'click .title-add-path': 'toggleRouteBar'
     'click .btn-clear-map': 'clearMap'
     'click .drop-filter-clear': 'hideDropdown'
     'click .btn-save': 'savePath'
@@ -62,6 +64,18 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   modelEvents:
     'change': 'render'
+
+  setMap: ->
+    if !_.isEmpty @model.get('points')
+      @collection.trigger 'add'
+      _.each @collection.models, (point) =>
+        @ui.addPathPlace.append """
+          <li data-point-id="#{point.get('id')}">
+            <h4>#{point.get('name')}</h4>
+            <p>#{point.get('address')}</p>
+            <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
+          </li>"""
+      @$('.btn-add-path').click()
 
   ###*
   # Fired when region is showed
@@ -150,7 +164,12 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     ## off all event trigger on yandex router object
     if @listeners
       @listeners.removeAll()
-    paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
+    if !_.isEmpty @model.get('coords')
+      paths = JSON.parse @model.get('coords')
+      @model.set 'coords', [], silent: true
+    else
+      paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
+      @model.set 'coords', [], silent: true
     Yapp.Map.route(paths).then (route) =>
       @route = @buildDetailPath(route)
       Yapp.Map.yandexmap.geoObjects.add @route
@@ -168,8 +187,11 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @method buildDetailPath
   ###
   buildDetailPath: (route) ->
-    route.getWayPoints().each (point) ->
+    if !_.isEmpty @model.get('points')
+      route.options.set 'mapStateAutoApply', true
+    route.getWayPoints().each (point ,index) =>
       point.properties.set 'class', 'place-added'
+      point.properties.set 'point', @collection.models[index].toJSON()
     route.getWayPoints().options.set 'iconLayout', Yapp.Map.pointIconLayout
     ways = route.getPaths()
     wayLength = ways.getLength()
@@ -234,16 +256,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     event.preventDefault()
     $target = $(event.currentTarget)
     pointId = $target.data 'point-id'
-    @collection.remove pointId
+    point = @collection.findWhere id: pointId
+    @collection.remove point
+    @model.set 'coords', [], silent:true
     $target.parent().remove()
-
-  ###*
-  # TODO
-  # @method toggleRouteBar
-  ###
-  toggleRouteBar: (event) ->
-    @$('.aside-content').slideToggle()
-    $('#panel-add-path').height(if not $('#panel-add-path').height() then 'auto' else 0)
 
   ###*
   # TODO
@@ -255,6 +271,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.detailsPath.empty().hide()
     @ui.lineAddPathButton.show()
     @ui.actionButton.hide()
+    @model.set 'coords', []
     @collection.reset()
     @collection.trigger 'remove'
 
@@ -283,7 +300,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @event resortCollection
   ###
   resortCollection: (index, pointId) ->
-    point = @collection.get pointId
+    point = @collection.findWhere id:pointId
     @_insertTo index, point, @collection.models
     @buildPath() if @route
 
@@ -294,9 +311,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   savePath: (event) ->
     event.preventDefault()
-    $target = $(event.currentTarget)
     routesSaveView = new Yapp.Routes.RoutesSaveView
       routeCollection: @routeCollection
+      model: @model
       route: @route
     Yapp.popup.show routesSaveView
     Yapp.Routes.router.trigger 'route'

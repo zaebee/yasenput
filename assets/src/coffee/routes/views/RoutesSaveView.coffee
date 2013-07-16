@@ -22,7 +22,6 @@ class Yapp.Routes.RoutesSaveView extends Yapp.Common.PopupView
     console.log 'initialize RoutesSaveView'
     _.bindAll @, 'render'
     @user = Yapp.user
-    @model = new Yapp.Routes.Route
     @routeCollection = @options.routeCollection
     @route = @options.route
 
@@ -82,11 +81,12 @@ class Yapp.Routes.RoutesSaveView extends Yapp.Common.PopupView
         description: routeDescription
         points: @routeCollection
         coords: coords
-      @model.save(
-        success: (response) =>
-          if response.status is 200
-            Yapp.popup.close()
-      )
+      @model.save().success (response) =>
+        Yapp.popup.close()
+        Yapp.Map.yandexmap.geoObjects.remove @route
+        @model.collection.reset()
+        @model.clear()
+        Yapp.Routes.router.navigate 'routes', true
     else if _.isEmpty routeName
       @ui.inputName.focus()
     else if _.isEmpty routeDescription

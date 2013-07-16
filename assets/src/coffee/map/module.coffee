@@ -135,6 +135,7 @@ Yapp.module 'Map',
               $target = $(event.currentTarget)
               pointId = $target.data 'id'
               Yapp.vent.trigger 'click:nameplacemark', pointId
+              Yapp.Common.router.trigger 'route'
           )
         )
     )

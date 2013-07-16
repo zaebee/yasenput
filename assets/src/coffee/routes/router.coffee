@@ -28,3 +28,4 @@ class Yapp.Routes.Router extends Marionette.AppRouter
   ###
   appRoutes:
     "routes": "showRoutes"
+    "routes/:id": "editRoute"

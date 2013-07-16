@@ -1,17 +1,25 @@
 <div class="p-top">
+  {{#if name}}
+  <h3>Маршрут - {{name}}</h3>
+  {{else}}
   <h3>Новый маршрут</h3>
+  {{/if}}
   <input type="button" class="p-close" value=" ">
 </div>
 
 <div class="p-body">
   <form >
     <div class="line">
+      {{#if name}}
+      <label for="input-add-new">Сохраните свой маршрут </label>
+      {{else}}
       <label for="input-add-new">Создайте новый маршрут </label>
-      <input type="text" placeholder="Введите название маршрута..." id="input-add-new-name">
+      {{/if}}
+      <input type="text" placeholder="Введите название маршрута..." id="input-add-new-name" value="{{name}}">
     </div>
 
     <div class="line">
-      <input type="text" placeholder="Введите описание маршрута..." id="input-add-new-desc">
+      <input type="text" placeholder="Введите описание маршрута..." id="input-add-new-desc" value="{{description}}">
     </div>
 
     <input type="submit" value="Создать" class="a-btn a-add-collection">
