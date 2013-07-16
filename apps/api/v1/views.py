@@ -84,6 +84,7 @@ class PointsBaseView(View):
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT

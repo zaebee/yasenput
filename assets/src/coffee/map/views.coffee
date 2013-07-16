@@ -121,45 +121,24 @@ class Yapp.Map.MapView extends Marionette.ItemView
   updatePointCollection: (collection) ->
     Yapp.Map.mapDeferred.then =>
       if @clusterer
-        Yapp.Map.yandexmap.geoObjects.remove @clusterer
-      @clusterer = new ymaps.Clusterer
-        clusterIcons: Yapp.Map.clusterIcons
-      collectionFiltered = _.filter collection.models, (point) ->
-        point.get('type_of_item') == "point"
-      placemarks = _.map collectionFiltered, (point) ->
-#          tag = _(point.get tags).find (tag) -> tag.icon isnt ''
+        @clusterer.remove @boardPlacemarks
+      else
+        @clusterer = new ymaps.Clusterer
+          clusterIcons: Yapp.Map.clusterIcons
+        Yapp.Map.yandexmap.geoObjects.add @clusterer
+      collectionFiltered = _.filter collection.models, (point) -> point.get('type_of_item') is "point"
+      @boardPlacemarks = _.map collectionFiltered, (point) ->
+        tag = _(point.get('tags')).find (tag) -> tag.icons isnt ''
         new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-          id: 'map-point' + point.get 'id'
-#              point: point
-#              tag: tag
-          }, {
-            iconImageHref: 'media/icons/place-none.png',
-            iconImageSize: [44, 74],
-            iconImageOffset: [-22, -74]
-          }
-        placemarks2.push pl
-      console.log placemarks2
-      @clusterer2.add placemarks2
-      window.cl = @clusterer2
-      console.log @clusterer2
-#      Yapp.Map.yandexmap.geoObjects.add @clusterer2
-#      placemarks = []
-#      collection.each (point) ->
-#        if point.type_of_item = "point"
-#          console.log point, 'point'
-#          tag = _(point.tags).find (tag) -> tag.icon isnt ''
-#          placemarks.push new ymaps.Placemark [point.get 'latitude', point.get 'longitude'], {
-#              id: 'map-point' + point.id
-#              point: point
-#              tag: tag
-#            }, {
-#              iconLayout: Yapp.Map.pointIconLayout
-#            }
-      console.log placemarks
-#      @clusterer.add placemarks
-#      Yapp.Map.yandexmap.geoObjects.add placemarks
-#      Yapp.Map.yandexmap.geoObjects.add @clusterer
-#      console.log  collection, 'collection reset'
+          id: 'map-point' + point.get('id')
+          point: point.toJSON()
+          tag: tag
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        }
+      @clusterer.add @boardPlacemarks
+      @clusterer.refresh()
+      console.log  collection, 'collection reset'
 
   ###*
   # TODO
@@ -205,14 +184,22 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   createCluster: (tagIds) ->
     if @clusterer
-      @clusterer.removeAll()
+      @clusterer.remove @diff
     else
       @clusterer = new ymaps.Clusterer
         clusterIcons: Yapp.Map.clusterIcons
       Yapp.Map.yandexmap.geoObjects.add @clusterer
 
     @placemarks = @getPlaceMarks tagIds
-    @clusterer.add @placemarks
+    ## get difference placemarks between boardPlacemarks and tags placemarks
+    @diff = _(@placemarks).filter((mark) =>
+      !_(@boardPlacemarks).map((el) =>
+        el.properties.getAll()
+      ).find(
+        id:mark.properties.get('id')
+      )
+    ).value()
+    @clusterer.add @diff
     @clusterer.refresh()
 
   ###*
