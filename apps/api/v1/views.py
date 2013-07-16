@@ -25,7 +25,7 @@ import random
 import json
 from pymorphy import get_morph
 from django.db import connection
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import ast
 from django.http import QueryDict
@@ -69,7 +69,7 @@ class PointsBaseView(View):
                                                                   },
                                                      'limit': LIMITS.POINTS_LIST.IMAGES_COUNT
                                                     },
-                                           'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                           'reviews': {'fields': ['id', 'review', 'rating', 'author', 'updated'],
                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                },
                                                        'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
@@ -793,15 +793,15 @@ class AddReviewToPoint(View):
         review_text = params.get('review')
         rating = params.get('rating')
         author = MainModels.Person.objects.get(username=request.user)
-        if point_reviews.filter(author = author):
-            last_review = point_reviews.objects.filter(author = author).order_by('-updated')[0]
-            if datetime.now() - last_review.updated < datetime.timedelta(days=1):
+        if point_reviews.filter(author=author):
+            last_review = point_reviews.filter(author = author).order_by('-updated')[0]
+            if datetime.now() - last_review.updated < timedelta(days=1):
                 review = last_review
                 review.review = review_text
             else:
-                review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+                review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
         else:
-            review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+            review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
         review.save()
         point.reviews.add(review)
 

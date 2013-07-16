@@ -7,7 +7,7 @@ class Reviews(models.Model):
     class Meta:
         verbose_name = u'Отзывы'
         verbose_name_plural = u'Отзывы'
-        
+
     review = models.TextField('Отзыв')
     rating = models.IntegerField(default=1)
     author = models.ForeignKey(Person, unique=False)

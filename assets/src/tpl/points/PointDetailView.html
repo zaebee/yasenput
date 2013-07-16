@@ -164,12 +164,12 @@
         <div class="toggle-block a-toggle-down">
 
           <div class="add-comment">
-            <form id="addReviewForm" action="#">
+            <form id="reviewForm" action="#">
               <div class="ac-block">
                 <img src="/media/{{user.avatar}}" alt="" width="29" height="30" class="avatar" data-author="{{user.first_name}} {{user.last_name}}">
 
                 <div class="ac-body">
-                  <textarea placeholder="Оставьте свой отзыв..."></textarea>
+                  <textarea name="review" placeholder="Оставьте свой отзыв..."></textarea>
                 </div>
               </div>
               <input type="submit" class="button button_green" value="Добавить">
@@ -188,14 +188,18 @@
             <img src="/media/{{author.avatar}}" alt="" width="29" height="30" class="avatar">
             <div class="comment-body">
               <div class="comment-author">{{author.first_name}} {{author.last_name}}</div>
-              <div class="comment-date">Оценил(а) место: {{rating}}<span class="ico-vote-small"></span></div>
+              <div class="comment-date">Оценил(а) место: {{rating}}<span class="ico-vote-small"></span> {{dateFormat updated}}</div>
               {{#if review}}
-              <p>{{review}}</p>
+              <p>{{safe review}}</p>
               {{/if}}
             </div>
 
             <div class="action">
-              <a data-toggle="tooltip" title="Пожаловаться&nbsp;на&nbsp;отзыв" data-placement="bottom" href="#" class="a-complaint-comment"></a>
+              {{#ifEquals author.id ../user.id}}
+              <!--<a data-toggle="tooltip" title="Удалить&nbsp;отзыв" data-placement="title" data-content="Вы уверены, что хотите удалить отзыв?" href="#" class="a-remove-comment"></a>-->
+              {{else}}
+                <a data-toggle="tooltip" title="Пожаловаться&nbsp;на&nbsp;отзыв" data-placement="bottom" href="#" class="a-complaint-comment"></a>
+              {{/ifEquals}}
             </div>
           </div>
           {{/each}}

@@ -239,7 +239,7 @@ class Yapp.Points.Point extends Backbone.Model
   # @param {Object} context variable for binding this namespace
   # @method addToSet
   ###
-  addToSet: (setId) -> #, successCallback, context) ->
+  addToSet: (setId) ->
     Yapp.request(
       'request'
         url: Yapp.API_BASE_URL + "/collections/addpoint"
@@ -251,6 +251,26 @@ class Yapp.Points.Point extends Backbone.Model
         data:
           id: setId
           point: @get 'id'
+    )
+
+  ###*
+  # Add reivew for point.
+  # @param {String} review Text review
+  # @param {Number} rating Rating review
+  # @param {Function} successCallback Callback that will be call after success response
+  # @param {Object} context variable for binding this namespace
+  # @method addReview
+  ###
+  addReview: (review, rating, successCallback, context) -> #, successCallback, context) ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + "/api/v1/points/#{@get('id')}/reviews/"
+        type: 'POST'
+        context: context
+        successCallback: successCallback
+        data:
+          review: review
+          rating: rating
     )
 
   parse: (response) ->
