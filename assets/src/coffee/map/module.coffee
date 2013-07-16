@@ -29,7 +29,6 @@ Yapp.module 'Map',
           size: [59, 59]
           offset: [-29, -29]
         }]
-
       dfd = $.Deferred()
       ## ymaps wrapper for emulate geocode deferred behavior if ymaps is undefined
       @geocode = (request, options) ->
@@ -37,32 +36,32 @@ Yapp.module 'Map',
           ymaps.geocode request, options
         else
           dfd
-
       ## ymaps wrapper for emulate route deferred behavior if ymaps is undefined
       @route = (feature, options) ->
         if window.ymaps isnt undefined
           ymaps.route feature, options
         else
           dfd
-
+      @mapDeferred = $.Deferred()
       # getting ya map script and binding it on #mainmap dom object
       $.getScript Yapp.YA_MAP_URL, =>
-        ymaps.ready( =>
-          dfd.resolve()
-          console.log 'Init Yandex map'
-          map = new ymaps.Map 'mainmap', (
-            center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
-            zoom: 12
-          )
-          #Yapp.updateSettings coords
-          Yapp.user.set location: ymaps.geolocation
-          map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
-          pointCollection = new ymaps.GeoObjectCollection()
-          map.geoObjects.add pointCollection
-          @yandexmap = map
-          @trigger 'load:yandexmap', @yandexmap
+        @mapDeferred.promise(
+          ymaps.ready( =>
+            dfd.resolve()
+            console.log 'Init Yandex map'
+            map = new ymaps.Map 'mainmap', (
+              center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
+              zoom: 12
+            )
+            #Yapp.updateSettings coords
+            Yapp.user.set location: ymaps.geolocation
+            map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
+            pointCollection = new ymaps.GeoObjectCollection()
+            map.geoObjects.add pointCollection
+            @yandexmap = map
+            @trigger 'load:yandexmap', @yandexmap
 
-          @pointIconLayout = ymaps.templateLayoutFactory.createClass(
+            @pointIconLayout = ymaps.templateLayoutFactory.createClass(
             """
             <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
               <!--<img src="/media/$[properties.tag.icons]">-->
@@ -139,6 +138,8 @@ Yapp.module 'Map',
               pointId = $target.data 'id'
               Yapp.vent.trigger 'click:nameplacemark', pointId
               Yapp.Common.router.trigger 'route'
+            )
+            @mapDeferred.resolve()
           )
         )
     )

@@ -1,0 +1,10 @@
+{
+    "version": "0.1",
+    "api_version": 1,
+
+    "layout": {
+        "logo": "http://yasenput.ru/assets/images/logo.png",
+        "color": "#E9F5E9",
+        "show_title": false
+    }
+}

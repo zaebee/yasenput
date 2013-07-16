@@ -7,6 +7,7 @@ settings_local.py
 /assets/media/cache/*
 /assets/media/point/*
 /assets/admin/*
+/assets/node_modules/*
 migrations
 .DS_Store
 ._*
@@ -21,3 +22,4 @@ build
 dist
 *.egg-info
 *.sql
+sphinx.conf
