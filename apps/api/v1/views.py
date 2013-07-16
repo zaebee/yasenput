@@ -289,21 +289,17 @@ class ItemsList(PointsBaseView):
             search_res_sets_list = []
             
             for collection in search_res_sets.all():
-                trigger = 0
-                for point in collection.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_sets_list.append(collection.id)
+                points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if str(points_l) != '[]':
+                    search_res_sets_list.append(int(collection.id))
+                
             search_res_routes_list = []
             for route in search_res_routes.all():
-                trigger = 0
-                for point in route.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_routes_list.append(route.id)
-            if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
+                points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if str(points_l) != '[]':
+                    search_res_routes_list.append(int(collection.id))
+                
+            if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
                 search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
                 search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
