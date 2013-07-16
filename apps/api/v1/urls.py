@@ -17,5 +17,7 @@ urlpatterns = patterns('',
     url(r'^route/(?P<id>\d+)/$', Route.as_view()),
     url(r'^route/*$', Route.as_view()),
     url(r'^points/(?P<id>\d+)/reviews/', AddReviewToPoint.as_view()),
+    url(r'^tags/$', GetTags.as_view()),
+
 
 )

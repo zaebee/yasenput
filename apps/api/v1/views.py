@@ -780,3 +780,12 @@ class AddReviewToPoint(View):
         point.reviews.add(review)
 
         return JsonHTTPResponse('review added')
+
+class GetTags(View):
+    http_method_names = ('get')
+
+    def get(self, request):
+        tags_l = TagsModels.Tags.objects.all()
+        YpJson = YpSerialiser()
+        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level']))
+        return JsonHTTPResponse(tags)
