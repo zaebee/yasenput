@@ -110,6 +110,11 @@
 
     RoutesView.prototype.onShow = function() {
       $('body').addClass('page-map');
+      $(window).on('resize', function() {
+        if (Yapp.Map.yandexmap) {
+          return Yapp.Map.yandexmap.container.fitToViewport();
+        }
+      });
       $('#header').hide();
       $('#panel-add-path').show();
       return this._dragPoints();
@@ -123,6 +128,11 @@
 
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
+      $(window).off('resize', function() {
+        if (Yapp.Map.yandexmap) {
+          return Yapp.Map.yandexmap.container.fitToViewport();
+        }
+      });
       $('#header').show();
       $('#panel-add-path').hide();
       if (this.route) {
@@ -151,8 +161,7 @@
     RoutesView.prototype.hideDropdown = function(event) {
       this.ui.dropResults.hide();
       this.ui.dropResults.empty();
-      this.ui.routeInput.val('');
-      return this.ui.routeInput.focus();
+      return this.ui.routeInput.val('');
     };
 
     RoutesView.prototype.showDropdown = function(response, geoObjectCollection) {
@@ -319,20 +328,24 @@
       event.preventDefault();
       $target = $(event.currentTarget);
       data = $target.data();
-      this.ui.msgHint.hide();
       length = this.collection.length;
       point = new Yapp.Points.Point({
         unid: data.pointId
       });
-      point.fetch({
-        success: function(response) {
-          _this.collection.add(point);
-          if (_this.collection.length !== length) {
-            Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
-            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+      if (!this.collection.findWhere({
+        id: data.pointId
+      })) {
+        point.fetch({
+          success: function(response) {
+            _this.collection.add(point);
+            _this.ui.msgHint.hide();
+            if (_this.collection.length !== length) {
+              Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
+              return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+            }
           }
-        }
-      });
+        });
+      }
       return this.hideDropdown();
     };
 
@@ -431,6 +444,10 @@
       var routesSaveView;
 
       event.preventDefault();
+      if (!this.user.get('authorized')) {
+        Yapp.vent.trigger('user:notauthorized');
+        return;
+      }
       routesSaveView = new Yapp.Routes.RoutesSaveView({
         routeCollection: this.routeCollection,
         model: this.model,

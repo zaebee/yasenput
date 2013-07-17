@@ -107,6 +107,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         data.coordRight = $target.data 'right-corner'
         @ui.labelFields.children('.label-place').remove()
         @ui.labelFields.prepend @labelTemplate(data)
+        Yapp.Map.yandexmap.setBounds [data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()], {
+          checkZoomRange: true
+        }
         @submitSearch(event)
       when 'user'
         @ui.labelFields.children('.label-user').remove()

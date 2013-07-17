@@ -86,6 +86,7 @@
         'click .item-comment .a-yes': 'removeComment',
         'click .item-comment .a-no, .item-comment .p-close': 'hideRemoveCommentPopover',
         'submit #commentForm': 'submitCommentForm',
+        'submit #reviewForm': 'submitReviewForm',
         'click .bp-photo .a-like': 'likePhoto',
         'change #addPhotoForm input:file': 'addPhoto',
         'click .remove-photo': 'removePhoto',
@@ -116,6 +117,8 @@
 
 
     PointDetailView.prototype.onRender = function() {
+      var _this = this;
+
       this.$el.find('[data-toggle=tooltip]').tooltip();
       this.ui.placePhotos.data('slider', Yapp.Common.sliderPhotos);
       this.photoSlider = this.ui.placePhotos.data('slider');
@@ -124,7 +127,16 @@
         root: this.ui.placePhotos,
         visible: 4
       });
-      return this._renderSocial();
+      this._renderSocial();
+      return this.$('.js-vote').rating({
+        fx: 'full',
+        image: '/static/images/rating.png',
+        loader: '/static/images/ajax-loader3.gif',
+        stars: 10,
+        click: function(rating) {
+          return _this.rating = rating;
+        }
+      });
     };
 
     /**
@@ -275,21 +287,6 @@
       return $target.parent().addClass('focus');
     };
 
-    /**
-    # TODO
-    # @method unfocusCommentTextarea
-    */
-
-
-    PointDetailView.prototype.unfocusCommentTextarea = function(event) {
-      var $target;
-
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      $target.parent().removeClass('focus');
-      return $target.val('');
-    };
-
     PointDetailView.prototype.addCollection = function(event) {
       var $target, addToCollectionView;
 
@@ -353,10 +350,30 @@
 
       event.preventDefault();
       $target = $(event.currentTarget);
-      txt = this.$('textarea').val();
+      txt = this.$('textarea[name=comment]').val();
       if (txt) {
-        photoId = this.$('textarea').data('photo-id');
+        photoId = this.$('textarea[name=comment]').data('photo-id');
         return this.model.addCommentPhoto(photoId, txt, this.successAddComment, this);
+      }
+    };
+
+    /**
+    # TODO
+    # @method submitReviewForm
+    */
+
+
+    PointDetailView.prototype.submitReviewForm = function(event) {
+      var $target, txt;
+
+      if (event) {
+        event.preventDefault();
+      }
+      $target = $(event.currentTarget);
+      txt = this.$('textarea[name=review]').val() || '';
+      if (this.rating) {
+        this.$('textarea[name=review]').css('background', 'url(/static/images/ajax-loader.gif) no-repeat center');
+        return this.model.addReview(txt, this.rating, this.successAddReview, this);
       }
     };
 
@@ -570,6 +587,22 @@
       this.model.set('imgs', imgs);
       this.options.photoId = imgs[0].id;
       return this.model.trigger('change');
+    };
+
+    /**
+    # Callback for success response from server after removing photo
+    # @method successRemovePhoto
+    */
+
+
+    PointDetailView.prototype.successAddReview = function(response) {
+      var _this = this;
+
+      return this.model.fetch({
+        success: function() {
+          return _this.$('a[href=#tab-reviews]').click();
+        }
+      });
     };
 
     return PointDetailView;

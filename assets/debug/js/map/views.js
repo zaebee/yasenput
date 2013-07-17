@@ -134,7 +134,7 @@
         results: 1,
         json: true
       });
-      return geoCoder.then(function(result) {
+      geoCoder.then(function(result) {
         var country, geoMetaData, geoObject, locality, region;
 
         geoObject = result.GeoObjectCollection.featureMember[0].GeoObject;
@@ -150,6 +150,8 @@
           }
         });
       });
+      console.log('map update');
+      return Yapp.Common.headerView.submitSearch();
     };
 
     /**
@@ -162,40 +164,42 @@
       var _this = this;
 
       return Yapp.Map.mapDeferred.then(function() {
-        var collectionFiltered, placemarks, placemarks2;
+        var collectionFiltered;
 
-        if (_this.clusterer2) {
-          Yapp.Map.yandexmap.geoObjects.remove(_this.clusterer2);
+        if (_this.clusterer) {
+          _this.clusterer.remove(_this.boardPlacemarks);
+        } else {
+          _this.clusterer = new ymaps.Clusterer({
+            clusterIcons: Yapp.Map.clusterIcons
+          });
+          Yapp.Map.yandexmap.geoObjects.add(_this.clusterer);
         }
-        _this.clusterer2 = new ymaps.Clusterer({
-          clusterIcons: Yapp.Map.clusterIcons
-        });
         collectionFiltered = _.filter(collection.models, function(point) {
           return point.get('type_of_item') === "point";
         });
-        placemarks2 = [];
-        placemarks = _.map(collectionFiltered, function(point) {
-          var pl;
+        _this.boardPlacemarks = _.map(collectionFiltered, function(point) {
+          var tag;
 
-          pl = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-            id: 'map-point' + point.get('id')
-          }, {
-            iconImageHref: 'media/icons/place-none.png',
-            iconImageSize: [44, 74],
-            iconImageOffset: [-22, -74]
+          tag = _(point.get('tags')).find(function(tag) {
+            return tag.icons !== '';
           });
-          return placemarks2.push(pl);
+          return new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+            id: 'map-point' + point.get('id'),
+            point: point.toJSON(),
+            tag: tag
+          }, {
+            iconLayout: Yapp.Map.pointIconLayout
+          });
         });
-        console.log(placemarks2);
-        _this.clusterer2.add(placemarks2);
-        window.cl = _this.clusterer2;
-        console.log(_this.clusterer2);
-        return console.log(placemarks);
+        _this.clusterer.add(_this.boardPlacemarks);
+        _this.clusterer.refresh();
+        return console.log(collection, 'collection reset');
       });
     };
 
     /**
-    # TODO
+    # Fired when response by /tags/list/ successed
+    # Show labels on left bottom corner on map
     # @event renderIcons
     */
 
@@ -211,7 +215,9 @@
     };
 
     /**
-    # TODO
+    # Filtered points by tag ids
+    # @param {Array} points Point list for filtering
+    # @param {Array} tagIds Tag list that need belong to points
     # @method _filteredPoints
     # @private
     */
@@ -230,7 +236,8 @@
     };
 
     /**
-    # TODO
+    # Biild ymaps.Placemarks for passed tag ids
+    # @param {Array} tagIds Tag list that need belong to points
     # @method getPlaceMarks
     */
 
@@ -262,8 +269,10 @@
 
 
     MapView.prototype.createCluster = function(tagIds) {
+      var _this = this;
+
       if (this.clusterer) {
-        this.clusterer.removeAll();
+        this.clusterer.remove(this.diff);
       } else {
         this.clusterer = new ymaps.Clusterer({
           clusterIcons: Yapp.Map.clusterIcons
@@ -271,7 +280,14 @@
         Yapp.Map.yandexmap.geoObjects.add(this.clusterer);
       }
       this.placemarks = this.getPlaceMarks(tagIds);
-      this.clusterer.add(this.placemarks);
+      this.diff = _(this.placemarks).filter(function(mark) {
+        return !_(_this.boardPlacemarks).map(function(el) {
+          return el.properties.getAll();
+        }).find({
+          id: mark.properties.get('id')
+        });
+      }).value();
+      this.clusterer.add(this.diff);
       return this.clusterer.refresh();
     };
 
@@ -296,6 +312,20 @@
         return $(tag).data('id');
       });
       return this.createCluster(tagIds);
+    };
+
+    /**
+    # Remove placemarks from map
+    # @method clear
+    */
+
+
+    MapView.prototype.clear = function() {
+      if (this.clusterer) {
+        this.clusterer.removeAll();
+        this.placemarks = [];
+        return this.boardPlacemarks = [];
+      }
     };
 
     return MapView;
