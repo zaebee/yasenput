@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^yapens/*$', ItemsList.as_view()),
     url(r'^map_yapens/*$', MapItemsList.as_view()),
 
+    url(r'^points/$', PointAdd.as_view()),
     url(r'^points/(?P<id>\d+)/$', PointAdd.as_view()),
     url(r'^points/(?P<id>\d+)/like/', LikePoint.as_view()),
     url(r'^points/(?P<id>\d+)/reviews/', AddReviewToPoint.as_view()),

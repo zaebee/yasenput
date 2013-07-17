@@ -511,8 +511,75 @@ class PointAdd(PointsBaseView):
                         point.tags.add(new_tag)
 
                     point.save()
-                
-                return PointAddByUser().post(request, id=point.id)
+                point = point.extra(select = {
+                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                    'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
+                    'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                    
+                    #'isliked': ''
+                     })
+                self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                YpJson = YpSerialiser()
+                t0 = time.time()
+                sets_list = CollectionsModels.Collections.objects.all()
+                self.log.info('Get collections for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                sets_l = []
+                #TO DO не перебором!!!
+                t0 = time.time()
+                for set_t in sets_list.all():
+                    for point_t in set_t.points.all():
+                        if point_t.id == point[0].id:
+                            sets_l.append(set_t.id)
+                if request.user.is_authenticated():
+                    if request.user in point[0].likeusers.all():
+                        isliked = 1
+                    else:
+                        isliked = 0
+                else: 
+                    isliked = 0
+
+                t0 = time.time()
+                sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
+                imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
+                'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
+                'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
+                'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+                self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+
+                author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+                self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                t0 = time.time()
+                tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                            'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
+                self.log.info('Serialize tags for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                t0 = time.time()
+                reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                                               'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                                       },
+                                                               'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                              }})
+                self.log.info('Serialize reviews for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+
+
+
+                return JsonHTTPResponse({
+                 'id':int(id),
+                 'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
+                 'name': point.name, 
+                 'description':point.description,
+                 'latitude':str(point.latitude), 
+                 'longitude': str(point.longitude),
+                 'address':point.address,
+                 'likes_count': point.likes_count,
+                 'invalid':point.invalid, 
+                 'wifi': point.wifi,
+                 'parking':point.parking,
+                 'imgs':json.loads(imgs)['imgs'],
+                 'author':json.loads(author)['author'],
+                 'tags': json.loads(tags)['tags'],
+                 'reviews': json.loads(reviews)['reviews'],
+                 'isliked': int(isliked)})
+
             else:
                 e = form.errors
                 for er in e:
