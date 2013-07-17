@@ -852,6 +852,7 @@ class Route(View):
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT,
                                                     'relations':{
+                                                        'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                         'comments': {'fields': ['txt', 'created', 'author'],
                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
@@ -904,11 +905,10 @@ class RouteLike(View):
         id = kwargs.get('id', None)
         route = MainModels.Routes.objects.get(id=id)
 
-        if MainModels.Person.objects.get(username=request.user) in route.likeusers:
-            route.likeusers.remove(MainModels.Person.objects.get(username=request.user))
+        if request.user.person in route.likeusers.all():
+            route.likeusers.remove(request.user.person)
         else:
-            route.likeusers.add(MainModels.Person.objects.get(username=request.user))
-        point.save()
+            route.likeusers.add(request.user.person)
         return JsonHTTPResponse('like')
 
 class AddReviewToPoint(View):
