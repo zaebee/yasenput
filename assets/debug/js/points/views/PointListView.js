@@ -172,12 +172,13 @@
       this.collection.reset(yapens.models);
       yapens.reset();
       this.infiniScroll.destroy();
-      return this.infiniScroll = new Backbone.InfiniScroll(this.collection, {
+      this.infiniScroll = new Backbone.InfiniScroll(this.collection, {
         success: this.onShow,
         scrollOffset: 350,
         includePage: true,
         extraParams: this.extraParams
       });
+      return Yapp.Points.trigger('update:collection', this.collection);
     };
 
     return PointListView;

@@ -317,6 +317,29 @@
       });
     };
 
+    /**
+    # Add reivew for point.
+    # @param {String} review Text review
+    # @param {Number} rating Rating review
+    # @param {Function} successCallback Callback that will be call after success response
+    # @param {Object} context variable for binding this namespace
+    # @method addReview
+    */
+
+
+    Point.prototype.addReview = function(review, rating, successCallback, context) {
+      return Yapp.request('request', {
+        url: Yapp.API_BASE_URL + ("/api/v1/points/" + (this.get('id')) + "/reviews/"),
+        type: 'POST',
+        context: context,
+        successCallback: successCallback,
+        data: {
+          review: review,
+          rating: rating
+        }
+      });
+    };
+
     Point.prototype.parse = function(response) {
       if (_.isArray(response)) {
         response = response[0];

@@ -68,7 +68,7 @@
             map.geoObjects.add(pointCollection);
             _this.yandexmap = map;
             _this.trigger('load:yandexmap', _this.yandexmap);
-            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n  <div class=\"name-place\" data-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
+            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n\n  <div class=\"name-place\" data-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
               /**
               #
               # Add custom events for placemark
@@ -76,11 +76,19 @@
               */
 
               build: function() {
+                var addPlaceElement, namePlaceElement, rootElement;
+
                 this.constructor.superclass.build.call(this);
-                $('.placemark').unbind('mouseenter').bind('mouseenter', this.onMouseOver);
-                $('.placemark').unbind('mouseleave').bind('mouseleave', this.onMouseOut);
-                $('.a-add-place').unbind('click').bind('click', this.onClickAddPlace);
-                return $('.name-place').unbind('click').bind('click', this.onClickNamePlace);
+                rootElement = this.getElement();
+                addPlaceElement = rootElement.getElementsByClassName('a-add-place');
+                namePlaceElement = rootElement.getElementsByClassName('name-place');
+                this.eventsGroup = this.events.group();
+                this.eventsGroup.add('click', this.onClickPlacemark, rootElement);
+                this.eventsGroup.add('click', this.onClickAddPlace, addPlaceElement);
+                this.eventsGroup.add('click', this.onClickNamePlace, namePlaceElement);
+                $(rootElement).unbind('click').bind('click', this.onClickPlacemark);
+                $(addPlaceElement).unbind('click').bind('click', this.onClickAddPlace);
+                return $(namePlaceElement).unbind('click').bind('click', this.onClickNamePlace);
               },
               /**
               #
@@ -89,39 +97,27 @@
               */
 
               clear: function() {
-                $('.placemark').unbind('mouseenter', this.onMouseOver);
-                $('.placemark').unbind('mouseleave', this.onMouseOut);
-                $('.a-add-place').unbind('click', this.onClickAddPlace);
-                return $('.name-place').unbind('click', this.onClickNamePlace);
+                return this.eventsGroup.removeAll();
               },
-              /**
-              # Fired when triggered mouseleave event
-              # @event onMouseOut
-              */
+              onClickPlacemark: function(event) {
+                var me, w;
 
-              onMouseOut: function() {
-                var me;
-
-                me = $(this);
-                return $(".name-place", this).stop().animate({
-                  width: 0
-                }, 150, function() {
-                  return me.removeClass('hover');
-                });
-              },
-              /**
-              # Fired when triggered mouseenter event
-              # @event onMouseOver
-              */
-
-              onMouseOver: function() {
-                var w;
-
-                $(this).addClass('hover');
-                w = $(".name-place", this).data("width") || $(".name-place", this).outerWidth();
-                return $(".name-place", this).data("width", w).width(0).stop().animate({
-                  width: w - 29
-                }, 200);
+                event.preventDefault();
+                event.stopPropagation();
+                if ($('.placemark', this).hasClass('hover')) {
+                  me = $('.placemark', this);
+                  return $('.name-place', this).stop().animate({
+                    width: 0
+                  }, 150, function() {
+                    return me.removeClass('hover');
+                  });
+                } else {
+                  $('.placemark', this).addClass('hover');
+                  w = $('.name-place', this).data('width') || $('.name-place', this).outerWidth();
+                  return $('.name-place', this).data('width', w).width(0).stop().animate({
+                    width: w - 29
+                  }, 200);
+                }
               },
               /**
               # Fired when .a-add-place clicked
@@ -129,6 +125,7 @@
               */
 
               onClickAddPlace: function(event) {
+                event.preventDefault();
                 return Yapp.vent.trigger('click:addplacemark', event);
               },
               /**
@@ -139,6 +136,8 @@
               onClickNamePlace: function(event) {
                 var $target, pointId;
 
+                event.preventDefault();
+                event.stopPropagation();
                 $target = $(event.currentTarget);
                 pointId = $target.data('id');
                 Yapp.vent.trigger('click:nameplacemark', pointId);

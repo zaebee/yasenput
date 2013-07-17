@@ -111,6 +111,8 @@ class Yapp.Map.MapView extends Marionette.ItemView
         region: if region then region.AdministrativeAreaName else ''
         city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
     )
+    console.log 'map update'
+    Yapp.Common.headerView.submitSearch()
 
   ###*
   # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
