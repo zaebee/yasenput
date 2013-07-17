@@ -810,6 +810,7 @@ class AddReviewToPoint(View):
             if datetime.now() - last_review.updated < timedelta(days=1):
                 review = last_review
                 review.review = review_text
+                review.rating = rating
             else:
                 review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
         else:
