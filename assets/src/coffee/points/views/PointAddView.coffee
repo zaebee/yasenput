@@ -451,8 +451,8 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method successSave
   ###
   successSave: (response) ->
-    model = new Yapp.Points.Point response[0]
-    model.id = response[0].id
+    model = new Yapp.Points.Point response
+    model.id = response.id
     model.set 'type_of_item', 'point'
     @collection.add model
     @collection.trigger 'reset'

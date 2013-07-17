@@ -498,6 +498,18 @@ class PointAdd(PointsBaseView):
                 person = MainModels.Person.objects.get(username=request.user)
                 point.author = person
                 point.save()
+
+                images = params.getlist('imgs[]')
+                if images:
+                    for image in images:
+                        try:
+                            img = PhotosModels.Photos.objects.get(id=image)
+                            point.imgs.add(img)
+                            originalPoint.imgs.add(img)
+                        except:
+                            message = "ошибка добавления изображения"
+                            pass
+
                 tags = params.getlist("tags[]")
                 if tags:
                     for tag in tags:
@@ -513,7 +525,6 @@ class PointAdd(PointsBaseView):
                     point.save()
                 id_l = point.id
                 point = MainModels.Points.objects.all().filter(id = id_l)
-                self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
                 YpJson = YpSerialiser()
                 t0 = time.time()
                 sets_list = CollectionsModels.Collections.objects.all()
@@ -558,7 +569,7 @@ class PointAdd(PointsBaseView):
 
 
                 return JsonHTTPResponse({
-                 'id':int(id),
+                 'id':int(id_l),
                  'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
                  'name': point[0].name, 
                  'description':point[0].description,
@@ -569,10 +580,10 @@ class PointAdd(PointsBaseView):
                  'invalid':point[0].invalid, 
                  'wifi': point[0].wifi,
                  'parking':point[0].parking,
-                 'imgs':json.loads(imgs)['imgs'],
-                 'author':json.loads(author)['author'],
-                 'tags': json.loads(tags)['tags'],
-                 'reviews': json.loads(reviews)['reviews'],
+                 'imgs':json.loads(imgs)[0]['imgs'],
+                 'author':json.loads(author)[0]['author'],
+                 'tags': json.loads(tags)[0]['tags'],
+                 'reviews': json.loads(reviews)[0]['reviews'],
                  'isliked': int(isliked),
                  'reviewusersplus': 0,
                  'reviewusersminus': 0,
