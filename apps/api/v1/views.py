@@ -512,7 +512,7 @@ class PointAdd(PointsBaseView):
 
                     point.save()
                 id_l = point.id
-                point = MainModels.Points.filter(id = id_l)
+                point = MainModels.Points.objects.all().filter(id = id_l)
                 self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
                 YpJson = YpSerialiser()
                 t0 = time.time()
