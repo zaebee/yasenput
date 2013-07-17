@@ -511,13 +511,8 @@ class PointAdd(PointsBaseView):
                         point.tags.add(new_tag)
 
                     point.save()
-                point = point.extra(select = {
-                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                    'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                    'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-                    
-                    #'isliked': ''
-                     })
+                id_l = point.id
+                point = MainModels.Points.objects.all().filter(id = id_l)
                 self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
                 YpJson = YpSerialiser()
                 t0 = time.time()
@@ -565,20 +560,23 @@ class PointAdd(PointsBaseView):
                 return JsonHTTPResponse({
                  'id':int(id),
                  'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
-                 'name': point.name, 
-                 'description':point.description,
-                 'latitude':str(point.latitude), 
-                 'longitude': str(point.longitude),
-                 'address':point.address,
-                 'likes_count': point.likes_count,
-                 'invalid':point.invalid, 
-                 'wifi': point.wifi,
-                 'parking':point.parking,
+                 'name': point[0].name, 
+                 'description':point[0].description,
+                 'latitude':str(point[0].latitude), 
+                 'longitude': str(point[0].longitude),
+                 'address':point[0].address,
+                 'likes_count': point[0].likes_count,
+                 'invalid':point[0].invalid, 
+                 'wifi': point[0].wifi,
+                 'parking':point[0].parking,
                  'imgs':json.loads(imgs)['imgs'],
                  'author':json.loads(author)['author'],
                  'tags': json.loads(tags)['tags'],
                  'reviews': json.loads(reviews)['reviews'],
-                 'isliked': int(isliked)})
+                 'isliked': int(isliked),
+                 'reviewusersplus': 0,
+                 'reviewusersminus': 0,
+                 'sets_count': 0})
 
             else:
                 e = form.errors
