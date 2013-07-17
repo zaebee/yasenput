@@ -291,13 +291,13 @@ class ItemsList(PointsBaseView):
             
             for collection in search_res_sets.all():
                 points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-                if str(points_l) != '[]':
+                if len(points_l) > 0:
                     search_res_sets_list.append(int(collection.id))
                 
             search_res_routes_list = []
             for route in search_res_routes.all():
                 points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-                if str(points_l) != '[]':
+                if len(points_l) > 0:
                     search_res_routes_list.append(int(route.id))
             
             if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
