@@ -35,11 +35,11 @@ class Yapp.Common.PopupView extends Marionette.ItemView
   ###
   className: 'popup'
 
-  onBeforeRender: ->
-    console.log 'before render PopupView'
-
   modelEvents:
     'change': 'render'
+
+  onBeforeRender: ->
+    console.log 'before render PopupView'
 
   ###*
   # Passed additional user data

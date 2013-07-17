@@ -85,7 +85,12 @@ Yapp.on 'start', ->
   @user = new Yapp.User.Profile(USER)
   @runApplication()
 
-  _this = @
+  $(document).ajaxStart( ->
+    $('.spinner').show()
+  ).ajaxStop( ->
+    $('.spinner').hide()
+  )
+
   $(document).on 'click', 'a.nonav', (event) ->
     href = $(@).attr 'href'
     protocol = @protocol + '//'
@@ -106,6 +111,7 @@ Yapp.runApplication = ->
   # if user not authorized we show popup with login buttons
   @vent.on 'user:notauthorized', ->
     Yapp.popup.show new Yapp.Common.AuthPopupView
+    Yapp.Common.router.trigger 'route'
 
   # on logout we must go to start application point
   @vent.on 'logout', ->

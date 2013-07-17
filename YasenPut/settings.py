@@ -16,7 +16,7 @@ DICTS_PATH = '/home/tenoclock/yasenput/dicts'
 SPHINX_API_VERSION = 0x119
 
 ADMINS = (
-# ('Artem Ushakov', 'artushakov@gmail.com'),
+# ('Artem Ushakov', 'artushakov@gmail.com'), тест 2
 )
 
 MANAGERS = ADMINS
@@ -247,6 +247,15 @@ SOCIAL_AUTH_PIPELINE = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(name)s %(process)d %(message)s'
+    },
+        'simple': {
+            'format': '%(levelname)s %(name)s %(message)s'
+        },
+    },
+
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -257,16 +266,27 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console':{
+                'level':'DEBUG',
+                'class':'logging.StreamHandler',
+                'formatter': 'simple'
+            },
     },
     'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-            },
-        }
+        },
+    }
 }
+
 try:
     from .settings_local import *
 except:

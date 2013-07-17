@@ -1,0 +1,54 @@
+<header class="header_small">
+  <a href="/" class="logo_small nonav">ясен путь</a>
+  <a href="/" class="button_brown nonav">На главную</a>
+  {{#if user.authorized}}
+  <div class="auth user">
+    <a href="#" target="_blank"><img src="/media/{{user.avatar}}" alt="" class="avatar" width="29" height="30"></a>
+    <div class="user-body">
+      <div class="user-name">{{user.first_name}} {{user.last_name}}</div>
+      <div class="user-likes">
+        <span class="ico ico-like-small"></span>
+        {{user.count_liked_objects}}
+        <span class="ico ico-comment-small"></span>
+        {{user.count_commented_objects}}
+      </div>
+    </div>
+  </div>
+  {{else}}
+    <div class="auth">
+      <img src="/static/images/guest.png" alt="" class="avatar" width="29" height="30">
+      <div class="user-body">
+        <span href="#" class="a-login">Вход</span>
+      </div>
+    </div>
+  {{/if}}
+</header>
+
+<div class="aside-content">
+  <div class="pap-viewport">
+    <div class="field-enter-place">
+      <div class="search search_way">
+        <input type="text" class="route-input" placeholder="Добавить месторасположение...">
+        <input type="button" class="drop-filter-clear">
+        <div class="drop-search-a">
+        </div>
+      </div>
+    </div>
+    
+    <div class="msg-hint">
+      Добавляйте места на карту через строку поиска в окне &laquo;Формирование маршрута&raquo;
+    </div>
+    
+    <ol class="ol-add-path-places"></ol>
+    
+    <div class="line-add-path-btn">
+      <a href="#" data-toogle="tooltip" data-placement="bottom" data-animation="true" title="Выберите минимум 2 точки" class="a-btn btn-add-path disabled">Создать маршрут</a>
+    </div>
+    
+    <div class="line-add-path-btn" id="action-btn">
+      <a href="#" class="a-btn btn-clear-map">Очистить карту</a><a href="#" class="a-btn btn-save">Сохранить</a><a href="#" class="a-btn btn-print">Печать</a>
+    </div>
+    
+    <div class="details-path"></div>
+  </div>
+</div>

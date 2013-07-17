@@ -78,11 +78,15 @@ module.exports = function(grunt) {
           ],
           'debug/js/libs.js': [
             'src/lib/json2.js',
+            'src/lib/moment.min.js',
+            'src/lib/moment.ru.js',
             'src/lib/masonry.min.js',
             'src/lib/jquery.form.js',
+            'src/lib/jquery.rating-2.0.min.js',
             'src/lib/jquery-sortable-min.js',
             'src/lib/bootstrap-tooltip.js',
             'src/lib/bootstrap-tab.js',
+            'src/lib/bootstrap-popover.js',
             'src/lib/handlebars.js',
             'src/lib/lodash.min.js',
             'src/lib/backbone-min.js',
@@ -177,7 +181,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          "debug/js/templates.js": ["src/tpl/*.html"]
+          "debug/js/templates.js": ["src/tpl/**/*.html"]
         }
       }
     },

@@ -1,0 +1,93 @@
+<div class="wrap">
+  <div class="logo">ясен путь</div>
+
+  <div class="head-search">
+    <div class="search">
+      <form action="#" id="multisearchForm">
+        <input type="submit" value="Найти">
+
+        <div class="label-fields">
+          <!--
+          {{#if location.country}}
+          <div class="label label-place">
+            {{location.country}}
+            <button class="remove-label"></button>
+          </div>
+          {{/if}}
+
+          {{#if location.region}}
+          <div class="label label-place">
+            {{location.region}}
+            <button class="remove-label"></button>
+          </div>
+          {{/if}}
+          -->
+
+          {{#if location.city}}
+          <div class="label label-place">
+            {{location.city}}
+            <button class="remove-label"></button>
+          </div>
+          {{/if}}
+          <div class="label label-add">
+            Добавить
+            <span>+</span>
+          </div>
+
+          <span class="text-field"><input type="text"></span>
+        </div>
+        <button type="button" class="clear-input"></button>
+      </form>
+
+      <div class="drop-search" style="display:none;"></div>
+      <div class="drop-search-overlay" style="display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1"></div>
+    </div>
+  </div>
+
+  <div class="head-nav">
+    <div>
+      <ul>
+        <li class="head-nav-current-item"><a href="#">Все сразу</a></li>
+        <li data-models="sets"><a href="#">Коллекции</a></li>
+        <li data-models="points"><a href="#">Места</a></li>
+        <li data-models="events"><a href="#">События</a></li>
+        <li data-models="routes"><a href="#">Маршруты</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="add-block-head">
+    <i class="ico-add"></i>
+
+    <div>
+      <div class="drop-add-head">
+        <a href="/point/add" class="nonav" data-target="p-add-place">Добавить место</a>
+        <a href="/routes" class="nonav" data-target="p-add-event">Добавить маршрут</a>
+        <!--<a href="/event/add" data-target="p-add-event">Добавить событие</a>-->
+      </div>
+    </div>
+  </div>
+
+  {{#if authorized}}
+    <div class="auth user">
+      <img src="/media/{{avatar}}" alt="" class="avatar" width="29" height="30">
+      <div class="user-body">
+        <div class="user-name">{{first_name}} {{last_name}}<div class="drop-logout"><a href="/logout/" class="a-logout">Выход</a></div></div>
+        <div class="user-likes">
+          <span class="ico ico-like-small"></span>
+          {{count_liked_objects}}
+          <span class="ico ico-comment-small"></span>
+          {{count_commented_objects}}
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="auth">
+      <img src="/static/images/guest.png" alt="" class="avatar" width="29" height="30">
+      <div class="user-body">
+        <span href="#" class="a-login">Вход</span>
+      </div>
+    </div>
+  {{/if}}
+</div>
+

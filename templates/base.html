@@ -8,45 +8,12 @@
 
     <title>{% block title %}{% endblock %}</title>
 
-    {% block preload_css %}{% endblock %}
-
     <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
 
-    {% block postload_css %}{% endblock %}
-
-    <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
   </head>
 
   <body class="front">
-    {% if user.is_authenticated %}
-      <script>
-        var USER = {
-          authorized: true,
-          id: {{user.id}},
-          first_name: '{{ user.first_name }}',
-          last_name: '{{ user.last_name }}',
-          avatar: '{{ user.person.avatar }}',
-          last_state: 'pins',
-          count_liked_objects: {{ count_liked_objects }},
-          count_commented_objects: {{ count_commented_objects }},
-          collections: [ {% for collection in collections %}
-            {
-              id: {{ collection.id }},
-              name: '{{ collection.name }}'
-            },
-          {% endfor %} ]
-        };
-      </script>
-    {% else %}
-      <script>
-        var USER = {
-          authorized: false
-        };
-      </script>
-    {% endif %}
     <div id="fb-root"></div>
-    <a href="#" class="a-up">Вверх <span>&uarr;</span></a>
     {% csrf_token %}
 
     <div id="wrap">
@@ -58,16 +25,52 @@
     {% endblock %}
 
     <div id="overlay"></div>
+    <span class="spinner"></span>
 
     {% block popups %}{% endblock %}
 
+    {% if user.is_authenticated %}
+      <script>
+        var USER = {
+          authorized: true,
+          id: {{user.id}},
+          first_name: '{{ user.first_name }}',
+          last_name: '{{ user.last_name }}',
+          avatar: '{{ user.person.avatar }}',
+          last_state: 'pins',
+          count_liked_objects: {{ count_liked_objects|default:0 }},
+          count_commented_objects: {{ count_commented_objects|default:0 }},
+          collections: [ {% for collection in collections %}
+            {
+              id: {{ collection.id }},
+              name: '{{ collection.name }}'
+            },
+          {% endfor %} ]
+        };
+      </script>
+    {% else %}
+      <script>
+        var USER = {authorized: false};
+      </script>
+    {% endif %}
+
+    <!--
+    <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
+    -->
+    <script src="http://yandex.st/modernizr/2.6.2/modernizr.min.js"></script>
+    <script src="http://yandex.st/jquery/1.10.1/jquery.min.js"></script>
     {% if ASSETS_DEBUG %}
       <script src="{{ STATIC_URL }}lib/json2.js"></script>
+      <script src="{{ STATIC_URL }}lib/moment.min.js"></script>
+      <script src="{{ STATIC_URL }}lib/moment.ru.js"></script>
       <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
       <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
+      <script src="{{ STATIC_URL }}lib/jquery.rating-2.0.min.js"></script>
       <script src="{{ STATIC_URL }}lib/jquery-sortable-min.js"></script>
       <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
       <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
+      <script src="{{ STATIC_URL }}lib/bootstrap-popover.js"></script>
       <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
       <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
       <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
@@ -79,9 +82,9 @@
     {% else %}
       {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
-    {% endif %}
 
-    {% block postload_js %}{% endblock %}
+      {% include 'includes/metrika.html' %}
+    {% endif %}
 
     {# external #}
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
@@ -97,14 +100,13 @@
       }(document, 'script', 'facebook-jssdk'));
 
       //VK init
-      VK.init({apiId: {{ VKONTAKTE_APP_ID }}, onlyWidgets: true});
+      VK.init({apiId: {{ VKONTAKTE_APP_ID|default:1 }}, onlyWidgets: true});
       VK.Widgets.Like("vk_like", {type: "mini"}, 1000);
 
     </script>
     <!--
     -->
 
-    {# include 'includes/metrika.html' #}
   </body>
 
 </html>

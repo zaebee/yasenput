@@ -31,7 +31,7 @@ class Yapp.Points.Set extends Yapp.Points.Point
     Yapp.API_BASE_URL + "/api/v1/sets/"
 
   ###*
-  # Defaults data of point model
+  # Defaults data of set model
   # @property defaults
   # @type Object
   ###
@@ -53,7 +53,7 @@ class Yapp.Points.Set extends Yapp.Points.Point
       return invalid
 
   ###*
-  # Like or unlike point. Frist arg is target that was clicked.
+  # Like or unlike set. Frist arg is target that was clicked.
   # Second is callback that will be call after success response.
   # Third is variable for binding this namespace.
   # @method like
