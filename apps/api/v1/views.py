@@ -245,6 +245,7 @@ class ItemsList(PointsBaseView):
         sets = "set"
         models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
+        none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
         if 'points' in models:
@@ -298,11 +299,18 @@ class ItemsList(PointsBaseView):
                 points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
                 if str(points_l) != '[]':
                     search_res_routes_list.append(int(route.id))
-                
-            if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
-                search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
-                search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
+            
+            if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
+                if len(search_res_sets_list) == 0:
+                    search_res_sets = none_qs
+                else:
+                    search_res_sets = search_res_sets.all().filter(id__in = search_res_sets_list)
+                if len(search_res_routes_list) == 0:
+                    search_res_routes = none_qs
+                else:
+                    search_res_routes = search_res_routes.all().filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
+            
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
