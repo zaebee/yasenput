@@ -565,21 +565,21 @@ class PointAdd(PointsBaseView):
                 return JsonHTTPResponse({
                  'id':int(id),
                  'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
-                 'name': point[0].name, 
-                 'description':point[0].description,
-                 'latitude':str(point[0].latitude), 
-                 'longitude': str(point[0].longitude),
-                 'address':point[0].address,
-                 'likes_count': point[0].likes_count,
-                 'invalid':point[0].invalid, 
-                 'wifi': point[0].wifi,
-                 'parking':point[0].parking,
-                 'imgs':json.loads(imgs)[0]['imgs'],
-                 'author':json.loads(author)[0]['author'],
-                 'tags': json.loads(tags)[0]['tags'],
-                 'reviews': json.loads(reviews)[0]['reviews'],
+                 'name': point.name, 
+                 'description':point.description,
+                 'latitude':str(point.latitude), 
+                 'longitude': str(point.longitude),
+                 'address':point.address,
+                 'likes_count': point.likes_count,
+                 'invalid':point.invalid, 
+                 'wifi': point.wifi,
+                 'parking':point.parking,
+                 'imgs':json.loads(imgs)['imgs'],
+                 'author':json.loads(author)['author'],
+                 'tags': json.loads(tags)['tags'],
+                 'reviews': json.loads(reviews)['reviews'],
                  'isliked': int(isliked)})
-                
+
             else:
                 e = form.errors
                 for er in e:
