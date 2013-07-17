@@ -141,7 +141,8 @@ class Yapp.Map.MapView extends Marionette.ItemView
       console.log  collection, 'collection reset'
 
   ###*
-  # TODO
+  # Fired when response by /tags/list/ successed
+  # Show labels on left bottom corner on map
   # @event renderIcons
   ###
   renderIcons: (response) ->
@@ -150,7 +151,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
     @$el.find('[data-toggle=tooltip]').tooltip()
 
   ###*
-  # TODO
+  # Filtered points by tag ids
+  # @param {Array} points Point list for filtering
+  # @param {Array} tagIds Tag list that need belong to points
   # @method _filteredPoints
   # @private
   ###
@@ -163,7 +166,8 @@ class Yapp.Map.MapView extends Marionette.ItemView
     ).value()
 
   ###*
-  # TODO
+  # Biild ymaps.Placemarks for passed tag ids
+  # @param {Array} tagIds Tag list that need belong to points
   # @method getPlaceMarks
   ###
   getPlaceMarks: (tagIds) ->
@@ -216,3 +220,13 @@ class Yapp.Map.MapView extends Marionette.ItemView
     $activeTags = @$('.m-ico-group a.active').children()
     tagIds = _.map $activeTags, (tag) -> $(tag).data 'id'
     @createCluster tagIds
+
+  ###*
+  # Remove placemarks from map
+  # @method clear
+  ###
+  clear: ->
+    if @clusterer
+      @clusterer.removeAll()
+      @placemarks = []
+      @boardPlacemarks = []

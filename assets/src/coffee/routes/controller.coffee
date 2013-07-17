@@ -28,6 +28,7 @@ class Yapp.Routes.Controller extends Marionette.Controller
   showRoutes: ->
     Yapp.content.close()
     Yapp.popup.close()
+    Yapp.Map.mapView.clear()
     routesView = new Yapp.Routes.RoutesView
       model: new Yapp.Routes.Route
     Yapp.routePanel.show routesView
@@ -63,6 +64,7 @@ class Yapp.Routes.Controller extends Marionette.Controller
   editRoute: (id) ->
     Yapp.content.close()
     Yapp.popup.close()
+    Yapp.Map.mapView.clear()
     route = new Yapp.Routes.Route unid: id
     route.fetch(
       success: (response) =>
