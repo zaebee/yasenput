@@ -250,6 +250,7 @@ class ItemsList(PointsBaseView):
         sets = "set"
         models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
+        none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
         if 'points' in models:
@@ -314,13 +315,18 @@ class ItemsList(PointsBaseView):
             for route in search_res_routes.all():
                 points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
                 if str(points_l) != '[]':
-                    search_res_routes_list.append(int(collection.id))
-                
-            if (Count(search_res_points_list) > 0) or (len(search_res_sets_list) > 0):
-                search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
-                search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
+                    search_res_routes_list.append(int(route.id))
+            
+            if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
+                if len(search_res_sets_list) == 0:
+                    search_res_sets = none_qs
+                else:
+                    search_res_sets = search_res_sets.all().filter(id__in = search_res_sets_list)
+                if len(search_res_routes_list) == 0:
+                    search_res_routes = none_qs
+                else:
+                    search_res_routes = search_res_routes.all().filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
-            self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
         t0 = time.time()
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
@@ -532,8 +538,10 @@ class PointAdd(PointsBaseView):
         for set_t in sets_list.all():
             for point_t in set_t.points.all():
                 if point_t.id == point[0].id:
-                    if set_t not in sets_l:
-                        sets_l.append(set_t)
+                    sets_l.append(set_t.id)
+        f = open('sets_in_det.txt','w')
+        f.write(str(sets_l))
+        f.close()
         self.log.info('Set collections for point as attribute complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         if request.user.is_authenticated():
             if request.user in point[0].likeusers.all():
@@ -542,12 +550,15 @@ class PointAdd(PointsBaseView):
                 isliked = 0
         else: 
             isliked = 0
+
         t0 = time.time()
-        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
-        'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+        sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
+        'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
-        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_height', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
@@ -564,7 +575,7 @@ class PointAdd(PointsBaseView):
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
          'id':int(id),
-         'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
+         'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
          'name': point[0].name, 
          'description':point[0].description,
          'latitude':str(point[0].latitude), 
