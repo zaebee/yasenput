@@ -53,7 +53,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
       @pointsByTag = _.partial @_filteredPoints, response
     Yapp.request(
       'request'
-        url: '/api/v1/tags/'
+        url: Yapp.API_BASE_URL + '/api/v1/tags/'
         context: @
         successCallback: @renderIcons
     )
