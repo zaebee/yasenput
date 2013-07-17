@@ -841,8 +841,44 @@ class Route(View):
                                       })
             positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
             points = YpJson.serialize(positions, fields=['position', 'point'],
-                                      relations={'point': {'fields': ['id', 'name', 'latitude', 'longitude', 'address']}}
+                                      relations={'point': {
+                                        'fields':['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                'extras':['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
+                                'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
+
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
+                                                    },
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
+                                                        'extras':['reviewusersplus'],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}},
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                        },
+                                                    },
+                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}},
+                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
+                                                        },
+                                                    },
+
+                                           }
+
+                                      }}
                                      )
+
+
             result = {
                 'id':route.id,
                 'name':route.name,
