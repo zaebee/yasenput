@@ -86,7 +86,7 @@ class PointsBaseView(View):
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                            'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
@@ -849,29 +849,11 @@ class Route(View):
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                            'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                           'imgs': {'extras': ['thumbnail560', 'thumbnail104x104', 'thumbnail560_width'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
-                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
-                                                        'extras':['reviewusersplus'],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
-                                                                                },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
-                                                        },
-                                                    },
-                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
-                                                                                },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
-                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
-                                                        },
-                                                    },
+                                           
+                                           
 
                                            }
 
