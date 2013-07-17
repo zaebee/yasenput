@@ -11,6 +11,7 @@ from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
 from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
+#from apps.collections.models import Collections
 
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
@@ -172,6 +173,12 @@ class Points(models.Model):
     sets = ''
 
     unid = '1'
+
+    reviewusersplus = 0
+    reviewusersminus = 0
+    sets_count = 0
+    likes_count = 0
+    
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
@@ -183,6 +190,14 @@ class Points(models.Model):
 
 
     
+    '''
+    def sets_count(self):
+        i = 0
+        for s in Collections.objects.all():
+            if self in s.points:
+                i += 1
+        return i
+    '''
 
     def _likes(self):
         return self.likeusers.count()
@@ -192,6 +207,7 @@ class Points(models.Model):
 
     likes = property(_likes)
     visits = property(_visits)
+
 
     def __unicode__(self):
         return self.name

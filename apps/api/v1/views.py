@@ -79,8 +79,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus',],
+                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
@@ -89,7 +89,8 @@ class PointsBaseView(View):
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
-                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
+                                                        'extras':['reviewusersplus'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -259,11 +260,11 @@ class ItemsList(PointsBaseView):
             self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         if 'sets' in models:
             t0 = time.time()
-            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
             self.log.info('Sets search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         if 'routes' in models:
             t0 = time.time()
-            search_res_routes = MainModels.Routes.search.query(params.get('s','')).extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+            search_res_routes = MainModels.Routes.search.query(params.get('s',''))
             self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         #search_res_sets_ex = search_res_sets
 
@@ -328,11 +329,14 @@ class ItemsList(PointsBaseView):
                     search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
         t0 = time.time()
+        search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+        
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-
+                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating>5',
+                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
+                'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
                  }), search_res_sets, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
@@ -820,5 +824,5 @@ class GetTags(View):
     def get(self, request):
         tags_l = TagsModels.Tags.objects.all()
         YpJson = YpSerialiser()
-        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent']))
+        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)
