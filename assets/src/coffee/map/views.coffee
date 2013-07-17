@@ -53,11 +53,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
       @pointsByTag = _.partial @_filteredPoints, response
     Yapp.request(
       'request'
-        url: '/tags/list'
+        url: '/api/v1/tags/'
         context: @
         successCallback: @renderIcons
-        data:
-          content: 'popular'
     )
 
   ###*
@@ -141,12 +139,12 @@ class Yapp.Map.MapView extends Marionette.ItemView
       console.log  collection, 'collection reset'
 
   ###*
-  # Fired when response by /tags/list/ successed
+  # Fired when response by /api/v1/tags/list/ successed
   # Show labels on left bottom corner on map
   # @event renderIcons
   ###
   renderIcons: (response) ->
-    icons = @iconTemplate icons: response
+    icons = @iconTemplate icons: response.filter (icon) -> icon.level is 0
     @$('.m-ico-group').html icons
     @$el.find('[data-toggle=tooltip]').tooltip()
 
