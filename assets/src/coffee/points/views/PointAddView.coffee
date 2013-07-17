@@ -422,7 +422,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   savePoint: ->
     Yapp.request(
       'request'
-        url: '/points/add'
+        url: Yapp.API_BASE_URL + '/api/v1/points/'
         context: @
         successCallback: @successSave
         type: 'POST'
@@ -452,6 +452,9 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   ###
   successSave: (response) ->
     model = new Yapp.Points.Point response[0]
+    model.id = response[0].id
+    model.set 'type_of_item', 'point'
     @collection.add model
+    @collection.trigger 'reset'
     Yapp.popup.close()
     console.log model, 'success'
