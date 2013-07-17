@@ -321,11 +321,11 @@ class ItemsList(PointsBaseView):
                 if len(search_res_sets_list) == 0:
                     search_res_sets = none_qs
                 else:
-                    search_res_sets = search_res_sets.all().filter(id__in = search_res_sets_list)
+                    search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
                 if len(search_res_routes_list) == 0:
                     search_res_routes = none_qs
                 else:
-                    search_res_routes = search_res_routes.all().filter(id__in = search_res_routes_list)
+                    search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
         t0 = time.time()
         all_items = QuerySetJoin(search_res_points.extra(select = {
