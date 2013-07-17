@@ -562,8 +562,8 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .remove-photo:hover{background-position:-647px -74px;}
 .complaint-photo{background-position:-679px -43px;}
 .complaint-photo:hover{background-position:-679px -74px;}
-.popup .item-photo{width:130px; height:130px; overflow:hidden; position:relative; float:left; margin:0 13px 13px 0; -moz-box-shadow:0 1px 2px #9f9f9f; -webkit-box-shadow:0 1px 2px #9f9f9f; box-shadow:0 1px 2px #9f9f9f}
-.load-photo{background-position:-466px -43px; position:relative; overflow:hidden; cursor:pointer; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
+.popup .item-photo{width:130px; height:130px; overflow:hidden; position:relative; float:left; margin:0 13px 13px 0; -moz-box-shadow:0 1px 2px #9f9f9f; -webkit-box-shadow:0 1px 2px #9f9f9f; box-shadow:0 1px 2px #9f9f9f; background: url(../images/ajax-loader.gif) no-repeat center;}
+.popup .load-photo{background-image:url(../images/sprite.png);background-position:-466px -43px; position:relative; overflow:hidden; cursor:pointer; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
 	.load-photo input[type=file]{font-size:130px; position:absolute; top:0; right:0; opacity:0; filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0); cursor:pointer}
 .photo-loading .load-status{position:absolute; width:104px; height:79px; text-align:center; background-position:-466px -199px; z-index:1; left:0; top:0; color:#666; padding:51px 0 0; text-transform:uppercase}
 	.photo-loading .load-status img{display:block; margin:0 auto 8px}
@@ -669,7 +669,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .p-gallery{margin:0 -18px -17px 0}
 .popup .p-gallery .item-photo{overflow:visible}
 .popup .p-gallery .item-photo.load-photo{overflow:hidden}
-.popup .p-gallery .item-photo.current{background-position:-461px -394px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; padding3px 3px 11px; margin-3px 10px 2px -3px}
+.popup .p-gallery .item-photo.current{background:none; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; padding3px 3px 11px; margin-3px 10px 2px -3px}
 .p-gallery .load-photo{width:130px; height:130px; overflow:hidden; position:relative; float:left; margin:0 13px 13px 0; -moz-box-shadow:0 1px 2px #9f9f9f; -webkit-box-shadow:0 1px 2px #9f9f9f; box-shadow:0 1px 2px #9f9f9f}
 	.p-gallery .hidden-content{clear:both}
 

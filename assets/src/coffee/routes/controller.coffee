@@ -25,14 +25,14 @@ class Yapp.Routes.Controller extends Marionette.Controller
   # The view for the routes showing function
   # @method showRoutes
   ###
-  showRoutes: ->
+  showRoute: ->
     Yapp.content.close()
     Yapp.popup.close()
     Yapp.Map.mapView.clear()
     routesView = new Yapp.Routes.RoutesView
       model: new Yapp.Routes.Route
     Yapp.routePanel.show routesView
-    if Yapp.Map.yandexmap
+    Yapp.Map.mapDeferred.then ->
       Yapp.Map.yandexmap.container.fitToViewport()
 
   ###*
@@ -62,6 +62,8 @@ class Yapp.Routes.Controller extends Marionette.Controller
   # @method editRoute
   ###
   editRoute: (id) ->
+    Yapp.Map.mapDeferred.then ->
+      Yapp.Map.yandexmap.container.fitToViewport()
     Yapp.content.close()
     Yapp.popup.close()
     Yapp.Map.mapView.clear()

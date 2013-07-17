@@ -847,10 +847,16 @@ class Route(View):
                                 'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
-                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
+                                           'tags': {'fields': ['id', 'name', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
-                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
+                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT,
+                                                    'relations':{
+                                                        'comments': {'fields': ['txt', 'created', 'author'],
+                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                },
+                                                    },
                                                     },
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
                                                         'extras':['reviewusersplus'],

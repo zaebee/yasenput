@@ -25,7 +25,7 @@ class Yapp.Routes.RouteDetailView extends Yapp.Common.PopupView
 
     pointId = parseInt @options.pointId, 10
     point = _.find @model.get('points'), (point) -> point.point.id is pointId
-    @activePoint = point or @model.get('points')[0].point
+    @activePoint = if point then point.point else @model.get('points')[0].point
 
   ###*
   # Required field for Marionette.View
@@ -33,7 +33,7 @@ class Yapp.Routes.RouteDetailView extends Yapp.Common.PopupView
   # @type Object
   # @default Templates.RouteDetailView
   ###
-  template: Templates.SetDetailView
+  template: Templates.RouteDetailView
 
   ###*
   # @property className
@@ -159,8 +159,8 @@ class Yapp.Routes.RouteDetailView extends Yapp.Common.PopupView
     else
       photoId = parseInt @options.photoId, 10
       photo = _.find @activePoint.imgs, (photo) -> photo.id is photoId
-      #photo = @activePoint.imgs[0]
-      photoId = 0
+      photo = @activePoint.imgs[0]
+      photoId = photo.id
 
     activePhoto = _.find @ui.allPhotos, (el) -> $(el).data('photo-id') is photoId
     $(activePhoto).addClass 'current'
@@ -193,8 +193,8 @@ class Yapp.Routes.RouteDetailView extends Yapp.Common.PopupView
     event.preventDefault()
     pointId = $(event.currentTarget).data 'id'
     point = _.find @model.get('points'), (point) -> point.point.id is pointId
-    @activePoint = point
-    @model.trigger('change')
+    @activePoint = point.point
+    @model.trigger 'change'
     delete @map
 
   ###*

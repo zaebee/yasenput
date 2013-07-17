@@ -27,8 +27,8 @@ class Yapp.Routes.Router extends Marionette.AppRouter
   # @property appRoutes
   ###
   appRoutes:
-    "routes": "showRoutes"
-    "routes/:id": "showRouteDetail"
-    "routes/:id/point/:id": "showRoutePhoto"
-    "routes/:id/point/:point_id/photo/:photo_id": "showRoutePhoto"
-    "routes/:id/edit": "editRoute"
+    "route/add": "showRoute"
+    "route/:id": "showRouteDetail"
+    "route/:id/point/:id": "showRoutePhoto"
+    "route/:id/point/:point_id/photo/:photo_id": "showRoutePhoto"
+    "route/:id/edit": "editRoute"

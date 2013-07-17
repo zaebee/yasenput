@@ -25,7 +25,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @search = Yapp.Common.headerView.search
     @collection = new Yapp.Points.PointCollection
     @model.collection = @collection
+
     _.each @model.get('points'), (el) =>
+      el.point.unid = el.point.id
       @collection.add new Yapp.Points.Point(el.point)
 
     @dropdownTemplate = Templates.RoutesDropdown
@@ -65,17 +67,18 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   modelEvents:
     'change': 'render'
 
-  setMap: ->
-    if !_.isEmpty @model.get('points')
-      @collection.trigger 'add'
-      _.each @collection.models, (point) =>
-        @ui.addPathPlace.append """
-          <li data-point-id="#{point.get('id')}">
-            <h4>#{point.get('name')}</h4>
-            <p>#{point.get('address')}</p>
-            <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
-          </li>"""
-      @$('.btn-add-path').click()
+  initBar: ->
+    Yapp.Map.mapDeferred.then =>
+      if !_.isEmpty @model.get('points')
+        @collection.each (point) =>
+          @ui.addPathPlace.append """
+            <li data-point-id="#{point.get('id')}">
+              <h4>#{point.get('name')}</h4>
+              <p>#{point.get('address')}</p>
+              <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
+            </li>"""
+        @collection.trigger 'add'
+        @$('.btn-add-path').click()
 
   ###*
   # Fired when region is showed
@@ -84,11 +87,12 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   onShow: ->
     $('body').addClass 'page-map'
     $(window).on 'resize', ->
-      if Yapp.Map.yandexmap
+      Yapp.Map.mapDeferred.then ->
         Yapp.Map.yandexmap.container.fitToViewport()
     $('#header').hide()
     $('#panel-add-path').show()
     @_dragPoints()
+    @initBar()
 
   ###*
   # After close method of the view.
@@ -97,7 +101,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   onClose: ->
     $('body').removeClass 'page-map'
     $(window).off 'resize', ->
-      if Yapp.Map.yandexmap
+      Yapp.Map.mapDeferred.then ->
         Yapp.Map.yandexmap.container.fitToViewport()
     $('#header').show()
     $('#panel-add-path').hide()
