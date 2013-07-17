@@ -608,7 +608,6 @@ class LikePoint(PointsBaseView):
                     point.likeusers.remove(person)
                 else:
                     point.likeusers.add(person)
-                point.save()
                 if id_point:
                     point = MainModels.PointsByUser.objects.filter(id=pk).extra(**self.getPointsByUserSelect(request))
                 else:

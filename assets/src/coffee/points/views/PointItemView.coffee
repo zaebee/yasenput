@@ -120,6 +120,7 @@ class Yapp.Points.PointItemView extends Marionette.ItemView
     $target = $(event.currentTarget)
     addToCollectionView = new Yapp.Points.AddToCollectionView model: @model
     Yapp.popup.show addToCollectionView
+    Yapp.Common.router.trigger 'route'
 
   toggleYpInfo: (event) ->
     @ui.ypInfo.toggle()
