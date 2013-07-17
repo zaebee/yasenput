@@ -528,9 +528,6 @@ class PointAdd(PointsBaseView):
             for point_t in set_t.points.all():
                 if point_t.id == point[0].id:
                     sets_l.append(set_t.id)
-        f = open('sets_in_det.txt','w')
-        f.write(str(sets_l))
-        f.close()
         if request.user.is_authenticated():
             if request.user in point[0].likeusers.all():
                 isliked = 1
