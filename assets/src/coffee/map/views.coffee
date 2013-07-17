@@ -93,9 +93,12 @@ class Yapp.Map.MapView extends Marionette.ItemView
     geoCoder = Yapp.Map.geocode center,
       results:1
       json:true
-    geoCoder.then((result) =>
+    geoCoder.then (result) =>
       geoObject = result.GeoObjectCollection.featureMember[0].GeoObject
       geoMetaData = geoObject.metaDataProperty.GeocoderMetaData
+      leftCorner = @map.getBounds()[0].reverse().join ' '
+      rightCorner = @map.getBounds()[1].reverse().join ' '
+      searchModels = Yapp.settings.models
 
       country = geoMetaData.AddressDetails.Country
       region = country.AdministrativeArea
@@ -106,11 +109,14 @@ class Yapp.Map.MapView extends Marionette.ItemView
         else if region and region.SubAdministrativeArea then region.SubAdministrativeArea
         else false
 
-      @user.set location:
-        country: country.CountryName
-        region: if region then region.AdministrativeAreaName else ''
-        city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
-    )
+      @user.set
+        searchModels: searchModels
+        location:
+          country: country.CountryName
+          region: if region then region.AdministrativeAreaName else ''
+          city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
+          leftCorner: leftCorner
+          rightCorner: rightCorner
     console.log 'map update'
     Yapp.Common.headerView.submitSearch()
 

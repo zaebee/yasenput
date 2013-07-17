@@ -54,10 +54,15 @@ Yapp.module 'Map',
               zoom: 12
             )
             #Yapp.updateSettings coords
-            Yapp.user.set location: ymaps.geolocation
+            leftCorner = map.getBounds()[0].reverse().join ' '
+            rightCorner = map.getBounds()[1].reverse().join ' '
+            location = _.extend ymaps.geolocation,
+              leftCorner: leftCorner
+              rightCorner: rightCorner
+
+            Yapp.user.set
+              location: location
             map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
-            pointCollection = new ymaps.GeoObjectCollection()
-            map.geoObjects.add pointCollection
             @yandexmap = map
             @trigger 'load:yandexmap', @yandexmap
 

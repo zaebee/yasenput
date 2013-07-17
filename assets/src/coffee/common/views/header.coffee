@@ -30,6 +30,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @default Templates.HeaderView
   ###
   template: Templates.HeaderView
+  className: 'wrap'
 
   ###*
   # Ui emenents for view
