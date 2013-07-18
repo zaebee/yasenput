@@ -46,7 +46,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
     @iconTemplate = Templates.IconTemplate
     _.bindAll @, 'updatePointCollection'
     @listenTo Yapp.Map, 'load:yandexmap', @setMap
-    @listenTo Yapp.Points, 'update:collection', @updatePointCollection
+    #@listenTo Yapp.Points, 'update:collection', @updatePointCollection
 
     ## need for creating clusterers filtered by tag
     $.get('/api/v1/map_yapens/').success (response) =>
@@ -91,13 +91,18 @@ class Yapp.Map.MapView extends Marionette.ItemView
   changeMap: (event) ->
     center = @map.getCenter()
     geoCoder = Yapp.Map.geocode center,
-      results:1
+      results:10
       json:true
     geoCoder.then (result) =>
-      geoObject = result.GeoObjectCollection.featureMember[0].GeoObject
+      match = _.find result.GeoObjectCollection.featureMember, (el) ->
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'locality' or
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'area'
+
+      geoObject = match.GeoObject
       geoMetaData = geoObject.metaDataProperty.GeocoderMetaData
-      leftCorner = @map.getBounds()[0].reverse().join ' '
-      rightCorner = @map.getBounds()[1].reverse().join ' '
+      leftCorner = @map.getBounds()[0].reverse()
+      rightCorner = @map.getBounds()[1].reverse()
+
       searchModels = Yapp.settings.models
 
       country = geoMetaData.AddressDetails.Country
@@ -109,16 +114,24 @@ class Yapp.Map.MapView extends Marionette.ItemView
         else if region and region.SubAdministrativeArea then region.SubAdministrativeArea
         else false
 
+      ## set user location need for header labels
       @user.set
         searchModels: searchModels
         location:
           country: country.CountryName
           region: if region then region.AdministrativeAreaName else ''
           city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
-          leftCorner: leftCorner
-          rightCorner: rightCorner
-    console.log 'map update'
-    Yapp.Common.headerView.submitSearch()
+          leftCorner: leftCorner.join ' '
+          rightCorner: rightCorner.join ' '
+
+      ## set Yapp.settings need for map_yapens server request
+      coordLeft = _.zipObject ['ln', 'lt'], _(leftCorner).map((el) -> parseFloat(el)).value()
+      coordRight= _.zipObject ['ln', 'lt'], _(rightCorner).map((el) -> parseFloat(el)).value()
+      Yapp.updateSettings
+        coord_left: JSON.stringify coordLeft
+        coord_right: JSON.stringify coordRight
+      console.log 'map update'
+      @getMapYapens()
 
   ###*
   # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
@@ -132,19 +145,18 @@ class Yapp.Map.MapView extends Marionette.ItemView
         @clusterer = new ymaps.Clusterer
           clusterIcons: Yapp.Map.clusterIcons
         Yapp.Map.yandexmap.geoObjects.add @clusterer
-      collectionFiltered = _.filter collection.models, (point) -> point.get('type_of_item') is "point"
-      @boardPlacemarks = _.map collectionFiltered, (point) ->
-        tag = _(point.get('tags')).find (tag) -> tag.icons isnt ''
-        new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-          id: 'map-point' + point.get('id')
-          point: point.toJSON()
+      #collectionFiltered = _.filter collection.models, (point) -> point.get('type_of_item') is "point"
+      @boardPlacemarks = _.map collection, (point) ->
+        tag = _(point.tags).find (tag) -> tag.icons isnt ''
+        new ymaps.Placemark [point.latitude, point.longitude], {
+          id: 'map-point' + point.id
+          point: point
           tag: tag
         }, {
           iconLayout: Yapp.Map.pointIconLayout
         }
       @clusterer.add @boardPlacemarks
       @clusterer.refresh()
-      console.log  collection, 'collection reset'
 
   ###*
   # Fired when response by /api/v1/tags/list/ successed
@@ -236,3 +248,14 @@ class Yapp.Map.MapView extends Marionette.ItemView
       @clusterer.removeAll()
       @placemarks = []
       @boardPlacemarks = []
+
+  getMapYapens: ->
+    Yapp.request(
+      'request'
+        url: Yapp.API_BASE_URL + '/api/v1/map_yapens/'
+        context: @
+        successCallback: @updatePointCollection
+        data:
+          coord_left: Yapp.settings.coord_left
+          coord_right: Yapp.settings.coord_right
+    )

@@ -68,7 +68,7 @@ Yapp.module 'Map',
 
             @pointIconLayout = ymaps.templateLayoutFactory.createClass(
               """
-              <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
+              <div class="placemark for-add-place $[properties.class]" data-point-id="$[properties.point.id]" id="placemark-$[properties.point.id]">
                 <!--<img src="/media/$[properties.tag.icons]">-->
                 <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
 
@@ -76,7 +76,7 @@ Yapp.module 'Map',
                   <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
                 </a>
 
-                <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
+                <div class="name-place" data-point-id="$[properties.point.id]">$[properties.point.name]</div>
               </div>
               """,
               ###*
@@ -115,6 +115,7 @@ Yapp.module 'Map',
               onClickPlacemark: (event) ->
                 event.preventDefault()
                 event.stopPropagation()
+                $target = $(event.currentTarget)
                 if $(@).hasClass 'hover'
                   me = $(@)
                   $('.name-place', @).stop().animate width: 0, 150, ->
@@ -138,9 +139,10 @@ Yapp.module 'Map',
               ###
               onClickNamePlace: (event) ->
                 $target = $(event.currentTarget)
-                pointId = $target.data 'id'
-                Yapp.vent.trigger 'click:nameplacemark', pointId
-                Yapp.Common.router.trigger 'route'
+                pointId = $target.data 'point-id'
+                if pointId
+                  Yapp.vent.trigger 'click:nameplacemark', pointId
+                  Yapp.Common.router.trigger 'route'
             )
             @mapDeferred.resolve()
           )
