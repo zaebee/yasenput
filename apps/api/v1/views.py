@@ -901,7 +901,7 @@ class AddReviewToPoint(View):
         author = MainModels.Person.objects.get(username=request.user)
         if point_reviews.filter(author=author):
             last_review = point_reviews.filter(author = author).order_by('-updated')[0]
-            if datetime.datetime.utcnow().replace(tzinfo=utc) - last_review.updated < timedelta(days=1):
+            if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
                 review = last_review
                 review.review = review_text
                 review.rating = rating
