@@ -387,7 +387,7 @@ class MapItemsList(PointsBaseView):
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
-            search_res_points = search_res_points_list[0:100]
+            search_res_points = search_res_points_list.order_by('ypi')[0:100]
 
 
         YpJson = YpSerialiser()
