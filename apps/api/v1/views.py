@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 import time
 import ast
 from django.http import QueryDict
+from django.utils.timezone import utc
 
 import logging
 logger = logging.getLogger(__name__)
@@ -900,7 +901,7 @@ class AddReviewToPoint(View):
         author = MainModels.Person.objects.get(username=request.user)
         if point_reviews.filter(author=author):
             last_review = point_reviews.filter(author = author).order_by('-updated')[0]
-            if datetime.now() - last_review.updated < timedelta(days=1):
+            if datetime.datetime.utcnow().replace(tzinfo=utc) - last_review.updated < timedelta(days=1):
                 review = last_review
                 review.review = review_text
                 review.rating = rating
