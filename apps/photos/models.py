@@ -58,5 +58,9 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, 'x560')
         return im.url
 
+    def thumbnail560_width(self):
+        im = im = get_thumbnail(self.img, 'x560')
+        return im.width
+
     def img_url(self):
         return self.img.url

@@ -25,13 +25,8 @@
     </span>
 
     <span>
-      <span class="ico-comment-small"></span>
-      {{comments_count}}
-    </span>
-
-    <span>
       <span class="ico-star-small"></span>
-      {{collections_count}}
+      {{sets.length}}
     </span>
 
     <span>
@@ -45,6 +40,7 @@
   <ul class="p-tabs">
     <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
     <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
+    <li><a href="#tab-reviews" data-toggle="tab">Отзывы</a></li>
     <!--
     <li><a href="#tab-desc" data-toggle="tab">О месте</a></li>
     <li><a href="#tab-events" data-toggle="tab">События</a></li>
@@ -104,7 +100,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- end #tab-photo -->
 
     <div id="tab-map" class="tab-pane">
       <div class="map">
@@ -156,62 +152,59 @@
         </div>
 
       </div>
-    </div>
+    </div><!-- end #tab-map -->
 
-    <!--
-    <div id="tab-desc" class="tab-pane">
-      <div class="tab-desc">
-        <div class="clearfix place-features-group">
-          {{#if wifi}}
-          <label class="custom-checkbox checked">
-            <input type="checkbox" value="" checked>
-            Wi-Fi
-          </label>
-          {{/if}}
+    <div id="tab-reviews" class="tab-pane">
+      <div class="bp-comments bp-comments_review">
+        <div class="toggle-block a-toggle-down">
 
-          {{#if parking}}
-          <label class="custom-checkbox">
-            <input type="checkbox" value="">
-            Парковка
-          </label>
-          {{/if}}
+          <div class="add-comment">
+            <form id="reviewForm" action="#">
+              <div class="ac-block">
+                <img src="/media/{{user.avatar}}" alt="" width="29" height="30" class="avatar" data-author="{{user.first_name}} {{user.last_name}}">
 
-          {{#if invalid}}
-          <label class="custom-checkbox">
-            <input type="checkbox" value="">
-            Оборудование для инвалидов
-          </label>
-          {{/if}}
-        </div>
-
-        <div class="mode">
-          <h4 class="title-block">
-            <a href="#" class="a-remove-mode" title="Удалить" data-toggle="tooltip"></a>
-            <a href="#" class="a-edit-mode" title="Редактировать" data-toggle="tooltip"></a>
-            Режим работы
-          </h4>
-
-          <textarea rows="7" cols="60" id="mode-field" readonly>
-          Понедельник - с 8:00 до 17:00
-          Вторник - с 8:00 до 17:00
-          Среда - с 8:00 до 17:00
-          Четверг - с 8:00 до 17:00
-          Пятница - с 8:00 до 17:00
-          Суббота - выходной
-          Воскресение - выходной</textarea>
-        </div>
-
-        <div class="add-new-section">
-          <h4 class="title-block">Создайте новый раздел</h4>
-
-          <div class="add-new-section-body">
-            <input type="text" placeholder="Введите название, например, режим работы..">
-            <textarea cols="50" rows="4" placeholder="Введите подробное описание..."></textarea>
+                <div class="ac-body">
+                  <textarea name="review" placeholder="Оставьте свой отзыв..."></textarea>
+                </div>
+              </div>
+              <input type="submit" class="button button_green" value="Добавить">
+              <div class="vote">
+                <label class="vote__label">Оцените место:</label>
+                <div class="vote__raiting js-vote">
+                  <input type="hidden" name="vote-id" value="1"/>
+                </div>
+              </div>
+            </form>
           </div>
+
+
+          {{#each reviews}}
+          <div  class="item-comment item-comment_green">
+            <img src="/media/{{author.avatar}}" alt="" width="29" height="30" class="avatar">
+            <div class="comment-body">
+              <div class="comment-author">{{author.first_name}} {{author.last_name}}</div>
+              <div class="comment-date">Оценил(а) место: {{rating}}<span class="ico-vote-small"></span> {{dateFormat updated}}</div>
+              {{#if review}}
+              <p>{{safe review}}</p>
+              {{/if}}
+            </div>
+
+            <div class="action">
+              {{#ifEquals author.id ../user.id}}
+              <!--<a data-toggle="tooltip" title="Удалить&nbsp;отзыв" data-placement="title" data-content="Вы уверены, что хотите удалить отзыв?" href="#" class="a-remove-comment"></a>-->
+              {{else}}
+                <a data-toggle="tooltip" title="Пожаловаться&nbsp;на&nbsp;отзыв" data-placement="bottom" href="#" class="a-complaint-comment"></a>
+              {{/ifEquals}}
+            </div>
+          </div>
+          {{/each}}
+
+          <div class="hidden-content"></div>
+          <a href="#" class="a-toggle">все отзывы <span>&darr;</span></a>
+
         </div>
-      </div>
-    </div>
-    -->
+      </div><!-- end .bp-comments -->
+    </div><!-- end #tab-reviews -->
   </div>
 
   <div class="tabs-content p-common-content">
@@ -240,7 +233,7 @@
   {{/ifEquals}}
 
   <div class="basic-icons">
-    <a href="#" class="a-like {{#if isliked}}marked{{/if}}" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></a>
+    <span href="#" class="a-like {{#if isliked}}marked{{/if}}" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></span>
     <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться&nbsp;на&nbsp;место" data-toggle="tooltip"></a>
   </div>
 

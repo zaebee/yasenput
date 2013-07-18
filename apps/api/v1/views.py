@@ -25,7 +25,7 @@ import random
 import json
 from pymorphy import get_morph
 from django.db import connection
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import ast
 from django.http import QueryDict
@@ -69,7 +69,7 @@ class PointsBaseView(View):
                                                                   },
                                                      'limit': LIMITS.POINTS_LIST.IMAGES_COUNT
                                                     },
-                                           'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                           'reviews': {'fields': ['id', 'review', 'rating', 'author', 'updated'],
                                                        'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                                                },
                                                        'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
@@ -79,16 +79,18 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi'],
-                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus',],
+                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
-                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'thumbnail207_height'],
+                                           'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
-                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id'],
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
+                                                        'extras':['reviewusersplus'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
                                                                                 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
@@ -249,6 +251,7 @@ class ItemsList(PointsBaseView):
         sets = "set"
         models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
+        none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
         if 'points' in models:
@@ -257,11 +260,11 @@ class ItemsList(PointsBaseView):
             self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         if 'sets' in models:
             t0 = time.time()
-            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', '')).extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
             self.log.info('Sets search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         if 'routes' in models:
             t0 = time.time()
-            search_res_routes = MainModels.Routes.search.query(params.get('s','')).extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+            search_res_routes = MainModels.Routes.search.query(params.get('s',''))
             self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         #search_res_sets_ex = search_res_sets
 
@@ -305,32 +308,35 @@ class ItemsList(PointsBaseView):
             search_res_sets_list = []
 
             for collection in search_res_sets.all():
-                trigger = 0
-                for point in collection.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_sets_list.append(collection.id)
+                points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if len(points_l) > 0:
+                    search_res_sets_list.append(int(collection.id))
+                
             search_res_routes_list = []
             for route in search_res_routes.all():
-                trigger = 0
-                for point in route.points.all():
-                    if (point.latitude >= lt_left) & (point.latitude <= lt_right) & (point.longitude >= ln_left) & (point.longitude <= ln_right):
-                        trigger = 1
-                if trigger == 1:
-                    search_res_routes_list.append(route.id)
-            t0 = time.time()
-            if (Count(search_res_points_list) > 0) | (len(search_res_sets_list) > 0):
-                search_res_sets = search_res_sets.filter(id__in = search_res_sets_list)
-                search_res_routes = search_res_routes.filter(id__in = search_res_routes_list)
+                points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+                if len(points_l) > 0:
+                    search_res_routes_list.append(int(route.id))
+            
+            if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
+                if len(search_res_sets_list) == 0:
+                    search_res_sets = none_qs
+                else:
+                    search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
+                if len(search_res_routes_list) == 0:
+                    search_res_routes = none_qs
+                else:
+                    search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
                 search_res_points = search_res_points_list
-            self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
         t0 = time.time()
+        search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
+        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+        
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
-
+                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating>5',
+                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
+                'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
                  }), search_res_sets, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
@@ -492,6 +498,18 @@ class PointAdd(PointsBaseView):
                 person = MainModels.Person.objects.get(username=request.user)
                 point.author = person
                 point.save()
+
+                images = params.getlist('imgs[]')
+                if images:
+                    for image in images:
+                        try:
+                            img = PhotosModels.Photos.objects.get(id=image)
+                            point.imgs.add(img)
+                            originalPoint.imgs.add(img)
+                        except:
+                            message = "ошибка добавления изображения"
+                            pass
+
                 tags = params.getlist("tags[]")
                 if tags:
                     for tag in tags:
@@ -505,8 +523,72 @@ class PointAdd(PointsBaseView):
                         point.tags.add(new_tag)
 
                     point.save()
-                
-                return PointAddByUser().post(request, id=point.id)
+                id_l = point.id
+                point = MainModels.Points.objects.all().filter(id = id_l)
+                YpJson = YpSerialiser()
+                t0 = time.time()
+                sets_list = CollectionsModels.Collections.objects.all()
+                self.log.info('Get collections for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                sets_l = []
+                #TO DO не перебором!!!
+                t0 = time.time()
+                for set_t in sets_list.all():
+                    for point_t in set_t.points.all():
+                        if point_t.id == point[0].id:
+                            sets_l.append(set_t.id)
+                if request.user.is_authenticated():
+                    if request.user in point[0].likeusers.all():
+                        isliked = 1
+                    else:
+                        isliked = 0
+                else: 
+                    isliked = 0
+
+                t0 = time.time()
+                sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
+                imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
+                'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
+                'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
+                'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+                self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+
+                author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+                self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                t0 = time.time()
+                tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
+                                                            'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
+                self.log.info('Serialize tags for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                t0 = time.time()
+                reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
+                                                               'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                                                       },
+                                                               'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                              }})
+                self.log.info('Serialize reviews for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+
+
+
+                return JsonHTTPResponse({
+                 'id':int(id_l),
+                 'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
+                 'name': point[0].name, 
+                 'description':point[0].description,
+                 'latitude':str(point[0].latitude), 
+                 'longitude': str(point[0].longitude),
+                 'address':point[0].address,
+                 'likes_count': point[0].likes_count,
+                 'invalid':point[0].invalid, 
+                 'wifi': point[0].wifi,
+                 'parking':point[0].parking,
+                 'imgs':json.loads(imgs)[0]['imgs'],
+                 'author':json.loads(author)[0]['author'],
+                 'tags': json.loads(tags)[0]['tags'],
+                 'reviews': json.loads(reviews)[0]['reviews'],
+                 'isliked': int(isliked),
+                 'reviewusersplus': 0,
+                 'reviewusersminus': 0,
+                 'sets_count': 0})
+
             else:
                 e = form.errors
                 for er in e:
@@ -536,9 +618,7 @@ class PointAdd(PointsBaseView):
         for set_t in sets_list.all():
             for point_t in set_t.points.all():
                 if point_t.id == point[0].id:
-                    if set_t not in sets_l:
-                        sets_l.append(set_t)
-        self.log.info('Set collections for point as attribute complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
+                    sets_l.append(set_t.id)
         if request.user.is_authenticated():
             if request.user in point[0].likeusers.all():
                 isliked = 1
@@ -546,13 +626,15 @@ class PointAdd(PointsBaseView):
                 isliked = 0
         else: 
             isliked = 0
+
         t0 = time.time()
-        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
-        'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+        sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
+        imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'], 
+        'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']}, 
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
-        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
+        'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-        t0 = time.time()
+
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
         self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
@@ -569,7 +651,7 @@ class PointAdd(PointsBaseView):
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
          'id':int(id),
-         'sets':json.loads(self.getSerializeCollections(sets_l[:3])),
+         'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
          'name': point[0].name, 
          'description':point[0].description,
          'latitude':str(point[0].latitude), 
@@ -606,7 +688,6 @@ class LikePoint(PointsBaseView):
                     point.likeusers.remove(person)
                 else:
                     point.likeusers.add(person)
-                point.save()
                 if id_point:
                     point = MainModels.PointsByUser.objects.filter(id=pk).extra(**self.getPointsByUserSelect(request))
                 else:
@@ -760,8 +841,26 @@ class Route(View):
                                       })
             positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
             points = YpJson.serialize(positions, fields=['position', 'point'],
-                                      relations={'point': {'fields': ['id', 'name', 'latitude', 'longitude', 'address']}}
+                                      relations={'point': {
+                                        'fields':['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                'extras':['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
+                                'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                         'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'tags': {'fields': ['id', 'name', 'level', 'icons', 'style', 'parent']},
+
+                                           'imgs': {'extras': ['thumbnail560', 'thumbnail104x104', 'thumbnail560_width'],
+                                                    'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
+                                                    },
+                                           
+                                           
+
+                                           }
+
+                                      }}
                                      )
+
+
             result = {
                 'id':route.id,
                 'name':route.name,
@@ -781,11 +880,10 @@ class RouteLike(View):
         id = kwargs.get('id', None)
         route = MainModels.Routes.objects.get(id=id)
 
-        if MainModels.Person.objects.get(username=request.user) in route.likeusers:
-            route.likeusers.remove(MainModels.Person.objects.get(username=request.user))
+        if request.user.person in route.likeusers.all():
+            route.likeusers.remove(request.user.person)
         else:
-            route.likeusers.add(MainModels.Person.objects.get(username=request.user))
-        point.save()
+            route.likeusers.add(request.user.person)
         return JsonHTTPResponse('like')
 
 class AddReviewToPoint(View):
@@ -799,16 +897,26 @@ class AddReviewToPoint(View):
         review_text = params.get('review')
         rating = params.get('rating')
         author = MainModels.Person.objects.get(username=request.user)
-        if point_reviews.filter(author = author):
-            last_review = point_reviews.objects.filter(author = author).order_by('-updated')[0]
-            if datetime.now() - last_review.updated < datetime.timedelta(days=1):
+        if point_reviews.filter(author=author):
+            last_review = point_reviews.filter(author = author).order_by('-updated')[0]
+            if datetime.now() - last_review.updated < timedelta(days=1):
                 review = last_review
                 review.review = review_text
+                review.rating = rating
             else:
-                review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+                review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
         else:
-            review = ReviewsModels.Reviews.objects.create(review = review_text, rating = int(rating), author = author)
+            review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
         review.save()
         point.reviews.add(review)
 
         return JsonHTTPResponse('review added')
+
+class GetTags(View):
+    http_method_names = ('get')
+
+    def get(self, request):
+        tags_l = TagsModels.Tags.objects.all()
+        YpJson = YpSerialiser()
+        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
+        return JsonHTTPResponse(tags)

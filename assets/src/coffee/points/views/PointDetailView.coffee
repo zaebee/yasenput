@@ -60,6 +60,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click .item-comment .a-yes': 'removeComment'
     'click .item-comment .a-no, .item-comment .p-close': 'hideRemoveCommentPopover'
     'submit #commentForm': 'submitCommentForm'
+    'submit #reviewForm': 'submitReviewForm'
 
     'click .bp-photo .a-like': 'likePhoto'
     'change #addPhotoForm input:file': 'addPhoto'
@@ -68,8 +69,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     'click a[href=#tab-map]': 'renderMap'
     'click .a-add-collection': 'addCollection'
     'click .a-complaint-comment': 'complaintComment'
-    #'blur #commentForm textarea': 'unfocusCommentTextarea'
-    #'touchend #big-photo > .bp-photo': 'nextPhoto'
 
   ###*
   # Passed additional user data, splited description.
@@ -89,11 +88,16 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
     @photoSlider = @ui.placePhotos.data 'slider'
     @showPhoto()
-    @photoSlider.init(
+    @photoSlider.init
       root: @ui.placePhotos
       visible: 4
-    )
     @_renderSocial()
+    @$('.js-vote').rating
+      fx: 'full'
+      image: '/static/images/rating.png'
+      loader: '/static/images/ajax-loader3.gif'
+      stars: 10
+      click: (rating) => @rating = rating
 
   ###*
   # Show social buttons on right sidebar
@@ -199,16 +203,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     $target.parent().addClass 'focus'
 
-  ###*
-  # TODO
-  # @method unfocusCommentTextarea
-  ###
-  unfocusCommentTextarea: (event) ->
-    event.preventDefault()
-    $target = $(event.currentTarget)
-    $target.parent().removeClass 'focus'
-    $target.val ''
-
   addCollection: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
@@ -250,10 +244,23 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   submitCommentForm: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    txt = @$('textarea').val()
+    txt = @$('textarea[name=comment]').val()
     if txt
-      photoId = @$('textarea').data 'photo-id'
+      photoId = @$('textarea[name=comment]').data 'photo-id'
       @model.addCommentPhoto photoId, txt, @successAddComment, @
+
+  ###*
+  # TODO
+  # @method submitReviewForm
+  ###
+  submitReviewForm: (event) ->
+    if event
+      event.preventDefault()
+    $target = $(event.currentTarget)
+    txt = @$('textarea[name=review]').val() or ''
+    if @rating
+      @$('textarea[name=review]').css 'background', 'url(/static/images/ajax-loader.gif) no-repeat center'
+      @model.addReview txt, @rating, @successAddReview, @
 
   ###*
   # TODO
@@ -397,3 +404,12 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     @model.set 'imgs', imgs
     @options.photoId = imgs[0].id
     @model.trigger 'change'
+
+  ###*
+  # Callback for success response from server after removing photo
+  # @method successRemovePhoto
+  ###
+  successAddReview: (response) ->
+    @model.fetch
+      success: =>
+        @$('a[href=#tab-reviews]').click()

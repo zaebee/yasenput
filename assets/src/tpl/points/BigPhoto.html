@@ -1,5 +1,5 @@
 <div class="bp-photo" data-photo-id="{{id}}">
-  <img src="{{thumbnail560}}" alt="" class="main-photo">
+  <img src="{{thumbnail560}}" alt="" class="main-photo" height="">
 
   <div class="bp-add-like">
     <img src="/media/{{author.avatar}}" alt="" width="22" height="22" class="avatar">
@@ -44,7 +44,7 @@
           <img src="/media/{{user.avatar}}" alt="" width="29" height="30" class="avatar">
           <div class="ac-body">
             <div class="toggle-area">
-              <textarea data-photo-id="{{id}}" rows="3" cols="40" placeholder="Комментировать"></textarea>
+              <textarea name="comment" data-photo-id="{{id}}" rows="3" cols="40" placeholder="Комментировать"></textarea>
               <input type="submit" value="">
             </div>
           </div>

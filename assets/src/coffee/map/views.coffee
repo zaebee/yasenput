@@ -53,11 +53,9 @@ class Yapp.Map.MapView extends Marionette.ItemView
       @pointsByTag = _.partial @_filteredPoints, response
     Yapp.request(
       'request'
-        url: '/tags/list'
+        url: Yapp.API_BASE_URL + '/api/v1/tags/'
         context: @
         successCallback: @renderIcons
-        data:
-          content: 'popular'
     )
 
   ###*
@@ -95,9 +93,12 @@ class Yapp.Map.MapView extends Marionette.ItemView
     geoCoder = Yapp.Map.geocode center,
       results:1
       json:true
-    geoCoder.then((result) =>
+    geoCoder.then (result) =>
       geoObject = result.GeoObjectCollection.featureMember[0].GeoObject
       geoMetaData = geoObject.metaDataProperty.GeocoderMetaData
+      leftCorner = @map.getBounds()[0].reverse().join ' '
+      rightCorner = @map.getBounds()[1].reverse().join ' '
+      searchModels = Yapp.settings.models
 
       country = geoMetaData.AddressDetails.Country
       region = country.AdministrativeArea
@@ -108,30 +109,57 @@ class Yapp.Map.MapView extends Marionette.ItemView
         else if region and region.SubAdministrativeArea then region.SubAdministrativeArea
         else false
 
-      @user.set location:
-        country: country.CountryName
-        region: if region then region.AdministrativeAreaName else ''
-        city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
-    )
+      @user.set
+        searchModels: searchModels
+        location:
+          country: country.CountryName
+          region: if region then region.AdministrativeAreaName else ''
+          city: if locality then locality.LocalityName or locality.SubAdministrativeAreaName ## else geoObject.name
+          leftCorner: leftCorner
+          rightCorner: rightCorner
+    console.log 'map update'
+    Yapp.Common.headerView.submitSearch()
 
   ###*
   # Fired when pointCollection reset. Publisher of this event belong in Yapp.Points.PointListView onShow method
   # @event updatePointCollection
   ###
   updatePointCollection: (collection) ->
-    console.log  collection, 'collection reset'
+    Yapp.Map.mapDeferred.then =>
+      if @clusterer
+        @clusterer.remove @boardPlacemarks
+      else
+        @clusterer = new ymaps.Clusterer
+          clusterIcons: Yapp.Map.clusterIcons
+        Yapp.Map.yandexmap.geoObjects.add @clusterer
+      collectionFiltered = _.filter collection.models, (point) -> point.get('type_of_item') is "point"
+      @boardPlacemarks = _.map collectionFiltered, (point) ->
+        tag = _(point.get('tags')).find (tag) -> tag.icons isnt ''
+        new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+          id: 'map-point' + point.get('id')
+          point: point.toJSON()
+          tag: tag
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        }
+      @clusterer.add @boardPlacemarks
+      @clusterer.refresh()
+      console.log  collection, 'collection reset'
 
   ###*
-  # TODO
+  # Fired when response by /api/v1/tags/list/ successed
+  # Show labels on left bottom corner on map
   # @event renderIcons
   ###
   renderIcons: (response) ->
-    icons = @iconTemplate icons: response
+    icons = @iconTemplate icons: response.filter (icon) -> icon.level is 0
     @$('.m-ico-group').html icons
     @$el.find('[data-toggle=tooltip]').tooltip()
 
   ###*
-  # TODO
+  # Filtered points by tag ids
+  # @param {Array} points Point list for filtering
+  # @param {Array} tagIds Tag list that need belong to points
   # @method _filteredPoints
   # @private
   ###
@@ -144,7 +172,8 @@ class Yapp.Map.MapView extends Marionette.ItemView
     ).value()
 
   ###*
-  # TODO
+  # Biild ymaps.Placemarks for passed tag ids
+  # @param {Array} tagIds Tag list that need belong to points
   # @method getPlaceMarks
   ###
   getPlaceMarks: (tagIds) ->
@@ -165,14 +194,22 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   createCluster: (tagIds) ->
     if @clusterer
-      @clusterer.removeAll()
+      @clusterer.remove @diff
     else
       @clusterer = new ymaps.Clusterer
         clusterIcons: Yapp.Map.clusterIcons
       Yapp.Map.yandexmap.geoObjects.add @clusterer
 
     @placemarks = @getPlaceMarks tagIds
-    @clusterer.add @placemarks
+    ## get difference placemarks between boardPlacemarks and tags placemarks
+    @diff = _(@placemarks).filter((mark) =>
+      !_(@boardPlacemarks).map((el) =>
+        el.properties.getAll()
+      ).find(
+        id:mark.properties.get('id')
+      )
+    ).value()
+    @clusterer.add @diff
     @clusterer.refresh()
 
   ###*
@@ -189,3 +226,13 @@ class Yapp.Map.MapView extends Marionette.ItemView
     $activeTags = @$('.m-ico-group a.active').children()
     tagIds = _.map $activeTags, (tag) -> $(tag).data 'id'
     @createCluster tagIds
+
+  ###*
+  # Remove placemarks from map
+  # @method clear
+  ###
+  clear: ->
+    if @clusterer
+      @clusterer.removeAll()
+      @placemarks = []
+      @boardPlacemarks = []

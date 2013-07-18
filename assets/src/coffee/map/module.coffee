@@ -29,7 +29,6 @@ Yapp.module 'Map',
           size: [59, 59]
           offset: [-29, -29]
         }]
-
       dfd = $.Deferred()
       ## ymaps wrapper for emulate geocode deferred behavior if ymaps is undefined
       @geocode = (request, options) ->
@@ -37,105 +36,115 @@ Yapp.module 'Map',
           ymaps.geocode request, options
         else
           dfd
-
       ## ymaps wrapper for emulate route deferred behavior if ymaps is undefined
       @route = (feature, options) ->
         if window.ymaps isnt undefined
           ymaps.route feature, options
         else
           dfd
-
+      @mapDeferred = $.Deferred()
       # getting ya map script and binding it on #mainmap dom object
       $.getScript Yapp.YA_MAP_URL, =>
-        ymaps.ready( =>
-          dfd.resolve()
-          console.log 'Init Yandex map'
-          map = new ymaps.Map 'mainmap', (
-            center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
-            zoom: 12
-          )
-          #Yapp.updateSettings coords
-          Yapp.user.set location: ymaps.geolocation
-          map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
-          pointCollection = new ymaps.GeoObjectCollection()
-          map.geoObjects.add pointCollection
-          @yandexmap = map
-          @trigger 'load:yandexmap', @yandexmap
+        @mapDeferred.promise(
+          ymaps.ready( =>
+            dfd.resolve()
+            console.log 'Init Yandex map'
+            map = new ymaps.Map 'mainmap', (
+              center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
+              zoom: 12
+            )
+            #Yapp.updateSettings coords
+            leftCorner = map.getBounds()[0].reverse().join ' '
+            rightCorner = map.getBounds()[1].reverse().join ' '
+            location = _.extend ymaps.geolocation,
+              leftCorner: leftCorner
+              rightCorner: rightCorner
 
-          @pointIconLayout = ymaps.templateLayoutFactory.createClass(
-            """
-            <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
-              <!--<img src="/media/$[properties.tag.icons]">-->
-              <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
+            Yapp.user.set
+              location: location
+            map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
+            @yandexmap = map
+            @trigger 'load:yandexmap', @yandexmap
 
-              <a href="#" class="a-add-place" data-point-id="$[properties.point.id]" data-title="$[properties.point.name]" data-desc="$[properties.point.address]">
-                <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
-              </a>
+            @pointIconLayout = ymaps.templateLayoutFactory.createClass(
+              """
+              <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
+                <!--<img src="/media/$[properties.tag.icons]">-->
+                <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
 
-              <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
-            </div>
-            """,
-            ###*
-            #
-            # Add custom events for placemark
-            # @method build
-            ###
-            build: ->
-              ## необходим вызов родительского метода, чтобы добавить содержимое макета в DOM
-              @constructor.superclass.build.call @
-              $('.placemark').unbind('mouseenter').bind 'mouseenter', @onMouseOver
-              $('.placemark').unbind('mouseleave').bind 'mouseleave', @onMouseOut
-              $('.a-add-place').unbind('click').bind 'click', @onClickAddPlace
-              $('.name-place').unbind('click').bind 'click', @onClickNamePlace
+                <a href="#" class="a-add-place" data-point-id="$[properties.point.id]" data-title="$[properties.point.name]" data-desc="$[properties.point.address]">
+                  <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
+                </a>
 
-            ###*
-            #
-            # Clear placemark custom events
-            # @method clear
-            ###
-            clear: ->
-              $('.placemark').unbind 'mouseenter', @onMouseOver
-              $('.placemark').unbind 'mouseleave', @onMouseOut
-              $('.a-add-place').unbind 'click', @onClickAddPlace
-              $('.name-place').unbind 'click', @onClickNamePlace
+                <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
+              </div>
+              """,
+              ###*
+              #
+              # Add custom events for placemark
+              # @method build
+              ###
+              build: ->
+                ## необходим вызов родительского метода, чтобы добавить содержимое макета в DOM
+                #_.bindAll @, 'onMouseOver', 'onMouseOut'
+                @constructor.superclass.build.call @
+                rootElement = @getElement()
+                addPlaceElement = rootElement.getElementsByClassName 'a-add-place'
+                namePlaceElement = rootElement.getElementsByClassName 'name-place'
+                #$('[data-toggle=tooltip]', @getElement()).tooltip()
 
-            ###*
-            # Fired when triggered mouseleave event
-            # @event onMouseOut
-            ###
-            onMouseOut: ->
-              #$('[data-toggle=tooltip]', @).tooltip('destroy')
-              me = $(@)
-              $(".name-place", @).stop().animate width: 0, 150, ->
-                me.removeClass 'hover'
+                @eventsGroup = @events.group()
+                @eventsGroup.add 'click', @onClickPlacemark, rootElement
+                @eventsGroup.add 'click', @onClickAddPlace, addPlaceElement
+                @eventsGroup.add 'click', @onClickNamePlace, namePlaceElement
 
-            ###*
-            # Fired when triggered mouseenter event
-            # @event onMouseOver
-            ###
-            onMouseOver: ->
-              #$('[data-toggle=tooltip]', @).tooltip()
-              $(@).addClass 'hover'
-              w = $(".name-place", @).data("width") or $(".name-place", @).outerWidth()
-              $(".name-place", @).data("width", w).width(0).stop().animate
-                width: w - 29, 200
+                $(rootElement).unbind('click').bind 'click', @onClickPlacemark
+                $(addPlaceElement).unbind('click').bind 'click', @onClickAddPlace
+                $(namePlaceElement).unbind('click').bind 'click', @onClickNamePlace
 
-            ###*
-            # Fired when .a-add-place clicked
-            # @event onClickAddPlace
-            ###
-            onClickAddPlace: (event) ->
-              Yapp.vent.trigger 'click:addplacemark', event
+              ###*
+              #
+              # Clear placemark custom events
+              # @method clear
+              ###
+              clear: ->
+                @eventsGroup.removeAll()
+                #$('[data-toggle=tooltip]', @getElement()).tooltip('destroy')
 
-            ###*
-            # Fired when .name-place clicked
-            # @event onClickNamePlace
-            ###
-            onClickNamePlace: (event) ->
-              $target = $(event.currentTarget)
-              pointId = $target.data 'id'
-              Yapp.vent.trigger 'click:nameplacemark', pointId
-              Yapp.Common.router.trigger 'route'
+              onClickPlacemark: (event) ->
+                event.preventDefault()
+                event.stopPropagation()
+                if $('.placemark', @).hasClass 'hover'
+                  me = $('.placemark', @)
+                  $('.name-place', @).stop().animate width: 0, 150, ->
+                    me.removeClass 'hover'
+                else
+                  $('.placemark', @).addClass 'hover'
+                  w = $('.name-place', @).data('width') or $('.name-place', @).outerWidth()
+                  $('.name-place', @).data('width', w).width(0).stop().animate
+                    width: w - 29, 200
+
+              ###*
+              # Fired when .a-add-place clicked
+              # @event onClickAddPlace
+              ###
+              onClickAddPlace: (event) ->
+                event.preventDefault()
+                Yapp.vent.trigger 'click:addplacemark', event
+
+              ###*
+              # Fired when .name-place clicked
+              # @event onClickNamePlace
+              ###
+              onClickNamePlace: (event) ->
+                event.preventDefault()
+                event.stopPropagation()
+                $target = $(event.currentTarget)
+                pointId = $target.data 'id'
+                Yapp.vent.trigger 'click:nameplacemark', pointId
+                Yapp.Common.router.trigger 'route'
+            )
+            @mapDeferred.resolve()
           )
         )
     )

@@ -7,7 +7,7 @@
 window.Backbone.emulateJSON = true
 window.Yapp = new Marionette.Application()
 
-window.Yapp.API_BASE_URL = '/api'
+window.Yapp.API_BASE_URL = '/api/v1'
 window.Yapp.API_BASE_URL = ''
 window.Yapp.YA_MAP_URL = 'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&wizard=constructor'
 

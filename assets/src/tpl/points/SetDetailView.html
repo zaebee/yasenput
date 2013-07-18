@@ -11,13 +11,23 @@
 
       <div class="stats">
         <span>
-          <span class="ico-like-small"></span>
-          {{activePoint.likes_count}}
+          <span class="ico-want-small"></span>
+          {{activePoint.beens_count}}
         </span>
 
         <span>
-          <span class="ico-comment-small"></span>
-          {{activePoint.comments}}
+          <span class="ico-like-small"></span>
+          {{activePoint.likesusers.length}}
+        </span>
+
+        <span>
+          <span class="ico-star-small"></span>
+          {{activePoint.sets_count}}
+        </span>
+
+        <span>
+          <span class="ico-vote-small"></span>
+          {{activePoint.reviewusersplus}}/{{activePoint.reviewusersminus}}
         </span>
       </div>
   </header>

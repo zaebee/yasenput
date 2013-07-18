@@ -23,15 +23,14 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @model = new Yapp.Points.Point()
     @model.on 'invalid', @showError, @
     @model.on 'valid', @savePoint, @
+    @labelTemplate = Templates.LabelTemplate
 
     ## get labels list to show labels-require and labels-other blocks
     Yapp.request(
       'request'
-        url: '/tags/list'
+        url: '/api/v1/tags/'
         context: @
         successCallback: @setLabels
-        data:
-          content: 'popular'
     )
     @listenTo Yapp.Map, 'load:yandexmap', @onInitMap
 
@@ -177,6 +176,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     @model.set
       'requireLabels': response.filter (label) -> label.level is 0
       'additionalLabels': response.filter (label) -> label.level is 1
+      'otherLabels': response.filter (label) -> label.level is 2
     @onInitMap Yapp.Map.yandexmap
 
   ###*
@@ -187,16 +187,20 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
     event.preventDefault()
     $target = $(event.currentTarget)
     @ui.requireLabels.hide()
-    @ui.moreLabels.show()
     text = @ui.labelsHeader.text()
     labelId = $target.find('.placemark').data 'label-id'
     labelName = $target.find('.ctp-item-title').text()
+    moreLabels = @model.get('additionalLabels').filter (label) ->
+      label.type = 'place'
+      return label.parent is labelId
     @ui.labelsHeader.html "#{text} <div class='label label-required'>#{labelName}<button class='remove-label'></button></div>"
     @model.get('tags').push(
       id: labelId
       name: labelName
       class: 'require'
     )
+    @ui.moreLabels.find('.labels-field').html @labelTemplate labels: moreLabels
+    @ui.moreLabels.slideDown 200
 
   ###*
   # Show all label icons on click selected label remove button
@@ -418,7 +422,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   savePoint: ->
     Yapp.request(
       'request'
-        url: '/points/add'
+        url: Yapp.API_BASE_URL + '/api/v1/points/'
         context: @
         successCallback: @successSave
         type: 'POST'
@@ -447,7 +451,10 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
   # @method successSave
   ###
   successSave: (response) ->
-    model = new Yapp.Points.Point response[0]
+    model = new Yapp.Points.Point response
+    model.id = response.id
+    model.set 'type_of_item', 'point'
     @collection.add model
+    @collection.trigger 'reset'
     Yapp.popup.close()
     console.log model, 'success'

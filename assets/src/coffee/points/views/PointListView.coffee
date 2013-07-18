@@ -127,3 +127,5 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
       scrollOffset: 350
       includePage: true
       extraParams: @extraParams
+    ## this need for MapView
+    Yapp.Points.trigger 'update:collection', @collection
