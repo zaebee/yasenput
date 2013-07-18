@@ -89,16 +89,17 @@ Yapp.module 'Map',
                 #_.bindAll @, 'onMouseOver', 'onMouseOut'
                 @constructor.superclass.build.call @
                 rootElement = @getElement()
+                placemarkElement = rootElement.getElementsByClassName 'placemark'
                 addPlaceElement = rootElement.getElementsByClassName 'a-add-place'
                 namePlaceElement = rootElement.getElementsByClassName 'name-place'
                 #$('[data-toggle=tooltip]', @getElement()).tooltip()
 
                 @eventsGroup = @events.group()
-                @eventsGroup.add 'click', @onClickPlacemark, rootElement
+                @eventsGroup.add 'click', @onClickPlacemark, placemarkElement
                 @eventsGroup.add 'click', @onClickAddPlace, addPlaceElement
                 @eventsGroup.add 'click', @onClickNamePlace, namePlaceElement
 
-                $(rootElement).unbind('click').bind 'click', @onClickPlacemark
+                $(placemarkElement).unbind('click').bind 'click', @onClickPlacemark
                 $(addPlaceElement).unbind('click').bind 'click', @onClickAddPlace
                 $(namePlaceElement).unbind('click').bind 'click', @onClickNamePlace
 
@@ -114,12 +115,12 @@ Yapp.module 'Map',
               onClickPlacemark: (event) ->
                 event.preventDefault()
                 event.stopPropagation()
-                if $('.placemark', @).hasClass 'hover'
-                  me = $('.placemark', @)
+                if $(@).hasClass 'hover'
+                  me = $(@)
                   $('.name-place', @).stop().animate width: 0, 150, ->
                     me.removeClass 'hover'
                 else
-                  $('.placemark', @).addClass 'hover'
+                  $(@).addClass 'hover'
                   w = $('.name-place', @).data('width') or $('.name-place', @).outerWidth()
                   $('.name-place', @).data('width', w).width(0).stop().animate
                     width: w - 29, 200
@@ -129,7 +130,6 @@ Yapp.module 'Map',
               # @event onClickAddPlace
               ###
               onClickAddPlace: (event) ->
-                event.preventDefault()
                 Yapp.vent.trigger 'click:addplacemark', event
 
               ###*
@@ -137,8 +137,6 @@ Yapp.module 'Map',
               # @event onClickNamePlace
               ###
               onClickNamePlace: (event) ->
-                event.preventDefault()
-                event.stopPropagation()
                 $target = $(event.currentTarget)
                 pointId = $target.data 'id'
                 Yapp.vent.trigger 'click:nameplacemark', pointId
