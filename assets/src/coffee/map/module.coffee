@@ -52,7 +52,7 @@ Yapp.module 'Map',
             map = new ymaps.Map 'mainmap', (
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
               zoom: 12
-            )
+            ), autoFitToViewport: 'always'
             #Yapp.updateSettings coords
             leftCorner = map.getBounds()[0].reverse().join ' '
             rightCorner = map.getBounds()[1].reverse().join ' '

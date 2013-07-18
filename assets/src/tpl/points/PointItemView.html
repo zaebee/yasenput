@@ -113,7 +113,7 @@
   <div class="photo">
     <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     {{#ifEquals user.id author.id}}
-    <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
+    <a href="/route/{{id}}/edit" class="a-edit-new nonav" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
     {{/ifEquals}}
 
     <div class="yasen-info">
