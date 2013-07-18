@@ -53,11 +53,41 @@
 <div class="head-nav">
   <div>
     <ul>
-      <li {{#unless searchModels}}class="head-nav-current-item"{{/unless}}><a href="#">Все сразу</a></li>
-      <li {{#ifEquals searchModels 'sets'}}class="head-nav-current-item"{{/ifEquals}} data-models="sets"><a href="#">Коллекции</a></li>
-      <li {{#ifEquals searchModels 'points'}}class="head-nav-current-item"{{/ifEquals}} data-models="points"><a href="#">Места</a></li>
-      <li {{#ifEquals searchModels 'events'}}class="head-nav-current-item"{{/ifEquals}} data-models="events"><a href="#">События</a></li>
-      <li {{#ifEquals searchModels 'routes'}}class="head-nav-current-item"{{/ifEquals}} data-models="routes"><a href="#">Маршруты</a></li>
+      {{#ifEquals searchModels 'points'}}
+      <li class="head-nav-current-item" data-models="points"><a href="#">Места</a></li>
+      <li><a href="#">Все сразу</a></li>
+      <li data-models="sets"><a href="#">Коллекции</a></li>
+      <li data-models="events"><a href="#">События</a></li>
+      <li data-models="routes"><a href="#">Маршруты</a></li>
+      {{/ifEquals}}
+      {{#ifEquals searchModels 'sets'}}
+      <li class="head-nav-current-item" data-models="sets"><a href="#">Коллекции</a></li>
+      <li><a href="#">Все сразу</a></li>
+      <li data-models="points"><a href="#">Места</a></li>
+      <li data-models="events"><a href="#">События</a></li>
+      <li data-models="routes"><a href="#">Маршруты</a></li>
+      {{/ifEquals}}
+      {{#ifEquals searchModels 'routes'}}
+      <li class="head-nav-current-item" data-models="routes"><a href="#">Маршруты</a></li>
+      <li><a href="#">Все сразу</a></li>
+      <li data-models="points"><a href="#">Места</a></li>
+      <li data-models="sets"><a href="#">Коллекции</a></li>
+      <li data-models="events"><a href="#">События</a></li>
+      {{/ifEquals}}
+      {{#ifEquals searchModels 'events'}}
+      <li class="head-nav-current-item" data-models="events"><a href="#">События</a></li>
+      <li><a href="#">Все сразу</a></li>
+      <li data-models="points"><a href="#">Места</a></li>
+      <li data-models="sets"><a href="#">Коллекции</a></li>
+      <li data-models="routes"><a href="#">Маршруты</a></li>
+      {{/ifEquals}}
+      {{#unless searchModels}}
+      <li class="head-nav-current-item"><a href="#">Все сразу</a></li>
+      <li data-models="points"><a href="#">Места</a></li>
+      <li data-models="sets"><a href="#">Коллекции</a></li>
+      <li data-models="events"><a href="#">События</a></li>
+      <li data-models="routes"><a href="#">Маршруты</a></li>
+      {{/unless}}
     </ul>
   </div>
 </div>

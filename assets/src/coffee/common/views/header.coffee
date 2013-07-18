@@ -269,6 +269,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
       $target.insertBefore @ui.itemTypeNav.children().first()
       $target.addClass 'head-nav-current-item'
       @submitSearch(event)
+      @model.set 'searchModels', $target.data('models'), silent:true
       @ui.itemTypeNav.removeClass 'opened'
 
   ###*

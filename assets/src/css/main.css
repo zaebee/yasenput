@@ -714,7 +714,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 
 .p-block{}
 .title-block{background:#d8ecd6; font-size:15px; color:#333; padding:1px 15px; border-bottom:solid 1px #cbd9c9; font-weight:normal; margin:0 -15px 12px}
-.event-labels .label{padding-right:9px}
+.event-labels .label{padding-right:9px; margin-bottom: 3px;}
 .peoples .toggle-block{margin-bottom:20px}
 .peoples .toggle-block a{float:left; margin:0 2px 2px 0}
 .peoples .toggle-block .a-toggle{float:right; margin:-10px auto 0 0}
