@@ -32,8 +32,6 @@ class Yapp.Routes.Controller extends Marionette.Controller
     routesView = new Yapp.Routes.RoutesView
       model: new Yapp.Routes.Route
     Yapp.routePanel.show routesView
-    Yapp.Map.mapDeferred.then ->
-      Yapp.Map.yandexmap.container.fitToViewport()
 
   ###*
   # The stub for the set detail showing function
@@ -62,8 +60,6 @@ class Yapp.Routes.Controller extends Marionette.Controller
   # @method editRoute
   ###
   editRoute: (id) ->
-    Yapp.Map.mapDeferred.then ->
-      Yapp.Map.yandexmap.container.fitToViewport()
     Yapp.content.close()
     Yapp.popup.close()
     Yapp.Map.mapView.clear()
@@ -74,5 +70,3 @@ class Yapp.Routes.Controller extends Marionette.Controller
           model: route
         Yapp.routePanel.show routesView
     )
-    if Yapp.Map.yandexmap
-      Yapp.Map.yandexmap.container.fitToViewport()

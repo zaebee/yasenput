@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 import time
 import ast
 from django.http import QueryDict
+from django.utils.timezone import utc
 
 import logging
 logger = logging.getLogger(__name__)
@@ -386,7 +387,7 @@ class MapItemsList(PointsBaseView):
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
-            search_res_points = search_res_points_list
+            search_res_points = search_res_points_list.order_by('ypi')[0:100]
 
 
         YpJson = YpSerialiser()
@@ -899,7 +900,7 @@ class AddReviewToPoint(View):
         author = MainModels.Person.objects.get(username=request.user)
         if point_reviews.filter(author=author):
             last_review = point_reviews.filter(author = author).order_by('-updated')[0]
-            if datetime.now() - last_review.updated < timedelta(days=1):
+            if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
                 review = last_review
                 review.review = review_text
                 review.rating = rating
@@ -920,3 +921,8 @@ class GetTags(View):
         YpJson = YpSerialiser()
         tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)
+'''
+class Event(view):
+    http_method_names = ('post','get','put','delete')
+
+'''

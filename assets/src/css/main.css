@@ -677,7 +677,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	#big-photo .bp-photo{text-align:center; width:558px; cursor:pointer; overflow:hidden; margin-bottom:-1px; position:relative}
 		#big-photo .bp-photo > img{max-width:558px; display:block; margin:auto}
 .bp-add-like{position:absolute; right:0; bottom:0px; height:22px; background:rgba(0, 0, 0, .4); font-size:11px; color:#fff; -moz-border-radius:3px 0 0 0; -webkit-border-radius:3px 0 0 0; border-radius:3px 0 0 0; white-space:nowrap; padding:3px 6px 3px 3px; filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#66000000,EndColorStr=#66000000); visibility:hidden}
-#big-photo .bp-photo:hover .bp-add-like{visibility:visible}
+#big-photo .bp-photo .bp-add-like{visibility:visible}
 	#big-photo .bp-photo .bp-add-like, #big-photo .bp-photo .bp-add-like .bp-name{font-size:11px !important; font-family: Arial, sans-serif}
 	#big-photo .bp-photo .bp-add-like .avatar{display:inline-block !important; .display:inline; .zoom:1; vertical-align:middle; float:none; margin:0 4px 0 0}
 	#big-photo .bp-photo .bp-add-like .a-like{width:20px; height:19px; margin:0 4px; background-position:-717px -428px; vertical-align:middle}
