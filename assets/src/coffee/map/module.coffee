@@ -52,7 +52,7 @@ Yapp.module 'Map',
             map = new ymaps.Map 'mainmap', (
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
               zoom: 12
-            )
+            ), autoFitToViewport: 'always'
             #Yapp.updateSettings coords
             leftCorner = map.getBounds()[0].reverse().join ' '
             rightCorner = map.getBounds()[1].reverse().join ' '
@@ -68,7 +68,7 @@ Yapp.module 'Map',
 
             @pointIconLayout = ymaps.templateLayoutFactory.createClass(
               """
-              <div class="placemark for-add-place $[properties.class]" id="placemark-$[properties.point.id]">
+              <div class="placemark for-add-place $[properties.class]" data-point-id="$[properties.point.id]" id="placemark-$[properties.point.id]">
                 <!--<img src="/media/$[properties.tag.icons]">-->
                 <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
 
@@ -76,7 +76,7 @@ Yapp.module 'Map',
                   <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
                 </a>
 
-                <div class="name-place" data-id="$[properties.point.id]">$[properties.point.name]</div>
+                <div class="name-place" data-point-id="$[properties.point.id]">$[properties.point.name]</div>
               </div>
               """,
               ###*
@@ -89,16 +89,17 @@ Yapp.module 'Map',
                 #_.bindAll @, 'onMouseOver', 'onMouseOut'
                 @constructor.superclass.build.call @
                 rootElement = @getElement()
+                placemarkElement = rootElement.getElementsByClassName 'placemark'
                 addPlaceElement = rootElement.getElementsByClassName 'a-add-place'
                 namePlaceElement = rootElement.getElementsByClassName 'name-place'
                 #$('[data-toggle=tooltip]', @getElement()).tooltip()
 
                 @eventsGroup = @events.group()
-                @eventsGroup.add 'click', @onClickPlacemark, rootElement
+                @eventsGroup.add 'click', @onClickPlacemark, placemarkElement
                 @eventsGroup.add 'click', @onClickAddPlace, addPlaceElement
                 @eventsGroup.add 'click', @onClickNamePlace, namePlaceElement
 
-                $(rootElement).unbind('click').bind 'click', @onClickPlacemark
+                $(placemarkElement).unbind('click').bind 'click', @onClickPlacemark
                 $(addPlaceElement).unbind('click').bind 'click', @onClickAddPlace
                 $(namePlaceElement).unbind('click').bind 'click', @onClickNamePlace
 
@@ -114,12 +115,13 @@ Yapp.module 'Map',
               onClickPlacemark: (event) ->
                 event.preventDefault()
                 event.stopPropagation()
-                if $('.placemark', @).hasClass 'hover'
-                  me = $('.placemark', @)
+                $target = $(event.currentTarget)
+                if $(@).hasClass 'hover'
+                  me = $(@)
                   $('.name-place', @).stop().animate width: 0, 150, ->
                     me.removeClass 'hover'
                 else
-                  $('.placemark', @).addClass 'hover'
+                  $(@).addClass 'hover'
                   w = $('.name-place', @).data('width') or $('.name-place', @).outerWidth()
                   $('.name-place', @).data('width', w).width(0).stop().animate
                     width: w - 29, 200
@@ -129,7 +131,6 @@ Yapp.module 'Map',
               # @event onClickAddPlace
               ###
               onClickAddPlace: (event) ->
-                event.preventDefault()
                 Yapp.vent.trigger 'click:addplacemark', event
 
               ###*
@@ -137,12 +138,11 @@ Yapp.module 'Map',
               # @event onClickNamePlace
               ###
               onClickNamePlace: (event) ->
-                event.preventDefault()
-                event.stopPropagation()
                 $target = $(event.currentTarget)
-                pointId = $target.data 'id'
-                Yapp.vent.trigger 'click:nameplacemark', pointId
-                Yapp.Common.router.trigger 'route'
+                pointId = $target.data 'point-id'
+                if pointId
+                  Yapp.vent.trigger 'click:nameplacemark', pointId
+                  Yapp.Common.router.trigger 'route'
             )
             @mapDeferred.resolve()
           )
