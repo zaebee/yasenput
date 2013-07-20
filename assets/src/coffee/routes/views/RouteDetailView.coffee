@@ -20,7 +20,7 @@ class Yapp.Routes.RouteDetailView extends Yapp.Common.PopupView
   ###
   initialize: ->
     console.log 'initialize RouteDetailView'
-    @bigPhotoTemplate = Templates.BigPhoto
+    @bigPhotoTemplate = Templates._BigPhoto
     @user = Yapp.user
 
     pointId = parseInt @options.pointId, 10
