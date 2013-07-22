@@ -287,7 +287,7 @@ class Yapp.Points.PointAddView extends Yapp.Common.PopupView
       clearForm: false
       success: (data) =>
         @model.get('imgs').push data[0]
-        @ui.photoList.html Templates._ProgressImage @model.toJSON()
+        @ui.photoList.html Templates.ProgressImage @model.toJSON()
         @ui.photoProgress.hide()
         @photoSlider.reinit()
       beforeSend: (request) =>

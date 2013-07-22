@@ -20,7 +20,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
   ###
   initialize: ->
     console.log 'initialize PointDetailView'
-    @bigPhotoTemplate = Templates._BigPhoto
+    @bigPhotoTemplate = Templates.BigPhoto
     @user = Yapp.user
 
   ###*
