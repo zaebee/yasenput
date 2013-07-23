@@ -45,7 +45,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
     @user = Yapp.user
     @iconTemplate = Templates.IconTemplate
     _.bindAll @, 'updatePointCollection'
-    @listenTo Yapp.Map, 'load:yandexmap', @setMap
+    #@listenTo Yapp.Map, 'load:yandexmap', @setMap
     #@listenTo Yapp.Points, 'update:collection', @updatePointCollection
 
     ## need for creating clusterers filtered by tag
@@ -80,9 +80,10 @@ class Yapp.Map.MapView extends Marionette.ItemView
   # @param {Object} map Instance on main map with yandex loaded.
   # @event setMap
   ###
-  setMap: (map) ->
-    @map = map
-    @map.events.add 'actionend', @changeMap, @
+  onRender: ->
+    Yapp.Map.mapDeferred.then =>
+      @map = Yapp.Map.yandexmap
+      Yapp.Map.mapEvents.add 'actionend', @changeMap, @
 
   ###*
   # Fired when an yandex map actionend event occur.

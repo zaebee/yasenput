@@ -1,7 +1,7 @@
 ###*
 # Submodule for all route functionality
 # @module Yapp
-# @submodule routes
+# @submodule Routes
 ###
 
 Yapp = window.Yapp
