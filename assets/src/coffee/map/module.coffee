@@ -131,13 +131,13 @@ Yapp.module 'Map',
                   $('.name-place', @).data('width', w).width(0).stop().animate
                     width: w - 29, 200
 
-                setTimeout( =>
-                  clearTimeout()
-                  me = $(@)
-                  $('.name-place', @).stop().animate width: 0, 150, ->
-                    me.removeClass 'hover'
-                1500 ## 1.5 sec icon template will be visible
-                )
+                #setTimeout( =>
+                #  clearTimeout()
+                #  me = $(@)
+                #  $('.name-place', @).stop().animate width: 0, 150, ->
+                #    me.removeClass 'hover'
+                #1500 ## 1.5 sec icon template will be visible
+                #)
 
               ###*
               # Fired when .a-add-place clicked

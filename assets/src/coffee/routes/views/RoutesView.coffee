@@ -233,6 +233,17 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @routeCollection = routeCollection
     @route = route
 
+  createGeoPoint: (data) ->
+    unid = parseInt _.uniqueId(1010), 10
+    point = new Yapp.Points.Point unid: unid
+    location = data.location.split ' '
+    point.set
+      id: unid
+      longitude: location[0]
+      latitude: location[1]
+      name: data.name
+      address: data.address
+
   ###*
   # TODO
   # @method addPointToPath
@@ -240,34 +251,58 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   addPointToPath: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    data = $target.data()
     length = @collection.length
-    point = new Yapp.Points.Point unid: data.pointId
-    if !@collection.findWhere(id: data.pointId)
-      point.fetch(
-        success: (response) =>
-          @collection.add point
-          @ui.msgHint.hide()
-          if @collection.length isnt length
+    data = $target.data()
+    if data.type is 'place'
+      point = @createGeoPoint data
+      @collection.add point
+      @ui.msgHint.hide()
+      if @collection.length isnt length
 
-            placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-              id: 'map-point' + point.get('id')
-              point: point.toJSON()
-              iconContent: @collection.indexOf(point) + 1
-            }, {
-              iconLayout: Yapp.Map.pointIconLayout
-            }
-            point.set 'placemark', placemark
-            Yapp.Map.yandexmap.geoObjects.add placemark
+        placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+          id: 'map-point' + point.get('id')
+          point: point.toJSON()
+          iconContent: @collection.indexOf(point) + 1
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        }
+        point.set 'placemark', placemark
+        Yapp.Map.yandexmap.geoObjects.add placemark
 
-            Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
-            @ui.addPathPlace.append """
-              <li data-point-id="#{point.get('id')}">
-                <h4>#{point.get('name')}</h4>
-                <p>#{point.get('address')}</p>
-                <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
-              </li>"""
-      )
+        Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
+        @ui.addPathPlace.append """
+          <li data-point-id="#{point.get('id')}">
+            <h4>#{point.get('name')}</h4>
+            <p>#{point.get('address')}</p>
+            <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
+          </li>"""
+    else
+      point = new Yapp.Points.Point unid: data.pointId
+      if !@collection.findWhere(id: data.pointId)
+        point.fetch(
+          success: (response) =>
+            @collection.add point
+            @ui.msgHint.hide()
+            if @collection.length isnt length
+
+              placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+                id: 'map-point' + point.get('id')
+                point: point.toJSON()
+                iconContent: @collection.indexOf(point) + 1
+              }, {
+                iconLayout: Yapp.Map.pointIconLayout
+              }
+              point.set 'placemark', placemark
+              Yapp.Map.yandexmap.geoObjects.add placemark
+
+              Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
+              @ui.addPathPlace.append """
+                <li data-point-id="#{point.get('id')}">
+                  <h4>#{point.get('name')}</h4>
+                  <p>#{point.get('address')}</p>
+                  <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
+                </li>"""
+        )
     @hideDropdown()
 
   ###*
@@ -279,7 +314,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $target = $(event.currentTarget)
     pointId = $target.data 'point-id'
     point = @collection.findWhere id: pointId
-    Yapp.Map.yandexmap.geoObjects.remove point.get('placemark')
     @collection.remove point
     @model.set 'coords', [], silent:true
     $target.parent().remove()
@@ -295,8 +329,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @ui.lineAddPathButton.show()
     @ui.actionButton.hide()
     @model.set 'coords', []
-    @collection.reset()
-    @collection.trigger 'remove'
+    @collection.remove @collection.models
 
   ###*
   # TODO
@@ -328,6 +361,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       if @route
         Yapp.Map.yandexmap.geoObjects.remove @route
         @route = null
+    @buildPath() if @route
 
   ###*
   # Fired when resort:collection occur
