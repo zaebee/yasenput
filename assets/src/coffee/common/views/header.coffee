@@ -30,6 +30,7 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @default Templates.HeaderView
   ###
   template: Templates.HeaderView
+  className: 'wrap'
 
   ###*
   # Ui emenents for view
@@ -70,6 +71,8 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     'keydown .text-field input': 'keyupInput'
 
     'click .head-nav li' : 'selectItemType'
+    'click .head-nav ul' : 'showItemTypeMenu'
+    'click .add-block-head' : 'showAddMenu'
     #'mouseleave .head-nav ul' : 'submitSearch'
 
   ###*
@@ -107,6 +110,9 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
         data.coordRight = $target.data 'right-corner'
         @ui.labelFields.children('.label-place').remove()
         @ui.labelFields.prepend @labelTemplate(data)
+        Yapp.Map.yandexmap.setBounds [data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()], {
+          checkZoomRange: true
+        }
         @submitSearch(event)
       when 'user'
         @ui.labelFields.children('.label-user').remove()
@@ -230,13 +236,41 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
     500
     )
 
-  selectItemType: (event) ->
+  ###*
+  # Show menu for adding point, event or route
+  # Fired when .add-block-head click occur
+  # @event showAddMenu
+  ###
+  showAddMenu: (event) ->
     event.preventDefault()
     $target = $(event.currentTarget)
-    @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
-    $target.insertBefore @ui.itemTypeNav.children().first()
-    $target.addClass 'head-nav-current-item'
-    @submitSearch(event)
+    $target.toggleClass 'opened'
+
+  ###*
+  # Show menu for select active search models
+  # Fired when .head-nav ul click occur
+  # @event showItemTypeMenu
+  ###
+  showItemTypeMenu: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    @ui.itemTypeNav.toggleClass 'opened'
+
+  ###*
+  # Set active search models and do request
+  # Fired when .head-nav li click occur
+  # @event selectItemType
+  ###
+  selectItemType: (event) ->
+    #event.preventDefault()
+    $target = $(event.currentTarget)
+    if !$target.hasClass 'head-nav-current-item'
+      @ui.itemTypeNav.children().removeClass 'head-nav-current-item'
+      $target.insertBefore @ui.itemTypeNav.children().first()
+      $target.addClass 'head-nav-current-item'
+      @submitSearch(event)
+      @model.set 'searchModels', $target.data('models'), silent:true
+      @ui.itemTypeNav.removeClass 'opened'
 
   ###*
   # Handles keypressed by special keys such as Enter, Escape,

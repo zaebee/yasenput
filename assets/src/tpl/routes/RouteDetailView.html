@@ -17,7 +17,7 @@
 
         <span>
           <span class="ico-like-small"></span>
-          {{activePoint.likesusers.length}}
+          {{activePoint.likes_count}}
         </span>
 
         <span>
@@ -52,8 +52,8 @@
                   <ul>
                     {{#each activePoint.imgs}}
                     <li>
-                      <div class="item-photo" data-set-id="{{../id}}" data-photo-id="{{id}}">
-                        <a href="/set/{{../id}}/point/{{../activePoint.id}}/photo/{{id}}">
+                      <div class="item-photo" data-route-id="{{../id}}" data-photo-id="{{id}}">
+                        <a href="/route/{{../id}}/point/{{../activePoint.id}}/photo/{{id}}">
                           <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
                         </a>
                         {{#ifEquals author.id ../user.id}}
@@ -234,7 +234,7 @@
     {{#if user.authorized}}
       <div class="c-buttons">
         <a href="#" class="a-btn stp-like {{#ifBelong user likeusers}}marked{{/ifBelong}}">Нравится</a>
-        {{#ifEquals author.id user.id}}<a href="#" class="a-btn stp-edit">Редактировать</a>{{/ifEquals}}
+        {{#ifEquals author.id user.id}}<a href="/route/{{id}}/edit" class="nonav a-btn stp-edit">Редактировать</a>{{/ifEquals}}
       </div>
     {{/if}}
       <div class="c-edit-buttons">
@@ -247,7 +247,7 @@
       <h1>{{name}}</h1>
       {{#ifEquals author 'new'}}
       {{else}}
-        коллекцию добавил
+        маршрут добавил
         <a href="#">{{author.first_name}} {{author.last_name}}</a>
       {{/ifEquals}}
     </div>
@@ -273,8 +273,8 @@
     <div class="aside-viewport">
       <ol id="ol-collection">
         {{#each points}}
-        <li class="choose_place {{#ifEquals id ../activePoint.id}}active{{/ifEquals}}" data-placemark-id="placemark-1">
-          <a href="/set/{{../id}}/point/{{id}}" class="choose_place_a" data-id="{{id}}">{{name}}</a>
+        <li class="choose_place {{#ifEquals point.id ../activePoint.id}}active{{/ifEquals}}" data-placemark-id="placemark-1">
+          <a href="/route/{{../id}}/point/{{point.id}}" class="choose_place_a" data-id="{{point.id}}">{{point.name}}</a>
             <button type="button" class="remove-collection"></button>
           </li>
         {{/each}}

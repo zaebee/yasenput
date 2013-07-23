@@ -1,7 +1,7 @@
 ###*
 # Submodule for all route functionality
 # @module Yapp
-# @submodule routes
+# @submodule Routes
 ###
 
 Yapp = window.Yapp
@@ -62,14 +62,12 @@ class Yapp.Routes.Route extends Yapp.Points.Point
   like: (target, successCallback, context) ->
     Yapp.request(
       'request'
-        url: Yapp.API_BASE_URL + "/route/like"
+        url: Yapp.API_BASE_URL + "/api/v1/route/#{@get('id')}/like/"
         type: 'POST'
         context: context
         successCallback: successCallback
         params:
           target: target
-        data:
-          routeid: @get 'id'
     )
 
   ###*

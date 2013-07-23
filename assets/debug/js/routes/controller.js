@@ -49,6 +49,7 @@
 
       Yapp.content.close();
       Yapp.popup.close();
+      Yapp.Map.mapView.clear();
       routesView = new Yapp.Routes.RoutesView({
         model: new Yapp.Routes.Route
       });
@@ -104,6 +105,7 @@
 
       Yapp.content.close();
       Yapp.popup.close();
+      Yapp.Map.mapView.clear();
       route = new Yapp.Routes.Route({
         unid: id
       });

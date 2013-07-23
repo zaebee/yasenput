@@ -843,7 +843,7 @@ class Route(View):
                                 'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
-                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
+                                           'tags': {'fields': ['id', 'name', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail560', 'thumbnail104x104', 'thumbnail560_width'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
@@ -876,11 +876,10 @@ class RouteLike(View):
         id = kwargs.get('id', None)
         route = MainModels.Routes.objects.get(id=id)
 
-        if MainModels.Person.objects.get(username=request.user) in route.likeusers:
-            route.likeusers.remove(MainModels.Person.objects.get(username=request.user))
+        if request.user.person in route.likeusers.all():
+            route.likeusers.remove(request.user.person)
         else:
-            route.likeusers.add(MainModels.Person.objects.get(username=request.user))
-        point.save()
+            route.likeusers.add(request.user.person)
         return JsonHTTPResponse('like')
 
 class AddReviewToPoint(View):
@@ -921,5 +920,7 @@ class GetTags(View):
 class Event(view):
     http_method_names = ('post','get','put','delete')
 
+
     def post(self, request):
+
 '''

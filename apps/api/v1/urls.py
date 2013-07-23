@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^points/(?P<id>\d+)/reviews/', AddReviewToPoint.as_view()),
 
     url(r'^sets/(?P<id>\d+)/$', OneCollection.as_view()),
-    url(r'^sets/(?P<id>\d+)$/like/', LikeCollection.as_view()),
+    url(r'^sets/(?P<id>\d+)/like/$', LikeCollection.as_view()),
     url(r'^sets/(?P<id>\d+)/points/(?P<point_id>\d+)/$', CollectionAdd.as_view()),
 
     url(r'^route/*$', Route.as_view()),

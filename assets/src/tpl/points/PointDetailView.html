@@ -25,13 +25,8 @@
     </span>
 
     <span>
-      <span class="ico-comment-small"></span>
-      {{comments_count}}
-    </span>
-
-    <span>
       <span class="ico-star-small"></span>
-      {{collections_count}}
+      {{sets.length}}
     </span>
 
     <span>
@@ -232,7 +227,7 @@
 {{#if user.authorized}}
 <aside id="right-panel">
   <a href="#" class="a-btn a-add-collection">В коллекцию</a>
-  <a href="#" class="a-btn a-add-path">Создать маршрут</a>
+  <a href="/route/add/point/{{id}}" class="a-btn a-add-path nonav">Создать маршрут</a>
   {{#ifEquals author.id user.id}}
   <a href="#" class="a-btn a-edit">Редактировать</a>
   {{/ifEquals}}

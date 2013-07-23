@@ -42,29 +42,30 @@ class LikeCollection(CollectionsBaseView):
     http_method_names = ('post',)
 
     def post(self, request, *args, **kwargs):
-
+        id = kwargs.get('id', None)
         errors = []
+        result = {
+            'id': int(id),
+            'status': 200,
+            'message': u'Ваш голос учтен'
+        }
 
-        params = request.POST.copy()
-        form = forms.AddCollectionForm(params)
+        form = forms.AddCollectionForm({id:id})
         if form.is_valid():
-
-            #list_of_collections.split()
-            list_of_collections = params.__getitem__("collectionid").split(",")
-            list_of_collections
-            for coll_id in list_of_collections:
-                collection = Collections.objects.get(id=int(coll_id))
-                if (MainModels.User.objects.get(username=request.user) in collection.likeusers.all()):
-                    collection.likeusers.remove(MainModels.User.objects.get(username=request.user))
-                else:
-                    collection.likeusers.add(MainModels.User.objects.get(username=request.user))
-
-            return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
+            collection = Collections.objects.get(id=int(id))
+            if request.user.person in collection.likeusers.all():
+                collection.likeusers.remove(request.user.person)
+            else:
+                collection.likeusers.add(request.user.person)
         else:
             e = form.errors
             for er in e:
                 errors.append(er + ':' + e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
+            result.update({
+                'status': 400,
+                'message': ', '.join(errors)
+            })
+        return JsonHTTPResponse(result)
 
 
 class OneCollection(View):

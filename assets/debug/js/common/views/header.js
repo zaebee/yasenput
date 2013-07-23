@@ -137,6 +137,11 @@
           data.coordRight = $target.data('right-corner');
           this.ui.labelFields.children('.label-place').remove();
           this.ui.labelFields.prepend(this.labelTemplate(data));
+          Yapp.Map.yandexmap.setBounds([data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()], {
+            checkZoomRange: true
+          });
+          console.log('setBounds', [data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()]);
+          console.log('setBounds', [data.coordLeft.split(' '), data.coordRight.split(' ')]);
           this.submitSearch(event);
           break;
         case 'user':
@@ -303,7 +308,8 @@
       $target = $(event.currentTarget);
       this.ui.itemTypeNav.children().removeClass('head-nav-current-item');
       $target.insertBefore(this.ui.itemTypeNav.children().first());
-      return $target.addClass('head-nav-current-item');
+      $target.addClass('head-nav-current-item');
+      return this.submitSearch(event);
     };
 
     /**
