@@ -155,7 +155,6 @@ Yapp.module 'Map',
                 pointId = $target.data 'point-id'
                 if pointId
                   Yapp.vent.trigger 'click:nameplacemark', pointId
-                  Yapp.Common.router.trigger 'route'
             )
             @mapDeferred.resolve()
           )
