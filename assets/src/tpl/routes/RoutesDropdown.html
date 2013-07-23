@@ -7,7 +7,6 @@
   </ul>
 {{/if}}
 
-<!--
 {{#if places}}
   <ul class="item item-place">
     <li class="item-title">Местоположения <sup>{{places.length}}</sup></li>
@@ -18,13 +17,12 @@
     {{/each}}
   </ul>
 {{/if}}
--->
 
 {{#if points}}
   <ul class="item item-name">
     <li class="item-title">Название <sup>{{points.length}}</sup></li>
     {{# each points}}
-    <li class="item-label" data-title="{{name}}" data-desc="{{address}}" data-point-id="{{id}}"><a href="#">{{name}}</a></li>
+    <li class="item-label" data-title="{{name}}" data-desc="{{address}}" data-point-id="{{id}}" data-type="name"><a href="#">{{name}}</a></li>
     {{/each}}
   </ul>
 {{/if}}

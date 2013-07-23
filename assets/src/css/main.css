@@ -641,7 +641,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 	html .submit-line input[type=submit][disabled]{color:#dfd1d1 !important; background:#ac8a89; background: -webkit-gradient(linear, 0 0, 0 bottom, from(#bb9393), to(#a08381)); background: -webkit-linear-gradient(#bb9393, #a08381);background: -moz-linear-gradient(#bb9393, #a08381); background: -ms-linear-gradient(#bb9393, #a08381); background: -o-linear-gradient(#bb9393, #a08381); background: linear-gradient(#bb9393, #a08381); filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffbb9393,EndColorStr=#ffa08381); cursor:default !important; top:0 !important}
 .required-desc{font-size:12px; color:#999; position:relative; top:2px}
 
-#right-panel{left:0; top:106px; width:118px; position:fixed; margin-left:595px}
+#right-panel{left:50%; top:106px; width:118px; position:fixed; margin-left:295px}
 #right-panel .a-btn{margin:0 0 3px}
 .a-complaint{display:block; width:22px; height:18px; text-decoration:none; background-position:-332px -288px; margin: 10px 0 8px}
 .a-complaint:hover{background-position:-364px -288px;}

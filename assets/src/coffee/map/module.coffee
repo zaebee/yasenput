@@ -11,7 +11,8 @@ Yapp.module 'Map',
   define: ()->
     @addInitializer(->
       console.log 'initializing Map Module'
-      callbacks = new Backbone.Marionette.Callbacks()
+      @mapDeferred = $.Deferred()
+
       # creating module's router and binding controller for it
       @router = new Yapp.Map.Router
         controller: new Yapp.Map.Controller
@@ -29,48 +30,51 @@ Yapp.module 'Map',
           size: [59, 59]
           offset: [-29, -29]
         }]
-      dfd = $.Deferred()
+
       ## ymaps wrapper for emulate geocode deferred behavior if ymaps is undefined
       @geocode = (request, options) ->
         if window.ymaps isnt undefined
           ymaps.geocode request, options
         else
-          dfd
+          @mapDeferred
       ## ymaps wrapper for emulate route deferred behavior if ymaps is undefined
       @route = (feature, options) ->
         if window.ymaps isnt undefined
           ymaps.route feature, options
         else
-          dfd
-      @mapDeferred = $.Deferred()
+          @mapDeferred
       # getting ya map script and binding it on #mainmap dom object
       $.getScript Yapp.YA_MAP_URL, =>
         @mapDeferred.promise(
           ymaps.ready( =>
-            dfd.resolve()
             console.log 'Init Yandex map'
-            map = new ymaps.Map 'mainmap', (
+            @yandexmap = new ymaps.Map 'mainmap', (
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
               zoom: 12
             ), autoFitToViewport: 'always'
+            @trigger 'load:yandexmap', @yandexmap
+
             #Yapp.updateSettings coords
-            leftCorner = map.getBounds()[0].reverse().join ' '
-            rightCorner = map.getBounds()[1].reverse().join ' '
+            leftCorner = @yandexmap.getBounds()[0].reverse().join ' '
+            rightCorner = @yandexmap.getBounds()[1].reverse().join ' '
             location = _.extend ymaps.geolocation,
               leftCorner: leftCorner
               rightCorner: rightCorner
 
             Yapp.user.set
               location: location
-            map.controls.add('zoomControl', right:5, top:80).add('typeSelector')
-            @yandexmap = map
-            @trigger 'load:yandexmap', @yandexmap
+            @yandexmap.controls.add('zoomControl', right:5, top:80).add('typeSelector')
+            @mapEvents = @yandexmap.events.group()
 
             @pointIconLayout = ymaps.templateLayoutFactory.createClass(
               """
               <div class="placemark for-add-place $[properties.class]" data-point-id="$[properties.point.id]" id="placemark-$[properties.point.id]">
                 <!--<img src="/media/$[properties.tag.icons]">-->
+                [if properties.iconContent]
+                <span class="p-num">$[properties.iconContent]</span>
+                [else]
                 <span class="m-ico $[properties.tag.style|m-dostoprimechatelnost]"></span>
+                [endif]
 
                 <a href="#" class="a-add-place" data-point-id="$[properties.point.id]" data-title="$[properties.point.name]" data-desc="$[properties.point.address]">
                   <span data-toggle="tooltip" data-placement="bottom" title="Добавить&nbsp;в&nbsp;маршрут"  class="p-num">$[properties.iconContent|+]</span>
@@ -92,7 +96,7 @@ Yapp.module 'Map',
                 placemarkElement = rootElement.getElementsByClassName 'placemark'
                 addPlaceElement = rootElement.getElementsByClassName 'a-add-place'
                 namePlaceElement = rootElement.getElementsByClassName 'name-place'
-                #$('[data-toggle=tooltip]', @getElement()).tooltip()
+                $('[data-toggle=tooltip]', @getElement()).tooltip()
 
                 @eventsGroup = @events.group()
                 @eventsGroup.add 'click', @onClickPlacemark, placemarkElement
@@ -110,12 +114,13 @@ Yapp.module 'Map',
               ###
               clear: ->
                 @eventsGroup.removeAll()
-                #$('[data-toggle=tooltip]', @getElement()).tooltip('destroy')
+                $('[data-toggle=tooltip]', @getElement()).tooltip('destroy')
 
               onClickPlacemark: (event) ->
                 event.preventDefault()
                 event.stopPropagation()
                 $target = $(event.currentTarget)
+                clearTimeout()
                 if $(@).hasClass 'hover'
                   me = $(@)
                   $('.name-place', @).stop().animate width: 0, 150, ->
@@ -125,6 +130,14 @@ Yapp.module 'Map',
                   w = $('.name-place', @).data('width') or $('.name-place', @).outerWidth()
                   $('.name-place', @).data('width', w).width(0).stop().animate
                     width: w - 29, 200
+
+                setTimeout( =>
+                  clearTimeout()
+                  me = $(@)
+                  $('.name-place', @).stop().animate width: 0, 150, ->
+                    me.removeClass 'hover'
+                1500 ## 1.5 sec icon template will be visible
+                )
 
               ###*
               # Fired when .a-add-place clicked
