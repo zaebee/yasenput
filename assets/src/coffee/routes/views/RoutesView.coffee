@@ -36,7 +36,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection.on 'remove', @removeWayPoint, @
     @collection.on 'resort:collection', @resortCollection, @
     @listenTo Yapp.vent, 'click:addplacemark', @addPointToPath
-    @listenTo Yapp.Map, 'load:yandexmap', @setMap
 
   template: Templates.RoutesView
   className: 'pap-wrap'
@@ -74,6 +73,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   ###
   initBar: ->
     Yapp.Map.mapDeferred.then =>
+      @addPointToPath() if @options.pointId
       if !_.isEmpty @model.get('points')
         @collection.each (point) =>
           @ui.addPathPlace.append """
@@ -106,6 +106,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     $('body').removeClass 'page-map'
     $('#header').show()
     $('#panel-add-path').hide()
+    @collection.remove @collection.models
     if @route
       Yapp.Map.yandexmap.geoObjects.remove @route
 
@@ -181,7 +182,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       paths = _(@collection.models).map( (point) => [point.get('latitude'), point.get('longitude')]).value()
       @model.set 'coords', [], silent: true
     Yapp.Map.route(paths).then (route) =>
-      @route = @buildDetailPath(route)
+      @route = @buildDetailPath route
       Yapp.Map.yandexmap.geoObjects.add @route
       ## start route editor and add event for path updates
       @route.editor.start editWayPoints: false
@@ -199,9 +200,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   buildDetailPath: (route) ->
     if !_.isEmpty @model.get('points')
       route.options.set 'mapStateAutoApply', true
-    route.getWayPoints().each (point ,index) =>
-      point.properties.set 'class', 'place-added'
-    route.getWayPoints().options.set 'iconLayout', Yapp.Map.pointIconLayout
+    route.getWayPoints().options.set 'visible', false
     ways = route.getPaths()
     wayLength = ways.getLength()
     routeCollection = []
@@ -233,6 +232,10 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @routeCollection = routeCollection
     @route = route
 
+  ###*
+  # TODO
+  # @method createGeoPoint
+  ###
   createGeoPoint: (data) ->
     unid = parseInt _.uniqueId(1010), 10
     point = new Yapp.Points.Point unid: unid
@@ -249,26 +252,25 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @method addPointToPath
   ###
   addPointToPath: (event) ->
-    event.preventDefault()
-    $target = $(event.currentTarget)
+    if event
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      data = $target.data()
+    else if @options.pointId
+      data = pointId: @options.pointId
+      @options.pointId = null
     length = @collection.length
-    data = $target.data()
     if data.type is 'place'
       point = @createGeoPoint data
+      placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+        id: 'map-point' + point.get('id')
+        point: point.toJSON()
+        class: 'place-added'
+      }, iconLayout: Yapp.Map.pointIconLayout
+      point.set 'placemark', placemark
       @collection.add point
-      @ui.msgHint.hide()
+
       if @collection.length isnt length
-
-        placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-          id: 'map-point' + point.get('id')
-          point: point.toJSON()
-          iconContent: @collection.indexOf(point) + 1
-        }, {
-          iconLayout: Yapp.Map.pointIconLayout
-        }
-        point.set 'placemark', placemark
-        Yapp.Map.yandexmap.geoObjects.add placemark
-
         Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
         @ui.addPathPlace.append """
           <li data-point-id="#{point.get('id')}">
@@ -281,20 +283,14 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       if !@collection.findWhere(id: data.pointId)
         point.fetch(
           success: (response) =>
+            placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
+              id: 'map-point' + point.get('id')
+              point: point.toJSON()
+              class: 'place-added'
+            }, iconLayout: Yapp.Map.pointIconLayout
+            point.set 'placemark', placemark
             @collection.add point
-            @ui.msgHint.hide()
             if @collection.length isnt length
-
-              placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-                id: 'map-point' + point.get('id')
-                point: point.toJSON()
-                iconContent: @collection.indexOf(point) + 1
-              }, {
-                iconLayout: Yapp.Map.pointIconLayout
-              }
-              point.set 'placemark', placemark
-              Yapp.Map.yandexmap.geoObjects.add placemark
-
               Yapp.Map.yandexmap.panTo [parseFloat(point.get 'latitude'), parseFloat(point.get 'longitude')]
               @ui.addPathPlace.append """
                 <li data-point-id="#{point.get('id')}">
@@ -343,7 +339,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       @ui.msgHint.hide()
       @ui.addPathButton.removeClass 'disabled'
       @buildPath() if @route
-    Yapp.Map.yandexmap.geoObjects.add model.get('placemark')
+    placemark = model.get 'placemark'
+    placemark.properties.set 'iconContent', @collection.indexOf(model) + 1
+    Yapp.Map.yandexmap.geoObjects.add placemark
 
   ###*
   # TODO
@@ -362,6 +360,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
         Yapp.Map.yandexmap.geoObjects.remove @route
         @route = null
     @buildPath() if @route
+    @collection.each (model, index) ->
+      placemark = model.get 'placemark'
+      placemark.properties.set 'iconContent', index + 1
 
   ###*
   # Fired when resort:collection occur
@@ -372,6 +373,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     point = @collection.findWhere id:pointId
     @_insertTo index, point, @collection.models
     @buildPath() if @route
+    @collection.each (model, i) ->
+      placemark = model.get 'placemark'
+      placemark.properties.set 'iconContent', i + 1
 
   ###*
   # Fired on .btn-save click
