@@ -75,12 +75,16 @@ class Yapp.Routes.RoutesSaveView extends Yapp.Common.PopupView
     routeName = @ui.inputName.val().trim()
     routeDescription = @ui.inputDescription.val().trim()
     coords = JSON.stringify  @route.requestPoints
+    routeCollection = _.map(@routeCollection, (geoPoint) ->
+      geoPoint.point.placemark = null
+    )
     if !_.isEmpty(routeName) and !_.isEmpty(routeDescription)
       @model.set
         name: routeName
         description: routeDescription
         points: @routeCollection
         coords: coords
+
       @model.save().success (response) =>
         Yapp.Map.yandexmap.geoObjects.remove @route
         @model.collection.reset()

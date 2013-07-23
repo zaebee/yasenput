@@ -387,7 +387,7 @@ class MapItemsList(PointsBaseView):
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
-            search_res_points = search_res_points_list.order_by('ypi')[0:100]
+            search_res_points = QuerySetJoin(search_res_points_list).order_by('-ypi')[0:100]
 
 
         YpJson = YpSerialiser()
@@ -807,8 +807,11 @@ class Route(View):
         MainModels.Position.objects.filter(route=route).delete()
         for point in points:
             point_id = point['point']['id']
-            dot = MainModels.Points.objects.get(id=point_id)
-            route.position_set.create(point=dot, position=point.get('position'))
+            try:
+                dot = MainModels.Points.objects.get(id=point_id)
+                route.position_set.create(point=dot, position=point.get('position'))
+            except:
+                pass
 
         route.save()
         return JsonHTTPResponse('ok')

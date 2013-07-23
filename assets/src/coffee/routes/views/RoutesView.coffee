@@ -26,10 +26,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     @collection = new Yapp.Points.PointCollection
     @model.collection = @collection
 
-    _.each @model.get('points'), (el) =>
-      el.point.unid = el.point.id
-      @collection.add new Yapp.Points.Point(el.point)
-
     @dropdownTemplate = Templates.RoutesDropdown
     @detailsPathTemplate = Templates.RoutesDetail
     @collection.on 'add', @addWayPoint, @
@@ -72,6 +68,9 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
   # @method initBar
   ###
   initBar: ->
+    _.each @model.get('points'), (el) =>
+      el.point.unid = el.point.id
+      @collection.add new Yapp.Points.Point(el.point)
     Yapp.Map.mapDeferred.then =>
       @addPointToPath() if @options.pointId
       if !_.isEmpty @model.get('points')
@@ -82,7 +81,7 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
               <p>#{point.get('address')}</p>
               <input type="button" value='' class="remove-item-path" data-point-id="#{point.get('id')}">
             </li>"""
-        @collection.trigger 'add'
+        #@collection.trigger 'add'
         @$('.btn-add-path').click()
 
   ###*
@@ -262,12 +261,6 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
     length = @collection.length
     if data.type is 'place'
       point = @createGeoPoint data
-      placemark = new ymaps.Placemark [point.get('latitude'), point.get('longitude')], {
-        id: 'map-point' + point.get('id')
-        point: point.toJSON()
-        class: 'place-added'
-      }, iconLayout: Yapp.Map.pointIconLayout
-      point.set 'placemark', placemark
       @collection.add point
 
       if @collection.length isnt length
@@ -339,9 +332,15 @@ class Yapp.Routes.RoutesView extends Marionette.ItemView
       @ui.msgHint.hide()
       @ui.addPathButton.removeClass 'disabled'
       @buildPath() if @route
-    placemark = model.get 'placemark'
-    placemark.properties.set 'iconContent', @collection.indexOf(model) + 1
-    Yapp.Map.yandexmap.geoObjects.add placemark
+    Yapp.Map.mapDeferred.then =>
+      placemark = new ymaps.Placemark [model.get('latitude'), model.get('longitude')], {
+        id: 'map-point' + model.get('id')
+        point: model.toJSON()
+        class: 'place-added'
+      }, iconLayout: Yapp.Map.pointIconLayout
+      model.set 'placemark', placemark
+      placemark.properties.set 'iconContent', @collection.indexOf(model) + 1
+      Yapp.Map.yandexmap.geoObjects.add placemark
 
   ###*
   # TODO
