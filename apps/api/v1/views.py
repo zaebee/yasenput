@@ -84,7 +84,8 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
-                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon','avatar']},
                                            'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
@@ -93,23 +94,17 @@ class PointsBaseView(View):
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
                                                         'extras':['reviewusersplus'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},},
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                                    'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},
                                                         },
                                                     },
-                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
-                                                                                },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
-                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
-                                                        },
-                                                    },
+                                           
 
                                            })
 
@@ -387,7 +382,7 @@ class MapItemsList(PointsBaseView):
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
             search_res_sets_list = []
-            search_res_points = search_res_points_list.order_by('ypi')[0:100]
+            search_res_points = QuerySetJoin(search_res_points_list).order_by('-ypi')[0:100]
 
 
         YpJson = YpSerialiser()
@@ -926,4 +921,5 @@ class GetTags(View):
 class Event(view):
     http_method_names = ('post','get','put','delete')
 
+    def post(self, request):
 '''

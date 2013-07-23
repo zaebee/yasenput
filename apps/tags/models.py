@@ -25,5 +25,11 @@ class Tags(models.Model):
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
 
+    def pic(self):
+        im = self.icons
+        self.icons = im.url
+        pass
+    icon = pic
+
     def __unicode__(self):
         return self.name
