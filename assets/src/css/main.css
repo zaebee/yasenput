@@ -286,7 +286,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
 	.placemark:hover .name-place{width:auto; opacity:1}
 .a-add-place{position:absolute; left:0; top:0; width:33px; height:36px; background-position:-429px -237px; z-index:5; display:none}
 	.a-add-place > .p-num{font:bold 22px/22px Arial, "Helvetica CY", "Nimbus Sans L", sans-serif; left:-1px}
-.for-add-place{overflow:hidden}
+.for-add-place{/*overflow:hidden*/}
 .for-add-place.hover{overflow:visible}
 .for-add-place.hover .name-place{visibility:visible}
 .for-add-place.hover .a-add-place, .for-add-place.place-added .a-add-place{display:block !important}
@@ -375,6 +375,42 @@ sup{position:relative; font-size:.75em; top:-.5em}
 .top-panel .btn:active{left:1px}
 	.top-panel .btn b, .popup .btn b{font:18px/22px arial, sans-serif; display:inline-block; .display:inline; .zoom:1; vertical-align:middle; position:relative; top:-2px}
 
+.GridFooter {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    display:none;
+}
+.GridFooter hr {
+    margin-top: 30px;
+    border-top: 1px solid #becfbc;
+    border-bottom: 1px solid #f3f3f3;
+}
+.GridFooter .gridLoading {
+    position: absolute;
+    top:0;
+    left:50%;
+    background: url(../images/bg.jpg) no-repeat;
+    width: 76px;
+    height: 60px;
+    margin-left: -43px;
+    text-align: center;
+}
+.GridFooter .gridFooterSpinner {
+    background: url(../images/ajax-loader.gif) no-repeat;
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+}
+.GridFooter .gridFooterLogoIcon {
+    background: url(../images/logo-yasen.png) no-repeat;
+    width: 30px;
+    height: 27px;
+    display: none;
+    margin-top: 18px;
+}
 #footer{position:fixed; left:0; bottom:0; width:100%; height:39px; z-index:200; background:url(../images/bg.jpg); border-top:solid 1px #b8c2b7; min-width:980px}
 .boxshadow #footer{-moz-box-shadow:0 -4px 5px rgba(0, 0, 0, .2); -webkit-box-shadow:0 -4px 5px rgba(0, 0, 0, .2); box-shadow:0 -4px 5px rgba(0, 0, 0, .2)}
 .hide-footer #footer{bottom:-40px}
@@ -761,7 +797,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .a-collection, .a-edit-new{background-color:transparent; background-image: url(../images/sprite.png); background-repeat:no-repeat}
 .a-collection{position:absolute; left:4px; top:4px; width:88px; height:28px; background-position:0 -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none; color:#fff; text-decoration:none; padding-left:29px; line-height:26px; font-size:13.5px; font-family: 'pf_agora_slab_prolight';}
 .a-collection:hover{background-position:0 -721px; color:#fff}
-.a-collection:active, .a-collection.marked{background-position0 -757px;}
+.a-collection:active, .a-collection.marked{background-position:0 -757px;}
 .a-collection.marked:hover{background-position:0 -793px;}
 .a-edit-new, .a-share-new{position:absolute; right:34px; top:4px; width:30px; height:27px; background-position:-173px -685px; -moz-box-shadow:none; -webkit-box-shadow:none; box-shadow:none}
 .a-edit-new:hover{background-position:-173px -721px;}
@@ -775,6 +811,7 @@ width: 0;height: 0;position: absolute;top: auto;bottom: 0;right: 3px;cursor: poi
 .items .a-like.marked:hover{background-position:-141px -793px;}
 .content .item-collection .a-like{right:3px;}
 .items .a-collection, .items .a-edit-new, .items .a-like{visibility:hidden}
+body.mobile .items .a-collection, body.mobile .items .a-edit-new, body.mobile .items .a-like{visibility:visible}
 .items .photo:hover .a-collection, .items .photo:hover .a-edit-new, .items .photo:hover .a-like, .items .photo:hover .a-share-new{visibility:visible}
 
 #new-collection{position:relative; z-index:12345; width:332px; left:50%; top:120px; text-align:left; font-size:14px; margin:0 0 40px -166px;}
