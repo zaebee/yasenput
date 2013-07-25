@@ -32,4 +32,3 @@ class Yapp.Common.Router extends Marionette.AppRouter
       @navigate @history[@history.length-2], false
     else
        @navigate '', false
-    @trigger 'route'
