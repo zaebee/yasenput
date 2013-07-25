@@ -11,8 +11,8 @@ from django.shortcuts import get_object_or_404
 
 from apps.serializers.json import Serializer as YpSerialiser
 
-from .models import Comments, COMMENT_ALLOWED_MODELS
-from .forms import CommentForm
+from apps.comments.models import Comments, COMMENT_ALLOWED_MODELS
+from apps.comments.forms import CommentForm
 
 class CommentBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(COMMENT_ALLOWED_MODELS)
