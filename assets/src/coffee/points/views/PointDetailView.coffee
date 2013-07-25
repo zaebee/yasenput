@@ -87,10 +87,10 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     @$el.find('[data-toggle=tooltip]').tooltip()
     @ui.placePhotos.data 'slider', Yapp.Common.sliderPhotos
     @photoSlider = @ui.placePhotos.data 'slider'
-    @showPhoto()
     @photoSlider.init
       root: @ui.placePhotos
       visible: 4
+    @showPhoto() if !_.isEmpty @model.get 'imgs'
     @_renderSocial()
     @$('.js-vote').rating
       fx: 'full'
@@ -112,7 +112,6 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
         type: 'mini'
         pageTitle: @model.get('name')
         pageDescription: @model.get('description')
-        pageImage: @model.get('imgs')[0].thumbnail104x104
         text: "ЯсенПуть знает все - #{@model.get('name')}"
       }, 1000 + @model.get('id')
 

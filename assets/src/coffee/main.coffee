@@ -10,6 +10,7 @@ Yapp = window.Yapp
 Yapp.addInitializer ->
   console.log 'application initializing'
   @settings = {}
+  @isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)
 
   @updateSettings = (settings) ->
     changedSettings = {}
@@ -87,8 +88,10 @@ Yapp.on 'start', ->
 
   $(document).ajaxStart( ->
     $('.spinner').show()
+    $('.GridFooter').show()
   ).ajaxStop( ->
     $('.spinner').hide()
+    $('.GridFooter').hide()
   )
 
   $(document).on 'click', 'a.nonav', (event) ->
@@ -101,6 +104,8 @@ Yapp.on 'start', ->
 
 # init all modules for fully working application
 Yapp.runApplication = ->
+  if @isMobile
+    $('body').addClass 'mobile'
 
   @Common.start()
   ## TODO: replace by smth like if $('#big-loader').length
