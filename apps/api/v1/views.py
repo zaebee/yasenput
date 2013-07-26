@@ -322,9 +322,6 @@ class ItemsList(PointsBaseView):
             else:
                 ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                 ipgeobase = ipgeobases[0]
-            f = open('ip.txt','ab+')
-            f.write(str(ip) + ' ' + str(ipgeobase.longitude))
-            f.close()
             ln_left = ipgeobase.longitude - 0.1
             ln_right = ipgeobase.longitude + 0.1
             lt_left = ipgeobase.latitude - 0.1
