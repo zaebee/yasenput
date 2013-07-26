@@ -3,6 +3,7 @@
 from django.conf.urls import *
 from apps.api.v1.views import *
 from apps.collections.views import *
+from apps.api.v1.comments_v import Comment, CommentDel
 
 urlpatterns = patterns('',
     url(r'^search/*$', Search.as_view()),
@@ -23,5 +24,8 @@ urlpatterns = patterns('',
     url(r'^route/(?P<id>\d+)/like/$', RouteLike.as_view()),
 
     url(r'^tags/$', GetTags.as_view()),
+
+    url(r'^photos/(?P<id>\d+)/comments/', Comment.as_view()),
+    url(r'^comments/(?P<id>\d+)/$', CommentDel.as_view()),
 
 )
