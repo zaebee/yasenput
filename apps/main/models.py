@@ -29,6 +29,18 @@ class Person(User):
     searchdelta = SphinxQuerySet(index="main_person",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
+    
+    
+    
+    
+    def ava(self):
+        im = self.avatar
+        self.avatar = im.url
+        pass
+    icon = ava 
+    #avatar = str('1')
+
+    
 
 
 def create_person(sender, **kwargs):
@@ -291,6 +303,7 @@ class Events(models.Model):
     dt_start = models.DateTimeField('Начало')
     dt_end = models.DateTimeField('Окончание')
     name = models.CharField('Название', max_length=255)
+    description = models.TextField('описание', blank=True)
     point = models.ForeignKey(Points, unique=False)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)

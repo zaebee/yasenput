@@ -31,6 +31,8 @@ import ast
 from django.http import QueryDict
 from django.utils.timezone import utc
 
+from django_ipgeobase.models import IPGeoBase
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -84,7 +86,8 @@ class PointsBaseView(View):
                                 extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
-                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon','avatar']},
                                            'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
@@ -93,23 +96,17 @@ class PointsBaseView(View):
                                            'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
                                                         'extras':['reviewusersplus'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},},
                                                                                 'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
                                                                                 },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
+                                                                    'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},
                                                         },
                                                     },
-                                           'points_by_user': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'point',],
-                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
-                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']}, 'comments': {'fields': ['txt', 'created', 'author'],
-                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},},
-                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
-                                                                                },}},
-                                                                    'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
-                                                                    'point' : {'fields' : ['name', 'longitude', 'latitude',]}
-                                                        },
-                                                    },
+                                           
 
                                            })
 
@@ -249,6 +246,13 @@ class ItemsList(PointsBaseView):
     log = logger
     def get(self, request, *args, **kwargs):
         params = request.GET
+        
+        
+
+        
+
+
+
         sets = "set"
         models = ['points','sets','routes']
         search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
@@ -296,6 +300,10 @@ class ItemsList(PointsBaseView):
             search_res_sets = CollectionsModels.Collections.search.none()
             self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, params.get('tags', '')))
 
+        
+        
+            
+
         if params.get('coord_left'):
             #top left coords
             ln_left = float(json.loads(params.get('coord_left')).get('ln'))
@@ -303,32 +311,50 @@ class ItemsList(PointsBaseView):
             #top right coords
             ln_right = float(json.loads(params.get('coord_right')).get('ln'))
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
-            t0 = time.time()
-            search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
-            search_res_sets_list = []
+        else:
+            #GET CLIENT IP:
+            remote_address = request.META.get('REMOTE_ADDR')
+            ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address
+            self.log.info('Client IP:' + str(ip))
+            ipgeobases = IPGeoBase.objects.by_ip(ip)
+            if ipgeobases.exists():
+                ipgeobase = ipgeobases[0]
+            else:
+                ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
+                ipgeobase = ipgeobases[0]
+            ln_left = ipgeobase.longitude - 0.1
+            ln_right = ipgeobase.longitude + 0.1
+            lt_left = ipgeobase.latitude - 0.1
+            lt_right = ipgeobase.latitude + 0.1
 
-            for collection in search_res_sets.all():
-                points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-                if len(points_l) > 0:
-                    search_res_sets_list.append(int(collection.id))
-                
-            search_res_routes_list = []
-            for route in search_res_routes.all():
-                points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-                if len(points_l) > 0:
-                    search_res_routes_list.append(int(route.id))
+        t0 = time.time()
+        search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+        self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
+        search_res_sets_list = []
+
+        for collection in search_res_sets.all():
+            points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            if len(points_l) > 0:
+                search_res_sets_list.append(int(collection.id))
             
-            if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
-                if len(search_res_sets_list) == 0:
-                    search_res_sets = none_qs
-                else:
-                    search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
-                if len(search_res_routes_list) == 0:
-                    search_res_routes = none_qs
-                else:
-                    search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
-                search_res_points = search_res_points_list
+        search_res_routes_list = []
+        for route in search_res_routes.all():
+            points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            if len(points_l) > 0:
+                search_res_routes_list.append(int(route.id))
+        
+        if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
+            if len(search_res_sets_list) == 0:
+                search_res_sets = none_qs
+            else:
+                search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
+            if len(search_res_routes_list) == 0:
+                search_res_routes = none_qs
+            else:
+                search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
+            search_res_points = search_res_points_list
+
+
         t0 = time.time()
         search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
         search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
@@ -924,8 +950,67 @@ class GetTags(View):
         YpJson = YpSerialiser()
         tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)
-'''
-class Event(view):
+
+class Event(View):
     http_method_names = ('post','get','put','delete')
 
-'''
+
+    def post(self, request):
+        params = reques.POST
+        author = MainModels.Person.objects.get(username=request.user)
+        point = MainModels.Points.objects.get(id = params.get('point'))
+        name = params.get('name')
+        description = params.get('description')
+        event = MainModels.Events.create(author = author, point = point, name = name, description = description)
+        images = params.getlist('imgs[]')
+        if images:
+            for image in images:
+                try:
+                    img = PhotosModels.Photos.objects.get(id=image)
+                    event.imgs.add(img)
+                    originalPoint.imgs.add(img)
+                except:
+                    message = "ошибка добавления изображения"
+                    pass
+        event.save()
+
+    def put(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        params = QueryDict(request.body, request.encoding)
+        route_dict = json.loads(params)
+        author = MainModels.Person.objects.get(username=request.user)
+        point = MainModels.Points.objects.get(id = params.get('point'))
+        name = params.get('name')
+        description = params.get('description')
+        event = MainModels.Events.objects.get(id = id).update(**route_dict)
+        images = params.getlist('imgs[]')
+        if images:
+            for image in images:
+                try:
+                    img = PhotosModels.Photos.objects.get(id=image)
+                    event.imgs.add(img)
+                    originalPoint.imgs.add(img)
+                except:
+                    message = "ошибка добавления изображения"
+                    pass
+        event.save()
+
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        event = MainModels.Events.objects.get(id = id)
+        if event.author == MainModels.Person.objects.get(username=request.user):
+            event.delete()
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        event = MainModels.Events.objects.get(id = id)
+
+        name = event.name
+        description = event.description
+        point = event.point
+        YpJson = YpSerialiser()
+        return JsonHTTPResponse(json.loads(self.getSerializeCollections(QuerySetJoin(event))[0]) )
+
+
+
+
