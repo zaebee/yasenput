@@ -74,13 +74,13 @@
                 <div class="clearfix place-photos">
                     <div class="photos-gallery">
                         <ul style="left: 0px;">
-                            {% for img in point.imgs %}
+                            {% for img in point.imgs.all %}
                             <li>
                                 <div class="item-photo selected current" data-photo-id="710" itemprop="photo" itemscope itemtype="http://schema.org/ImageObject">
                                     <meta itemprop="image" content="{{ img.img }}" />
                                     <meta itemprop="author" content="{{ img.author.first_name }} {{ img.author.last_name }}" />
                                     <a href="#!/point/196/photo/710" itemprop="URL">
-                                        <img src="/media/cache/81/17/811793c21cdaa8106676b386fcf6bc2c.jpg" alt=""
+                                        <img src="{{img.thumbnail207}}" alt=""
                                              width="104" height="104" itemprop="thumbnail">
                                     </a>
 
@@ -126,7 +126,7 @@
                     <div class="bp-comments">
                         <div class="toggle-block a-toggle-up">
                             <a href="#" class="a-toggle">все комментарии <span>↓</span></a>
-                            {% for comment in point.comments %}
+                            {% for comment in point.comments.all %}
                                 <div class="item-comment" data-comment-id="18">
                                     <img src="{{ comment.author.avatar }}" alt="" width="29"  height="30" class="avatar">
 
@@ -219,7 +219,7 @@
     <div class="bp-comments bp-comments_review">
         <div class="toggle-block a-toggle-down">
 
-            {% for review in place.reviews %}
+            {% for review in place.reviews.all %}
                 <div class="item-comment item-comment_green" itemprop="review" itemscope itemtype="http://schema.org/Review">
                     <img src="/media/avatar/3d300e1bacb14947ac383093b0e7c92a.jpeg" alt="" width="29" height="30" class="avatar">
                     <div class="comment-body">
@@ -256,7 +256,7 @@
         <h4 class="title-block">Метки</h4>
 
         <div class="body">
-            {% for tag in point.tags %}
+            {% for tag in point.tags.all %}
                 <div class="label label-place">{{ tag.name }}</div>
             {% endfor %}
         </div>
