@@ -12,21 +12,6 @@ Yapp.addInitializer ->
   @settings = {}
   @isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)
 
-  @updateSettings = (settings) ->
-    changedSettings = {}
-    changed = false
-    for key of settings
-      if settings.hasOwnProperty(key)
-        if @settings[key] isnt settings[key]
-          if _.isNumber(settings[key]) or !_.isEmpty settings[key]
-            @settings[key] = settings[key]
-          else
-            delete @settings[key]
-          changedSettings[key] = settings[key]
-          changed = true
-    if changed
-      @vent.trigger 'change:settings', changedSettings
-
   ## TODO: set page content for showing big ajax-loader
   # application regions
   @addRegions(
@@ -117,11 +102,9 @@ Yapp.runApplication = ->
   @vent.on 'user:notauthorized', ->
     Yapp.popup.show new Yapp.Common.AuthPopupView
 
-  # on logout we must go to start application point
-  @vent.on 'logout', ->
-    window.location.replace '/'
   Backbone.history.start(
     pushState: true
+    trackDirection: true
   )
 
 Yapp.start()

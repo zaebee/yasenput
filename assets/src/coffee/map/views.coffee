@@ -23,13 +23,6 @@ class Yapp.Map.MapView extends Marionette.ItemView
   template: Templates.MapView
 
   ###*
-  # @property tagName
-  # @type String
-  # @default 'div'
-  ###
-  tagName: 'div'
-
-  ###*
   # @property className
   # @type String
   # @default 'map'
@@ -73,7 +66,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   toggleMap: (event) ->
     event.preventDefault()
-    Yapp.execute('toggleMap')
+    Yapp.execute 'toggleMap'
 
   ###*
   # Fired when an ymaps fully load and load:yandexmap event occur.
