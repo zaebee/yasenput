@@ -90,7 +90,10 @@ class Yapp.Map.MapView extends Marionette.ItemView
     geoCoder.then (result) =>
       match = _.find result.GeoObjectCollection.featureMember, (el) ->
         el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'locality' or
-        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'area'
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'area' or
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'province'
+
+      match = if match then match else result[0]
 
       geoObject = match.GeoObject
       geoMetaData = geoObject.metaDataProperty.GeocoderMetaData
