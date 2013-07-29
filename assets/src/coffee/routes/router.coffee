@@ -20,14 +20,14 @@ class Yapp.Routes.Router extends Marionette.AppRouter
   ###
   initialize: ->
     console.log 'initializing Yapp.Routes.Router'
-    @on 'route', -> Yapp.Common.router.trigger 'route'
 
   ###*
   # It determine route list of the router
   # @property appRoutes
   ###
   appRoutes:
-    "route/add": "showRoute"
+    "route/add": "addRoute"
+    "route/add/point/:id": "addRoutePoint"
     "route/:id": "showRouteDetail"
     "route/:id/point/:id": "showRoutePhoto"
     "route/:id/point/:point_id/photo/:photo_id": "showRoutePhoto"

@@ -23,14 +23,27 @@ class Yapp.Routes.Controller extends Marionette.Controller
 
   ###*
   # The view for the routes showing function
-  # @method showRoutes
+  # @method addRoute
   ###
-  showRoute: ->
+  addRoute: ->
     Yapp.content.close()
     Yapp.popup.close()
     Yapp.Map.mapView.clear()
     routesView = new Yapp.Routes.RoutesView
       model: new Yapp.Routes.Route
+    Yapp.routePanel.show routesView
+
+  ###*
+  # The view for the routes showing function with selected point
+  # @method addRoutePoint
+  ###
+  addRoutePoint: (pointId) ->
+    Yapp.content.close()
+    Yapp.popup.close()
+    Yapp.Map.mapView.clear()
+    routesView = new Yapp.Routes.RoutesView
+      model: new Yapp.Routes.Route
+      pointId: pointId
     Yapp.routePanel.show routesView
 
   ###*

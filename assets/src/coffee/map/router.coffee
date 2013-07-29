@@ -20,7 +20,6 @@ class Yapp.Map.Router extends Marionette.AppRouter
   ###
   initialize: ->
     console.log 'initializing Yapp.Map.Router'
-    @on 'route', -> Yapp.Common.router.trigger 'route'
 
   ###*
   # It determine route list of the router
