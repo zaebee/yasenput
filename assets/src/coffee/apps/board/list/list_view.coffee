@@ -10,7 +10,7 @@
 
 
   class List.Yapens extends App.Views.ItemView
-    template: 'PointItemView'
+    template: 'BoardItem'
     className: 'items'
 
     collectionEvents:
@@ -41,7 +41,7 @@
 
 
   class List.Panel extends App.Views.ItemView
-    template: 'PointPanelView'
+    template: 'BoardPanel'
     className: 'tabs'
     tagName: 'menu'
     templateHelpers: ->

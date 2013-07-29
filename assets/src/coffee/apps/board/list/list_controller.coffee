@@ -4,8 +4,8 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
+      App.updateSettings content: @options.content
       @yapens = App.request 'get:all:yapens', @options.content
-      Yapp.updateSettings content: @options.content
 
       @layout = @getLayoutView()
       @listenTo @layout, 'show', =>
@@ -15,7 +15,6 @@
       @show @layout, loading: true
 
     onClose: ->
-      console.log 'onClose'
       @stopListening()
       @yapens.reset()
 
@@ -32,8 +31,8 @@
     getLayoutView: ->
       new List.Layout
 
-    getPanelView: (content) ->
-      new List.Panel content: content or @options.content
+    getPanelView: ->
+      new List.Panel content: @options.content
 
     getYapensView: (yapens) ->
       yapensView = new List.Yapens collection: yapens

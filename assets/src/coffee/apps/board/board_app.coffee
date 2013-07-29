@@ -11,6 +11,9 @@
       '': 'popular'
       '!popular': 'popular'
       '!new': 'new'
+      '!point/:id': 'point'
+      '!set/:id': 'set'
+      '!route/:id': 'route'
 
   API =
     popular: ->
@@ -19,6 +22,15 @@
     new: ->
       new BoardApp.List.Controller
         content: 'updated'
+
+    point: (id) ->
+      new BoardApp.Point.Controller id: id
+
+    set: (id) ->
+      new BoardApp.Set.Controller id: id
+
+    route: (id) ->
+      new BoardApp.Route.Controller id: id
 
   App.addInitializer ->
     new BoardApp.Router
