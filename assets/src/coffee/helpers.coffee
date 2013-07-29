@@ -6,7 +6,6 @@ Handlebars.registerHelper('ifEquals', (v1, v2, options) ->
     return options.inverse @
 )
 
-
 ## Adding helper to Handlebars for using {{#ifContains a b}} conditions in templates
 Handlebars.registerHelper('ifContains', (v1, v2, options) ->
   if v2 is undefined

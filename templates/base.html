@@ -29,30 +29,6 @@
 
     {% block popups %}{% endblock %}
 
-    {% if user.is_authenticated %}
-      <script>
-        var USER = {
-          authorized: true,
-          id: {{user.id}},
-          first_name: '{{ user.first_name }}',
-          last_name: '{{ user.last_name }}',
-          avatar: '{{ user.person.avatar }}',
-          last_state: 'pins',
-          count_liked_objects: {{ count_liked_objects|default:0 }},
-          count_commented_objects: {{ count_commented_objects|default:0 }},
-          collections: [ {% for collection in collections %}
-            {
-              id: {{ collection.id }},
-              name: '{{ collection.name }}'
-            },
-          {% endfor %} ]
-        };
-      </script>
-    {% else %}
-      <script>
-        var USER = {authorized: false};
-      </script>
-    {% endif %}
 
     <!--
     <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
@@ -86,9 +62,36 @@
       {% include 'includes/metrika.html' %}
     {% endif %}
 
+    <script>
+      $(function() {
+        Yapp.start();
+        {% if user.is_authenticated %}
+          Yapp.USER = {
+            authorized: true,
+            id: {{user.id}},
+            first_name: '{{ user.first_name }}',
+            last_name: '{{ user.last_name }}',
+            avatar: '{{ user.person.avatar }}',
+            last_state: 'pins',
+            count_liked_objects: {{ count_liked_objects|default:0 }},
+            count_commented_objects: {{ count_commented_objects|default:0 }},
+            collections: [ {% for collection in collections %}
+              {
+                id: {{ collection.id }},
+                name: '{{ collection.name }}'
+              },
+            {% endfor %} ]
+          };
+        {% else %}
+          var USER = {authorized: false};
+        {% endif %}
+      });
+    </script>
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&ns=Yapp.ymaps"></script>
     {# external #}
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
 
+    <!--
     <script type="text/javascript">
       //FB init
       (function(d, s, id) {
@@ -104,7 +107,6 @@
       VK.Widgets.Like("vk_like", {type: "mini"}, 1000);
 
     </script>
-    <!--
     -->
 
   </body>

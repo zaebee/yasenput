@@ -1,6 +1,10 @@
 do (Backbone) ->
 
+  Backbone.emulateJSON = true
+
   _.extend Backbone.Marionette.Application::,
+
+    settings: {}
 
     navigate: (route, options = {}) ->
       Backbone.history.navigate route, options

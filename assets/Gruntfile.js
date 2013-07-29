@@ -42,41 +42,30 @@ module.exports = function(grunt) {
             'src/css/**/*.css'
           ],
           'debug/js/application.js': [
-            'debug/js/config/*.js',
-            'debug/js/config.js',
             'debug/js/templates.js',
             'debug/js/helpers.js',
-            'debug/js/**/module.js',
-            'debug/js/**/popup.js',
-            'debug/js/**/*model.js',
-            'debug/js/**/collection.js',
-            'debug/js/**/layout.js',
-            'debug/js/**/views.js',
-            'debug/js/**/views/*.js',
-            'debug/js/**/router.js',
-            'debug/js/**/controller.js',
-            'debug/js/main.js'
+            'debug/js/config/*.js',
+            'debug/js/main.js',
+            'debug/js/controllers/*.js',
+            'debug/js/views/_base/*.js',
+            'debug/js/entities/_base/*.js',
+            'debug/js/entities/*.js',
+            'debug/js/apps/**/*.js',
           ]
         }
       },
       release: {
         files: {
           'debug/js/application.js': [
-            'debug/js/release-only.js',
-            'debug/js/config/*.js',
-            'debug/js/config.js',
             'debug/js/templates.js',
             'debug/js/helpers.js',
-            'debug/js/**/module.js',
-            'debug/js/**/popup.js',
-            'debug/js/**/*model.js',
-            'debug/js/**/collection.js',
-            'debug/js/**/layout.js',
-            'debug/js/**/views.js',
-            'debug/js/**/views/*.js',
-            'debug/js/**/router.js',
-            'debug/js/**/controller.js',
-            'debug/js/main.js'
+            'debug/js/config/*.js',
+            'debug/js/main.js',
+            'debug/js/controllers/*.js',
+            'debug/js/yapens/_base/*.js',
+            'debug/js/yapens/*.js',
+            'debug/js/views/*.js',
+            'debug/js/apps/*.js',
           ],
           'debug/js/libs.js': [
             'src/lib/json2.js',

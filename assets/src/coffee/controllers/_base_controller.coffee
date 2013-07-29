@@ -1,31 +1,15 @@
-###*
-# Submodule for all common functionality
-# @module Yapp
-# @submodule Common
-###
+@Yapp.module 'Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
 
-@Yapp.module 'Common.Controllers', (Controllers, App, Backbone, Marionette, $, _) ->
+  class Controllers.Base extends Marionette.Controller
 
-  ###*
-  # Controller for Common module
-  # @class Yapp.Common.Controller
-  # @extends Marionette.Controller
-  # @constructor
-  ###
-  class Yapp.Common.Controllers.Base extends Marionette.Controller
-
-    ###*
-    # The controller initializer
-    # @method initialize
-    ###
     constructor: (options = {}) ->
-      @region = options.region or App.request "default:region"
-      @_instance_id = _.uniqueId("controller")
-      App.execute "register:instance", @, @_instance_id
+      @region = options.region or App.request 'default:region'
+      @_instance_id = _.uniqueId('controller')
+      App.execute 'register:instance', @, @_instance_id
       super
 
     close: ->
-      App.execute "unregister:instance", @, @_instance_id
+      App.execute 'unregister:instance', @, @_instance_id
       super
 
     show: (view, options = {}) ->
@@ -45,11 +29,11 @@
 
       return if @_mainView
       @_mainView = view
-      @listenTo view, "close", @close
+      @listenTo view, 'close', @close
 
     _manageView: (view, options) ->
       if options.loading
         ## show the loading view
-        App.execute "show:loading", view, options
+        App.execute 'show:loading', view, options
       else
         options.region.show view
