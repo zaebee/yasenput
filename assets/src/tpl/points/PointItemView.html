@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <a href="/set/{{id}}" class="a-photo nonav">
+      <a href="#!set/{{id}}" class="a-photo">
         {{#if points.[0].imgs.[0]}}
           <img src="{{points.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{points.[0].imgs.[0].thumbnail207_height}}">
         {{else}}
@@ -29,7 +29,7 @@
       </a>
     </div>
 
-    <ul class="photo-preview a-photo nonav">
+    <ul class="photo-preview a-photo">
       {{#if points.[2]}}
         <li>
           <a href="#">
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <a href="/point/{{id}}" class="a-photo nonav">
+      <a href="#!point/{{id}}" class="a-photo">
         <img src="{{imgs.[0].thumbnail207}}" alt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
       </a>
     </div>
@@ -119,7 +119,7 @@
     <div class="photo">
       <a href="#" class="a-like a-like-ok {{#ifBelong ../../user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
       {{#ifEquals ../../user.id author.id}}
-      <a href="/route/{{id}}/edit" class="a-edit-new nonav" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
+      <a href="#!route/{{id}}/edit" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
       {{/ifEquals}}
 
       <div class="yasen-info">
@@ -131,7 +131,7 @@
         </div>
       </div>
 
-      <a href="/route/{{id}}" class="a-photo nonav">
+      <a href="#!route/{{id}}" class="a-photo">
         {{#if points.[0].imgs.[0]}}
           <img src="{{points.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{points.[0].imgs.[0].thumbnail207_height}}">
         {{else}}
@@ -140,7 +140,7 @@
       </a>
     </div>
 
-    <ul class="photo-preview a-photo nonav">
+    <ul class="photo-preview a-photo">
       {{#if points.[2]}}
         <li>
           <a href="#">

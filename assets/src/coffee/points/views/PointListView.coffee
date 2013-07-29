@@ -81,8 +81,8 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onClose: ->
     console.log 'onClose trigger'
-    @wall.destroy()
     @infiniScroll.destroy()
+    @wall.destroy()
     @remove()
 
   ###*

@@ -1,5 +1,6 @@
 @Yapp.module 'MapApp.Show', (Show, App, Backbone, Marionette, $, _) ->
 
+
   class Show.Layout extends App.Views.Layout
     template: 'MapView'
     className: 'map'
@@ -7,7 +8,12 @@
       tagsRegion: '#m-ico-group'
 
     events:
-      'click .a-toggle' : -> App.execute 'toggle:map'
+      'click .a-toggle': 'toggleMap'
+
+    toggleMap: (e) ->
+      e.preventDefault()
+      App.execute 'toggle:map'
+
 
   class Show.Map extends App.Views.ItemView
     template: false

@@ -4,23 +4,30 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
+      @yapens = App.request 'get:all:yapens', @options.content
+      Yapp.updateSettings content: @options.content
 
       @layout = @getLayoutView()
       @listenTo @layout, 'show', =>
         @yapensView()
         @panelView()
 
-      @show @layout
+      @show @layout, loading: true
+
+    onClose: ->
+      console.log 'onClose'
+      @stopListening()
+      @yapens.reset()
 
     panelView: ->
       panelView = @getPanelView()
       @show panelView, region: @layout.panelRegion
 
-    yapensView: (content) ->
-      yapens = App.request 'get:all:yapens', content or @options.content
-      App.execute 'when:fetched', yapens, =>
-        yapensView = @getYapensView yapens
-        @show yapensView, region: @layout.yapensRegion
+    yapensView: ->
+      yapensView = @getYapensView @yapens
+      @show yapensView,
+        region: @layout.yapensRegion
+        loading: true
 
     getLayoutView: ->
       new List.Layout
@@ -30,4 +37,3 @@
 
     getYapensView: (yapens) ->
       yapensView = new List.Yapens collection: yapens
-

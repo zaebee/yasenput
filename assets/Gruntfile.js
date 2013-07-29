@@ -50,6 +50,7 @@ module.exports = function(grunt) {
             'debug/js/views/_base/*.js',
             'debug/js/entities/_base/*.js',
             'debug/js/entities/*.js',
+            'debug/js/components/loading/*.js',
             'debug/js/apps/**/*.js',
           ]
         }
@@ -65,6 +66,7 @@ module.exports = function(grunt) {
             'debug/js/yapens/_base/*.js',
             'debug/js/yapens/*.js',
             'debug/js/views/*.js',
+            'debug/js/components/loading/*.js',
             'debug/js/apps/*.js',
           ],
           'debug/js/libs.js': [

@@ -8,6 +8,7 @@
 
   class BoardApp.Router extends Marionette.AppRouter
     appRoutes:
+      '': 'popular'
       '!popular': 'popular'
       '!new': 'new'
 
