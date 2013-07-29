@@ -15,7 +15,7 @@ class LIMITS():
         
 
         POINTS_SEARCH_COUNT = 5  # число точек на странице поиска точек
-        POINTS_LIST_COUNT = 10
+        POINTS_LIST_COUNT = 15
 
     
     class COLLECTIONS_LIST():
@@ -23,7 +23,7 @@ class LIMITS():
         LIKEUSERS_COUNT = 20
         POINTS_COUNT = 1
         
-        COLLECTIONS_LIST_COUNT = 10
+        COLLECTIONS_LIST_COUNT = 15
 
     class COLLECT():
         COLLECTION_PAGE = 1
