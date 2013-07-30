@@ -28,10 +28,3 @@
     ###
     initialize: ->
       console.log "initializing Entities.Collection"
-
-    ###*
-    # The collection comparator for ordering models default by ypi
-    # @method comparator
-    ###
-    comparator: (collection) ->
-      -collection.get 'ypi'

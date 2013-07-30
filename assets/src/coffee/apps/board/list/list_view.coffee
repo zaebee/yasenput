@@ -15,6 +15,8 @@
 
     collectionEvents:
       'reset': 'render'
+    triggers:
+      'click .a-photo': 'show:detail:points'
 
     initialize: ->
       _.bindAll @, 'update'
@@ -30,13 +32,12 @@
         isFitWidth: true
 
     onClose: ->
-      console.log 'onClose trigger'
       @infiniScroll.destroy()
       @wall.destroy()
       @remove()
 
     update: (collection) ->
-      @collection.reset collection.models
+      @collection.reset collection.sortBy @options.content
       @onShow()
 
 
@@ -44,9 +45,9 @@
     template: 'BoardPanel'
     className: 'tabs'
     tagName: 'menu'
+
     templateHelpers: ->
       active: @options.content
-
     events:
       'click .menu-item': 'changeContent'
 
