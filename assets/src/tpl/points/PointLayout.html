@@ -1,0 +1,252 @@
+<div class="clearfix p-body">
+<header>
+  <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
+
+  <!--<div class="event-date">1―5 января</div>-->
+
+  <h2><a href="#" class="a-place-name">{{name}}</a></h2>
+  <small>Увидел</small>
+  <a href="#">{{author.first_name}} {{author.last_name}}</a>
+  <div class="addr">{{address}}</div>
+
+  <div class="p-place-desc">
+    {{headDescription}}{{#if tailDescription}}<span class="hellip">&hellip;</span><span class="hidden more-desc">{{tailDescription}}<br></span><a href="#" class="a-toggle-desc">подробнее</a>{{/if}}
+  </div>
+
+  <div class="stats">
+    <span>
+      <span class="ico-want-small"></span>
+      {{beens_count}}
+    </span>
+
+    <span>
+      <span class="ico-like-small"></span>
+      {{likes_count}}
+    </span>
+
+    <span>
+      <span class="ico-star-small"></span>
+      {{sets.length}}
+    </span>
+
+    <span>
+      <span class="ico-vote-small"></span>
+      {{reviewusersplus}}/{{reviewusersminus}}
+    </span>
+  </div>
+</header>
+
+<div class="wide-box">
+  <ul class="p-tabs">
+    <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
+    <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
+    <li><a href="#tab-reviews" data-toggle="tab">Отзывы</a></li>
+    <!--
+    <li><a href="#tab-desc" data-toggle="tab">О месте</a></li>
+    <li><a href="#tab-events" data-toggle="tab">События</a></li>
+    -->
+
+    <li><div class="shadow"></div></li>
+  </ul>
+
+  <div class="tabs-content">
+    <div id="tab-photo" class="tab-pane active">
+      <ul class="tabs-inside"><!-- tp- tab photo -->
+        <li class="active"><a href="#tp-tab-pop" data-toggle="tab">популярные</a></li>
+        <li><a href="#tp-tab-my" data-toggle="tab">новые</a></li>
+        <li><a href="#tp-tab-new" data-toggle="tab">мои</a></li>
+      </ul>
+
+      <div class="tabs-content">
+        <div class="toggle-block">
+          <div class="clearfix p-gallery">
+            <div class="clearfix place-photos">
+              <div class="photos-gallery">
+                <ul>
+                  {{#each imgs}}
+                  <li>
+                    <div class="item-photo selected" data-photo-id="{{id}}">
+                      <a href="/point/{{../id}}/photo/{{id}}">
+                        <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
+                      </a>
+
+                      {{#ifEquals author.id ../user.id}}
+                        <button type="button" title="Удалить фото" class="remove-photo"></button>
+                      {{else}}
+                        <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+                      {{/ifEquals}}
+                    </div>
+                  </li>
+                  {{/each}}
+                </ul>
+              </div>
+              <div class="item-photo load-photo">
+                <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
+                  <input name="img" type="file">
+                </form>
+              </div>
+
+              <!--
+              <div class="item-photo load-photo">
+                <input type="file">
+              </div>
+              -->
+
+              <span class="photos-next"></span>
+              <span class="photos-prev"></span>
+            </div>
+
+            <div id="big-photo"></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end #tab-photo -->
+
+    <div id="tab-map" class="tab-pane">
+      <div class="map">
+        <div id="popup-map" style="width:560px; height:510px"></div>
+
+        <div class="m-ico-group">
+          <a href="#">
+            <span class="m-ico m-hotel"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-cafe"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-restoran"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-turism"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-azs"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-active-rest"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-sto"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-commerc"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-hunting"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-events"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-shop"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-fishing"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-monument"></span>
+          </a>
+          <a href="#">
+            <span class="m-ico m-church"></span>
+          </a>
+        </div>
+
+      </div>
+    </div><!-- end #tab-map -->
+
+    <div id="tab-reviews" class="tab-pane">
+      <div class="bp-comments bp-comments_review">
+        <div class="toggle-block a-toggle-down">
+
+          <div class="add-comment">
+            <form id="reviewForm" action="#">
+              <div class="ac-block">
+                <img src="/media/{{user.avatar}}" alt="" width="29" height="30" class="avatar" data-author="{{user.first_name}} {{user.last_name}}">
+
+                <div class="ac-body">
+                  <textarea name="review" placeholder="Оставьте свой отзыв..."></textarea>
+                </div>
+              </div>
+              <input type="submit" class="button button_green" value="Добавить">
+              <div class="vote">
+                <label class="vote__label">Оцените место:</label>
+                <div class="vote__raiting js-vote">
+                  <input type="hidden" name="vote-id" value="1"/>
+                </div>
+              </div>
+            </form>
+          </div>
+
+
+          {{#each reviews}}
+          <div  class="item-comment item-comment_green">
+            <img src="/media/{{author.avatar}}" alt="" width="29" height="30" class="avatar">
+            <div class="comment-body">
+              <div class="comment-author">{{author.first_name}} {{author.last_name}}</div>
+              <div class="comment-date">Оценил(а) место: {{rating}}<span class="ico-vote-small"></span> {{dateFormat updated}}</div>
+              {{#if review}}
+              <p>{{safe review}}</p>
+              {{/if}}
+            </div>
+
+            <div class="action">
+              {{#ifEquals author.id ../user.id}}
+              <!--<a data-toggle="tooltip" title="Удалить&nbsp;отзыв" data-placement="title" data-content="Вы уверены, что хотите удалить отзыв?" href="#" class="a-remove-comment"></a>-->
+              {{else}}
+                <a data-toggle="tooltip" title="Пожаловаться&nbsp;на&nbsp;отзыв" data-placement="bottom" href="#" class="a-complaint-comment"></a>
+              {{/ifEquals}}
+            </div>
+          </div>
+          {{/each}}
+
+          <div class="hidden-content"></div>
+          <a href="#" class="a-toggle">все отзывы <span>&darr;</span></a>
+
+        </div>
+      </div><!-- end .bp-comments -->
+    </div><!-- end #tab-reviews -->
+  </div>
+
+  <div class="tabs-content p-common-content">
+    {{#if tags}}
+    <section class="p-block event-labels">
+      <h4 class="title-block">Метки</h4>
+
+      <div class="body">
+        {{#each tags}}
+        <div class="label label-place">{{name}}</div>
+        {{/each}}
+      </div>
+    </section>
+    {{/if}}
+  </div>
+</div>
+
+</div>
+
+{{#if user.authorized}}
+<aside id="right-panel">
+  <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+  <a href="/route/add/point/{{id}}" class="a-btn a-add-path nonav">Создать маршрут</a>
+  {{#ifEquals author.id user.id}}
+  <a href="#" class="a-btn a-edit">Редактировать</a>
+  {{/ifEquals}}
+
+  <div class="basic-icons">
+    <span href="#" class="a-like {{#if isliked}}marked{{/if}}" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></span>
+    <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться&nbsp;на&nbsp;место" data-toggle="tooltip"></a>
+  </div>
+
+  <div class="aside-social">
+    <div class="share">
+      <div id="vk_like_point"></div>
+      <br>
+      <div class="fb-like" data-href="http://yasenput.ru/point/{{id}}" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+    </div>
+  </div>
+
+  <div class="small-icons">
+    {{#if wifi}}<i class="ico-wifi"></i>{{/if}}{{#if invalid}}<i class="ico-disabled"></i>{{/if}}{{#if parking}}<i class="ico-p"></i>{{/if}}{{#if wc}}<i class="ico-wc"></i>{{/if}}
+  </div>
+</aside>
+{{/if}}
