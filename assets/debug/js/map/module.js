@@ -10,11 +10,10 @@
     startWithParent: false,
     define: function() {
       return this.addInitializer(function() {
-        var callbacks, dfd,
-          _this = this;
+        var _this = this;
 
         console.log('initializing Map Module');
-        callbacks = new Backbone.Marionette.Callbacks();
+        this.mapDeferred = $.Deferred();
         this.router = new Yapp.Map.Router({
           controller: new Yapp.Map.Controller
         });
@@ -31,44 +30,47 @@
             offset: [-29, -29]
           }
         ];
-        dfd = $.Deferred();
         this.geocode = function(request, options) {
           if (window.ymaps !== void 0) {
             return ymaps.geocode(request, options);
           } else {
-            return dfd;
+            return this.mapDeferred;
           }
         };
         this.route = function(feature, options) {
           if (window.ymaps !== void 0) {
             return ymaps.route(feature, options);
           } else {
-            return dfd;
+            return this.mapDeferred;
           }
         };
-        this.mapDeferred = $.Deferred();
         return $.getScript(Yapp.YA_MAP_URL, function() {
           return _this.mapDeferred.promise(ymaps.ready(function() {
-            var map, pointCollection;
+            var leftCorner, location, rightCorner;
 
-            dfd.resolve();
             console.log('Init Yandex map');
-            map = new ymaps.Map('mainmap', {
+            _this.yandexmap = new ymaps.Map('mainmap', {
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
               zoom: 12
+            }, {
+              autoFitToViewport: 'always'
+            });
+            _this.trigger('load:yandexmap', _this.yandexmap);
+            leftCorner = _this.yandexmap.getBounds()[0].reverse().join(' ');
+            rightCorner = _this.yandexmap.getBounds()[1].reverse().join(' ');
+            location = _.extend(ymaps.geolocation, {
+              leftCorner: leftCorner,
+              rightCorner: rightCorner
             });
             Yapp.user.set({
-              location: ymaps.geolocation
+              location: location
             });
-            map.controls.add('zoomControl', {
+            _this.yandexmap.controls.add('zoomControl', {
               right: 5,
               top: 80
             }).add('typeSelector');
-            pointCollection = new ymaps.GeoObjectCollection();
-            map.geoObjects.add(pointCollection);
-            _this.yandexmap = map;
-            _this.trigger('load:yandexmap', _this.yandexmap);
-            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n\n  <div class=\"name-place\" data-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
+            _this.mapEvents = _this.yandexmap.events.group();
+            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" data-point-id=\"$[properties.point.id]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  [if properties.iconContent]\n  <span class=\"p-num\">$[properties.iconContent]</span>\n  [else]\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n  [endif]\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n\n  <div class=\"name-place\" data-point-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
               /**
               #
               # Add custom events for placemark
@@ -76,17 +78,19 @@
               */
 
               build: function() {
-                var addPlaceElement, namePlaceElement, rootElement;
+                var addPlaceElement, namePlaceElement, placemarkElement, rootElement;
 
                 this.constructor.superclass.build.call(this);
                 rootElement = this.getElement();
+                placemarkElement = rootElement.getElementsByClassName('placemark');
                 addPlaceElement = rootElement.getElementsByClassName('a-add-place');
                 namePlaceElement = rootElement.getElementsByClassName('name-place');
+                $('[data-toggle=tooltip]', this.getElement()).tooltip();
                 this.eventsGroup = this.events.group();
-                this.eventsGroup.add('click', this.onClickPlacemark, rootElement);
+                this.eventsGroup.add('click', this.onClickPlacemark, placemarkElement);
                 this.eventsGroup.add('click', this.onClickAddPlace, addPlaceElement);
                 this.eventsGroup.add('click', this.onClickNamePlace, namePlaceElement);
-                $(rootElement).unbind('click').bind('click', this.onClickPlacemark);
+                $(placemarkElement).unbind('click').bind('click', this.onClickPlacemark);
                 $(addPlaceElement).unbind('click').bind('click', this.onClickAddPlace);
                 return $(namePlaceElement).unbind('click').bind('click', this.onClickNamePlace);
               },
@@ -97,22 +101,25 @@
               */
 
               clear: function() {
-                return this.eventsGroup.removeAll();
+                this.eventsGroup.removeAll();
+                return $('[data-toggle=tooltip]', this.getElement()).tooltip('destroy');
               },
               onClickPlacemark: function(event) {
-                var me, w;
+                var $target, me, w;
 
                 event.preventDefault();
                 event.stopPropagation();
-                if ($('.placemark', this).hasClass('hover')) {
-                  me = $('.placemark', this);
+                $target = $(event.currentTarget);
+                clearTimeout();
+                if ($(this).hasClass('hover')) {
+                  me = $(this);
                   return $('.name-place', this).stop().animate({
                     width: 0
                   }, 150, function() {
                     return me.removeClass('hover');
                   });
                 } else {
-                  $('.placemark', this).addClass('hover');
+                  $(this).addClass('hover');
                   w = $('.name-place', this).data('width') || $('.name-place', this).outerWidth();
                   return $('.name-place', this).data('width', w).width(0).stop().animate({
                     width: w - 29
@@ -125,7 +132,6 @@
               */
 
               onClickAddPlace: function(event) {
-                event.preventDefault();
                 return Yapp.vent.trigger('click:addplacemark', event);
               },
               /**
@@ -136,12 +142,11 @@
               onClickNamePlace: function(event) {
                 var $target, pointId;
 
-                event.preventDefault();
-                event.stopPropagation();
                 $target = $(event.currentTarget);
-                pointId = $target.data('id');
-                Yapp.vent.trigger('click:nameplacemark', pointId);
-                return Yapp.Common.router.trigger('route');
+                pointId = $target.data('point-id');
+                if (pointId) {
+                  return Yapp.vent.trigger('click:nameplacemark', pointId);
+                }
               }
             });
             return _this.mapDeferred.resolve();

@@ -50,6 +50,8 @@
 
     HeaderView.prototype.template = Templates.HeaderView;
 
+    HeaderView.prototype.className = 'wrap';
+
     /**
     # Ui emenents for view
     # @type Object
@@ -89,7 +91,9 @@
       'click #multisearchForm input[type=submit]': 'submitSearch',
       'submit #multisearchForm': 'submitSearch',
       'keydown .text-field input': 'keyupInput',
-      'click .head-nav li': 'selectItemType'
+      'click .head-nav li': 'selectItemType',
+      'click .head-nav ul': 'showItemTypeMenu',
+      'click .add-block-head': 'showAddMenu'
     };
 
     /**
@@ -140,8 +144,6 @@
           Yapp.Map.yandexmap.setBounds([data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()], {
             checkZoomRange: true
           });
-          console.log('setBounds', [data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()]);
-          console.log('setBounds', [data.coordLeft.split(' '), data.coordRight.split(' ')]);
           this.submitSearch(event);
           break;
         case 'user':
@@ -301,15 +303,55 @@
       }, 500);
     };
 
-    HeaderView.prototype.selectItemType = function(event) {
+    /**
+    # Show menu for adding point, event or route
+    # Fired when .add-block-head click occur
+    # @event showAddMenu
+    */
+
+
+    HeaderView.prototype.showAddMenu = function(event) {
       var $target;
 
       event.preventDefault();
       $target = $(event.currentTarget);
-      this.ui.itemTypeNav.children().removeClass('head-nav-current-item');
-      $target.insertBefore(this.ui.itemTypeNav.children().first());
-      $target.addClass('head-nav-current-item');
-      return this.submitSearch(event);
+      return $target.toggleClass('opened');
+    };
+
+    /**
+    # Show menu for select active search models
+    # Fired when .head-nav ul click occur
+    # @event showItemTypeMenu
+    */
+
+
+    HeaderView.prototype.showItemTypeMenu = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      return this.ui.itemTypeNav.toggleClass('opened');
+    };
+
+    /**
+    # Set active search models and do request
+    # Fired when .head-nav li click occur
+    # @event selectItemType
+    */
+
+
+    HeaderView.prototype.selectItemType = function(event) {
+      var $target;
+
+      $target = $(event.currentTarget);
+      if (!$target.hasClass('head-nav-current-item')) {
+        this.ui.itemTypeNav.children().removeClass('head-nav-current-item');
+        $target.insertBefore(this.ui.itemTypeNav.children().first());
+        $target.addClass('head-nav-current-item');
+        this.submitSearch(event);
+        this.model.set('searchModels', $target.data('models'), {
+          silent: true
+        });
+        return this.ui.itemTypeNav.removeClass('opened');
+      }
     };
 
     /**

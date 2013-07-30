@@ -8,7 +8,7 @@
 
   </head>
 
-  <body class="front" style="overflow-y: auto;">
+  <body class="front rgba" style="overflow-y: auto;" >
     <div id="fb-root"></div>
     {% csrf_token %}
 
@@ -70,118 +70,39 @@
 </div></header><!--/ #header-->
 
     
-      <div class="toggle-block main-map" id="yandex-map"><div class="map"><div style="width: 100%;" id="mainmap"><ymaps class="ymaps-map ymaps-i-ua_js_yes" style="z-index: 0; width: 1263px; height: 477px;"><ymaps class="ymaps-glass-pane ymaps-events-pane" style="z-index: 500; position: absolute; width: 1263px; height: 477px; left: 0px; top: 0px; -moz-user-select: none; cursor: url(&quot;http://api-maps.yandex.ru/2.0.30/release/../images/ef50ac9e93aaebe3299791c79f277f8e&quot;) 16 16, url(&quot;http://api-maps.yandex.ru/2.0.30/release/../images/ef50ac9e93aaebe3299791c79f277f8e&quot;), move;" unselectable="on"></ymaps><ymaps class="ymaps-layers-pane" style="z-index: 100; position: absolute; left: 632px; top: 239px;"><ymaps style="z-index: 150; position: absolute;"><ymaps style="position: absolute; left: 0px; top: 0px;"><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2498&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -970px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2498&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -970px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2498&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -970px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2498&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -970px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2499&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -714px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2499&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -714px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2499&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -714px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2499&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -714px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2500&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -458px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2500&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -458px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2500&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -458px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2500&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -458px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2501&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -202px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2501&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -202px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2501&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -202px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2501&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: -202px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2502&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 54px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2502&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 54px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2502&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 54px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2502&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 54px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2503&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 310px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2503&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 310px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2503&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 310px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2503&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 310px; top: 336px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2504&amp;y=1209&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 566px; top: -432px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2504&amp;y=1210&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 566px; top: -176px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2504&amp;y=1211&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 566px; top: 80px;" unselectable="on"></ymaps><ymaps style="opacity: 1; background-size: 100% 100%; position: absolute; -moz-user-select: none; background-image: url(&quot;http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=2504&amp;y=1212&amp;z=12&amp;lang=ru_RU&quot;); width: 256px; height: 256px; left: 566px; top: 336px;" unselectable="on"></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-copyrights-pane" style="z-index: 1000; position: absolute;"><ymaps><ymaps class="ymaps-copyrights-logo"><ymaps class="ymaps-logotype-div"><a class="ymaps-logo-link ymaps-logo-link-ru" target="_blank" href="http://maps.yandex.ru/?origin=jsapi&amp;ll=39.883923,59.224024&amp;z=12&amp;l=map"><ymaps class="ymaps-logo-link-wrap"></ymaps></a></ymaps></ymaps><ymaps class="ymaps-copyrights-legend"><ymaps class="ymaps-copyright-legend-container"><ymaps class="ymaps-copyright-legend"><ymaps class="ymaps-copyright-legend-element ymaps-copyright-legend-element-black"><ymaps style="display: inline;">&copy;&nbsp;Яндекс</ymaps>, <ymaps style="display: inline;">&copy;&nbsp;Роскартография</ymaps>, <ymaps style="display: inline;">&copy;&nbsp;ЗАО «Резидент»</ymaps>, <ymaps style="display: inline;">&copy;&nbsp;ЗАО&nbsp;«ТГА»,&nbsp;2006</ymaps></ymaps></ymaps><ymaps class="ymaps-copyright-agreement ymaps-copyright-agreement-black"><ymaps class="ymaps-coyprights-ua-extended"><ymaps><a target="_blank" href="http://maps.yandex.ru/?ll=39.883923,59.224024&amp;z=12&amp;origin=jsapi&amp;fb">Сообщить об ошибке</a> · </ymaps></ymaps><a href="http://legal.yandex.ru/maps_termsofuse/" target="_blank">Пользовательское соглашение</a></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-controls-pane" style="z-index: 800; position: static;"><ymaps class="ymaps-controls-righttop" style="z-index: 800;"><ymaps style="top: 80px; right: 5px; position: absolute;" class="ymaps-b-zoom_hints-pos_left"><ymaps><ymaps class="ymaps-b-zoom"><ymaps class="ymaps-b-zoom__button ymaps-b-zoom__button_type_minus" unselectable="on" style="-moz-user-select: none;"><ymaps role="button" class="ymaps-b-form-button ymaps-b-form-button_size_sm ymaps-b-form-button_theme_grey-sm ymaps-b-form-button_height_26 ymaps-i-bem"><ymaps class="ymaps-b-form-button__left"></ymaps><ymaps class="ymaps-b-form-button__content"><ymaps class="ymaps-b-form-button__text"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-b-zoom__scale" style="height: 125.667px; -moz-user-select: none;" unselectable="on"><ymaps class="ymaps-b-zoom__scale-bg"></ymaps><ymaps style="top: 87px;" class="ymaps-b-zoom__mark"><ymaps class="ymaps-b-zoom__mark-inner"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps><ymaps class="ymaps-b-hint-placeholder"><ymaps><ymaps><ymaps class="ymaps-b-zoom__hint" style="top: 17px;"><ymaps class="ymaps-b-zoom__hint-left"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-content"><ymaps class="ymaps-b-zoom__hint-text">мир</ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-right"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps><ymaps class="ymaps-b-zoom__hint" style="top: 38px;"><ymaps class="ymaps-b-zoom__hint-left"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-content"><ymaps class="ymaps-b-zoom__hint-text">страна</ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-right"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps><ymaps class="ymaps-b-zoom__hint" style="top: 66px;"><ymaps class="ymaps-b-zoom__hint-left"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-content"><ymaps class="ymaps-b-zoom__hint-text">город</ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-right"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps><ymaps class="ymaps-b-zoom__hint" style="top: 94px;"><ymaps class="ymaps-b-zoom__hint-left"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-content"><ymaps class="ymaps-b-zoom__hint-text">улица</ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-right"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps><ymaps class="ymaps-b-zoom__hint" style="top: 115px;"><ymaps class="ymaps-b-zoom__hint-left"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-content"><ymaps class="ymaps-b-zoom__hint-text">дом</ymaps></ymaps><ymaps class="ymaps-b-zoom__hint-right"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-b-zoom__button ymaps-b-zoom__button_type_plus" unselectable="on" style="-moz-user-select: none;"><ymaps role="button" class="ymaps-b-form-button ymaps-b-form-button_size_sm ymaps-b-form-button_theme_grey-sm ymaps-b-form-button_height_26 ymaps-i-bem"><ymaps class="ymaps-b-form-button__left"></ymaps><ymaps class="ymaps-b-form-button__content"><ymaps class="ymaps-b-form-button__text"><ymaps class="ymaps-b-zoom__sprite"></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps style="top: 5px; right: 5px; position: absolute;"><ymaps><ymaps class="ymaps-b-select ymaps-b-select_control_listbox"><ymaps role="button" class="ymaps-b-form-button ymaps-b-form-button_theme_grey-no-transparent-26 ymaps-b-form-button_height_26 ymaps-i-bem" unselectable="on" style="-moz-user-select: none;"><ymaps class="ymaps-b-form-button__left"></ymaps><ymaps class="ymaps-b-form-button__content"><ymaps class="ymaps-b-form-button__text"><ymaps id="id_137414908912284924_0" unselectable="on" style="-moz-user-select: none;"><ymaps><ymaps class="ymaps-b-select__title" style="display: block; width: 59px;">Схема</ymaps><ymaps title="Развернуть" class="ymaps-b-select__arrow"></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-b-popupa ymaps-b-popupa_layout_yes ymaps-b-popupa_theme_white ymaps-i-bem"><ymaps class="ymaps-b-popupa__shadow"></ymaps><ymaps class="ymaps-b-popupa__body ymaps-b-popupa__body_theme_white"><ymaps class="ymaps-b-popupa__ie-gap">&nbsp;</ymaps><ymaps class="ymaps-b-listbox-panel" style=""><ymaps><ymaps class="ymaps-group"><ymaps><ymaps></ymaps><ymaps><ymaps class="ymaps-b-listbox-panel__item ymaps-b-listbox-panel__item_state_current"><ymaps class="ymaps-b-listbox-panel__item-link" unselectable="on" style="-moz-user-select: none;">Схема</ymaps><ymaps class="ymaps-b-listbox-panel__item-flag"></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps></ymaps><ymaps><ymaps class="ymaps-b-listbox-panel__item "><ymaps class="ymaps-b-listbox-panel__item-link" unselectable="on" style="-moz-user-select: none;">Спутник</ymaps><ymaps class="ymaps-b-listbox-panel__item-flag"></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps></ymaps><ymaps><ymaps class="ymaps-b-listbox-panel__item "><ymaps class="ymaps-b-listbox-panel__item-link" unselectable="on" style="-moz-user-select: none;">Гибрид</ymaps><ymaps class="ymaps-b-listbox-panel__item-flag"></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps></ymaps><ymaps><ymaps class="ymaps-b-listbox-panel__item "><ymaps class="ymaps-b-listbox-panel__item-link" unselectable="on" style="-moz-user-select: none;">Народная карта</ymaps><ymaps class="ymaps-b-listbox-panel__item-flag"></ymaps></ymaps></ymaps></ymaps><ymaps><ymaps></ymaps><ymaps><ymaps class="ymaps-b-listbox-panel__item "><ymaps class="ymaps-b-listbox-panel__item-link" unselectable="on" style="-moz-user-select: none;">Народная + спутник</ymaps><ymaps class="ymaps-b-listbox-panel__item-flag"></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps></ymaps><ymaps class="ymaps-overlay-stepwise-pane" style="z-index: 600; position: absolute; left: 632px; top: 239px;"><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: -37px; top: -7px;" unselectable="on"><ymaps class="ymaps-default-cluster" style="line-height: 32px; left: -23px; top: -23px; width: 32px; height: 32px; background-repeat: no-repeat; background-size: 100% 100%; background-image: url(&quot;/media/icons/cluster_small.png&quot;);"><ymaps> 3 </ymaps></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: 6px; top: 1px;" unselectable="on"><ymaps class="ymaps-default-cluster" style="line-height: 32px; left: -23px; top: -23px; width: 32px; height: 32px; background-repeat: no-repeat; background-size: 100% 100%; background-image: url(&quot;/media/icons/cluster_small.png&quot;);"><ymaps> 9 </ymaps></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: 20px; top: 38px;" unselectable="on"><ymaps class="ymaps-default-cluster" style="line-height: 32px; left: -23px; top: -23px; width: 32px; height: 32px; background-repeat: no-repeat; background-size: 100% 100%; background-image: url(&quot;/media/icons/cluster_small.png&quot;);"><ymaps> 4 </ymaps></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: -15px; top: 17px; z-index: 650;" unselectable="on"><ymaps><div id="placemark-13" class="placemark for-add-place ">
-  <!--<img src="/media/assets/media/icons/place-attraction.png">-->
-  <span class="m-ico m-dostoprimechatelnost"></span>
+      <div class="toggle-block main-map" id="yandex-map">
+          <div class="map">
+          <div style="width: 100%;" id="mainmap"></div>
 
-  <a data-desc="Россия, Вологодская область, Вологда, улица Мальцева, 16" data-title="Дом Дружинина" data-point-id="13" class="a-add-place" href="#">
-    <span class="p-num" title="Добавить&nbsp;в&nbsp;маршрут" data-placement="bottom" data-toggle="tooltip">+</span>
-  </a>
+        <div class="m-ico-group"></div>
 
-  <div data-id="13" class="name-place">Дом Дружинина</div>
-</div></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: -72px; top: 152px; z-index: 650;" unselectable="on"><ymaps><div id="placemark-54" class="placemark for-add-place ">
-  <!--<img src="/media/assets/media/icons/place-shop.png">-->
-  <span class="m-ico m-shop"></span>
-
-  <a data-desc="Россия, Вологодская область, Вологда, Пошехонское шоссе, 22" Мармелад""="" data-title="ТРЦ " data-point-id="54" class="a-add-place" href="#">
-    <span class="p-num" title="Добавить&nbsp;в&nbsp;маршрут" data-placement="bottom" data-toggle="tooltip">+</span>
-  </a>
-
-  <div data-id="54" class="name-place">ТРЦ "Мармелад"</div>
-</div></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: 48px; top: -61px; z-index: 650;" unselectable="on"><ymaps><div id="placemark-134" class="placemark for-add-place ">
-  <!--<img src="/media/assets/media/icons/place-attraction.png">-->
-  <span class="m-ico m-dostoprimechatelnost"></span>
-
-  <a data-desc="Россия, Вологодская область, Вологда, улица Чернышевского, 73" data-title="Музей профтехобразования Вологодской области" data-point-id="134" class="a-add-place" href="#">
-    <span class="p-num" title="Добавить&nbsp;в&nbsp;маршрут" data-placement="bottom" data-toggle="tooltip">+</span>
-  </a>
-
-  <div data-id="134" class="name-place">Музей профтехобразования Вологодской области</div>
-</div></ymaps></ymaps><ymaps class="ymaps-point-overlay" style="position: absolute; height: 0px; width: 0px; -moz-user-select: none; left: 71px; top: 80px; z-index: 650;" unselectable="on"><ymaps><div id="placemark-38" class="placemark for-add-place ">
-  <!--<img src="/media/assets/media/icons/place-attraction.png">-->
-  <span class="m-ico m-dostoprimechatelnost"></span>
-
-  <a data-desc="Россия, Вологодская область, Вологда, Советский проспект, 47" data-title="Дом Петра I" data-point-id="38" class="a-add-place" href="#">
-    <span class="p-num" title="Добавить&nbsp;в&nbsp;маршрут" data-placement="bottom" data-toggle="tooltip">+</span>
-  </a>
-
-  <div data-id="38" class="name-place">Дом Петра I</div>
-</div></ymaps></ymaps></ymaps></ymaps></div>
-
-<div class="m-ico-group">
-<a data-type-ico="Достопримечательности" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Достопримечательности">
-  <span data-id="1" class="m-ico m-dostoprimechatelnost"></span>
-</a>
-
-<a data-type-ico="Охота" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Охота">
-  <span data-id="2" class="m-ico m-hunting"></span>
-</a>
-
-<a data-type-ico="Рыбалка" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Рыбалка">
-  <span data-id="3" class="m-ico m-fishing"></span>
-</a>
-
-<a data-type-ico="Активный отдых" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Активный отдых">
-  <span data-id="4" class="m-ico m-active-rest"></span>
-</a>
-
-<a data-type-ico="Гостиница" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Гостиница">
-  <span data-id="5" class="m-ico m-hotel"></span>
-</a>
-
-<a data-type-ico="Магазины и услуги" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Магазины и услуги">
-  <span data-id="6" class="m-ico m-shop"></span>
-</a>
-
-<a data-type-ico="Кафе и рестораны" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Кафе и рестораны">
-  <span data-id="7" class="m-ico m-cafe"></span>
-</a>
-
-<a data-type-ico="Ресторан" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Ресторан">
-  <span data-id="8" class="m-ico m-restoran"></span>
-</a>
-
-<a data-type-ico="АЗС" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="АЗС">
-  <span data-id="9" class="m-ico m-azs"></span>
-</a>
-
-<a data-type-ico="СТО" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="СТО">
-  <span data-id="10" class="m-ico m-sto"></span>
-</a>
-
-<a data-type-ico="Развлечения и искусство" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Развлечения и искусство">
-  <span data-id="85" class="m-ico m-dostoprimechatelnost"></span>
-</a>
-
-<a data-type-ico="Бары и ночные клубы" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Бары и ночные клубы">
-  <span data-id="86" class="m-ico m-dostoprimechatelnost"></span>
-</a>
-
-<a data-type-ico="Учреждения" data-placement="top" title="" data-toggle="tooltip" href="#" data-original-title="Учреждения">
-  <span data-id="87" class="m-ico m-dostoprimechatelnost"></span>
-</a>
-
-</div>
-
-<div class="toggle-bottom">
-  <a class="a-toggle" href="#">Развернуть карту</a>
-</div>
-</div></div>
+        <div class="toggle-bottom">
+          <a class="a-toggle" href="#">Развернуть карту</a>
+        </div>
+        </div>
+      </div>
     
 
     
-      <div id="content"><div id="point-layout"><header class="clearfix top-panel" id="point-panel"><menu class="tabs"><a class="active nonav menu-item" data-target="tab-popular" href="/popular">популярное</a>
-<a class=" nonav menu-item" data-target="tab-new" href="/new">новое</a>
-</menu></header>
-
-<div class="content tabs-content" id="point-content">
-  <section id="tab-popular">
-	  <div id="items" class="items masonry" style="position: relative; height: 1738px; width: 1205px;">
-	  </div>
-  </section>
-  <section id="tab-new"></section>
+<div id="content">
+    <div id="point-layout">
+        <header class="clearfix top-panel" id="point-panel">
+            <menu class="tabs">
+                <a class="active nonav menu-item" data-target="tab-popular" href="/popular">популярное</a>
+                <a class=" nonav menu-item" data-target="tab-new" href="/new">новое</a>
+            </menu>
+        </header>
+        <div class="content tabs-content" id="point-content">
+            <section id="tab-popular">
+                <div id="items" class="items masonry" style="position: relative;">
+                    {% block points %}
+                    {% endblock %}
+                </div>
+            </section>
+            <section id="tab-new"></section>
+        </div>
+    </div>
 </div>
-</div></div>
     
 
     <footer id="footer"><div class="f-body"><a title="переключить панель" class="a-toggle" href="#">&nbsp;</a>
@@ -207,26 +128,13 @@
   <a class="a-vk" target="_blank" href="http://vk.com/yasenput">&nbsp;</a>
   <a class="a-fb" target="_blank" href="http://www.facebook.com/yasenput">&nbsp;</a>
 </div>
-</div></footer>
-
-    </div>
-
-    
-      <aside id="panel-add-path"></aside>
-    
-
-    <div id="overlay" style="display: none;"></div>
-    <span class="spinner" style="display: none;"></span>
-
-    
-    <div id="popups" style="display: none;">
-  <div class="viewport">
-    <div class="scroll-box">
-      <div id="alerts"></div>
-    </div>
-  </div>
 </div>
+    </footer>
 
+    </div>
+    <aside id="panel-add-path"></aside>
+    {% block overlay %}
+    {% endblock %}
     <div id="confirm-remove-photo" class="popup">
     <div class="p-top">
         <h3>Удаление фото</h3>

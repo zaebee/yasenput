@@ -111,18 +111,17 @@
     Controller.prototype.showPointDetail = function(id, photo_id) {
       var model;
 
+      if (!this.layout) {
+        this.showLayout();
+      }
       model = new Yapp.Points.Point({
         unid: id
       });
-      model.fetch({
-        success: function(model, response) {
-          return Yapp.popup.show(new Yapp.Points.PointDetailView({
-            model: model,
-            photoId: photo_id
-          }));
-        }
-      });
-      return model;
+      Yapp.popup.show(new Yapp.Points.PointDetailView({
+        model: model,
+        photoId: photo_id
+      }));
+      return model.fetch();
     };
 
     /**
@@ -147,17 +146,6 @@
         }
       });
       return model;
-    };
-
-    /**
-    # Method for the point showing function with selected photo
-    # @method showPointPhoto
-    */
-
-
-    Controller.prototype.showPointPhoto = function(id, photo_id) {
-      this.showLayout();
-      return this.showPointDetail(id, photo_id);
     };
 
     /**

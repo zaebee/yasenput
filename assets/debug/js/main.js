@@ -13,6 +13,7 @@
   Yapp.addInitializer(function() {
     console.log('application initializing');
     this.settings = {};
+    this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
     this.updateSettings = function(settings) {
       var changed, changedSettings, key;
 
@@ -89,9 +90,11 @@
     this.user = new Yapp.User.Profile(USER);
     this.runApplication();
     $(document).ajaxStart(function() {
-      return $('.spinner').show();
+      $('.spinner').show();
+      return $('.GridFooter').show();
     }).ajaxStop(function() {
-      return $('.spinner').hide();
+      $('.spinner').hide();
+      return $('.GridFooter').hide();
     });
     return $(document).on('click', 'a.nonav', function(event) {
       var href, protocol;
@@ -107,13 +110,15 @@
   });
 
   Yapp.runApplication = function() {
+    if (this.isMobile) {
+      $('body').addClass('mobile');
+    }
     this.Common.start();
     this.Map.start();
     this.Points.start();
     this.Routes.start();
     this.vent.on('user:notauthorized', function() {
-      Yapp.popup.show(new Yapp.Common.AuthPopupView);
-      return Yapp.Common.router.trigger('route');
+      return Yapp.popup.show(new Yapp.Common.AuthPopupView);
     });
     this.vent.on('logout', function() {
       return window.location.replace('/');

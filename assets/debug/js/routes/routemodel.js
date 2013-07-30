@@ -1,7 +1,7 @@
 /**
 # Submodule for all route functionality
 # @module Yapp
-# @submodule routes
+# @submodule Routes
 */
 
 
@@ -92,15 +92,12 @@
 
     Route.prototype.like = function(target, successCallback, context) {
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/route/like",
+        url: Yapp.API_BASE_URL + ("/api/v1/route/" + (this.get('id')) + "/like/"),
         type: 'POST',
         context: context,
         successCallback: successCallback,
         params: {
           target: target
-        },
-        data: {
-          routeid: this.get('id')
         }
       });
     };

@@ -44,7 +44,7 @@
       point = _.find(this.model.get('points'), function(point) {
         return point.point.id === pointId;
       });
-      return this.activePoint = point || this.model.get('points')[0].point;
+      return this.activePoint = point ? point.point : this.model.get('points')[0].point;
     };
 
     /**
@@ -55,7 +55,7 @@
     */
 
 
-    RouteDetailView.prototype.template = Templates.SetDetailView;
+    RouteDetailView.prototype.template = Templates.RouteDetailView;
 
     /**
     # @property className
@@ -222,7 +222,8 @@
         photo = _.find(this.activePoint.imgs, function(photo) {
           return photo.id === photoId;
         });
-        photoId = 0;
+        photo = this.activePoint.imgs[0];
+        photoId = photo.id;
       }
       activePhoto = _.find(this.ui.allPhotos, function(el) {
         return $(el).data('photo-id') === photoId;
@@ -272,7 +273,7 @@
       point = _.find(this.model.get('points'), function(point) {
         return point.point.id === pointId;
       });
-      this.activePoint = point;
+      this.activePoint = point.point;
       this.model.trigger('change');
       return delete this.map;
     };

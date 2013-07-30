@@ -35,23 +35,18 @@
 
 
     RoutesView.prototype.initialize = function() {
-      var _this = this;
-
       console.log('initializing Yapp.Routes.RoutesView');
-      _.bindAll(this, 'updateBar', 'resortCollection', 'loadPoint');
+      _.bindAll(this, 'addWayPoint', 'removeWayPoint', 'resortCollection', 'addPointToPath');
       this.user = Yapp.user;
       this.search = Yapp.Common.headerView.search;
       this.collection = new Yapp.Points.PointCollection;
       this.model.collection = this.collection;
-      _.each(this.model.get('points'), function(el) {
-        return _this.collection.add(new Yapp.Points.Point(el.point));
-      });
       this.dropdownTemplate = Templates.RoutesDropdown;
       this.detailsPathTemplate = Templates.RoutesDetail;
-      this.collection.on('add remove', this.updateBar, this);
+      this.collection.on('add', this.addWayPoint, this);
+      this.collection.on('remove', this.removeWayPoint, this);
       this.collection.on('resort:collection', this.resortCollection, this);
-      this.listenTo(Yapp.vent, 'click:addplacemark', this.loadPoint);
-      return this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      return this.listenTo(Yapp.vent, 'click:addplacemark', this.addPointToPath);
     };
 
     RoutesView.prototype.template = Templates.RoutesView;
@@ -72,7 +67,7 @@
     RoutesView.prototype.events = {
       'keydown input.route-input': 'keyupInput',
       'click .btn-add-path': 'buildPath',
-      'click .drop-search-a li.item-label': 'loadPoint',
+      'click .drop-search-a li.item-label': 'addPointToPath',
       'click .remove-item-path': 'removePointFromPath',
       'click .btn-clear-map': 'clearMap',
       'click .drop-filter-clear': 'hideDropdown',
@@ -90,16 +85,30 @@
       'change': 'render'
     };
 
-    RoutesView.prototype.setMap = function() {
+    /**
+    # Initialize left sidebar if route has points when edit
+    # @method initBar
+    */
+
+
+    RoutesView.prototype.initBar = function() {
       var _this = this;
 
-      if (!_.isEmpty(this.model.get('points'))) {
-        this.collection.trigger('add');
-        _.each(this.collection.models, function(point) {
-          return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
-        });
-        return this.$('.btn-add-path').click();
-      }
+      _.each(this.model.get('points'), function(el) {
+        el.point.unid = el.point.id;
+        return _this.collection.add(new Yapp.Points.Point(el.point));
+      });
+      return Yapp.Map.mapDeferred.then(function() {
+        if (_this.options.pointId) {
+          _this.addPointToPath();
+        }
+        if (!_.isEmpty(_this.model.get('points'))) {
+          _this.collection.each(function(point) {
+            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+          });
+          return _this.$('.btn-add-path').click();
+        }
+      });
     };
 
     /**
@@ -109,15 +118,16 @@
 
 
     RoutesView.prototype.onShow = function() {
-      $('body').addClass('page-map');
-      $(window).on('resize', function() {
-        if (Yapp.Map.yandexmap) {
-          return Yapp.Map.yandexmap.container.fitToViewport();
-        }
+      var _this = this;
+
+      Yapp.Map.mapDeferred.then(function() {
+        return Yapp.Map.mapEvents.removeAll();
       });
+      $('body').addClass('page-map');
       $('#header').hide();
       $('#panel-add-path').show();
-      return this._dragPoints();
+      this._dragPoints();
+      return this.initBar();
     };
 
     /**
@@ -128,13 +138,9 @@
 
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
-      $(window).off('resize', function() {
-        if (Yapp.Map.yandexmap) {
-          return Yapp.Map.yandexmap.container.fitToViewport();
-        }
-      });
       $('#header').show();
       $('#panel-add-path').hide();
+      this.collection.remove(this.collection.models);
       if (this.route) {
         return Yapp.Map.yandexmap.geoObjects.remove(this.route);
       }
@@ -264,17 +270,12 @@
 
 
     RoutesView.prototype.buildDetailPath = function(route) {
-      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments,
-        _this = this;
+      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments;
 
       if (!_.isEmpty(this.model.get('points'))) {
         route.options.set('mapStateAutoApply', true);
       }
-      route.getWayPoints().each(function(point, index) {
-        point.properties.set('class', 'place-added');
-        return point.properties.set('point', _this.collection.models[index].toJSON());
-      });
-      route.getWayPoints().options.set('iconLayout', Yapp.Map.pointIconLayout);
+      route.getWayPoints().options.set('visible', false);
       ways = route.getPaths();
       wayLength = ways.getLength();
       routeCollection = [];
@@ -317,34 +318,82 @@
 
     /**
     # TODO
-    # @method loadPoint
+    # @method createGeoPoint
     */
 
 
-    RoutesView.prototype.loadPoint = function(event) {
+    RoutesView.prototype.createGeoPoint = function(data) {
+      var location, point, unid;
+
+      unid = parseInt(_.uniqueId(1010), 10);
+      point = new Yapp.Points.Point({
+        unid: unid
+      });
+      location = data.location.split(' ');
+      return point.set({
+        id: unid,
+        longitude: location[0],
+        latitude: location[1],
+        name: data.name,
+        address: data.address
+      });
+    };
+
+    /**
+    # TODO
+    # @method addPointToPath
+    */
+
+
+    RoutesView.prototype.addPointToPath = function(event) {
       var $target, data, length, point,
         _this = this;
 
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      data = $target.data();
+      if (event) {
+        event.preventDefault();
+        $target = $(event.currentTarget);
+        data = $target.data();
+      } else if (this.options.pointId) {
+        data = {
+          pointId: this.options.pointId
+        };
+        this.options.pointId = null;
+      }
       length = this.collection.length;
-      point = new Yapp.Points.Point({
-        unid: data.pointId
-      });
-      if (!this.collection.findWhere({
-        id: data.pointId
-      })) {
-        point.fetch({
-          success: function(response) {
-            _this.collection.add(point);
-            _this.ui.msgHint.hide();
-            if (_this.collection.length !== length) {
-              Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
-              return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
-            }
-          }
+      if (data.type === 'place') {
+        point = this.createGeoPoint(data);
+        this.collection.add(point);
+        if (this.collection.length !== length) {
+          Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
+          this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+        }
+      } else {
+        point = new Yapp.Points.Point({
+          unid: data.pointId
         });
+        if (!this.collection.findWhere({
+          id: data.pointId
+        })) {
+          point.fetch({
+            success: function(response) {
+              var placemark;
+
+              placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                id: 'map-point' + point.get('id'),
+                point: point.toJSON(),
+                "class": 'place-added'
+              }, {
+                iconLayout: Yapp.Map.pointIconLayout
+              });
+              point.set('placemark', placemark);
+              _this.collection.add(point);
+              if (_this.collection.length !== length) {
+                Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
+                return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+              }
+            }
+          });
+        }
       }
       return this.hideDropdown();
     };
@@ -378,40 +427,81 @@
 
 
     RoutesView.prototype.clearMap = function(event) {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       this.ui.addPathPlace.empty();
       this.ui.detailsPath.empty().hide();
       this.ui.lineAddPathButton.show();
       this.ui.actionButton.hide();
       this.model.set('coords', []);
-      this.collection.reset();
-      return this.collection.trigger('remove');
+      return this.collection.remove(this.collection.models);
     };
 
     /**
     # TODO
-    # @method updateBar
+    # @method addWayPoint
     */
 
 
-    RoutesView.prototype.updateBar = function(model) {
-      if (this.collection.length === 0) {
-        this.ui.msgHint.show();
-        this.ui.addPathButton.addClass('disabled');
-        if (this.route) {
-          Yapp.Map.yandexmap.geoObjects.remove(this.route);
-          return this.route = null;
-        }
-      } else if (this.collection.length === 1) {
+    RoutesView.prototype.addWayPoint = function(model) {
+      var _this = this;
+
+      if (this.collection.length === 1) {
         this.ui.msgHint.hide();
-        return this.ui.addPathButton.addClass('disabled');
+        this.ui.addPathButton.addClass('disabled');
       } else if (this.collection.length > 1) {
         this.ui.msgHint.hide();
         this.ui.addPathButton.removeClass('disabled');
         if (this.route) {
-          return this.buildPath();
+          this.buildPath();
         }
       }
+      return Yapp.Map.mapDeferred.then(function() {
+        var placemark;
+
+        placemark = new ymaps.Placemark([model.get('latitude'), model.get('longitude')], {
+          id: 'map-point' + model.get('id'),
+          point: model.toJSON(),
+          "class": 'place-added'
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        });
+        model.set('placemark', placemark);
+        placemark.properties.set('iconContent', _this.collection.indexOf(model) + 1);
+        return Yapp.Map.yandexmap.geoObjects.add(placemark);
+      });
+    };
+
+    /**
+    # TODO
+    # @method removeWayPoint
+    */
+
+
+    RoutesView.prototype.removeWayPoint = function(model) {
+      Yapp.Map.yandexmap.geoObjects.remove(model.get('placemark'));
+      if (this.collection.length === 0) {
+        this.ui.addPathPlace.empty();
+        this.ui.detailsPath.empty().hide();
+        this.ui.lineAddPathButton.show();
+        this.ui.actionButton.hide();
+        this.ui.msgHint.show();
+        this.ui.addPathButton.addClass('disabled');
+        if (this.route) {
+          Yapp.Map.yandexmap.geoObjects.remove(this.route);
+          this.route = null;
+        }
+      }
+      if (this.route) {
+        this.buildPath();
+      }
+      return this.collection.each(function(model, index) {
+        var placemark;
+
+        placemark = model.get('placemark');
+        return placemark.properties.set('iconContent', index + 1);
+      });
     };
 
     /**
@@ -429,8 +519,14 @@
       });
       this._insertTo(index, point, this.collection.models);
       if (this.route) {
-        return this.buildPath();
+        this.buildPath();
       }
+      return this.collection.each(function(model, i) {
+        var placemark;
+
+        placemark = model.get('placemark');
+        return placemark.properties.set('iconContent', i + 1);
+      });
     };
 
     /**
@@ -443,7 +539,9 @@
     RoutesView.prototype.savePath = function(event) {
       var routesSaveView;
 
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       if (!this.user.get('authorized')) {
         Yapp.vent.trigger('user:notauthorized');
         return;
@@ -453,8 +551,7 @@
         model: this.model,
         route: this.route
       });
-      Yapp.popup.show(routesSaveView);
-      return Yapp.Routes.router.trigger('route');
+      return Yapp.popup.show(routesSaveView);
     };
 
     /**

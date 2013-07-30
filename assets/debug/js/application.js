@@ -12,7 +12,7 @@
 
   window.Yapp = new Marionette.Application();
 
-  window.Yapp.API_BASE_URL = '/api';
+  window.Yapp.API_BASE_URL = '/api/v1';
 
   window.Yapp.API_BASE_URL = '';
 
@@ -109,43 +109,99 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 this["Templates"]["HeaderView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n          <div class=\"label label-place\">\r\n            "
+  buffer += "\r\n        <div class=\"label label-place\">\r\n          "
     + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.country)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\r\n            <button class=\"remove-label\"></button>\r\n          </div>\r\n          ";
+    + "\r\n          <button class=\"remove-label\"></button>\r\n        </div>\r\n        ";
   return buffer;
   }
 
 function program3(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n          <div class=\"label label-place\">\r\n            "
+  buffer += "\r\n        <div class=\"label label-place\">\r\n          "
     + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.region)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\r\n            <button class=\"remove-label\"></button>\r\n          </div>\r\n          ";
+    + "\r\n          <button class=\"remove-label\"></button>\r\n        </div>\r\n        ";
   return buffer;
   }
 
 function program5(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n          <div class=\"label label-place\">\r\n            "
+  buffer += "\r\n        <div class=\"label label-place\" data-type=\"place\" data-left-corner=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.leftCorner)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-right-corner=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.rightCorner)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\r\n          "
     + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.city)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\r\n            <button class=\"remove-label\"></button>\r\n          </div>\r\n          ";
+    + "\r\n          <button class=\"remove-label\"></button>\r\n        </div>\r\n        ";
   return buffer;
   }
 
 function program7(depth0,data) {
   
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n          ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.region), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n        ";
+  return buffer;
+  }
+function program8(depth0,data) {
+  
   var buffer = "", stack1;
-  buffer += "\r\n    <div class=\"auth user\">\r\n      <img src=\"/media/";
+  buffer += "\r\n            <div class=\"label label-place\" data-type=\"place\" data-left-corner=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.leftCorner)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-right-corner=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.rightCorner)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\r\n            "
+    + escapeExpression(((stack1 = ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.region)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n            <button class=\"remove-label\"></button>\r\n          </div>\r\n          ";
+  return buffer;
+  }
+
+function program10(depth0,data) {
+  
+  
+  return "\r\n      <li class=\"head-nav-current-item\" data-models=\"points\"><a href=\"#\">Места</a></li>\r\n      <li><a href=\"#\">Все сразу</a></li>\r\n      <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n      <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n      <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      ";
+  }
+
+function program12(depth0,data) {
+  
+  
+  return "\r\n      <li class=\"head-nav-current-item\" data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n      <li><a href=\"#\">Все сразу</a></li>\r\n      <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n      <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n      <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      ";
+  }
+
+function program14(depth0,data) {
+  
+  
+  return "\r\n      <li class=\"head-nav-current-item\" data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      <li><a href=\"#\">Все сразу</a></li>\r\n      <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n      <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n      <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n      ";
+  }
+
+function program16(depth0,data) {
+  
+  
+  return "\r\n      <li class=\"head-nav-current-item\" data-models=\"events\"><a href=\"#\">События</a></li>\r\n      <li><a href=\"#\">Все сразу</a></li>\r\n      <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n      <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n      <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      ";
+  }
+
+function program18(depth0,data) {
+  
+  
+  return "\r\n      <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n      <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n      <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n      <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n      <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      ";
+  }
+
+function program20(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  <div class=\"auth user\">\r\n    <img src=\"/media/";
   if (stack1 = helpers.avatar) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.avatar; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n      <div class=\"user-body\">\r\n        <div class=\"user-name\">";
+    + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n    <div class=\"user-body\">\r\n      <div class=\"user-name\">";
   if (stack1 = helpers.first_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.first_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -153,46 +209,119 @@ function program7(depth0,data) {
   if (stack1 = helpers.last_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.last_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "<div class=\"drop-logout\"><a href=\"/logout/\" class=\"a-logout\">Выход</a></div></div>\r\n        <div class=\"user-likes\">\r\n          <span class=\"ico ico-like-small\"></span>\r\n          ";
+    + "<div class=\"drop-logout\"><a href=\"/logout/\" class=\"a-logout\">Выход</a></div></div>\r\n      <div class=\"user-likes\">\r\n        <span class=\"ico ico-like-small\"></span>\r\n        ";
   if (stack1 = helpers.count_liked_objects) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.count_liked_objects; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\r\n          <span class=\"ico ico-comment-small\"></span>\r\n          ";
+    + "\r\n        <span class=\"ico ico-comment-small\"></span>\r\n        ";
   if (stack1 = helpers.count_commented_objects) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.count_commented_objects; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\r\n        </div>\r\n      </div>\r\n    </div>\r\n  ";
+    + "\r\n      </div>\r\n    </div>\r\n  </div>\r\n";
   return buffer;
   }
 
-function program9(depth0,data) {
+function program22(depth0,data) {
   
   
-  return "\r\n    <div class=\"auth\">\r\n      <img src=\"/static/images/guest.png\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n      <div class=\"user-body\">\r\n        <span href=\"#\" class=\"a-login\">Вход</span>\r\n      </div>\r\n    </div>\r\n  ";
+  return "\r\n  <div class=\"auth\">\r\n    <img src=\"/static/images/guest.png\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n    <div class=\"user-body\">\r\n      <span href=\"#\" class=\"a-login\">Вход</span>\r\n    </div>\r\n  </div>\r\n";
   }
 
-  buffer += "<div class=\"wrap\">\r\n  <div class=\"logo\">ясен путь</div>\r\n\r\n  <div class=\"head-search\">\r\n    <div class=\"search\">\r\n      <form action=\"#\" id=\"multisearchForm\">\r\n        <input type=\"submit\" value=\"Найти\">\r\n\r\n        <div class=\"label-fields\">\r\n          <!--\r\n          ";
+  buffer += "<a class=\"logo\" href=\"/\">ясен путь</a>\r\n\r\n<div class=\"head-search\">\r\n  <div class=\"search\">\r\n    <form action=\"#\" id=\"multisearchForm\">\r\n      <input type=\"submit\" value=\"Найти\">\r\n\r\n      <div class=\"label-fields\">\r\n        <!--\r\n        ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.country), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n\r\n          ";
+  buffer += "\r\n\r\n        ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.region), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n          -->\r\n\r\n          ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.city), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  buffer += "\r\n        -->\r\n\r\n        ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.location),stack1 == null || stack1 === false ? stack1 : stack1.city), {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n          <div class=\"label label-add\">\r\n            Добавить\r\n            <span>+</span>\r\n          </div>\r\n\r\n          <span class=\"text-field\"><input type=\"text\"></span>\r\n        </div>\r\n        <button type=\"button\" class=\"clear-input\"></button>\r\n      </form>\r\n\r\n      <div class=\"drop-search\" style=\"display:none;\"></div>\r\n      <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"head-nav\">\r\n    <div>\r\n      <ul>\r\n        <li class=\"head-nav-current-item\"><a href=\"#\">Все сразу</a></li>\r\n        <li data-models=\"sets\"><a href=\"#\">Коллекции</a></li>\r\n        <li data-models=\"points\"><a href=\"#\">Места</a></li>\r\n        <li data-models=\"events\"><a href=\"#\">События</a></li>\r\n        <li data-models=\"routes\"><a href=\"#\">Маршруты</a></li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"add-block-head\">\r\n    <i class=\"ico-add\"></i>\r\n\r\n    <div>\r\n      <div class=\"drop-add-head\">\r\n        <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n        <a href=\"/routes\" class=\"nonav\" data-target=\"p-add-event\">Добавить маршрут</a>\r\n        <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.authorized, {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
+  buffer += "\r\n        <div class=\"label label-add\">\r\n          Искать\r\n          <span>+</span>\r\n        </div>\r\n\r\n        <span class=\"text-field\"><input type=\"text\"></span>\r\n      </div>\r\n      <button type=\"button\" class=\"clear-input\"></button>\r\n    </form>\r\n\r\n    <div class=\"drop-search\" style=\"display:none;\"></div>\r\n    <div class=\"drop-search-overlay\" style=\"display:none;width:100%;height:100%;top:0;left:0;position:fixed;z-index:-1\"></div>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"head-nav\">\r\n  <div>\r\n    <ul>\r\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.searchModels, "points", options) : helperMissing.call(depth0, "ifEquals", depth0.searchModels, "points", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n</div>\r\n\r\n";
+  buffer += "\r\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.searchModels, "sets", options) : helperMissing.call(depth0, "ifEquals", depth0.searchModels, "sets", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.searchModels, "routes", options) : helperMissing.call(depth0, "ifEquals", depth0.searchModels, "routes", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.searchModels, "events", options) : helperMissing.call(depth0, "ifEquals", depth0.searchModels, "events", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      ";
+  stack2 = helpers.unless.call(depth0, depth0.searchModels, {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n    </ul>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"add-block-head\">\r\n  <i class=\"ico-add\"></i>\r\n\r\n  <div>\r\n    <div class=\"drop-add-head\">\r\n      <a href=\"/point/add\" class=\"nonav\" data-target=\"p-add-place\">Добавить место</a>\r\n      <a href=\"/route/add\" class=\"nonav\" data-target=\"p-add-event\">Добавить маршрут</a>\r\n      <!--<a href=\"/event/add\" data-target=\"p-add-event\">Добавить событие</a>-->\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n";
+  stack2 = helpers['if'].call(depth0, depth0.authorized, {hash:{},inverse:self.program(22, program22, data),fn:self.program(20, program20, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n";
   return buffer;
   });
 
 this["Templates"]["LabelTemplate"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n  ";
+  stack1 = helpers.each.call(depth0, depth0.labels, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <div class=\"label label-";
+  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-label-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n      ";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\r\n      <button class=\"remove-label\"></button>\r\n    </div>\r\n  ";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n  <div class=\"label label-";
+  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" data-type=\"";
+  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" ";
+  options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type, "place", options) : helperMissing.call(depth0, "ifEquals", depth0.type, "place", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += ">\r\n    ";
+  if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\r\n    <button class=\"remove-label\"></button>\r\n  </div>\r\n";
+  return buffer;
+  }
+function program5(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "data-left-corner=\"";
@@ -207,27 +336,9 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div class=\"label label-";
-  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" data-id=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" data-type=\"";
-  if (stack1 = helpers.type) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\" ";
-  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data};
-  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.type, "place", options) : helperMissing.call(depth0, "ifEquals", depth0.type, "place", options));
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += ">\r\n  ";
-  if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "\r\n  <button class=\"remove-label\"></button>\r\n</div>\r\n";
+  stack1 = helpers['if'].call(depth0, depth0.labels, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
   return buffer;
   });
 
@@ -645,21 +756,6 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n            <div class=\"label label-place\" data-label-id=\"";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">";
-  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\r\n              <button class=\"remove-label\"></button>\r\n            </div>\r\n            ";
-  return buffer;
-  }
-
-function program5(depth0,data) {
-  
-  var buffer = "", stack1;
   buffer += "\r\n            <li>\r\n              <div class=\"item-photo\">\r\n                <img src=\"";
   if (stack1 = helpers.thumbnail104x104) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.thumbnail104x104; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
@@ -679,11 +775,8 @@ function program5(depth0,data) {
     + "\"></textarea>\r\n      </div>\r\n\r\n      <div class=\"add-place-choose-type-place\">\r\n        <h4>Выберите тип места:</h4>\r\n\r\n        <div class=\"clearfix ctp-labels\">\r\n          ";
   stack1 = helpers.each.call(depth0, depth0.requireLabels, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n        </div>\r\n\r\n        <div class=\"clearfix ctp-more-labels\">\r\n          <div class=\"input-line\">\r\n            <div class=\"drop-filter select-labels\">\r\n              <div class=\"p-labels drop-labels\">\r\n                <div class=\"clearfix selected-labels\">\r\n                  <div class=\"label label-add\">\r\n                    Создать метку\r\n                    <span>+</span>\r\n                  </div>\r\n\r\n                  <span class=\"text-field\"><input name=\"tags\" type=\"text\"></span>\r\n                </div>\r\n\r\n                <input type=\"button\" value=\" \" class=\"clear-selected\">\r\n\r\n                <ul class=\"drop-labels-field\"></ul>\r\n              </div>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"labels-field\">\r\n            ";
-  stack1 = helpers.each.call(depth0, depth0.additionalLabels, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"clear\"></div>\r\n\r\n    <div class=\"clearfix place-photos\">\r\n      <h4>Добавьте фотографии к месту:</h4>\r\n\r\n      <div class=\"item-photo load-photo\">\r\n        <input name=\"img\" type=\"file\">\r\n      </div>\r\n\r\n      <span class=\"photos-prev\"></span>\r\n      <span class=\"photos-next\"></span>\r\n\r\n      <div class=\"photos-gallery\">\r\n        <ul id=\"item-photo-list\">\r\n          ";
-  stack1 = helpers.each.call(depth0, depth0.imgs, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  buffer += "\r\n        </div>\r\n\r\n        <div class=\"clearfix ctp-more-labels\">\r\n          <div class=\"input-line\">\r\n            <div class=\"drop-filter select-labels\">\r\n              <div class=\"p-labels drop-labels\">\r\n                <div class=\"clearfix selected-labels\">\r\n                  <div class=\"label label-add\">\r\n                    Создать метку\r\n                    <span>+</span>\r\n                  </div>\r\n\r\n                  <span class=\"text-field\"><input name=\"tags\" type=\"text\"></span>\r\n                </div>\r\n\r\n                <input type=\"button\" value=\" \" class=\"clear-selected\">\r\n\r\n                <ul class=\"drop-labels-field\"></ul>\r\n              </div>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"labels-field\"></div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"clear\"></div>\r\n\r\n    <div class=\"clearfix place-photos\">\r\n      <h4>Добавьте фотографии к месту:</h4>\r\n\r\n      <div class=\"item-photo load-photo\">\r\n        <input name=\"img\" type=\"file\">\r\n      </div>\r\n\r\n      <span class=\"photos-prev\"></span>\r\n      <span class=\"photos-next\"></span>\r\n\r\n      <div class=\"photos-gallery\">\r\n        <ul id=\"item-photo-list\">\r\n          ";
+  stack1 = helpers.each.call(depth0, depth0.imgs, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n        </ul>\r\n\r\n        <div class=\"item-photo photo-loading\" style=\"display:none;\">\r\n          <div class=\"load-status\">\r\n            <div class=\"progress-loading\">\r\n              <div style=\"width: 0%;\" class=\"value\"></div>\r\n            </div>\r\n            <span class=\"progress-count\">0%</span>\r\n          </div>\r\n        </div>\r\n\r\n      </div>\r\n    </div><!-- end .place-photos -->\r\n\r\n    <footer class=\"p-footer\">\r\n      <div class=\"input-line submit-line\">\r\n          <input type=\"submit\" value=\"Добавить место\" class=\"fr a-btn\" id=\"a-add-point\">\r\n\r\n        <label class=\"fr custom-checkbox checked\">\r\n          <input type=\"checkbox\" checked>\r\n          Рассказать друзьям\r\n        </label>\r\n\r\n        <small class=\"required-desc\">Поля со значком * обязательны для заполнения</small>\r\n      </div>\r\n    </footer>\r\n  </form>\r\n</div>\r\n";
   return buffer;
@@ -812,7 +905,11 @@ function program16(depth0,data) {
 function program18(depth0,data) {
   
   var buffer = "", stack1, stack2, options;
-  buffer += "\r\n<aside id=\"right-panel\">\r\n  <a href=\"#\" class=\"a-btn a-add-collection\">В коллекцию</a>\r\n  <a href=\"#\" class=\"a-btn a-add-path\">Создать маршрут</a>\r\n  ";
+  buffer += "\r\n<aside id=\"right-panel\">\r\n  <a href=\"#\" class=\"a-btn a-add-collection\">В коллекцию</a>\r\n  <a href=\"/route/add/point/";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\" class=\"a-btn a-add-path nonav\">Создать маршрут</a>\r\n  ";
   options = {hash:{},inverse:self.noop,fn:self.program(19, program19, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
@@ -897,14 +994,8 @@ function program29(depth0,data) {
   if (stack2 = helpers.likes_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.likes_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "\r\n    </span>\r\n\r\n    <span>\r\n      <span class=\"ico-comment-small\"></span>\r\n      ";
-  if (stack2 = helpers.comments_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.comments_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "\r\n    </span>\r\n\r\n    <span>\r\n      <span class=\"ico-star-small\"></span>\r\n      ";
-  if (stack2 = helpers.collections_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.collections_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
+    + "\r\n    </span>\r\n\r\n    <span>\r\n      <span class=\"ico-star-small\"></span>\r\n      "
+    + escapeExpression(((stack1 = ((stack1 = depth0.sets),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\r\n    </span>\r\n\r\n    <span>\r\n      <span class=\"ico-vote-small\"></span>\r\n      ";
   if (stack2 = helpers.reviewusersplus) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.reviewusersplus; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
@@ -959,7 +1050,7 @@ function program1(depth0,data) {
   if (stack2 = helpers.likes_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.likes_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</small>\r\n        <i class=\"yp-marked\"></i><small>";
+    + "</small>\r\n        <!--\r\n        <i class=\"yp-marked\"></i><small>";
   if (stack2 = helpers.collections_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.collections_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -975,7 +1066,7 @@ function program1(depth0,data) {
   if (stack2 = helpers.reviewusersminus) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.reviewusersminus; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</small>\r\n      </div>\r\n    </div>\r\n\r\n    <a href=\"/set/";
+    + "</small>\r\n        -->\r\n      </div>\r\n    </div>\r\n\r\n    <a href=\"/set/";
   if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -1098,8 +1189,8 @@ function program18(depth0,data) {
   else { stack2 = depth0.likes_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "</small>\r\n        <i class=\"yp-marked\"></i><small>";
-  if (stack2 = helpers.collections_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.collections_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  if (stack2 = helpers.sets_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.sets_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
     + "</small>\r\n        <i class=\"yp-place\"></i><small>";
   if (stack2 = helpers.beens_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1143,7 +1234,7 @@ function program20(depth0,data) {
   stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\" title=\"мне&nbsp;нравится\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</a>\r\n    ";
-  options = {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data};
+  options = {hash:{},inverse:self.noop,fn:self.program(21, program21, data),data:data};
   stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n\r\n    <div class=\"yasen-info\">\r\n      <span class=\"yp-title\">";
@@ -1154,14 +1245,6 @@ function program20(depth0,data) {
   if (stack2 = helpers.likes_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.likes_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</small>\r\n        <i class=\"yp-marked\"></i><small>";
-  if (stack2 = helpers.collections_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.collections_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "</small>\r\n        <i class=\"yp-place\"></i><small>";
-  if (stack2 = helpers.beens_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.beens_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
     + "</small>\r\n        <i class=\"yp-star\"></i><small>+";
   if (stack2 = helpers.reviewusersplus) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.reviewusersplus; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
@@ -1170,7 +1253,11 @@ function program20(depth0,data) {
   if (stack2 = helpers.reviewusersminus) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.reviewusersminus; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</small>\r\n      </div>\r\n    </div>\r\n\r\n    <a href=\"#\" class=\"a-photo\">\r\n      ";
+    + "</small>\r\n      </div>\r\n    </div>\r\n\r\n    <a href=\"/route/";
+  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\" class=\"a-photo nonav\">\r\n      ";
   stack2 = helpers['if'].call(depth0, ((stack1 = ((stack1 = ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.imgs)),stack1 == null || stack1 === false ? stack1 : stack1[0]), {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\r\n    </a>\r\n  </div>\r\n\r\n  <ul class=\"photo-preview a-photo nonav\">\r\n    ";
@@ -1187,6 +1274,16 @@ function program20(depth0,data) {
     + " "
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</p>\r\n  </div>\r\n";
+  return buffer;
+  }
+function program21(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <a href=\"/route/";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "/edit\" class=\"a-edit-new nonav\" data-toggle=\"tooltip\" title=\"отредактировать\" data-placement=\"bottom\"></a>\r\n    ";
   return buffer;
   }
 
@@ -1243,7 +1340,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<header id=\"point-panel\" class=\"clearfix top-panel\"></header>\r\n\r\n<div id=\"point-content\" class=\"content tabs-content\">\r\n  <section id=\"tab-popular\"></section>\r\n  <section id=\"tab-new\"></section>\r\n</div>\r\n";
+  return "<header id=\"point-panel\" class=\"clearfix top-panel\"></header>\r\n\r\n<div id=\"point-content\" class=\"content tabs-content\">\r\n  <section id=\"tab-popular\"></section>\r\n  <section id=\"tab-new\"></section>\r\n</div>\r\n\r\n<div class=\"GridFooter\">\r\n  <div class=\"gridLoadingWrapper\">\r\n    <hr>\r\n    <div class=\"gridLoading\">\r\n      <span class=\"gridFooterLogoIcon\"></span>\r\n      <span class=\"gridFooterSpinner\"></span>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n";
   });
 
 this["Templates"]["ProgressImage"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -1434,10 +1531,235 @@ function program23(depth0,data) {
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.author)),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</a>\r\n\r\n      <div class=\"addr\">"
     + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.address)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</div>\r\n\r\n      <div class=\"stats\">\r\n        <span>\r\n          <span class=\"ico-like-small\"></span>\r\n          "
+    + "</div>\r\n\r\n      <div class=\"stats\">\r\n        <span>\r\n          <span class=\"ico-want-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.beens_count)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-like-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.likesusers)),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-star-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.sets_count)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-vote-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.reviewusersplus)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.reviewusersminus)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n      </div>\r\n  </header>\r\n\r\n  <div class=\"wide-box\">\r\n    <ul class=\"p-tabs\">\r\n      <li class=\"active\"><a href=\"#tab-photo\" data-toggle=\"tab\">Фотография</a></li>\r\n      <li><a href=\"#tab-map\" data-toggle=\"tab\">На карте</a></li>\r\n      <li><a href=\"#tab-desc\" data-toggle=\"tab\">Описание</a></li>\r\n\r\n      <li><div class=\"shadow\"></div></li>\r\n    </ul>\r\n\r\n    <div class=\"tabs-content\">\r\n\r\n      <div id=\"tab-photo\" class=\"tab-pane active\">\r\n        <div class=\"tabs-content\">\r\n          <div class=\"toggle-block\">\r\n            <div class=\"clearfix p-gallery\">\r\n              <div class=\"clearfix place-photos\">\r\n                <div class=\"photos-gallery\">\r\n                  <ul>\r\n                    ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.imgs), {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n                  </ul>\r\n                </div>\r\n\r\n                <div class=\"item-photo load-photo\">\r\n                  <form id=\"addPhotoForm\" action=\"\" method=\"POST\" enctype=\"multipart/form-data\">\r\n                    <input name=\"img\" type=\"file\">\r\n                  </form>\r\n                </div>\r\n\r\n                <span class=\"photos-next\"></span>\r\n                <span class=\"photos-prev\"></span>\r\n              </div>\r\n\r\n              <div id=\"big-photo\"></div><!-- end #big-photo -->\r\n\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div><!-- end #tab-photo -->\r\n\r\n      <div id=\"tab-map\" class=\"tab-pane\">\r\n        <div class=\"map\">\r\n            <div id=\"popup-map\" style=\"width:560px; height:510px\"></div>\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (начало) -->\r\n\r\n            <!-- Этот блок кода нужно вставить в ту часть страницы, где вы хотите разместить карту (конец) -->\r\n            <div class=\"m-ico-group\">\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hotel\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-cafe\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-restoran\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-turism\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-azs\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-active-rest\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-sto\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-commerc\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-hunting\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-events\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-shop\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-fishing\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-monument\"></span>\r\n                </a>\r\n\r\n                <a href=\"#\">\r\n                    <span class=\"m-ico m-church\"></span>\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div id=\"near-objects\">\r\n          <h4 class=\"title-block\">Ближайшие гостинницы</h4>\r\n\r\n          <ol>\r\n            <li>\r\n              <h5>Место номер один</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер два</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер три</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер четыре</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n            <li>\r\n              <h5>Место номер пять</h5>\r\n              <p>Краткое описание места и того, что здесь находится</p>\r\n            </li>\r\n          </ol>\r\n        </div>\r\n\r\n      </div><!-- end #tab-map -->\r\n\r\n      <div id=\"tab-desc\" class=\"tab-pane\">\r\n        <div class=\"toggle-block\">\r\n          <ul class=\"ul-desc\"></ul>\r\n          <div class=\"hidden-content\">\r\n            <ul class=\"ul-desc\"></ul>\r\n          </div>\r\n\r\n          <a href=\"#\" class=\"a-toggle\">Ещё описания <span>&darr;</span></a>\r\n        </div>\r\n\r\n        <div class=\"add-comment\">\r\n          <form action=\"#\">\r\n            <div class=\"ac-block\">\r\n              <img src=\"/media/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" alt=\"\" width=\"29\" height=\"30\" class=\"avatar\">\r\n\r\n              <div class=\"ac-body\">\r\n                <div class=\"toggle-area\">\r\n                  <textarea rows=\"3\" cols=\"40\"></textarea>\r\n                  <input type=\"submit\" value=\" \">\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </div>\r\n      </div><!-- end #tab-desc -->\r\n    </div><!-- .tabs.content -->\r\n\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n  </div><!-- end .wide-box -->\r\n\r\n  <footer>\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n  </footer>\r\n</div><!-- end .cleatfix-body -->\r\n\r\n<header id=\"c-top-panel\">\r\n  <div class=\"inner-wrap\">\r\n    <aside class=\"stp-buttons\">\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      <div class=\"c-edit-buttons\">\r\n        <!--<a href=\"#\" class=\"a-btn stp-remove\">Удалить</a>-->\r\n        <a href=\"#\" class=\"a-btn stp-save\">Сохранить</a>\r\n      </div>\r\n    </aside>\r\n\r\n    <div class=\"ctp-head\">\r\n      <h1>";
+  if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "</h1>\r\n      ";
+  options = {hash:{},inverse:self.program(18, program18, data),fn:self.program(16, program16, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, depth0.author, "new", options) : helperMissing.call(depth0, "ifEquals", depth0.author, "new", options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n    </div>\r\n\r\n    <div class=\"ctp-content\">\r\n      ";
+  if (stack2 = helpers.headDescription) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.headDescription; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\r\n      ";
+  stack2 = helpers['if'].call(depth0, depth0.tailDescription, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n    </div>\r\n\r\n    <div class=\"c-edit-inputs\">\r\n      <input type=\"text\" value=\"";
+  if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.name; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\">\r\n      <input type=\"text\" value=\"";
+  if (stack2 = helpers.description) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.description; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\">\r\n    </div>\r\n  </div>\r\n</header>\r\n\r\n<aside id=\"c-left-panel\">\r\n  <div class=\"aside-content\">\r\n    <div class=\"aside-viewport\">\r\n      <ol id=\"ol-collection\">\r\n        ";
+  stack2 = helpers.each.call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.programWithDepth(22, program22, data, depth0),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      </ol>\r\n    </div>\r\n\r\n    <a href=\"#\" class=\"clp-up\"></a> <!-- clp- collection left panel  -->\r\n    <a href=\"#\" class=\"clp-down\"></a>\r\n  </div>\r\n</aside>\r\n";
+  return buffer;
+  });
+
+this["Templates"]["RouteDetailView"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  
+  return "\r\n      <!--<a href=\"#\" class=\"fr a-btn a-subscribe\">Подписаться</a>-->\r\n    ";
+  }
+
+function program3(depth0,data,depth1) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n                    <li>\r\n                      <div class=\"item-photo\" data-route-id=\""
+    + escapeExpression(((stack1 = depth1.id),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-photo-id=\"";
+  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\">\r\n                        <a href=\"/route/"
+    + escapeExpression(((stack1 = depth1.id),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/point/"
+    + escapeExpression(((stack1 = ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/photo/";
+  if (stack2 = helpers.id) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.id; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\">\r\n                          <img src=\"";
+  if (stack2 = helpers.thumbnail104x104) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.thumbnail104x104; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
+    + "\" alt=\"\" width=\"104\" height=\"104\">\r\n                        </a>\r\n                        ";
+  options = {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth1.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth1.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n                      </div>\r\n                    </li>\r\n                    ";
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  
+  return "\r\n                          <button type=\"button\" title=\"Удалить фото\" class=\"remove-photo\"></button>\r\n                        ";
+  }
+
+function program6(depth0,data) {
+  
+  
+  return "\r\n                          <button type=\"button\" title=\"Пожаловаться на фото\" class=\"complaint-photo\"></button>\r\n                        ";
+  }
+
+function program8(depth0,data) {
+  
+  var buffer = "", stack1, stack2;
+  buffer += "\r\n    <div class=\"tabs-content p-common-content\">\r\n      <section class=\"p-block event-labels\">\r\n          <h4 class=\"title-block\">Метки</h4>\r\n\r\n          <div class=\"body\">\r\n            ";
+  stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.tags), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n          </div>\r\n      </section>\r\n    </div><!-- end .p-common-content -->\r\n    ";
+  return buffer;
+  }
+function program9(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n              <div class=\"label\">";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</div>\r\n            ";
+  return buffer;
+  }
+
+function program11(depth0,data) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n      <div class=\"c-buttons\">\r\n        <a href=\"#\" class=\"a-btn stp-like ";
+  options = {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data};
+  stack2 = ((stack1 = helpers.ifBelong),stack1 ? stack1.call(depth0, depth0.user, depth0.likeusers, options) : helperMissing.call(depth0, "ifBelong", depth0.user, depth0.likeusers, options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\">Нравится</a>\r\n        ";
+  options = {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      </div>\r\n    ";
+  return buffer;
+  }
+function program12(depth0,data) {
+  
+  
+  return "marked";
+  }
+
+function program14(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "<a href=\"/route/";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "/edit\" class=\"nonav a-btn stp-edit\">Редактировать</a>";
+  return buffer;
+  }
+
+function program16(depth0,data) {
+  
+  
+  return "\r\n      ";
+  }
+
+function program18(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n        маршрут добавил\r\n        <a href=\"#\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " "
+    + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\r\n      ";
+  return buffer;
+  }
+
+function program20(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n        <span class=\"hellip\">…</span>\r\n        <span class=\"hidden more-desc\">";
+  if (stack1 = helpers.tailDescription) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.tailDescription; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n        <a href=\"#\" class=\"a-toggle-desc\">подробнее</a>\r\n      ";
+  return buffer;
+  }
+
+function program22(depth0,data,depth1) {
+  
+  var buffer = "", stack1, stack2, options;
+  buffer += "\r\n        <li class=\"choose_place ";
+  options = {hash:{},inverse:self.noop,fn:self.program(23, program23, data),data:data};
+  stack2 = ((stack1 = helpers.ifEquals),stack1 ? stack1.call(depth0, ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options) : helperMissing.call(depth0, "ifEquals", ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.id), ((stack1 = depth1.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.id), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\" data-placemark-id=\"placemark-1\">\r\n          <a href=\"/route/"
+    + escapeExpression(((stack1 = depth1.id),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/point/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"choose_place_a\" data-id=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.point),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\r\n            <button type=\"button\" class=\"remove-collection\"></button>\r\n          </li>\r\n        ";
+  return buffer;
+  }
+function program23(depth0,data) {
+  
+  
+  return "active";
+  }
+
+  buffer += "<div class=\"clearfix p-body\">\r\n  <header>\r\n    ";
+  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.user),stack1 == null || stack1 === false ? stack1 : stack1.authorized), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\r\n      <!--<div class=\"event-date\">1―5 января</div>-->\r\n      <h2>"
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h2>\r\n      <small>поделился</small> <a href=\"#\">"
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.author)),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " "
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.author)),stack1 == null || stack1 === false ? stack1 : stack1.last_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\r\n\r\n      <div class=\"addr\">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.address)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</div>\r\n\r\n      <div class=\"stats\">\r\n        <span>\r\n          <span class=\"ico-want-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.beens_count)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-like-small\"></span>\r\n          "
     + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.likes_count)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-comment-small\"></span>\r\n          "
-    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.comments)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-star-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.sets_count)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n        </span>\r\n\r\n        <span>\r\n          <span class=\"ico-vote-small\"></span>\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.reviewusersplus)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "/"
+    + escapeExpression(((stack1 = ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.reviewusersminus)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\r\n        </span>\r\n      </div>\r\n  </header>\r\n\r\n  <div class=\"wide-box\">\r\n    <ul class=\"p-tabs\">\r\n      <li class=\"active\"><a href=\"#tab-photo\" data-toggle=\"tab\">Фотография</a></li>\r\n      <li><a href=\"#tab-map\" data-toggle=\"tab\">На карте</a></li>\r\n      <li><a href=\"#tab-desc\" data-toggle=\"tab\">Описание</a></li>\r\n\r\n      <li><div class=\"shadow\"></div></li>\r\n    </ul>\r\n\r\n    <div class=\"tabs-content\">\r\n\r\n      <div id=\"tab-photo\" class=\"tab-pane active\">\r\n        <div class=\"tabs-content\">\r\n          <div class=\"toggle-block\">\r\n            <div class=\"clearfix p-gallery\">\r\n              <div class=\"clearfix place-photos\">\r\n                <div class=\"photos-gallery\">\r\n                  <ul>\r\n                    ";
   stack2 = helpers.each.call(depth0, ((stack1 = depth0.activePoint),stack1 == null || stack1 === false ? stack1 : stack1.imgs), {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
@@ -1609,7 +1931,9 @@ function program3(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n    <li class=\"item-label\" data-name=\""
+  buffer += "\r\n    <li class=\"item-label\" data-address=\""
+    + escapeExpression(((stack1 = ((stack1 = depth0.GeoObject),stack1 == null || stack1 === false ? stack1 : stack1.description)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-name=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.GeoObject),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" data-left-corner=\""
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = depth0.GeoObject),stack1 == null || stack1 === false ? stack1 : stack1.boundedBy)),stack1 == null || stack1 === false ? stack1 : stack1.Envelope)),stack1 == null || stack1 === false ? stack1 : stack1.lowerCorner)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -1651,7 +1975,7 @@ function program7(depth0,data) {
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\"><a href=\"#\">";
+    + "\" data-type=\"name\"><a href=\"#\">";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -1662,10 +1986,10 @@ function program7(depth0,data) {
   buffer += "<button type=\"button\"  class=\"toggle-panel\"></button>\r\n\r\n<div class=\"inner-wrap\">\r\n";
   stack1 = helpers['if'].call(depth0, depth0.empty, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n\r\n<!--\r\n";
+  buffer += "\r\n\r\n";
   stack1 = helpers['if'].call(depth0, depth0.places, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n-->\r\n\r\n";
+  buffer += "\r\n\r\n";
   stack1 = helpers['if'].call(depth0, depth0.points, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
@@ -1954,11 +2278,10 @@ function program3(depth0,data) {
     startWithParent: false,
     define: function() {
       return this.addInitializer(function() {
-        var callbacks, dfd,
-          _this = this;
+        var _this = this;
 
         console.log('initializing Map Module');
-        callbacks = new Backbone.Marionette.Callbacks();
+        this.mapDeferred = $.Deferred();
         this.router = new Yapp.Map.Router({
           controller: new Yapp.Map.Controller
         });
@@ -1975,44 +2298,47 @@ function program3(depth0,data) {
             offset: [-29, -29]
           }
         ];
-        dfd = $.Deferred();
         this.geocode = function(request, options) {
           if (window.ymaps !== void 0) {
             return ymaps.geocode(request, options);
           } else {
-            return dfd;
+            return this.mapDeferred;
           }
         };
         this.route = function(feature, options) {
           if (window.ymaps !== void 0) {
             return ymaps.route(feature, options);
           } else {
-            return dfd;
+            return this.mapDeferred;
           }
         };
-        this.mapDeferred = $.Deferred();
         return $.getScript(Yapp.YA_MAP_URL, function() {
           return _this.mapDeferred.promise(ymaps.ready(function() {
-            var map, pointCollection;
+            var leftCorner, location, rightCorner;
 
-            dfd.resolve();
             console.log('Init Yandex map');
-            map = new ymaps.Map('mainmap', {
+            _this.yandexmap = new ymaps.Map('mainmap', {
               center: [ymaps.geolocation.latitude, ymaps.geolocation.longitude],
               zoom: 12
+            }, {
+              autoFitToViewport: 'always'
+            });
+            _this.trigger('load:yandexmap', _this.yandexmap);
+            leftCorner = _this.yandexmap.getBounds()[0].reverse().join(' ');
+            rightCorner = _this.yandexmap.getBounds()[1].reverse().join(' ');
+            location = _.extend(ymaps.geolocation, {
+              leftCorner: leftCorner,
+              rightCorner: rightCorner
             });
             Yapp.user.set({
-              location: ymaps.geolocation
+              location: location
             });
-            map.controls.add('zoomControl', {
+            _this.yandexmap.controls.add('zoomControl', {
               right: 5,
               top: 80
             }).add('typeSelector');
-            pointCollection = new ymaps.GeoObjectCollection();
-            map.geoObjects.add(pointCollection);
-            _this.yandexmap = map;
-            _this.trigger('load:yandexmap', _this.yandexmap);
-            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n\n  <div class=\"name-place\" data-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
+            _this.mapEvents = _this.yandexmap.events.group();
+            _this.pointIconLayout = ymaps.templateLayoutFactory.createClass("<div class=\"placemark for-add-place $[properties.class]\" data-point-id=\"$[properties.point.id]\" id=\"placemark-$[properties.point.id]\">\n  <!--<img src=\"/media/$[properties.tag.icons]\">-->\n  [if properties.iconContent]\n  <span class=\"p-num\">$[properties.iconContent]</span>\n  [else]\n  <span class=\"m-ico $[properties.tag.style|m-dostoprimechatelnost]\"></span>\n  [endif]\n\n  <a href=\"#\" class=\"a-add-place\" data-point-id=\"$[properties.point.id]\" data-title=\"$[properties.point.name]\" data-desc=\"$[properties.point.address]\">\n    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Добавить&nbsp;в&nbsp;маршрут\"  class=\"p-num\">$[properties.iconContent|+]</span>\n  </a>\n\n  <div class=\"name-place\" data-point-id=\"$[properties.point.id]\">$[properties.point.name]</div>\n</div>", {
               /**
               #
               # Add custom events for placemark
@@ -2020,17 +2346,19 @@ function program3(depth0,data) {
               */
 
               build: function() {
-                var addPlaceElement, namePlaceElement, rootElement;
+                var addPlaceElement, namePlaceElement, placemarkElement, rootElement;
 
                 this.constructor.superclass.build.call(this);
                 rootElement = this.getElement();
+                placemarkElement = rootElement.getElementsByClassName('placemark');
                 addPlaceElement = rootElement.getElementsByClassName('a-add-place');
                 namePlaceElement = rootElement.getElementsByClassName('name-place');
+                $('[data-toggle=tooltip]', this.getElement()).tooltip();
                 this.eventsGroup = this.events.group();
-                this.eventsGroup.add('click', this.onClickPlacemark, rootElement);
+                this.eventsGroup.add('click', this.onClickPlacemark, placemarkElement);
                 this.eventsGroup.add('click', this.onClickAddPlace, addPlaceElement);
                 this.eventsGroup.add('click', this.onClickNamePlace, namePlaceElement);
-                $(rootElement).unbind('click').bind('click', this.onClickPlacemark);
+                $(placemarkElement).unbind('click').bind('click', this.onClickPlacemark);
                 $(addPlaceElement).unbind('click').bind('click', this.onClickAddPlace);
                 return $(namePlaceElement).unbind('click').bind('click', this.onClickNamePlace);
               },
@@ -2041,22 +2369,25 @@ function program3(depth0,data) {
               */
 
               clear: function() {
-                return this.eventsGroup.removeAll();
+                this.eventsGroup.removeAll();
+                return $('[data-toggle=tooltip]', this.getElement()).tooltip('destroy');
               },
               onClickPlacemark: function(event) {
-                var me, w;
+                var $target, me, w;
 
                 event.preventDefault();
                 event.stopPropagation();
-                if ($('.placemark', this).hasClass('hover')) {
-                  me = $('.placemark', this);
+                $target = $(event.currentTarget);
+                clearTimeout();
+                if ($(this).hasClass('hover')) {
+                  me = $(this);
                   return $('.name-place', this).stop().animate({
                     width: 0
                   }, 150, function() {
                     return me.removeClass('hover');
                   });
                 } else {
-                  $('.placemark', this).addClass('hover');
+                  $(this).addClass('hover');
                   w = $('.name-place', this).data('width') || $('.name-place', this).outerWidth();
                   return $('.name-place', this).data('width', w).width(0).stop().animate({
                     width: w - 29
@@ -2069,7 +2400,6 @@ function program3(depth0,data) {
               */
 
               onClickAddPlace: function(event) {
-                event.preventDefault();
                 return Yapp.vent.trigger('click:addplacemark', event);
               },
               /**
@@ -2080,12 +2410,11 @@ function program3(depth0,data) {
               onClickNamePlace: function(event) {
                 var $target, pointId;
 
-                event.preventDefault();
-                event.stopPropagation();
                 $target = $(event.currentTarget);
-                pointId = $target.data('id');
-                Yapp.vent.trigger('click:nameplacemark', pointId);
-                return Yapp.Common.router.trigger('route');
+                pointId = $target.data('point-id');
+                if (pointId) {
+                  return Yapp.vent.trigger('click:nameplacemark', pointId);
+                }
               }
             });
             return _this.mapDeferred.resolve();
@@ -2278,8 +2607,7 @@ function program3(depth0,data) {
       this.regions.alerts.close();
       $(this.overlay).hide();
       $(this.wrapper).hide();
-      $(this.body).css('overflow-y', 'auto');
-      return Yapp.Common.router.previous();
+      return $(this.body).css('overflow-y', 'auto');
     };
 
     return PopupRegion;
@@ -2820,15 +3148,12 @@ function program3(depth0,data) {
 
     Set.prototype.like = function(target, successCallback, context) {
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/collections/like",
+        url: Yapp.API_BASE_URL + ("/api/v1/sets/" + (this.get('id')) + "/like/"),
         type: 'POST',
         context: context,
         successCallback: successCallback,
         params: {
           target: target
-        },
-        data: {
-          collectionid: this.get('id')
         }
       });
     };
@@ -2865,7 +3190,7 @@ function program3(depth0,data) {
 /**
 # Submodule for all route functionality
 # @module Yapp
-# @submodule routes
+# @submodule Routes
 */
 
 
@@ -2956,15 +3281,12 @@ function program3(depth0,data) {
 
     Route.prototype.like = function(target, successCallback, context) {
       return Yapp.request('request', {
-        url: Yapp.API_BASE_URL + "/route/like",
+        url: Yapp.API_BASE_URL + ("/api/v1/route/" + (this.get('id')) + "/like/"),
         type: 'POST',
         context: context,
         successCallback: successCallback,
         params: {
           target: target
-        },
-        data: {
-          routeid: this.get('id')
         }
       });
     };
@@ -3334,18 +3656,13 @@ function program3(depth0,data) {
       this.user = Yapp.user;
       this.iconTemplate = Templates.IconTemplate;
       _.bindAll(this, 'updatePointCollection');
-      this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
-      this.listenTo(Yapp.Points, 'update:collection', this.updatePointCollection);
       $.get('/api/v1/map_yapens/').success(function(response) {
         return _this.pointsByTag = _.partial(_this._filteredPoints, response);
       });
       return Yapp.request('request', {
-        url: '/tags/list',
+        url: Yapp.API_BASE_URL + '/api/v1/tags/',
         context: this,
-        successCallback: this.renderIcons,
-        data: {
-          content: 'popular'
-        }
+        successCallback: this.renderIcons
       });
     };
 
@@ -3379,9 +3696,13 @@ function program3(depth0,data) {
     */
 
 
-    MapView.prototype.setMap = function(map) {
-      this.map = map;
-      return this.map.events.add('actionend', this.changeMap, this);
+    MapView.prototype.onRender = function() {
+      var _this = this;
+
+      return Yapp.Map.mapDeferred.then(function() {
+        _this.map = Yapp.Map.yandexmap;
+        return Yapp.Map.mapEvents.add('actionend', _this.changeMap, _this);
+      });
     };
 
     /**
@@ -3396,27 +3717,46 @@ function program3(depth0,data) {
 
       center = this.map.getCenter();
       geoCoder = Yapp.Map.geocode(center, {
-        results: 1,
+        results: 10,
         json: true
       });
-      geoCoder.then(function(result) {
-        var country, geoMetaData, geoObject, locality, region;
+      return geoCoder.then(function(result) {
+        var coordLeft, coordRight, country, geoMetaData, geoObject, leftCorner, locality, match, region, rightCorner, searchModels;
 
-        geoObject = result.GeoObjectCollection.featureMember[0].GeoObject;
+        match = _.find(result.GeoObjectCollection.featureMember, function(el) {
+          return el.GeoObject.metaDataProperty.GeocoderMetaData.kind === 'locality' || el.GeoObject.metaDataProperty.GeocoderMetaData.kind === 'area';
+        });
+        geoObject = match.GeoObject;
         geoMetaData = geoObject.metaDataProperty.GeocoderMetaData;
+        leftCorner = _this.map.getBounds()[0].reverse();
+        rightCorner = _this.map.getBounds()[1].reverse();
+        searchModels = Yapp.settings.models;
         country = geoMetaData.AddressDetails.Country;
         region = country.AdministrativeArea;
         locality = country.Locality ? country.Locality : region && region.Locality ? region.Locality : region && region.SubAdministrativeArea && region.SubAdministrativeArea.Locality ? region.SubAdministrativeArea.Locality : region && region.SubAdministrativeArea ? region.SubAdministrativeArea : false;
-        return _this.user.set({
+        _this.user.set({
+          searchModels: searchModels,
           location: {
             country: country.CountryName,
             region: region ? region.AdministrativeAreaName : '',
-            city: locality ? locality.LocalityName || locality.SubAdministrativeAreaName : void 0
+            city: locality ? locality.LocalityName || locality.SubAdministrativeAreaName : void 0,
+            leftCorner: leftCorner.join(' '),
+            rightCorner: rightCorner.join(' ')
           }
         });
+        coordLeft = _.zipObject(['ln', 'lt'], _(leftCorner).map(function(el) {
+          return parseFloat(el);
+        }).value());
+        coordRight = _.zipObject(['ln', 'lt'], _(rightCorner).map(function(el) {
+          return parseFloat(el);
+        }).value());
+        Yapp.updateSettings({
+          coord_left: JSON.stringify(coordLeft),
+          coord_right: JSON.stringify(coordRight)
+        });
+        console.log('map update');
+        return _this.getMapYapens();
       });
-      console.log('map update');
-      return Yapp.Common.headerView.submitSearch();
     };
 
     /**
@@ -3429,8 +3769,6 @@ function program3(depth0,data) {
       var _this = this;
 
       return Yapp.Map.mapDeferred.then(function() {
-        var collectionFiltered;
-
         if (_this.clusterer) {
           _this.clusterer.remove(_this.boardPlacemarks);
         } else {
@@ -3439,31 +3777,27 @@ function program3(depth0,data) {
           });
           Yapp.Map.yandexmap.geoObjects.add(_this.clusterer);
         }
-        collectionFiltered = _.filter(collection.models, function(point) {
-          return point.get('type_of_item') === "point";
-        });
-        _this.boardPlacemarks = _.map(collectionFiltered, function(point) {
+        _this.boardPlacemarks = _.map(collection, function(point) {
           var tag;
 
-          tag = _(point.get('tags')).find(function(tag) {
+          tag = _(point.tags).find(function(tag) {
             return tag.icons !== '';
           });
-          return new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-            id: 'map-point' + point.get('id'),
-            point: point.toJSON(),
+          return new ymaps.Placemark([point.latitude, point.longitude], {
+            id: 'map-point' + point.id,
+            point: point,
             tag: tag
           }, {
             iconLayout: Yapp.Map.pointIconLayout
           });
         });
         _this.clusterer.add(_this.boardPlacemarks);
-        _this.clusterer.refresh();
-        return console.log(collection, 'collection reset');
+        return _this.clusterer.refresh();
       });
     };
 
     /**
-    # Fired when response by /tags/list/ successed
+    # Fired when response by /api/v1/tags/list/ successed
     # Show labels on left bottom corner on map
     # @event renderIcons
     */
@@ -3473,7 +3807,9 @@ function program3(depth0,data) {
       var icons;
 
       icons = this.iconTemplate({
-        icons: response
+        icons: response.filter(function(icon) {
+          return icon.level === 0;
+        })
       });
       this.$('.m-ico-group').html(icons);
       return this.$el.find('[data-toggle=tooltip]').tooltip();
@@ -3593,6 +3929,18 @@ function program3(depth0,data) {
       }
     };
 
+    MapView.prototype.getMapYapens = function() {
+      return Yapp.request('request', {
+        url: Yapp.API_BASE_URL + '/api/v1/map_yapens/',
+        context: this,
+        successCallback: this.updatePointCollection,
+        data: {
+          coord_left: Yapp.settings.coord_left,
+          coord_right: Yapp.settings.coord_right
+        }
+      });
+    };
+
     return MapView;
 
   })(Marionette.ItemView);
@@ -3696,7 +4044,7 @@ function program3(depth0,data) {
 /**
 # Submodule for all points functionality
 # @module Yapp
-# @submodule Points
+# @submodule Common
 */
 
 
@@ -3947,6 +4295,8 @@ function program3(depth0,data) {
 
     HeaderView.prototype.template = Templates.HeaderView;
 
+    HeaderView.prototype.className = 'wrap';
+
     /**
     # Ui emenents for view
     # @type Object
@@ -3986,7 +4336,9 @@ function program3(depth0,data) {
       'click #multisearchForm input[type=submit]': 'submitSearch',
       'submit #multisearchForm': 'submitSearch',
       'keydown .text-field input': 'keyupInput',
-      'click .head-nav li': 'selectItemType'
+      'click .head-nav li': 'selectItemType',
+      'click .head-nav ul': 'showItemTypeMenu',
+      'click .add-block-head': 'showAddMenu'
     };
 
     /**
@@ -4037,8 +4389,6 @@ function program3(depth0,data) {
           Yapp.Map.yandexmap.setBounds([data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()], {
             checkZoomRange: true
           });
-          console.log('setBounds', [data.coordLeft.split(' ').reverse(), data.coordRight.split(' ').reverse()]);
-          console.log('setBounds', [data.coordLeft.split(' '), data.coordRight.split(' ')]);
           this.submitSearch(event);
           break;
         case 'user':
@@ -4198,15 +4548,55 @@ function program3(depth0,data) {
       }, 500);
     };
 
-    HeaderView.prototype.selectItemType = function(event) {
+    /**
+    # Show menu for adding point, event or route
+    # Fired when .add-block-head click occur
+    # @event showAddMenu
+    */
+
+
+    HeaderView.prototype.showAddMenu = function(event) {
       var $target;
 
       event.preventDefault();
       $target = $(event.currentTarget);
-      this.ui.itemTypeNav.children().removeClass('head-nav-current-item');
-      $target.insertBefore(this.ui.itemTypeNav.children().first());
-      $target.addClass('head-nav-current-item');
-      return this.submitSearch(event);
+      return $target.toggleClass('opened');
+    };
+
+    /**
+    # Show menu for select active search models
+    # Fired when .head-nav ul click occur
+    # @event showItemTypeMenu
+    */
+
+
+    HeaderView.prototype.showItemTypeMenu = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      return this.ui.itemTypeNav.toggleClass('opened');
+    };
+
+    /**
+    # Set active search models and do request
+    # Fired when .head-nav li click occur
+    # @event selectItemType
+    */
+
+
+    HeaderView.prototype.selectItemType = function(event) {
+      var $target;
+
+      $target = $(event.currentTarget);
+      if (!$target.hasClass('head-nav-current-item')) {
+        this.ui.itemTypeNav.children().removeClass('head-nav-current-item');
+        $target.insertBefore(this.ui.itemTypeNav.children().first());
+        $target.addClass('head-nav-current-item');
+        this.submitSearch(event);
+        this.model.set('searchModels', $target.data('models'), {
+          silent: true
+        });
+        return this.ui.itemTypeNav.removeClass('opened');
+      }
     };
 
     /**
@@ -4719,13 +5109,11 @@ function program3(depth0,data) {
       this.model = new Yapp.Points.Point();
       this.model.on('invalid', this.showError, this);
       this.model.on('valid', this.savePoint, this);
+      this.labelTemplate = Templates.LabelTemplate;
       Yapp.request('request', {
-        url: '/tags/list',
+        url: '/api/v1/tags/',
         context: this,
-        successCallback: this.setLabels,
-        data: {
-          content: 'popular'
-        }
+        successCallback: this.setLabels
       });
       return this.listenTo(Yapp.Map, 'load:yandexmap', this.onInitMap);
     };
@@ -4897,6 +5285,9 @@ function program3(depth0,data) {
         }),
         'additionalLabels': response.filter(function(label) {
           return label.level === 1;
+        }),
+        'otherLabels': response.filter(function(label) {
+          return label.level === 2;
         })
       });
       return this.onInitMap(Yapp.Map.yandexmap);
@@ -4909,21 +5300,28 @@ function program3(depth0,data) {
 
 
     PointAddView.prototype.addRequireLabel = function(event) {
-      var $target, labelId, labelName, text;
+      var $target, labelId, labelName, moreLabels, text;
 
       event.preventDefault();
       $target = $(event.currentTarget);
       this.ui.requireLabels.hide();
-      this.ui.moreLabels.show();
       text = this.ui.labelsHeader.text();
       labelId = $target.find('.placemark').data('label-id');
       labelName = $target.find('.ctp-item-title').text();
+      moreLabels = this.model.get('additionalLabels').filter(function(label) {
+        label.type = 'place';
+        return label.parent === labelId;
+      });
       this.ui.labelsHeader.html("" + text + " <div class='label label-required'>" + labelName + "<button class='remove-label'></button></div>");
-      return this.model.get('tags').push({
+      this.model.get('tags').push({
         id: labelId,
         name: labelName,
         "class": 'require'
       });
+      this.ui.moreLabels.find('.labels-field').html(this.labelTemplate({
+        labels: moreLabels
+      }));
+      return this.ui.moreLabels.slideDown(200);
     };
 
     /**
@@ -5215,7 +5613,7 @@ function program3(depth0,data) {
 
     PointAddView.prototype.savePoint = function() {
       return Yapp.request('request', {
-        url: '/points/add',
+        url: Yapp.API_BASE_URL + '/api/v1/points/',
         context: this,
         successCallback: this.successSave,
         type: 'POST',
@@ -5260,8 +5658,11 @@ function program3(depth0,data) {
     PointAddView.prototype.successSave = function(response) {
       var model;
 
-      model = new Yapp.Points.Point(response[0]);
+      model = new Yapp.Points.Point(response);
+      model.id = response.id;
+      model.set('type_of_item', 'point');
       this.collection.add(model);
+      this.collection.trigger('reset');
       Yapp.popup.close();
       return console.log(model, 'success');
     };
@@ -5396,11 +5797,13 @@ function program3(depth0,data) {
       this.$el.find('[data-toggle=tooltip]').tooltip();
       this.ui.placePhotos.data('slider', Yapp.Common.sliderPhotos);
       this.photoSlider = this.ui.placePhotos.data('slider');
-      this.showPhoto();
       this.photoSlider.init({
         root: this.ui.placePhotos,
         visible: 4
       });
+      if (!_.isEmpty(this.model.get('imgs'))) {
+        this.showPhoto();
+      }
       this._renderSocial();
       return this.$('.js-vote').rating({
         fx: 'full',
@@ -5429,7 +5832,6 @@ function program3(depth0,data) {
           type: 'mini',
           pageTitle: this.model.get('name'),
           pageDescription: this.model.get('description'),
-          pageImage: this.model.get('imgs')[0].thumbnail104x104,
           text: "ЯсенПуть знает все - " + (this.model.get('name'))
         }, 1000 + this.model.get('id'));
       }
@@ -6939,7 +7341,7 @@ function program3(depth0,data) {
       point = _.find(this.model.get('points'), function(point) {
         return point.point.id === pointId;
       });
-      return this.activePoint = point || this.model.get('points')[0].point;
+      return this.activePoint = point ? point.point : this.model.get('points')[0].point;
     };
 
     /**
@@ -6950,7 +7352,7 @@ function program3(depth0,data) {
     */
 
 
-    RouteDetailView.prototype.template = Templates.SetDetailView;
+    RouteDetailView.prototype.template = Templates.RouteDetailView;
 
     /**
     # @property className
@@ -7117,7 +7519,8 @@ function program3(depth0,data) {
         photo = _.find(this.activePoint.imgs, function(photo) {
           return photo.id === photoId;
         });
-        photoId = 0;
+        photo = this.activePoint.imgs[0];
+        photoId = photo.id;
       }
       activePhoto = _.find(this.ui.allPhotos, function(el) {
         return $(el).data('photo-id') === photoId;
@@ -7167,7 +7570,7 @@ function program3(depth0,data) {
       point = _.find(this.model.get('points'), function(point) {
         return point.point.id === pointId;
       });
-      this.activePoint = point;
+      this.activePoint = point.point;
       this.model.trigger('change');
       return delete this.map;
     };
@@ -7556,7 +7959,7 @@ function program3(depth0,data) {
 
 
     RoutesSaveView.prototype.createRoute = function(event) {
-      var coords, routeDescription, routeName,
+      var coords, routeCollection, routeDescription, routeName,
         _this = this;
 
       event.preventDefault();
@@ -7564,6 +7967,9 @@ function program3(depth0,data) {
       routeName = this.ui.inputName.val().trim();
       routeDescription = this.ui.inputDescription.val().trim();
       coords = JSON.stringify(this.route.requestPoints);
+      routeCollection = _.map(this.routeCollection, function(geoPoint) {
+        return geoPoint.point.placemark = null;
+      });
       if (!_.isEmpty(routeName) && !_.isEmpty(routeDescription)) {
         this.model.set({
           name: routeName,
@@ -7647,23 +8053,18 @@ function program3(depth0,data) {
 
 
     RoutesView.prototype.initialize = function() {
-      var _this = this;
-
       console.log('initializing Yapp.Routes.RoutesView');
-      _.bindAll(this, 'updateBar', 'resortCollection', 'loadPoint');
+      _.bindAll(this, 'addWayPoint', 'removeWayPoint', 'resortCollection', 'addPointToPath');
       this.user = Yapp.user;
       this.search = Yapp.Common.headerView.search;
       this.collection = new Yapp.Points.PointCollection;
       this.model.collection = this.collection;
-      _.each(this.model.get('points'), function(el) {
-        return _this.collection.add(new Yapp.Points.Point(el.point));
-      });
       this.dropdownTemplate = Templates.RoutesDropdown;
       this.detailsPathTemplate = Templates.RoutesDetail;
-      this.collection.on('add remove', this.updateBar, this);
+      this.collection.on('add', this.addWayPoint, this);
+      this.collection.on('remove', this.removeWayPoint, this);
       this.collection.on('resort:collection', this.resortCollection, this);
-      this.listenTo(Yapp.vent, 'click:addplacemark', this.loadPoint);
-      return this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
+      return this.listenTo(Yapp.vent, 'click:addplacemark', this.addPointToPath);
     };
 
     RoutesView.prototype.template = Templates.RoutesView;
@@ -7684,7 +8085,7 @@ function program3(depth0,data) {
     RoutesView.prototype.events = {
       'keydown input.route-input': 'keyupInput',
       'click .btn-add-path': 'buildPath',
-      'click .drop-search-a li.item-label': 'loadPoint',
+      'click .drop-search-a li.item-label': 'addPointToPath',
       'click .remove-item-path': 'removePointFromPath',
       'click .btn-clear-map': 'clearMap',
       'click .drop-filter-clear': 'hideDropdown',
@@ -7702,16 +8103,30 @@ function program3(depth0,data) {
       'change': 'render'
     };
 
-    RoutesView.prototype.setMap = function() {
+    /**
+    # Initialize left sidebar if route has points when edit
+    # @method initBar
+    */
+
+
+    RoutesView.prototype.initBar = function() {
       var _this = this;
 
-      if (!_.isEmpty(this.model.get('points'))) {
-        this.collection.trigger('add');
-        _.each(this.collection.models, function(point) {
-          return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
-        });
-        return this.$('.btn-add-path').click();
-      }
+      _.each(this.model.get('points'), function(el) {
+        el.point.unid = el.point.id;
+        return _this.collection.add(new Yapp.Points.Point(el.point));
+      });
+      return Yapp.Map.mapDeferred.then(function() {
+        if (_this.options.pointId) {
+          _this.addPointToPath();
+        }
+        if (!_.isEmpty(_this.model.get('points'))) {
+          _this.collection.each(function(point) {
+            return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+          });
+          return _this.$('.btn-add-path').click();
+        }
+      });
     };
 
     /**
@@ -7721,15 +8136,16 @@ function program3(depth0,data) {
 
 
     RoutesView.prototype.onShow = function() {
-      $('body').addClass('page-map');
-      $(window).on('resize', function() {
-        if (Yapp.Map.yandexmap) {
-          return Yapp.Map.yandexmap.container.fitToViewport();
-        }
+      var _this = this;
+
+      Yapp.Map.mapDeferred.then(function() {
+        return Yapp.Map.mapEvents.removeAll();
       });
+      $('body').addClass('page-map');
       $('#header').hide();
       $('#panel-add-path').show();
-      return this._dragPoints();
+      this._dragPoints();
+      return this.initBar();
     };
 
     /**
@@ -7740,13 +8156,9 @@ function program3(depth0,data) {
 
     RoutesView.prototype.onClose = function() {
       $('body').removeClass('page-map');
-      $(window).off('resize', function() {
-        if (Yapp.Map.yandexmap) {
-          return Yapp.Map.yandexmap.container.fitToViewport();
-        }
-      });
       $('#header').show();
       $('#panel-add-path').hide();
+      this.collection.remove(this.collection.models);
       if (this.route) {
         return Yapp.Map.yandexmap.geoObjects.remove(this.route);
       }
@@ -7876,17 +8288,12 @@ function program3(depth0,data) {
 
 
     RoutesView.prototype.buildDetailPath = function(route) {
-      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments,
-        _this = this;
+      var point, routeCollection, segment, segments, way, wayIndex, wayLength, ways, _i, _j, _len, _len1, _ref1, _segments;
 
       if (!_.isEmpty(this.model.get('points'))) {
         route.options.set('mapStateAutoApply', true);
       }
-      route.getWayPoints().each(function(point, index) {
-        point.properties.set('class', 'place-added');
-        return point.properties.set('point', _this.collection.models[index].toJSON());
-      });
-      route.getWayPoints().options.set('iconLayout', Yapp.Map.pointIconLayout);
+      route.getWayPoints().options.set('visible', false);
       ways = route.getPaths();
       wayLength = ways.getLength();
       routeCollection = [];
@@ -7929,34 +8336,82 @@ function program3(depth0,data) {
 
     /**
     # TODO
-    # @method loadPoint
+    # @method createGeoPoint
     */
 
 
-    RoutesView.prototype.loadPoint = function(event) {
+    RoutesView.prototype.createGeoPoint = function(data) {
+      var location, point, unid;
+
+      unid = parseInt(_.uniqueId(1010), 10);
+      point = new Yapp.Points.Point({
+        unid: unid
+      });
+      location = data.location.split(' ');
+      return point.set({
+        id: unid,
+        longitude: location[0],
+        latitude: location[1],
+        name: data.name,
+        address: data.address
+      });
+    };
+
+    /**
+    # TODO
+    # @method addPointToPath
+    */
+
+
+    RoutesView.prototype.addPointToPath = function(event) {
       var $target, data, length, point,
         _this = this;
 
-      event.preventDefault();
-      $target = $(event.currentTarget);
-      data = $target.data();
+      if (event) {
+        event.preventDefault();
+        $target = $(event.currentTarget);
+        data = $target.data();
+      } else if (this.options.pointId) {
+        data = {
+          pointId: this.options.pointId
+        };
+        this.options.pointId = null;
+      }
       length = this.collection.length;
-      point = new Yapp.Points.Point({
-        unid: data.pointId
-      });
-      if (!this.collection.findWhere({
-        id: data.pointId
-      })) {
-        point.fetch({
-          success: function(response) {
-            _this.collection.add(point);
-            _this.ui.msgHint.hide();
-            if (_this.collection.length !== length) {
-              Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
-              return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
-            }
-          }
+      if (data.type === 'place') {
+        point = this.createGeoPoint(data);
+        this.collection.add(point);
+        if (this.collection.length !== length) {
+          Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
+          this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+        }
+      } else {
+        point = new Yapp.Points.Point({
+          unid: data.pointId
         });
+        if (!this.collection.findWhere({
+          id: data.pointId
+        })) {
+          point.fetch({
+            success: function(response) {
+              var placemark;
+
+              placemark = new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
+                id: 'map-point' + point.get('id'),
+                point: point.toJSON(),
+                "class": 'place-added'
+              }, {
+                iconLayout: Yapp.Map.pointIconLayout
+              });
+              point.set('placemark', placemark);
+              _this.collection.add(point);
+              if (_this.collection.length !== length) {
+                Yapp.Map.yandexmap.panTo([parseFloat(point.get('latitude')), parseFloat(point.get('longitude'))]);
+                return _this.ui.addPathPlace.append("<li data-point-id=\"" + (point.get('id')) + "\">\n  <h4>" + (point.get('name')) + "</h4>\n  <p>" + (point.get('address')) + "</p>\n  <input type=\"button\" value='' class=\"remove-item-path\" data-point-id=\"" + (point.get('id')) + "\">\n</li>");
+              }
+            }
+          });
+        }
       }
       return this.hideDropdown();
     };
@@ -7990,40 +8445,81 @@ function program3(depth0,data) {
 
 
     RoutesView.prototype.clearMap = function(event) {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       this.ui.addPathPlace.empty();
       this.ui.detailsPath.empty().hide();
       this.ui.lineAddPathButton.show();
       this.ui.actionButton.hide();
       this.model.set('coords', []);
-      this.collection.reset();
-      return this.collection.trigger('remove');
+      return this.collection.remove(this.collection.models);
     };
 
     /**
     # TODO
-    # @method updateBar
+    # @method addWayPoint
     */
 
 
-    RoutesView.prototype.updateBar = function(model) {
-      if (this.collection.length === 0) {
-        this.ui.msgHint.show();
-        this.ui.addPathButton.addClass('disabled');
-        if (this.route) {
-          Yapp.Map.yandexmap.geoObjects.remove(this.route);
-          return this.route = null;
-        }
-      } else if (this.collection.length === 1) {
+    RoutesView.prototype.addWayPoint = function(model) {
+      var _this = this;
+
+      if (this.collection.length === 1) {
         this.ui.msgHint.hide();
-        return this.ui.addPathButton.addClass('disabled');
+        this.ui.addPathButton.addClass('disabled');
       } else if (this.collection.length > 1) {
         this.ui.msgHint.hide();
         this.ui.addPathButton.removeClass('disabled');
         if (this.route) {
-          return this.buildPath();
+          this.buildPath();
         }
       }
+      return Yapp.Map.mapDeferred.then(function() {
+        var placemark;
+
+        placemark = new ymaps.Placemark([model.get('latitude'), model.get('longitude')], {
+          id: 'map-point' + model.get('id'),
+          point: model.toJSON(),
+          "class": 'place-added'
+        }, {
+          iconLayout: Yapp.Map.pointIconLayout
+        });
+        model.set('placemark', placemark);
+        placemark.properties.set('iconContent', _this.collection.indexOf(model) + 1);
+        return Yapp.Map.yandexmap.geoObjects.add(placemark);
+      });
+    };
+
+    /**
+    # TODO
+    # @method removeWayPoint
+    */
+
+
+    RoutesView.prototype.removeWayPoint = function(model) {
+      Yapp.Map.yandexmap.geoObjects.remove(model.get('placemark'));
+      if (this.collection.length === 0) {
+        this.ui.addPathPlace.empty();
+        this.ui.detailsPath.empty().hide();
+        this.ui.lineAddPathButton.show();
+        this.ui.actionButton.hide();
+        this.ui.msgHint.show();
+        this.ui.addPathButton.addClass('disabled');
+        if (this.route) {
+          Yapp.Map.yandexmap.geoObjects.remove(this.route);
+          this.route = null;
+        }
+      }
+      if (this.route) {
+        this.buildPath();
+      }
+      return this.collection.each(function(model, index) {
+        var placemark;
+
+        placemark = model.get('placemark');
+        return placemark.properties.set('iconContent', index + 1);
+      });
     };
 
     /**
@@ -8041,8 +8537,14 @@ function program3(depth0,data) {
       });
       this._insertTo(index, point, this.collection.models);
       if (this.route) {
-        return this.buildPath();
+        this.buildPath();
       }
+      return this.collection.each(function(model, i) {
+        var placemark;
+
+        placemark = model.get('placemark');
+        return placemark.properties.set('iconContent', i + 1);
+      });
     };
 
     /**
@@ -8055,7 +8557,9 @@ function program3(depth0,data) {
     RoutesView.prototype.savePath = function(event) {
       var routesSaveView;
 
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       if (!this.user.get('authorized')) {
         Yapp.vent.trigger('user:notauthorized');
         return;
@@ -8065,8 +8569,7 @@ function program3(depth0,data) {
         model: this.model,
         route: this.route
       });
-      Yapp.popup.show(routesSaveView);
-      return Yapp.Routes.router.trigger('route');
+      return Yapp.popup.show(routesSaveView);
     };
 
     /**
@@ -8291,11 +8794,10 @@ function program3(depth0,data) {
 
     Router.prototype.previous = function() {
       if (this.history.length > 1) {
-        this.navigate(this.history[this.history.length - 2], false);
+        return this.navigate(this.history[this.history.length - 2], false);
       } else {
-        this.navigate('', false);
+        return this.navigate('', false);
       }
-      return this.trigger('route');
     };
 
     return Router;
@@ -8341,10 +8843,7 @@ function program3(depth0,data) {
 
 
     Router.prototype.initialize = function() {
-      console.log('initializing Yapp.Map.Router');
-      return this.on('route', function() {
-        return Yapp.Common.router.trigger('route');
-      });
+      return console.log('initializing Yapp.Map.Router');
     };
 
     /**
@@ -8400,10 +8899,7 @@ function program3(depth0,data) {
 
 
     Router.prototype.initialize = function() {
-      console.log('initializing Yapp.Points.Router');
-      return this.on('route', function() {
-        return Yapp.Common.router.trigger('route');
-      });
+      return console.log('initializing Yapp.Points.Router');
     };
 
     /**
@@ -8418,10 +8914,10 @@ function program3(depth0,data) {
       "new": "showNew",
       "point/add": "addPoint",
       "point/:id": "showPointDetail",
+      "point/:id/photo/:photo_id": "showPointDetail",
       "set/:id": "showSetDetail",
       "set/:id/point/:id": "showSetPhoto",
-      "set/:id/point/:point_id/photo/:photo_id": "showSetPhoto",
-      "point/:id/photo/:photo_id": "showPointPhoto"
+      "set/:id/point/:point_id/photo/:photo_id": "showSetPhoto"
     };
 
     return Router;
@@ -8467,10 +8963,7 @@ function program3(depth0,data) {
 
 
     Router.prototype.initialize = function() {
-      console.log('initializing Yapp.Routes.Router');
-      return this.on('route', function() {
-        return Yapp.Common.router.trigger('route');
-      });
+      return console.log('initializing Yapp.Routes.Router');
     };
 
     /**
@@ -8480,11 +8973,12 @@ function program3(depth0,data) {
 
 
     Router.prototype.appRoutes = {
-      "routes": "showRoutes",
-      "routes/:id": "showRouteDetail",
-      "routes/:id/point/:id": "showRoutePhoto",
-      "routes/:id/point/:point_id/photo/:photo_id": "showRoutePhoto",
-      "routes/:id/edit": "editRoute"
+      "route/add": "addRoute",
+      "route/add/point/:id": "addRoutePoint",
+      "route/:id": "showRouteDetail",
+      "route/:id/point/:id": "showRoutePhoto",
+      "route/:id/point/:point_id/photo/:photo_id": "showRoutePhoto",
+      "route/:id/edit": "editRoute"
     };
 
     return Router;
@@ -8754,18 +9248,17 @@ function program3(depth0,data) {
     Controller.prototype.showPointDetail = function(id, photo_id) {
       var model;
 
+      if (!this.layout) {
+        this.showLayout();
+      }
       model = new Yapp.Points.Point({
         unid: id
       });
-      model.fetch({
-        success: function(model, response) {
-          return Yapp.popup.show(new Yapp.Points.PointDetailView({
-            model: model,
-            photoId: photo_id
-          }));
-        }
-      });
-      return model;
+      Yapp.popup.show(new Yapp.Points.PointDetailView({
+        model: model,
+        photoId: photo_id
+      }));
+      return model.fetch();
     };
 
     /**
@@ -8790,17 +9283,6 @@ function program3(depth0,data) {
         }
       });
       return model;
-    };
-
-    /**
-    # Method for the point showing function with selected photo
-    # @method showPointPhoto
-    */
-
-
-    Controller.prototype.showPointPhoto = function(id, photo_id) {
-      this.showLayout();
-      return this.showPointDetail(id, photo_id);
     };
 
     /**
@@ -8862,11 +9344,11 @@ function program3(depth0,data) {
 
     /**
     # The view for the routes showing function
-    # @method showRoutes
+    # @method addRoute
     */
 
 
-    Controller.prototype.showRoutes = function() {
+    Controller.prototype.addRoute = function() {
       var routesView;
 
       Yapp.content.close();
@@ -8875,10 +9357,26 @@ function program3(depth0,data) {
       routesView = new Yapp.Routes.RoutesView({
         model: new Yapp.Routes.Route
       });
-      Yapp.routePanel.show(routesView);
-      if (Yapp.Map.yandexmap) {
-        return Yapp.Map.yandexmap.container.fitToViewport();
-      }
+      return Yapp.routePanel.show(routesView);
+    };
+
+    /**
+    # The view for the routes showing function with selected point
+    # @method addRoutePoint
+    */
+
+
+    Controller.prototype.addRoutePoint = function(pointId) {
+      var routesView;
+
+      Yapp.content.close();
+      Yapp.popup.close();
+      Yapp.Map.mapView.clear();
+      routesView = new Yapp.Routes.RoutesView({
+        model: new Yapp.Routes.Route,
+        pointId: pointId
+      });
+      return Yapp.routePanel.show(routesView);
     };
 
     /**
@@ -8931,7 +9429,7 @@ function program3(depth0,data) {
       route = new Yapp.Routes.Route({
         unid: id
       });
-      route.fetch({
+      return route.fetch({
         success: function(response) {
           var routesView;
 
@@ -8941,9 +9439,6 @@ function program3(depth0,data) {
           return Yapp.routePanel.show(routesView);
         }
       });
-      if (Yapp.Map.yandexmap) {
-        return Yapp.Map.yandexmap.container.fitToViewport();
-      }
     };
 
     return Controller;
@@ -8967,6 +9462,7 @@ function program3(depth0,data) {
   Yapp.addInitializer(function() {
     console.log('application initializing');
     this.settings = {};
+    this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
     this.updateSettings = function(settings) {
       var changed, changedSettings, key;
 
@@ -9043,9 +9539,11 @@ function program3(depth0,data) {
     this.user = new Yapp.User.Profile(USER);
     this.runApplication();
     $(document).ajaxStart(function() {
-      return $('.spinner').show();
+      $('.spinner').show();
+      return $('.GridFooter').show();
     }).ajaxStop(function() {
-      return $('.spinner').hide();
+      $('.spinner').hide();
+      return $('.GridFooter').hide();
     });
     return $(document).on('click', 'a.nonav', function(event) {
       var href, protocol;
@@ -9061,13 +9559,15 @@ function program3(depth0,data) {
   });
 
   Yapp.runApplication = function() {
+    if (this.isMobile) {
+      $('body').addClass('mobile');
+    }
     this.Common.start();
     this.Map.start();
     this.Points.start();
     this.Routes.start();
     this.vent.on('user:notauthorized', function() {
-      Yapp.popup.show(new Yapp.Common.AuthPopupView);
-      return Yapp.Common.router.trigger('route');
+      return Yapp.popup.show(new Yapp.Common.AuthPopupView);
     });
     this.vent.on('logout', function() {
       return window.location.replace('/');

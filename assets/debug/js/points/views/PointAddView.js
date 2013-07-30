@@ -39,13 +39,11 @@
       this.model = new Yapp.Points.Point();
       this.model.on('invalid', this.showError, this);
       this.model.on('valid', this.savePoint, this);
+      this.labelTemplate = Templates.LabelTemplate;
       Yapp.request('request', {
-        url: '/tags/list',
+        url: '/api/v1/tags/',
         context: this,
-        successCallback: this.setLabels,
-        data: {
-          content: 'popular'
-        }
+        successCallback: this.setLabels
       });
       return this.listenTo(Yapp.Map, 'load:yandexmap', this.onInitMap);
     };
@@ -217,6 +215,9 @@
         }),
         'additionalLabels': response.filter(function(label) {
           return label.level === 1;
+        }),
+        'otherLabels': response.filter(function(label) {
+          return label.level === 2;
         })
       });
       return this.onInitMap(Yapp.Map.yandexmap);
@@ -229,21 +230,28 @@
 
 
     PointAddView.prototype.addRequireLabel = function(event) {
-      var $target, labelId, labelName, text;
+      var $target, labelId, labelName, moreLabels, text;
 
       event.preventDefault();
       $target = $(event.currentTarget);
       this.ui.requireLabels.hide();
-      this.ui.moreLabels.show();
       text = this.ui.labelsHeader.text();
       labelId = $target.find('.placemark').data('label-id');
       labelName = $target.find('.ctp-item-title').text();
+      moreLabels = this.model.get('additionalLabels').filter(function(label) {
+        label.type = 'place';
+        return label.parent === labelId;
+      });
       this.ui.labelsHeader.html("" + text + " <div class='label label-required'>" + labelName + "<button class='remove-label'></button></div>");
-      return this.model.get('tags').push({
+      this.model.get('tags').push({
         id: labelId,
         name: labelName,
         "class": 'require'
       });
+      this.ui.moreLabels.find('.labels-field').html(this.labelTemplate({
+        labels: moreLabels
+      }));
+      return this.ui.moreLabels.slideDown(200);
     };
 
     /**
@@ -535,7 +543,7 @@
 
     PointAddView.prototype.savePoint = function() {
       return Yapp.request('request', {
-        url: '/points/add',
+        url: Yapp.API_BASE_URL + '/api/v1/points/',
         context: this,
         successCallback: this.successSave,
         type: 'POST',
@@ -580,8 +588,11 @@
     PointAddView.prototype.successSave = function(response) {
       var model;
 
-      model = new Yapp.Points.Point(response[0]);
+      model = new Yapp.Points.Point(response);
+      model.id = response.id;
+      model.set('type_of_item', 'point');
       this.collection.add(model);
+      this.collection.trigger('reset');
       Yapp.popup.close();
       return console.log(model, 'success');
     };

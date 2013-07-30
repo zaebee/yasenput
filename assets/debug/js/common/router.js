@@ -47,11 +47,10 @@
 
     Router.prototype.previous = function() {
       if (this.history.length > 1) {
-        this.navigate(this.history[this.history.length - 2], false);
+        return this.navigate(this.history[this.history.length - 2], false);
       } else {
-        this.navigate('', false);
+        return this.navigate('', false);
       }
-      return this.trigger('route');
     };
 
     return Router;

@@ -122,11 +122,13 @@
       this.$el.find('[data-toggle=tooltip]').tooltip();
       this.ui.placePhotos.data('slider', Yapp.Common.sliderPhotos);
       this.photoSlider = this.ui.placePhotos.data('slider');
-      this.showPhoto();
       this.photoSlider.init({
         root: this.ui.placePhotos,
         visible: 4
       });
+      if (!_.isEmpty(this.model.get('imgs'))) {
+        this.showPhoto();
+      }
       this._renderSocial();
       return this.$('.js-vote').rating({
         fx: 'full',
@@ -155,7 +157,6 @@
           type: 'mini',
           pageTitle: this.model.get('name'),
           pageDescription: this.model.get('description'),
-          pageImage: this.model.get('imgs')[0].thumbnail104x104,
           text: "ЯсенПуть знает все - " + (this.model.get('name'))
         }, 1000 + this.model.get('id'));
       }

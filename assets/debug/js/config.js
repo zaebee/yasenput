@@ -12,7 +12,7 @@
 
   window.Yapp = new Marionette.Application();
 
-  window.Yapp.API_BASE_URL = '/api';
+  window.Yapp.API_BASE_URL = '/api/v1';
 
   window.Yapp.API_BASE_URL = '';
 

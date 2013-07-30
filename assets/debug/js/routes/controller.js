@@ -40,11 +40,11 @@
 
     /**
     # The view for the routes showing function
-    # @method showRoutes
+    # @method addRoute
     */
 
 
-    Controller.prototype.showRoutes = function() {
+    Controller.prototype.addRoute = function() {
       var routesView;
 
       Yapp.content.close();
@@ -53,10 +53,26 @@
       routesView = new Yapp.Routes.RoutesView({
         model: new Yapp.Routes.Route
       });
-      Yapp.routePanel.show(routesView);
-      if (Yapp.Map.yandexmap) {
-        return Yapp.Map.yandexmap.container.fitToViewport();
-      }
+      return Yapp.routePanel.show(routesView);
+    };
+
+    /**
+    # The view for the routes showing function with selected point
+    # @method addRoutePoint
+    */
+
+
+    Controller.prototype.addRoutePoint = function(pointId) {
+      var routesView;
+
+      Yapp.content.close();
+      Yapp.popup.close();
+      Yapp.Map.mapView.clear();
+      routesView = new Yapp.Routes.RoutesView({
+        model: new Yapp.Routes.Route,
+        pointId: pointId
+      });
+      return Yapp.routePanel.show(routesView);
     };
 
     /**
@@ -109,7 +125,7 @@
       route = new Yapp.Routes.Route({
         unid: id
       });
-      route.fetch({
+      return route.fetch({
         success: function(response) {
           var routesView;
 
@@ -119,9 +135,6 @@
           return Yapp.routePanel.show(routesView);
         }
       });
-      if (Yapp.Map.yandexmap) {
-        return Yapp.Map.yandexmap.container.fitToViewport();
-      }
     };
 
     return Controller;

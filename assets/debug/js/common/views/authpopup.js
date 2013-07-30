@@ -1,7 +1,7 @@
 /**
 # Submodule for all points functionality
 # @module Yapp
-# @submodule Points
+# @submodule Common
 */
 
 

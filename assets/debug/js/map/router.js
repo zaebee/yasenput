@@ -35,10 +35,7 @@
 
 
     Router.prototype.initialize = function() {
-      console.log('initializing Yapp.Map.Router');
-      return this.on('route', function() {
-        return Yapp.Common.router.trigger('route');
-      });
+      return console.log('initializing Yapp.Map.Router');
     };
 
     /**

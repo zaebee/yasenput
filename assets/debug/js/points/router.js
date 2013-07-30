@@ -35,10 +35,7 @@
 
 
     Router.prototype.initialize = function() {
-      console.log('initializing Yapp.Points.Router');
-      return this.on('route', function() {
-        return Yapp.Common.router.trigger('route');
-      });
+      return console.log('initializing Yapp.Points.Router');
     };
 
     /**
@@ -53,10 +50,10 @@
       "new": "showNew",
       "point/add": "addPoint",
       "point/:id": "showPointDetail",
+      "point/:id/photo/:photo_id": "showPointDetail",
       "set/:id": "showSetDetail",
       "set/:id/point/:id": "showSetPhoto",
-      "set/:id/point/:point_id/photo/:photo_id": "showSetPhoto",
-      "point/:id/photo/:photo_id": "showPointPhoto"
+      "set/:id/point/:point_id/photo/:photo_id": "showSetPhoto"
     };
 
     return Router;

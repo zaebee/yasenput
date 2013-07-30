@@ -43,27 +43,16 @@ class YpSerialiser(Serializer):
 
 @csrf_exempt
 def index(request):
-    if len(list(request.GET))>0:
-        escaped = list(request.GET)[0]
-        esc_list = str(list(request.GET)[0]).split('/')
-    else:
-        escaped = None
-    f=open('escaped', 'ab+')
-    #f.write('ESCAPED FRAGMENT:' + str(list(request.GET)) + str(escaped))
-    
-    
-    if escaped != None:
-        f.write('inside IF')
-        if len(esc_list) == 1:
+    if '_escaped_fragment_' in request.GET:
+        if str(request.GET['_escaped_fragment_']) == '':
             points = MainModels.Points.objects.all().order_by('-updated')[:100]
-            template_name = 'escaped/main.html'
-            return render(request, template_name, {"points":points})
+            template_name = 'escaped/points/PointItemView.html'
+            return render(request, template_name, {"points": points})
         else:
-            f.write('inside ELSE')
-            point = MainModels.Points.objects.all().get(id = int(esc_list[2]))
+            esc_list = str(request.GET['_escaped_fragment_']).strip('/').split('/')
+            point = MainModels.Points.objects.get(id=int(esc_list[1]))
             template_name = 'escaped/points/PointDetailView.html'
             return render(request, template_name, {"point": point})
-    
     else:
         template_name = 'main/main.html'
         countvisitpoints = 0
@@ -91,7 +80,6 @@ def index(request):
                                    'tagsOther': tagsOther,
                                    'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
                                   )
-    f.close()
 
 
 def addpoint(request):

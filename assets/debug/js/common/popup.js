@@ -116,8 +116,7 @@
       this.regions.alerts.close();
       $(this.overlay).hide();
       $(this.wrapper).hide();
-      $(this.body).css('overflow-y', 'auto');
-      return Yapp.Common.router.previous();
+      return $(this.body).css('overflow-y', 'auto');
     };
 
     return PopupRegion;

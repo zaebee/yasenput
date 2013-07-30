@@ -1,304 +1,321 @@
-<div id="p-common" class="popup" itemscope itemtype="http://schema.org/Place">
-<meta itemprop="telephone" content="" />
-    <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-        <meta itemprop="latitude" content="{{ point.latitude }}" />
-        <meta itemprop="longitude" content="{{ point.longitude }}" />
-    </div>
-    <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-        <meta itemprop="ratingValue" content="{{ point.ypi }}" />
-    </div>
-<div class="clearfix p-body">
-<header>
-    <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
-
-    <!--<div class="event-date">1―5 января</div>-->
-
-    <h2><a href="#" class="a-place-name" itemprop="name">{{ place.name }}</a></h2>
-    <small>Увидел</small>
-    <a href="#">{{ author.first_name }} {{ author.last_name }}</a>
-
-    <div class="addr" itemprop="address">{{ point.address }}</div>
-
-    <div class="p-place-desc" itemprop="description">
-        {{ point.description }}
-    </div>
-
-    <div class="stats">
-    <span>
-      <span class="ico-want-small"></span>
-    </span>
-
-    <span>
-      <span class="ico-like-small"></span>
-      {{ point.likes_count }}
-    </span>
-
-    <span>
-      <span class="ico-star-small"></span>
-      {{ point.sets_count }}
-    </span>
-
-    <span>
-      <span class="ico-vote-small"></span>
-      {{ point.reviewusersplus }}/{{ point.reviewusersminus }}
-    </span>
-    </div>
-</header>
-
-<div class="wide-box">
-<ul class="p-tabs">
-    <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
-    <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
-    <li><a href="#tab-reviews" data-toggle="tab">Отзывы</a></li>
-    <!--
-    <li><a href="#tab-desc" data-toggle="tab">О месте</a></li>
-    <li><a href="#tab-events" data-toggle="tab">События</a></li>
-    -->
-
-    <li>
-        <div class="shadow"></div>
-    </li>
-</ul>
-
-<div class="tabs-content">
-<div id="tab-photo" class="tab-pane active">
-    <ul class="tabs-inside"><!-- tp- tab photo -->
-        <li class="active"><a href="#tp-tab-pop" data-toggle="tab">популярные</a></li>
-        <li><a href="#tp-tab-my" data-toggle="tab">новые</a></li>
-        <li><a href="#tp-tab-new" data-toggle="tab">мои</a></li>
-    </ul>
-
-    <div class="tabs-content">
-        <div class="toggle-block">
-            <div class="clearfix p-gallery">
-                <div class="clearfix place-photos">
-                    <div class="photos-gallery">
-                        <ul style="left: 0px;">
-                            {% for img in point.imgs.all %}
-                            <li>
-                                <div class="item-photo selected current" data-photo-id="710" itemprop="photo" itemscope itemtype="http://schema.org/ImageObject">
-                                    <meta itemprop="image" content="{{ img.img }}" />
-                                    <meta itemprop="author" content="{{ img.author.first_name }} {{ img.author.last_name }}" />
-                                    <a href="#!/point/196/photo/710" itemprop="URL">
-                                        <img src="{{img.thumbnail207}}" alt=""
-                                             width="104" height="104" itemprop="thumbnail">
-                                    </a>
+{% extends 'escaped/main.html' %}
+{% block overlay %}
+    <div id="overlay" style="display: block;"></div>
+    <span class="spinner" style="display: none;"></span>
 
 
-                                    <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+    <div id="popups" style="display: block;">
+      <div class="viewport">
+        <div class="scroll-box">
+          <div id="alerts"></div>
 
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="item-photo load-photo">
-                        <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
-                            <input name="img" type="file">
-                        </form>
-                    </div>
+            <div id="p-common" class="popup" itemscope itemtype="http://schema.org/Place">
+            <meta itemprop="telephone" content="" />
+            <meta itemprop="url" content="http://yasenput.ru/points/{{ point.id }}" />
+                <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                    <meta itemprop="latitude" content="{{ point.latitude }}" />
+                    <meta itemprop="longitude" content="{{ point.longitude }}" />
+                </div>
+                <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                    <meta itemprop="ratingValue" content="{{ point.ypi }}" />
+                </div>
+            <div class="clearfix p-body">
+            <header>
+                <!--<a href="#" class="fr a-btn a-subscribe">Подписаться</a>-->
 
-                    <!--
-                    <div class="item-photo load-photo">
-                      <input type="file">
-                    </div>
-                    -->
+                <!--<div class="event-date">1―5 января</div>-->
 
-                    <span class="photos-next" style="display: none;"></span>
-                    <span class="photos-prev disabled" style="display: none;"></span>
+                <h2><a href="#" class="a-place-name" itemprop="name">{{ point.name }}</a></h2>
+                <small>Увидел</small>
+                <a href="#">{{ author.first_name }} {{ author.last_name }}</a>
+
+                <div class="addr" itemprop="address">{{ point.address }}</div>
+
+                <div class="p-place-desc" itemprop="description">
+                    {{ point.description }}
                 </div>
 
-                <div id="big-photo">
-                    <div class="bp-photo" data-photo-id="710">
-                        <img src="{{ point.imgs.0.thumbnail560 }}" alt="" class="main-photo"
-                             height="{{ point.imgs.0.thumbnail560_width }}">
+                <div class="stats">
+                <span>
+                  <span class="ico-want-small"></span>
+                </span>
 
-                        <div class="bp-add-like">
-                            <img src="{{ point.imgs.0.author.avatar }}" alt="" width="22" height="22"
-                                 class="avatar">
-                            <span class="bp-name">{{ point.imgs.0.author.first_name }} {{ point.imgs.0.author.last_name }}</span>
+                <span>
+                  <span class="ico-like-small"></span>
+                  {{ point.likes_count }}
+                </span>
 
-                            <a href="#" class="a-like " data-photo-id="710"></a>
-                            <span class="count-like"></span>
-                        </div>
-                    </div>
+                <span>
+                  <span class="ico-star-small"></span>
+                  {{ point.sets_count }}
+                </span>
 
-                    <div class="bp-comments">
-                        <div class="toggle-block a-toggle-up">
-                            <a href="#" class="a-toggle">все комментарии <span>↓</span></a>
-                            {% for comment in point.comments.all %}
-                                <div class="item-comment" data-comment-id="18">
-                                    <img src="{{ comment.author.avatar }}" alt="" width="29"  height="30" class="avatar">
+                <span>
+                  <span class="ico-vote-small"></span>
+                  {{ point.reviewusersplus }}/{{ point.reviewusersminus }}
+                </span>
+                </div>
+            </header>
 
-                                    <div class="comment-body">
-                                        <div class="comment-author">{{ comment.author.first_name }} {{ comment.author.last_name }}</div>
-                                        <p>{{ comment.txt }}</p>
+            <div class="wide-box">
+            <ul class="p-tabs">
+                <li class="active"><a href="#tab-photo" data-toggle="tab">Фотография</a></li>
+                <li><a href="#tab-map" data-toggle="tab">На карте</a></li>
+                <li><a href="#tab-reviews" data-toggle="tab">Отзывы</a></li>
+                <!--
+                <li><a href="#tab-desc" data-toggle="tab">О месте</a></li>
+                <li><a href="#tab-events" data-toggle="tab">События</a></li>
+                -->
 
-                                        <div class="comment-date">{{ comment.created }}</div>
-                                    </div>
+                <li>
+                    <div class="shadow"></div>
+                </li>
+            </ul>
 
-                                    <div class="action">
+            <div class="tabs-content">
+            <div id="tab-photo" class="tab-pane active">
+                <ul class="tabs-inside"><!-- tp- tab photo -->
+                    <li class="active"><a href="#tp-tab-pop" data-toggle="tab">популярные</a></li>
+                    <li><a href="#tp-tab-my" data-toggle="tab">новые</a></li>
+                    <li><a href="#tp-tab-new" data-toggle="tab">мои</a></li>
+                </ul>
 
-                                        <a href="#" class="a-complaint-comment" data-toggle="tooltip" title=""
-                                           data-original-title="пожаловаться на комментарий"></a>
+                <div class="tabs-content">
+                    <div class="toggle-block">
+                        <div class="clearfix p-gallery">
+                            <div class="clearfix place-photos">
+                                <div class="photos-gallery">
+                                    <ul style="left: 0px;">
+                                        {% for img in point.imgs.all %}
+                                        <li>
+                                            <div class="item-photo selected current" data-photo-id="710" itemprop="photo" itemscope itemtype="http://schema.org/ImageObject">
+                                                <meta itemprop="image" content="{{ img.img }}" />
+                                                <meta itemprop="author" content="{{ img.author.first_name }} {{ img.author.last_name }}" />
+                                                <a href="#!/point/196/photo/710" itemprop="URL">
+                                                    <img src="{{img.thumbnail207}}" alt=""
+                                                         width="104" height="104" itemprop="thumbnail">
+                                                </a>
 
+
+                                                <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="item-photo load-photo">
+                                    <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
+                                        <input name="img" type="file">
+                                    </form>
+                                </div>
+
+                                <!--
+                                <div class="item-photo load-photo">
+                                  <input type="file">
+                                </div>
+                                -->
+
+                                <span class="photos-next" style="display: none;"></span>
+                                <span class="photos-prev disabled" style="display: none;"></span>
+                            </div>
+
+                            <div id="big-photo">
+                                <div class="bp-photo" data-photo-id="710">
+                                    <img src="{{ point.imgs.all.0.thumbnail560 }}" alt="" class="main-photo"
+                                         width="{{ point.imgs.all.0.thumbnail560_width }}">
+
+                                    <div class="bp-add-like">
+                                        <img src="{{ MEDIA_URL }}{{ point.imgs.all.0.author.avatar }}" alt="" width="22" height="22"
+                                             class="avatar">
+                                        <span class="bp-name">{{ point.imgs.all.0.author.first_name }} {{ point.imgs.all.0.author.last_name }}</span>
+
+                                        <a href="#" class="a-like " data-photo-id="710"></a>
+                                        <span class="count-like"></span>
                                     </div>
                                 </div>
-                            {% endfor %}
 
-                            <!-- hidden comments will be here -->
-                            <div class="hidden-content"></div>
-                            <!-- end .add-comment -->
+                                <div class="bp-comments">
+                                    <div class="toggle-block a-toggle-up">
+                                        <a href="#" class="a-toggle">все комментарии <span>↓</span></a>
+                                        {% for comment in point.imgs.all.0.comments.all %}
+                                            <div class="item-comment" data-comment-id="18">
+                                                <img src="{{ MEDIA_URL }}{{ comment.author.avatar }}" alt="" width="29"  height="30" class="avatar">
+
+                                                <div class="comment-body">
+                                                    <div class="comment-author">{{ comment.author.first_name }} {{ comment.author.last_name }}</div>
+                                                    <p>{{ comment.txt }}</p>
+
+                                                    <div class="comment-date">{{ comment.created }}</div>
+                                                </div>
+
+                                                <div class="action">
+
+                                                    <a href="#" class="a-complaint-comment" data-toggle="tooltip" title=""
+                                                       data-original-title="пожаловаться на комментарий"></a>
+
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                        <!-- hidden comments will be here -->
+                                        <div class="hidden-content"></div>
+                                        <!-- end .add-comment -->
 
 
+                                    </div>
+                                    <!-- end .toggle-block a-toggle-up -->
+                                </div>
+                                <!-- end .bp-comments -->
+                            </div>
                         </div>
-                        <!-- end .toggle-block a-toggle-up -->
                     </div>
-                    <!-- end .bp-comments -->
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<!-- end #tab-photo -->
+            <!-- end #tab-photo -->
 
-<div id="tab-map" class="tab-pane">
-    <div class="map">
-        <div id="popup-map" style="width:560px; height:510px"></div>
+            <div id="tab-map" class="tab-pane">
+                <div class="map">
+                    <div id="popup-map" style="width:560px; height:510px"></div>
 
-        <div class="m-ico-group">
-            <a href="#">
-                <span class="m-ico m-hotel"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-cafe"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-restoran"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-turism"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-azs"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-active-rest"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-sto"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-commerc"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-hunting"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-events"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-shop"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-fishing"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-monument"></span>
-            </a>
-            <a href="#">
-                <span class="m-ico m-church"></span>
-            </a>
-        </div>
-
-    </div>
-</div>
-<!-- end #tab-map -->
-
-<div id="tab-reviews" class="tab-pane">
-    <div class="bp-comments bp-comments_review">
-        <div class="toggle-block a-toggle-down">
-
-            {% for review in place.reviews.all %}
-                <div class="item-comment item-comment_green" itemprop="review" itemscope itemtype="http://schema.org/Review">
-                    <img src="/media/avatar/3d300e1bacb14947ac383093b0e7c92a.jpeg" alt="" width="29" height="30" class="avatar">
-                    <div class="comment-body">
-                      <div class="comment-author" itemprop="author">Anton Botvin</div>
-                      <div class="comment-date" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-                          <meta itemprop="worstRating" content="1" />
-                          <meta itemprop="bestRating" content="10" />
-                          Оценил(а) место: <span itemprop="ratingValue">8</span>
-                          <span class="ico-vote-small"></span>
-                          23 июля 2013 в 16:43
-                      </div>
-                      <p>{{ review.review }}</p>
+                    <div class="m-ico-group">
+                        <a href="#">
+                            <span class="m-ico m-hotel"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-cafe"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-restoran"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-turism"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-azs"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-active-rest"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-sto"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-commerc"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-hunting"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-events"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-shop"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-fishing"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-monument"></span>
+                        </a>
+                        <a href="#">
+                            <span class="m-ico m-church"></span>
+                        </a>
                     </div>
 
-                    <div class="action">
-                        <a data-toggle="tooltip" title="" data-placement="bottom" href="#" class="a-complaint-comment" data-original-title="Пожаловаться&nbsp;на&nbsp;отзыв"></a>
-                    </div>
-              </div>
-            {% endfor %}
-
-            <div class="hidden-content"></div>
-            <a href="#" class="a-toggle">все отзывы <span>↓</span></a>
-
-        </div>
-    </div>
-    <!-- end .bp-comments -->
-</div>
-<!-- end #tab-reviews -->
-</div>
-
-<div class="tabs-content p-common-content">
-
-    <section class="p-block event-labels">
-        <h4 class="title-block">Метки</h4>
-
-        <div class="body">
-            {% for tag in point.tags.all %}
-                <div class="label label-place">{{ tag.name }}</div>
-            {% endfor %}
-        </div>
-    </section>
-
-</div>
-</div>
-
-</div>
-
-
-<aside id="right-panel">
-    <a href="#" class="a-btn a-add-collection">В коллекцию</a>
-    <a href="#" class="a-btn a-add-path">Создать маршрут</a>
-
-
-    <div class="basic-icons">
-        <span href="#" class="a-like " data-placement="bottom" data-original-title="Нравится"
-              data-toggle="tooltip"></span>
-        <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться&nbsp;на&nbsp;место"
-           data-toggle="tooltip"></a>
-    </div>
-
-    <div class="aside-social">
-        <div class="share">
-            <div id="vk_like_point"
-                 style="height: 22px; width: 100px; background-image: none; position: relative; clear: both; background-position: initial initial; background-repeat: initial initial;">
-                <iframe name="fXDd5c88" frameborder="0"
-                        src="http://vk.com/widget_like.php?app=3246032&amp;width=100%&amp;_ver=1&amp;page=1196&amp;url=http%3A%2F%2Fyasenput.ru%2F&amp;type=mini&amp;verb=0&amp;title=%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0&amp;description=%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0%20%D0%B2%20%D0%BE%D0%BA%D1%80%D0%B5%D1%81%D1%82%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D1%88%D0%BA%D0%BE%D0%BB%D1%8B%20%E2%84%968&amp;image=%2Fmedia%2Fcache%2F81%2F17%2F811793c21cdaa8106676b386fcf6bc2c.jpg&amp;text=%D0%AF%D1%81%D0%B5%D0%BD%D0%9F%D1%83%D1%82%D1%8C%20%D0%B7%D0%BD%D0%B0%D0%B5%D1%82%20%D0%B2%D1%81%D0%B5%20-%20%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0&amp;h=22&amp;140060df5e6"
-                        width="100%" height="22" scrolling="no" id="vkwidget7"
-                        style="overflow: hidden; height: 22px; width: 100px; z-index: 150;"></iframe>
+                </div>
             </div>
-            <br>
+            <!-- end #tab-map -->
 
-            <div class="fb-like" data-href="http://yasenput.ru/point/196" data-send="false" data-layout="button_count"
-                 data-width="450" data-show-faces="false" data-font="verdana"></div>
-        </div>
+            <div id="tab-reviews" class="tab-pane">
+                <div class="bp-comments bp-comments_review">
+                    <div class="toggle-block a-toggle-down">
+
+                        {% for review in place.reviews.all %}
+                            <div class="item-comment item-comment_green" itemprop="review" itemscope itemtype="http://schema.org/Review">
+                                <img src="/media/avatar/3d300e1bacb14947ac383093b0e7c92a.jpeg" alt="" width="29" height="30" class="avatar">
+                                <div class="comment-body">
+                                  <div class="comment-author" itemprop="author">Anton Botvin</div>
+                                  <div class="comment-date" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                                      <meta itemprop="worstRating" content="1" />
+                                      <meta itemprop="bestRating" content="10" />
+                                      Оценил(а) место: <span itemprop="ratingValue">8</span>
+                                      <span class="ico-vote-small"></span>
+                                      23 июля 2013 в 16:43
+                                  </div>
+                                  <p>{{ review.review }}</p>
+                                </div>
+
+                                <div class="action">
+                                    <a data-toggle="tooltip" title="" data-placement="bottom" href="#" class="a-complaint-comment" data-original-title="Пожаловаться&nbsp;на&nbsp;отзыв"></a>
+                                </div>
+                          </div>
+                        {% endfor %}
+
+                        <div class="hidden-content"></div>
+                        <a href="#" class="a-toggle">все отзывы <span>↓</span></a>
+
+                    </div>
+                </div>
+                <!-- end .bp-comments -->
+            </div>
+            <!-- end #tab-reviews -->
+            </div>
+
+            <div class="tabs-content p-common-content">
+
+                <section class="p-block event-labels">
+                    <h4 class="title-block">Метки</h4>
+
+                    <div class="body">
+                        {% for tag in point.tags.all %}
+                            <div class="label label-place">{{ tag.name }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+            </div>
+
+            </div>
+
+
+            <aside id="right-panel">
+                <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+                <a href="#" class="a-btn a-add-path">Создать маршрут</a>
+
+
+                <div class="basic-icons">
+                    <span href="#" class="a-like " data-placement="bottom" data-original-title="Нравится"
+                          data-toggle="tooltip"></span>
+                    <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться&nbsp;на&nbsp;место"
+                       data-toggle="tooltip"></a>
+                </div>
+
+                <div class="aside-social">
+                    <div class="share">
+                        <div id="vk_like_point"
+                             style="height: 22px; width: 100px; background-image: none; position: relative; clear: both; background-position: initial initial; background-repeat: initial initial;">
+                            <iframe name="fXDd5c88" frameborder="0"
+                                    src="http://vk.com/widget_like.php?app=3246032&amp;width=100%&amp;_ver=1&amp;page=1196&amp;url=http%3A%2F%2Fyasenput.ru%2F&amp;type=mini&amp;verb=0&amp;title=%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0&amp;description=%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0%20%D0%B2%20%D0%BE%D0%BA%D1%80%D0%B5%D1%81%D1%82%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D1%88%D0%BA%D0%BE%D0%BB%D1%8B%20%E2%84%968&amp;image=%2Fmedia%2Fcache%2F81%2F17%2F811793c21cdaa8106676b386fcf6bc2c.jpg&amp;text=%D0%AF%D1%81%D0%B5%D0%BD%D0%9F%D1%83%D1%82%D1%8C%20%D0%B7%D0%BD%D0%B0%D0%B5%D1%82%20%D0%B2%D1%81%D0%B5%20-%20%D0%91%D0%B5%D1%80%D0%B5%D0%B3%20%D1%80.%D0%93%D0%BB%D1%83%D1%88%D0%B8%D1%86%D0%B0&amp;h=22&amp;140060df5e6"
+                                    width="100%" height="22" scrolling="no" id="vkwidget7"
+                                    style="overflow: hidden; height: 22px; width: 100px; z-index: 150;"></iframe>
+                        </div>
+                        <br>
+
+                        <div class="fb-like" data-href="http://yasenput.ru/point/196" data-send="false" data-layout="button_count"
+                             data-width="450" data-show-faces="false" data-font="verdana"></div>
+                    </div>
+                </div>
+
+                <div class="small-icons">
+
+                </div>
+            </aside>
+
+            </div>
+
+         </div>
+      </div>
     </div>
-
-    <div class="small-icons">
-
-    </div>
-</aside>
-
-</div>
+{% endblock %}

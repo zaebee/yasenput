@@ -1,25 +1,43 @@
-<article class="item item-place masonry-brick" style="position: absolute; top: 0px; left: 0px;">
-  <div class="photo">
-    <a href="#" class="a-like a-like-ok " title="" data-toggle="tooltip" data-placement="bottom" data-original-title="мне&nbsp;нравится">&nbsp;</a>
-    <a href="#" class="a-collection" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="добавить в коллекцию">� ���������</a>
-    <div class="yasen-info">
-      <span class="yp-title">{{ point.ypi }} ЯПи</span>
-      <div class="yp-info">
-        <i class="yp-like"></i><small>{{ point.likes_count }}</small>
-        <i class="yp-marked"></i><small>{{ point.sets_count }}</small>
-        <i class="yp-place"></i><small>0</small>
-        <i class="yp-star"></i><small>+{{ point.reviewusersplus }}/-{{ point.reviewusersminus }}</small>
+{% extends 'escaped/main.html' %}
+{% block points %}
+    {% for point in points.all %}
+        <article class="item item-place masonry-brick" style="">
+          <div class="photo">
+            <a href="#" class="a-like a-like-ok " title="" data-toggle="tooltip" data-placement="bottom" data-original-title="мне&nbsp;нравится">&nbsp;</a>
+            <a href="#" class="a-collection" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="добавить в коллекцию">В коллекцию</a>
+            <div class="yasen-info">
+              <span class="yp-title">{{ point.ypi }} ЯПи</span>
+              <div class="yp-info">
+                <i class="yp-like"></i><small>{{ point.likes_count }}</small>
+                <i class="yp-marked"></i><small>{{ point.sets_count }}</small>
+                <i class="yp-place"></i><small>0</small>
+                <i class="yp-star"></i><small>+{{ point.reviewusersplus }}/-{{ point.reviewusersminus }}</small>
+              </div>
+            </div>
+
+            <a href="/#!/point/117" class="a-photo nonav">
+              <img src="{{ point.imgs.all.0.thumbnail207 }}" alt="" width="207" height="{{ point.thumbnail207_height }}">
+            </a>
+          </div>
+
+          <div class="body">
+              <img src="{{ MEDIA_URL }}{{ point.author.avatar }}" alt="" class="avatar" width="29" height="30">
+            <h3>{{ point.address }}</h3>
+            <p>{{ point.name }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock %}
+{% block overlay %}
+    <div id="overlay" style="display: none;"></div>
+    <span class="spinner" style="display: none;"></span>
+
+
+    <div id="popups" style="display: none;">
+      <div class="viewport">
+        <div class="scroll-box">
+          <div id="alerts"></div>
+        </div>
       </div>
     </div>
-
-    <a href="#!/point/117" class="a-photo nonav">
-      <img src="{{ point.imgs.0.thumbnail207 }}" alt="" width="207" height="{{ point.thumbnail207_height }}">
-    </a>
-  </div>
-
-  <div class="body">
-      <img src="{{ author.avatar }}" alt="" class="avatar" width="29" height="30">
-    <h3>{{ point.address }}</h3>
-    <p>{{ point.name }}</p>
-  </div>
-</article>
+{% endblock %}

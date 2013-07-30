@@ -101,7 +101,7 @@
 
 
     RoutesSaveView.prototype.createRoute = function(event) {
-      var coords, routeDescription, routeName,
+      var coords, routeCollection, routeDescription, routeName,
         _this = this;
 
       event.preventDefault();
@@ -109,6 +109,9 @@
       routeName = this.ui.inputName.val().trim();
       routeDescription = this.ui.inputDescription.val().trim();
       coords = JSON.stringify(this.route.requestPoints);
+      routeCollection = _.map(this.routeCollection, function(geoPoint) {
+        return geoPoint.point.placemark = null;
+      });
       if (!_.isEmpty(routeName) && !_.isEmpty(routeDescription)) {
         this.model.set({
           name: routeName,

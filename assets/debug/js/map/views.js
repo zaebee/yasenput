@@ -69,18 +69,13 @@
       this.user = Yapp.user;
       this.iconTemplate = Templates.IconTemplate;
       _.bindAll(this, 'updatePointCollection');
-      this.listenTo(Yapp.Map, 'load:yandexmap', this.setMap);
-      this.listenTo(Yapp.Points, 'update:collection', this.updatePointCollection);
       $.get('/api/v1/map_yapens/').success(function(response) {
         return _this.pointsByTag = _.partial(_this._filteredPoints, response);
       });
       return Yapp.request('request', {
-        url: '/tags/list',
+        url: Yapp.API_BASE_URL + '/api/v1/tags/',
         context: this,
-        successCallback: this.renderIcons,
-        data: {
-          content: 'popular'
-        }
+        successCallback: this.renderIcons
       });
     };
 
@@ -114,9 +109,13 @@
     */
 
 
-    MapView.prototype.setMap = function(map) {
-      this.map = map;
-      return this.map.events.add('actionend', this.changeMap, this);
+    MapView.prototype.onRender = function() {
+      var _this = this;
+
+      return Yapp.Map.mapDeferred.then(function() {
+        _this.map = Yapp.Map.yandexmap;
+        return Yapp.Map.mapEvents.add('actionend', _this.changeMap, _this);
+      });
     };
 
     /**
@@ -131,27 +130,46 @@
 
       center = this.map.getCenter();
       geoCoder = Yapp.Map.geocode(center, {
-        results: 1,
+        results: 10,
         json: true
       });
-      geoCoder.then(function(result) {
-        var country, geoMetaData, geoObject, locality, region;
+      return geoCoder.then(function(result) {
+        var coordLeft, coordRight, country, geoMetaData, geoObject, leftCorner, locality, match, region, rightCorner, searchModels;
 
-        geoObject = result.GeoObjectCollection.featureMember[0].GeoObject;
+        match = _.find(result.GeoObjectCollection.featureMember, function(el) {
+          return el.GeoObject.metaDataProperty.GeocoderMetaData.kind === 'locality' || el.GeoObject.metaDataProperty.GeocoderMetaData.kind === 'area';
+        });
+        geoObject = match.GeoObject;
         geoMetaData = geoObject.metaDataProperty.GeocoderMetaData;
+        leftCorner = _this.map.getBounds()[0].reverse();
+        rightCorner = _this.map.getBounds()[1].reverse();
+        searchModels = Yapp.settings.models;
         country = geoMetaData.AddressDetails.Country;
         region = country.AdministrativeArea;
         locality = country.Locality ? country.Locality : region && region.Locality ? region.Locality : region && region.SubAdministrativeArea && region.SubAdministrativeArea.Locality ? region.SubAdministrativeArea.Locality : region && region.SubAdministrativeArea ? region.SubAdministrativeArea : false;
-        return _this.user.set({
+        _this.user.set({
+          searchModels: searchModels,
           location: {
             country: country.CountryName,
             region: region ? region.AdministrativeAreaName : '',
-            city: locality ? locality.LocalityName || locality.SubAdministrativeAreaName : void 0
+            city: locality ? locality.LocalityName || locality.SubAdministrativeAreaName : void 0,
+            leftCorner: leftCorner.join(' '),
+            rightCorner: rightCorner.join(' ')
           }
         });
+        coordLeft = _.zipObject(['ln', 'lt'], _(leftCorner).map(function(el) {
+          return parseFloat(el);
+        }).value());
+        coordRight = _.zipObject(['ln', 'lt'], _(rightCorner).map(function(el) {
+          return parseFloat(el);
+        }).value());
+        Yapp.updateSettings({
+          coord_left: JSON.stringify(coordLeft),
+          coord_right: JSON.stringify(coordRight)
+        });
+        console.log('map update');
+        return _this.getMapYapens();
       });
-      console.log('map update');
-      return Yapp.Common.headerView.submitSearch();
     };
 
     /**
@@ -164,8 +182,6 @@
       var _this = this;
 
       return Yapp.Map.mapDeferred.then(function() {
-        var collectionFiltered;
-
         if (_this.clusterer) {
           _this.clusterer.remove(_this.boardPlacemarks);
         } else {
@@ -174,31 +190,27 @@
           });
           Yapp.Map.yandexmap.geoObjects.add(_this.clusterer);
         }
-        collectionFiltered = _.filter(collection.models, function(point) {
-          return point.get('type_of_item') === "point";
-        });
-        _this.boardPlacemarks = _.map(collectionFiltered, function(point) {
+        _this.boardPlacemarks = _.map(collection, function(point) {
           var tag;
 
-          tag = _(point.get('tags')).find(function(tag) {
+          tag = _(point.tags).find(function(tag) {
             return tag.icons !== '';
           });
-          return new ymaps.Placemark([point.get('latitude'), point.get('longitude')], {
-            id: 'map-point' + point.get('id'),
-            point: point.toJSON(),
+          return new ymaps.Placemark([point.latitude, point.longitude], {
+            id: 'map-point' + point.id,
+            point: point,
             tag: tag
           }, {
             iconLayout: Yapp.Map.pointIconLayout
           });
         });
         _this.clusterer.add(_this.boardPlacemarks);
-        _this.clusterer.refresh();
-        return console.log(collection, 'collection reset');
+        return _this.clusterer.refresh();
       });
     };
 
     /**
-    # Fired when response by /tags/list/ successed
+    # Fired when response by /api/v1/tags/list/ successed
     # Show labels on left bottom corner on map
     # @event renderIcons
     */
@@ -208,7 +220,9 @@
       var icons;
 
       icons = this.iconTemplate({
-        icons: response
+        icons: response.filter(function(icon) {
+          return icon.level === 0;
+        })
       });
       this.$('.m-ico-group').html(icons);
       return this.$el.find('[data-toggle=tooltip]').tooltip();
@@ -326,6 +340,18 @@
         this.placemarks = [];
         return this.boardPlacemarks = [];
       }
+    };
+
+    MapView.prototype.getMapYapens = function() {
+      return Yapp.request('request', {
+        url: Yapp.API_BASE_URL + '/api/v1/map_yapens/',
+        context: this,
+        successCallback: this.updatePointCollection,
+        data: {
+          coord_left: Yapp.settings.coord_left,
+          coord_right: Yapp.settings.coord_right
+        }
+      });
     };
 
     return MapView;
