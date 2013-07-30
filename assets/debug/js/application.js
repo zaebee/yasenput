@@ -1076,7 +1076,7 @@ function program1(depth0,data) {
   buffer += "\r\n    </a>\r\n  </div>\r\n\r\n  <ul class=\"photo-preview a-photo nonav\">\r\n    ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\"/media/"
+  buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n      <h3>";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1212,7 +1212,7 @@ function program18(depth0,data) {
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.imgs),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.thumbnail207)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" alt=\"\" width=\"207\" height=\""
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = depth0.imgs),stack1 == null || stack1 === false ? stack1 : stack1[0])),stack1 == null || stack1 === false ? stack1 : stack1.thumbnail207_height)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\r\n    </a>\r\n  </div>\r\n\r\n  <div class=\"body\">\r\n      <img src=\"/media/"
+    + "\">\r\n    </a>\r\n  </div>\r\n\r\n  <div class=\"body\">\r\n      <img src=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n    <h3>";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
@@ -1263,7 +1263,7 @@ function program20(depth0,data) {
   buffer += "\r\n    </a>\r\n  </div>\r\n\r\n  <ul class=\"photo-preview a-photo nonav\">\r\n    ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.points),stack1 == null || stack1 === false ? stack1 : stack1[2]), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\"/media/"
+  buffer += "\r\n  </ul>\r\n  <div class=\"body author-point\">\r\n    <img src=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.author),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" alt=\"\" class=\"avatar\" width=\"29\" height=\"30\">\r\n\r\n      <h3>";
   if (stack2 = helpers.name) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
