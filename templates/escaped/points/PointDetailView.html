@@ -18,6 +18,8 @@
                 </div>
                 <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
                     <meta itemprop="ratingValue" content="{{ point.ypi }}" />
+                    <meta itemprop="worstRating" content="1" />
+                    <meta itemprop="bestRating" content="10" />
                 </div>
             <div class="clearfix p-body">
             <header>
@@ -91,7 +93,7 @@
                                             <div class="item-photo selected current" data-photo-id="710" itemprop="photo" itemscope itemtype="http://schema.org/ImageObject">
                                                 <meta itemprop="image" content="{{ img.img }}" />
                                                 <meta itemprop="author" content="{{ img.author.first_name }} {{ img.author.last_name }}" />
-                                                <a href="#!/point/196/photo/710" itemprop="URL">
+                                                <a href="/point/196/photo/710">
                                                     <img src="{{img.thumbnail207}}" alt=""
                                                          width="104" height="104" itemprop="thumbnail">
                                                 </a>
@@ -233,15 +235,15 @@
 
                         {% for review in place.reviews.all %}
                             <div class="item-comment item-comment_green" itemprop="review" itemscope itemtype="http://schema.org/Review">
-                                <img src="/media/avatar/3d300e1bacb14947ac383093b0e7c92a.jpeg" alt="" width="29" height="30" class="avatar">
+                                <img src="{{ review.author.avatar }}" alt="" width="29" height="30" class="avatar">
                                 <div class="comment-body">
-                                  <div class="comment-author" itemprop="author">Anton Botvin</div>
+                                  <div class="comment-author" itemprop="author">{{ review.author.first_name }} {{ review.author.last_name }}</div>
                                   <div class="comment-date" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
                                       <meta itemprop="worstRating" content="1" />
                                       <meta itemprop="bestRating" content="10" />
                                       Оценил(а) место: <span itemprop="ratingValue">8</span>
                                       <span class="ico-vote-small"></span>
-                                      23 июля 2013 в 16:43
+                                      {{ review.updated }}
                                   </div>
                                   <p>{{ review.review }}</p>
                                 </div>
