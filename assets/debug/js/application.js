@@ -9461,6 +9461,9 @@ function program3(depth0,data) {
 
   Yapp.addInitializer(function() {
     console.log('application initializing');
+    if (window.location.href.search('#!') !== -1) {
+      window.location.replace(window.location.href.split('#!').join('').split('//').join('/').replace('http:', 'http:/'));
+    }
     this.settings = {};
     this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
     this.updateSettings = function(settings) {
