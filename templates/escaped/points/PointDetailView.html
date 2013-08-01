@@ -1,4 +1,9 @@
 {% extends 'escaped/main.html' %}
+{% block og %}prefix="og: http://ogp.me/ns/#"{% endblock %}
+{% block opengraph %}
+    <meta property="og:title" content="{{ point.name }}"/>
+    <meta name="og:description" content="{{ point.description }}">
+{% endblock opengraph %}
 {% block overlay %}
     <div id="overlay" style="display: block;"></div>
     <span class="spinner" style="display: none;"></span>
