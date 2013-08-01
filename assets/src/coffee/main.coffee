@@ -9,6 +9,8 @@ Yapp = window.Yapp
 # Application initializer
 Yapp.addInitializer ->
   console.log 'application initializing'
+  if window.location.href.search('#!') != -1
+    window.location.replace(window.location.href.split('#!').join('').split('//').join('/').replace('http:','http:/'))
   @settings = {}
   @isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)
 
