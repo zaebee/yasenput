@@ -20,6 +20,7 @@ import urllib
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.conf import settings
+from apps.main import models as MainModels
 
 import logging
 logger = logging.getLogger(__name__)
@@ -42,32 +43,43 @@ class YpSerialiser(Serializer):
 
 @csrf_exempt
 def index(request):
-    template_name = 'main/main.html'
-    countvisitpoints = 0
-    count_liked_objects = 0
-    count_commented_objects = 0
-    collections = Collections.objects.filter(author__id=0)
-    if request.user.is_authenticated():
-        t0 = time.time()
-        user = User.objects.get(username=request.user)
-        countvisitpoints = Points.objects.filter(visitusers__id=user.id).count()
-        count_liked_objects = (Points.objects.filter(likeusers__id=user.id).count() +
-                                Photos.objects.filter(likeusers__id=user.id).count() +
-                                Events.objects.filter(likeusers__id=user.id).count())
-        count_commented_objects = Comments.objects.filter(author__id=user.id).count()
-        collections = Collections.objects.filter(author__id=user.id)
-        logger.info('index view queries complete (%.2f sec.)' % (time.time()-t0))
-    tagsRequire = Tags.objects.filter(level=0).all()
-    tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
-    return render(request, template_name,
-                              {'collections': collections,
-                               'countvisitpoints': countvisitpoints,
-                               'count_liked_objects': count_liked_objects,
-                               'count_commented_objects': count_commented_objects,
-                               'tagsRequire': tagsRequire,
-                               'tagsOther': tagsOther,
-                               'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
-                              )
+    if '_escaped_fragment_' in request.GET:
+        if str(request.GET['_escaped_fragment_']) == '':
+            points = MainModels.Points.objects.all().order_by('-updated')[:100]
+            template_name = 'escaped/points/PointItemView.html'
+            return render(request, template_name, {"points": points})
+        else:
+            esc_list = str(request.GET['_escaped_fragment_']).strip('/').split('/')
+            point = MainModels.Points.objects.get(id=int(esc_list[1]))
+            template_name = 'escaped/points/PointDetailView.html'
+            return render(request, template_name, {"point": point})
+    else:
+        template_name = 'main/main.html'
+        countvisitpoints = 0
+        count_liked_objects = 0
+        count_commented_objects = 0
+        collections = Collections.objects.filter(author__id=0)
+        if request.user.is_authenticated():
+            t0 = time.time()
+            user = User.objects.get(username=request.user)
+            countvisitpoints = Points.objects.filter(visitusers__id=user.id).count()
+            count_liked_objects = (Points.objects.filter(likeusers__id=user.id).count() +
+                                    Photos.objects.filter(likeusers__id=user.id).count() +
+                                    Events.objects.filter(likeusers__id=user.id).count())
+            count_commented_objects = Comments.objects.filter(author__id=user.id).count()
+            collections = Collections.objects.filter(author__id=user.id)
+            logger.info('index view queries complete (%.2f sec.)' % (time.time()-t0))
+        tagsRequire = Tags.objects.filter(level=0).all()
+        tagsOther = Tags.objects.exclude(level=0).annotate(num_points=Count('points')).order_by('-num_points')[:10]
+        return render(request, template_name,
+                                  {'collections': collections,
+                                   'countvisitpoints': countvisitpoints,
+                                   'count_liked_objects': count_liked_objects,
+                                   'count_commented_objects': count_commented_objects,
+                                   'tagsRequire': tagsRequire,
+                                   'tagsOther': tagsOther,
+                                   'VKONTAKTE_APP_ID': settings.VKONTAKTE_APP_ID},
+                                  )
 
 
 def addpoint(request):

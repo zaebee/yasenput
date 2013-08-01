@@ -1,0 +1,58 @@
+do (Backbone) ->
+
+  _.extend Backbone.Marionette.Application::,
+
+    navigate: (route, options = {}) ->
+      Backbone.history.navigate route, options
+
+    getCurrentRoute: ->
+      frag = Backbone.history.fragment
+      if _.isEmpty(frag) then null else frag
+
+    startHistory: ->
+      if Backbone.history
+        Backbone.history.start()
+
+    register: (instance, id) ->
+      @_registry ?= {}
+      @_registry[id] = instance
+
+    unregister: (instance, id) ->
+      delete @_registry[id]
+
+    resetRegistry: ->
+      oldCount = @getRegistrySize()
+      for key, controller of @_registry
+        controller.region.close()
+      msg = "There were #{oldCount} controllers in the registry, there are now #{@getRegistrySize()}"
+      if @getRegistrySize() > 0 then console.warn(msg, @_registry) else console.log(msg)
+
+    getRegistrySize: ->
+      _.size @_registry
+
+    updateSettings:  (settings) ->
+      changedSettings = {}
+      changed = false
+      for key of settings
+        if settings.hasOwnProperty(key)
+          if @settings[key] isnt settings[key]
+            if _.isNumber(settings[key]) or !_.isEmpty settings[key]
+              @settings[key] = settings[key]
+            else
+              delete @settings[key]
+            changedSettings[key] = settings[key]
+            changed = true
+      if changed
+        @vent.trigger 'change:settings', changedSettings
+
+    getCookie: (name) ->
+      cookieValue = null
+      if document.cookie and document.cookie isnt ''
+        cookies = document.cookie.split(';')
+        for item in cookies
+          do (item) ->
+            cookie = item.trim()
+            # Does this cookie string begin with the name we want?
+            if cookie.substring(0, name.length + 1) is (name + '=')
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+      return cookieValue

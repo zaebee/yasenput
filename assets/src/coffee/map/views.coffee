@@ -23,13 +23,6 @@ class Yapp.Map.MapView extends Marionette.ItemView
   template: Templates.MapView
 
   ###*
-  # @property tagName
-  # @type String
-  # @default 'div'
-  ###
-  tagName: 'div'
-
-  ###*
   # @property className
   # @type String
   # @default 'map'
@@ -73,7 +66,7 @@ class Yapp.Map.MapView extends Marionette.ItemView
   ###
   toggleMap: (event) ->
     event.preventDefault()
-    Yapp.execute('toggleMap')
+    Yapp.execute 'toggleMap'
 
   ###*
   # Fired when an ymaps fully load and load:yandexmap event occur.
@@ -97,7 +90,10 @@ class Yapp.Map.MapView extends Marionette.ItemView
     geoCoder.then (result) =>
       match = _.find result.GeoObjectCollection.featureMember, (el) ->
         el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'locality' or
-        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'area'
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'area' or
+        el.GeoObject.metaDataProperty.GeocoderMetaData.kind is 'province'
+
+      match = if match then match else result[0]
 
       geoObject = match.GeoObject
       geoMetaData = geoObject.metaDataProperty.GeocoderMetaData

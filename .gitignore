@@ -8,6 +8,7 @@ settings_local.py
 /assets/media/point/*
 /assets/admin/*
 /assets/node_modules/*
+/assets/debug/*
 migrations
 .DS_Store
 ._*

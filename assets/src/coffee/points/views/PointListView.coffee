@@ -73,7 +73,8 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
   ###
   onRender: ->
     console.log 'onRender trigger'
-    $(window).trigger 'scroll'
+    hasVScroll = document.body.scrollHeight > document.body.clientHeight
+    $(window).trigger 'scroll' if !hasVScroll
 
   ###*
   # After close method of the view.
@@ -108,6 +109,8 @@ class Yapp.Points.PointListView extends Marionette.CompositeView
     console.log 'onCompositeCollectionRendered trigger'
     @$el.find('[data-toggle=tooltip]').tooltip()
     @wall.reload() if @wall
+    hasVScroll = document.body.scrollHeight > document.body.clientHeight
+    $(window).trigger 'scroll' if !hasVScroll
 
   ###*
   # Fired when update:multisrearch in Yapp.Common.headerView occur.
