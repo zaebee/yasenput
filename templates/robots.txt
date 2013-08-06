@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /api/
+Disallow: /assets/lib/
+Disallow: /assets/js/
+Disallow: /assets/css/
+Disallow: /assets/images/
+Disallow: /new
+Disallow: /popular
+Disallow: /admin/
