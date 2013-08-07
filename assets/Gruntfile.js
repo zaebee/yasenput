@@ -50,7 +50,7 @@ module.exports = function(grunt) {
             'debug/js/views/_base/*.js',
             'debug/js/entities/_base/*.js',
             'debug/js/entities/*.js',
-            'debug/js/components/loading/*.js',
+            'debug/js/components/**/*.js',
             'debug/js/apps/**/*.js',
           ]
         }
@@ -63,11 +63,11 @@ module.exports = function(grunt) {
             'debug/js/config/*.js',
             'debug/js/main.js',
             'debug/js/controllers/*.js',
-            'debug/js/yapens/_base/*.js',
-            'debug/js/yapens/*.js',
-            'debug/js/views/*.js',
+            'debug/js/views/_base/*.js',
+            'debug/js/entities/_base/*.js',
+            'debug/js/entities/*.js',
             'debug/js/components/loading/*.js',
-            'debug/js/apps/*.js',
+            'debug/js/apps/**/*.js',
           ],
           'debug/js/libs.js': [
             'src/lib/json2.js',
@@ -77,6 +77,7 @@ module.exports = function(grunt) {
             'src/lib/jquery.form.js',
             'src/lib/jquery.rating-2.0.min.js',
             'src/lib/jquery-sortable-min.js',
+            'src/lib/bootstrap-modal.js',
             'src/lib/bootstrap-tooltip.js',
             'src/lib/bootstrap-tab.js',
             'src/lib/bootstrap-popover.js',

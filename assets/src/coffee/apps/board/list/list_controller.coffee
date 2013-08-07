@@ -24,6 +24,8 @@
 
     yapensView: ->
       yapensView = @getYapensView @yapens
+      yapensView.on 'childview:show:detail:popup', (iv, model) ->
+        App.vent.trigger 'show:detail:popup', model
       @show yapensView,
         region: @layout.yapensRegion
         loading: true

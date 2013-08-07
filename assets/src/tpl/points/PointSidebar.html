@@ -1,0 +1,24 @@
+{{#if user.authorized}}
+  <a href="#" class="a-btn a-add-collection">В коллекцию</a>
+  <a href="/route/add/point/{{id}}" class="a-btn a-add-path nonav">Создать маршрут</a>
+  {{#ifEquals author.id user.id}}
+  <a href="#" class="a-btn a-edit">Редактировать</a>
+  {{/ifEquals}}
+
+  <div class="basic-icons">
+    <span href="#" class="a-like {{#if isliked}}marked{{/if}}" data-placement="bottom" data-original-title="Нравится" data-toggle="tooltip"></span>
+    <a href="#" class="a-complaint" data-placement="bottom" data-original-title="Пожаловаться&nbsp;на&nbsp;место" data-toggle="tooltip"></a>
+  </div>
+
+  <div class="aside-social">
+    <div class="share">
+      <div id="vk_like_point"></div>
+      <br>
+      <div class="fb-like" data-href="http://yasenput.ru/point/{{id}}" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+    </div>
+  </div>
+
+  <div class="small-icons">
+    {{#if wifi}}<i class="ico-wifi"></i>{{/if}}{{#if invalid}}<i class="ico-disabled"></i>{{/if}}{{#if parking}}<i class="ico-p"></i>{{/if}}{{#if wc}}<i class="ico-wc"></i>{{/if}}
+  </div>
+{{/if}}

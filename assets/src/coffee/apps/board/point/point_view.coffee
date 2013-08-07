@@ -4,10 +4,14 @@
   class Point.Layout extends App.Views.Layout
     template: 'PointLayout'
     regions:
+      headerRegion: '#point-header'
       sidebarRegion: '#right-panel'
       tabPhotoRegion: '#tab-photo'
       tabMapRegion: '#tab-map'
       tabReviewRegion: '#tab-reviews'
+
+    id: 'p-common'
+    className: 'popup'
 
 
   class Point.Model extends App.Views.ItemView
@@ -20,6 +24,9 @@
       console.log 'onClose trigger'
       @remove()
 
+
+  class Point.Header extends App.Views.ItemView
+    template: 'PointHeader'
 
   class Point.Sidebar extends App.Views.ItemView
     template: 'PointSidebar'

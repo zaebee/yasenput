@@ -1,0 +1,49 @@
+<ul class="tabs-inside"><!-- tp- tab photo -->
+  <li class="active"><a href="#tp-tab-pop" data-toggle="tab">популярные</a></li>
+  <li><a href="#tp-tab-my" data-toggle="tab">новые</a></li>
+  <li><a href="#tp-tab-new" data-toggle="tab">мои</a></li>
+</ul>
+
+<div class="tabs-content">
+  <div class="toggle-block">
+    <div class="clearfix p-gallery">
+      <div class="clearfix place-photos">
+        <div class="photos-gallery">
+          <ul>
+            {{#each imgs}}
+            <li>
+              <div class="item-photo selected" data-photo-id="{{id}}">
+                <a href="/point/{{../id}}/photo/{{id}}">
+                  <img src="{{thumbnail104x104}}" alt="" width="104" height="104">
+                </a>
+
+                {{#ifEquals author.id ../user.id}}
+                  <button type="button" title="Удалить фото" class="remove-photo"></button>
+                {{else}}
+                  <button type="button" title="Пожаловаться на фото" class="complaint-photo"></button>
+                {{/ifEquals}}
+              </div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+        <div class="item-photo load-photo">
+          <form id="addPhotoForm" action="" method="POST" enctype="multipart/form-data">
+            <input name="img" type="file">
+          </form>
+        </div>
+
+        <!--
+        <div class="item-photo load-photo">
+          <input type="file">
+        </div>
+        -->
+
+        <span class="photos-next"></span>
+        <span class="photos-prev"></span>
+      </div>
+
+      <div id="big-photo"></div>
+    </div>
+  </div>
+</div>

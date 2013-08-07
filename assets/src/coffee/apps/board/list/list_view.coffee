@@ -9,19 +9,28 @@
       yapensRegion: '#point-content'
 
 
-  class List.Yapens extends App.Views.ItemView
-    template: 'BoardItem'
+  class List.Yapen extends App.Views.ItemView
+    getTemplate: ->
+      if @model.get('type_of_item') is 'point'
+        return 'BoardPoint'
+      else if @model.get('type_of_item') is 'set'
+        return 'BoardSet'
+      else if @model.get('type_of_item') is 'route'
+        return 'BoardRoute'
+    className: 'item'
+    tagName: 'article'
+    events:
+      'click .a-photo': -> @trigger 'show:detail:popup', @model
+
+
+  class List.Yapens extends App.Views.CollectionView
+    itemView: List.Yapen
     className: 'items'
 
-    collectionEvents:
-      'reset': 'render'
-    triggers:
-      'click .a-photo': 'show:detail:points'
-
     initialize: ->
-      _.bindAll @, 'update'
+      _.bindAll @, 'onShow'
       @infiniScroll = new Backbone.InfiniScroll @collection,
-        success: @update
+        success: @onShow
         scrollOffset: 350
         includePage: true
         extraParams: App.settings
@@ -37,7 +46,7 @@
       @remove()
 
     update: (collection) ->
-      @collection.reset collection.sortBy @options.content
+      #@collection.reset collection.sortBy @options.content
       @onShow()
 
 

@@ -7,4 +7,4 @@
     className: 'wrap'
 
     regions:
-      fooRegion: "#foo-region"
+      userstatRegion: "#userstat"

@@ -13,7 +13,8 @@
     contentRegion:'#content'
     routePanel:'#panel-add-path'
     footerRegion:'#footer'
-    #popup: App.Common.PopupRegion
+    #popup: '#popups .scroll-box'
+    popup: Marionette.Region.Modal.extend(el: '#popups')
 
   App.reqres.setHandler 'default:region', ->
     App.contentRegion

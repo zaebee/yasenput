@@ -4,38 +4,37 @@
 
     initialize: ->
       console.log 'initialize BoardApp.Point.Controller'
-      point = App.request 'get:detail:points', @options.id
+      @options.model.fetch()
 
-      @layout = @getLayoutView()
+      @layout = new Point.Layout model: @options.model
       @listenTo @layout, 'show', =>
-        @sidebarView @point
-        @tabPhotoView @point
-        @tabMapView @point
-        @tabReviewView @point
-
-      @show @layout, loading: true
+        @headerView()
+        @sidebarView()
+        @tabPhotoView()
+        @tabMapView()
+        @tabReviewView()
+      #App.execute 'when:fetched', model, =>
+      App.popup.show @layout, loading: true
 
     onClose: ->
       @stopListening()
 
-    sidebarView: (point) ->
-      sidebarView = @getSidebarView model: point
+    headerView: ->
+      headerView = new Point.Header model: @options.model
+      @show headerView, region: @layout.headerRegion
+
+    sidebarView: ->
+      sidebarView = new Point.Sidebar model: @options.model
       @show sidebarView, region: @layout.sidebarRegion
 
-    tabPhotoView: (point) ->
-      tabPhotoView = new Point.Photo model: point
+    tabPhotoView: ->
+      tabPhotoView = new Point.Photo model: @options.model
       @show tabPhotoView, region: @layout.tabPhotoRegion
 
-    tabMapView: (point) ->
-      tabMapView = new Point.Map model: point
+    tabMapView: ->
+      tabMapView = new Point.Map model: @options.model
       @show tabMapView, region: @layout.tabMapRegion
 
-    tabReviewView: (point) ->
-      tabReviewView = new Point.Review model: point
+    tabReviewView: ->
+      tabReviewView = new Point.Review model: @options.model
       @show tabReviewView, region: @layout.tabReviewRegion
-
-    getLayoutView: ->
-      new Point.Layout
-
-    getSidebarView: (point) ->
-      new Point.Sidebar model: point
