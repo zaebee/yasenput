@@ -17,7 +17,9 @@ Yapp.module 'Common',
 
       # show main navbar with user info
       @headerView = new Yapp.Common.HeaderView
+      @userstatView = new Yapp.Common.UserstatView
         model: Yapp.user
+      @headerView.on 'show', => @headerView.userstatContainer.show @userstatView
       Yapp.header.show @headerView
 
       # show footer info with social widgets
@@ -56,7 +58,6 @@ Yapp.module 'Common',
 
       init: (p) ->
         me = @
-
         me.p = p
         me.prev = $(".photos-prev", p.root)
         me.next = $(".photos-next", p.root)

@@ -12,7 +12,7 @@ Yapp = window.Yapp
 # @extends Marionette.ItemView
 # @constructor
 ###
-class Yapp.Common.HeaderView extends Marionette.ItemView
+class Yapp.Common.HeaderView extends Marionette.Layout
 
   ###*
   # Initialize method of view
@@ -31,6 +31,14 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   template: Templates.HeaderView
   className: 'wrap'
+
+  ###*
+  # List of layout regions
+  # @type Object
+  # @property regions
+  ###
+  regions:
+    userstatContainer: '#auth-user'
 
   ###*
   # Ui emenents for view
@@ -55,7 +63,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   # @property events
   ###
   events:
-    'click .drop-add-head, .auth, a-login': 'showAuthPopup'
     'click .drop-search-overlay': 'hideDropdown'
 
     'click .item-label': 'addLabel'
@@ -82,12 +89,6 @@ class Yapp.Common.HeaderView extends Marionette.ItemView
   ###
   modelEvents:
     'change': 'render'
-
-  showAuthPopup: (event) ->
-    if !@model.get 'authorized'
-      event.preventDefault()
-      event.stopPropagation()
-      Yapp.vent.trigger 'user:notauthorized' ## handler for this event is in main.coffee file
 
   addLabel: (event) ->
     event.preventDefault()
