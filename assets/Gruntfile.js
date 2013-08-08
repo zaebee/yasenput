@@ -175,7 +175,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          "debug/js/templates.js": ["src/tpl/**/*.html"]
+          "debug/js/templates.js": ["src/coffee/**/*.html"]
         }
       }
     },
