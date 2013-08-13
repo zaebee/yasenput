@@ -1,5 +1,5 @@
 <div class="photo">
-  <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+  <span class="a-like a-like-point {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</span>
   <a href="#" class="a-collection" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
   {{#ifEquals user.id author.id}}
   <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <a href="#!point/{{id}}" class="a-photo">
+  <a href="#!point/{{id}}/photo/{{imgs.[0].id}}" class="a-photo">
     <img src="{{imgs.[0].thumbnail207}}" alt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
   </a>
 </div>

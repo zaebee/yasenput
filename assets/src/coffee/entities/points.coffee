@@ -9,17 +9,32 @@
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
   class Entities.Point extends Entities.Model
-    urlRoot: ->
+    urlRoot:
       App.API_BASE_URL + "/api/v1/points/"
 
   API =
-    getDetailPoints: (id, params = {}) ->
+    getDetail: (point, params = {}) ->
+      point.id = point.get 'id'
       _.defaults params
-      point = new Entities.Point unid: id
       point.fetch
         reset: true
         data: params
       point
+
+    like: (point, params = {}) ->
+      id = point.get 'id'
+      App.apiRequest
+        url: App.API_BASE_URL + "/api/v1/points/#{id}/like/"
+        type: 'POST'
+        #successCallback: successCallback
+        data:
+          id: id
       
-  App.reqres.setHandler 'get:detail:points', (id) ->
-    API.getDetailPoints id
+  App.reqres.setHandler 'get:detail:point', (point) ->
+    API.getDetail point
+
+  App.reqres.setHandler 'like:point', (point) ->
+    response = API.like point
+    response.done (data) ->
+      point.set data[0]
+    point

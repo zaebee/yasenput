@@ -10,6 +10,10 @@
 
 
   class List.Yapen extends App.Views.ItemView
+    initialize: ->
+      if @model.get('type_of_item') is 'set'
+        @$el.addClass 'set'
+
     getTemplate: ->
       if @model.get('type_of_item') is 'point'
         return 'BoardPoint'
@@ -21,6 +25,9 @@
     tagName: 'article'
     events:
       'click .a-photo': -> @trigger 'show:detail:popup', @model
+      'click .a-like-point': -> App.request 'like:point', @model
+    modelEvents:
+      'change': 'render'
 
 
   class List.Yapens extends App.Views.CollectionView

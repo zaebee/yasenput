@@ -6,10 +6,8 @@
     className: 'map'
     regions:
       tagsRegion: '#m-ico-group'
-
     events:
       'click .a-toggle': 'toggleMap'
-
     toggleMap: (e) ->
       e.preventDefault()
       App.execute 'toggle:map'
@@ -20,6 +18,8 @@
 
     initialize: ->
       console.log 'initialize MapApp.Show.Map'
+      if App.ymaps is undefined
+        return
       App.ymaps.ready =>
         @yandexmap = new App.ymaps.Map 'mainmap',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]

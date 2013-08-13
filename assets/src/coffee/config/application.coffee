@@ -1,4 +1,4 @@
-do (Backbone) ->
+do (Backbone, $) ->
 
   Backbone.emulateJSON = true
 
@@ -60,3 +60,24 @@ do (Backbone) ->
             if cookie.substring(0, name.length + 1) is (name + '=')
               cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
       return cookieValue
+
+    apiRequest: (options) ->
+      url = @API_BASE_URL + options.url
+      #url = options.url
+      console.log ["#{options.type} request to #{url} with data:", options.data]
+      $.ajax
+        url: url
+        type: options.type
+        dataType: options.dataType or 'json'
+        processData: options.processData
+        contentType: options.contentType
+        data: options.data
+        beforeSend: (xhr) => xhr.setRequestHeader('X-CSRFToken', @getCookie('csrftoken'))
+        success: (response) ->
+          console.log ['response from API: ', response]
+          if options.successCallback
+            params = [response]
+            _.each options.params, (p)->
+              params.push p
+            options.successCallback.apply options.context, params
+
