@@ -28,6 +28,7 @@
   </div>
 
   <ul class="photo-preview a-photo nonav">
+  <div class="item-caption">Коллекция</div>
     {{#if points.[2]}}
       <li>
         <a href="#">
@@ -79,6 +80,7 @@
 {{/ifEquals}}
 
 {{#ifEquals type_of_item 'point'}}
+  <div class="item-caption">Точка</div>
   <div class="photo">
     <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     <a href="#" class="a-collection" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
@@ -110,6 +112,7 @@
 {{/ifEquals}}
 
 {{#ifEquals type_of_item 'route'}}
+  <div class="item-caption">Маршрут</div>
   <div class="photo">
     <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
     {{#ifEquals user.id author.id}}
