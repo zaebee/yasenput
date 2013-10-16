@@ -1524,4 +1524,10 @@ ol.ol-add-path-places li.placeholder:before {
 .drop-search-a .item-title {
 	line-height: 18px;
 }
+.item-caption {
+    color: #999999;
+    font-size: 20px;
+    margin: 0 10px 10px;
+    text-align: center;
+}
 /**/
