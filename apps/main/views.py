@@ -332,3 +332,6 @@ def logout_view(request):
 
 def yapdd(request):
     return HttpResponse('b3be50c0ce9a')
+	
+def googlewm(request):
+    return HttpResponse('google-site-verification: google351823d6b3cb8bda.html')	
