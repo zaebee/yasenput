@@ -95,7 +95,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     @$('.js-vote').rating
       fx: 'full'
       image: '/static/images/rating.png'
-      loader: '/static/images/ajax-loader3.gif'
+      loader: '/static/images/ajax-loader-point.gif'
       stars: 10
       click: (rating) => @rating = rating
 
@@ -258,7 +258,7 @@ class Yapp.Points.PointDetailView extends Yapp.Common.PopupView
     $target = $(event.currentTarget)
     txt = @$('textarea[name=review]').val() or ''
     if @rating
-      @$('textarea[name=review]').css 'background', 'url(/static/images/ajax-loader.gif) no-repeat center'
+      @$('textarea[name=review]').css 'background', 'url(/static/images/ajax-loader-point.gif) no-repeat center'
       @model.addReview txt, @rating, @successAddReview, @
 
   ###*

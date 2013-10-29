@@ -298,7 +298,7 @@ sup{position:relative; font-size:.75em; top:-.5em}
     position: fixed;
     width: 4%;
     height: 32px;
-    background: url(../images/ajax-loader3.gif) transparent no-repeat center center;
+    background: url(../images/ajax-loader-2.gif) transparent no-repeat center center;
     left: 8%;
     top: 33px;
     display:none;
@@ -1523,5 +1523,11 @@ ol.ol-add-path-places li.placeholder:before {
 }
 .drop-search-a .item-title {
 	line-height: 18px;
+}
+.item-caption {
+    color: #999999;
+    font-size: 20px;
+    margin: 0 10px 10px;
+    text-align: center;
 }
 /**/

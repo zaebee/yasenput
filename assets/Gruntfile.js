@@ -42,6 +42,7 @@ module.exports = function(grunt) {
             'src/css/**/*.css'
           ],
           'debug/js/application.js': [
+            'debug/js/config/*.js',
             'debug/js/config.js',
             'debug/js/templates.js',
             'debug/js/helpers.js',
@@ -62,6 +63,7 @@ module.exports = function(grunt) {
         files: {
           'debug/js/application.js': [
             'debug/js/release-only.js',
+            'debug/js/config/*.js',
             'debug/js/config.js',
             'debug/js/templates.js',
             'debug/js/helpers.js',
