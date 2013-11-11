@@ -13,7 +13,7 @@
       App.API_BASE_URL + "/api/v1/route/"
 
   API =
-    getDetailRoutes: (id, params = {}) ->
+    getDetail: (id, params = {}) ->
       _.defaults params
       route = new Entities.Route unid: id
       route.fetch
@@ -21,5 +21,5 @@
         data: params
       route
       
-  App.reqres.setHandler 'get:detail:routes', (id) ->
-    API.getDetailRoutes id
+  App.reqres.setHandler 'get:detail:route', (id) ->
+    API.getDetail id

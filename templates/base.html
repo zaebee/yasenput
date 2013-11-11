@@ -1,5 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js ie7 lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js ie8 lt-ie9"> <![endif]-->
+<!--[if IE 9]><html class="no-js ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"> <!--<![endif]-->
   <head>
+    <meta charset="utf-8">
     <link rel="shortcut icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -8,7 +14,15 @@
 
     <title>{% block title %}{% endblock %}</title>
 
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
     <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+    <!--[if lt IE 7]>
+      <script type="text/javascript" src="media/js/libs/ie6no.ru.js"></script>
+    <![endif]-->
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="media/css/ie/ie.css">
+    <![endif]-->
 
   </head>
 
@@ -16,15 +30,7 @@
     <div id="fb-root"></div>
     {% csrf_token %}
 
-    <div id="wrap">
-      {% block wrap %}{% endblock %}
-    </div>
-
-    {% block aside %}
-      <aside id="panel-add-path"></aside>
-    {% endblock %}
-
-    <span class="spinner"></span>
+    {% block wrap %}{% endblock %}
 
     {% block popups %}{% endblock %}
 
@@ -33,26 +39,12 @@
     <script src="http://yandex.st/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="http://yandex.st/jquery/1.10.1/jquery.min.js"></script>
     -->
-    <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/modernizr-2.6.2.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-1.10.2.min.js"></script>
 
     {% if ASSETS_DEBUG %}
-      <script src="{{ STATIC_URL }}lib/json2.js"></script>
-      <script src="{{ STATIC_URL }}lib/moment.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/moment.ru.js"></script>
-      <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery.rating-2.0.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery-sortable-min.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-modal.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-popover.js"></script>
-      <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
-      <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
-      <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
+      <script src="{{ STATIC_URL }}js/libs.js"></script>
+      <script src="{{ STATIC_URL }}js/plugins.js"></script>
 
       {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
@@ -60,7 +52,7 @@
       {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
 
-      {% include 'includes/metrika.html' %}
+      {# include 'includes/metrika.html' #}
     {% endif %}
 
     <script>
@@ -84,15 +76,15 @@
             {% endfor %} ]
           };
         {% else %}
-          var USER = {authorized: false};
+          Yapp.USER = {authorized: false};
         {% endif %}
       });
     </script>
+    <!--
     <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&ns=Yapp.ymaps"></script>
     {# external #}
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
 
-    <!--
     <script type="text/javascript">
       //FB init
       (function(d, s, id) {

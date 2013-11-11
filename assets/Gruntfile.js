@@ -37,9 +37,10 @@ module.exports = function(grunt) {
       debug: {
         files: {
           'debug/css/styles.css': [
+            'src/css/base/base.css',
+            'src/css/select2.css',
             'src/css/main.css',
-            'src/css/jquery-ui-1.10.0.custom.css.css',
-            'src/css/**/*.css'
+            'src/css/fancybox/jquery.fancybox.css'
           ],
           'debug/js/application.js': [
             'debug/js/templates.js',
@@ -52,6 +53,20 @@ module.exports = function(grunt) {
             'debug/js/entities/*.js',
             'debug/js/components/**/*.js',
             'debug/js/apps/**/*.js',
+          ],
+          'debug/js/libs.js': [
+            'src/lib/json2.js',
+            'src/lib/spin.min.js',
+            'src/lib/moment.min.js',
+            //'src/lib/masonry.min.js',
+            'src/lib/moment.ru.js',
+            'src/lib/handlebars.js',
+            'src/lib/lodash.min.js',
+            'src/lib/backbone.min.js',
+            'src/lib/backbone.marionette.min.js',
+          ],
+          'debug/js/plugins.js': [
+            'src/plugins/*.js',
           ]
         }
       },
@@ -75,38 +90,15 @@ module.exports = function(grunt) {
             'src/lib/moment.ru.js',
             'src/lib/masonry.min.js',
             'src/lib/jquery.form.js',
-            'src/lib/jquery.rating-2.0.min.js',
-            'src/lib/jquery-sortable-min.js',
-            'src/lib/bootstrap-modal.js',
-            'src/lib/bootstrap-tooltip.js',
-            'src/lib/bootstrap-tab.js',
-            'src/lib/bootstrap-popover.js',
             'src/lib/handlebars.js',
             'src/lib/lodash.min.js',
-            'src/lib/backbone-min.js',
+            'src/lib/backbone.min.js',
             'src/lib/backbone.marionette.min.js',
             'src/lib/infiniScroll.js',
+          ],
+          'debug/js/plugins.js': [
+            'src/plugins/*.js',
           ]
-        }
-      }
-    },
-    generator: {
-      debug: {
-        files: [
-          { cwd: 'src/hbr/data', src: ['**/*'], dest: 'debug/', ext: '.html' }
-        ],
-        options: {
-          partialsGlob: 'src/hbr/partials/*.html',
-          templates: 'src/hbr/'
-        }
-      },
-      release: {
-        files: [
-          { cwd: 'src/hbr/data', src: ['**/*'], dest: 'release/', ext: '.html' }
-        ],
-        options: {
-          partialsGlob: 'src/hbr/partials/*.html',
-          templates: 'src/hbr/'
         }
       }
     },
@@ -115,14 +107,14 @@ module.exports = function(grunt) {
         files: [
           {expand: true, cwd: 'src/images/', src: ['**'], dest: 'debug/images'},
           {expand: true, cwd: 'src/lib/', src: ['**'], dest: 'debug/lib'},
-          //{expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'debug/tpl'}
+          {expand: true, cwd: 'src/css/', src: ['**'], dest: 'debug/css'},
         ]
       },
       release: {
         files: [
           {expand: true, cwd: 'src/images/', src: ['**'], dest: 'release/images'},
           {expand: true, cwd: 'src/lib/', src: ['**'], dest: 'release/lib'},
-          //{expand: true, cwd: 'src/tpl/', src: ['**'], dest: 'release/tpl'}
+          {expand: true, cwd: 'src/css/', src: ['**'], dest: 'release/css'},
         ]
       }
     },
@@ -151,7 +143,7 @@ module.exports = function(grunt) {
         }
       },
       compile: {
-        src: ['debug/js/libs.js', 'debug/js/application.js'],
+        src: ['debug/js/libs.js', 'debug/js/plugins.js', 'debug/js/application.js'],
         dest: 'release/js/application.js'
       }
     },
@@ -199,7 +191,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-generator');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-handlebars-compiler');

@@ -8,15 +8,11 @@
 
   class BoardApp.Router extends Marionette.AppRouter
     appRoutes:
-      '': 'popular'
-      '!popular': 'popular'
+      '': 'index'
       '!new': 'new'
-      #'!point/:id': 'point'
-      #'!set/:id': 'set'
-      #'!route/:id': 'route'
 
   API =
-    popular: ->
+    index: ->
       new BoardApp.List.Controller
         content: 'ypi'
     new: ->
@@ -25,6 +21,9 @@
 
   App.vent.on 'show:detail:popup', (model) ->
     new BoardApp.Point.Controller model: model
+
+  App.vent.on 'filter:all:yapens', (params = {}) ->
+    new BoardApp.List.Controller
 
   App.addInitializer ->
     new BoardApp.Router

@@ -47,7 +47,7 @@ class Photos(models.Model):
         return im.url
 
     def thumbnail207(self):
-        im = get_thumbnail(self.img, '207')
+        im = get_thumbnail(self.img, '232')
         return im.url
 
     def thumbnail207_height(self):

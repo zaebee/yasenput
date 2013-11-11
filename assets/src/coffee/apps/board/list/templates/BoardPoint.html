@@ -1,28 +1,22 @@
-<div class="photo">
-  <span class="a-like a-like-point {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</span>
-  <a href="#" class="a-collection" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
-  {{#ifEquals user.id author.id}}
-  <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
-  {{/ifEquals}}
-
-  <div class="yasen-info">
-    <span class="yp-title">{{ypi}} ЯПи</span>
-
-    <div class="yp-info">
-      <i class="yp-like"></i><small>{{likes_count}}</small>
-      <i class="yp-marked"></i><small>{{sets_count}}</small>
-      <i class="yp-place"></i><small>{{beens_count}}</small>
-      <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
+<div class="box__title box__title_type_place">Место</div>
+<div class="box__img">
+  <a href="#?">
+    <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" class="img">
+    <div class="icons">
+      <a href="#?" class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>
+      <a href="#?" class="icon sprite-like" data-toggle="tooltip" title="Нравится"></a>
     </div>
-  </div>
-
-  <a href="#!point/{{id}}/photo/{{imgs.[0].id}}" class="a-photo">
-    <img src="{{imgs.[0].thumbnail207}}" alt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
   </a>
 </div>
-
-<div class="body">
-    <img src="{{author.avatar}}" alt="" class="avatar" width="29" height="30">
-  <h3>{{name}}</h3>
-  <p>{{address}}</p>
+<div class="box__description">
+  <div class="name">{{name}}</div>
+  <span class="info info_like">{{likes_count}}</span>
+  <span class="info info_comment">0</span>
+</div>
+<div class="box__person">
+  <img src="{{author.avatar}}" alt="{{author.first_name}} {{author.last_name}}" class="img">
+  <div class="text">
+    Путешествие составил<br>
+    <span class="name">{{author.first_name}} {{author.last_name}}</span>
+  </div>
 </div>

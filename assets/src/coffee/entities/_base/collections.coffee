@@ -21,6 +21,8 @@
         new Entities.Set attrs, options
       else if attrs.type_of_item is 'route' ## is route type
         new Entities.Route attrs, options
+      else
+        new Entities.Point
 
     ###*
     # The collection initializer

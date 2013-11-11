@@ -1,18 +1,9 @@
 @Yapp.module 'BoardApp.List', (List, App, Backbone, Marionette, $, _) ->
 
 
-  class List.Layout extends App.Views.Layout
-    template: 'BoardLayout'
-    id: 'point-layout'
-    regions:
-      panelRegion: '#point-panel'
-      yapensRegion: '#point-content'
-
-
   class List.Yapen extends App.Views.ItemView
     initialize: ->
-      if @model.get('type_of_item') is 'set'
-        @$el.addClass 'set'
+      return
 
     getTemplate: ->
       if @model.get('type_of_item') is 'point'
@@ -21,53 +12,47 @@
         return 'BoardSet'
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
-    className: 'item'
-    tagName: 'article'
+      else
+        return 'BoardPoint'
+
+    className: 'box'
     events:
       'click .a-photo': -> @trigger 'show:detail:popup', @model
       'click .a-like-point': -> App.request 'like:point', @model
+
     modelEvents:
       'change': 'render'
 
 
   class List.Yapens extends App.Views.CollectionView
     itemView: List.Yapen
-    className: 'items'
+    className: 'content'
+    id: 'grid'
 
     initialize: ->
       _.bindAll @, 'onShow'
       @infiniScroll = new Backbone.InfiniScroll @collection,
-        success: @onShow
         scrollOffset: 350
         includePage: true
         extraParams: App.settings
 
+    onAfterItemAdded: (itemView) ->
+      if @wall
+        itemView.$el.imagesLoaded =>
+          @wall.appended itemView.$el
+          itemView.$('.box__img .icon').tooltip
+            placement: 'bottom'
+
     onShow: ->
-      if @wall then @wall.reload() else @wall = new Masonry @el,
-        columnWidth: 241
-        isFitWidth: true
+      App.execute 'when:fetched', @collection, =>
+        console.log 'collection fetched', @collection
+        @$el.imagesLoaded =>
+          $('.box__img .icon').tooltip
+            placement: 'bottom'
+          @wall = new Masonry @el,
+            itemSelector: '.box'
 
     onClose: ->
       @infiniScroll.destroy()
       @wall.destroy()
       @remove()
-
-    update: (collection) ->
-      #@collection.reset collection.sortBy @options.content
-      @onShow()
-
-
-  class List.Panel extends App.Views.ItemView
-    template: 'BoardPanel'
-    className: 'tabs'
-    tagName: 'menu'
-
-    templateHelpers: ->
-      active: @options.content
-    events:
-      'click .menu-item': 'changeContent'
-
-    changeContent: (e) ->
-      e.preventDefault()
-      $target = $(e.currentTarget)
-      App.navigate $target.attr('href'), true

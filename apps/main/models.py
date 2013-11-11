@@ -29,18 +29,18 @@ class Person(User):
     searchdelta = SphinxQuerySet(index="main_person",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
-    
-    
-    
-    
+
+
+
+
     def ava(self):
         im = self.avatar
         self.avatar = im.url
         pass
-    icon = ava 
+    icon = ava
     #avatar = str('1')
 
-    
+
 
 
 def create_person(sender, **kwargs):
@@ -154,7 +154,7 @@ class Points(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
     from apps.descriptions.models import Descriptions
-    
+
     class Meta:
         verbose_name = u'Точки'
         verbose_name_plural = u'Точки'
@@ -177,7 +177,7 @@ class Points(models.Model):
     wc = models.BooleanField(default=False)
     invalid = models.BooleanField(default=False)
     parking = models.BooleanField(default=False)
-    
+
     priority = models.IntegerField(default=0, blank=False)
 
     ypi = models.IntegerField(default=0, blank=True)
@@ -190,7 +190,7 @@ class Points(models.Model):
     reviewusersminus = 0
     sets_count = 0
     likes_count = 0
-    
+
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
@@ -201,7 +201,7 @@ class Points(models.Model):
                                 rankmode = 'SPH_RANK_NONE')
 
 
-    
+
     '''
     def sets_count(self):
         i = 0
@@ -231,7 +231,7 @@ class PointsByUser(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
     from apps.descriptions.models import Descriptions
-    
+
     class Meta:
         verbose_name = u'Точки глазами пользователя'
         verbose_name_plural = u'Точки глазами пользователя'
@@ -251,7 +251,7 @@ class PointsByUser(models.Model):
     author = models.ForeignKey(Person, null=True, serialize=True) #Пользователь, чьими глазами точка
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
-    
+
     def __unicode__(self):
         return self.point.name
 
@@ -313,9 +313,9 @@ class Events(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
-    
+
     def __unicode__(self):
-        return self.name    
+        return self.name
 
 
 class Profile(models.Model):
