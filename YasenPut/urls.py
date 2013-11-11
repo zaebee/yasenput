@@ -34,6 +34,7 @@ urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),
     url(r'', include('apps.main.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^layout/', direct_to_template, {'template': 'layout/index.html'}),
     (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 )
 if settings.DEBUG:
