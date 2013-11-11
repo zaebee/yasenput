@@ -1087,3 +1087,10 @@ a {
 .box__person .name {
   color: #767676;
 }
+
+.loading-container {
+    width:100px;
+    height:40px;
+    background:url(../images/ajax-loader.gif) no-repeat;
+    margin:20px auto 0;
+}
