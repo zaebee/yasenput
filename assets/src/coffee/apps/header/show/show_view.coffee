@@ -16,9 +16,33 @@
     template: 'Ctrls'
     className: 'constrain'
 
+    format: (state) ->
+      originalOption = state.element
+      "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
+
     onShow: ->
-      @$('select').select2
+      @$('input').select2
         allowClear: true
+        ajax:
+          dataType: 'json'
+          url: App.API_BASE_URL + '/api/v1/search/'
+          data: (term, page) ->
+            s: term
+          results: (data, page) ->
+            console.log data
+            results = _.map data, (el, type) ->
+              _.map el, (item) ->
+                item.type = type
+              el
+            results: _.flatten results
+        formatResult: @format
+        formatSelection: @format
+        minimumInputLength: 3
+        formatInputTooShort: ->
+          return 'Введите хотя бы 3 символа'
+        formatNoMatches: ->
+          return 'Ничего не найдено'
+        escapeMarkup: (m) -> m
   
 
   class Show.Destination extends App.Views.ItemView
@@ -42,15 +66,12 @@
       App.vent.trigger 'filter:all:yapens'
 
     keyupInput: (e) ->
-      #event.preventDefault()
       @_delay(() =>
         if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
           ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
           query = $(e.target).val()
           if query
-            console.log query
             App.updateSettings s: query
-            #@searchXHR = @search query, @showDropdown, @
           return
       500
       )
