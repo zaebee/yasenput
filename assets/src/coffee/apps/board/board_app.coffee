@@ -22,7 +22,7 @@
   App.vent.on 'show:detail:popup', (model) ->
     new BoardApp.Point.Controller model: model
 
-  App.vent.on 'filter:all:yapens', (params = {}) ->
+  App.vent.on 'filter:all:yapens', ->
     new BoardApp.List.Controller
 
   App.addInitializer ->

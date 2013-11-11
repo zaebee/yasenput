@@ -12,9 +12,6 @@
 
   API =
     getEntities: (params = {}) ->
-      _.defaults params,
-        p: 1 ## page = 1
-      
       yapens = new Entities.YapensCollection
       yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
       yapens.fetch

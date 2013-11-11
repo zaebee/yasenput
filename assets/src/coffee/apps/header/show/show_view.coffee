@@ -25,6 +25,36 @@
     template: 'Destination'
     className: 'constrain'
 
+    events:
+      'submit #destination-form': 'submitSearch'
+      'keydown #destination-input': 'keyupInput'
+
+    _delay: ( ->
+      timer = 0
+      (callback, ms) ->
+        clearTimeout (timer)
+        timer = setTimeout(callback, ms)
+        return
+    )()
+
+    submitSearch: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'filter:all:yapens'
+
+    keyupInput: (e) ->
+      #event.preventDefault()
+      @_delay(() =>
+        if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
+          ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
+          query = $(e.target).val()
+          if query
+            console.log query
+            App.updateSettings s: query
+            #@searchXHR = @search query, @showDropdown, @
+          return
+      500
+      )
+
 
   class Show.Filter extends App.Views.ItemView
     template: 'Filter'
