@@ -17,14 +17,13 @@
       authorized: false
       email: false
       avatar: ''
-      last_state: 'pins'
       count_liked_objects: 0
       count_commented_objects: 0
 
   API =
     me: (params = {}) ->
       _.defaults params
-      user = new Entities.User App.USER
+      @user = @user or new Entities.User App.USER
       
-  App.reqres.setHandler 'get:me:users', ->
+  App.reqres.setHandler 'get:my:profile', ->
     API.me()

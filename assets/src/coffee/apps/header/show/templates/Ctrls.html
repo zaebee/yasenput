@@ -8,32 +8,35 @@
   <a href="#?" class="btn btn_action_add">
     <span class="sprite-add"></span>
   </a>
-  <!-- <a href="#?" class="btn btn_color_blue">Войти</a> -->
-  <div class="header__user">
-    <a href="#?" class="link-user">
-      <img src="/static/images/guest.png" alt="uset" class="photo">
-      Константин Константиновский
-    </a>
-    <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
-    <ul class="profile-menu">
-      <li class="item">
-        <a href="#?" class="link">
-          <span class="icon sprite-bag"></span>
-          Я создал
-        </a>
-        <a href="#?" class="link">
-          <span class="icon sprite-heart"></span>
-          Мне нравится
-        </a>
-        <a href="#?" class="link">
-          <span class="icon sprite-settings"></span>
-          Настройки
-        </a>
-        <a href="#?" class="link">
-          <span class="icon sprite-power"></span>
-          Выход
-        </a>
-      </li>
-    </ul>
-  </div>
+  {{#if user.authorized}}
+    <div class="header__user">
+      <a href="#?" class="link-user">
+        <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/static/images/guest.png{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
+        {{user.first_name}}<br>{{user.last_name}} 
+      </a>
+      <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
+      <ul class="profile-menu">
+        <li class="item">
+          <a href="#?" class="link">
+            <span class="icon sprite-bag"></span>
+            Я создал
+          </a>
+          <a href="#?" class="link">
+            <span class="icon sprite-heart"></span>
+            Мне нравится
+          </a>
+          <a href="#?" class="link">
+            <span class="icon sprite-settings"></span>
+            Настройки
+          </a>
+          <a href="#?" class="link">
+            <span class="icon sprite-power"></span>
+            Выход
+          </a>
+        </li>
+      </ul>
+    </div>
+  {{else}}
+  <a href="#?" class="btn btn_color_blue">Войти</a>
+  {{/if}}
 </div><!-- class="header__btns" -->
