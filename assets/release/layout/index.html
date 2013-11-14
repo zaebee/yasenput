@@ -22,7 +22,7 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="media/css/fancybox/jquery.fancybox.css">
   <script type="text/javascript" src="media/js/libs/modernizr-2.6.2.min.js"></script>
-  <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+  <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
   <!--[if lt IE 7]>
     <script type="text/javascript" src="media/js/libs/ie6no.ru.js"></script>
   <![endif]-->
@@ -49,7 +49,7 @@
             <img src="media/images/logo.png" alt="ЯсенПуть">
           </a>
           <div class="header__btns">
-            <a href="#?" class="btn btn_action_add">
+            <a href="#?" class="btn btn_action_add js-popup-add">
               <span class="sprite-add"></span>
             </a>
             <!-- <a href="#?" class="btn btn_color_blue">Войти</a> -->
@@ -150,43 +150,136 @@
       </div><!-- class="header__filter" -->
     </header><!-- class="header" -->
     <section class="container">
-      <div class="map">
+      <div class="map map_main">
         <div class="constrain">
-          <a href="#?" class="close sprite-close js-map-close"></a>
+          <a href="#?" class="map__close sprite-close js-map-close"></a>
+        </div>
+        <div class="map__route route-list">
+          <ul class="list">
+            <li class="item">
+              <span class="number">1</span>
+              <img src="media/uploads/route-1.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Ферапонтов монастырь</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">2</span>
+              <img src="media/uploads/route-2.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Российский дельфинарий впервые...</span>
+                <span class="text__type c-event">событие 14.09—20.10</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">3</span>
+              <img src="media/uploads/route-3.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
+                <span class="text__type c-event">событие 14.09</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">4</span>
+              <img src="media/uploads/route-4.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">5</span>
+              <img src="media/uploads/route-1.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Ферапонтов монастырь</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">6</span>
+              <img src="media/uploads/route-2.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Российский дельфинарий впервые...</span>
+                <span class="text__type c-event">событие 14.09—20.10</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">7</span>
+              <img src="media/uploads/route-3.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
+                <span class="text__type c-event">событие 14.09</span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="number">8</span>
+              <img src="media/uploads/route-4.png" alt="" class="img">
+              <div class="text">
+                <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="baloon">
+          <div class="baloon__head">
+            <a href="#?" class="title title_tag">
+              <i class="icon"></i>
+               ТРК «Ярославский Вернисаж»
+            </a>
+            <a href="#?" class="close"></a>
+          </div>
+          <div class="baloon__body">
+            <div class="text">
+              <img src="media/uploads/baloon-img.png" alt="" class="img">
+              Расположен в Ярославле на пересечении Московского проспекта и улицы Калинина 30 Га. На
+            </div>
+            <div class="type">
+              <i class="icon sprite-place-small"></i>
+            </div>
+          </div>
         </div>
         <div class="map__container" id="map"></div>
-        <div class="map__ctrls-wrap constrain">
-          <div class="map__ctrls">
+        <div class="map__ctrls-wrap">
+          <div class="map__ctrls hide">
             <form action="/">
               <input type="submit" value="Сохранить маршрут" class="btn btn_color_blue">
               <ul class="map-counter">
-                <li class="map-counter__item">
-                  <a href="#?" class="map-counter__link map-counter__link_type_place" data-type="place" data-toggle="tooltip" title="Добавленные&nbsp;места">1</a>
+                <li class="map-counter__item hide">
+                  <a href="#?" class="map-counter__link map-counter__link_type_event " data-type="event" data-toggle="tooltip" title="Добавленные&nbsp;события">0</a>
                 </li>
-                <li class="map-counter__item">
-                  <a href="#?" class="map-counter__link map-counter__link_type_trip" data-type="trip" data-toggle="tooltip" title="Добавленные&nbsp;путешествия">1</a>
-                </li>
-                <li class="map-counter__item">
-                  <a href="#?" class="map-counter__link map-counter__link_type_route" data-type="route" data-toggle="tooltip" title="Добавленные&nbsp;маршруты">1</a>
-                </li>
-                <li class="map-counter__item">
-                  <a href="#?" class="map-counter__link map-counter__link_type_event" data-type="event" data-toggle="tooltip" title="Добавленные&nbsp;события">1</a>
+                <li class="map-counter__item hide">
+                  <a href="#?" class="map-counter__link map-counter__link_type_place" data-type="place" data-toggle="tooltip" title="Добавленные&nbsp;места">0</a>
                 </li>
               </ul>
             </form>
           </div>
         </div>
-        <a href="#?" class="btn-open js-map-open"></a>
+        <div class="constrain">
+          <div class="map__where">
+            <a href="#?" class="btn btn_color_green btn-change-city js-change-city"><span class="text">Вы едете из <span class="city">Вологды</span>  ?</span></a>
+            <div class="select-wrap">
+              <select>
+                <option value="1">Вологда</option>
+                <option value="2">Москва</option>
+                <option value="3">Санкт-Петербург</option>
+                <option value="4">Воронеж</option>
+                <option value="5">Пермь</option>
+              </select>
+              <a href="#?" class="btn btn_color_green js-chosen-city">ОК</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="constrain">
         <section class="content" id="grid">
           <div class="box" data-type="trip">
             <div class="box__title box__title_type_trip">Путешествие</div>
             <div class="box__img">
-              <a href="#popupwinPlaceView" class="js-popupwin">
+              <a href="#popupwinPlaceView" class="js-popupwin-place">
                 <img src="media/uploads/box-1.png" alt="church" class="img">
                 <div class="icons">
-                  <a href="#?" class="icon sprite-place js-add-to-route" data-toggle="tooltip" title="Добавить&nbsp;в&nbsp;маршрут"></a>
                   <a href="#?" class="icon sprite-like js-like-box" data-toggle="tooltip" title="Нравится"></a>
                 </div>
               </a>
@@ -230,10 +323,10 @@
           <div class="box" data-type="route">
             <div class="box__title box__title_type_route">Маршрут</div>
             <div class="box__img">
-              <a href="#?">
+              <a href="#?" class="js-popupwin-route">
                 <img src="media/uploads/box-3.png" alt="church" class="img">
                 <div class="icons">
-                  <a href="#?" class="icon sprite-place js-add-to-route" data-toggle="tooltip" title="Добавить&nbsp;в&nbsp;маршрут"></a>
+                  <a href="#?" class="icon sprite-reload js-change-route" data-toggle="tooltip" title="Заменить&nbsp;маршрут&nbsp;на&nbsp;карте"></a>
                   <a href="#?" class="icon sprite-like js-like-box" data-toggle="tooltip" title="Нравится"></a>
                 </div>
               </a>
@@ -355,7 +448,7 @@
               <a href="#?">
                 <img src="media/uploads/box-8.png" alt="church" class="img">
                 <div class="icons">
-                  <a href="#?" class="icon sprite-place js-add-to-route" data-toggle="tooltip" title="Добавить&nbsp;в&nbsp;маршрут"></a>
+                  <a href="#?" class="icon sprite-reload js-change-route" data-toggle="tooltip" title="Заменить&nbsp;маршрут&nbsp;на&nbsp;карте"></a>
                   <a href="#?" class="icon sprite-like js-like-box" data-toggle="tooltip" title="Нравится"></a>
                 </div>
               </a>
@@ -383,7 +476,6 @@
               <a href="#?">
                 <img src="media/uploads/box-1.png" alt="church" class="img">
                 <div class="icons">
-                  <a href="#?" class="icon sprite-place js-add-to-route" data-toggle="tooltip" title="Добавить&nbsp;в&nbsp;маршрут"></a>
                   <a href="#?" class="icon sprite-like js-like-box" data-toggle="tooltip" title="Нравится"></a>
                 </div>
               </a>
@@ -430,7 +522,7 @@
               <a href="#?">
                 <img src="media/uploads/box-3.png" alt="church" class="img">
                 <div class="icons">
-                  <a href="#?" class="icon sprite-place js-add-to-route" data-toggle="tooltip" title="Добавить&nbsp;в&nbsp;маршрут"></a>
+                  <a href="#?" class="icon sprite-reload js-change-route" data-toggle="tooltip" title="Заменить&nbsp;маршрут&nbsp;на&nbsp;карте"></a>
                   <a href="#?" class="icon sprite-like js-like-box" data-toggle="tooltip" title="Нравится"></a>
                 </div>
               </a>
@@ -500,10 +592,8 @@
     <div class="popupwin popupwin_place">
       <div class="popupwin__viewport">
         <div class="popupwin__scrollbox">
-          <div class="popupwin__close constrain">
-            <a href="#?" class="close"></a>
-          </div>
-          <div class="popupwin-content clearfix">
+          <a href="#?" class="popupwin__close"></a>
+          <div class="popupwin__content clearfix">
             <div class="place-info clearfix">
               <a href="#?" class="user">
                 <img src="media/uploads/user-place-1.png" alt="" class="img">
@@ -513,7 +603,8 @@
               <ul class="actions">
                 <li class="item">
                   <a href="#?" class="btn-like">
-                    <span class="icon sprite-like-user"></span>4
+                    <span class="icon sprite-like-user"></span>
+                    <span class="text">4</span>
                   </a>
                 </li>
                 <li class="item">
@@ -550,43 +641,59 @@
                 <li class="item"><img src="media/uploads/slide-1.png" class="img" /></li>
                 <li class="item"><img src="media/uploads/slide-2.png" class="img" /></li>
                 <li class="item"><img src="media/uploads/slide-1.png" class="img" /></li>
+                <li class="item"><img src="media/uploads/slide-2.png" class="img" /></li>
+                <li class="item"><img src="media/uploads/slide-1.png" class="img" /></li>
+                <li class="item"><img src="media/uploads/slide-2.png" class="img" /></li>
               </ul>
               <div class="bx-pager" id="bx-pager">
-                <a data-slide-index="0" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-1.png" class="img"/>
-                </a>
-                <a data-slide-index="1" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-2.png" class="img"/>
-                </a>
-                <a data-slide-index="2" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-3.png" class="img"/>
-                </a>
-                <a data-slide-index="3" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-4.png" class="img"/>
-                </a>
-                <a data-slide-index="4" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-5.png" class="img"/>
-                </a>
-                <a data-slide-index="5" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-6.png" class="img"/>
-                </a>
-                <a data-slide-index="6" href="" class="bx-pager__item">
-                  <img src="media/uploads/thumb-1.png" class="img"/>
-                </a>
+                <div class="bx-pager__viewport">
+                  <div class="bx-pager__scrollbox">
+                    <a data-slide-index="0" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-1.png" class="img"/>
+                    </a>
+                    <a data-slide-index="1" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-2.png" class="img"/>
+                    </a>
+                    <a data-slide-index="2" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-3.png" class="img"/>
+                    </a>
+                    <a data-slide-index="3" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-4.png" class="img"/>
+                    </a>
+                    <a data-slide-index="4" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-5.png" class="img"/>
+                    </a>
+                    <a data-slide-index="5" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-6.png" class="img"/>
+                    </a>
+                    <a data-slide-index="6" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-1.png" class="img"/>
+                    </a>
+                    <a data-slide-index="7" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-1.png" class="img"/>
+                    </a>
+                    <a data-slide-index="8" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-2.png" class="img"/>
+                    </a>
+                    <a data-slide-index="9" href="" class="bx-pager__item">
+                      <img src="media/uploads/thumb-3.png" class="img"/>
+                    </a>
+                  </div>
+                </div>
               </div>
               <a href="#?" class="btn-photo-add">Добавить</a>
             </div>
-            <div class="popupwin-content__description description">
+            <div class="description">
               <h3 class="description__title">Кирилло-Белозерский монастырь</h3>
               <p class="description__text">Кирилло-Белозерский или Кириллов мужской монастырь находится на берегу Сиверского озера в Вологодской области. Основали его монахи Кирилл и Ферапонт в 1397 г. Первым в православном комплексе был возведен Успенский собор, за ним – малый Иоанновский монастырь, которые стали форпостом государства Московского во вражеских землях. Со временем Кирилло-Белозерский монастырь стал крупным землевладельцем, вел обширную торговлю, особенно рыбой и солью, в XV-XVII вв. В этот же период его использовали, как место заточения церковной и светской знати. К 1557 г. он стал самым крупным образованием, уступавшим только Троице-Сергиевому монастырю. Закат монастыря начался с 1764 г., когда Екатерина II указом лишила его угодий и крестьян, а в 1776 г. из его слободы образовался город Кириллов.</p>
               <div class="description__address">Вологодская область, г. Кириллов, 161100</div>
             </div>
             <div class="map map_popupwin">
-              <a href="#?" class="close sprite-close js-map-close"></a>
+              <a href="#?" class="map__close sprite-close js-map-close"></a>
               <div class="map__container" id="map2"></div>
               <a href="#?" class="btn-open js-map-open"></a>
             </div>
-            <div class="popupwin-content__comments">
+            <div class="comments-wrap">
               <ul class="comments">
                 <li class="comments__item">
                   <a href="#?" class="photo">
@@ -638,7 +745,7 @@
               </ul>
             </div>
           </div><!-- class="popup-content" -->
-          <div class="popupwin-content clearfix">
+          <div class="popupwin__content clearfix">
             <div class="title title_blue">Им понравилось:</div>
             <ul class="peoples">
               <li class="peoples__item">
@@ -733,7 +840,7 @@
               </li>
             </ul>
           </div><!-- class="popup-content" -->
-          <div class="popupwin-content clearfix">
+          <div class="popupwin__content clearfix">
             <div class="title title_green">Добавили к себе в путешествие:</div>
             <ul class="peoples">
               <li class="peoples__item">
@@ -861,6 +968,661 @@
         </div>
       </div>
     </div><!-- class="popupwin popupwin_place" -->
+    <div class="popupwin popupwin_route">
+      <div class="popupwin__viewport">
+        <div class="popupwin__scrollbox">
+          <a href="#?" class="popupwin__close"></a>
+          <div class="popupwin__route-wrap clearfix">
+            <div class="popupwin__aside">
+              <div class="route-list popupwin__content">
+                <div class="title">Добавленные места и события</div>
+                <ul class="list">
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">1</span>
+                    <img src="media/uploads/route-1.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Ферапонтов монастырь</span>
+                      <span class="text__type c-place">место</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">2</span>
+                    <img src="media/uploads/route-2.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Российский дельфинарий впервые...</span>
+                      <span class="text__type c-event">событие 14.09—20.10</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">3</span>
+                    <img src="media/uploads/route-3.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
+                      <span class="text__type c-event">событие 14.09</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">4</span>
+                    <img src="media/uploads/route-4.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
+                      <span class="text__type c-place">место</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">5</span>
+                    <img src="media/uploads/route-1.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Ферапонтов монастырь</span>
+                      <span class="text__type c-place">место</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">6</span>
+                    <img src="media/uploads/route-2.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Российский дельфинарий впервые...</span>
+                      <span class="text__type c-event">событие 14.09—20.10</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">7</span>
+                    <img src="media/uploads/route-3.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
+                      <span class="text__type c-event">событие 14.09</span>
+                    </div>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">8</span>
+                    <img src="media/uploads/route-4.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
+                      <span class="text__type c-place">место</span>
+                    </div>
+                  </li>
+                </ul>
+              </div><!-- class="route-list" -->
+            </div>
+            <div class="popupwin__content">
+              <div class="place-info clearfix">
+                <a href="#?" class="user">
+                  <img src="media/uploads/user-place-1.png" alt="" class="img">
+                  <span class="name">Константин Константиновский</span><br>
+                  добавил <span class="type c-route">маршрут</span>
+                </a>
+                <ul class="actions">
+                  <li class="item">
+                    <a href="#?" class="btn-like">
+                      <span class="icon sprite-like-user"></span>
+                      <span class="text">4</span>
+                    </a>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="btn-place">
+                      <span class="icon sprite-place-user"></span>В маршрут
+                    </a>
+                  </li>
+                  <li class="item">
+                    <a href="#?" class="btn-upload">
+                      <span class="icon sprite-upload"></span>
+                    </a>
+                    <div class="soc-wrap">
+                      <ul class="soc-list">
+                        <li class="soc-list__item">
+                          <a href="#?" class="btn-soc btn-soc_tw">Twitter</a>
+                        </li>
+                        <li class="soc-list__item">
+                          <a href="#?" class="btn-soc btn-soc_vk">Вконтакте</a>
+                        </li>
+                        <li class="soc-list__item">
+                          <a href="#?" class="btn-soc btn-soc_fb">Facebook</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="map map_popupwin">
+                <a href="#?" class="map__close sprite-close js-map-close"></a>
+                <div class="map__container" id="map4"></div>
+                <a href="#?" class="btn-open js-map-open"></a>
+              </div>
+              <div class="description">
+                <h3 class="description__title">Интересные места по пути на Алтай</h3>
+                <p class="description__text">Алтай — прародина всех современных тюркских народов мира, где в 552 году до н. э. древние тюрки создали свое государство — каганат. Здесь сформировался первозданный язык тюрков, получивший распространение среди всех народов каганата благодаря появлению письменности в связи с государственностью тюрков, известной сегодня как «орхоно-енисейская руническая.</p>
+              </div>
+              <div class="comments-wrap">
+                <ul class="comments">
+                  <li class="comments__item">
+                    <a href="#?" class="photo">
+                      <img src="media/uploads/user-comments-1.png" alt="user1" class="photo__img">
+                    </a>
+                    <div class="text">
+                      <div class="text__info">
+                        <a href="#?" class="name">Нина Реджинова</a>
+                        <span class="time">&bull; 12.04.2013 в 17:27</span>
+                      </div>
+                      <div class="text__comment">В XVI веке рядом с ним появился малый Ивановский монастырь.</div>
+                    </div>
+                  </li>
+                  <li class="comments__item">
+                    <a href="#?" class="photo">
+                      <img src="media/uploads/user-comments-2.png" alt="user1" class="photo__img">
+                    </a>
+                    <div class="text">
+                      <div class="text__info">
+                        <a href="#?" class="name">Константин Васильевич</a>
+                        <span class="time">&bull; 12.04.2013 в 17:27</span>
+                      </div>
+                      <div class="text__comment">Одно из самых древних и самых известных подворий монастыря было Кремлёвское Кирилловское подворье — подворье Кирилло-Белозерского монастыря в Московском Кремле. Подворье находилось недалеко от Фроловских ворот (ныне Спасская башня)</div>
+                    </div>
+                  </li>
+                  <li class="comments__item">
+                    <a href="#?" class="photo">
+                      <img src="media/uploads/user-comments-3.png" alt="user1" class="photo__img">
+                    </a>
+                    <div class="text">
+                      <div class="text__info">
+                        <a href="#?" class="name">Виталий Вадимович</a>
+                        <span class="time">&bull; 12.04.2013 в 17:27</span>
+                      </div>
+                      <div class="text__comment">В комплекс Кирилло-Белозерского монастыря входят ансамбли Большого Успенского и Ивановского монастырей</div>
+                    </div>
+                  </li>
+                  <li class="comments__item">
+                    <form action="/">
+                      <a href="#?" class="photo">
+                        <img src="media/uploads/user-comments-4.png" alt="user1" class="photo__img">
+                      </a>
+                      <div class="text">
+                        <textarea placeholder="Написать комментарий"></textarea>
+                        <input type="submit" class="btn btn_color_blue" value="Комментировать">
+                      </div>
+                    </form>
+                  </li>
+                </ul>
+              </div>
+            </div><!-- class="popup-content" -->
+            <div class="popupwin__content">
+              <div class="title title_blue">Им понравилось:</div>
+              <ul class="peoples">
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+                <li class="peoples__item">
+                  <a href="#?" class="peoples__link">
+                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+                  </a>
+                </li>
+              </ul>
+            </div><!-- class="popup-content" -->
+          </div>
+        </div>
+      </div>
+    </div><!-- class="popupwin popupwin_place" -->
+    <div class="popupwin popupwin_add">
+      <div class="popupwin__viewport">
+        <div class="popupwin__scrollbox">
+          <div class="popupwin__content clearfix">
+            <div class="popupwin__title clearfix">
+              Добавить
+              <a href="#?" class="popupwin__close"></a>
+            </div>
+            <ul class="stuff-add">
+              <li class="stuff-add__item">
+                <a href="#?" class="stuff-add__link">
+                  <span class="icon icon_place"></span>
+                  <span class="btn btn_color_green">Добавить место</span>
+                  <span class="text">Город, гостиница, кафе, улица...</span>
+                </a>
+              </li>
+              <li class="stuff-add__item">
+                <a href="#?" class="stuff-add__link">
+                  <span class="icon icon_event"></span>
+                  <span class="btn btn_color_yel">Добавить событие</span>
+                  <span class="text">Фестивали, выставки, праздники...</span>
+                </a>
+              </li>
+              <li class="stuff-add__item">
+                <a href="#?" class="stuff-add__link js-popup-add-route">
+                  <span class="icon icon_route"></span>
+                  <span class="btn btn_color_brown">Добавить маршрут</span>
+                  <span class="text">Откуда, куда и как...</span>
+                </a>
+              </li>
+              <li class="stuff-add__item">
+                <a href="#?" class="stuff-add__link">
+                  <span class="icon icon_trip"></span>
+                  <span class="btn btn_color_blue">Добавить путешествие</span>
+                  <span class="text">Фото, маршруты, события, места</span>
+                </a>
+              </li>
+            </ul>
+          </div><!-- class="popup-content" -->
+        </div>
+      </div>
+    </div><!-- class="popupwin popupwin_add" -->
+    <div class="popupwin popupwin_add-route">
+      <div class="popupwin__viewport">
+        <div class="popupwin__scrollbox">
+          <a href="#?" class="popupwin__close"></a>
+          <div class="route-step route-step_name">
+            <div class="popupwin__content popupwin__content_route_name clearfix">
+              <div class="popupwin__title clearfix">
+                <div class="steps">
+                  <ul class="steps__list steps__list_route">
+                    <li class="steps__item active">1</li>
+                    <li class="steps__item">2</li>
+                    <li class="steps__item">3</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="form">
+                <form action="/">
+                  <div class="form__field form__field_route-name error">
+                    <label>Название маршрута:</label>
+                    <input type="text" placeholder="Например: Вологда-Москва">
+                  </div>
+                  <div class="form__field form__field_route-description">
+                    <label>Описание маршрута:</label>
+                    <textarea placeholder="Опишите этот маршрут так,чтобы захотелось по нему проехать"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="btn-wrap">
+                <a href="#?" class="btn btn_color_blue js-next-step">Следующий шаг</a>
+              </div>
+            </div><!-- class="popup-content" -->
+          </div><!-- class="route-step route-step_name" -->
+          <div class="route-step route-step_place clearfix">
+            <div class="route-step__aside">
+              <div class="route-list route-list_deleteable popupwin__content">
+                <div class="title">Добавленные места и события</div>
+                <ul class="list">
+                  <li class="item hide">
+                    <a href="#?" class="close js-delete"></a>
+                    <span class="drag"></span>
+                    <span class="number">0</span>
+                    <img src="media/uploads/route-2.png" alt="" class="img">
+                    <div class="text">
+                      <span class="text__place">Российский дельфинарий впервые...</span>
+                      <span class="text__type">событие 14.09—20.10</span>
+                    </div>
+                  </li>
+                </ul>
+              </div><!-- class="route-list" -->
+              <div class="route-ctrls popupwin__content">
+                <a href="#?" class="btn btn_color_blue btn_next js-next-step">Следующий шаг</a>
+                <a href="#?" class="btn btn_color_blue btn_finish js-finish">Готово</a>
+                <a href="#?" class="btn btn_color_green js-prev-step">Назад</a>
+              </div>
+            </div>
+            <div class="popupwin__content popupwin__content_route_place">
+              <div class="popupwin__title clearfix">
+                <div class="steps">
+                  <ul class="steps__list steps__list_route">
+                    <li class="steps__item active">1</li>
+                    <li class="steps__item active">2</li>
+                    <li class="steps__item">3</li>
+                  </ul>
+                  <div class="steps__title">
+                    <span class="title-place">Добавьте места и события в свой маршрут</span>
+                    <span class="title-order">Выберите порядок</span>
+                  </div>
+                </div>
+              </div>
+              <div class="route-search">
+                <select data-placeholder="Поиск по местам и событиям">
+                  <option></option>
+                  <option value="1" data-type="g" data-city="г. Вологда">Вологодские узоры</option>
+                  <option value="2" data-type="y" data-city="г. Вологда">Вологодские мероприятия</option>
+                  <option value="3" data-type="b" data-city="г. Вологда">Вологодские кафе</option>
+                  <option value="4" data-type="br" data-city="г. Вологда">Вологодские места отдыха</option>
+                  <option value="5" data-type="g" data-city="г. Вологда">Вологодские дороги</option>
+                </select>
+              </div>
+              <div class="route-categories">
+                <ul class="categories">
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo" data-toggle="tooltip" title="Фото"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-gun" data-toggle="tooltip" title="Охота"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-fish" data-toggle="tooltip" title="Рыбалка"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-ski" data-toggle="tooltip" title="Лыжи"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-music" data-toggle="tooltip" title="Музыка"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-food" data-toggle="tooltip" title="Еда"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-drink" data-toggle="tooltip" title="Напитки"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-tag" data-toggle="tooltip" title="Магазины"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-theatre" data-toggle="tooltip" title="Театры"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-place" data-toggle="tooltip" title="Места"></a></li>
+                  <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
+                </ul>
+              </div>
+              <div class="map map_popupwin map_route">
+                <div class="map__container" id="map3"></div>
+                <a href="#?" class="btn-open js-map-open"></a>
+                <div class="map__add-place">
+                  <div class="title">Создайте место для маршрута</div>
+                  <div class="form">
+                    <div class="form__field">
+                      <label>Название места:</label>
+                      <input type="text" placeholder="Например: закусочная">
+                    </div>
+                    <a href="#?" class="btn btn_color_green js-finish">Готово</a>
+                  </div>
+                </div>
+              </div>
+              <div class="route-grid" id="route-grid">
+                <div class="box" data-type="place" data-id="1" data-pic-small="media/uploads/route-4.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_place">Место</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-2.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Архиерейское подворье (Вологодский кремль)</div>
+                      <span class="info info_like">6</span>
+                      <span class="info info_comment">4</span>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="event" data-id="2" data-pic-small="media/uploads/route-2.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_event">Событие 14.09-20.10</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-4.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Российский дельфинарий Впервые в Вологде</div>
+                      <span class="info info_like">12</span>
+                      <span class="info info_comment">11</span>
+                    </a>
+                  </div>
+                  <div class="box__person">
+                    <a href="#?">
+                      <img src="media/uploads/user-2.png" alt="user" class="img">
+                      <div class="text">
+                        Опубликовал<br>
+                        <span class="name">Виталий Рибаков</span>
+                      </div>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="place" data-id="3" data-pic-small="media/uploads/route-1.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_place">Место</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-5.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Ферапонтов монастырь</div>
+                      <span class="info info_like">11</span>
+                      <span class="info info_comment">8</span>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="event" data-id="4" data-pic-small="media/uploads/route-3.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_event">Событие 14.09</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/place-unknown.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Фестиваль красок ХОЛИ<br> Не пропустите самый яркий день в этом году!!</div>
+                      <span class="info info_like">14</span>
+                      <span class="info info_comment">17</span>
+                    </a>
+                  </div>
+                  <div class="box__person">
+                    <a href="#?">
+                      <img src="media/uploads/user-2.png" alt="user" class="img">
+                      <div class="text">
+                        Опубликовал<br>
+                        <span class="name">Виталий Рибаков</span>
+                      </div>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="place" data-id="5" data-pic-small="media/uploads/route-4.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_place">Место</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-7.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Усадьба Брянчаниновых</div>
+                      <span class="info info_like">2</span>
+                      <span class="info info_comment">2</span>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="place" data-id="6" data-pic-small="media/uploads/route-1.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_place">Место</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-2.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Архиерейское подворье (Вологодский кремль)</div>
+                      <span class="info info_like">6</span>
+                      <span class="info info_comment">4</span>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="event" data-id="7" data-pic-small="media/uploads/route-2.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_event">Событие 14.09-20.10</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-4.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Российский дельфинарий Впервые в Вологде</div>
+                      <span class="info info_like">12</span>
+                      <span class="info info_comment">11</span>
+                    </a>
+                  </div>
+                  <div class="box__person">
+                    <a href="#?">
+                      <img src="media/uploads/user-2.png" alt="user" class="img">
+                      <div class="text">
+                        Опубликовал<br>
+                        <span class="name">Виталий Рибаков</span>
+                      </div>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="place" data-id="8" data-pic-small="media/uploads/route-3.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_place">Место</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-5.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Ферапонтов монастырь</div>
+                      <span class="info info_like">11</span>
+                      <span class="info info_comment">8</span>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+                <div class="box" data-type="event" data-id="9" data-pic-small="media/uploads/route-4.png">
+                  <a href="#?" class="btn-delete js-delete-from-route"></a>
+                  <div class="box__title box__title_type_event">Событие 14.09</div>
+                  <div class="box__img">
+                    <a href="#?">
+                      <img src="media/uploads/box-6.png" alt="church" class="img">
+                      <div class="btns">
+                        <a href="#?" class="btn btn_color_blue js-add-to-route-popupwin">Добавить в маршрут</a>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="box__description">
+                    <a href="#?">
+                      <div class="name">Фестиваль красок ХОЛИ<br> Не пропустите самый яркий день в этом году!!</div>
+                      <span class="info info_like">14</span>
+                      <span class="info info_comment">17</span>
+                    </a>
+                  </div>
+                  <div class="box__person">
+                    <a href="#?">
+                      <img src="media/uploads/user-2.png" alt="user" class="img">
+                      <div class="text">
+                        Опубликовал<br>
+                        <span class="name">Виталий Рибаков</span>
+                      </div>
+                    </a>
+                  </div>
+                </div><!-- class="box" -->
+              </div><!-- class="content" -->
+            </div><!-- class="popup-content" -->
+          </div><!-- class="route-step route-step_place" -->
+        </div>
+      </div>
+    </div><!-- class="popupwin popupwin_add" -->
   </div><!-- class="page" -->
   <script type="text/javascript" src="http://yandex.st/jquery/1.9.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="media/js/libs/jquery-1.9.1.js"><\/script>')</script>

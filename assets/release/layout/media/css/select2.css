@@ -63,6 +63,20 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     font-size: 16px;
     color: #7f7f7f;
 }
+.select2-container_where .select2-choice {
+    border: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 4px 8px;
+    width: 180px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 13px;
+    color: #5A5A5A;
+}
+.select2-container_route .select2-choice {
+    width: 648px;
+}
 
 .select2-container_destination {
     margin-right: 25px;
@@ -89,6 +103,9 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     white-space: nowrap;
     text-overflow: ellipsis;
     cursor: text;
+}
+.select2-container_where .select2-choice > .select2-chosen {
+    margin-right: 0;
 }
 
 .select2-container .select2-choice > .select2-chosen .type {
@@ -196,6 +213,9 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 .select2-container_destination .select2-choice .select2-arrow {
     display: none;
 }
+.select2-container_where .select2-choice .select2-arrow {
+    display: none;
+}
 
 .select2-container .select2-choice .select2-arrow b {
     display: block;
@@ -226,6 +246,11 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     padding-right: 0;
     width: 474px;
 }
+.select2-drop_where .select2-search {
+    padding-left: 3px;
+    padding-right: 0;
+    width: 180px;
+}
 
 .select2-search input {
     width: 100%;
@@ -254,6 +279,9 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     font-size: 16px;
     color: #7f7f7f;
 }
+.select2-drop_destination .select2-search input {
+    padding-top: 5px;
+}
 
 .select2-drop.select2-drop-above .select2-search input {
     margin-top: 4px;
@@ -281,6 +309,12 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     opacity: 0;
     width: 440px;
     border-color: transparent;
+}
+.select2-container_where.select2-dropdown-open .select2-choice {
+    width: 180px;
+}
+.select2-container_route.select2-dropdown-open .select2-choice {
+    width: 648px;
 }
 
 .select2-dropdown-open.select2-drop-above .select2-choice,
@@ -374,6 +408,7 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
+    padding: 5px 10px;
     background: #f4f4f4;
     display: list-item;
 }
