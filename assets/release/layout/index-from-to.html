@@ -86,10 +86,20 @@
       <div class="header__destination">
         <div class="constrain">
           <div class="slogan">Путешествуйте вместе с нами</div>
-          <div class="query">
+          <div class="query query_from-to">
             <form action="/">
-              <div class="query__destination">
-                <select data-placeholder="Куда вы собираетесь?">
+              <div class="query__item query__item_from">
+                <select data-placeholder="Откуда">
+                  <option></option>
+                  <option value="1" data-type="g" data-city="г. Вологда">Вологодские узоры</option>
+                  <option value="2" data-type="y" data-city="г. Вологда">Вологодские мероприятия</option>
+                  <option value="3" data-type="b" data-city="г. Вологда">Вологодские кафе</option>
+                  <option value="4" data-type="br" data-city="г. Вологда">Вологодские места отдыха</option>
+                  <option value="5" data-type="g" data-city="г. Вологда">Вологодские дороги</option>
+                </select>
+              </div>
+              <div class="query__item query__item_to">
+                <select data-placeholder="Куда">
                   <option></option>
                   <option value="1" data-type="g" data-city="г. Вологда">Вологодские узоры</option>
                   <option value="2" data-type="y" data-city="г. Вологда">Вологодские мероприятия</option>
@@ -152,144 +162,6 @@
       </div><!-- class="header__filter" -->
     </header><!-- class="header" -->
     <section class="container">
-      <div class="map map_main">
-        <div class="constrain">
-          <a href="#?" class="map__close sprite-close js-map-close"></a>
-        </div>
-        <div class="map__route route-list route-list_draggable route-list_deleteable">
-          <ul class="list">
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">1</span>
-              <img src="media/uploads/route-1.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Ферапонтов монастырь</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">2</span>
-              <img src="media/uploads/route-2.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Российский дельфинарий впервые...</span>
-                <span class="text__type c-event">событие 14.09—20.10</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">3</span>
-              <img src="media/uploads/route-3.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
-                <span class="text__type c-event">событие 14.09</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">4</span>
-              <img src="media/uploads/route-4.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">5</span>
-              <img src="media/uploads/route-1.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Ферапонтов монастырь</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">6</span>
-              <img src="media/uploads/route-2.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Российский дельфинарий впервые...</span>
-                <span class="text__type c-event">событие 14.09—20.10</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">7</span>
-              <img src="media/uploads/route-3.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Фестиваль красок ХОЛИ Не пропустите самый...</span>
-                <span class="text__type c-event">событие 14.09</span>
-              </div>
-            </li>
-            <li class="item">
-              <a href="#?" class="close js-delete"></a>
-              <span class="drag"></span>
-              <span class="number">8</span>
-              <img src="media/uploads/route-4.png" alt="" class="img">
-              <div class="text">
-                <span class="text__place">Архиерейское подворье (Вологодский кремль)</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="baloon">
-          <div class="baloon__head">
-            <a href="#?" class="title title_tag">
-              <i class="icon"></i>
-               ТРК «Ярославский Вернисаж»
-            </a>
-            <a href="#?" class="close"></a>
-          </div>
-          <div class="baloon__body">
-            <div class="text">
-              <img src="media/uploads/baloon-img.png" alt="" class="img">
-              Расположен в Ярославле на пересечении Московского проспекта и улицы Калинина 30 Га. На
-            </div>
-            <div class="type">
-              <i class="icon sprite-place-small"></i>
-            </div>
-          </div>
-        </div>
-        <div class="map__container" id="map"></div>
-        <div class="map__ctrls-wrap">
-          <div class="map__ctrls hide">
-            <form action="/">
-              <input type="submit" value="Сохранить маршрут" class="btn btn_color_blue">
-              <ul class="map-counter">
-                <li class="map-counter__item hide">
-                  <a href="#?" class="map-counter__link map-counter__link_type_event " data-type="event" data-toggle="tooltip" title="Добавленные&nbsp;события">0</a>
-                </li>
-                <li class="map-counter__item hide">
-                  <a href="#?" class="map-counter__link map-counter__link_type_place" data-type="place" data-toggle="tooltip" title="Добавленные&nbsp;места">0</a>
-                </li>
-              </ul>
-            </form>
-          </div>
-        </div>
-        <div class="constrain">
-          <div class="map__where">
-            <a href="#?" class="btn btn_color_green btn-change-city js-change-city"><span class="text">Вы едете из <span class="city">Вологды</span>  ?</span></a>
-            <div class="select-wrap">
-              <select>
-                <option value="1">Вологда</option>
-                <option value="2">Москва</option>
-                <option value="3">Санкт-Петербург</option>
-                <option value="4">Воронеж</option>
-                <option value="5">Пермь</option>
-              </select>
-              <a href="#?" class="btn btn_color_green js-chosen-city">ОК</a>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="constrain">
         <section class="content" id="grid">
           <div class="box" data-type="trip">

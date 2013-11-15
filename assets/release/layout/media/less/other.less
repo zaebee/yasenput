@@ -91,7 +91,6 @@
     line-height: 16px;
     font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
     font-size: 18px;
-    font-weight: bold;
   }
   .title_blue {
     color: #53B6D8;
@@ -101,10 +100,7 @@
   }
 
   .peoples {
-    padding: 20px 15px;
-  }
-  .peoples__item:nth-child(12n) {
-    margin-right: 0;
+    padding: 20px 6px 20px 15px;
   }
   .description {
     padding: 23px 25px 12px;
@@ -312,6 +308,13 @@ textarea {
 .btn_color_blue {
   background-color: #53b6d8;
   color: #FFF;
+
+  &:hover {
+    background-color: #56C3E9;
+  }
+  &:active {
+    background-color: #43A9CC;
+  }
 }
 .btn_color_grey {
   background-color: #efeded;
@@ -320,14 +323,35 @@ textarea {
 .btn_color_green {
   background-color: #26B89A;
   color: #FFF;
+
+  &:hover {
+    background-color: #29C7A6;
+  }
+  &:active {
+    background-color: #22A58A;
+  }
 }
 .btn_color_yel {
   background-color: #F6A934;
   color: #FFF;
+
+  &:hover {
+    background-color: #FCB850;
+  }
+  &:active {
+    background-color: #F9A21D;
+  }
 }
 .btn_color_brown {
   background-color: #C87852;
   color: #FFF;
+
+  &:hover {
+    background-color: #DC855B;
+  }
+  &:active {
+    background-color: #B96944;
+  }
 }
 .btn_action_add {
   padding: 7px 8px;
@@ -512,7 +536,7 @@ textarea {
   content: '';
   position: absolute;
   top: 5px;
-  right: 0;
+  right: -10px;
   display: block;
   border-radius: 4px;
   width: 8px;
@@ -707,13 +731,13 @@ textarea {
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.4);
   }
   &:hover,
   &.active {
-    margin: 1.5px 4.5px;
-    width: 63px;
-    height: 60px;
+    margin: 0 4px;
+    width: 64px;
+    height: 61.5px;
 
     &:after {
       display: none;
@@ -729,6 +753,13 @@ textarea {
 .jspContainer {
   overflow: hidden;
   position: relative;
+
+  &:hover {
+
+    .jspDrag {
+      display: block;
+    }
+  }
 }
 .jspPane {
   position: absolute;
@@ -748,6 +779,7 @@ textarea {
   position: relative;
 }
 .jspDrag {
+  display: none;
   border-radius: 2px;
   background: #a0a0a0;
   position: relative;
