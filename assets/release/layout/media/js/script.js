@@ -18,9 +18,39 @@ $(document).ready(function(){
     escapeMarkup: function(m) { return m; }
   });
 
-  $('.header__destination select').select2({
+  $('.header__destination .query__destination select').select2({
     containerCssClass: 'select2-container_destination',
     dropdownCssClass: 'select2-drop_destination',
+    formatResult: format,
+    formatSelection: format,
+    minimumInputLength: 1,
+    formatInputTooShort: function (){
+      return 'Введите хотя бы 1 символ'
+    },
+    formatNoMatches: function (){
+      return 'Ничего не найдено'
+    },
+    escapeMarkup: function(m) { return m; }
+  });
+
+  $('.header__destination .query__item_from select').select2({
+    containerCssClass: 'select2-container_destination select2-container_destination-from',
+    dropdownCssClass: 'select2-drop_destination select2-drop_destination-from',
+    formatResult: format,
+    formatSelection: format,
+    minimumInputLength: 1,
+    formatInputTooShort: function (){
+      return 'Введите хотя бы 1 символ'
+    },
+    formatNoMatches: function (){
+      return 'Ничего не найдено'
+    },
+    escapeMarkup: function(m) { return m; }
+  });
+
+  $('.header__destination .query__item_to select').select2({
+    containerCssClass: 'select2-container_destination select2-container_destination-to',
+    dropdownCssClass: 'select2-drop_destination select2-drop_destination-to',
     formatResult: format,
     formatSelection: format,
     minimumInputLength: 1,
@@ -186,6 +216,8 @@ $(document).ready(function(){
   $('.popupwin_add-route .popupwin__viewport').scroll(function(){
     $('.route-step__aside').css('top', $(this).scrollTop()+'px');
   });
+
+
   //$map
   var resizeClick = true;
 
@@ -204,16 +236,16 @@ $(document).ready(function(){
       }
 
       //$jscrollpane
-      if ($this.find('.route-list').length) {
-        if ($this.find('.route-list .list').outerHeight(true)>=ui.size.height) {
-          $this.find('.route-list').addClass('fullHeight');
-          $('.map_main .route-list').jScrollPane({
-            autoReinitialise: true
-          });
-        } else {
-          $this.find('.route-list').removeClass('fullHeight');
-        }
-      }
+      // if ($this.find('.route-list').length) {
+        // if ($this.find('.route-list .list').outerHeight(true)>=ui.size.height) {
+        //   $this.find('.route-list').addClass('fullHeight');
+        //   $('.map_main .route-list').jScrollPane({
+        //     autoReinitialise: true
+        //   });
+        // } else {
+        //   $this.find('.route-list').removeClass('fullHeight');
+        // }
+      // }
 
       myMap.container.fitToViewport();
       myMap2.container.fitToViewport();
@@ -236,17 +268,6 @@ $(document).ready(function(){
         $map.find('.map__close').show();
       }
 
-      //$jscrollpane
-      if ($map.find('.route-list').length) {
-        if ($map.find('.route-list .list').outerHeight(true)>=440) {
-          $map.find('.route-list').addClass('fullHeight');
-          $('.map_main .route-list').jScrollPane({
-            autoReinitialise: true
-          });
-        } else {
-          $map.find('.route-list').removeClass('fullHeight');
-        }
-      }
       myMap.container.fitToViewport();
       myMap2.container.fitToViewport();
       myMap3.container.fitToViewport();
@@ -263,6 +284,11 @@ $(document).ready(function(){
     $this.hide();
   });
 
+  $('.map_main .route-list').jScrollPane({
+    autoReinitialise: true
+  });
+  dragAndDropSetup($('.map_main'));
+
   //$add to route from boxes
   $('.js-add-to-route').click(function(){
     var $this = $(this),
@@ -272,7 +298,6 @@ $(document).ready(function(){
         $resultBox = $resultWrap.find('[data-type="'+type+'"]'),
         $resultItem = $resultBox.closest('.map-counter__item'),
         count = parseInt($resultBox.text());
-
 
     $this.toggleClass('active');
     if ($this.hasClass('active')){
@@ -401,61 +426,78 @@ $(document).ready(function(){
           center: [59.228939, 39.897748],
           zoom: 10
       });
+      myMap.behaviors.enable('scrollZoom')
 
       myMap2 = new ymaps.Map ("map2", {
           center: [59.228939, 39.897748],
           zoom: 10
       });
+      myMap2.behaviors.enable('scrollZoom')
+
 
       myMap3 = new ymaps.Map ("map3", {
           center: [59.228939, 39.897748],
           zoom: 10
       });
+      myMap3.behaviors.enable('scrollZoom')
+
 
       myMap4 = new ymaps.Map ("map4", {
           center: [59.228939, 39.897748],
           zoom: 10
       });
+      myMap4.behaviors.enable('scrollZoom')
+
 
       myPlacemark = new ymaps.Placemark([59.228939, 39.897748], {}, {
         iconImageClipRect: [[0,0], [32, 36]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark2 = new ymaps.Placemark([59.229641, 39.491195], {}, {
         iconImageClipRect: [[40,0], [72, 36]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark3 = new ymaps.Placemark([59.262001, 40.203933], {}, {
         iconImageClipRect: [[80,0], [112, 36]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark4 = new ymaps.Placemark([59.323821, 39.833144], {}, {
         iconImageClipRect: [[0,40], [32, 76]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark5 = new ymaps.Placemark([59.190204, 40.234145], {}, {
         iconImageClipRect: [[40,40], [72, 76]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark6 = new ymaps.Placemark([59.129552, 39.84413], {}, {
         iconImageClipRect: [[80,40], [112, 76]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark7 = new ymaps.Placemark([59.247935, 39.842757], {}, {
         iconImageClipRect: [[0,80], [32, 116]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark8 = new ymaps.Placemark([59.231048, 39.74388], {}, {
         iconImageClipRect: [[40,80], [72, 116]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark9 = new ymaps.Placemark([59.238789, 39.943007], {}, {
         iconImageClipRect: [[80,80], [112, 116]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
       myPlacemark10 = new ymaps.Placemark([59.079398, 39.85237], {}, {
         iconImageClipRect: [[0,120], [32, 156]],
-        iconImageHref: 'media/images/sprite-baloon.png'
+        iconImageHref: 'media/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
       });
 
     var myGeoObject = new ymaps.GeoObject({
@@ -631,7 +673,7 @@ $(document).ready(function(){
     myMap3.container.fitToViewport();
     $('.popupwin__content_route_place .steps__list .steps__item').addClass('active');
     $('.route-list_deleteable').removeClass('route-list_deleteable').addClass('route-list_draggable');
-    dragAndDropSetup();
+    dragAndDropSetup($('.popupwin_add-route'));
   }
   function deactivateStepOrder(){
     $('.route-step_place').removeClass('route-step_order');
@@ -646,12 +688,35 @@ $(document).ready(function(){
     sliderPlace.goToNextSlide();
   });
 
+  //$delete place from route
+  $('.route-list_deleteable').on('click','.js-delete' ,function(){
+    console.log('123');
+    var $this = $(this),
+        $item = $(this).closest('.item'),
+        $list = $this.closest('.route-list'),
+        id = $item.data('id');
+
+    if ($('.popupwin_add-route .route-list .jspPane').length) {
+      var element = $('.popupwin_add-route .route-list .list').jScrollPane({});
+      var api = element.data('jsp');
+      api.destroy();
+    }
+    $this.closest('.item').remove();
+    $list.find('.item').each(function(){
+      $(this).find('.number').html($(this).index());
+    });
+    $('.popupwin_add-route .route-list .list').jScrollPane({
+      autoReinitialise: true
+    });
+    $('.route-grid').find('.box[data-id="'+id+'"]').removeClass('added');
+  });
+
   //$drag and drop
-  function dragAndDropSetup(){
+  function dragAndDropSetup(container){
     var $srcElement;
     var srcIndex, dstIndex;
 
-    $(".route-list_draggable .list .item").dragdrop({
+    container.find(".route-list_draggable .list .item").dragdrop({
         makeClone: true,
         sourceHide: true,
         dragClass: "dragged",
@@ -673,32 +738,19 @@ $(document).ready(function(){
         },
         didDrop: function($src, $dst) {
           $dst.find('.item').each(function(){
-            $(this).find('.number').html($(this).index());
+            if ($(this).closest('.map_main').length) {
+              $(this).find('.number').html($(this).index()+1);
+            } else {
+              $(this).find('.number').html($(this).index());
+            }
           });
         }
     });
   };
 
-  $('.route-list_deleteable').on('click','.js-delete' ,function(){
-    var $this = $(this),
-        $item = $(this).closest('.item'),
-        $list = $this.closest('.route-list'),
-        id = $item.data('id');
-
-    if ($('.popupwin_add-route .route-list .jspPane').length) {
-      var element = $('.popupwin_add-route .route-list .list').jScrollPane({});
-      var api = element.data('jsp');
-      api.destroy();
-    }
-    $this.closest('.item').remove();
-    $list.find('.item').each(function(){
-      $(this).find('.number').html($(this).index());
-    });
-    $('.popupwin_add-route .route-list .list').jScrollPane({
-      autoReinitialise: true
-    });
-    $('.route-grid').find('.box[data-id="'+id+'"]').removeClass('added');
-
-  });
+  //$peoples
+  $('.peoples .js-more-people').click(function(){
+    $(this).closest('.peoples').find('.peoples__item.hide').removeClass('hide');
+  })
 
 });
