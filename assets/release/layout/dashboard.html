@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js ie7 lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js ie8 lt-ie9"> <![endif]-->
+<!--[if IE 9]><html class="no-js ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Личный кабинет</title>
+  <meta name="viewport" content="width=device-width">
+  <link href="media/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link rel="apple-touch-icon" href="media/images/apple-touch-icon.png">
+  <meta name="keywords" content="{{ metadata.keywords }}">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" type="text/css" href="media/css/base/base.css">
+  <link rel="stylesheet" type="text/css" href="media/css/select2.css">
+  <link rel="stylesheet" type="text/css" href="media/css/animate-custom.css">
+  <link rel="stylesheet" type="text/css" href="media/css/main.css">
+  <link rel="stylesheet" type="text/css" href="media/css/media.css">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="media/css/fancybox/jquery.fancybox.css">
+  <script type="text/javascript" src="media/js/libs/modernizr-2.6.2.min.js"></script>
+  <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+  <!--[if lt IE 7]>
+    <script type="text/javascript" src="media/js/libs/ie6no.ru.js"></script>
+  <![endif]-->
+  <!--[if IE]>
+    <link rel="stylesheet" type="text/css" href="media/css/ie/ie.css">
+  <![endif]-->
+</head>
+<body>
+  <div class="page">
+    <header class="header header_small">
+      <div class="header__ctrls">
+        <div class="constrain clearfix">
+          <div class="header__search">
+            <select data-placeholder="Места, маршруты, события...">
+              <option></option>
+              <option value="1" data-type="g" data-city="г. Вологда">Вологодские узоры</option>
+              <option value="2" data-type="y" data-city="г. Вологда">Вологодские мероприятия</option>
+              <option value="3" data-type="b" data-city="г. Вологда">Вологодские кафе</option>
+              <option value="4" data-type="br" data-city="г. Вологда">Вологодские места отдыха</option>
+              <option value="5" data-type="g" data-city="г. Вологда">Вологодские дороги</option>
+            </select>
+          </div><!-- class="header__search" -->
+          <a href="#?" class="logo">
+            <img src="media/images/logo.png" alt="ЯсенПуть">
+          </a>
+          <div class="header__btns">
+            <a href="#?" class="btn btn_action_add btn_color_green js-popup-add">
+              <span class="sprite-add"></span>
+            </a>
+            <!-- <a href="#?" class="btn btn_color_blue">Войти</a> -->
+            <div class="header__user">
+              <a href="#?" class="link-user">
+                <img src="media/uploads/user-1.png" alt="uset" class="photo">
+                Константин Константиновский
+              </a>
+              <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
+              <ul class="profile-menu">
+                <li class="item">
+                  <a href="#?" class="link">
+                    <span class="icon sprite-bag"></span>
+                    Я создал
+                  </a>
+                  <a href="#?" class="link">
+                    <span class="icon sprite-heart"></span>
+                    Мне нравится
+                  </a>
+                  <a href="#?" class="link">
+                    <span class="icon sprite-settings"></span>
+                    Настройки
+                  </a>
+                  <a href="#?" class="link">
+                    <span class="icon sprite-power"></span>
+                    Выход
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div><!-- class="header__btns" -->
+        </div>
+      </div><!-- class="header__ctrls" -->
+      <div class="header__dashboard">
+        <div class="constrain clearfix">
+          <div class="user-info">
+            <img src="media/uploads/dashboard-1.png" alt="user" class="img">
+            <div class="text">
+              <span class="name">Константин Константиновский</span>
+              <span class="location">Вологда</span>
+              <span class="mail">youremail@gmail.com</span>
+            </div>
+          </div>
+          <div class="user-ctrls">
+            <ul class="list">
+              <li class="item">
+                <a href="#?" class="link link_make active">Я создал<span class="number">85</span></a>
+              </li>
+              <li class="item">
+                <a href="#?" class="link link_like">Мне нравится<span class="number">2</span></a>
+              </li>
+              <li class="item"><a href="#?" class="link link_settings">Настройки</a></li>
+              <li class="item"><a href="#?" class="link link_exit">Выход</a></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- class="header__dashboard" -->
+      <div class="header__filter">
+        <div class="constrain clearfix">
+          <ul class="categories">
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo" data-toggle="tooltip" title="Фото"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-gun" data-toggle="tooltip" title="Охота"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-fish" data-toggle="tooltip" title="Рыбалка"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-ski" data-toggle="tooltip" title="Лыжи"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-music" data-toggle="tooltip" title="Музыка"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-food" data-toggle="tooltip" title="Еда"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-drink" data-toggle="tooltip" title="Напитки"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-tag" data-toggle="tooltip" title="Магазины"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-theatre" data-toggle="tooltip" title="Театры"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link sprite-filter-place" data-toggle="tooltip" title="Места"></a></li>
+            <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
+          </ul>
+          <div class="filter-type">
+            <a href="#?" class="btn btn_color_grey js-open">Выберите тип</a>
+            <ul class="filter-type__list">
+              <li class="filter-type__item">
+                <a href="#?" class="filter-type__link c-trip active">Путешествия</a>
+              </li>
+              <li class="filter-type__item">
+                <a href="#?" class="filter-type__link c-place">Места</a>
+              </li>
+              <li class="filter-type__item">
+                <a href="#?" class="filter-type__link c-route">Маршруты</a>
+              </li>
+              <li class="filter-type__item">
+                <a href="#?" class="filter-type__link c-event">События</a>
+              </li>
+              <li class="filter-type__item filter-type__item_checkbox">
+                <label class="checkbox-label">
+                  <input type="checkbox">
+                  <span class="checkbox-bg"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- class="header__filter" -->
+    </header><!-- class="header" -->
+    <section class="container">
+      <div class="constrain">
+        <section class="content" id="grid">
+          <div class="box box_dashboard" data-type="trip">
+            <div class="box__title box__title_type_trip">Путешествие</div>
+            <div class="box__img">
+              <a href="#popupwinPlaceView" class="js-popupwin-place">
+                <img src="media/uploads/box-1.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">По следам Варлаама Хутынского</div>
+                <span class="info info_like">18</span>
+                <span class="info info_comment">3</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-2.png" alt="user" class="img">
+                <div class="text">
+                  Путешествие составила<br>
+                  <span class="name">Нина Реджинова</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="place">
+            <div class="box__title box__title_type_place">Место</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-2.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Архиерейское подворье (Вологодский кремль)</div>
+                <span class="info info_like">6</span>
+                <span class="info info_comment">4</span>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="route">
+            <div class="box__title box__title_type_route">Маршрут</div>
+            <div class="box__img">
+              <a href="#?" class="js-popupwin-route">
+                <img src="media/uploads/box-3.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Самые красивые места Вологодско области</div>
+                <span class="info info_like">10</span>
+                <span class="info info_comment">15</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-3.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Константин Васильевич</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="event">
+            <div class="box__title box__title_type_event">Событие 14.09-20.10</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-4.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Российский дельфинарий Впервые в Вологде</div>
+                <span class="info info_like">12</span>
+                <span class="info info_comment">11</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-2.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Виталий Рибаков</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="place">
+            <div class="box__title box__title_type_place">Место</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-5.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Ферапонтов монастырь</div>
+                <span class="info info_like">11</span>
+                <span class="info info_comment">8</span>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="event">
+            <div class="box__title box__title_type_event">Событие 14.09</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-6.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Фестиваль красок ХОЛИ<br> Не пропустите самый яркий день в этом году!!</div>
+                <span class="info info_like">14</span>
+                <span class="info info_comment">17</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-2.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Виталий Рибаков</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="place">
+            <div class="box__title box__title_type_place">Место</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-7.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Усадьба Брянчаниновых</div>
+                <span class="info info_like">2</span>
+                <span class="info info_comment">2</span>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="route">
+            <div class="box__title box__title_type_route">Маршрут</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-8.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">В Вологде несколько музеев и галерей. Вперед по музеям</div>
+                <span class="info info_like">10</span>
+                <span class="info info_comment">15</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-3.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Константин Васильевич</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="trip">
+            <div class="box__title box__title_type_trip">Путешествие</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-1.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">По следам Варлаама Хутынского</div>
+                <span class="info info_like">18</span>
+                <span class="info info_comment">3</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-2.png" alt="user" class="img">
+                <div class="text">
+                  Путешествие составила<br>
+                  <span class="name">Нина Реджинова</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="place">
+            <div class="box__title box__title_type_place">Место</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-2.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Архиерейское подворье (Вологодский кремль)</div>
+                <span class="info info_like">6</span>
+                <span class="info info_comment">4</span>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="route">
+            <div class="box__title box__title_type_route">Маршрут</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-3.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Самые красивые места Вологодско области</div>
+                <span class="info info_like">10</span>
+                <span class="info info_comment">15</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-3.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Константин Васильевич</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+          <div class="box box_dashboard" data-type="event">
+            <div class="box__title box__title_type_event">Событие 14.09-20.10</div>
+            <div class="box__img">
+              <a href="#?">
+                <img src="media/uploads/box-4.png" alt="church" class="img">
+                <div class="btns">
+                  <a href="#?" class="btn btn_color_green">Редактировать</a>
+                  <a href="#?" class="btn btn_color_red">Удалить</a>
+                </div>
+              </a>
+            </div>
+            <div class="box__description">
+              <a href="#?">
+                <div class="name">Российский дельфинарий Впервые в Вологде</div>
+                <span class="info info_like">12</span>
+                <span class="info info_comment">11</span>
+              </a>
+            </div>
+            <div class="box__person">
+              <a href="#?">
+                <img src="media/uploads/user-2.png" alt="user" class="img">
+                <div class="text">
+                  Опубликовал<br>
+                  <span class="name">Виталий Рибаков</span>
+                </div>
+              </a>
+            </div>
+          </div><!-- class="box" -->
+        </section><!-- class="content" -->
+        <div class="loader">
+          <img src="media/images/loader.gif" alt="loading..." class="img">
+        </div>
+      </div>
+    </section><!-- class="container" -->
+    <footer class="footer">
+      <div class="logo"><img src="media/images/logo-footer.png" alt="ЯсенПуть" class="img"></div>
+      <div class="constrain">
+        <nav class="nav">
+          <ul class="nav_list">
+            <li class="nav__item"><a href="#?" class="nav__link">О проекте</a></li>
+            <li class="nav__item"><a href="#?" class="nav__link">Контакты</a></li>
+            <li class="nav__item"><a href="#?" class="nav__link">Соглашение</a></li>
+          </ul>
+        </nav>
+        <a href="#?" class="link-up js-up">Вверх</a>
+      </div>
+    </footer><!-- class="footer" -->
+  </div><!-- class="page" -->
+  <script type="text/javascript" src="http://yandex.st/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script type="text/javascript" src="media/js/libs/jquery-1.9.1.js"><\/script>')</script>
+  <script type="text/javascript" src="media/js/plugins.js"></script>
+  <script type="text/javascript" src="media/js/script.js"></script>
+</body>
+</html>

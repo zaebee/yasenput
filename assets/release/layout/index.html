@@ -49,7 +49,7 @@
             <img src="media/images/logo.png" alt="ЯсенПуть">
           </a>
           <div class="header__btns">
-            <a href="#?" class="btn btn_action_add js-popup-add">
+            <a href="#?" class="btn btn_action_add btn_color_green js-popup-add">
               <span class="sprite-add"></span>
             </a>
             <!-- <a href="#?" class="btn btn_color_blue">Войти</a> -->
@@ -158,8 +158,16 @@
         </div>
         <div class="map__route route-list route-list_draggable route-list_deleteable">
           <ul class="list">
+            <li class="item hide">
+              <span class="drag"></span>
+              <span class="number">0</span>
+              <img src="" alt="" class="img">
+              <div class="text">
+                <span class="text__place"></span>
+                <span class="text__type c-place"></span>
+              </div>
+            </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">1</span>
               <img src="media/uploads/route-1.png" alt="" class="img">
@@ -169,7 +177,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">2</span>
               <img src="media/uploads/route-2.png" alt="" class="img">
@@ -179,7 +186,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">3</span>
               <img src="media/uploads/route-3.png" alt="" class="img">
@@ -189,7 +195,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">4</span>
               <img src="media/uploads/route-4.png" alt="" class="img">
@@ -199,7 +204,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">5</span>
               <img src="media/uploads/route-1.png" alt="" class="img">
@@ -209,7 +213,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">6</span>
               <img src="media/uploads/route-2.png" alt="" class="img">
@@ -219,7 +222,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">7</span>
               <img src="media/uploads/route-3.png" alt="" class="img">
@@ -229,7 +231,6 @@
               </div>
             </li>
             <li class="item">
-              <a href="#?" class="close js-delete"></a>
               <span class="drag"></span>
               <span class="number">8</span>
               <img src="media/uploads/route-4.png" alt="" class="img">
@@ -239,6 +240,7 @@
               </div>
             </li>
           </ul>
+          <a href="#?" class="delete-item js-delete"></a>
         </div>
         <div class="baloon">
           <div class="baloon__head">
@@ -1029,6 +1031,73 @@
         </div>
       </div>
     </div><!-- class="popupwin popupwin_place" -->
+    <div class="popupwin popupwin_add-place">
+      <div class="popupwin__viewport">
+        <div class="popupwin__scrollbox">
+          <a href="#?" class="popupwin__close"></a>
+          <div class="place-step place-step_name">
+            <div class="popupwin__content clearfix">
+              <div class="popupwin__title clearfix">
+                <div class="steps">
+                  <ul class="steps__list steps__list_place">
+                    <li class="steps__item active">1</li>
+                    <li class="steps__item">2</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="popupwin__container clearfix">
+                <div class="form">
+                  <form action="/">
+                    <div class="form__field form__field_name error">
+                      <label>Название места:</label>
+                      <input type="text" placeholder="Например: Домик Петра">
+                      <span class="star">*</span>
+                      <div class="already-added">
+                        <div class="already-added__title">Уже есть!</div>
+                        <ul class="already-added__list">
+                          <li class="already-added__item">
+                            <img src="media/uploads/added-1.png" alt="" class="img">
+                            <span class="name">Софийский собор</span>
+                            <span class="city">г.Вологда</span>
+                          </li>
+                          <li class="already-added__item">
+                            <img src="media/uploads/added-2.png" alt="" class="img">
+                            <span class="name">Софийский собор</span>
+                            <span class="city">г.Новгород</span>
+                          </li>
+                          <li class="already-added__item">
+                            <img src="media/uploads/added-1.png" alt="" class="img">
+                            <span class="name">Софийский собор</span>
+                            <span class="city">г.Киев</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="form__field form__field_description">
+                      <label>Описание места:</label>
+                      <textarea placeholder="Опишите этот место так,чтобы захотелось туда поехать"></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="photo-upload">
+                  <form action="" id="upload-form">
+                    <div class="drop-box" id="drop-box">
+                      <ul class="img-list">
+                        <li class="img-list__item"></li>
+                      </ul>
+                      <span class="text-no-photo">Перетащите сюда фотографии</span>
+                      <div class="btn-file">
+                        <input type="file" name="file" id="file-field" multiple="true" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div><!-- class="popup-content" -->
+          </div>
+        </div>
+      </div>
+    </div><!-- class="popupwin popupwin_place" -->
     <div class="popupwin popupwin_route">
       <div class="popupwin__viewport">
         <div class="popupwin__scrollbox">
@@ -1379,11 +1448,12 @@
               </div>
               <div class="form">
                 <form action="/">
-                  <div class="form__field form__field_route-name error">
+                  <div class="form__field form__field_name form__field_name_route error">
                     <label>Название маршрута:</label>
                     <input type="text" placeholder="Например: Вологда-Москва">
+                    <span class="star">*</span>
                   </div>
-                  <div class="form__field form__field_route-description">
+                  <div class="form__field form__field_description">
                     <label>Описание маршрута:</label>
                     <textarea placeholder="Опишите этот маршрут так,чтобы захотелось по нему проехать"></textarea>
                   </div>
@@ -1396,20 +1466,20 @@
           </div><!-- class="route-step route-step_name" -->
           <div class="route-step route-step_place clearfix">
             <div class="route-step__aside">
-              <div class="route-list route-list_deleteable popupwin__content">
+              <div class="route-list route-list_deleteable route-list_draggable popupwin__content">
                 <div class="title">Добавленные места и события</div>
                 <ul class="list">
                   <li class="item hide">
-                    <a href="#?" class="close js-delete"></a>
                     <span class="drag"></span>
                     <span class="number">0</span>
-                    <img src="media/uploads/route-2.png" alt="" class="img">
+                    <img src="" alt="" class="img">
                     <div class="text">
-                      <span class="text__place">Российский дельфинарий впервые...</span>
-                      <span class="text__type">событие 14.09—20.10</span>
+                      <span class="text__place"></span>
+                      <span class="text__type"></span>
                     </div>
                   </li>
                 </ul>
+                <a href="#?" class="delete-item js-delete"></a>
               </div><!-- class="route-list" -->
               <div class="route-ctrls popupwin__content">
                 <a href="#?" class="btn btn_color_blue btn_next js-next-step">Следующий шаг</a>
@@ -1683,7 +1753,7 @@
           </div><!-- class="route-step route-step_place" -->
         </div>
       </div>
-    </div><!-- class="popupwin popupwin_add" -->
+    </div><!-- class="popupwin popupwin_add-route" -->
   </div><!-- class="page" -->
   <script type="text/javascript" src="http://yandex.st/jquery/1.9.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="media/js/libs/jquery-1.9.1.js"><\/script>')</script>

@@ -176,6 +176,15 @@
   }
 }
 
+.popupwin_add-route {
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  textarea:focus {
+    border-color: #ca7953;
+  }
+}
+
 .popupwin__content_route_name {
   width: 400px;
 
@@ -196,7 +205,19 @@
   margin: 0;
   width: 700px;
 }
+.popupwin_add-place {
+  display: none;
 
+  .photo-upload {
+    float: right;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  textarea:focus {
+    border-color: #26b89a;
+  }
+}
 /*$forms*/
 input,
 select,
@@ -228,7 +249,8 @@ textarea {
     color: #848484;
   }
   input[type="text"],
-  input[type="password"] {
+  input[type="password"],
+  textarea {
     padding: 0 10px;
     border: 1px solid #c8c6c6;
     border-radius: 3px;
@@ -239,45 +261,81 @@ textarea {
     width: 100%;
   }
   textarea {
+    padding: 10px;
     background-color: transparent;
   }
 }
 .form__field {
   margin-bottom: 20px;
-
-  &.error {
-
-    input[type="text"],
-    input[type="password"] {
-      border-color: #ca7953;
-    }
-  }
 }
-.form__field_route-name {
+.form__field_name {
+  position: relative;
+  width: 245px;
+
+  .star {
+    position: absolute;
+    top: 29px;
+    right: 7px;
+    color: #EA5854;
+  }
 
   input[type="text"] {
     padding-right: 20px;
+
+    &:focus + .star {
+      display: none;
+    }
   }
+}
+.form__field_name_route {
 
   &.error {
-    position: relative;
-    width: 245px;
 
     &:after {
-      content: '*';
-      position: absolute;
-      top: 29px;
-      right: 7px;
       color: #EA5854;
     }
   }
 }
-.form__field_route-description {
+.form__field_description {
 
   textarea {
     height: 135px;
   }
 }
+.form_dashboard {
+  margin-bottom: 70px;
+  padding: 0 15px;
+  width: 400px;
+
+  .form__field {
+    margin-bottom: 35px;
+  }
+  label {
+    display: inline-block;
+    margin-right: 10px;
+    width: 120px;
+    letter-spacing: -0.6px;
+    line-height: 18px;
+    font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
+    font-size: 18px;
+    color: #6B6C6C;
+  }
+  input[type="text"],
+  input[type="password"],
+  textarea {
+    width: 265px;
+    height: 32px;
+    background-color: #E4E5E8;
+    font-size: 14px;
+    font-style: italic;
+    color: #828282;
+  }
+  textarea {
+    padding: 10px;
+    height: 200px;
+  }
+}
+
 /*$colors*/
 .c-trip {
   color: #15a6cc;
@@ -353,9 +411,31 @@ textarea {
     background-color: #B96944;
   }
 }
+.btn_color_red {
+  background-color: #ea5854;
+  color: #FFF;
+
+  &:hover {
+    background-color: #E86B68;
+  }
+  &:active {
+    background-color: #EA4C48;
+  }
+}
+.btn_color_white {
+  background-color: #FFF;
+  color: #9a9a9a;
+
+  &:hover {
+    background-color: #f5f5f6;
+  }
+  &:active {
+    background-color: #c0c0c0;
+    color: #FFF;
+  }
+}
 .btn_action_add {
   padding: 7px 8px;
-  background-color: #26b89a;
 }
 .btn-like {
   position: relative;
