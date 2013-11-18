@@ -1,4 +1,4 @@
-/* glue: 0.3 hash: 39d4ccd2af */
+/* glue: 0.3 hash: 8ee68d51a2 */
 .sprite-trip,
 .sprite-trip-active,
 .sprite-route,
@@ -18,6 +18,14 @@
 .sprite-like,
 .sprite-like-active,
 .sprite-close,
+.sprite-settings-big,
+.sprite-settings-big-active,
+.sprite-heart-big,
+.sprite-heart-big-active,
+.sprite-power-big,
+.sprite-power-big-active,
+.sprite-bag-big,
+.sprite-bag-big-active,
 .sprite-fb,
 .sprite-checkbox,
 .sprite-checkbox-checked,
@@ -49,6 +57,8 @@
 .sprite-comment-small,
 .sprite-close-popupwin-small,
 .sprite-close-place,
+.sprite-place-very-small,
+.sprite-mail,
 .sprite-close-baloon,
 .sprite-tile,
 .sprite-close-route {
@@ -78,37 +88,47 @@ background: url(../images/sprite.png) no-repeat;
 .sprite-like{background-position:-187px -221px;width:33px;height:33px;}
 .sprite-like-active{background-position:-224px -221px;width:33px;height:33px;}
 .sprite-close{background-position:-290px -2px;width:32px;height:32px;}
-.sprite-fb{background-position:-290px -38px;width:14px;height:27px;}
-.sprite-checkbox{background-position:-290px -69px;width:27px;height:27px;}
-.sprite-checkbox-checked{background-position:-290px -100px;width:27px;height:27px;}
-.sprite-place-user{background-position:-290px -131px;width:18px;height:24px;}
-.sprite-place-user-active{background-position:-290px -159px;width:18px;height:24px;}
-.sprite-place-small{background-position:-290px -187px;width:18px;height:24px;}
-.sprite-tw{background-position:-290px -215px;width:22px;height:18px;}
-.sprite-like-user{background-position:-240px -191px;width:22px;height:18px;}
-.sprite-like-user-active{background-position:-210px -145px;width:22px;height:18px;}
-.sprite-upload{background-position:-210px -167px;width:21px;height:19px;}
-.sprite-upload-active{background-position:-210px -190px;width:21px;height:19px;}
-.sprite-settings{background-position:-261px -221px;width:20px;height:20px;}
-.sprite-settings-hover{background-position:-2px -258px;width:20px;height:20px;}
-.sprite-power{background-position:-26px -258px;width:17px;height:20px;}
-.sprite-power-hover{background-position:-47px -258px;width:17px;height:20px;}
-.sprite-heart{background-position:-290px -237px;width:20px;height:16px;}
-.sprite-heart-hover{background-position:-266px -191px;width:20px;height:16px;}
-.sprite-bag{background-position:-68px -258px;width:20px;height:19px;}
-.sprite-bag-hover{background-position:-92px -258px;width:20px;height:19px;}
-.sprite-vk{background-position:-308px -38px;width:14px;height:19px;}
-.sprite-up{background-position:-220px -78px;width:15px;height:18px;}
-.sprite-close-popupwin{background-position:-116px -258px;width:18px;height:18px;}
-.sprite-point{background-position:-220px -100px;width:11px;height:17px;}
-.sprite-drag{background-position:-170px -128px;width:16px;height:13px;}
-.sprite-add{background-position:-138px -258px;width:16px;height:16px;}
-.sprite-type-check{background-position:-190px -128px;width:15px;height:10px;}
-.sprite-type-check-hover{background-position:-209px -128px;width:15px;height:10px;}
-.sprite-like-small{background-position:-158px -258px;width:15px;height:12px;}
-.sprite-comment-small{background-position:-2px -282px;width:15px;height:14px;}
-.sprite-close-popupwin-small{background-position:-2px -300px;width:15px;height:15px;}
-.sprite-close-place{background-position:-21px -300px;width:15px;height:15px;}
-.sprite-close-baloon{background-position:-21px -282px;width:14px;height:14px;}
-.sprite-tile{background-position:-312px -131px;width:10px;height:6px;}
-.sprite-close-route{background-position:-312px -141px;width:10px;height:10px;}
+.sprite-settings-big{background-position:-290px -38px;width:30px;height:30px;}
+.sprite-settings-big-active{background-position:-290px -72px;width:30px;height:30px;}
+.sprite-heart-big{background-position:-290px -106px;width:30px;height:25px;}
+.sprite-heart-big-active{background-position:-290px -135px;width:30px;height:25px;}
+.sprite-power-big{background-position:-290px -164px;width:26px;height:29px;}
+.sprite-power-big-active{background-position:-290px -197px;width:26px;height:29px;}
+.sprite-bag-big{background-position:-2px -258px;width:28px;height:27px;}
+.sprite-bag-big-active{background-position:-34px -258px;width:28px;height:27px;}
+.sprite-fb{background-position:-220px -78px;width:14px;height:27px;}
+.sprite-checkbox{background-position:-66px -258px;width:27px;height:27px;}
+.sprite-checkbox-checked{background-position:-97px -258px;width:27px;height:27px;}
+.sprite-place-user{background-position:-290px -230px;width:18px;height:24px;}
+.sprite-place-user-active{background-position:-240px -191px;width:18px;height:24px;}
+.sprite-place-small{background-position:-262px -191px;width:18px;height:24px;}
+.sprite-tw{background-position:-210px -145px;width:22px;height:18px;}
+.sprite-like-user{background-position:-210px -167px;width:22px;height:18px;}
+.sprite-like-user-active{background-position:-210px -189px;width:22px;height:18px;}
+.sprite-upload{background-position:-261px -221px;width:21px;height:19px;}
+.sprite-upload-active{background-position:-128px -258px;width:21px;height:19px;}
+.sprite-settings{background-position:-2px -289px;width:20px;height:20px;}
+.sprite-settings-hover{background-position:-26px -289px;width:20px;height:20px;}
+.sprite-power{background-position:-50px -289px;width:17px;height:20px;}
+.sprite-power-hover{background-position:-71px -289px;width:17px;height:20px;}
+.sprite-heart{background-position:-153px -258px;width:20px;height:16px;}
+.sprite-heart-hover{background-position:-177px -258px;width:20px;height:16px;}
+.sprite-bag{background-position:-92px -289px;width:20px;height:19px;}
+.sprite-bag-hover{background-position:-116px -289px;width:20px;height:19px;}
+.sprite-vk{background-position:-140px -289px;width:14px;height:19px;}
+.sprite-up{background-position:-158px -289px;width:15px;height:18px;}
+.sprite-close-popupwin{background-position:-177px -289px;width:18px;height:18px;}
+.sprite-point{background-position:-199px -289px;width:11px;height:17px;}
+.sprite-drag{background-position:-220px -109px;width:16px;height:13px;}
+.sprite-add{background-position:-201px -258px;width:16px;height:16px;}
+.sprite-type-check{background-position:-170px -128px;width:15px;height:10px;}
+.sprite-type-check-hover{background-position:-189px -128px;width:15px;height:10px;}
+.sprite-like-small{background-position:-221px -258px;width:15px;height:12px;}
+.sprite-comment-small{background-position:-214px -289px;width:15px;height:14px;}
+.sprite-close-popupwin-small{background-position:-326px -2px;width:15px;height:15px;}
+.sprite-close-place{background-position:-326px -21px;width:15px;height:15px;}
+.sprite-place-very-small{background-position:-326px -40px;width:11px;height:14px;}
+.sprite-mail{background-position:-326px -58px;width:14px;height:11px;}
+.sprite-close-baloon{background-position:-326px -73px;width:14px;height:14px;}
+.sprite-tile{background-position:-326px -91px;width:10px;height:6px;}
+.sprite-close-route{background-position:-326px -101px;width:10px;height:10px;}

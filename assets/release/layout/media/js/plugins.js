@@ -8,3 +8,4 @@ document.write("<sc"+"ript src='media/js/plugins/jquery.drag-drop.plugin.min.js'
 document.write("<sc"+"ript src='media/js/plugins/jquery.mousewheel.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/mwheelIntent.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/jquery.jscrollpane.min.js'></sc"+"ript>");
+document.write("<sc"+"ript src='media/js/plugins/jquery.damnUploader.min.js'></sc"+"ript>");

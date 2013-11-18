@@ -217,7 +217,6 @@ $(document).ready(function(){
     $('.route-step__aside').css('top', $(this).scrollTop()+'px');
   });
 
-
   //$map
   var resizeClick = true;
 
@@ -289,6 +288,49 @@ $(document).ready(function(){
   });
   dragAndDropSetup($('.map_main'));
 
+  var routeItemNumber = 0;
+  $('.route-list.route-list_deleteable').on('mouseenter','.item',function(){
+    var $this = $(this),
+        $list = $this.closest('.route-list'),
+        itemTop = $this.position().top+10,
+        scrollTop = 0;
+
+    routeItemNumber = $this.index();
+    if ($list.find('.title').length) {
+      itemTop = itemTop + $list.find('.title').outerHeight();
+    }
+    if ($list.find('.jspPane').length) {
+      scrollTop = parseInt($list.find('.jspPane').css('top').split('px')[0]);
+      itemTop = itemTop + scrollTop;
+    }
+    $list.find('.delete-item').css('top', itemTop + 'px');
+  });
+
+  $('.route-list.route-list_deleteable .js-delete').click(function(){
+    var $this = $(this),
+        $list = $this.closest('.route-list'),
+        $removeElement = $list. find('.item').eq(routeItemNumber),
+        id = $removeElement.data('id');
+
+    if ($list.find('.jspPane').length) {
+      var element = $list.find('.list').jScrollPane({});
+      var api = element.data('jsp');
+      api.destroy();
+    }
+    $removeElement.remove();
+    $list.find('.item').each(function(){
+      $(this).find('.number').html($(this).index());
+    });
+    $list.find('.list').jScrollPane({
+      autoReinitialise: true
+    });
+
+    if ($list.closest('.popupwin_add-route').length){
+      $('.route-grid').find('.box[data-id="'+id+'"]').removeClass('added');
+    }
+
+  });
+
   //$add to route from boxes
   $('.js-add-to-route').click(function(){
     var $this = $(this),
@@ -297,7 +339,8 @@ $(document).ready(function(){
         $resultWrap = $('.map__ctrls'),
         $resultBox = $resultWrap.find('[data-type="'+type+'"]'),
         $resultItem = $resultBox.closest('.map-counter__item'),
-        count = parseInt($resultBox.text());
+        count = parseInt($resultBox.text()),
+        $mapRouteList = $('.map_main .route-list');
 
     $this.toggleClass('active');
     if ($this.hasClass('active')){
@@ -333,6 +376,7 @@ $(document).ready(function(){
       $resultBox.removeClass('bounce animated')},
       1300
     );
+
   });
 
   $('.js-like-box').click(function(){
@@ -356,51 +400,68 @@ $(document).ready(function(){
     $(this).toggleClass('active');
   });
 
-  $('.js-add-to-route-popupwin').click(function(){
-    var $this = $(this),
-        $box = $this.closest('.box'),
-        $list = $('.popupwin_add-route .route-list'),
-        $newPlace = $list.find('.item.hide').clone(),
-        number = parseInt($list.find('.item:last-child .number').text());
+  function addPlaceToList($box, $list, $container){
+    var   $newPlace = $list.find('.item.hide').clone(),
+          number = parseInt($list.find('.item:last-child .number').text());
 
-    $box.addClass('added');
+
+    if ($list.css('display') == 'none') {
+      $list.css('display', 'block');
+    }
     number++;
-    $newPlace.attr('data-id', $box.data('id'));
-    $newPlace.removeClass('hide');
-    $newPlace.find('.number').html(number);
-    $newPlace.find('.img').attr('src',$box.data('pic-small'));
-    $newPlace.find('.text__place').html($box.find('.box__description .name').text());
-    $newPlace.find('.text__type').html($box.find('.box__title').text());
-    $newPlace.find('.text__type').attr('class','text__type c-'+$box.data('type'));
-    if ($('.popupwin_add-route .route-list .jspPane').length) {
-      var element = $('.popupwin_add-route .route-list .list').jScrollPane({});
+
+    with ($newPlace) {
+      attr('data-id', $box.data('id'));
+      removeClass('hide');
+      find('.number').html(number);
+      find('.img').attr('src',$box.data('pic-small'));
+      find('.text__place').html($box.find('.box__description .name').text());
+      find('.text__type').html($box.find('.box__title').text());
+      find('.text__type').attr('class','text__type c-'+$box.data('type'));
+    }
+    if ($list.find('.jspPane').length) {
+      var element = $list.find('.list').jScrollPane({});
       var api = element.data('jsp');
       api.destroy();
     }
-    $newPlace.appendTo('.popupwin_add-route .route-list .list');
-    $('.popupwin_add-route .route-list .list').jScrollPane({
+    $newPlace.appendTo($list.find('.list'));
+    $list.find('.item').dragdrop('destroy');
+    dragAndDropSetup($container);
+    $list.find('.list').jScrollPane({
       autoReinitialise: true
     });
+  };
 
+  $('.js-add-to-route-popupwin').click(function(){
+    var $this = $(this),
+        $box = $this.closest('.box'),
+        $list = $('.popupwin_add-route .route-list');
+
+    $box.addClass('added');
+    addPlaceToList($box, $list, $('.popupwin_add-route'));
   });
 
   $('.js-delete-from-route').click(function(){
     var $box = $(this).closest('.box'),
-        id = $box.data('id');
+        id = $box.data('id'),
+        $list = $('.popupwin_add-route .route-list');
 
     $box.removeClass('added');
-    if ($('.popupwin_add-route .route-list .jspPane').length) {
-      var element = $('.popupwin_add-route .route-list .list').jScrollPane({});
+    if ($list.find('.jspPane').length) {
+      var element = $list.find('.list').jScrollPane({});
       var api = element.data('jsp');
       api.destroy();
     }
-    $('.popupwin_add-route .route-list').find('.item[data-id="'+id+'"]').remove();
-    $('.popupwin_add-route .route-list .list').jScrollPane({
+    $list.find('.item[data-id="'+id+'"]').remove();
+    $list.find('.list').jScrollPane({
       autoReinitialise: true
     });
-    $('.popupwin_add-route .route-list').find('.item').each(function(){
+    $list.find('.item').each(function(){
       $(this).find('.number').html($(this).index());
     });
+    if ($list.find('.item').length <= 1) {
+      $list.css('display', 'none');
+    }
   });
 
   //$ymaps
@@ -422,31 +483,37 @@ $(document).ready(function(){
         myGeoObject;
 
   function init(){
-      myMap = new ymaps.Map ("map", {
+      if ($('#map').length) {
+        myMap = new ymaps.Map ("map", {
           center: [59.228939, 39.897748],
           zoom: 10
-      });
-      myMap.behaviors.enable('scrollZoom')
+        });
+        myMap.behaviors.enable('scrollZoom');
+      }
 
-      myMap2 = new ymaps.Map ("map2", {
-          center: [59.228939, 39.897748],
-          zoom: 10
-      });
-      myMap2.behaviors.enable('scrollZoom')
+      if ($('#map2').length) {
+        myMap2 = new ymaps.Map ("map2", {
+            center: [59.228939, 39.897748],
+            zoom: 10
+        });
+        myMap2.behaviors.enable('scrollZoom')
+      }
 
+      if ($('#map3').length) {
+        myMap3 = new ymaps.Map ("map3", {
+            center: [59.228939, 39.897748],
+            zoom: 10
+        });
+        myMap3.behaviors.enable('scrollZoom');
+      }
 
-      myMap3 = new ymaps.Map ("map3", {
-          center: [59.228939, 39.897748],
-          zoom: 10
-      });
-      myMap3.behaviors.enable('scrollZoom')
-
-
-      myMap4 = new ymaps.Map ("map4", {
-          center: [59.228939, 39.897748],
-          zoom: 10
-      });
-      myMap4.behaviors.enable('scrollZoom')
+      if ($('#map4').length) {
+        myMap4 = new ymaps.Map ("map4", {
+            center: [59.228939, 39.897748],
+            zoom: 10
+        });
+        myMap4.behaviors.enable('scrollZoom');
+      }
 
 
       myPlacemark = new ymaps.Placemark([59.228939, 39.897748], {}, {
@@ -515,18 +582,20 @@ $(document).ready(function(){
       strokeWidth: 4
     });
 
-    myMap.geoObjects
-      .add(myPlacemark)
-      .add(myPlacemark2)
-      .add(myPlacemark3)
-      .add(myPlacemark4)
-      .add(myPlacemark5)
-      .add(myPlacemark6)
-      .add(myPlacemark7)
-      .add(myPlacemark8)
-      .add(myPlacemark9)
-      .add(myPlacemark10)
-      .add(myGeoObject);
+    if ($('#map').length) {
+      myMap.geoObjects
+        .add(myPlacemark)
+        .add(myPlacemark2)
+        .add(myPlacemark3)
+        .add(myPlacemark4)
+        .add(myPlacemark5)
+        .add(myPlacemark6)
+        .add(myPlacemark7)
+        .add(myPlacemark8)
+        .add(myPlacemark9)
+        .add(myPlacemark10)
+        .add(myGeoObject);
+      }
   }
 
   $('.map__where .js-change-city').click(function(){
@@ -644,71 +713,46 @@ $(document).ready(function(){
   $('.route-step_name .js-next-step').click(function(){
     $('.route-step_name').hide();
     $('.route-step_place').show();
-    $('#route-grid').masonry({
-      itemSelector: '.box'
-    });
-    $('.popupwin_add-route .route-list .list').jScrollPane({
-      autoReinitialise: true
-    });
+    initStepPlace();
   });
   $('.route-step_place .js-next-step').click(function(){
-    $(window).scrollTop('fast');
     initStepOrder();
   });
   $('.route-step_place .js-prev-step').click(function(){
     var $this = $(this);
-
-    $(window).scrollTop('fast');
     if ($this.closest('.route-step_place').hasClass('route-step_order') == true) {
-      deactivateStepOrder();
+      $('.route-step_place').removeClass('route-step_order');
+      $('.popupwin__content_route_place .steps__list .steps__item:last-child').removeClass('active');
+      initStepPlace();
     } else {
       $('.route-step_place').hide();
       $('.route-step_name').show();
     }
   });
 
+  function initStepPlace(){
+    $('.route-step_place').find('.map').height(140);
+    myMap3.container.fitToViewport();
+    $('#route-grid').masonry({
+      itemSelector: '.box'
+    });
+    $('.popupwin_add-route .route-list .list').jScrollPane({
+      autoReinitialise: true
+    });
+    $('html, body').scrollTop(0);
+  }
   function initStepOrder(){
     $('.route-step_place').addClass('route-step_order');
     $('.route-step_order').find('.map').height(440);
     myMap3.container.fitToViewport();
     $('.popupwin__content_route_place .steps__list .steps__item').addClass('active');
-    $('.route-list_deleteable').removeClass('route-list_deleteable').addClass('route-list_draggable');
+    $('html, body').scrollTop(0);
     dragAndDropSetup($('.popupwin_add-route'));
-  }
-  function deactivateStepOrder(){
-    $('.route-step_place').removeClass('route-step_order');
-    myMap3.container.fitToViewport();
-    $('.popupwin__content_route_place .steps__list .steps__item:last-child').removeClass('active');
-    $('.route-list_draggable .list .item').dragdrop('destroy');
-    $('.route-list_draggable').removeClass('route-list_draggable').addClass('route-list_deleteable');
   }
 
   //$bxslider
   $('.bxslider .img').click(function(){
     sliderPlace.goToNextSlide();
-  });
-
-  //$delete place from route
-  $('.route-list_deleteable').on('click','.js-delete' ,function(){
-    console.log('123');
-    var $this = $(this),
-        $item = $(this).closest('.item'),
-        $list = $this.closest('.route-list'),
-        id = $item.data('id');
-
-    if ($('.popupwin_add-route .route-list .jspPane').length) {
-      var element = $('.popupwin_add-route .route-list .list').jScrollPane({});
-      var api = element.data('jsp');
-      api.destroy();
-    }
-    $this.closest('.item').remove();
-    $list.find('.item').each(function(){
-      $(this).find('.number').html($(this).index());
-    });
-    $('.popupwin_add-route .route-list .list').jScrollPane({
-      autoReinitialise: true
-    });
-    $('.route-grid').find('.box[data-id="'+id+'"]').removeClass('added');
   });
 
   //$drag and drop
@@ -751,6 +795,46 @@ $(document).ready(function(){
   //$peoples
   $('.peoples .js-more-people').click(function(){
     $(this).closest('.peoples').find('.peoples__item.hide').removeClass('hide');
-  })
+  });
+
+  //$fileUpload
+  var $fileInput = $('#file-input').damnUploader({
+    url: '/ajax-file-upload-handler'
+  });
+
+  // Drag & drop events handling
+  var $dropBox = $("#drop-box");
+  var $uploadForm = $("#upload-form");
+  var exitedToForm = false;
+  var highlighted = false;
+  var highlight = function(mode) {
+      mode ? $dropBox.addClass('highlighted') : $dropBox.removeClass('highlighted');
+  };
+  $dropBox.on({
+      dragenter: function() {
+          highlight(true);
+      },
+      dragover: function() {
+          highlighted || highlight(true);
+          return false; // To prevent default action
+      },
+      dragleave: function() {
+          setTimeout(function() {
+              exitedToForm || highlight(false);
+          }, 50);
+      },
+      drop: function() {
+          highlight(false);
+      }
+  });
+  $uploadForm.on({
+      dragenter: function() {
+          exitedToForm = true;
+          highlighted || highlight(true);
+      },
+      dragleave: function() {
+          exitedToForm = false;
+      }
+  });
 
 });
