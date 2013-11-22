@@ -16,6 +16,11 @@
     template: 'Ctrls'
     className: 'constrain'
 
+    initialize: ->
+      user = App.request 'get:my:profile'
+      console.log user
+      #@listenTo @user, 'change:authorized', @render
+
     format: (state) ->
       originalOption = state.element
       "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
