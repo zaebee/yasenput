@@ -112,8 +112,33 @@ $(document).ready(function(){
     $this.siblings('.profile-menu').slideToggle();
   });
 
-
   //$header__filter
+  $('.categories__link').click(function(){
+    var $this = $(this),
+        $list = $this.closest('.categories'),
+        $linkAll = $list.find('.categories__link_type_all'),
+        countLink = $list.find('.categories__link').not('.categories__link_type_all').length;
+
+    $this.toggleClass('active');
+    countActive = $list.find('.categories__link.active').not('.categories__link_type_all').length;
+
+    if ($this.hasClass('categories__link_type_all')) {
+      if ($this.hasClass('active')) {
+        $list.find('.categories__link').addClass('active');
+      } else {
+        $list.find('.categories__link').removeClass('active');
+      }
+    } else {
+      if (countActive == countLink){
+        $linkAll.addClass('active')
+      } else {
+        if ($linkAll.hasClass('active')){
+          $linkAll.removeClass('active');
+        }
+      }
+    }
+  });
+
   $('.filter-type .js-open').click(function(){
     var $this = $(this);
     $this.toggleClass('open');
@@ -141,50 +166,6 @@ $(document).ready(function(){
   filterTypeCheck();
   $('.filter-type__item_checkbox input[type="checkbox"]').change(function(){
     filterTypeCheck();
-  });
-
-  //$categories
-  $('.header__filter .categories__link, .event-step_what .categories__link, .route-step_place .categories__link').click(function(){
-    var $this = $(this),
-        $list = $this.closest('.categories'),
-        $linkAll = $list.find('.categories__link_type_all'),
-        countLink = $list.find('.categories__link').not('.categories__link_type_all').length;
-
-    $this.toggleClass('active');
-    countActive = $list.find('.categories__link.active').not('.categories__link_type_all').length;
-
-    if ($this.hasClass('categories__link_type_all')) {
-      if ($this.hasClass('active')) {
-        $list.find('.categories__link').addClass('active');
-      } else {
-        $list.find('.categories__link').removeClass('active');
-      }
-    } else {
-      if (countActive == countLink){
-        $linkAll.addClass('active')
-      } else {
-        if ($linkAll.hasClass('active')){
-          $linkAll.removeClass('active');
-        }
-      }
-    }
-  });
-
-  $('.categories_tag .categories__link').click(function(){
-    var $this = $(this),
-        type = $this.data('type'),
-        $categoriesContainer = $this.closest('.categories'),
-        $popupwinContainer = $this.closest('.popupwin__container');
-
-    $categoriesContainer.find('.categories__link').not($this).removeClass('active');
-    $this.toggleClass('active');
-
-    if ($this.hasClass('active')) {
-      $popupwinContainer.find('.field_tags').attr('class', 'field field_tags field_tags-'+type);
-    } else {
-      $popupwinContainer.find('.field_tags').attr('class', 'hide field field_tags field_tags-'+type);
-    }
-
   });
 
   //$grid layout mansory
@@ -243,28 +224,12 @@ $(document).ready(function(){
     applyFixed();
   });
 
-  $('.popupwin .popupwin__viewport').scroll(function(){
-    if ($(this).find('.popupwin__aside').length) {
-      //$('.popupwin__aside').css('top', $(this).scrollTop()+'px');
-      $('.popupwin__aside')
-        .css('-webkit-transform',  'translateY(' + $(this).scrollTop()+'px)')
-        .css('transform',  'translateY(' + $(this).scrollTop()+'px)');
-    }
-    if ($(this).find('.route-step__aside').length) {
-      //$('.route-step__aside').css('top', $(this).scrollTop()+'px');
-      $('.route-step__aside')
-        .css('-webkit-transform',  'translateY(' + $(this).scrollTop()+'px)')
-        .css('transform', 'translateY(' + $(this).scrollTop()+'px)');
-    }
-    if ($(this).find('.trip-step__aside').length) {
-      //$('.trip-step__aside').css('top', $(this).scrollTop()+'px');
-      $('.trip-step__aside')
-        .css('-webkit-transform',  'translateY(' + $(this).scrollTop()+'px)')
-        .css('transform', 'translateY(' + $(this).scrollTop()+'px)');
-    }
+  $('.popupwin_route .popupwin__viewport').scroll(function(){
+    $('.popupwin__aside').css('top', $(this).scrollTop()+'px');
   });
-  // $('.popupwin_add-route .popupwin__viewport').scroll(function(){
-  // });
+  $('.popupwin_add-route .popupwin__viewport').scroll(function(){
+    $('.route-step__aside').css('top', $(this).scrollTop()+'px');
+  });
 
   //$map
   var resizeClick = true;
@@ -286,13 +251,6 @@ $(document).ready(function(){
       myMap.container.fitToViewport();
       myMap2.container.fitToViewport();
       myMap3.container.fitToViewport();
-      myMap4.container.fitToViewport();
-      myMap5.container.fitToViewport();
-      myMap6.container.fitToViewport();
-      myMap7.container.fitToViewport();
-      myMap8.container.fitToViewport();
-      myMap9.container.fitToViewport();
-      myMap10.container.fitToViewport();
     }
   });
   $('.ui-resizable-handle').mousedown(function(){
@@ -311,16 +269,9 @@ $(document).ready(function(){
         $map.find('.map__close').show();
       }
 
-    myMap.container.fitToViewport();
-    myMap2.container.fitToViewport();
-    myMap3.container.fitToViewport();
-    myMap4.container.fitToViewport();
-    myMap5.container.fitToViewport();
-    myMap6.container.fitToViewport();
-    myMap7.container.fitToViewport();
-    myMap8.container.fitToViewport();
-    myMap9.container.fitToViewport();
-    myMap10.container.fitToViewport();;
+      myMap.container.fitToViewport();
+      myMap2.container.fitToViewport();
+      myMap3.container.fitToViewport();
     }
   });
 
@@ -331,13 +282,6 @@ $(document).ready(function(){
     myMap.container.fitToViewport();
     myMap2.container.fitToViewport();
     myMap3.container.fitToViewport();
-    myMap4.container.fitToViewport();
-    myMap5.container.fitToViewport();
-    myMap6.container.fitToViewport();
-    myMap7.container.fitToViewport();
-    myMap8.container.fitToViewport();
-    myMap9.container.fitToViewport();
-    myMap10.container.fitToViewport();
     $this.hide();
   });
 
@@ -357,20 +301,6 @@ $(document).ready(function(){
     if ($list.find('.title').length) {
       itemTop = itemTop + $list.find('.title').outerHeight();
     }
-    if ($list.find('.jspPane').length) {
-      scrollTop = parseInt($list.find('.jspPane').css('top').split('px')[0]);
-      itemTop = itemTop + scrollTop;
-    }
-    $list.find('.delete-item').css('top', itemTop + 'px');
-  });
-
-  $('.trip-list.trip-list_deleteable').on('mouseenter','.item',function(){
-    var $this = $(this),
-        $list = $this.closest('.trip-list'),
-        itemTop = $this.position().top+4,
-        scrollTop = 0;
-
-    routeItemNumber = $this.index();
     if ($list.find('.jspPane').length) {
       scrollTop = parseInt($list.find('.jspPane').css('top').split('px')[0]);
       itemTop = itemTop + scrollTop;
@@ -400,26 +330,7 @@ $(document).ready(function(){
     if ($list.closest('.popupwin_add-route').length){
       $('.route-grid').find('.box[data-id="'+id+'"]').removeClass('added');
     }
-  });
 
-  $('.trip-list.trip-list_deleteable .js-delete').click(function(){
-    var $this = $(this),
-        $list = $this.closest('.trip-list'),
-        $removeElement = $list. find('.item').eq(routeItemNumber),
-        id = $removeElement.data('id');
-
-    // if ($list.find('.jspPane').length) {
-    //   var element = $list.find('.list').jScrollPane({});
-    //   var api = element.data('jsp');
-    //   api.destroy();
-    // }
-    $removeElement.remove();
-    $list.find('.item').each(function(){
-      $(this).find('.number').html($(this).index());
-    });
-    // $list.find('.list').jScrollPane({
-    //   autoReinitialise: true
-    // });
   });
 
   //$add to route from boxes
@@ -555,61 +466,6 @@ $(document).ready(function(){
     }
   });
 
-  $('.js-add-to-trip-popupwin').click(function(){
-    var $this = $(this),
-      $box = $this.closest('.box'),
-      $list = $('.trip-add-place .route-list');
-
-    $box.addClass('added');
-    addPlaceToList($box, $list, $('.trip-add-place'));
-  });
-
-  $('.js-delete-from-route').click(function(){
-    var $box = $(this).closest('.box'),
-        id = $box.data('id'),
-        $list = $('.popupwin_add-route .route-list');
-
-    $box.removeClass('added');
-    if ($list.find('.jspPane').length) {
-      var element = $list.find('.list').jScrollPane({});
-      var api = element.data('jsp');
-      api.destroy();
-    }
-    $list.find('.item[data-id="'+id+'"]').remove();
-    $list.find('.list').jScrollPane({
-      autoReinitialise: true
-    });
-    $list.find('.item').each(function(){
-      $(this).find('.number').html($(this).index());
-    });
-    if ($list.find('.item').length <= 1) {
-      $list.css('display', 'none');
-    }
-  });
-
-  $('.js-delete-from-trip').click(function(){
-    var $box = $(this).closest('.box'),
-      id = $box.data('id'),
-      $list = $('.trip-add-place .route-list');
-
-    $box.removeClass('added');
-    if ($list.find('.jspPane').length) {
-      var element = $list.find('.list').jScrollPane({});
-      var api = element.data('jsp');
-      api.destroy();
-    }
-    $list.find('.item[data-id="'+id+'"]').remove();
-    $list.find('.list').jScrollPane({
-      autoReinitialise: true
-    });
-    $list.find('.item').each(function(){
-      $(this).find('.number').html($(this).index());
-    });
-    if ($list.find('.item').length <= 1) {
-      $list.css('display', 'none');
-    }
-  });
-
   //$ymaps
   ymaps.ready(init);
     var myMap,
@@ -619,9 +475,6 @@ $(document).ready(function(){
         myMap5,
         myMap6,
         myMap7,
-        myMap8,
-        myMap9,
-        myMap10,
         myPlacemark,
         myPlacemark2,
         myPlacemark3,
@@ -690,39 +543,6 @@ $(document).ready(function(){
         });
         myMap7.behaviors.enable('scrollZoom');
       }
-
-      if ($('#map8').length) {
-        myMap8 = new ymaps.Map ("map8", {
-            center: [59.228939, 39.897748],
-            zoom: 10
-        });
-        myMap8.behaviors.enable('scrollZoom');
-      }
-
-      if ($('#map9').length) {
-        myMap9 = new ymaps.Map ("map9", {
-            center: [59.228939, 39.897748],
-            zoom: 10
-        });
-        myMap9.behaviors.enable('scrollZoom');
-      }
-
-      if ($('#map10').length) {
-        myMap10 = new ymaps.Map ("map10", {
-            center: [59.228939, 39.897748],
-            zoom: 10
-        });
-        myMap10.behaviors.enable('scrollZoom');
-      }
-
-      if ($('#map11').length) {
-        myMap11 = new ymaps.Map ("map11", {
-            center: [59.228939, 39.897748],
-            zoom: 10
-        });
-        myMap11.behaviors.enable('scrollZoom');
-      }
-
 
 
       myPlacemark = new ymaps.Placemark([59.228939, 39.897748], {}, {
@@ -845,46 +665,16 @@ $(document).ready(function(){
 
   //$popupwin
   function popupwinInit(object){
-    //var z = 1000 + 100*($('.popupwin.active').length);
-    var maxZ = 1000;
-
-    $('.popupwin.active').each(function(){
-      if (parseInt($(this).css('z-index')) > maxZ ){
-        maxZ = parseInt($(this).css('z-index'));
-      }
-    });
-    $('.overlay').fadeIn()
-          .css('z-index', maxZ+50);
-
-    object.fadeIn()
-          .addClass('active')
-          .css('z-index', maxZ+100);
+    $('.popupwin').hide();
+    $('.overlay').fadeIn();
+    object.fadeIn();
     $('body').css('overflow-y', 'hidden');
   };
 
-  function popupwinDestroy(object){
-    var $popupwin = object.closest('.popupwin'),
-        maxZ = 0;
-
-    $popupwin
-      .fadeOut()
-      .removeClass('active')
-      .css('z-index', '0');
-    $popupwin.find('.jspPane').each(function(){
-      var element = $popupwin.find('.jspPane').closest('.list').jScrollPane({});
-      var api = element.data('jsp');
-      api.destroy();
-    });
-    $('.popupwin.active').each(function(){
-      if (parseInt($(this).css('z-index')) > maxZ ){
-        maxZ = parseInt($(this).css('z-index'));
-      }
-    });
-    $('.overlay').css('z-index', maxZ);
-    if ($('.page').find('.popupwin.active').length < 1) {
-      $('.overlay').fadeOut();
-      $('body').css('overflow-y', 'auto');
-    }
+  function popupwinDestroy(){
+    $('.overlay').fadeOut();
+    $('.popupwin').fadeOut();
+    $('body').css('overflow-y', 'auto');
   }
 
   function bxPagerInit(){
@@ -954,89 +744,26 @@ $(document).ready(function(){
     });
   });
 
-  $('.js-popupwin-trip').click(function(){
-    popupwinInit($('.popupwin_trip'));
-
-    $('.popupwin_trip .trip-list .list').jScrollPane({
-      autoReinitialise: true
-    });
-
-    $('.popupwin_trip .route-list .list').jScrollPane({
-      autoReinitialise: true
-    });
-
-    sliderTrip1 = $('.bxslider-trip-1').bxSlider({
-      pagerCustom: '#bx-pager-trip-1',
-      onSliderLoad: function(){
-        $('#bx-pager-trip-1 .bx-pager__viewport').scrollLeft(-100);
-      },
-      onSlideNext: function($slideElement, oldIndex, newIndex){
-        var coordX = $('#bx-pager-trip-1 .bx-pager__scrollbox .active').position().left + $('#bx-pager-trip-1 .bx-pager__item').outerWidth(true);
-        $('#bx-pager-trip-1 .bx-pager__viewport').scrollLeft( coordX );
-        if ($('#bx-pager-trip-1 .bx-pager__item:first-child').index() == newIndex) {
-          $('#bx-pager-trip-1 .bx-pager__viewport').scrollLeft(0);
-        }
-      },
-      onSlidePrev: function($slideElement, oldIndex, newIndex){
-        var coordX = $('#bx-pager-trip-1 .bx-pager__scrollbox .active').position().left - $('#bx-pager-trip-1 .bx-pager__item').outerWidth(true);
-        $('#bx-pager-trip-1 .bx-pager__viewport').scrollLeft( coordX );
-        if ($('#bx-pager-trip-1 .bx-pager__item:last-child').index() == newIndex) {
-          $('#bx-pager-trip-1 .bx-pager__viewport').scrollLeft( $('#bx-pager-trip-1 .bx-pager__viewport').width() );
-        }
-      }
-    });
-
-    sliderTrip2 = $('.bxslider-trip-2').bxSlider({
-      pagerCustom: '#bx-pager-trip-2',
-      onSliderLoad: function(){
-        $('#bx-pager-trip-2 .bx-pager__viewport').scrollLeft(-100);
-      },
-      onSlideNext: function($slideElement, oldIndex, newIndex){
-        var coordX = $('#bx-pager-trip-2 .bx-pager__scrollbox .active').position().left + $('#bx-pager-trip-2 .bx-pager__item').outerWidth(true);
-        $('#bx-pager-trip-2 .bx-pager__viewport').scrollLeft( coordX );
-        if ($('#bx-pager-trip-2 .bx-pager__item:first-child').index() == newIndex) {
-          $('#bx-pager-trip-2 .bx-pager__viewport').scrollLeft(0);
-        }
-      },
-      onSlidePrev: function($slideElement, oldIndex, newIndex){
-        var coordX = $('#bx-pager-trip-2 .bx-pager__scrollbox .active').position().left - $('#bx-pager-trip-2 .bx-pager__item').outerWidth(true);
-        $('#bx-pager-trip-2 .bx-pager__viewport').scrollLeft( coordX );
-        if ($('#bx-pager-trip-2 .bx-pager__item:last-child').index() == newIndex) {
-          $('#bx-pager-trip-2 .bx-pager__viewport').scrollLeft( $('#bx-pager-trip-2 .bx-pager__viewport').width() );
-        }
-      }
-    });
-  });
-
   $('.js-popup-add').click(function(){
     popupwinInit($('.popupwin_add'));
   });
 
   $('.js-popup-add-route').click(function(){
     popupwinInit($('.popupwin_add-route'));
-    popupwinDestroy($(this));
     $('.route-step').css('display','none');
     $('.route-step_name').css('display','block');
   });
 
   $('.js-popup-add-place').click(function(){
     popupwinInit($('.popupwin_add-place'));
-    popupwinDestroy($(this));
     $('.place-step_what').css('display','none');
     $('.place-step_name').css('display','block');
   });
 
   $('.js-popup-add-event').click(function(){
     popupwinInit($('.popupwin_add-event'));
-    popupwinDestroy($(this));
     $('.event-step_what').css('display','none');
     $('.event-step_name').css('display','block');
-  });
-
-  $('.js-popup-add-trip').click(function(){
-    popupwinInit($('.popupwin_add-trip'));
-    popupwinDestroy($(this));
-    dragAndDropSetup($('.trip-step'));
   });
 
   $('.js-popup-add-photos').click(function(){
@@ -1045,12 +772,12 @@ $(document).ready(function(){
 
   $('.popupwin__scrollbox').click(function(e){
     if ($(e.target).hasClass('popupwin__scrollbox') == true) {
-      popupwinDestroy($(this));
+      popupwinDestroy();
     }
   });
 
   $('.popupwin__close').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
 
   //$add place
@@ -1063,12 +790,12 @@ $(document).ready(function(){
     $('.place-step_name').show();
   });
   $('.place-step_what .js-finish').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
 
   //$add photos
   $('.popupwin_add-photos .js-finish').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
 
   //$add event
@@ -1081,56 +808,21 @@ $(document).ready(function(){
     $('.event-step_name').show();
   });
   $('.event-step_what .js-finish').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
-
 
   //$add trip
   $('.popupwin_add-trip .js-finish').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
   $('.popupwin_add-trip .js-add-block').click(function(){
     var $this = $(this),
-        $addTripWrap = $this.closest('.popupwin_add-trip'),
-        $tripWrap = $addTripWrap.find('.trip-step'),
-        $tripBlocks = $addTripWrap.find('.trip-step__blocks'),
+        $addTripWrap = $this.closest('.popupwin_add-trip')
         $newBlock = $addTripWrap.find('.popupwin__content_empty').clone().removeClass('popupwin__content_empty');
 
-    if ($tripWrap.hasClass('trip-step_wide') == false){
-      $tripWrap.addClass('trip-step_wide');
-    }
-    numberEditor = parseInt($newBlock.find('.tinyeditor').attr('id').split('-')[1]);
-    numberEditor++;
-    $newBlock.find('.tinyeditor').attr('id','tinyeditor-' +numberEditor);
     $newBlock.appendTo('.trip-step__blocks');
-    initEditor('tinyeditor-'+numberEditor);
 
-    $newBlock.find('.dropzone').attr('id', 'trip-dropzone-' + numberEditor);
-    $newBlock.find('.dropzone').dropzone({
-      dictDefaultMessage: "Перетащите сюда фотографии",
-      addRemoveLinks: true
-    });
-    $addTripWrap.find('.popupwin__content_empty .tinyeditor').attr('id','tinyeditor-'+numberEditor);
-  });
-  $('.popupwin_add-trip').on('click', '.js-add-place', function(){
-    popupwinInit($('.popupwin_add-place-to-trip'));
-    $('#trip-grid').masonry({
-      itemSelector: '.box'
-    });
-  });
-  $('.popupwin_trip .trip-list .item').click(function(){
-    var $this = $(this),
-        numberStep = $this.data('step'),
-        $blockTrip = $this.closest('.popupwin_trip').find('.trip-view[data-step="'+numberStep+'"]'),
-        scrollY = $blockTrip.position().top;
-
-    $this.closest('.popupwin__viewport').animate({
-      scrollTop: scrollY
-    });
-  });
-
-  $('.trip-add-place .js-finish-adding').click(function(){
-    popupwinDestroy($(this));
+    initEditor('tinyeditor-1');
   });
 
   //$route
@@ -1154,7 +846,7 @@ $(document).ready(function(){
     }
   });
   $('.route-step_place .js-finish').click(function(){
-    popupwinDestroy($(this));
+    popupwinDestroy();
   });
 
   function initStepPlace(){
@@ -1178,17 +870,8 @@ $(document).ready(function(){
   }
 
   //$bxslider
-  $('.bxslider-place .img').click(function(){
+  $('.bxslider .img').click(function(){
     sliderPlace.goToNextSlide();
-  });
-  $('.bxslider-event .img').click(function(){
-    sliderEvent.goToNextSlide();
-  });
-  $('.bxslider-trip-1 .img').click(function(){
-    sliderTrip1.goToNextSlide();
-  });
-  $('.bxslider-trip-2 .img').click(function(){
-    sliderTrip2.goToNextSlide();
   });
 
   //$drag and drop
@@ -1218,7 +901,11 @@ $(document).ready(function(){
         },
         didDrop: function($src, $dst) {
           $dst.find('.item').each(function(){
-            $(this).find('.number').html($(this).index());
+            if ($(this).closest('.map_main').length) {
+              $(this).find('.number').html($(this).index()+1);
+            } else {
+              $(this).find('.number').html($(this).index());
+            }
           });
         }
     });
@@ -1234,7 +921,7 @@ $(document).ready(function(){
 
   $(function() {
 
-    var placeDropzone = new Dropzone("#place-dropzone", {
+    var myDropzone = new Dropzone("#dropzone", {
       dictDefaultMessage: "Перетащите сюда фотографии",
       addRemoveLinks: true
     });
@@ -1245,11 +932,6 @@ $(document).ready(function(){
     });
 
     var tripDropzone = new Dropzone("#trip-dropzone", {
-      dictDefaultMessage: "Перетащите сюда фотографии",
-      addRemoveLinks: true
-    });
-
-    var photosDropzone = new Dropzone("#photos-dropzone", {
       dictDefaultMessage: "Перетащите сюда фотографии",
       addRemoveLinks: true
     });

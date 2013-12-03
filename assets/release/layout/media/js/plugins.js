@@ -1,5 +1,5 @@
 document.write("<sc"+"ript src='media/js/plugins/jquery.fancybox.js'></sc"+"ript>");
-document.write("<sc"+"ript src='media/js/plugins/select2.min.js'></sc"+"ript>");
+document.write("<sc"+"ript src='media/js/plugins/select2.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/masonry.pkgd.min.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/tooltip.min.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/jquery.bxslider.min.js'></sc"+"ript>");
@@ -8,4 +8,5 @@ document.write("<sc"+"ript src='media/js/plugins/jquery.drag-drop.plugin.min.js'
 document.write("<sc"+"ript src='media/js/plugins/jquery.mousewheel.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/mwheelIntent.js'></sc"+"ript>");
 document.write("<sc"+"ript src='media/js/plugins/jquery.jscrollpane.min.js'></sc"+"ript>");
-document.write("<sc"+"ript src='media/js/plugins/jquery.damnUploader.min.js'></sc"+"ript>");
+document.write("<sc"+"ript src='media/js/plugins/dropzone.min.js'></sc"+"ript>");
+document.write("<sc"+"ript src='media/js/plugins/tiny.editor.packed.js'></sc"+"ript>");
