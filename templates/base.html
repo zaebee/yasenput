@@ -1,77 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js ie7 lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js ie8 lt-ie9"> <![endif]-->
+<!--[if IE 9]><html class="no-js ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"> <!--<![endif]-->
   <head>
-    <link rel="shortcut icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
-    <link rel="icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    {% block seo %}{% endblock %}
-    <meta name="fragment" content="!">
+    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <meta name="description" content="{% block description %}{% endblock %}">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
     <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+    <!--[if lt IE 7]>
+      <script type="text/javascript" src="media/js/libs/ie6no.ru.js"></script>
+    <![endif]-->
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="media/css/ie/ie.css">
+    <![endif]-->
+
   </head>
 
   <body class="front">
     <div id="fb-root"></div>
     {% csrf_token %}
 
-    <div id="wrap">
-      {% block wrap %}{% endblock %}
-    </div>
-
-    {% block aside %}
-      <aside id="panel-add-path"></aside>
-    {% endblock %}
-
-    <div id="overlay"></div>
-    <span class="spinner"></span>
+    {% block wrap %}{% endblock %}
 
     {% block popups %}{% endblock %}
 
-    {% if user.is_authenticated %}
-      <script>
-        var USER = {
-          authorized: true,
-          id: {{user.id}},
-          first_name: '{{ user.first_name }}',
-          last_name: '{{ user.last_name }}',
-          avatar: '{{ user.person.avatar }}',
-          last_state: 'pins',
-          count_liked_objects: {{ count_liked_objects|default:0 }},
-          count_commented_objects: {{ count_commented_objects|default:0 }},
-          collections: [ {% for collection in collections %}
-            {
-              id: {{ collection.id }},
-              name: '{{ collection.name }}'
-            },
-          {% endfor %} ]
-        };
-      </script>
-    {% else %}
-      <script>
-        var USER = {authorized: false};
-      </script>
-    {% endif %}
 
     <!--
-    <script src="{{ STATIC_URL }}lib/modernizr.min.js"></script>
-    <script src="{{ STATIC_URL }}lib/jquery-1.10.1.min.js"></script>
-    -->
     <script src="http://yandex.st/modernizr/2.6.2/modernizr.min.js"></script>
     <script src="http://yandex.st/jquery/1.10.1/jquery.min.js"></script>
+    -->
+    <script src="{{ STATIC_URL }}lib/modernizr-2.6.2.min.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-1.10.2.min.js"></script>
+
     {% if ASSETS_DEBUG %}
-      <script src="{{ STATIC_URL }}lib/json2.js"></script>
-      <script src="{{ STATIC_URL }}lib/moment.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/moment.ru.js"></script>
-      <script src="{{ STATIC_URL }}lib/masonry.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery.form.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery.rating-2.0.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/jquery-sortable-min.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-tooltip.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-tab.js"></script>
-      <script src="{{ STATIC_URL }}lib/bootstrap-popover.js"></script>
-      <script src="{{ STATIC_URL }}lib/handlebars.js"></script>
-      <script src="{{ STATIC_URL }}lib/lodash.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/backbone-min.js"></script>
-      <script src="{{ STATIC_URL }}lib/backbone.marionette.min.js"></script>
-      <script src="{{ STATIC_URL }}lib/infiniScroll.js"></script>
+      <script src="{{ STATIC_URL }}js/libs.js"></script>
+      <script src="{{ STATIC_URL }}js/plugins.js"></script>
 
       {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
@@ -79,9 +52,35 @@
       {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
 
-      {% include 'includes/metrika.html' %}
+      {# include 'includes/metrika.html' #}
     {% endif %}
 
+    <script>
+      $(function() {
+        {% if user.is_authenticated %}
+          Yapp.USER = {
+            authorized: true,
+            id: {{user.id}},
+            first_name: '{{ user.first_name }}',
+            last_name: '{{ user.last_name }}',
+            avatar: '{{ user.person.avatar }}',
+            count_liked_objects: {{ count_liked_objects|default:0 }},
+            count_commented_objects: {{ count_commented_objects|default:0 }},
+            collections: [ {% for collection in collections %}
+              {
+                id: {{ collection.id }},
+                name: '{{ collection.name }}'
+              },
+            {% endfor %} ]
+          };
+        {% else %}
+          Yapp.USER = {authorized: false};
+        {% endif %}
+        Yapp.start();
+      });
+    </script>
+    <!--
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&ns=Yapp.ymaps"></script>
     {# external #}
     <script type="text/javascript" src="//vk.com/js/api/openapi.js"></script>
 
@@ -100,7 +99,6 @@
       VK.Widgets.Like("vk_like", {type: "mini"}, 1000);
 
     </script>
-    <!--
     -->
 
   </body>
