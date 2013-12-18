@@ -95,7 +95,8 @@ module.exports = function(grunt) {
             'src/lib/backbone.min.js',
             'src/lib/backbone.marionette.min.js',
             'src/lib/infiniScroll.js',
-			'src/lib/spin.min.js'
+			'src/lib/spin.min.js',
+			'src/lib/ie6no.js'
           ],
           'debug/js/plugins.js': [
             'src/plugins/*.js',
@@ -151,7 +152,7 @@ module.exports = function(grunt) {
     cssmin: {
       compress: {
         files: {
-          'release/css/styles.css': ['src/css/bootstrap.css', 'src/css/main.css', 'src/css/jquery-ui-1.10.0.custom.css']
+          'release/css/styles.css': ['src/css/bootstrap.css', 'src/css/main.css', 'src/css/jquery-ui-1.10.0.custom.css', 'src/css/base/base.css', 'src/css/select2.css', 'src/css/fancybox/jquery.fancybox.css']
         }
       }
     },
