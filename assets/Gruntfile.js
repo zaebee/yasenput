@@ -95,6 +95,7 @@ module.exports = function(grunt) {
             'src/lib/backbone.min.js',
             'src/lib/backbone.marionette.min.js',
             'src/lib/infiniScroll.js',
+			'src/lib/spin.min.js'
           ],
           'debug/js/plugins.js': [
             'src/plugins/*.js',
