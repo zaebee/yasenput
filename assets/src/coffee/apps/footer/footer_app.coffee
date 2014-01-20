@@ -1,3 +1,9 @@
+###*
+# FooterApp module.
+# @submodule Yapp
+# @FooterApp
+###
+
 @Yapp.module 'FooterApp', (FooterApp, App, Backbone, Marionette, $, _) ->
 
   API =

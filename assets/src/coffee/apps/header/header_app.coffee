@@ -1,6 +1,6 @@
 ###*
 # HeaderApp module.
-# @bmodule Yapp
+# @submodule Yapp
 # @HeaderApp
 ###
 

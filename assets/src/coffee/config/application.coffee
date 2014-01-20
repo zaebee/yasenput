@@ -1,5 +1,9 @@
 do (Backbone, $) ->
 
+  $.ajaxSetup
+    headers:
+      'X-CSRFToken': $.cookie('csrftoken')
+
   Backbone.emulateJSON = true
 
   _.extend Backbone.Marionette.Application::,
