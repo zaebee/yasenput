@@ -8,6 +8,7 @@
 
     <section class="container">
       <div id="board-region" class="constrain"></div>
+      <div class="loader hide"></div>
     </section>
 
     <footer id="footer-region" class="footer">
@@ -16,5 +17,6 @@
 {% endblock %}
 
 {% block popups %}
+    <div class="overlay"></div>
     {% include 'includes/popups.html' %}
 {% endblock %}

@@ -22,6 +22,5 @@ do (Backbone) ->
   else
     console = window.console
 
-  if !window.DEBUG or typeof console.log is 'undefined'
-    return
+  if window.DEBUG is false or typeof console.log is 'undefined'
     console.log =  console.debug = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = () ->
