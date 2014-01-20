@@ -31,7 +31,7 @@
 
     pointLikeResponse: (data) ->
       if data.status is 1
-        ##TODO write handler
+        ##TODO write error handler
         console.error data
 
 

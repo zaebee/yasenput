@@ -1,6 +1,6 @@
 ###*
 # BoardApp module.
-# @bmodule Yapp
+# @submodule Yapp
 # @BoardApp
 ###
 
