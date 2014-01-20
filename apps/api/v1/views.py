@@ -88,7 +88,7 @@ class PointsBaseView(View):
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon','avatar']},
-                                           'tags': {'fields': ['id', 'level', 'icons', 'style', 'parent']},
+                                           'tags': {'fields': ['id', 'name', 'level', 'icons', 'style', 'parent']},
 
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
@@ -662,7 +662,9 @@ class PointAdd(PointsBaseView):
         'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         self.log.info('Serialize imgs for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
 
-        author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
+        author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                  'extras': ['icon','avatar']},
+        })
         self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
         tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
@@ -946,7 +948,8 @@ class GetTags(View):
     http_method_names = ('get')
 
     def get(self, request):
-        tags_l = TagsModels.Tags.objects.all()
+        #tags_l = TagsModels.Tags.objects.all()
+        tags_l = TagsModels.Tags.objects.filter(level=0)
         YpJson = YpSerialiser()
         tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)

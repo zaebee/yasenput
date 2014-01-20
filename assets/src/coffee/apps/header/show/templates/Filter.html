@@ -1,0 +1,38 @@
+<ul class="categories">
+  {{#each items}}
+  <li class="categories__item">
+    <a href="#" class="categories__link sprite-filter-photo {{style}}" data-id="{{id}}" data-toggle="tooltip" data-placement="bottom" title="{{name}}"></a>
+  </li>
+  {{/each}}
+  <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
+  <!--
+  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo" data-toggle="tooltip" title="Фото"></a></li>
+  -->
+</ul>
+<div class="filter-sort">
+  <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
+  <a href="#?" class="sprite-filter-up" data-toggle="tooltip" data-placement="bottom" title="Популярное"></a>
+</div>
+<div class="filter-type">
+  <a href="#?" class="btn btn_color_grey js-open">Выберите тип</a>
+  <ul class="filter-type__list">
+    <li class="filter-type__item">
+      <a data-models="sets" href="#?" class="filter-type__link c-blue">Путешествия</a>
+    </li>
+    <li class="filter-type__item">
+      <a data-models="points" href="#?" class="filter-type__link c-green">Места</a>
+    </li>
+    <li class="filter-type__item">
+      <a data-models="routes" href="#?" class="filter-type__link c-brown">Маршруты</a>
+    </li>
+    <li class="filter-type__item">
+      <a data-models="events" href="#?" class="filter-type__link c-yellow">События</a>
+    </li>
+    <li class="filter-type__item filter-type__item_checkbox">
+      <label class="checkbox-label">
+        <input type="checkbox">
+        <span class="checkbox-bg"></span>
+      </label>
+    </li>
+  </ul>
+</div>

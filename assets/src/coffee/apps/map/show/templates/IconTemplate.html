@@ -1,0 +1,7 @@
+{{#each items}}
+  {{#ifEquals level 0}}
+  <a href="#" data-toggle="tooltip" title="{{name}}" data-placement="top" data-type-ico="{{name}}">
+    <span class="m-ico {{#if style}}{{style}}{{else}}m-dostoprimechatelnost{{/if}}" data-id="{{id}}"></span>
+  </a>
+  {{/ifEquals}}
+{{/each}}
