@@ -7,7 +7,7 @@
 do (Backbone) ->
   _.extend Backbone.Marionette.Application::,
 
-    API_BASE_URL: '/api/v1'
+    #API_BASE_URL: '/api/v1'
     API_BASE_URL: ''
 
     if window.DEBUG isnt undefined
