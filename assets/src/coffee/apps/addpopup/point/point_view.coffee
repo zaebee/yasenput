@@ -20,6 +20,12 @@
     events:
       'click .js-next': 'nextStep'
 
+    onShow: ->
+      @$('#place-dropzone').dropzone
+        paramName:'img'
+        headers:
+          'X-CSRFToken': $.cookie('csrftoken')
+
     nextStep: (event) ->
       event.preventDefault()
       @trigger 'show:step:what'
