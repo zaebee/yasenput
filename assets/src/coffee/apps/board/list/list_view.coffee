@@ -19,6 +19,7 @@
     events:
       'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
       'click .sprite-like': -> App.request 'like:point', @model
+      'click .sprite-place': 'mark'
 
     modelEvents:
       'change:likes_count': 'render'
@@ -34,6 +35,9 @@
         ##TODO write error handler
         console.error data
 
+    mark: ->
+      console.log this.model.attributes
+      console.log window
 
   class List.Yapens extends App.Views.CollectionView
     itemView: List.Yapen

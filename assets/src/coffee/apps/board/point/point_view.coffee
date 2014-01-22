@@ -41,6 +41,7 @@
       $(e.currentTarget).toggleClass 'active'
 
 
+
   class Point.Photo extends App.Views.ItemView
     template: 'PointPhoto'
 
