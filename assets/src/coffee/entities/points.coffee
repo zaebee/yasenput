@@ -12,6 +12,24 @@
     urlRoot:
       App.API_BASE_URL + "/api/v1/points/"
 
+    defaults:
+      priority: 0
+      longitude: 0.0
+      latitude: 0.0
+      ypi: 0
+      imgs: []
+      tags: []
+
+    validate: (attrs, options) ->
+      invalid = []
+      if attrs.name is ''
+        invalid.push 'name'
+      if attrs.address is ''
+        invalid.push 'address'
+
+      if invalid.length
+        invalid
+
   API =
     getDetail: (point, params = {}) ->
       point.id = point.get 'id'

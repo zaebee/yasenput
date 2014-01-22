@@ -15,6 +15,11 @@
       new AddPopupApp.Point.Controller
         content: 'ypi'
 
+  App.vent.on 'show:add:place:popup', ->
+    App.addPopupRegion.close()
+    new AddPopupApp.Point.Controller
+      content: 'ypi'
+
   App.addInitializer ->
     new AddPopupApp.Router
       controller: API

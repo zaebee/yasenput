@@ -16,6 +16,9 @@ do (Backbone, Marionette) ->
       options = @getDefaultOptions _.result(view, 'modal')
       @$el.modal options
 
+    onClose: (view) ->
+      @$el.modal 'hide'
+
     getDefaultOptions: (options = {}) ->
       _.defaults options,
         modalClass: options.className
