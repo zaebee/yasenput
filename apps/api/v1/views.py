@@ -948,7 +948,8 @@ class GetTags(View):
     http_method_names = ('get')
 
     def get(self, request):
-        tags_l = TagsModels.Tags.objects.all()
+        #tags_l = TagsModels.Tags.objects.all()
+        tags_l = TagsModels.Tags.objects.filter(level=0)
         YpJson = YpSerialiser()
         tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)

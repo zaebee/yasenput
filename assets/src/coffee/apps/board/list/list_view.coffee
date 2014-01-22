@@ -3,7 +3,7 @@
 
   class List.Yapen extends App.Views.ItemView
     initialize: ->
-      return
+      @listenTo @model, 'point:like:response', @pointLikeResponse
 
     getTemplate: ->
       if @model.get('type_of_item') is 'point'
@@ -17,11 +17,22 @@
 
     className: 'box'
     events:
-      'click .a-photo': -> @trigger 'show:detail:popup', @model
-      'click .a-like-point': -> App.request 'like:point', @model
+      'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
+      'click .sprite-like': -> App.request 'like:point', @model
 
     modelEvents:
-      'change': 'render'
+      'change:likes_count': 'render'
+      'change:reviews': 'render'
+
+    onRender: ->
+      console.log 'onRender model'
+      @tips = @$('.box__img .icon').tooltip
+        placement: 'bottom'
+
+    pointLikeResponse: (data) ->
+      if data.status is 1
+        ##TODO write error handler
+        console.error data
 
 
   class List.Yapens extends App.Views.CollectionView
@@ -35,24 +46,22 @@
         scrollOffset: 350
         includePage: true
         extraParams: App.settings
+        onFetch: -> $('.loader').removeClass 'hide'
+        success: -> $('.loader').addClass 'hide'
 
     onAfterItemAdded: (itemView) ->
       if @wall
         itemView.$el.imagesLoaded =>
           @wall.appended itemView.$el
-          itemView.$('.box__img .icon').tooltip
-            placement: 'bottom'
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>
         console.log 'collection fetched', @collection
         @$el.imagesLoaded =>
-          $('.box__img .icon').tooltip
-            placement: 'bottom'
           @wall = new Masonry @el,
             itemSelector: '.box'
 
     onClose: ->
       @infiniScroll.destroy()
-      @wall.destroy()
+      @wall.destroy() if @wall
       @remove()

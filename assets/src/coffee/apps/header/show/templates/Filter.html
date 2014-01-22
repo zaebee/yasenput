@@ -1,19 +1,17 @@
 <ul class="categories">
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-gun"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-fish"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-ski"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-music"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-food"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-drink"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-tag"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-theatre"></a></li>
-  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-place"></a></li>
+  {{#each items}}
+  <li class="categories__item">
+    <a href="#" class="categories__link sprite-filter-photo {{style}}" data-id="{{id}}" data-toggle="tooltip" data-placement="bottom" title="{{name}}"></a>
+  </li>
+  {{/each}}
   <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
+  <!--
+  <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo" data-toggle="tooltip" title="Фото"></a></li>
+  -->
 </ul>
 <div class="filter-sort">
-  <a href="#?" class="sprite-filter-down"></a>
-  <a href="#?" class="sprite-filter-up"></a>
+  <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
+  <a href="#?" class="sprite-filter-up" data-toggle="tooltip" data-placement="bottom" title="Популярное"></a>
 </div>
 <div class="filter-type">
   <a href="#?" class="btn btn_color_grey js-open">Выберите тип</a>
@@ -31,10 +29,6 @@
       <a data-models="events" href="#?" class="filter-type__link c-yellow">События</a>
     </li>
     <li class="filter-type__item filter-type__item_checkbox">
-      <label class="checkbox-label">
-        <input type="checkbox">
-        <span class="checkbox-bg"></span>
-      </label>
       <label class="checkbox-label">
         <input type="checkbox">
         <span class="checkbox-bg"></span>

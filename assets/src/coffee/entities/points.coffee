@@ -26,7 +26,7 @@
       App.apiRequest
         url: App.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'
-        #successCallback: successCallback
+        successCallback: (data) -> point.trigger 'point:like:response', data
         data:
           id: id
       
@@ -36,5 +36,5 @@
   App.reqres.setHandler 'like:point', (point) ->
     response = API.like point
     response.done (data) ->
-      point.set data[0]
+      point.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
     point

@@ -1,0 +1,163 @@
+<div class="popupwin__title clearfix">
+  <div class="steps">
+    <ul class="steps__list steps__list_place">
+      <li class="steps__item active">1</li>
+      <li class="steps__item active">2</li>
+      <li class="steps__item active">3</li>
+    </ul>
+  </div>
+</div>
+<div class="popupwin__container clearfix">
+  <section class="toggle-list">
+    <div class="toggle-list__item">
+      <div class="toggle-list__title">Дополнительные контактные данные</div>
+      <div class="toggle-list__body">
+      <div class="form">
+        <div class="field clearfix">
+          <div class="item item_add-cont">
+            <label>Телефон:</label>
+            <input type="text">
+          </div>
+          <div class="item item_add-cont">
+            <label>Группа vkontakte:</label>
+            <input type="text" placeholder="vk.com/groupname">
+          </div>
+        </div>
+        <div class="field clearfix">
+          <div class="item item_add-cont">
+            <label>Веб-сайт:</label>
+            <input type="text">
+          </div>
+          <div class="item item_add-cont">
+            <label>Twitter:</label>
+            <input type="text" placeholder="@twittername">
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div class="toggle-list__item">
+      <div class="toggle-list__title">Время работы</div>
+      <div class="toggle-list__body">
+        <section class="working-period clearfix">
+          <div class="working-period__choice">
+            <ul class="working-days">
+              <li class="working-days__item" data-number="1">ПН</li>
+              <li class="working-days__item" data-number="2">ВТ</li>
+              <li class="working-days__item" data-number="3">СР</li>
+              <li class="working-days__item" data-number="4">ЧТ</li>
+              <li class="working-days__item" data-number="5">ПТ</li>
+              <li class="working-days__item" data-number="6">СБ</li>
+              <li class="working-days__item" data-number="7">ВС</li>
+            </ul>
+            <div class="working-time clearfix">
+              <input type="text" value="10:00" class="start-time">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;<input type="text" value="18:00" class="end-time">
+              <a href="#?" class="btn btn_color_green js-add-days">Добавить</a>
+            </div>
+            <div class="note">Вы можете выбрать один или несколько дней</div>
+          </div>
+          <ul class="working-period__result">
+            <li class="item hide">
+              <span class="days"></span>
+              <span class="time"></span>
+              <a href="#?" class="delete js-delete"></a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+    <div class="toggle-list__item">
+      <div class="toggle-list__title">Подробности</div>
+      <div class="toggle-list__body">
+        <div class="form-detail">
+          <div class="field field_price clearfix">
+            <label>Цена:</label>
+            <div class="input-wrap right">
+              от<input type="text">&nbsp;&nbsp;&nbsp;&nbsp;до <input type="text">&nbsp;<span class="sprite-ruble-dark"></span>
+            </div>
+          </div>
+          <div class="field clearfix">
+            <label>Предлагается:</label>
+            <div class="input-wrap right">
+              <div class="select-quasi">
+                <div class="select-quasi__btn js-select-quasi">Выберите из списка</div>
+                <ul class="select-quasi__list">
+                  <li class="select-quasi__item">
+                    <label>
+                      <input type="checkbox"><span></span> Завтрак
+                    </label>
+                  </li>
+                  <li class="select-quasi__item">
+                    <label>
+                      <input type="checkbox"><span></span> Бизнес-ланч
+                    </label>
+                  </li>
+                  <li class="select-quasi__item">
+                    <label>
+                      <input type="checkbox"><span></span> Линия раздачи еды
+                    </label>
+                  </li>
+                  <li class="select-quasi__item">
+                    <label>
+                      <input type="checkbox"><span></span> Ужин
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="field field_sub clearfix">
+            <label>Кредитные карты:</label>
+            <div class="input-wrap input-wrap_radio right">
+              <label><input type="radio" name="group1" data-value="open"><span></span>Да</label>
+              <label><input type="radio" name="group1" checked="checked" data-value="close"><span></span>Нет</label>
+            </div>
+            <div class="input-wrap input-wrap_checkbox clear clearfix">
+              <label><input type="checkbox"><span></span> Visa</label>
+              <label><input type="checkbox"><span></span> MasterCard</label>
+              <label><input type="checkbox"><span></span> American Express</label>
+              <label><input type="checkbox"><span></span> Discover</label>
+            </div>
+          </div>
+          <div class="field clearfix">
+            <label>Бронирование:</label>
+            <div class="input-wrap input-wrap_radio right">
+              <label><input type="radio" name="group2"><span></span>Да</label>
+              <label><input type="radio" name="group2" checked="checked"><span></span>Нет</label>
+            </div>
+          </div>
+          <div class="field field_sub clearfix">
+            <label>WiFi:</label>
+            <div class="input-wrap input-wrap_radio right">
+              <label><input type="radio" name="group3" data-value="open"><span></span>Да</label>
+              <label><input type="radio" name="group3" checked="checked" data-value="close"><span></span>Нет</label>
+            </div>
+            <div class="input-wrap input-wrap_checkbox clear clearfix">
+              <label><input type="checkbox"><span></span> Бесплатный</label>
+              <label><input type="checkbox"><span></span> Платный</label>
+            </div>
+          </div>
+          <div class="field clearfix">
+            <label>Уличная веранда:</label>
+            <div class="input-wrap input-wrap_radio right">
+              <label><input type="radio" name="group4"><span></span>Да</label>
+              <label><input type="radio" name="group4" checked="checked"><span></span>Нет</label>
+            </div>
+          </div>
+          <div class="field field_price clearfix">
+            <label>Доставка:</label>
+            <div class="input-wrap input-wrap_radio right">
+              <label><input type="radio" name="group5"><span></span>Да</label>
+              <label><input type="radio" name="group5" checked="checked"><span></span>Нет</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- class="toggle-list" -->
+</div>
+<div class="popupwin__footer clearfix">
+  <a href="#?" class="btn btn_color_green left js-back">Назад</a>
+  <a href="#?" class="btn btn_color_blue right js-finish">Готово</a>
+</div>

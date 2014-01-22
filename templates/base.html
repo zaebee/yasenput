@@ -9,6 +9,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    {% block seo %}{% endblock %}
+    <meta name="fragment" content="!">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     <meta name="description" content="{% block description %}{% endblock %}">
 
@@ -18,10 +20,10 @@
 
     <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
     <!--[if lt IE 7]>
-      <script type="text/javascript" src="media/js/libs/ie6no.ru.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/lib/ie6no.ru.js"></script>
     <![endif]-->
     <!--[if IE]>
-      <link rel="stylesheet" type="text/css" href="media/css/ie/ie.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ie.css">
     <![endif]-->
 
   </head>

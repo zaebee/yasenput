@@ -13,7 +13,7 @@
     "grunt-contrib": "~0.5.0",
     "dslivescript": "~1.1.1-DS",
     "prelude-ls": "~0.6.0",
-    "grunt-closure-tools": "~0.7.7",
+    "grunt-closure-tools": "~0.9.2",
     "yuidocjs": "~0.3.44",
     "grunt-contrib-jst": "~0.5.0",
     "grunt-contrib-coffee": "~0.6.7",
@@ -26,9 +26,11 @@
     "grunt-contrib-watch": "~0.3.1",
     "grunt-contrib-yuidoc": "~0.4.0",
     "grunt-contrib-concat": "~0.1.3",
-    "grunt-contrib-handlebars": "~0.5.8",
+    "grunt-contrib-handlebars": "~0.6.0",
     "grunt-handlebars": "0.0.6",
     "grunt-handlebars-compiler": "0.0.5",
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "grunt-contrib-less": "~0.8.2",
+    "assemble-less": "~0.5.3"
   }
 }
