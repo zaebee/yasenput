@@ -10,6 +10,10 @@
         return 'BoardPoint'
       else if @model.get('type_of_item') is 'set'
         return 'BoardSet'
+      else if @model.get('type_of_item') is 'trip'
+        return 'BoardTrip'
+      else if @model.get('type_of_item') is 'event'
+        return 'BoardEvent'
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
       else

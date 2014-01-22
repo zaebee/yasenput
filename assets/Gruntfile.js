@@ -152,7 +152,7 @@ module.exports = function(grunt) {
     cssmin: {
       compress: {
         files: {
-          'release/css/styles.css': ['src/css/bootstrap.css', 'src/css/main.css', 'src/css/jquery-ui-1.10.0.custom.css', 'src/css/base/base.css', 'src/css/select2.css', 'src/css/fancybox/jquery.fancybox.css']
+          'release/css/styles.css': ['src/css/bootstrap.css', 'src/css/main.css', 'src/css/jquery-ui-1.10.0.custom.css', 'src/css/base/base.css', 'src/css/base/reset.css', 'src/css/base/global.css',  'src/css/base/normalize.css','src/css/select2.css', 'src/css/fancybox/jquery.fancybox.css']
         }
       }
     },
