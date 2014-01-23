@@ -3,7 +3,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="http://yasenput.ru/assets/images/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    {% include 'includes/seo.html' %}
+    {% block seo %}{% endblock %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
     {% block opengraph %}
     {% endblock opengraph %}

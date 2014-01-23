@@ -1,0 +1,189 @@
+{{#ifEquals type_of_item 'set'}}
+  <div class="item-caption">Коллекция</div>
+  <div class="photo">
+    <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+    {{#ifEquals user.id author.id}}
+    <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
+    {{/ifEquals}}
+
+    <div class="yasen-info">
+      <span class="yp-title">{{ypi}} ЯПи</span>
+
+      <div class="yp-info">
+        <i class="yp-like"></i><small>{{likes_count}}</small>
+        <!--
+        <i class="yp-marked"></i><small>{{collections_count}}</small>
+        <i class="yp-place"></i><small>{{beens_count}}</small>
+        <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
+        -->
+      </div>
+    </div>
+
+    <a href="/set/{{id}}" class="a-photo nonav">
+      {{#if points.[0].imgs.[0]}}
+        <img src="{{points.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{points.[0].imgs.[0].thumbnail207_height}}">
+      {{else}}
+        <img src="/static/images/collection_logo.png" alt="" width="65" height="52">
+      {{/if}}
+    </a>
+  </div>
+
+  <ul class="photo-preview a-photo nonav">
+    {{#if points.[2]}}
+      <li>
+        <a href="#">
+          <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" height="52">
+        </a>
+      </li>
+
+      <li>
+        <a href="#">
+          <img src="{{points.[1].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+        </a>
+      </li>
+
+      <li>
+        <a href="#">
+          <img src="{{points.[2].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+        </a>
+      </li>
+    {{else}}
+      {{#if points.[1]}}
+        <li>
+          <a href="#">
+            <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <img src="{{points.[1].imgs.[0].thumbnail135x52}}" alt="" width="135" height="52">
+          </a>
+        </li>
+      {{else}}
+        {{#if points.[0]}}
+          <li>
+            <a href="#">
+              <img src="{{points.[0].imgs.[0].thumbnail205x52}}" alt="" width="205" height="52">
+            </a>
+          </li>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </ul>
+  <div class="body author-point">
+    <img src="{{author.avatar}}" alt="" class="avatar" width="29" height="30">
+
+      <h3>{{name}}</h3>
+      <p>коллекцию создал {{author.first_name}} {{author.last_name}}</p>
+  </div>
+{{/ifEquals}}
+
+{{#ifEquals type_of_item 'point'}}
+  <div class="item-caption">Место</div>
+  <div class="photo">
+    <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+    <a href="#" class="a-collection" title="добавить в коллекцию" data-toggle="tooltip" data-placement="bottom">В коллекцию</a>
+    {{#ifEquals user.id author.id}}
+    <a href="#" class="a-edit-new" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
+    {{/ifEquals}}
+
+    <div class="yasen-info">
+      <span class="yp-title">{{ypi}} ЯПи</span>
+
+      <div class="yp-info">
+        <i class="yp-like"></i><small>{{likes_count}}</small>
+        <i class="yp-marked"></i><small>{{sets_count}}</small>
+        <i class="yp-place"></i><small>{{beens_count}}</small>
+        <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
+      </div>
+    </div>
+
+    <a href="/point/{{id}}" class="a-photo nonav">
+      <img src="{{imgs.[0].thumbnail207}}" alt="" width="207" height="{{imgs.[0].thumbnail207_height}}">
+    </a>
+  </div>
+
+  <div class="body">
+      <img src="{{author.avatar}}" alt="" class="avatar" width="29" height="30">
+    <h3>{{name}}</h3>
+    <p>{{address}}</p>
+  </div>
+{{/ifEquals}}
+
+{{#ifEquals type_of_item 'route'}}
+  <div class="item-caption">Маршрут</div>
+  <div class="photo">
+    <a href="#" class="a-like a-like-ok {{#ifBelong user likeusers}}marked{{/ifBelong}}" title="мне&nbsp;нравится" data-toggle="tooltip" data-placement="bottom">&nbsp;</a>
+    {{#ifEquals user.id author.id}}
+    <a href="/route/{{id}}/edit" class="a-edit-new nonav" data-toggle="tooltip" title="отредактировать" data-placement="bottom"></a>
+    {{/ifEquals}}
+
+    <div class="yasen-info">
+      <span class="yp-title">{{ypi}} ЯПи</span>
+
+      <div class="yp-info">
+        <i class="yp-like"></i><small>{{likes_count}}</small>
+        <i class="yp-star"></i><small>+{{reviewusersplus}}/-{{reviewusersminus}}</small>
+      </div>
+    </div>
+
+    <a href="/route/{{id}}" class="a-photo nonav">
+      {{#if points.[0].imgs.[0]}}
+        <img src="{{points.[0].imgs.[0].thumbnail207}}" alt="" width="207" height="{{points.[0].imgs.[0].thumbnail207_height}}">
+      {{else}}
+        <img src="/static/images/collection_logo.png" alt="" width="65" height="52">
+      {{/if}}
+    </a>
+  </div>
+
+  <ul class="photo-preview a-photo nonav">
+    {{#if points.[2]}}
+      <li>
+        <a href="#">
+          <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" height="52">
+        </a>
+      </li>
+
+      <li>
+        <a href="#">
+          <img src="{{points.[1].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+        </a>
+      </li>
+
+      <li>
+        <a href="#">
+          <img src="{{points.[2].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+        </a>
+      </li>
+    {{else}}
+      {{#if points.[1]}}
+        <li>
+          <a href="#">
+            <img src="{{points.[0].imgs.[0].thumbnail65x52}}" alt="" width="65" height="52">
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <img src="{{points.[1].imgs.[0].thumbnail135x52}}" alt="" width="135" height="52">
+          </a>
+        </li>
+      {{else}}
+        {{#if points.[0]}}
+          <li>
+            <a href="#">
+              <img src="{{points.[0].imgs.[0].thumbnail205x52}}" alt="" width="205" height="52">
+            </a>
+          </li>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </ul>
+  <div class="body author-point">
+    <img src="{{author.avatar}}" alt="" class="avatar" width="29" height="30">
+
+      <h3>{{name}}</h3>
+      <p>маршрут создал {{author.first_name}} {{author.last_name}}</p>
+  </div>
+{{/ifEquals}}
