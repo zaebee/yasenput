@@ -1,0 +1,19 @@
+<div class="slider">
+  <ul class="bxslider bxslider-place">
+    {{#imgs}}
+    <li class="item"><img src="{{thumbnail560}}" class="img" /></li>
+    {{/imgs}}
+  </ul>
+  <div class="bx-pager" id="bx-pager">
+    <div class="bx-pager__viewport">
+      <div class="bx-pager__scrollbox">
+        {{#imgs}}
+        <a data-slide-index="{{@index}}" href="" class="bx-pager__item">
+          <img src="{{thumbnail104x104}}" class="img"/>
+          </a>
+        {{/imgs}}
+      </div>
+    </div>
+  </div>
+  <a href="#?" class="btn-photo-add js-popup-add-photos">Добавить</a>
+</div>

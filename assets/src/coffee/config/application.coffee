@@ -1,4 +1,10 @@
-do (Backbone, $) ->
+do (Backbone, $, Dropzone) ->
+
+  $.ajaxSetup
+    headers:
+      'X-CSRFToken': $.cookie('csrftoken')
+
+  Dropzone.autoDiscover = false
 
   Backbone.emulateJSON = true
 

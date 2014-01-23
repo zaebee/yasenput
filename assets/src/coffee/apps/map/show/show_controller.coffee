@@ -8,7 +8,6 @@
       @layout = @getLayoutView()
       @listenTo @layout, 'show', =>
         @mapView()
-        @tagsView()
 
       @show @layout
 
@@ -17,11 +16,3 @@
 
     mapView: ->
       new Show.Map
-
-    tagsView: ->
-      tags = App.request 'get:all:tags'
-      App.execute 'when:fetched', tags, =>
-        tagsView = new Show.Tags
-          collection: tags
-
-        @show tagsView, region: @layout.tagsRegion

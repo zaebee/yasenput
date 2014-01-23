@@ -103,3 +103,10 @@
 .fs20 {
   font-size: 20px !important;
 }
+
+.loader {
+    margin: 0 auto;
+    width: 186px;
+    height: 186px;
+    background: url(../../images/loader.gif);
+}

@@ -6,13 +6,14 @@
 
 {% block title %}Ясен Путь{% endblock %}
 
-
 {% block wrap %}
   <div class="page">
     <header id="header-region" class="header"></header>
 
     <section class="container">
+      <div id="map-region"></div>
       <div id="board-region" class="constrain"></div>
+      <div class="loader hide"></div>
     </section>
 
     <footer id="footer-region" class="footer">
@@ -21,5 +22,6 @@
 {% endblock %}
 
 {% block popups %}
+    <div class="overlay"></div>
     {% include 'includes/popups.html' %}
 {% endblock %}

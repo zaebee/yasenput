@@ -16,10 +16,16 @@
     template: 'Ctrls'
     className: 'constrain'
 
+    events:
+      'click .btn_action_add': 'showAddPopup'
+
     initialize: ->
       user = App.request 'get:my:profile'
-      console.log user
       #@listenTo @user, 'change:authorized', @render
+
+    showAddPopup: (e) ->
+      e.preventDefault()
+      App.addPopupRegion.show(new Show.PopupAdd)
 
     format: (state) ->
       originalOption = state.element
@@ -44,9 +50,9 @@
         formatSelection: @format
         minimumInputLength: 3
         formatInputTooShort: ->
-          return 'Введите хотя бы 3 символа'
+          'Введите хотя бы 3 символа'
         formatNoMatches: ->
-          return 'Ничего не найдено'
+          'Ничего не найдено'
         escapeMarkup: (m) -> m
   
 
@@ -56,30 +62,54 @@
 
     events:
       'submit #destination-form': 'submitSearch'
-      'keydown #destination-input': 'keyupInput'
-
-    _delay: ( ->
-      timer = 0
-      (callback, ms) ->
-        clearTimeout (timer)
-        timer = setTimeout(callback, ms)
-        return
-    )()
+      'select2-selecting #destination-input':'submitSearch'
+      'select2-clearing #destination-input':'submitSearch'
 
     submitSearch: (event) ->
-      event.preventDefault()
+      ## TODO fix search params
+      ## stop form submitting and page reload
+      if event.type is 'submit'
+        event.preventDefault()
+        console.log event
+      data = event.object
+      App.updateSettings s: if data then data.name else ''
       App.vent.trigger 'filter:all:yapens'
 
-    keyupInput: (e) ->
-      @_delay(() =>
-        if e.which isnt 38 and e.which isnt 40 and e.which isnt 13 and e.which isnt 27 and e.which isnt 8
-          ## если не стрелка вверх-вниз, не ESC, не Backspace и не Enter, то запустить и выполнить поиск,
-          query = $(e.target).val()
-          if query
-            App.updateSettings s: query
-          return
-      500
-      )
+    format: (state) ->
+      originalOption = state.element
+      "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
+
+    onShow: ->
+      window.select2 = @$('#destination-input').select2
+        containerCssClass: 'select2-container_destination'
+        dropdownCssClass: 'select2-drop_destination'
+        quietMillis: 750
+        allowClear: true
+        ajax:
+          dataType: 'json'
+          url: App.API_BASE_URL + '/api/v1/search/'
+          data: (term, page) ->
+            s: term
+          results: (data, page) ->
+            results = _.map data, (el, type) ->
+              _.map el, (item) ->
+                item.type = type
+              el
+            results: _.flatten results
+        formatResult: @format
+        formatSelection: @format
+        minimumInputLength: 1
+        formatInputTooShort: ->
+          'Введите хотя бы 1 символ'
+        formatNoMatches: ->
+          'Ничего не найдено'
+        escapeMarkup: (m) -> m
+        createSearchChoice: (term) ->
+          result =
+            id: 0
+            type: 'custom'
+            name: term
+          return result
 
 
   class Show.Filter extends App.Views.ItemView
@@ -96,11 +126,18 @@
       filterTypeList: '.filter-type__list'
       filterAllCategory: '.categories__link'
 
+    onShow: ->
+      $('[data-toggle=tooltip]').tooltip()
+
     filterCategory: (event) ->
       event.preventDefault()
-      if $(event.target).hasClass 'categories__link_type_all'
+      $target = $(event.target)
+      if $target.hasClass 'categories__link_type_all'
         return
-      $(event.target).toggleClass 'active'
+      $target.toggleClass 'active'
+      tags = _.map @$('.categories__link.sprite-filter-photo.active'), (type) -> $(type).data('id')
+      App.updateSettings tags: tags.join ','
+      App.vent.trigger 'filter:all:yapens'
 
     filterAllCategory: (event) ->
       event.preventDefault()
@@ -110,6 +147,9 @@
       else
         $(event.target).addClass 'active'
         @ui.filterAllCategory.addClass 'active'
+      tags = _.map @$('.categories__link.sprite-filter-photo.active'), (type) -> $(type).data('id')
+      App.updateSettings tags: tags.join ','
+      App.vent.trigger 'filter:all:yapens'
 
     openFilterType: (event) ->
       event.preventDefault()
@@ -120,5 +160,10 @@
       $target = $(event.target)
       $target.toggleClass 'active'
       models = _.map @$('.filter-type__link.active'), (type) -> $(type).data('models')
-      Yapp.updateSettings models: models.join ','
+      App.updateSettings models: models.join ','
       App.vent.trigger 'filter:all:yapens'
+
+
+  class Show.PopupAdd extends App.Views.ItemView
+    template: 'PopupAdd'
+    className: 'popupwin__scrollbox'
