@@ -10,9 +10,9 @@
 <div class="popupwin__container clearfix">
   <div class="form">
     <form action="/">
-      <div class="form__field form__field_name error">
+      <div class="form__field form__field_name">
         <label>Название места:</label>
-        <input type="text" placeholder="Например: Домик Петра">
+        <input type="text" placeholder="Например: Домик Петра" value={{name}}>
         <span class="star">*</span>
         <div class="already-added hide">
           <div class="already-added__title">Уже есть!</div>
@@ -43,7 +43,7 @@
       </div>
       <div class="form__field form__field_description">
         <label>Описание места:</label>
-        <textarea placeholder="Опишите этот место так,чтобы захотелось туда поехать"></textarea>
+        <textarea placeholder="Опишите этот место так,чтобы захотелось туда поехать">{{description}}</textarea>
       </div>
     </form>
   </div>

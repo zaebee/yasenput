@@ -17,7 +17,9 @@
     className: 'constrain'
 
     events:
-      'click .btn_action_add': 'showAddPopup'
+      'click .js-popup-add': 'showAddPopup'
+      'click .js-popupwin-authorization': 'showLoginPopup'
+      'click .js-profile-menu': 'showProfileMenu'
 
     initialize: ->
       user = App.request 'get:my:profile'
@@ -26,6 +28,16 @@
     showAddPopup: (e) ->
       e.preventDefault()
       App.addPopupRegion.show(new Show.PopupAdd)
+
+    showLoginPopup: (e) ->
+      e.preventDefault()
+      App.loginPopupRegion.show(new Show.PopupLogin)
+
+    showProfileMenu: (e) ->
+      e.preventDefault()
+      target = $(e.currentTarget)
+      target.toggleClass 'open'
+      @$('.profile-menu').slideToggle()
 
     format: (state) ->
       originalOption = state.element
@@ -80,7 +92,7 @@
       "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
 
     onShow: ->
-      window.select2 = @$('#destination-input').select2
+      @$('#destination-input').select2
         containerCssClass: 'select2-container_destination'
         dropdownCssClass: 'select2-drop_destination'
         quietMillis: 750
@@ -166,4 +178,13 @@
 
   class Show.PopupAdd extends App.Views.ItemView
     template: 'PopupAdd'
+    className: 'popupwin__scrollbox'
+
+    events:
+      'click .js-popup-add-place': -> App.vent.trigger 'show:add:place:popup'
+      'click .js-popup-add-event': -> App.vent.trigger 'show:add:event:popup'
+
+
+  class Show.PopupLogin extends App.Views.ItemView
+    template: 'PopupLogin'
     className: 'popupwin__scrollbox'
