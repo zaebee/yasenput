@@ -37,7 +37,31 @@
 
     mark: ->
       console.log this.model.attributes
-      console.log window
+      
+      id_icon = [[1,[[80,0], [112, 36]]], #достопримечательности
+        [2,[[0,40], [32, 76]]], #охота
+        [3,[[40,0], [72, 36]]], #рыбалка
+        [4,[[40,80], [72, 116]]], #активный отдых
+        [6,[[0,120], [32, 156]]], #магазины
+        [7,[[80,80], [112, 116]]], #кафе и рестораны
+        [85,[[40,40], [72, 76]]], #развлечения и искусство
+        [86,[[80,40], [112, 76]]], #бары и ночные клубы
+        [87,[[0,0], [32, 36]]], #учреждения
+        [1136,[[0,80], [32, 116]]]] #другое
+      console.log id_icon[1]
+      that = this
+      sprite_coords = [[0,0], [32, 36]]
+      $(id_icon).each ->
+        if this[0] == that.model.attributes.tags[0].id 
+          sprite_coords = this[1]
+      placemark = new App.ymaps.Placemark [this.model.attributes.latitude, this.model.attributes.longitude],{}, {
+        iconImageClipRect: sprite_coords,
+        iconImageHref: 'static/images/sprite-baloon.png',
+        iconImageSize: [32, 36]
+      }
+      App.mmap.geoObjects.add placemark
+      console.log placemark
+
 
   class List.Yapens extends App.Views.CollectionView
     itemView: List.Yapen

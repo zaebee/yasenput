@@ -21,11 +21,13 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        @yandexmap = new App.ymaps.Map 'map',
+        App.mmap = new App.ymaps.Map 'map',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 12
+          zoom: 6
         , autoFitToViewport: 'always'
-      console.log @yandexmap
+        #App.mmap = @yandexmap
+
+
       console.log this
       $('.map').resizable 
         minHeight: 80,
