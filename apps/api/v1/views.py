@@ -518,7 +518,7 @@ class PointAdd(PointsBaseView):
                 point.author = person
                 point.save()
 
-                images = params.getlist('imgs[]')
+                images = data.get('imgs')
                 if images:
                     for image in images:
                         try:
@@ -529,11 +529,11 @@ class PointAdd(PointsBaseView):
                             message = "ошибка добавления изображения"
                             pass
 
-                tags = params.getlist("tags[]")
+                tags = data.get("tags")
                 if tags:
                     for tag in tags:
                         new_tag = TagsModels.Tags.objects.filter(name=tag)
-                        if tag.isdigit():
+                        if isinstance(tag, int):
                             new_tag = TagsModels.Tags.objects.get(id=tag)
                         elif new_tag.count() == 0:
                             new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
@@ -938,8 +938,10 @@ class GetTags(View):
     http_method_names = ('get')
 
     def get(self, request):
-        #tags_l = TagsModels.Tags.objects.all()
-        tags_l = TagsModels.Tags.objects.filter(level=0)
+        level = request.GET.get('level', False)
+        tags_l = TagsModels.Tags.objects.all()
+        if level:
+            tags_l = tags_l.filter(level=level)
         YpJson = YpSerialiser()
         tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)

@@ -6168,7 +6168,7 @@ a {
 .toggle-list__body .form-detail .input-wrap_radio input[type="radio"]:checked + span {
   background: url(../images/sprite.png) no-repeat;
   display: inline-block;
-  background-position: -245px -310px;
+  background-position: -278px -268px;
   width: 17px;
   height: 17px;
 }
@@ -6188,7 +6188,7 @@ a {
 .toggle-list__body .form-detail .input-wrap_checkbox span {
   background: url(../images/sprite.png) no-repeat;
   display: inline-block;
-  background-position: -278px -258px;
+  background-position: -245px -310px;
   width: 16px;
   height: 16px;
   margin-right: 4px;
@@ -6197,7 +6197,7 @@ a {
 .toggle-list__body .form-detail .input-wrap_checkbox input[type="checkbox"]:checked + span {
   background: url(../images/sprite.png) no-repeat;
   display: inline-block;
-  background-position: -265px -310px;
+  background-position: -245px -310px;
   width: 16px;
   height: 16px;
 }
@@ -6677,6 +6677,7 @@ a {
     margin-right:15px;
 }
 
-.form__field_name.error input {
-    border: 1px solid #EA5854;
+.form__field_name.error input,
+.field__input-map.error input {
+    border: 1px solid #EA5854 !important;
 }

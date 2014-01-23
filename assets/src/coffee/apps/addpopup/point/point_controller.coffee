@@ -4,6 +4,7 @@
 
     initialize: ->
       console.log 'initialize AddPopupApp.Point.Controller'
+      @tags = App.request 'get:all:tags', level: false
       @model = new App.Entities.Point
 
       @layout = new Point.Layout model: @model
@@ -28,15 +29,18 @@
         @layout.stepWhatRegion.$el.show()
 
     showStepWhat: ->
-      @whatView = new Point.StepWhat model: @model
-      @show @whatView,
-        region: @layout.stepWhatRegion
-      @listenTo @whatView, 'show:step:commers', ->
-        @layout.stepWhatRegion.$el.hide()
-        @layout.stepCommersRegion.$el.show()
-      @listenTo @whatView, 'show:step:name', ->
-        @layout.stepWhatRegion.$el.hide()
-        @layout.stepNameRegion.$el.show()
+      App.execute 'when:fetched', @tags, =>
+        @whatView = new Point.StepWhat
+          model: @model
+          collection: @tags
+        @show @whatView,
+          region: @layout.stepWhatRegion
+        @listenTo @whatView, 'show:step:commers', ->
+          @layout.stepWhatRegion.$el.hide()
+          @layout.stepCommersRegion.$el.show()
+        @listenTo @whatView, 'show:step:name', ->
+          @layout.stepWhatRegion.$el.hide()
+          @layout.stepNameRegion.$el.show()
 
     showStepCommers: ->
       @commersView = new Point.StepCommers model: @model

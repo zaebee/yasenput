@@ -92,7 +92,7 @@
       "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
 
     onShow: ->
-      window.select2 = @$('#destination-input').select2
+      @$('#destination-input').select2
         containerCssClass: 'select2-container_destination'
         dropdownCssClass: 'select2-drop_destination'
         quietMillis: 750
