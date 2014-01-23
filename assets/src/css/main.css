@@ -6676,3 +6676,7 @@ a {
 #destination-form .select2-container .select2-choice > .select2-chosen {
     margin-right:15px;
 }
+
+.form__field_name.error input {
+    border: 1px solid #EA5854;
+}

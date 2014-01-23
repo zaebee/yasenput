@@ -19,6 +19,8 @@
       ypi: 0
       imgs: []
       tags: []
+      name: ''
+      address: ''
 
     validate: (attrs, options) ->
       invalid = []

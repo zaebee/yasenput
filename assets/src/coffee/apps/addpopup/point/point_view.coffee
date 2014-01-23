@@ -35,6 +35,8 @@
     setName: (event) ->
       target = $(event.currentTarget)
       name = target.val()
+      if name
+        @$('.form__field_name').removeClass 'error'
       @model.set name: name
 
     setDescription: (event) ->
@@ -44,7 +46,12 @@
 
     nextStep: (event) ->
       event.preventDefault()
-      @trigger 'show:step:what'
+      isValid = @model.isValid()
+      if _.indexOf(@model.validationError, 'name') < 0
+        @$('.form__field_name').removeClass 'error'
+        @trigger 'show:step:what'
+      else
+        @$('.form__field_name').addClass 'error'
 
 
   class Point.StepWhat extends App.Views.ItemView
