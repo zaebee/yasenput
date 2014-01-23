@@ -8,7 +8,6 @@
       stepWhatRegion: '#point-what-region'
       stepCommersRegion: '#point-commers-region'
 
-
     onShow: ->
       @stepNameRegion.$el.show()
 
@@ -18,6 +17,8 @@
     className: 'popupwin__content clearfix'
     
     events:
+      'blur .form__field_name input': 'setName'
+      'blur .form__field_description textarea': 'setDescription'
       'click .js-next': 'nextStep'
 
     onShow: ->
@@ -25,10 +26,32 @@
         paramName:'img'
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
+        success: (file, data) =>
+          img = data[0]
+          imgs = @model.get 'imgs'
+          imgs.push img.id
+          @model.set imgs
+
+    setName: (event) ->
+      target = $(event.currentTarget)
+      name = target.val()
+      if name
+        @$('.form__field_name').removeClass 'error'
+      @model.set name: name
+
+    setDescription: (event) ->
+      target = $(event.currentTarget)
+      description = target.val()
+      @model.set description: description
 
     nextStep: (event) ->
       event.preventDefault()
-      @trigger 'show:step:what'
+      isValid = @model.isValid()
+      if _.indexOf(@model.validationError, 'name') < 0
+        @$('.form__field_name').removeClass 'error'
+        @trigger 'show:step:what'
+      else
+        @$('.form__field_name').addClass 'error'
 
 
   class Point.StepWhat extends App.Views.ItemView

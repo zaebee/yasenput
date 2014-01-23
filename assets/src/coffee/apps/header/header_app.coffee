@@ -12,10 +12,7 @@
         region: App.headerRegion
 
   App.vent.on 'show:add:popup', () ->
-    console.log 'event fired'
-    popup = new App.Views.ItemView
-      template: 'PopupAdd'
-      className: 'popupwin__scrollbox'
+    popup = new HeaderApp.Show.PopupAdd
     App.addPopupRegion.show popup
 
   HeaderApp.on 'start', ->

@@ -29,3 +29,6 @@
       if _.isArray response
         response = response[0]
       response
+      if not response.unid and response.id
+        response.unid = response.id
+      response

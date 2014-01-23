@@ -12,7 +12,9 @@
     boardRegion:'#board-region'
     footerRegion:'#footer-region'
     mapRegion: '#map-region'
+
     addPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_add')
+    loginPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_authorization')
     pointPopup: Marionette.Region.Modal.extend(el: '.popupwin_place')
     addPointPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-place')
 
