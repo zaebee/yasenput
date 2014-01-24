@@ -66,7 +66,19 @@
       $(App.mmap_points).each ->
         route_p.push {type: 'wayPoint', point:this}
       if route_p.length > 1
-        App.mmap.geoObjects.add App.ymaps.route(route_p, { mapStateAutoApply: true })
+        console.log App.mmap.geoObjects
+        if !App.mroute
+          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+            console.log 'test'
+            route.getPaths().options.set
+              balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
+              strokeColor: 'ca7953',
+              opacity: 0.9,
+              noPlacemark: true
+            route.getWayPoints().options.set 'visible', false
+            App.mmap.geoObjects.add route
+        #else 
+          #App.mroute
 
 
 
