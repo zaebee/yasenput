@@ -50,13 +50,48 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
               user-select: none;
     background-color: #fff;
     font-size: 13px;
+    cursor: text;
+}
+.select2-container_destination .select2-choice {
+    border-radius: 4px;
+    border: 2px solid #26b89a;
+    padding: 10px 15px 12px;
+    width: 440px;
+    height: 20px;
+    background: transparent;
+    line-height: 20px;
+    font-size: 16px;
+    color: #7f7f7f;
+}
+.select2-container_destination-from .select2-choice,
+.select2-container_destination-to .select2-choice {
+    width: 215px;
+}
+.select2-container_destination-to .select2-choice {
+    border-color: #CA7953;
+}
+.select2-container_where .select2-choice {
+    border: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 4px 8px;
+    width: 180px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 13px;
+    color: #5A5A5A;
+}
+.select2-container_route .select2-choice {
+    width: 648px;
+}
+
+.select2-container_destination {
+    margin-right: 25px;
 }
 
 .select2-container.select2-drop-above .select2-choice {
     border-bottom-color: #aaa;
-
     border-radius: 0 0 4px 4px;
-
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.9, #fff));
     background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 90%);
     background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 90%);
@@ -72,10 +107,16 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     margin-right: 34px;
     display: block;
     overflow: hidden;
-
     white-space: nowrap;
-
     text-overflow: ellipsis;
+    cursor: text;
+}
+.select2-container_where .select2-choice > .select2-chosen {
+    margin-right: 0;
+}
+
+.select2-container .select2-choice > .select2-chosen .type {
+    cursor: text;
 }
 
 .select2-container .select2-choice abbr {
@@ -83,12 +124,10 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     width: 12px;
     height: 12px;
     position: absolute;
-    right: 36px;
-    top: 10px;
-
+    right: 35px;
+    top: 8px;
     font-size: 1px;
     text-decoration: none;
-
     border: 0;
     background: url('../images/select2.png') right top no-repeat;
     cursor: pointer;
@@ -134,6 +173,14 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
         box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
 }
+.select2-drop_destination-from,
+.select2-drop_destination-to {
+    width: 250px !important;
+}
+
+.select2-drop_destination {
+    border-radius: 4px;
+}
 
 .select2-drop-auto-width {
     border-top: 1px solid #aaa;
@@ -174,6 +221,13 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     background-clip: padding-box;
 }
 
+.select2-container_destination .select2-choice .select2-arrow {
+    display: none;
+}
+.select2-container_where .select2-choice .select2-arrow {
+    display: none;
+}
+
 .select2-container .select2-choice .select2-arrow b {
     display: block;
     border-left: 1px solid #bababa;
@@ -189,7 +243,7 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     top: -34px;
     z-index: 10000;
     display: inline-block;
-    width: 265px;
+    width: 270px;
     min-height: 26px;
     margin: 0;
     padding-left: 4px;
@@ -197,22 +251,60 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     white-space: nowrap;
 }
 
+.select2-drop_destination .select2-search {
+    top: -51px;
+    padding-left: 0;
+    padding-right: 0;
+    width: 474px;
+}
+.select2-drop_destination-from .select2-search,
+.select2-drop_destination-to .select2-search {
+    width: 250px;
+}
+.select2-drop_where .select2-search {
+    padding-left: 3px;
+    padding-right: 0;
+    width: 180px;
+}
+
 .select2-search input {
     width: 100%;
-    height: auto !important;
+    height: auto;
     min-height: 26px;
     padding: 3px 20px 4px 5px;
     margin: 0;
-
     outline: 0;
     font-size: 13px;
-
-    border: none !important;
+    border: none;
     border-radius: 0;
-
     -webkit-box-shadow: none;
             box-shadow: none;
     color: #5a5a5a;
+}
+.select2-drop_destination .select2-search input {
+    border-radius: 4px;
+    border: 2px solid #26b89a;
+    padding: 10px 14px 12px;
+    width: 474px;
+    height: 46px;
+    background: transparent;
+    box-shadow: 0px 0px 5px rgba(38, 184, 154, 0.5);
+    -webkit-box-shadow: 0px 0px 5px rgba(38, 184, 154, 0.5);
+    line-height: 20px;
+    font-size: 16px;
+    color: #7f7f7f;
+}
+.select2-drop_destination .select2-search input {
+    padding-top: 5px;
+}
+.select2-drop_destination-from .select2-search input,
+.select2-drop_destination-to .select2-search input{
+    width: 249px;
+}
+.select2-drop_destination-to .select2-search input{
+    border-color: #ca7953;
+    box-shadow: 0px 0px 5px rgba(202, 121, 83, 0.5);
+    -webkit-box-shadow: 0px 0px 5px rgba(202, 121, 83, 0.5);
 }
 
 .select2-drop.select2-drop-above .select2-search input {
@@ -236,7 +328,17 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 .select2-dropdown-open .select2-choice {
     width: 290px;
     border-color: #53b6d8;
-
+}
+.select2-container_destination.select2-dropdown-open .select2-choice {
+    opacity: 0;
+    width: 440px;
+    border-color: transparent;
+}
+.select2-container_where.select2-dropdown-open .select2-choice {
+    width: 180px;
+}
+.select2-container_route.select2-dropdown-open .select2-choice {
+    width: 648px;
 }
 
 .select2-dropdown-open.select2-drop-above .select2-choice,
@@ -270,6 +372,11 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+.select2-drop_destination-from .select2-results,
+.select2-drop_destination-to .select2-results {
+    width: 250px;
+}
+
 .select2-results ul.select2-result-sub {
     margin: 0;
     padding-left: 0;
@@ -294,7 +401,7 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 }
 
 .select2-results .select2-result-label {
-    padding: 4px 10px 5px 13px;
+    padding: 4px 20px 5px 13px;
     margin: 0;
     cursor: pointer;
 
@@ -330,8 +437,14 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
+    padding: 5px 10px;
     background: #f4f4f4;
     display: list-item;
+}
+.select2-drop_destination .select2-results .select2-no-results,
+.select2-drop_destination .select2-results .select2-searching,
+.select2-drop_destination .select2-results .select2-selection-limit {
+    padding: 4px;
 }
 
 /*
@@ -566,7 +679,7 @@ disabled look for disabled choices in the results dropdown
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
   .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
-      background-image: url('select2x2.png') !important;
+      background-image: url('../images/select2x2.png') !important;
       background-repeat: no-repeat !important;
       background-size: 60px 40px !important;
   }
