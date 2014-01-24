@@ -59,8 +59,15 @@
         iconImageHref: 'static/images/sprite-baloon.png',
         iconImageSize: [32, 36]
       }
+      App.mmap_points.push [this.model.attributes.latitude, this.model.attributes.longitude]
       App.mmap.geoObjects.add placemark
-      console.log placemark
+      console.log App.mmap_points
+      route_p = []
+      $(App.mmap_points).each ->
+        route_p.push {type: 'wayPoint', point:this}
+      if route_p.length > 1
+        App.mmap.geoObjects.add App.ymaps.route(route_p, { mapStateAutoApply: true })
+
 
 
   class List.Yapens extends App.Views.CollectionView

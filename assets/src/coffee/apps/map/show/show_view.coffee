@@ -21,6 +21,7 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
+        App.mmap_points = []
         App.mmap = new App.ymaps.Map 'map',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
           zoom: 6
