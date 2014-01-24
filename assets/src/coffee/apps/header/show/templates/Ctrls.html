@@ -1,9 +1,11 @@
 <div class="header__search">
   <input type="text" placeholder="Места, маршруты, события...">
 </div><!-- class="header__search" -->
+
 <a href="/" class="logo">
   <img src="/static/images/logo.png" alt="ЯсенПуть">
 </a>
+
 <div class="header__btns">
   {{#if user.authorized}}
   <a href="#?" class="btn btn_action_add btn_color_green js-popup-add">
@@ -29,7 +31,7 @@
             <span class="icon sprite-settings"></span>
             Настройки
           </a>
-          <a href="#?" class="link">
+          <a href="/logout/" class="link">
             <span class="icon sprite-power"></span>
             Выход
           </a>
@@ -37,6 +39,6 @@
       </ul>
     </div>
   {{else}}
-  <a href="#?" class="btn btn_color_blue">Войти</a>
+  <a href="#?" class="btn btn_color_blue js-popupwin-authorization">Войти</a>
   {{/if}}
 </div><!-- class="header__btns" -->

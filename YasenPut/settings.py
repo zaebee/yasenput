@@ -16,7 +16,7 @@ DICTS_PATH = '/home/tenoclock/yasenput/dicts'
 SPHINX_API_VERSION = 0x119
 
 ADMINS = (
-# ('Artem Ushakov', 'artushakov@gmail.com'), тест 2
+# ('Artem Ushakov', 'artushakov@gmail.com'), пїЅпїЅпїЅпїЅ 2
 )
 
 MANAGERS = ADMINS
@@ -75,7 +75,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/debug'))
+STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/release'))
 
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(SITE_ROOT, 'assets')),

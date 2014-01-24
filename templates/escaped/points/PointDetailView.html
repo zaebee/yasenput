@@ -1,4 +1,9 @@
 {% extends 'escaped/main.html' %}
+{% block seo %}
+    <meta name="keywords" content="путешествия по россии туризм охота рыбалка отпуск отпускные турпакеты места поездка планирование отель отели мотель мини отель мини отели ночлег и завтрак гостиница гостиницы путеводитель отзыв отзывы популярные план скидка карта карты лыжи статьи достопримечательности совет рестораны российские достопримечательности туризм по россии деревня отдых душой интересные места путешествия на автомобиле путеводители маршруты туры путевка">
+    <meta name="description" content="{{ point.description }}">
+    <title>{{ point.name }} - ЯсенПуть</title>
+{% endblock %}
 {% block og %}prefix="og: http://ogp.me/ns/#"{% endblock %}
 {% block opengraph %}
     <meta property="og:title" content="{{ point.name }}"/>
@@ -25,6 +30,7 @@
                     <meta itemprop="ratingValue" content="{{ point.ypi }}" />
                     <meta itemprop="worstRating" content="1" />
                     <meta itemprop="bestRating" content="10" />
+                    <meta itemprop="reviewcount" content="10" />
                 </div>
             <div class="clearfix p-body">
             <header>

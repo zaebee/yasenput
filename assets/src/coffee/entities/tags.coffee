@@ -20,5 +20,7 @@
         data: params
       tags
       
-  App.reqres.setHandler 'get:all:tags', ->
-    API.getTags()
+  App.reqres.setHandler 'get:all:tags', (params = {level:0}) ->
+    if params.level is false
+      delete params.level
+    API.getTags(params)

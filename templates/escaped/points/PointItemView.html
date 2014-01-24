@@ -1,4 +1,7 @@
 {% extends 'escaped/main.html' %}
+{% block seo %}
+    {% include 'includes/seo.html' %}
+{% endblock %}
 {% block points %}
     {% for point in points.all %}
         <article class="item item-place masonry-brick" style="">
