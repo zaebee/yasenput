@@ -72,6 +72,7 @@
       @rootLabels = @collection.toJSON().filter (label) -> label.level is 0
       @additionalLabels = @collection.toJSON().filter (label) -> label.level is 1
       @otherLabels = @collection.toJSON().filter (label) -> label.level is 2
+      @labels = {}
 
     templateHelpers: ->
       rootLabels: @rootLabels
@@ -86,14 +87,22 @@
       target = $(event.currentTarget)
       data = target.data()
       @$('.tags__item').hide()
+      rootLabel = @$('.categories__link.active').data()
+      if rootLabel
+        @labels[rootLabel.id] = @$('.select-type').select2 'data'
       @$el.find('.categories__link').not(target).removeClass 'active'
+
       target.toggleClass 'active'
       if target.hasClass 'active'
         @$el.find('.field_tags').attr 'class', 'field field_tags field_tags-' + data.style
+
       else
         @$el.find('.field_tags').attr 'class', 'hide field field_tags field_tags-' + data.style
       additionalLabels = @$('.tags__link').filter (idx, el) -> $(el).data('parent') is data.id
       additionalLabels.parent().show()
+
+      if data
+        @$('.select-type').select2 'data', @labels[data.id]
 
     selectAdditionalLabel: (event) ->
       event.preventDefault()
@@ -122,10 +131,10 @@
       if _.indexOf(@model.validationError, 'address') < 0
         @$('.field__input-map').removeClass 'error'
         @trigger 'show:step:commers'
-        tags = @$('.select-type').select2 'data'
+        tags = @$('.select-type').select2 'val'
         rootTag = $('.categories__link.active').data() or id: 1 ## if not root tag selected
-        tags.push id: rootTag.id
-        @model.set tags: _.pluck(tags, 'id')
+        tags.push rootTag.id
+        @model.set tags: tags
       else
         @$('.field__input-map').addClass 'error'
 

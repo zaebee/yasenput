@@ -1,10 +1,28 @@
 # -*- coding: utf-8 -*-
+import random
+import json
+import time
+import ast
+
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.http import Http404, HttpResponse
+from django.utils.encoding import smart_str
+from django.utils.timezone import utc
+from django.http import Http404, HttpResponse, QueryDict
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
+from django.db.models import Count
+from django.db import connection
+from datetime import datetime, timedelta
+
+from django_ipgeobase.models import IPGeoBase
+
+from querysetjoin import QuerySetJoin
+from pymorphy import get_morph
+
+from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
+
 from apps.points import forms
 from apps.main import models as MainModels
 from apps.reviews import models as ReviewsModels
@@ -15,23 +33,9 @@ from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
 from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
-from django.db.models import Count
+
 from YasenPut.limit_config import LIMITS
 import YasenPut.settings
-from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
-from querysetjoin import QuerySetJoin
-from django.utils.encoding import smart_str
-import random
-import json
-from pymorphy import get_morph
-from django.db import connection
-from datetime import datetime, timedelta
-import time
-import ast
-from django.http import QueryDict
-from django.utils.timezone import utc
-
-from django_ipgeobase.models import IPGeoBase
 
 import logging
 logger = logging.getLogger(__name__)
@@ -532,18 +536,20 @@ class PointAdd(PointsBaseView):
                 tags = data.get("tags")
                 if tags:
                     for tag in tags:
-                        new_tag = TagsModels.Tags.objects.filter(name=tag)
-                        if isinstance(tag, int):
-                            new_tag = TagsModels.Tags.objects.get(id=tag)
-                        elif new_tag.count() == 0:
-                            new_tag = TagsModels.Tags.objects.create(name=tag, level=DEFAULT_LEVEL, author=person)
+                        if unicode(tag).isdigit():
+                            new_tag = TagsModels.Tags.objects.filter(id=tag)
+                        else:
+                            new_tag = TagsModels.Tags.objects.filter(name=tag)
+                        if new_tag.count() == 0:
+                            new_tag = TagsModels.Tags.objects.create(name=tag,
+                                                                     level=DEFAULT_LEVEL,
+                                                                     author=person)
                         else:
                             new_tag = new_tag[0]
                         point.tags.add(new_tag)
 
-                    point.save()
                 id_l = point.id
-                point = MainModels.Points.objects.all().filter(id = id_l)
+                point = MainModels.Points.objects.all().filter(id=id_l)
                 YpJson = YpSerialiser()
                 t0 = time.time()
                 sets_list = CollectionsModels.Collections.objects.all()
