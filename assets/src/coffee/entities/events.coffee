@@ -8,33 +8,35 @@
 # Yapp.Entities module definition
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
-  class Entities.Point extends Entities.Model
+  class Entities.Event extends Entities.Model
     urlRoot:
-      App.API_BASE_URL + "/api/v1/points/"
+      App.API_BASE_URL + "/api/v1/events/"
 
     defaults:
-      priority: 0
-      longitude: 0.0
-      latitude: 0.0
+      dt_start: ''
+      dt_end: ''
       ypi: 0
       imgs: []
       tags: []
       name: ''
-      address: ''
+      description: ''
+      points: []
 
     validate: (attrs, options) ->
       invalid = []
       if attrs.name is ''
         invalid.push 'name'
-      if attrs.address is ''
-        invalid.push 'address'
+      if attrs.dt_start is ''
+        invalid.push 'dt_start'
+      if attrs.dt_end is ''
+        invalid.push 'dt_end'
 
       if invalid.length
         invalid
 
   API =
     getDetail: (point, params = {}) ->
-      point.id = point.get('id') or point.get('unid')
+      point.id = point.get 'id'
       _.defaults params
       point.fetch
         reset: true

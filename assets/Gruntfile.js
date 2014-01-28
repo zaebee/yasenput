@@ -38,6 +38,7 @@ module.exports = function(grunt) {
         files: {
           'debug/css/styles.css': [
             'src/css/base/base.css',
+            'src/css/jquery-ui-1.10.3.custom.min.css',
             'src/css/select2.css',
             'src/css/main.css',
             'src/css/media.css',
@@ -76,6 +77,7 @@ module.exports = function(grunt) {
         files: {
           'debug/css/styles.css': [
             'src/css/base/base.css',
+            'src/css/jquery-ui-1.10.3.custom.min.css',
             'src/css/select2.css',
             'src/css/main.css',
             'src/css/media.css',
@@ -186,25 +188,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    less: {
-      development: {
-        options: {
-          paths: 'src/less/',
-          concat: false,
-          imports: {
-            less: [
-              'src/less/sprite.less',
-              'src/less/sprite-filter.less',
-              'src/less/sprite-filter2.less',
-              'src/less/animate-custom.less'
-            ]
-          }
-        },
-        files: {
-          'src/css/result.css': 'src/less/*.less'
-        },
-      },
-    },
     watch: {
       scripts: {
         files: 'src/**/*',
@@ -229,10 +212,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-handlebars-compiler');
   grunt.loadNpmTasks("grunt-contrib-handlebars");
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('assemble-less');
 
-  grunt.registerTask('debug', ['clean:debug', 'coffeelint', 'coffee', 'handlebars', 'less', 'concat:debug', 'copy:debug']);
+  grunt.registerTask('debug', ['clean:debug', 'coffeelint', 'coffee', 'handlebars', 'concat:debug', 'copy:debug']);
   grunt.registerTask('default', ['debug']);
   grunt.registerTask('release', ['clean:release', 'coffeelint', 'coffee', 'handlebars', 'concat:release', 'closureCompiler:compile', 'cssmin', 'yuidoc', 'copy:release']);
   grunt.registerTask('watching', ['watch']);

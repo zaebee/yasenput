@@ -2427,6 +2427,7 @@ textarea {
 }
 .form__field_description textarea {
   height: 135px;
+  background:#fff;
 }
 .form__field_date {
   line-height: 30px;
@@ -4051,6 +4052,7 @@ a {
 .box__img {
   position: relative;
   width: 232px;
+  text-align:center;
 }
 .box__img > a {
   text-decoration: none;
@@ -6677,7 +6679,10 @@ a {
     margin-right:15px;
 }
 
+.field__input-place.error .select2-choices,
+#dt_start.error, #dt_end.error,
 .form__field_name.error input,
+.form__field_date.error input,
 .field__input-map.error input {
     border: 1px solid #EA5854 !important;
 }
