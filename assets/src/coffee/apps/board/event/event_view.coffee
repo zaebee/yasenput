@@ -1,13 +1,13 @@
-@Yapp.module 'BoardApp.Point', (Point, App, Backbone, Marionette, $, _) ->
+@Yapp.module 'BoardApp.Event', (Event, App, Backbone, Marionette, $, _) ->
 
-  class Point.Layout extends App.Views.Layout
-    template: 'PointLayout'
+  class Event.Layout extends App.Views.Layout
+    template: 'EventLayout'
     regions:
-      headerRegion: '#point-header-region'
-      photoRegion: '#point-photo-region'
-      mapRegion: '#point-map-region'
-      commentsRegion: '#point-comments-region'
-      tagsRegion: '#point-tags-region'
+      headerRegion: '#event-header-region'
+      photoRegion: '#event-photo-region'
+      mapRegion: '#event-map-region'
+      commentsRegion: '#event-comments-region'
+      tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
 
@@ -16,20 +16,20 @@
       'change': 'render'
     ###
 
-  class Point.Header extends App.Views.ItemView
-    template: 'PointHeader'
+  class Event.Header extends App.Views.ItemView
+    template: 'EventHeader'
     modelEvents:
       'change:isliked': 'render'
       'change:likes_count': 'render'
     events:
-      'click .btn-like': -> App.request 'like:point', @model
+      'click .btn-like': -> App.request 'like:event', @model
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
 
     initialize: ->
-      @listenTo @model, 'point:like:response', @pointLikeResponse
+      @listenTo @model, 'event:like:response', @eventLikeResponse
 
-    pointLikeResponse: (data) ->
+    eventLikeResponse: (data) ->
       if data.status is 1
         btn = @$('.btn-like').tooltip 'show'
         setTimeout( =>
@@ -41,8 +41,8 @@
       $(e.currentTarget).toggleClass 'active'
 
 
-  class Point.Photo extends App.Views.ItemView
-    template: 'PointPhoto'
+  class Event.Photo extends App.Views.ItemView
+    template: 'EventPhoto'
     events:
       'click .btn-photo-add': 'showPhotoPopup'
     modelEvents:
@@ -60,7 +60,7 @@
 
     showPhotoPopup: (event) ->
       event.preventDefault()
-      addPhotoView = new Point.AddPhoto
+      addPhotoView = new Event.AddPhoto
         model: @model
       App.photoPopupRegion.show addPhotoView
 
@@ -88,23 +88,23 @@
             @$('#bx-pager .bx-pager__viewport').scrollLeft $('#bx-pager .bx-pager__viewport').width()
 
 
-  class Point.Map extends App.Views.ItemView
-    template: 'PointMap'
+  class Event.Map extends App.Views.ItemView
+    template: 'EventMap'
 
 
-  class Point.Comments extends App.Views.ItemView
-    template: 'PointComments'
+  class Event.Comments extends App.Views.ItemView
+    template: 'EventComments'
     className: 'comments'
     tagName: 'ul'
 
 
-  class Point.Tags extends App.Views.ItemView
-    template: 'PointTags'
+  class Event.Tags extends App.Views.ItemView
+    template: 'EventTags'
     modelEvents:
       'change:tags': 'render'
 
 
-  class Point.AddPhoto extends App.Views.ItemView
+  class Event.AddPhoto extends App.Views.ItemView
     template: 'AddPhotoPopup'
     className: 'popupwin__scrollbox'
     events:
@@ -118,7 +118,7 @@
     onShow: ->
       id = @model.get 'id'
       @$('#photos-dropzone').dropzone
-        url: "/photos/point/#{id}/add"
+        url: "/photos/event/#{id}/add"
         paramName:'img'
         headers:
           'X-CSRFToken': $.cookie('csrftoken')

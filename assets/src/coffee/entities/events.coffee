@@ -35,28 +35,28 @@
         invalid
 
   API =
-    getDetail: (point, params = {}) ->
-      point.id = point.get 'id'
+    getDetail: (event, params = {}) ->
+      event.id = event.get('id') or event.get('unid')
       _.defaults params
-      point.fetch
+      event.fetch
         reset: true
         data: params
-      point
+      event
 
-    like: (point, params = {}) ->
-      id = point.get 'id'
+    like: (event, params = {}) ->
+      id = event.get('id') or event.get('unid')
       App.apiRequest
-        url: App.API_BASE_URL + "/api/v1/points/#{id}/like/"
+        url: App.API_BASE_URL + "/api/v1/events/#{id}/like/"
         type: 'POST'
-        successCallback: (data) -> point.trigger 'point:like:response', data
+        successCallback: (data) -> event.trigger 'event:like:response', data
         data:
           id: id
       
-  App.reqres.setHandler 'get:detail:point', (point) ->
-    API.getDetail point
+  App.reqres.setHandler 'get:detail:event', (event) ->
+    API.getDetail event
 
-  App.reqres.setHandler 'like:point', (point) ->
-    response = API.like point
+  App.reqres.setHandler 'like:event', (event) ->
+    response = API.like event
     response.done (data) ->
-      point.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
-    point
+      event.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
+    event

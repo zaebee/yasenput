@@ -18,6 +18,9 @@
     loginPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_authorization')
 
     pointPopup: Marionette.Region.Modal.extend(el: '.popupwin_place')
+    eventPopup: Marionette.Region.Modal.extend(el: '.popupwin_event')
+    routePopup: Marionette.Region.Modal.extend(el: '.popupwin_route')
+    tripPopup: Marionette.Region.Modal.extend(el: '.popupwin_trip')
 
     addPointPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-place')
     addEventPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-event')

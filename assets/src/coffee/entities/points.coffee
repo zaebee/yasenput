@@ -42,7 +42,7 @@
       point
 
     like: (point, params = {}) ->
-      id = point.get 'id'
+      id = point.get('id') or point.get('unid')
       App.apiRequest
         url: App.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'

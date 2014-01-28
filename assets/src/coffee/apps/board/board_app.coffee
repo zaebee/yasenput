@@ -22,6 +22,9 @@
   App.vent.on 'show:detail:popup', (model) ->
     new BoardApp.Point.Controller model: model
 
+  App.vent.on 'show:detail:popup:event', (model) ->
+    new BoardApp.Event.Controller model: model
+
   App.vent.on 'filter:all:yapens', ->
     new BoardApp.List.Controller
 
