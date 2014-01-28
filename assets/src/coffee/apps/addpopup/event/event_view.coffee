@@ -106,6 +106,7 @@
       @rootLabels = @collection.toJSON().filter (label) -> label.level is 0
       @additionalLabels = @collection.toJSON().filter (label) -> label.level is 1
       @otherLabels = @collection.toJSON().filter (label) -> label.level is 2
+      @listenTo @model, 'sync', @closePopup
 
     templateHelpers: ->
       rootLabels: @rootLabels
@@ -157,9 +158,9 @@
       event.preventDefault()
       tags = @$('.field_tags .select-type').select2 'val'
       @model.set tags: tags
-      isValid = @model.isValid()
       if @model.get('points').length
         @$('.field__input-place').removeClass 'error'
+        @model.save()
       else
         @$('.field__input-place').addClass 'error'
 
@@ -206,6 +207,10 @@
         formatSelection: @format_tags
         tokenSeparators: [","]
         escapeMarkup: (m) -> m
+
+    closePopup: (model, resp, options) ->
+      console.log 'event saved', model, resp, options
+      App.addEventPopup.close()
 
 
   class Event.Points extends App.Views.ItemView
