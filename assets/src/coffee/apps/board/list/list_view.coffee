@@ -24,6 +24,7 @@
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'
+      'change:imgs': 'render'
 
     onRender: ->
       console.log 'onRender model'
@@ -37,7 +38,7 @@
 
     mark: ->
       console.log this.model.attributes
-      
+
       id_icon = [[1,[[80,0], [112, 36]]], #достопримечательности
         [2,[[0,40], [32, 76]]], #охота
         [3,[[40,0], [72, 36]]], #рыбалка
@@ -48,11 +49,10 @@
         [86,[[80,40], [112, 76]]], #бары и ночные клубы
         [87,[[0,0], [32, 36]]], #учреждения
         [1136,[[0,80], [32, 116]]]] #другое
-      console.log id_icon[1]
       that = this
       sprite_coords = [[0,0], [32, 36]]
       $(id_icon).each ->
-        if this[0] == that.model.attributes.tags[0].id 
+        if this[0] == that.model.attributes.tags[0].id
           sprite_coords = this[1]
       placemark = new App.ymaps.Placemark [this.model.attributes.latitude, this.model.attributes.longitude],{}, {
         iconImageClipRect: sprite_coords,
@@ -68,7 +68,7 @@
       if route_p.length > 1
         console.log App.mmap.geoObjects
         if !App.mroute
-          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->
             console.log 'test'
             route.getPaths().options.set
               balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
@@ -77,9 +77,8 @@
               noPlacemark: true
             route.getWayPoints().options.set 'visible', false
             App.mmap.geoObjects.add route
-        #else 
+        #else
           #App.mroute
-
 
 
   class List.Yapens extends App.Views.CollectionView
