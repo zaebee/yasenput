@@ -96,6 +96,11 @@
     template: 'EventComments'
     className: 'comments'
     tagName: 'ul'
+    events:
+      'submit .comment-form': 'addComment'
+
+    addComment: (event) ->
+      event.preventDefault()
 
 
   class Event.Tags extends App.Views.ItemView

@@ -11,6 +11,14 @@
 
     className: 'popupwin__scrollbox'
 
+    events:
+      'click .js-open': 'toggleCommercial'
+
+    toggleCommercial: (event) ->
+      event.preventDefault()
+      @$('.js-open').toggleClass 'active'
+      @$('.commercial-info__body ').slideToggle()
+
     ###
     modelEvents:
       'change': 'render'
@@ -97,6 +105,11 @@
     template: 'PointComments'
     className: 'comments'
     tagName: 'ul'
+    events:
+      'submit .comment-form': 'addComment'
+
+    addComment: (event) ->
+      event.preventDefault()
 
 
   class Point.Tags extends App.Views.ItemView
