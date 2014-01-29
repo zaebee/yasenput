@@ -34,7 +34,7 @@
     pointLikeResponse: (data) ->
       if data.status is 1
         ##TODO write error handler
-        console.error data
+        App.vent.trigger 'show:login:popup'
 
     mark: ->
       console.log this.model.attributes

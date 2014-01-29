@@ -15,6 +15,10 @@
     popup = new HeaderApp.Show.PopupAdd
     App.addPopupRegion.show popup
 
+  App.vent.on 'show:login:popup', () ->
+    popup = new HeaderApp.Show.PopupLogin
+    App.loginPopupRegion.show popup
+
   HeaderApp.on 'start', ->
     console.log 'HeaderApp onStart event'
     API.show()

@@ -31,6 +31,7 @@
 
     pointLikeResponse: (data) ->
       if data.status is 1
+        App.vent.trigger 'show:login:popup'
         btn = @$('.btn-like').tooltip 'show'
         setTimeout( =>
           @$('.btn-like').tooltip 'destroy'
