@@ -11,7 +11,7 @@
       'click .link_settings': 'settings'
 
     modelEvents:
-      'change': 'render'
+      'change': 'calculateTotalAdded render'
 
     initialize: ->
       App.execute 'when:fetched', @model, =>
@@ -19,6 +19,10 @@
         total_added = @model.get('added_events') + @model.get('added_points')
         @model.set 'total_added', total_added
         window.model = @model
+
+    calculateTotalAdded: ->
+        total_added = @model.get('added_events') + @model.get('added_points')
+        @model.set 'total_added', total_added
 
     onRender: ->
       @tips = @$('.box__img .icon').tooltip

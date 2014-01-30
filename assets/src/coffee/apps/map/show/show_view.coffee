@@ -21,25 +21,26 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
+        $('.ymaps-copyrights-pane').css('bottom','13px')
         App.mmap_points = []
         App.mmap = new App.ymaps.Map 'map',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 6
+          zoom: 12
         , autoFitToViewport: 'always'
         #App.mmap = @yandexmap
 
 
       console.log this
-      $('.map').resizable 
+      $('.map').resizable
         minHeight: 80,
         handles: "s"
-        resize: ( event, ui )  => 
+        resize: ( event, ui )  =>
           $this = $(this)
-          if ui.size.height > 440 
+          if ui.size.height > 440
             $this.addClass('open')
           else
             $this.removeClass('open')
-          
+
           ###
           myMap.container.fitToViewport();
           myMap2.container.fitToViewport();
@@ -51,7 +52,41 @@
           myMap8.container.fitToViewport();
           myMap9.container.fitToViewport();
           myMap10.container.fitToViewport();
-          ###        
+          ###   
+      ###      
+      dragAndDropSetup = (container) -> 
+        console.log 'dragAndDropSetup'
+        container.find(".route-list_draggable .list .item").dragdrop =>
+            makeClone: true,
+            sourceHide: true,
+            dragClass: "dragged"
+            
+            canDrag = ($src, event) -> 
+                $srcElement = $src
+                srcIndex = $srcElement.index()
+                dstIndex = srcIndex
+                return $src
+            
+            canDrop: function($dst) {
+                if ($dst.is("li")) {
+                    dstIndex = $dst.index();
+                    if (srcIndex<dstIndex)
+                        $srcElement.insertAfter($dst);
+                    else
+                        $srcElement.insertBefore($dst);
+                }
+                return true;
+            },
+            didDrop: function($src, $dst) {
+              $dst.find('.item').each(function(){
+                $(this).find('.number').html($(this).index());
+              });
+            }
+            
+      $('.map_main .route-list').jScrollPane =>
+        autoReinitialise: true
 
+      dragAndDropSetup $('.map_main')    
+      ###
   class Show.Tags extends App.Views.ItemView
     template: 'IconTemplate'

@@ -9,15 +9,21 @@
   class ProfileApp.Router extends Marionette.AppRouter
     appRoutes:
       'dashboard/': 'index'
-      'dashboard/edit/': 'edit'
+      'dashboard/likes/': 'likes'
+      'dashboard/settings/': 'settings'
 
   API =
     index: ->
       console.log 'ProfileApp index url'
       new ProfileApp.List.Controller
 
-    edit: ->
-      return
+    likes: ->
+      console.log 'ProfileApp likes url'
+      new ProfileApp.List.Controller
+
+    settings: ->
+      console.log 'ProfileApp settings url'
+      new ProfileApp.List.Controller
 
   App.vent.on 'show:dashboard:region', () ->
     if App.headerRegion.currentView.dashboardRegion.$el
