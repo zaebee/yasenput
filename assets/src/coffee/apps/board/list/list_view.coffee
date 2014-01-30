@@ -13,6 +13,8 @@
         return 'BoardSet'
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
+      else if @model.get('type_of_item') is 'event'
+        return 'BoardEvent'
       else
         return 'BoardPoint'
 
@@ -21,6 +23,9 @@
 
     events:
       'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
+      'click .js-popupwin-event': -> @trigger 'show:detail:popup', @model
+      'click .js-popupwin-route': -> @trigger 'show:detail:popup', @model
+
       'click .sprite-like': -> App.request 'like:point', @model
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'

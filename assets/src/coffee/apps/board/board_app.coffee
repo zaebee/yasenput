@@ -20,10 +20,10 @@
         user: null
 
   App.vent.on 'show:detail:popup', (model) ->
-    new BoardApp.Point.Controller model: model
-
-  App.vent.on 'show:detail:popup:event', (model) ->
-    new BoardApp.Event.Controller model: model
+    switch model.get 'type_of_item'
+      when 'point' then new BoardApp.Point.Controller model: model
+      when 'event' then new BoardApp.Event.Controller model: model
+      when 'route' then new BoardApp.Route.Controller model: model
 
   App.vent.on 'filter:all:yapens', (params = {}) ->
     _.defaults params
