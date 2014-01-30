@@ -20,10 +20,12 @@
     likes: ->
       console.log 'ProfileApp likes url'
       new ProfileApp.List.Controller
+        section: 'likes'
 
     settings: ->
       console.log 'ProfileApp settings url'
       new ProfileApp.List.Controller
+        section: 'settings'
 
   App.vent.on 'show:dashboard:region', () ->
     if App.headerRegion.currentView.dashboardRegion.$el
