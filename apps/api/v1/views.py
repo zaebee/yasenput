@@ -515,11 +515,17 @@ class PointAdd(PointsBaseView):
         DEFAULT_LEVEL = 2
 
         errors = []
-        if request.user.is_authenticated():
-            params = request.POST.copy()
-            data = params.get('model', "{}")
-            data = json.loads(data)
+        params = request.POST.copy()
+        data = params.get('model', "{}")
+        data = json.loads(data)
+
+        ## update point with PUT emulate 
+        if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
+            form = forms.AddPointForm(data,
+                                      instance=MainModels.Points.objects.get(pk=kwargs.get('id')))
+        else:
             form = forms.AddPointForm(data)
+        if request.user.is_authenticated():
             if form.is_valid():
                 point = form.save(commit=False)
 
@@ -540,6 +546,7 @@ class PointAdd(PointsBaseView):
 
                 tags = data.get("tags")
                 if tags:
+                    point.tags.remove(*point.tags.all())
                     for tag in tags:
                         if unicode(tag).isdigit():
                             new_tag = TagsModels.Tags.objects.filter(id=tag)
