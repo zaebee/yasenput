@@ -153,7 +153,7 @@ class PersonAccount(PersonsBaseView):
                                              extras=["liked_points", "liked_events", "liked_photod",
                                                      "added_points", "added_events", "added_photos",
                                                      "want_visit_points", "want_visit_events",
-                                                     "person_followers", "data"
+                                                     "person_followers", "icon", "icon_small"
                                                      ],
-                                             fields=("username", "first_name", "last_name")),
+                                             fields=("username", "first_name", "last_name", "avatar")),
                             mimetype="application/json")

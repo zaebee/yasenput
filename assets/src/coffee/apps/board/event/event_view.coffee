@@ -22,12 +22,16 @@
       'change:isliked': 'render'
       'change:likes_count': 'render'
     events:
-      'click .btn-like': -> App.request 'like:event', @model
+      'click .btn-like': 'eventLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
 
     initialize: ->
       @listenTo @model, 'event:like:response', @eventLikeResponse
+
+    eventLike: (event) ->
+      event.preventDefault()
+      App.request 'like:event', @model
 
     eventLikeResponse: (data) ->
       if data.status is 1
@@ -98,9 +102,31 @@
     tagName: 'ul'
     events:
       'submit .comment-form': 'addComment'
+    modelEvents:
+      'change:reviews': 'render'
+
+    initialize: ->
+      @listenTo @model, 'event:comment:response', @eventCommentResponse
+
+    eventCommentResponse: (data) ->
+      if data.status is 0
+        @model.fetch(
+          success: =>
+            @$('.comment-form').parent().removeClass 'loading'
+        )
+        @$('[name=review_text]').val ''
+        @$('[name=review_text]').removeClass 'error'
+      else
+        @$('[name=review_text]').addClass 'error'
 
     addComment: (event) ->
       event.preventDefault()
+      review_text = @$('[name=review_text]').val()
+      if review_text
+        App.request 'comment:event', @model, review: review_text
+        @$('.comment-form').parent().addClass 'loading'
+      else
+        @$('[name=review_text]').addClass 'error'
 
 
   class Event.Tags extends App.Views.ItemView

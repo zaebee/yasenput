@@ -4,7 +4,8 @@
   class List.Yapen extends App.Views.ItemView
     initialize: (options) ->
       @model.set 'editable', options.editable
-      @listenTo @model, 'point:like:response', @pointLikeResponse
+      @listenTo @model, 'point:like:response', @likeResponse
+      @listenTo @model, 'event:like:response', @likeResponse
 
     getTemplate: ->
       if @model.get('type_of_item') is 'point'
@@ -26,7 +27,7 @@
       'click .js-popupwin-event': -> @trigger 'show:detail:popup', @model
       'click .js-popupwin-route': -> @trigger 'show:detail:popup', @model
 
-      'click .sprite-like': -> App.request 'like:point', @model
+      'click .sprite-like': 'like'
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
@@ -49,9 +50,14 @@
     showRemovePopup: (event) ->
       event.preventDefault()
 
-    pointLikeResponse: (data) ->
+    like: (event) ->
+      event.preventDefault()
+      switch @model.get 'type_of_item'
+        when 'point' then App.request 'like:point', @model
+        when 'event' then App.request 'like:event', @model
+
+    likeResponse: (data) ->
       if data.status is 1
-        ##TODO write error handler
         App.vent.trigger 'show:login:popup'
 
     mark: ->

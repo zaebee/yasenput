@@ -49,7 +49,16 @@
         successCallback: (data) -> point.trigger 'point:like:response', data
         data:
           id: id
-      
+
+    comment: (point, params = {}) ->
+      _.defaults params
+      id = point.get('id') or point.get('unid')
+      App.apiRequest
+        url: App.API_BASE_URL + "/api/v1/points/#{id}/review/"
+        type: 'POST'
+        successCallback: (data) -> point.trigger 'point:comment:response', data
+        data: params
+
   App.reqres.setHandler 'get:detail:point', (point) ->
     API.getDetail point
 
@@ -57,4 +66,8 @@
     response = API.like point
     response.done (data) ->
       point.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
+    point
+
+  App.reqres.setHandler 'comment:point', (point, params = {}) ->
+    response = API.comment point, params
     point

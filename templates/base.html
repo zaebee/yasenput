@@ -67,6 +67,7 @@
             first_name: '{{ user.first_name }}',
             last_name: '{{ user.last_name }}',
             avatar: '{{ user.person.avatar }}',
+            icon: '{{ user.person.icon }}',
             count_liked_objects: {{ count_liked_objects|default:0 }},
             count_commented_objects: {{ count_commented_objects|default:0 }},
           };

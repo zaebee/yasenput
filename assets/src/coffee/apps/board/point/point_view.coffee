@@ -19,10 +19,6 @@
       @$('.js-open').toggleClass 'active'
       @$('.commercial-info__body ').slideToggle()
 
-    ###
-    modelEvents:
-      'change': 'render'
-    ###
 
   class Point.Header extends App.Views.ItemView
     template: 'PointHeader'
@@ -30,12 +26,16 @@
       'change:isliked': 'render'
       'change:likes_count': 'render'
     events:
-      'click .btn-like': -> App.request 'like:point', @model
+      'click .btn-like': 'pointLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
 
     initialize: ->
       @listenTo @model, 'point:like:response', @pointLikeResponse
+
+    pointLike: (event) ->
+      event.preventDefault()
+      App.request 'like:point', @model
 
     pointLikeResponse: (data) ->
       if data.status is 1
@@ -107,9 +107,31 @@
     tagName: 'ul'
     events:
       'submit .comment-form': 'addComment'
+    modelEvents:
+      'change:reviews': 'render'
+
+    initialize: ->
+      @listenTo @model, 'point:comment:response', @pointCommentResponse
+
+    pointCommentResponse: (data) ->
+      if data.status is 0
+        @model.fetch(
+          success: =>
+            @$('.comment-form').parent().removeClass 'loading'
+        )
+        @$('[name=review_text]').val ''
+        @$('[name=review_text]').removeClass 'error'
+      else
+        @$('[name=review_text]').addClass 'error'
 
     addComment: (event) ->
       event.preventDefault()
+      review_text = @$('[name=review_text]').val()
+      if review_text
+        App.request 'comment:point', @model, review: review_text
+        @$('.comment-form').parent().addClass 'loading'
+      else
+        @$('[name=review_text]').addClass 'error'
 
 
   class Point.Tags extends App.Views.ItemView

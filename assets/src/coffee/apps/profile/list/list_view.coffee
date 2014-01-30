@@ -35,6 +35,7 @@
       'click .link_make': 'makes'
       'click .link_like': 'likes'
       'click .link_settings': 'settings'
+      'click .js-popup-login-commercial': 'showCommercialPopup'
 
     onShow: ->
       $('.header__title').removeClass 'hide'
@@ -43,3 +44,6 @@
     onClose: ->
       $('.header__title').addClass 'hide'
       $('.header__filter').removeClass 'hide'
+
+    showCommercialPopup: (event) ->
+      event.preventDefault()

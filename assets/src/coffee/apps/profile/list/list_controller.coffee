@@ -29,10 +29,12 @@
     showMyYapens: ->
       App.vent.trigger 'filter:all:yapens',
         user: @user.get 'id'
+        s: null
 
     showMyLikes: ->
       App.vent.trigger 'filter:all:yapens',
         user: @user.get 'id'
+        s: null
 
     showSettings: ->
       settingsView = new List.ProfileSettings model: @user

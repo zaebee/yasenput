@@ -6679,8 +6679,16 @@ a {
     margin-right:15px;
 }
 
+.comments__item.loading {
+    background: url(../images/ajax-loader.gif) no-repeat center;
+}
+.comments__item.loading > form {
+    visibility: hidden;
+}
+
 .field__input-place.error .select2-choices,
 #dt_start.error, #dt_end.error,
+.comment-form textarea.error,
 .form__field_name.error input,
 .form__field_date.error input,
 .field__input-map.error input {
