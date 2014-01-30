@@ -11,12 +11,10 @@
 
     initialize: (options) ->
       @section = options.section
-      console.log 'section', @section
       App.execute 'when:fetched', @model, =>
         console.log 'user fetched'
         total_added = @model.get('added_events') + @model.get('added_points')
         @model.set 'total_added', total_added
-        window.model = @model
 
     templateHelpers: ->
       section: @section
