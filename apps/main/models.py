@@ -316,6 +316,14 @@ class Events(models.Model):
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
 
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_events",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+    unid = '1'
+    ypi = models.IntegerField(default=0, blank=True)
+    type_of_item = 'event'
+
     def __unicode__(self):
         return self.name
 

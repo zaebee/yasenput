@@ -255,8 +255,8 @@ class ItemsList(PointsBaseView):
         params = request.GET
 
         sets = "set"
-        models = ['points','sets','routes']
-        search_res_points = search_res_sets = search_res_routes = MainModels.Points.search.none()
+        models = ['points','sets','routes','events']
+        search_res_points = search_res_sets = search_res_routes = search_res_events = MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
@@ -272,19 +272,25 @@ class ItemsList(PointsBaseView):
             t0 = time.time()
             search_res_routes = MainModels.Routes.search.query(params.get('s',''))
             self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
+        if 'events' in models:
+            t0 = time.time()
+            search_res_events = MainModels.Events.search.query(params.get('s',''))
+            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         #search_res_sets_ex = search_res_sets
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         if params.get('user'):
             t0 = time.time()
-            search_res_points_list = search_res_points.all().filter(author_id = params.get('user'))
+            search_res_points_list = search_res_points.filter(author_id = params.get('user'))
             search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
             search_res_routes_list = search_res_routes.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0 | (Count(search_res_routes_list)>0)):
+            search_res_events_list = search_res_events.filter(author_id = params.get('user'))
+            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0) | (Count(search_res_routes_list)>0) | (Count(search_res_events_list)>0):
                 search_res_sets = search_res_sets_list
                 search_res_points = search_res_points_list
                 search_res_routes = search_res_routes_list
+                search_res_events = search_res_events_list
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
         sort = 'ypi'
         if params.get('content'):
@@ -293,13 +299,14 @@ class ItemsList(PointsBaseView):
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
         if params.get('tags'):
-            tags = params.get('tags')
+            tags = params.get('tags', [])
             tags = tags.split(',')
             t0 = time.time()
-            search_res_points = search_res_points.filter(tags_id = tags)
+            search_res_points = search_res_points.filter(tags_id__in = tags)
+            search_res_events = search_res_events.filter(tags_id__in = tags)
             search_res_routes = MainModels.Routes.search.none()
             search_res_sets = CollectionsModels.Collections.search.none()
-            self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, params.get('tags', '')))
+            self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
 
         if params.get('coord_left'):
             #top left coords
@@ -340,7 +347,13 @@ class ItemsList(PointsBaseView):
             if len(points_l) > 0:
                 search_res_routes_list.append(int(route.id))
 
-        if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0):
+        search_res_events_list = []
+        for event in search_res_events.all():
+            points_l = event.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            if len(points_l) > 0:
+                search_res_events_list.append(int(event.id))
+
+        if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
             if len(search_res_sets_list) == 0:
                 search_res_sets = none_qs
             else:
@@ -349,12 +362,17 @@ class ItemsList(PointsBaseView):
                 search_res_routes = none_qs
             else:
                 search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
+            if len(search_res_events_list) == 0:
+                search_res_events = none_qs
+            else:
+                search_res_events = MainModels.Events.objects.all().filter(id__in = search_res_events_list)
             search_res_points = search_res_points_list
 
 
         t0 = time.time()
         search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
         search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+        search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
 
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
@@ -362,7 +380,7 @@ class ItemsList(PointsBaseView):
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
-                 }), search_res_sets, search_res_routes.extra(select={
+                 }), search_res_sets, search_res_events, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
 
