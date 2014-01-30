@@ -149,6 +149,8 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, '104x104', crop="center center")
         return im.url
 """
+
+
 class Points(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
@@ -304,7 +306,7 @@ class Events(models.Model):
     dt_end = models.DateTimeField('Окончание')
     name = models.CharField('Название', max_length=255)
     description = models.TextField('описание', blank=True)
-    point = models.ForeignKey(Points, unique=False)
+    points = models.ManyToManyField(Points, unique=False, related_name='events', blank=True, null=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_followers', serialize=True)
@@ -313,6 +315,14 @@ class Events(models.Model):
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
+
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_events",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+    unid = '1'
+    ypi = models.IntegerField(default=0, blank=True)
+    type_of_item = 'event'
 
     def __unicode__(self):
         return self.name

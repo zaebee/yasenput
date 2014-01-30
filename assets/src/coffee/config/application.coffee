@@ -1,5 +1,18 @@
 do (Backbone, $, Dropzone) ->
 
+  $(document).click (e) ->
+    if $(e.target).closest('.header__user').length
+      return
+    else
+      $('.header__user .profile-menu').hide()
+      $('.js-profile-menu').removeClass 'open'
+
+    if $(e.target).closest('.filter-type').length
+      return
+    else
+      $('.filter-type__list').hide()
+      $('.header__filter .js-open').removeClass 'open'
+
   $.ajaxSetup
     headers:
       'X-CSRFToken': $.cookie('csrftoken')
@@ -7,6 +20,7 @@ do (Backbone, $, Dropzone) ->
   Dropzone.autoDiscover = false
 
   Backbone.emulateJSON = true
+  Backbone.emulateHTTP = true
 
   _.extend Backbone.Marionette.Application::,
 

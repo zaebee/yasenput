@@ -2,7 +2,8 @@
 
 
   class List.Yapen extends App.Views.ItemView
-    initialize: ->
+    initialize: (options) ->
+      @model.set 'editable', options.editable
       @listenTo @model, 'point:like:response', @pointLikeResponse
 
     getTemplate: ->
@@ -12,32 +13,50 @@
         return 'BoardSet'
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
+      else if @model.get('type_of_item') is 'event'
+        return 'BoardEvent'
       else
         return 'BoardPoint'
 
-    className: 'box'
+    className: ->
+      if @model.get('editable') then 'box box_dashboard' else 'box'
+
     events:
       'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
+      'click .js-popupwin-event': -> @trigger 'show:detail:popup', @model
+      'click .js-popupwin-route': -> @trigger 'show:detail:popup', @model
+
       'click .sprite-like': -> App.request 'like:point', @model
       'click .sprite-place': 'mark'
+      'click .btn_edit': 'showEditPopup'
+      'click .btn_remove': 'showRemovePopup'
 
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'
+      'change:imgs': 'render'
 
     onRender: ->
       console.log 'onRender model'
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
 
+    showEditPopup: (event) ->
+      event.preventDefault()
+      console.log event
+      App.vent.trigger 'show:add:place:popup', model: @model
+
+    showRemovePopup: (event) ->
+      event.preventDefault()
+
     pointLikeResponse: (data) ->
       if data.status is 1
         ##TODO write error handler
-        console.error data
+        App.vent.trigger 'show:login:popup'
 
     mark: ->
       console.log this.model.attributes
-      
+
       id_icon = [[1,[[80,0], [112, 36]]], #достопримечательности
         [2,[[0,40], [32, 76]]], #охота
         [3,[[40,0], [72, 36]]], #рыбалка
@@ -48,11 +67,10 @@
         [86,[[80,40], [112, 76]]], #бары и ночные клубы
         [87,[[0,0], [32, 36]]], #учреждения
         [1136,[[0,80], [32, 116]]]] #другое
-      console.log id_icon[1]
       that = this
       sprite_coords = [[0,0], [32, 36]]
       $(id_icon).each ->
-        if this[0] == that.model.attributes.tags[0].id 
+        if this[0] == that.model.attributes.tags[0].id
           sprite_coords = this[1]
 
       placemark = new App.ymaps.Placemark [this.model.attributes.latitude, this.model.attributes.longitude],{}, {
@@ -95,7 +113,7 @@
         App.mmap.geoObjects.remove App.t_route
       if route_p.length > 1
         if !App.mroute
-          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->
             console.log 'test'
             route.getPaths().options.set
               balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
@@ -120,11 +138,13 @@
             App.t_route = route
 
 
-
   class List.Yapens extends App.Views.CollectionView
     itemView: List.Yapen
     className: 'content'
     id: 'grid'
+
+    itemViewOptions: () ->
+      editable: !!App.settings.user
 
     initialize: ->
       _.bindAll @, 'onShow'

@@ -1,0 +1,19 @@
+<div class="box__title box__title_type_place">Место</div>
+<div class="box__img">
+  <a href="#?" class="js-popupwin-place">
+    {{#if imgs}}
+      <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" class="img">
+    {{else}}
+      <img src="/static/images/place-unknown.png" alt="{{name}}" class="img">
+    {{/if}}
+    <div class="icons">
+      <a class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>
+      <a href="#?" class="icon sprite-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" title="Нравится"></a>
+    </div>
+  </a>
+</div>
+<div class="box__description">
+  <div class="name">{{name}}</div>
+  <span class="info info_like">{{likes_count}}</span>
+  <span class="info info_comment">{{#if reviews}}{{reviews.length}}{{else}}0{{/if}}</span>
+</div>

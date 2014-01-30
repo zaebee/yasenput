@@ -4,7 +4,8 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
-      App.updateSettings content: @options.content or 'ypi'
+      #App.updateSettings content: @options.content or 'ypi'
+      App.updateSettings @options
       @yapens = App.request 'get:all:yapens', App.settings
       @showYapens()
 

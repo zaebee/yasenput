@@ -18,14 +18,14 @@ import json
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
-    
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
 
 class EventsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-    
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -50,7 +50,7 @@ class FollowEvent(EventsBaseView):
                 events.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка события"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
@@ -73,7 +73,7 @@ class LikeEvent(EventsBaseView):
                 events.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления лайка события"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
@@ -96,7 +96,7 @@ class WantVisitEvent(EventsBaseView):
                 events.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 0, "txt": "ошибка процедуры добавления хочу посетить событие"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": pk, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задано id события", "id": 0})
@@ -129,28 +129,28 @@ class EventsSearch(View):
         params = request.GET
         COUNT_ELEMENTS = 5
         errors = []
-               
+
         limit = COUNT_ELEMENTS
         offset = 0
-        
+
         form = forms.SearchForm(params)
         if form.is_valid():
-            pointsreq = MainModels.Events.objects;           
-            
+            pointsreq = MainModels.Events.objects;
+
             name = form.cleaned_data.get("s")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
 
-            content = form.cleaned_data.get("content") 
+            content = form.cleaned_data.get("content")
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes', '-created')
-            else:   
+            else:
                 pointsreq  = pointsreq.order_by("name")
-                
+
             events = pointsreq[offset:limit]
-            
+
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(events, fields=("name")), mimetype="application/json")
         else:
@@ -162,7 +162,7 @@ class EventsSearch(View):
 
 class EventsList(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-    http_method_names = ('get',)
+    http_method_names = ('get', 'post')
 
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -171,24 +171,24 @@ class EventsList(View):
 
     def get(self, request, *args, **kwargs):
         params = request.GET
-        
+
         COUNT_ELEMENTS = 10
         status = 2
         errors = []
-        
+
         page = kwargs.get("page", 1) or 1
-        
+
         limit = COUNT_ELEMENTS*int(page)
         offset = (int(page)-1)*COUNT_ELEMENTS
-        
+
         form = forms.FiltersForm(params)
         if form.is_valid():
             pointsreq = MainModels.Events.objects;
-                       
+
             user = form.cleaned_data.get("user")
             if user:
-                pointsreq = pointsreq.filter(author__id_icontains=user)            
-            
+                pointsreq = pointsreq.filter(author__id_icontains=user)
+
             coord_left = params.get("coord_left")
             if coord_left:
                 try:
@@ -200,8 +200,8 @@ class EventsList(View):
                     ln = coord_left.get("ln")
                     lt = coord_left.get("lt")
                     if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)    
-                    
+                        pointsreq = pointsreq.filter(point__longitude__gte=ln, point__latitude__gte=lt)
+
             coord_right = params.get("coord_right")
             if coord_right:
                 try:
@@ -213,16 +213,16 @@ class EventsList(View):
                     ln = coord_right.get("ln")
                     lt = coord_right.get("lt")
                     if str(ln).isdigit() and str(lt).isdigit() and ln >= 0 and lt >= 0:
-                        pointsreq = pointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)               
-            
-            categ = form.cleaned_data.get("categ")    
+                        pointsreq = pointsreq.filter(point__longitude__lte=ln, point__latitude__lte=lt)
+
+            categ = form.cleaned_data.get("categ")
             if categ:
                 pointsreq = pointsreq.filter(point__categories__id__icontains=categ)
-            
+
             name = form.cleaned_data.get("name")
             if name:
                 pointsreq = pointsreq.filter(name__icontains=name)
-                                         
+
             tags = form.cleaned_data.get("tags")
             if tags:
                 try:
@@ -234,15 +234,15 @@ class EventsList(View):
                     if len(tags) > 0:
                         object_type = ContentType.objects.get_for_model(MainModels.Events).id
                         pointsreq = pointsreq.extra(where=['main_events.id in (select events_id from main_events_tags where tags_id in (%s))' % (",".join(map(lambda x: "'%s'" % x, tags)))])
-            
-            content = form.cleaned_data.get("content") or 'new'    
+
+            content = form.cleaned_data.get("content") or 'new'
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-created')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(uslikes=Count('likeusers__id')).order_by('-uslikes')
-                
+
             points  = pointsreq[offset:limit].all()
-            
+
             YpJson = YpSerialiser()
             return HttpResponse(YpJson.serialize(points, relations={'point':{}, 'tags': {'fields': ('name', 'id', 'level')}, 'feedbacks': {'fields': ('type', 'feedback')}, 'author':{'fields':('first_name','last_name','avatar')},'imgs':{'extras':('thumbnail207','thumbnail325',)}}), mimetype="application/json")
         else:
@@ -257,25 +257,25 @@ class EventAdd(EventsBaseView):
 
     def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
-        
+
         status = 2
         errors = []
-        
+
         params = request.GET
         form = forms.AddEventForm(params)
         if form.is_valid():
             event = form.save(commit=False)
-            
+
             person = MainModels.Person.objects.get(username=request.user)
             event.author = person
             event.save()
-                      
+
             params_form = forms.AddIdsForm(params)
             if params_form.is_valid():
                 images = params_form.cleaned_data.get('imgs', None)
                 if images:
                     try:
-                        images = json.loads(images)  
+                        images = json.loads(images)
                     except:
                         status = 1
                         errors.append("некорректно заданы изображения")
@@ -287,11 +287,11 @@ class EventAdd(EventsBaseView):
                                 status = 1
                                 message = "ошибка добавления изображения"
                                 if message not in errors: errors.appen(message)
-                           
+
                 reports = params_form.cleaned_data.get('feedbacks', None)
                 if reports:
                     try:
-                        reports = json.loads(reports)  
+                        reports = json.loads(reports)
                     except:
                         status = 1
                         errors.append("некорректно заданы отзывы")
@@ -308,11 +308,11 @@ class EventAdd(EventsBaseView):
                                         status = 1
                                         message = "ошибка добавления отзыва"
                                         if message not in errors: errors.appen(message)
-                    
+
                 tags = params_form.cleaned_data.get("tags")
                 if tags:
                     try:
-                        tags = json.loads(tags)    
+                        tags = json.loads(tags)
                     except:
                         status = 1
                         errors.append("некорректно заданы метки")
@@ -331,7 +331,7 @@ class EventAdd(EventsBaseView):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})           
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})
 
 
 class EventEdit(EventsBaseView):
@@ -339,28 +339,28 @@ class EventEdit(EventsBaseView):
 
     def get(self, request, *args, **kwargs):
         DEFAULT_LEVEL = 2
-        
+
         status = 2
         errors = []
-        
+
         params = request.GET
         form = forms.IdForm(params)
         if not form.is_valid():
             return JsonHTTPResponse({"status": 0, "id": 0, "txt": "Ожидается id события"})
-        
+
         form = forms.AddEventForm(params, instance=MainModels.Events.objects.get(pk=form.cleaned_data['id']))
         if form.is_valid():
             event = form.save()
-            
+
             person = MainModels.Person.objects.get(username=request.user)
-                
-                        
+
+
             params_form = forms.AddIdsForm(params)
             if params_form.is_valid():
                 images = params_form.cleaned_data.get('imgs', None)
                 if images:
                     try:
-                        images = json.loads(images)  
+                        images = json.loads(images)
                     except:
                         status = 1
                         errors.append("некорректно заданы изображения")
@@ -372,11 +372,11 @@ class EventEdit(EventsBaseView):
                                 status = 1
                                 message = "ошибка добавления изображения"
                                 if message not in errors: errors.appen(message)
-                           
+
                 reports = params_form.cleaned_data.get('feedbacks', None)
                 if reports:
                     try:
-                        reports = json.loads(reports)  
+                        reports = json.loads(reports)
                     except:
                         status = 1
                         errors.append("некорректно заданы отзывы")
@@ -393,11 +393,11 @@ class EventEdit(EventsBaseView):
                                         status = 1
                                         message = "ошибка добавления отзыва"
                                         if message not in errors: errors.appen(message)
-                    
+
                 tags = params_form.cleaned_data.get("tags")
                 if tags:
                     try:
-                        tags = json.loads(tags)    
+                        tags = json.loads(tags)
                     except:
                         status = 1
                         errors.append("некорректно заданы метки")
@@ -418,4 +418,4 @@ class EventEdit(EventsBaseView):
             e = form.errors
             for er in e:
                 errors.append(er +':'+e[er][0])
-        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})           
+        return JsonHTTPResponse({"id": 0, "status": 0, "txt": ", ".join(errors)})

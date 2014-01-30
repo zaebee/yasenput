@@ -1,0 +1,20 @@
+<div class="user-info">
+  <img src="/media/{{avatar}}" alt="user" class="img">
+  <div class="text">
+    <span class="name">{{first_name}} {{last_name}}</span>
+    <span class="location">{{#if city}}{{city}}{{else}}Не указано{{/if}}</span>
+    <span class="mail">{{#if email}}{{email}}{{else}}Не указано{{/if}}</span>
+  </div>
+</div>
+<div class="user-ctrls">
+  <ul class="list">
+    <li class="item">
+      <a href="#dashboard/" class="link link_make active">Я создал<span class="number">{{total_added}}</span></a>
+    </li>
+    <li class="item">
+    <a href="#dashboard/likes/" class="link link_like">Мне нравится<span class="number">{{count_liked_objects}}</span></a>
+    </li>
+    <li class="item"><a href="#dashboard/settings/" class="link link_settings">Настройки</a></li>
+    <li class="item"><a href="/logout/" class="link link_exit">Выход</a></li>
+  </ul>
+</div>

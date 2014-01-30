@@ -1,0 +1,68 @@
+<div class="popupwin__title clearfix">
+  <div class="steps">
+    <ul class="steps__list steps__list_event">
+      <li class="steps__item active">1</li>
+      <li class="steps__item">2</li>
+    </ul>
+  </div>
+</div>
+<div class="popupwin__container clearfix">
+  <div class="form">
+    <form action="/">
+      <div class="form__field form__field_name">
+        <label>Название события:</label>
+        <input type="text" placeholder="Например: Домик Петра" value={{name}}>
+        <span class="star">*</span>
+        <div class="already-added hide">
+          <div class="already-added__title">Уже есть!</div>
+          <ul class="already-added__list">
+            <li class="already-added__item">
+              <a href="#?" class="already-added__link">
+                <img src="media/uploads/added-1.png" alt="" class="img">
+                <span class="name">Софийский собор</span>
+                <span class="city">г.Вологда</span>
+              </a>
+            </li>
+            <li class="already-added__item active">
+              <a href="#?" class="already-added__link">
+                <img src="media/uploads/added-2.png" alt="" class="img">
+                <span class="name">Софийский собор</span>
+                <span class="city">г.Новгород</span>
+              </a>
+            </li>
+            <li class="already-added__item">
+              <a href="#?" class="already-added__link">
+                <img src="media/uploads/added-1.png" alt="" class="img">
+                <span class="name">Софийский собор</span>
+                <span class="city">г.Киев</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form__field form__field_date clearfix">
+        <label>Дата проведения:</label>
+        <div class="item">
+          <input id="dt_start" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
+        </div> &mdash;
+        <div class="item">
+          <input id="dt_end" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
+        </div>
+      </div>
+      <div class="form__field form__field_description">
+        <label>Описание места:</label>
+        <textarea placeholder="Опишите это событие так,чтобы захотелось в нем поучаствовать">{{description}}</textarea>
+      </div>
+    </form>
+  </div>
+  <div class="photo-upload">
+    <form action="/photos/add" class="dropzone clearfix" id="place-dropzone">
+      <div class="fallback">
+        <input name="file" type="file" multiple />
+      </div>
+    </form>
+  </div>
+</div>
+<div class="popupwin__footer clearfix">
+  <a href="#?" class="btn btn_color_blue right js-next">Следующий шаг</a>
+</div>

@@ -10,6 +10,8 @@
 
   class Entities.User extends Entities.Model
     idAttribute: 'id'
+    url:
+      App.API_BASE_URL + "/users/account/"
 
     defaults:
       first_name: ''

@@ -23,6 +23,10 @@ urlpatterns = patterns('',
     url(r'^route/(?P<id>\d+)/$', Route.as_view()),
     url(r'^route/(?P<id>\d+)/like/$', RouteLike.as_view()),
 
+    url(r'^events/*$', Event.as_view()),
+    url(r'^events/(?P<id>\d+)/$', Event.as_view()),
+    #url(r'^events/(?P<id>\d+)/like/$', RouteLike.as_view()),
+
     url(r'^tags/$', GetTags.as_view()),
 
     url(r'^photos/(?P<id>\d+)/comments/', Comment.as_view()),

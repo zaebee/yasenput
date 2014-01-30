@@ -69,12 +69,6 @@
             avatar: '{{ user.person.avatar }}',
             count_liked_objects: {{ count_liked_objects|default:0 }},
             count_commented_objects: {{ count_commented_objects|default:0 }},
-            collections: [ {% for collection in collections %}
-              {
-                id: {{ collection.id }},
-                name: '{{ collection.name }}'
-              },
-            {% endfor %} ]
           };
         {% else %}
           Yapp.USER = {authorized: false};

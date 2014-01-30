@@ -10,6 +10,7 @@
       ctrlsRegion: '.header__ctrls'
       destinationRegion: '.header__destination'
       filterRegion: '.header__filter'
+      dashboardRegion: '.header__dashboard'
 
 
   class Show.Ctrls extends App.Views.ItemView
