@@ -54,19 +54,46 @@
       $(id_icon).each ->
         if this[0] == that.model.attributes.tags[0].id 
           sprite_coords = this[1]
+
       placemark = new App.ymaps.Placemark [this.model.attributes.latitude, this.model.attributes.longitude],{}, {
         iconImageClipRect: sprite_coords,
         iconImageHref: 'static/images/sprite-baloon.png',
         iconImageSize: [32, 36]
       }
+      placemark.model = this
       App.mmap_points.push [this.model.attributes.latitude, this.model.attributes.longitude]
-      App.mmap.geoObjects.add placemark
-      console.log App.mmap_points
+      
+      if App.route_points
+        trig = 0
+        num = 0
+        $(App.route_points).each ->
+          if this == that
+            App.route_points.splice num, 1
+            
+            App.mmap.geoObjects.each (geoObject)->
+              if geoObject.model && geoObject.model == that
+                App.mmap.geoObjects.remove geoObject
+                console.log 'удалаяем плэйсмарк'
+            trig = 1
+          num += 1
+        if trig == 0
+          App.mmap.geoObjects.add placemark
+          App.route_points.push that
+      else 
+        App.route_points = []
+        App.route_points.push that
+        App.mmap.geoObjects.add placemark
+
+      
+      
+      console.log App.route_points
       route_p = []
-      $(App.mmap_points).each ->
-        route_p.push {type: 'wayPoint', point:this}
+
+      $(App.route_points).each ->
+        route_p.push {type: 'wayPoint', point:[this.model.attributes.latitude, this.model.attributes.longitude]}
+      if App.t_route
+        App.mmap.geoObjects.remove App.t_route
       if route_p.length > 1
-        console.log App.mmap.geoObjects
         if !App.mroute
           App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
             console.log 'test'
@@ -76,9 +103,21 @@
               opacity: 0.9,
               noPlacemark: true
             route.getWayPoints().options.set 'visible', false
+            console.log 'строим маршрут'
             App.mmap.geoObjects.add route
-        #else 
-          #App.mroute
+            App.t_route = route
+        else 
+          
+          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+            console.log 'test'
+            route.getPaths().options.set
+              balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
+              strokeColor: 'ca7953',
+              opacity: 0.9,
+              noPlacemark: true
+            route.getWayPoints().options.set 'visible', false
+            App.mmap.geoObjects.add route
+            App.t_route = route
 
 
 

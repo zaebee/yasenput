@@ -26,7 +26,6 @@
 
   MapApp.on 'start', ->
     console.log 'MapApp onStart event'
-    console.log 'збс'
     API.show()
 
   App.commands.setHandler 'toggle:map', (state) ->
