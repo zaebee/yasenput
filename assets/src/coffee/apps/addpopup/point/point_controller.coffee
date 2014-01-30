@@ -5,16 +5,17 @@
     initialize: ->
       console.log 'initialize AddPopupApp.Point.Controller'
       @tags = App.request 'get:all:tags', level: false
-      @model = new App.Entities.Point
+      @model = @options.model or new App.Entities.Point
+      if not @model.isNew()
+        @model.fetch
+          success: =>
+            App.addPointPopup.show @layout, loading: true
 
       @layout = new Point.Layout model: @model
       @listenTo @layout, 'show', =>
         @showStepName()
         @showStepWhat()
         @showStepCommers()
-      ###
-      ###
-      App.addPointPopup.show @layout, loading: true
 
     onClose: ->
       @stopListening()

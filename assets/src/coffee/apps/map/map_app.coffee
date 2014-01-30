@@ -23,10 +23,16 @@
       text = if App.mapRegion.$el.find('.a-toggle').html() is 'Свернуть карту' then 'Развернуть карту' else 'Свернуть карту'
       App.mapRegion.$el.find('.a-toggle').html text
 
+  App.vent.on 'show:map:region', () ->
+    if App.mapRegion.$el
+      App.mapRegion.$el.removeClass 'hide'
+
+  App.vent.on 'hide:map:region', () ->
+    if App.mapRegion.$el
+      App.mapRegion.$el.addClass 'hide'
 
   MapApp.on 'start', ->
     console.log 'MapApp onStart event'
-    console.log 'збс'
     API.show()
 
   App.commands.setHandler 'toggle:map', (state) ->

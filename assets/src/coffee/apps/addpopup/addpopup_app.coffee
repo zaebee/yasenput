@@ -17,13 +17,15 @@
     event: ->
       new AddPopupApp.Event.Controller
 
-  App.vent.on 'show:add:place:popup', ->
+  App.vent.on 'show:add:place:popup', (params = {}) ->
+    _.defaults params
     App.addPopupRegion.close()
-    new AddPopupApp.Point.Controller
+    new AddPopupApp.Point.Controller params
 
-  App.vent.on 'show:add:event:popup', ->
+  App.vent.on 'show:add:event:popup', (params = {}) ->
+    _.defaults params
     App.addPopupRegion.close()
-    new AddPopupApp.Event.Controller
+    new AddPopupApp.Event.Controller params
 
   App.addInitializer ->
     new AddPopupApp.Router

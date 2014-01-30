@@ -15,7 +15,7 @@
   class Point.StepName extends App.Views.ItemView
     template: 'PointStepName'
     className: 'popupwin__content clearfix'
-    
+
     events:
       'blur .form__field_name input': 'setName'
       'blur .form__field_description textarea': 'setDescription'
@@ -139,7 +139,6 @@
         @$('.field__input-map').addClass 'error'
 
     onShow: ->
-      @$('.categories__link').eq(0).trigger 'click'
       @$('.categories__link').tooltip()
       @$('.select-type').select2
         containerCssClass: 'select2-container_tags'
@@ -156,6 +155,21 @@
         tokenSeparators: [","]
         escapeMarkup: (m) -> m
 
+      rootLabel = _.find @model.get('tags'), level: 0
+      tags = _.filter @model.get('tags'), (el) -> el.level isnt 0
+      tags = _.map tags, (el) -> id:el.id, text:el.name
+      if rootLabel
+        @$(".categories__link[data-id=#{rootLabel.id}]").trigger 'click'
+        @labels[rootLabel.id] = tags
+      else
+        @$('.categories__link').eq(0).trigger 'click'
+      @$('.select-type').select2 'data', tags
+
+    onClose: ->
+      @stopListening()
+      @collection.reset()
+      @model.unset()
+
 
   class Point.StepCommers extends App.Views.ItemView
     template: 'PointStepCommers'
@@ -165,9 +179,6 @@
       'click .toggle-list__title': 'toggleList'
       'click .js-back': 'backStep'
       'click .js-finish': 'finishStep'
-
-    initialize: ->
-      @listenTo @model, 'sync', @closePopup
 
     toggleList: (event) ->
       event.preventDefault
@@ -183,12 +194,10 @@
 
     finishStep: (event) ->
       event.preventDefault()
-      @model.save()
+      @model.save null,
+        success: =>
+          App.addPointPopup.close()
 
     backStep: (event) ->
       event.preventDefault()
       @trigger 'show:step:what'
-
-    closePopup: (model, resp, options) ->
-      console.log model, resp, options
-      App.addPointPopup.close()

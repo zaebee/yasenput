@@ -7,6 +7,7 @@ do (Backbone, $, Dropzone) ->
   Dropzone.autoDiscover = false
 
   Backbone.emulateJSON = true
+  Backbone.emulateHTTP = true
 
   _.extend Backbone.Marionette.Application::,
 

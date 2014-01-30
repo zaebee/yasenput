@@ -2,7 +2,8 @@
 
 
   class List.Yapen extends App.Views.ItemView
-    initialize: ->
+    initialize: (options) ->
+      @model.set 'editable', options.editable
       @listenTo @model, 'point:like:response', @pointLikeResponse
 
     getTemplate: ->
@@ -15,11 +16,15 @@
       else
         return 'BoardPoint'
 
-    className: 'box'
+    className: ->
+      if @model.get('editable') then 'box box_dashboard' else 'box'
+
     events:
       'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
       'click .sprite-like': -> App.request 'like:point', @model
       'click .sprite-place': 'mark'
+      'click .btn_edit': 'showEditPopup'
+      'click .btn_remove': 'showRemovePopup'
 
     modelEvents:
       'change:likes_count': 'render'
@@ -30,6 +35,14 @@
       console.log 'onRender model'
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
+
+    showEditPopup: (event) ->
+      event.preventDefault()
+      console.log event
+      App.vent.trigger 'show:add:place:popup', model: @model
+
+    showRemovePopup: (event) ->
+      event.preventDefault()
 
     pointLikeResponse: (data) ->
       if data.status is 1
@@ -85,6 +98,9 @@
     itemView: List.Yapen
     className: 'content'
     id: 'grid'
+
+    itemViewOptions: () ->
+      editable: !!App.settings.user
 
     initialize: ->
       _.bindAll @, 'onShow'

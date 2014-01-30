@@ -9,15 +9,15 @@
   class BoardApp.Router extends Marionette.AppRouter
     appRoutes:
       '': 'index'
-      '!new': 'new'
 
   API =
     index: ->
+      App.vent.trigger 'show:map:region'
+      App.vent.trigger 'show:destination:region'
+      App.vent.trigger 'hide:dashboard:region'
       new BoardApp.List.Controller
         content: 'ypi'
-    new: ->
-      new BoardApp.List.Controller
-        content: 'updated'
+        user: null
 
   App.vent.on 'show:detail:popup', (model) ->
     new BoardApp.Point.Controller model: model
@@ -25,8 +25,9 @@
   App.vent.on 'show:detail:popup:event', (model) ->
     new BoardApp.Event.Controller model: model
 
-  App.vent.on 'filter:all:yapens', ->
-    new BoardApp.List.Controller
+  App.vent.on 'filter:all:yapens', (params = {}) ->
+    _.defaults params
+    new BoardApp.List.Controller params
 
   App.addInitializer ->
     new BoardApp.Router
