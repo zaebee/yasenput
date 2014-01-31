@@ -163,8 +163,8 @@
 
     onAfterItemAdded: (itemView) ->
       if @wall
-        itemView.$el.imagesLoaded =>
-          @wall.appended itemView.$el
+        #itemView.$el.imagesLoaded =>
+        @wall.appended itemView.$el
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>

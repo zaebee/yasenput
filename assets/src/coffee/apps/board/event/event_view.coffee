@@ -10,11 +10,17 @@
       tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
+    events:
+      'click .js-popupwin-place': 'showPointPopup'
 
-    ###
-    modelEvents:
-      'change': 'render'
-    ###
+    showPointPopup: (event) ->
+      event.preventDefault()
+      data = $(event.currentTarget).data()
+      point = new App.Entities.Point
+        unid: data.id
+        type_of_item: 'point'
+      App.vent.trigger 'show:detail:popup', point
+
 
   class Event.Header extends App.Views.ItemView
     template: 'EventHeader'
