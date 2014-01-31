@@ -96,11 +96,40 @@
           num += 1
         if trig == 0
           App.mmap.geoObjects.add placemark
+          $('.route_right').append '<li class="item">
+              <span class="drag"></span>
+              <span class="number">'+ (App.route_points.length+1)+'</span>
+              <img src="/static/images/place-unknown.png" alt="" class="img" width="44px" height="44px">
+              <div class="text">
+                <span class="text__place">'+ placemark.model.model.attributes.name+ '</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>'
           App.route_points.push that
       else 
         App.route_points = []
         App.route_points.push that
         App.mmap.geoObjects.add placemark
+        $('.route-list_deleteable').css 'display', 'block'
+        console.log placemark
+        $('.route_right').append '<li class="item hide">
+              <span class="drag"></span>
+              <span class="number">0</span>
+              <img src="" alt="" class="img">
+              <div class="text">
+                <span class="text__place"></span>
+                <span class="text__type c-place"></span>
+              </div>
+            </li>
+            <li class="item">
+              <span class="drag"></span>
+              <span class="number">1</span>
+              <img src="/static/images/place-unknown.png" alt="" class="img" width="44px" height="44px">
+              <div class="text">
+                <span class="text__place">'+ placemark.model.model.attributes.name+ '</span>
+                <span class="text__type c-place">место</span>
+              </div>
+            </li>'
 
       
       
