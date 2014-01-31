@@ -12,7 +12,7 @@
       <ul class="list">
         {{#each points}}
         <li class="item">
-          <a href="#" class="link c-place js-popupwin-place">{{name}}</a>
+          <a data-id="{{id}}" href="#" class="link c-place js-popupwin-place">{{name}}</a>
           <div class="description__address">{{address}}</div>
         </li>
         {{/each}}
@@ -48,7 +48,7 @@
     {{#sets}}
       <li class="peoples__item">
         <a href="#" class="peoples__link">
-          <img src="{{author.avatar}}" alt="user" class="peoples__img">
+          <img src="{{author.icon}}" alt="user" class="peoples__img">
         </a>
       </li>
     {{/sets}}

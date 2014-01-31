@@ -56,7 +56,7 @@ class PointsBaseView(View):
     def getSerializePoints(self, points):
         YpJson = YpSerialiser()
         return YpJson.serialize(points,
-                                fields=['main_img', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
+                                fields=['main_img', 'dt_start', 'dt_end', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
                                         'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking',
                                         'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
@@ -77,8 +77,9 @@ class PointsBaseView(View):
                                                                   },
                                                      'limit': LIMITS.POINTS_LIST.IMAGES_COUNT
                                                     },
-                                           'reviews': {'fields': ['id', 'review', 'rating', 'author', 'updated'],
-                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                           'reviews': {'fields': ['id', 'review', 'rating', 'author', 'updated', 'created'],
+                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                                                                'extras': ['icon']},
                                                                },
                                                        'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                       }
@@ -128,6 +129,18 @@ class PointsBaseView(View):
                  'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                  'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
+                 }}
+        return args
+
+    def getEventSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_events_likeusers WHERE main_events_likeusers.events_id = main_events.id and main_events_likeusers.user_id = '+str(user.id)
+        else:
+            isliked = "select 0"
+        args = {"select": {'id_event': 'select 0',
+                 'isliked': isliked,
+                 'likes_count': 'SELECT count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id',
                  }}
         return args
 
@@ -302,8 +315,8 @@ class ItemsList(PointsBaseView):
             tags = params.get('tags', [])
             tags = tags.split(',')
             t0 = time.time()
-            search_res_points = search_res_points.filter(tags_id__in = tags)
-            search_res_events = search_res_events.filter(tags_id__in = tags)
+            search_res_points = search_res_points.filter(tags_id = tags)
+            search_res_events = search_res_events.filter(tags_id = tags)
             search_res_routes = MainModels.Routes.search.none()
             search_res_sets = CollectionsModels.Collections.search.none()
             self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
@@ -614,8 +627,10 @@ class PointAdd(PointsBaseView):
                                                             'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
                 self.log.info('Serialize tags for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
                 t0 = time.time()
-                reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
-                                                               'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                reviews = YpJson.serialize(point, fields = ['reviews'],
+                                           relations={'reviews': {'fields': ['id', 'review', 'rating', 'author', 'created', 'updated'],
+                                                                  'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                                                           'extras': ['icon']},
                                                                        },
                                                                'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                               }})
@@ -697,8 +712,9 @@ class PointAdd(PointsBaseView):
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
         self.log.info('Serialize tags for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
-        reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author'],
-                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+        reviews = YpJson.serialize(point, fields = ['reviews'], relations={'reviews': {'fields': ['id', 'review', 'rating', 'author', 'created', 'updated'],
+                                                       'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                                                'extras': ['icon']},
                                                                },
                                                        'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
                                                       }})
@@ -933,45 +949,98 @@ class Route(View):
         return JsonHTTPResponse(result)
 
 
+class EventLike(PointsBaseView):
+    http_method_names = ('post')
+
+    def post(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id":id,
+                                     "status": 1,
+                                     "txt":"Вы не авторизованы"})
+        event = get_object_or_404(MainModels.Events, id=id)
+
+        if request.user in event.likeusers.all():
+            event.likeusers.remove(request.user)
+        else:
+            event.likeusers.add(request.user)
+        event = MainModels.Events.objects.filter(id=id).extra(**self.getEventSelect(request))
+        return HttpResponse(self.getSerializeCollections(event),
+                            mimetype="application/json")
+
+
 class RouteLike(View):
     http_method_names = ('post')
 
     def post(self, request, *args, **kwargs):
         id = kwargs.get('id', None)
-        route = MainModels.Routes.objects.get(id=id)
+        route = get_object_or_404(MainModels.Routes, id=id)
 
-        if request.user.person in route.likeusers.all():
-            route.likeusers.remove(request.user.person)
+        if request.user in route.likeusers.all():
+            route.likeusers.remove(request.user)
         else:
-            route.likeusers.add(request.user.person)
+            route.likeusers.add(request.user)
         return JsonHTTPResponse('like')
+
+
+class AddReviewToEvent(View):
+    http_method_names = ('post')
+
+    def post(self, request, *args, **kwargs):
+        author = request.user.person
+        id = kwargs.get('id', None)
+        review_text = request.POST.get('review', None)
+        review_text = review_text.replace('\n', '<br>')
+        if not review_text:
+            return JsonHTTPResponse({"id":id,
+                                     "status": 1,
+                                     "txt":"Напишите текст комментария"})
+
+        event= get_object_or_404(MainModels.Events, id=id)
+        if event.reviews.filter(author=author).exists():
+            last_review = event.reviews.filter(author=author).latest('updated')
+            if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
+                review = last_review
+                review.review = review_text
+            else:
+                review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
+        else:
+            review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
+        review.save()
+        event.reviews.add(review)
+        return JsonHTTPResponse({"id":id,
+                                 "status": 0,
+                                 "txt":"Комментарий добавлен"})
 
 
 class AddReviewToPoint(View):
     http_method_names = ('post')
 
     def post(self, request, *args, **kwargs):
+        author = request.user.person
         id = kwargs.get('id', None)
-        point = MainModels.Points.objects.get(id=id)
-        point_reviews = point.reviews
-        params = request.POST
-        review_text = params.get('review')
-        rating = params.get('rating')
-        author = MainModels.Person.objects.get(username=request.user)
-        if point_reviews.filter(author=author):
-            last_review = point_reviews.filter(author = author).order_by('-updated')[0]
+        review_text = request.POST.get('review', None)
+        review_text = review_text.replace('\n', '<br>')
+        if not review_text:
+            return JsonHTTPResponse({"id":id,
+                                     "status": 1,
+                                     "txt":"Напишите текст комментария"})
+
+        point = get_object_or_404(MainModels.Points, id=id)
+        if point.reviews.filter(author=author).exists():
+            last_review = point.reviews.filter(author=author).latest('updated')
             if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
                 review = last_review
                 review.review = review_text
-                review.rating = rating
             else:
-                review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
+                review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         else:
-            review = ReviewsModels.Reviews.objects.create(review=review_text, rating=int(rating), author=author)
+            review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
         point.reviews.add(review)
-
-        return JsonHTTPResponse('review added')
+        return JsonHTTPResponse({"id":id,
+                                 "status": 0,
+                                 "txt":"Комментарий добавлен"})
 
 
 class GetTags(View):
@@ -1080,6 +1149,15 @@ class Event(View):
                     }
                 }
                 points = YpJson.serialize(event, fields=['points'], relations=relations)
+                t0 = time.time()
+                reviews = YpJson.serialize(event, fields = ['reviews'],
+                                           relations={'reviews': {'fields': ['id', 'review', 'rating', 'author', 'created', 'updated'],
+                                                                  'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                                                           'extras': ['icon']},
+                                                                       },
+                                                               'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                              }})
+                self.log.info('Serialize reviews for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
 
                 return JsonHTTPResponse({
                  'id':int(id_l),
@@ -1091,6 +1169,7 @@ class Event(View):
                  'author':json.loads(author)[0]['author'],
                  'tags': json.loads(tags)[0]['tags'],
                  'points': json.loads(points)[0]['points'],
+                 'reviews': json.loads(reviews)[0]['reviews'],
                  'isliked': int(isliked),
                 })
 
@@ -1160,6 +1239,15 @@ class Event(View):
             }
         }
         points = YpJson.serialize(event, fields=['points'], relations=relations)
+        t0 = time.time()
+        reviews = YpJson.serialize(event, fields = ['reviews'],
+                                   relations={'reviews': {'fields': ['id', 'review', 'rating', 'author', 'created', 'updated'],
+                                                          'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                                                   'extras': ['icon']},
+                                                               },
+                                                       'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
+                                                      }})
+        self.log.info('Serialize reviews for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
 
         return JsonHTTPResponse({
          'id': id,
@@ -1171,5 +1259,7 @@ class Event(View):
          'author':json.loads(author)[0]['author'],
          'tags': json.loads(tags)[0]['tags'],
          'points': json.loads(points)[0]['points'],
+         'reviews': json.loads(reviews)[0]['reviews'],
          'isliked': int(isliked),
+         'likes_count': event[0].likes_count,
         })

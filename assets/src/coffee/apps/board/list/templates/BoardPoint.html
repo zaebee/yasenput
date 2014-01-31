@@ -2,9 +2,9 @@
 <div class="box__img">
   <a href="#?" class="js-popupwin-place">
     {{#if imgs}}
-      <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" class="img">
+      <img src="{{imgs.[0].thumbnail207}}" height="{{imgs.[0].thumbnail207_height}}" alt="{{name}}" class="img">
     {{else}}
-      <img src="/static/images/place-unknown.png" alt="{{name}}" class="img">
+      <img src="/static/images/place-unknown.png" height="152" alt="{{name}}" class="img">
     {{/if}}
     {{#if editable}}
     <div class="btns">

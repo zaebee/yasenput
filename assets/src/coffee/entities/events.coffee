@@ -35,28 +35,41 @@
         invalid
 
   API =
-    getDetail: (event, params = {}) ->
-      event.id = event.get('id') or event.get('unid')
+    getDetail: (model, params = {}) ->
+      model.id = model.get('id') or model.get('unid')
       _.defaults params
-      event.fetch
+      model.fetch
         reset: true
         data: params
-      event
+      model
 
-    like: (event, params = {}) ->
-      id = event.get('id') or event.get('unid')
+    like: (model, params = {}) ->
+      id = model.get('id') or event.get('unid')
       App.apiRequest
         url: App.API_BASE_URL + "/api/v1/events/#{id}/like/"
         type: 'POST'
-        successCallback: (data) -> event.trigger 'event:like:response', data
+        successCallback: (data) -> model.trigger 'event:like:response', data
         data:
           id: id
-      
-  App.reqres.setHandler 'get:detail:event', (event) ->
-    API.getDetail event
 
-  App.reqres.setHandler 'like:event', (event) ->
-    response = API.like event
+    comment: (model, params = {}) ->
+      _.defaults params
+      id = model.get('id') or model.get('unid')
+      App.apiRequest
+        url: App.API_BASE_URL + "/api/v1/events/#{id}/review/"
+        type: 'POST'
+        successCallback: (data) -> model.trigger 'event:comment:response', data
+        data: params
+
+  App.reqres.setHandler 'get:detail:event', (model) ->
+    API.getDetail model
+
+  App.reqres.setHandler 'like:event', (model) ->
+    response = API.like model
     response.done (data) ->
-      event.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
-    event
+      model.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
+    model
+
+  App.reqres.setHandler 'comment:event', (model, params = {}) ->
+    response = API.comment model, params
+    model

@@ -5,20 +5,19 @@
 
     template: 'Dashboard'
     className: 'constrain clearfix'
-    events:
-      'click .link_make': 'makes'
-      'click .link_like': 'likes'
-      'click .link_settings': 'settings'
 
     modelEvents:
       'change': 'calculateTotalAdded render'
 
-    initialize: ->
+    initialize: (options) ->
+      @section = options.section
       App.execute 'when:fetched', @model, =>
         console.log 'user fetched'
         total_added = @model.get('added_events') + @model.get('added_points')
         @model.set 'total_added', total_added
-        window.model = @model
+
+    templateHelpers: ->
+      section: @section
 
     calculateTotalAdded: ->
         total_added = @model.get('added_events') + @model.get('added_points')
@@ -28,20 +27,23 @@
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
 
-    makes: (event) ->
-      event.preventDefault()
-      target = $(event.currentTarget)
-      @$('.item .link').removeClass 'active'
-      target.addClass 'active'
 
-    likes: (event) ->
-      event.preventDefault()
-      target = $(event.currentTarget)
-      @$('.item .link').removeClass 'active'
-      target.addClass 'active'
+  class List.ProfileSettings extends App.Views.ItemView
+    template: 'DashboardSettings'
+    className: 'dashboard-settings'
+    events:
+      'click .link_make': 'makes'
+      'click .link_like': 'likes'
+      'click .link_settings': 'settings'
+      'click .js-popup-login-commercial': 'showCommercialPopup'
 
-    settings: (event) ->
+    onShow: ->
+      $('.header__title').removeClass 'hide'
+      $('.header__filter').addClass 'hide'
+
+    onClose: ->
+      $('.header__title').addClass 'hide'
+      $('.header__filter').removeClass 'hide'
+
+    showCommercialPopup: (event) ->
       event.preventDefault()
-      target = $(event.currentTarget)
-      @$('.item .link').removeClass 'active'
-      target.addClass 'active'

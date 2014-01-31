@@ -18,7 +18,7 @@
       last_name: ''
       authorized: false
       email: false
-      avatar: ''
+      avatar: '/static/images/guest.png'
       count_liked_objects: 0
       count_commented_objects: 0
 
