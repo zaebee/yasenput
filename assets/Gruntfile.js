@@ -41,6 +41,7 @@ module.exports = function(grunt) {
             'src/css/jquery-ui-1.10.3.custom.min.css',
             'src/css/select2.css',
             'src/css/main.css',
+            'src/css/dropzone.css',
             'src/css/media.css',
             'src/css/bootstrap.css',
             'src/css/fancybox/jquery.fancybox.css'

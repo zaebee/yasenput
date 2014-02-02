@@ -34,7 +34,7 @@ class Person(User):
             im = get_thumbnail(self.avatar, '80')
             return im.url
         except:
-            return False
+            return '/static/images/user-unknown.png'
 
     @property
     def icon_small(self):
@@ -42,7 +42,7 @@ class Person(User):
             im = get_thumbnail(self.avatar, '38')
             return im.url
         except:
-            return False
+            return '/static/images/user-unknown-small.png'
 
 
 def create_person(sender, **kwargs):

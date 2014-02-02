@@ -12,7 +12,6 @@
     initialize: (options) ->
       @section = options.section
       App.execute 'when:fetched', @model, =>
-        console.log 'user fetched'
         total_added = @model.get('added_events') + @model.get('added_points')
         @model.set 'total_added', total_added
 
@@ -36,6 +35,8 @@
       'click .link_like': 'likes'
       'click .link_settings': 'settings'
       'click .js-popup-login-commercial': 'showCommercialPopup'
+    modelEvents:
+      'change': 'render'
 
     onShow: ->
       $('.header__title').removeClass 'hide'

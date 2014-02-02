@@ -5,7 +5,7 @@
   </div>
   <div class="btns btns_picture">
     <a href="#?" class="btn btn_color_green" onclick="document.getElementById('uploadAvatar').click();return false;">Сменить автар</a>
-    <input id="uploadAvatar" name="avatar" type="file" style="visibility: hidden;width:0px;height:0px;">
+    <input id="uploadAvatar" name="avatar" type="file" style="visibility:hidden;width:0px;height:0px;display:none;">
     <a href="#?" class="btn btn_color_blue">Аватар из вконтакте</a>
   </div>
   <div class="btns btns_ctrls">
@@ -43,6 +43,9 @@
   <div class="form__field">
     <label>О себе:</label>
     <textarea placeholder="Напишите немного о себе">{{about}}</textarea>
+  </div>
+  <div class="form__field form__field__control">
+    <a href="#?" class="btn btn_color_blue save-settings">Сохранить</a><br>
   </div>
 </div>
 

@@ -41,6 +41,8 @@
           @$( '#dt_start' ).datepicker 'option', 'maxDate', selectedDate
       
       @$('#place-dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
         paramName:'img'
         headers:
           'X-CSRFToken': $.cookie('csrftoken')

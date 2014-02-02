@@ -19,11 +19,14 @@
     events:
       'blur .form__field_name input': 'setName'
       'blur .form__field_description textarea': 'setDescription'
+      'click .dz-details': 'setMainImage'
       'click .js-next': 'nextStep'
       'submit form': 'nextStep'
 
     onShow: ->
       @$('#place-dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
         paramName:'img'
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
@@ -44,6 +47,12 @@
       target = $(event.currentTarget)
       description = target.val()
       @model.set description: description
+
+    setMainImage: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      @$('.dz-details').not(target).removeClass 'main-image'
+      target.toggleClass 'main-image'
 
     nextStep: (event) ->
       event.preventDefault()

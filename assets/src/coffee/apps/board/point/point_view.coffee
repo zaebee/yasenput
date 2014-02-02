@@ -154,6 +154,8 @@
     onShow: ->
       id = @model.get 'id'
       @$('#photos-dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
         url: "/photos/point/#{id}/add"
         paramName:'img'
         headers:
