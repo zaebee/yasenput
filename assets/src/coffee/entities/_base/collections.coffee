@@ -23,6 +23,8 @@
         new Entities.Set attrs, options
       else if attrs.type_of_item is 'route' ## is route type
         new Entities.Route attrs, options
+      else if attrs.type_of_item is 'event' ## is event type
+        new Entities.Event attrs, options
       else
         new Entities.Point
 

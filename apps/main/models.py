@@ -22,25 +22,27 @@ class Person(User):
                                        blank=True,
                                        related_name='person_users_followers',
                                        serialize=True)
-    #    def extra_person(self):
-    #        return serializers.serialize('python', self.address.all())
     objects = UserManager()
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     searchdelta = SphinxQuerySet(index="main_person",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
 
+    @property
+    def icon(self):
+        try:
+            im = get_thumbnail(self.avatar, '80')
+            return im.url
+        except:
+            return False
 
-
-
-    def ava(self):
-        im = self.avatar
-        self.avatar = im.url
-        pass
-    icon = ava
-    #avatar = str('1')
-
-
+    @property
+    def icon_small(self):
+        try:
+            im = get_thumbnail(self.avatar, '38')
+            return im.url
+        except:
+            return False
 
 
 def create_person(sender, **kwargs):
@@ -149,6 +151,8 @@ class Photos(models.Model):
         im = get_thumbnail(self.img, '104x104', crop="center center")
         return im.url
 """
+
+
 class Points(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
@@ -295,6 +299,7 @@ class Position(models.Model):
 class Events(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
+    from apps.reviews.models import Reviews
 
     class Meta:
         verbose_name = u'События'
@@ -304,15 +309,24 @@ class Events(models.Model):
     dt_end = models.DateTimeField('Окончание')
     name = models.CharField('Название', max_length=255)
     description = models.TextField('описание', blank=True)
-    point = models.ForeignKey(Points, unique=False)
+    points = models.ManyToManyField(Points, unique=False, related_name='events', blank=True, null=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
+    reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_followers', serialize=True)
     likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
+
+    search = SphinxSearch(weights={'name': 100, 'description': 80})
+    searchdelta = SphinxQuerySet(index="main_events",
+                                mode = 'SPH_MATCH_EXTENDED2',
+                                rankmode = 'SPH_RANK_NONE')
+    unid = '1'
+    ypi = models.IntegerField(default=0, blank=True)
+    type_of_item = 'event'
 
     def __unicode__(self):
         return self.name

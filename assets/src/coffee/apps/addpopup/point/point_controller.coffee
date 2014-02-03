@@ -4,16 +4,21 @@
 
     initialize: ->
       console.log 'initialize AddPopupApp.Point.Controller'
-      @model = new App.Entities.Point
-
+      @tags = App.request 'get:all:tags', level: false
+      @model = @options.model or new App.Entities.Point
       @layout = new Point.Layout model: @model
+
       @listenTo @layout, 'show', =>
         @showStepName()
         @showStepWhat()
         @showStepCommers()
-      ###
-      ###
-      App.addPointPopup.show @layout, loading: true
+
+      if @model.isNew()
+        App.addPointPopup.show @layout, loading: true
+      else
+        @model.fetch
+          success: =>
+            App.addPointPopup.show @layout, loading: true
 
     onClose: ->
       @stopListening()
@@ -28,15 +33,18 @@
         @layout.stepWhatRegion.$el.show()
 
     showStepWhat: ->
-      @whatView = new Point.StepWhat model: @model
-      @show @whatView,
-        region: @layout.stepWhatRegion
-      @listenTo @whatView, 'show:step:commers', ->
-        @layout.stepWhatRegion.$el.hide()
-        @layout.stepCommersRegion.$el.show()
-      @listenTo @whatView, 'show:step:name', ->
-        @layout.stepWhatRegion.$el.hide()
-        @layout.stepNameRegion.$el.show()
+      App.execute 'when:fetched', @tags, =>
+        @whatView = new Point.StepWhat
+          model: @model
+          collection: @tags
+        @show @whatView,
+          region: @layout.stepWhatRegion
+        @listenTo @whatView, 'show:step:commers', ->
+          @layout.stepWhatRegion.$el.hide()
+          @layout.stepCommersRegion.$el.show()
+        @listenTo @whatView, 'show:step:name', ->
+          @layout.stepWhatRegion.$el.hide()
+          @layout.stepNameRegion.$el.show()
 
     showStepCommers: ->
       @commersView = new Point.StepCommers model: @model

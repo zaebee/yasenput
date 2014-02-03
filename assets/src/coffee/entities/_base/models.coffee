@@ -10,6 +10,11 @@
 
   class Entities.Model extends Backbone.Model
 
+    url: ->
+      @id = @.get('id') or @id
+      origUrl = Backbone.Model.prototype.url.call @
+      origUrl + if origUrl.charAt(origUrl.length - 1) is '/' then '' else '/'
+
     ###*
     # The model initializer
     # @method initialize
@@ -28,4 +33,7 @@
     parse: (response) ->
       if _.isArray response
         response = response[0]
+      response
+      if not response.unid and response.id
+        response.unid = response.id
       response

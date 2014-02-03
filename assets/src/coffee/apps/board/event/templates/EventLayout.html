@@ -1,0 +1,72 @@
+<div class="popupwin__content clearfix">
+  <div id="event-header-region" class="place-info clearfix"></div>
+  
+  <div id="event-photo-region"></div> 
+
+  <div class="description">
+    <h3 class="description__title">{{name}}</h3>
+    <p class="description__text">{{description}}</p>
+    {{#if points}}
+    <div class="description__places">
+      <div class="title"><span class="c-event">Событие</span> проходит в местах:</div>
+      <ul class="list">
+        {{#each points}}
+        <li class="item">
+          <a data-id="{{id}}" href="#" class="link c-place js-popupwin-place">{{name}}</a>
+          <div class="description__address">{{address}}</div>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="map map_popupwin">
+    <a href="#" class="map__close sprite-close js-map-close"></a>
+    <div class="map__container" id="map2"></div>
+    <a href="#" class="btn-open js-map-open"></a>
+  </div>
+
+  <div class="comments-wrap" id="event-comments-region"></div>
+</div><!-- class="popup-content" -->
+
+<div class="popupwin__content clearfix">
+  <div class="title title_blue title_bg_light">Им понравилось:</div>
+  <ul class="peoples">
+    <li class="peoples__item">
+      <a href="#" class="peoples__link">
+        <img src="/static/images/guest.png" alt="user" class="peoples__img">
+      </a>
+    </li>
+  </ul>
+</div><!-- class="popup-content" -->
+
+{{#if sets}}
+<div class="popupwin__content clearfix">
+  <div class="title title_green title_bg_light">Добавили к себе в путешествие:</div>
+  <ul class="peoples">
+    {{#sets}}
+      <li class="peoples__item">
+        <a href="#" class="peoples__link">
+          <img src="{{author.icon}}" alt="user" class="peoples__img">
+        </a>
+      </li>
+    {{/sets}}
+    <li class="peoples__item hide">
+      <a href="#" class="peoples__link">
+        <img src="/static/images/guest.png" alt="user" class="peoples__img">
+      </a>
+    </li>
+    <li class="peoples__item hide">
+      <a href="#" class="peoples__link">
+        <img src="/static/images/guest.png" alt="user" class="peoples__img">
+      </a>
+    </li>
+    <li class="peoples__item">
+      <a href="#" class="peoples__link peoples__link_all js-more-people">
+        Ещё
+      </a>
+    </li>
+  </ul>
+</div><!-- class="popup-content" -->
+{{/if}}

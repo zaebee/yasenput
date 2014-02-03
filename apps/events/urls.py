@@ -18,5 +18,5 @@ urlpatterns = patterns('',
     url(r'^follow/*$', views.FollowEvent.as_view()),
     url(r'^photos/*$', PhotosViews.PhotosList.as_view(model=Events)),
     #url(r'^delete$', 'apps.points.views.delete'),
-    
+
 )

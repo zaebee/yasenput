@@ -1,25 +1,25 @@
 {{#reviews}}
   <li class="comments__item">
-    <a href="#?" class="photo">
-      <img src="/media/{{author.avatar}}" alt="user1" class="photo__img">
+    <a href="#" class="photo">
+      <img src="{{author.icon}}" alt="user1" class="photo__img">
     </a>
     <div class="text">
       <div class="text__info">
-        <a href="#?" class="name">{{author.first_name}} {{author.last_name}}</a>
-        <span class="time">&bull; 12.04.2013 в 17:27</span>
+        <a href="#" class="name">{{author.first_name}} {{author.last_name}}</a>
+        <span class="time">&bull; {{dateFormat created}}</span>
       </div>
-      <div class="text__comment">{{review}}</div>
+      <div class="text__comment">{{safe review}}</div>
     </div>
   </li>
 {{/reviews}}
 {{#if user.authorized}}
 <li class="comments__item">
-  <form action="/">
-    <a href="#?" class="photo">
-      <img src="/media/{{user.avatar}}" alt="user1" class="photo__img">
+  <form class="comment-form" action="/">
+    <a href="#" class="photo">
+      <img src="{{user.icon}}" alt="user1" class="photo__img">
     </a>
     <div class="text">
-      <textarea placeholder="Написать комментарий"></textarea>
+      <textarea name="review_text" placeholder="Написать комментарий"></textarea>
       <input type="submit" class="btn btn_color_blue" value="Комментировать">
     </div>
   </form>

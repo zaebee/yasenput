@@ -161,7 +161,7 @@ class Serializer(base.Serializer):
         not seekable).
         """
         return self.objects
-    
+
     def handle_extra_field(self, obj, field):
         """
         Return "extra" fields that the user specifies.
@@ -173,6 +173,6 @@ class Serializer(base.Serializer):
                 self._extras[field] = smart_unicode(extra(), strings_only=True)
             else:
                 self._extras[field] = smart_unicode(extra, strings_only=True)
-                
+
 
 Deserializer = PythonDeserializer

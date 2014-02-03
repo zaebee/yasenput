@@ -7,6 +7,9 @@ do (Backbone, Marionette) ->
       _.bindAll @
 
     open: (view) ->
+      @prevModal = $('.modal.in').not @$el
+      if @prevModal.length
+        @prevModal.css 'z-index', 1000
       @$el.find('.modal-dialog').empty().append view.el
       @$el.on 'hidden.bs.modal', @closeModal
 
@@ -15,6 +18,9 @@ do (Backbone, Marionette) ->
 
       options = @getDefaultOptions _.result(view, 'modal')
       @$el.modal options
+
+    onClose: (view) ->
+      @$el.modal 'hide'
 
     getDefaultOptions: (options = {}) ->
       _.defaults options,
@@ -27,3 +33,8 @@ do (Backbone, Marionette) ->
       @$el.off()
       @stopListening()
       @close()
+      if @prevModal.length
+        e.preventDefault()
+        e.stopPropagation()
+        @prevModal.css 'z-index', 1050
+        $('body').addClass 'modal-open'

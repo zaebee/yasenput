@@ -9,9 +9,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-
     {% block seo %}{% endblock %}
-    <!--<meta name="fragment" content="!">-->
+    <meta name="fragment" content="!">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     <meta name="description" content="{% block description %}{% endblock %}">
 
@@ -68,14 +67,9 @@
             first_name: '{{ user.first_name }}',
             last_name: '{{ user.last_name }}',
             avatar: '{{ user.person.avatar }}',
+            icon: '{{ user.person.icon }}',
             count_liked_objects: {{ count_liked_objects|default:0 }},
             count_commented_objects: {{ count_commented_objects|default:0 }},
-            collections: [ {% for collection in collections %}
-              {
-                id: {{ collection.id }},
-                name: '{{ collection.name }}'
-              },
-            {% endfor %} ]
           };
         {% else %}
           Yapp.USER = {authorized: false};
