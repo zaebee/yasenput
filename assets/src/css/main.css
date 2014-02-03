@@ -3444,6 +3444,7 @@ a {
 .header__user .link-user {
   display: inline-block;
   max-width: 160px;
+  min-width: 100px;
   text-decoration: none;
   line-height: 16px;
   color: #787777;
@@ -6497,11 +6498,45 @@ a {
 .field__input-place.error .select2-choices,
 #dt_start.error, #dt_end.error,
 .comment-form textarea.error,
+.field.error input,
 .form__field_name.error input,
 .form__field_date.error input,
 .field__input-map.error input {
     border: 1px solid #EA5854 !important;
 }
 
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
 
+input[type="radio"][disabled],
+input[type="checkbox"][disabled],
+input[type="radio"][readonly],
+input[type="checkbox"][readonly] {
+  background-color: transparent;
+}
 
+.link.disabled,
+.link[disabled] {
+  color: #333333;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+}
+
+.link.disabled:hover,
+.link[disabled]:hover,
+.link.disabled,
+.link[disabled] {
+  cursor: default;
+  opacity: 0.25;
+  filter: alpha(opacity=25);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}

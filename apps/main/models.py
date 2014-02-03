@@ -18,6 +18,10 @@ class Person(User):
     avatar = ImageField(upload_to='avatar',
                         verbose_name=u'Аватарка',
                         blank=True, null=True)
+    phone = models.CharField(u'Телефон', max_length=80, blank=True, null=True)
+    website = models.CharField(u'Сайт', max_length=80, blank=True, null=True)
+    city = models.CharField(u'Город', max_length=80, blank=True, null=True)
+    about = models.TextField(u'О вас', max_length=80, blank=True, null=True)
     followers = models.ManyToManyField(User, null=True,
                                        blank=True,
                                        related_name='person_users_followers',
