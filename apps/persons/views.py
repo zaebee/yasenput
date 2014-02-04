@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -129,7 +131,26 @@ class SearchPerson(PersonsBaseView):
 
 
 class PersonAccount(PersonsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('get', 'post')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST.get('model', None)
+        user_dict = json.loads(data)
+        author = MainModels.Person.objects.filter(user=request.user)
+        if 'fullname' in user_dict:
+            fullname = user_dict.pop('fullname', '').split(' ', 1)
+            if len(fullname) == 2:
+                user_dict['first_name'], user_dict['last_name'] = fullname
+            elif fullname[0]:
+                user_dict['first_name'] = fullname[0]
+                user_dict['last_name'] = ''
+
+        try:
+            author.update(**user_dict)
+        except Exception, e:
+            return JsonHTTPResponse({"status": 1, "txt": str(e)})
+
+        return self.get(request)
 
     def get(self, request, *args, **kwargs):
         person = MainModels.Person.objects.filter(username=request.user).extra(
@@ -155,5 +176,6 @@ class PersonAccount(PersonsBaseView):
                                                      "want_visit_points", "want_visit_events",
                                                      "person_followers", "icon", "icon_small"
                                                      ],
-                                             fields=("username", "first_name", "last_name", "avatar")),
+                                             fields=("username", "first_name", "last_name", "email",
+                                                     "avatar", "phone", "city", "website", "about")),
                             mimetype="application/json")

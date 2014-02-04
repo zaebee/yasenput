@@ -189,3 +189,14 @@
   class Show.PopupLogin extends App.Views.ItemView
     template: 'PopupLogin'
     className: 'popupwin__scrollbox'
+
+
+  class Show.PopupInfo extends App.Views.ItemView
+    template: 'PopupInfo'
+    className: 'popupwin__scrollbox'
+
+    initialize: (options) ->
+      @message = options.message
+
+    templateHelpers: ->
+      message: @message

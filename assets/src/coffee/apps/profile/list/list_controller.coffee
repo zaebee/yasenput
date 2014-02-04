@@ -5,6 +5,10 @@
     initialize: ->
       console.log 'initialize ProfileApp.List.Controller'
       @user = App.request 'get:my:profile'
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+        return
+
       @user.fetch()
       @showDashboard()
       switch @options.section
