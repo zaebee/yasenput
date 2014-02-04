@@ -550,7 +550,7 @@ class PointAdd(PointsBaseView):
         data = params.get('model', "{}")
         data = json.loads(data)
 
-        ## update point with PUT emulate 
+        ## update point with PUT emulate
         if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
             form = forms.AddPointForm(data,
                                       instance=MainModels.Points.objects.get(pk=kwargs.get('id')))
@@ -1060,18 +1060,24 @@ class Event(View):
     http_method_names = ('post','get','delete')
     log = logger
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         DEFAULT_LEVEL = 2
 
         errors = []
-        if request.user.is_authenticated():
-            params = request.POST.copy()
-            data = params.get('model', "{}")
-            data = json.loads(data)
-            points = data.pop('points')
-            points = [point['id'] for point in points]
-            data['points'] = points
+        params = request.POST.copy()
+        data = params.get('model', "{}")
+        data = json.loads(data)
+        points = data.pop('points')
+        points = [point['id'] for point in points]
+        data['points'] = points
+
+        ## update event with PUT emulate
+        if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
+            form = AddEventForm(data,
+                                instance=MainModels.Events.objects.get(pk=kwargs.get('id')))
+        else:
             form = AddEventForm(data)
+        if request.user.is_authenticated():
             if form.is_valid():
                 event = form.save(commit=False)
 
@@ -1079,16 +1085,24 @@ class Event(View):
                 event.author = person
                 event.save()
 
-                points = form.cleaned_data.get("points")
+                points = form.cleaned_data.get('points')
+                event.points.remove(*event.points.all())
                 for point in points:
                     event.points.add(point)
 
-                imgs = form.cleaned_data.get("imgs")
-                for img in imgs:
-                    event.imgs.add(img)
+                images = data.get('imgs')
+                if images:
+                    for image in images:
+                        try:
+                            img = PhotosModels.Photos.objects.get(id=image)
+                            event.imgs.add(img)
+                        except:
+                            message = 'ошибка добавления изображения'
+                            pass
 
-                tags = data.get("tags")
+                tags = data.get('tags')
                 if tags:
+                    event.tags.remove(*event.tags.all())
                     for tag in tags:
                         if unicode(tag).isdigit():
                             new_tag = TagsModels.Tags.objects.filter(id=tag)
@@ -1101,78 +1115,8 @@ class Event(View):
                         else:
                             new_tag = new_tag[0]
                         event.tags.add(new_tag)
-
-                id_l = event.id
-                event = MainModels.Events.objects.all().filter(id=id_l)
-                YpJson = YpSerialiser()
-                t0 = time.time()
-                if request.user.is_authenticated():
-                    if request.user in event[0].likeusers.all():
-                        isliked = 1
-                    else:
-                        isliked = 0
-                else:
-                    isliked = 0
-
-                t0 = time.time()
-                imgs = YpJson.serialize(event, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
-                'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
-                'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
-                'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
-                self.log.info('Serialize imgs for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-
-                author = YpJson.serialize(event, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},})
-                self.log.info('Serialize author for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-                t0 = time.time()
-                tags = YpJson.serialize(event, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
-                                                            'limit': LIMITS.POINTS_LIST.TAGS_COUNT}})
-                self.log.info('Serialize tags for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-
-                relations = {
-                    'points': {
-                        'relations': {
-                            'tags': {'fields': ('name', 'id', 'level')},
-                            'author': {'fields': ('first_name', 'last_name', 'avatar')},
-                            'imgs': {
-                                'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
-                                'relations': {
-                                    'author': {'fields': ('last_name', 'first_name', 'avatar')},
-                                    'likeusers': {'fields': ('last_name', 'first_name', 'avatar')},
-                                    'comments': {
-                                        'relations': {
-                                            'author': {'fields': ('first_name', 'last_name', 'avatar')}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                points = YpJson.serialize(event, fields=['points'], relations=relations)
-                t0 = time.time()
-                reviews = YpJson.serialize(event, fields = ['reviews'],
-                                           relations={'reviews': {'fields': ['id', 'review', 'rating', 'author', 'created', 'updated'],
-                                                                  'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
-                                                                                           'extras': ['icon']},
-                                                                       },
-                                                               'limit': LIMITS.POINTS_LIST.REVIEWS_COUNT
-                                                              }})
-                self.log.info('Serialize reviews for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-
-                return JsonHTTPResponse({
-                 'id':int(id_l),
-                 'name': event[0].name,
-                 'description': event[0].description,
-                 'dt_start':str(event[0].dt_start),
-                 'dt_end': str(event[0].dt_end),
-                 'imgs':json.loads(imgs)[0]['imgs'],
-                 'author':json.loads(author)[0]['author'],
-                 'tags': json.loads(tags)[0]['tags'],
-                 'points': json.loads(points)[0]['points'],
-                 'reviews': json.loads(reviews)[0]['reviews'],
-                 'isliked': int(isliked),
-                })
-
+                kwargs.update({'id': event.id})
+                return self.get(request, **kwargs)
             else:
                 e = form.errors
                 for er in e:
@@ -1210,7 +1154,7 @@ class Event(View):
         'extras': ['thumbnail207', 'thumbnail560', 'thumbnail560_width', 'thumbnail104x104', 'isliked', 'thumbnail207_height'],}})
         self.log.info('Serialize imgs for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
 
-        author = YpJson.serialize(event, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+        author = YpJson.serialize(event, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                   'extras': ['icon','avatar']},
         })
         self.log.info('Serialize author for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))

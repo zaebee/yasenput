@@ -24,7 +24,7 @@
 
     initialize: ->
       user = App.request 'get:my:profile'
-      #@listenTo @user, 'change:authorized', @render
+      #@listenTo user, 'change', @render
 
     showAddPopup: (e) ->
       e.preventDefault()

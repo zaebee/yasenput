@@ -79,6 +79,8 @@
       @onShow()
 
     onShow: ->
+      if not @model.get('imgs').length
+        return
       @bxPagerInit()
       sliderPlace = @$('.bxslider-place').bxSlider
         pagerCustom: '#bx-pager'

@@ -3046,6 +3046,11 @@ textarea {
 }
 .bxslider .item {
   float: left;
+  text-align: center;
+  overflow: hidden;
+}
+.bxslider .item.empty {
+    float:none;
 }
 .bx-wrapper {
   position: relative;
@@ -4467,11 +4472,13 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 13px;
   color: #969696;
+  min-width:160px;
 }
 .place-info .user .img {
   display: block;
   float: left;
   margin-right: 5px;
+  width: 38px;
 }
 .place-info .user .name {
   line-height: 17px;

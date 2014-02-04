@@ -5,18 +5,22 @@
     initialize: ->
       console.log 'initialize AddPopupApp.Event.Controller'
       @tags = App.request 'get:all:tags', level: false
-      @model = new App.Entities.Event
+      @model = @options.model or new App.Entities.Event
 
       @layout = new Event.Layout model: @model
       @listenTo @layout, 'show', =>
         @showStepName()
         @showStepWhat()
-      App.addEventPopup.show @layout, loading: true
 
+      if @model.isNew()
+        App.addEventPopup.show @layout, loading: true
+      else
+        @model.fetch
+          success: =>
+            App.addEventPopup.show @layout, loading: true
 
     onClose: ->
       @stopListening()
-
 
     showStepName: ->
       @nameView = new Event.StepName model: @model
@@ -26,7 +30,6 @@
       @listenTo @nameView, 'show:step:what', ->
         @layout.stepNameRegion.$el.hide()
         @layout.stepWhatRegion.$el.show()
-
 
     showStepWhat: ->
       App.execute 'when:fetched', @tags, =>
