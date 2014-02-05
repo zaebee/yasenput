@@ -54,7 +54,8 @@
           myMap10.container.fitToViewport();
           ###   
             
-      dragAndDropSetup = (container) ->
+              
+      App.dragAndDropSetup = (container) ->
         $srcElement = undefined
         srcIndex = undefined
         dstIndex = undefined
@@ -85,7 +86,8 @@
               autoReinitialise: true
 
       $(".map_main .route-list").jScrollPane autoReinitialise: true
-      dragAndDropSetup $('.map_main')    
+      #dragAndDropSetup $('.map_main')    
+
 
       routeItemNumber = 0
       $(".route-list.route-list_deleteable").on "mouseenter", ".item", ->

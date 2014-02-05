@@ -111,22 +111,18 @@
                 <span class="text__type c-place">место</span>
               </div>
             </li>'
+          #$('.route-list').dragdrop 'destroy'
           App.route_points.push that
+          App.dragAndDropSetup $('.map_main') 
+          #$('.route-list').find(".list").jScrollPane autoReinitialise: true
+
       else 
         App.route_points = []
         App.route_points.push that
         App.mmap.geoObjects.add placemark
         $('.route-list_deleteable').css 'display', 'block'
         console.log placemark
-        $('.route_right').append '<li class="item hide">
-              <span class="drag"></span>
-              <span class="number">0</span>
-              <img src="" alt="" class="img">
-              <div class="text">
-                <span class="text__place"></span>
-                <span class="text__type c-place"></span>
-              </div>
-            </li>
+        $('.route_right').append '
             <li class="item">
               <span class="drag"></span>
               <span class="number">1</span>
@@ -159,6 +155,7 @@
             console.log 'строим маршрут'
             App.mmap.geoObjects.add route
             App.t_route = route
+
         else 
           
           App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
