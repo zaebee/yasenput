@@ -174,6 +174,68 @@
         @$('.categories__link').eq(0).trigger 'click'
       @$('.select-type').select2 'data', tags
 
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        map = new App.ymaps.Map 'map-point-add',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+
+        placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
+          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+          iconImageHref: 'static/images/sprite-baloon.png',
+          iconImageSize: [32, 36]
+        }
+        map.geoObjects.add placemark
+        map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+
+        map.events.add 'click', (event) =>
+          map.geoObjects.remove placemark
+          coords = event.get('coordPosition')
+          map.geoObjects.each (geoObject) =>
+            if geoObject.properties.get('id') is 'map-point'
+              map.geoObjects.remove(geoObject)
+              return false
+
+          placemark = new App.ymaps.Placemark coords, {
+            id:'map-point'
+          }, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }
+          map.geoObjects.add placemark
+          App.ymaps.geocode(coords).then (res) =>
+            i = true
+            res.geoObjects.each (obj) =>
+              if i
+                @$('[name=address]').val obj.properties.get 'metaDataProperty.GeocoderMetaData.text'
+              i = false
+            @$el.find('[name=address]').change()
+
+          map.setCenter coords, 14, (
+            checkZoomRange: true
+            duration:1000
+          )
+          longitude = coords[1]
+          latitude = coords[0]
+          @model.set(
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+
+      @$('.map_popupwin').resizable
+        minHeight: 80,
+        handles: "s"
+        resize: ( event, ui )  =>
+          $this = $(this)
+          if ui.size.height > 440
+            $this.addClass('open')
+          else
+            $this.removeClass('open')
+
     onClose: ->
       @stopListening()
       @collection.reset()
@@ -206,6 +268,7 @@
       @model.save null,
         success: =>
           App.addPointPopup.close()
+          App.vent.trigger 'show:detail:popup', @model
 
     backStep: (event) ->
       event.preventDefault()
