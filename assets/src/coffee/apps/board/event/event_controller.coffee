@@ -11,9 +11,9 @@
         @showPhotos()
         @showHeader()
         @showComments()
+        @showMap()
       ###
         @sidebarView()
-        @tabMapView()
         @tagsView()
       ###
       #App.execute 'when:fetched', @model, =>
@@ -37,4 +37,10 @@
       @commentsView = new Event.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
+        loading: true
+
+    showMap: ->
+      @mapView = new Event.Map  model: @model
+      @show @mapView,
+        region: @layout.mapRegion
         loading: true

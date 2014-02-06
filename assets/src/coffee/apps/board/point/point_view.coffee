@@ -99,6 +99,34 @@
 
   class Point.Map extends App.Views.ItemView
     template: 'PointMap'
+    className: 'map map_popupwin'
+
+    onShow: ->
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        map = new App.ymaps.Map 'map-point',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+
+        placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
+          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+          iconImageHref: 'static/images/sprite-baloon.png',
+          iconImageSize: [32, 36]
+        }
+        map.geoObjects.add placemark
+        map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+
+      @$el.resizable
+        minHeight: 80,
+        handles: "s"
+        resize: ( event, ui )  =>
+          $this = $(this)
+          if ui.size.height > 440
+            $this.addClass('open')
+          else
+            $this.removeClass('open')
 
 
   class Point.Comments extends App.Views.ItemView
