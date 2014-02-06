@@ -182,13 +182,15 @@
           zoom: 12
         , autoFitToViewport: 'always'
 
-        placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
-          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-          iconImageHref: 'static/images/sprite-baloon.png',
-          iconImageSize: [32, 36]
-        }
-        map.geoObjects.add placemark
-        map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+        placemark = {}
+        if @model.get 'latitude'
+          placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }
+          map.geoObjects.add placemark
+          map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
 
         map.events.add 'click', (event) =>
           map.geoObjects.remove placemark
