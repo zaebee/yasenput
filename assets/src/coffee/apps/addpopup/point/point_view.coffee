@@ -72,7 +72,7 @@
     events:
       'click .categories__link': 'selectRootLabel'
       'click .tags__link': 'selectAdditionalLabel'
-      'blur .field__input-map input': 'setAddress'
+      'change .field__input-map input': 'setAddress'
       'select2-removed': 'removeLabel'
       'click .js-back': 'backStep'
       'click .js-next': 'nextStep'
