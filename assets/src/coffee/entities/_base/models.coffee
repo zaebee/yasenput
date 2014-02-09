@@ -21,6 +21,17 @@
     ###
     initialize: ->
       console.log "initializing Entities.Model"
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @placemark = new App.ymaps.Placemark null,{
+          id: 'map-point'
+        }, {
+          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+          iconImageHref: 'static/images/sprite-baloon.png',
+          iconImageSize: [32, 36]
+        }
+
 
     ###*
     # Set unigue attribute for model
@@ -37,3 +48,17 @@
       if not response.unid and response.id
         response.unid = response.id
       response
+
+    setCoordinates: (coords) ->
+      coords = coords.map String
+      if @placemark
+        @placemark.geometry.setCoordinates coords
+      else
+        App.ymaps.ready =>
+          @placemark = new App.ymaps.Placemark coords,{
+            id: 'map-point'
+          }, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }

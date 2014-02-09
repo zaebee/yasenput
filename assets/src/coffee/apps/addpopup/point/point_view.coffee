@@ -138,9 +138,31 @@
       tags = @$('.select-type').select2 'data', tags
 
     setAddress: (event) ->
+      console.log 'FOOOO'
       target = $(event.currentTarget)
       address = target.val()
-      @model.set address: address
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        App.ymaps.geocode(address).then (res) =>
+          #@$el.find('[name=address]').change()
+          first = res.geoObjects.get(0)
+          coords = first.geometry.getCoordinates()
+          @model.setCoordinates coords
+          #@map.geoObjects.add @model.placemark
+          #@map.setCenter coords, 12
+
+          latitude = coords[0]
+          longitude = coords[1]
+          console.log coords
+          @model.set(
+            'address': address
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
 
     backStep: (event) ->
       event.preventDefault()
@@ -159,7 +181,42 @@
       else
         @$('.field__input-map').addClass 'error'
 
+    initMap: ->
+      console.log 'initMap'
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @map = @map or new App.ymaps.Map 'map-point-add',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+
+        App.execute 'when:fetched', @model, =>
+          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+          @map.geoObjects.add @model.placemark
+
+        @map.events.remove 'click'
+        @map.events.add 'click', (event) =>
+          coords = event.get('coordPosition')
+          @map.geoObjects.remove @model.placemark
+          @model.setCoordinates coords
+          @map.geoObjects.add @model.placemark
+          App.ymaps.geocode(coords).then (res) =>
+            first = res.geoObjects.get(0)
+            @$('[name=address]').val first.properties.get 'metaDataProperty.GeocoderMetaData.text'
+            #@$el.find('[name=address]').change()
+
+          longitude = coords[1]
+          latitude = coords[0]
+          @model.set(
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+
     onShow: ->
+      console.log 'onShow'
       @$('.categories__link').tooltip()
       @$('.select-type').select2
         containerCssClass: 'select2-container_tags'
@@ -186,59 +243,6 @@
         @$('.categories__link').eq(0).trigger 'click'
       @$('.select-type').select2 'data', tags
 
-      if App.ymaps is undefined
-        return
-      App.ymaps.ready =>
-        map = new App.ymaps.Map 'map-point-add',
-          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 12
-        , autoFitToViewport: 'always'
-
-        placemark = {}
-        if @model.get 'latitude'
-          placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
-            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: 'static/images/sprite-baloon.png',
-            iconImageSize: [32, 36]
-          }
-          map.geoObjects.add placemark
-          map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-
-        map.events.add 'click', (event) =>
-          map.geoObjects.remove placemark
-          coords = event.get('coordPosition')
-          map.geoObjects.each (geoObject) =>
-            if geoObject.properties.get('id') is 'map-point'
-              map.geoObjects.remove(geoObject)
-              return false
-
-          placemark = new App.ymaps.Placemark coords, {
-            id:'map-point'
-          }, {
-            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: 'static/images/sprite-baloon.png',
-            iconImageSize: [32, 36]
-          }
-          map.geoObjects.add placemark
-          App.ymaps.geocode(coords).then (res) =>
-            i = true
-            res.geoObjects.each (obj) =>
-              if i
-                @$('[name=address]').val obj.properties.get 'metaDataProperty.GeocoderMetaData.text'
-              i = false
-            @$el.find('[name=address]').change()
-
-          map.setCenter coords, 14, (
-            checkZoomRange: true
-            duration:1000
-          )
-          longitude = coords[1]
-          latitude = coords[0]
-          @model.set(
-            'longitude': longitude
-            'latitude': latitude
-            {silent: true}
-          )
 
       @$('.map_popupwin').resizable
         minHeight: 80,
@@ -249,6 +253,7 @@
             $this.addClass('open')
           else
             $this.removeClass('open')
+      @initMap()
 
     onClose: ->
       @stopListening()

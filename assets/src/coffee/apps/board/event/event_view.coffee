@@ -176,6 +176,8 @@
   class Event.AddPhoto extends App.Views.ItemView
     template: 'AddPhotoPopup'
     className: 'popupwin__scrollbox'
+    ui:
+      'finishBtn': '.js-finish'
     events:
       'click .js-finish': 'addImage'
 
@@ -198,3 +200,4 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
+          @ui.finishBtn.prop 'disabled', false

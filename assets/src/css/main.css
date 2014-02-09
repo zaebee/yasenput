@@ -6548,3 +6548,10 @@ input[type="checkbox"][readonly] {
      -moz-box-shadow: none;
           box-shadow: none;
 }
+
+button.js-finish {
+    height:30px;
+}
+button[disabled].js-finish {
+    opacity: .3;
+}

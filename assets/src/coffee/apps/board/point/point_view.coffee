@@ -78,6 +78,8 @@
       @onShow()
 
     onShow: ->
+      if not @model.get('imgs').length
+        return
       @bxPagerInit()
       sliderPlace = @$('.bxslider-place').bxSlider
         pagerCustom: '#bx-pager'
@@ -171,6 +173,8 @@
   class Point.AddPhoto extends App.Views.ItemView
     template: 'AddPhotoPopup'
     className: 'popupwin__scrollbox'
+    ui:
+      'finishBtn': '.js-finish'
     events:
       'click .js-finish': 'addImage'
 
@@ -193,3 +197,4 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
+          @ui.finishBtn.prop 'disabled', false
