@@ -4647,6 +4647,7 @@ a {
 .event-step_what .already-added {
   top: 40px;
 }
+.place-step_name .already-added-photos,
 .event-step_what .already-added-photos {
   padding: 15px;
 }

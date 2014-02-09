@@ -21,6 +21,7 @@
       'click .js-popup-add': 'showAddPopup'
       'click .js-popupwin-authorization': 'showLoginPopup'
       'click .js-profile-menu': 'showProfileMenu'
+      'select2-selecting': 'selectItem'
 
     initialize: ->
       user = App.request 'get:my:profile'
@@ -39,6 +40,9 @@
       target = $(e.currentTarget)
       target.toggleClass 'open'
       @$('.profile-menu').slideToggle()
+
+    selectItem: (event) ->
+      console.log event
 
     format: (state) ->
       originalOption = state.element

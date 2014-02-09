@@ -12,9 +12,10 @@
       @stepNameRegion.$el.show()
 
 
-  class Point.StepName extends App.Views.ItemView
+  class Point.StepName extends App.Views.Layout
     template: 'PointStepName'
-    className: 'popupwin__content clearfix'
+    regions:
+      imgsRegion: '#imgs-region'
 
     events:
       'blur .form__field_name input': 'setName'
@@ -23,18 +24,29 @@
       'click .js-next': 'nextStep'
       'submit form': 'nextStep'
 
+    onClose: ->
+      @stopListening()
+      @model.unset()
+
     onShow: ->
+      id = @model.get 'id'
+      if id
+        url = "/photos/point/#{id}/add"
+      else
+        url = "/photos/add"
       @$('#place-dropzone').dropzone
         dictDefaultMessage: 'Перетащите сюда фотографии'
         addRemoveLinks: true
         paramName:'img'
+        url: url
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
         success: (file, data) =>
           img = data[0]
           imgs = @model.get 'imgs'
-          imgs.push img.id
+          imgs.push img
           @model.set 'imgs', imgs
+          @model.trigger 'change:imgs'
 
     setName: (event) ->
       target = $(event.currentTarget)
@@ -275,3 +287,27 @@
     backStep: (event) ->
       event.preventDefault()
       @trigger 'show:step:what'
+
+    onClose: ->
+      @stopListening()
+      @model.unset()
+
+  class Point.Imgs extends App.Views.ItemView
+    template: 'ImgsList'
+    modelEvents:
+      'change:imgs': 'render'
+
+    events:
+      'click .js-delete': 'deleteImg'
+
+    deleteImg: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      data = target.data()
+      #event.val = data.id
+      console.log data
+      #@model. trigger 'select2-removed', event
+
+    onClose: ->
+      @stopListening()
+      @model.unset()
