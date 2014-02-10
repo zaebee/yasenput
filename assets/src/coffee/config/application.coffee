@@ -12,6 +12,10 @@ do (Backbone, $, Dropzone) ->
     else
       $('.filter-type__list').hide()
       $('.header__filter .js-open').removeClass 'open'
+
+    if $(e.target).closest('.filter-dropdown').length
+      return
+    else
       $('.dropdown').removeClass 'open'
 
   $.ajaxSetup
