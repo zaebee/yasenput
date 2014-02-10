@@ -3642,7 +3642,8 @@ a {
   margin-right: 45px;
 }
 .header__filter .filter-sort {
-  float: left;
+  float: right;
+  margin-right: 15px;
 }
 .header__filter .filter-type {
   float: right;

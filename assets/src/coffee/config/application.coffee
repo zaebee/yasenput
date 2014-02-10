@@ -6,6 +6,7 @@ do (Backbone, $, Dropzone) ->
     else
       $('.header__user .profile-menu').hide()
       $('.js-profile-menu').removeClass 'open'
+      $('.dropdown').removeClass 'open'
 
     if $(e.target).closest('.filter-type').length
       return

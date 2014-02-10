@@ -219,3 +219,189 @@
 .dz-error-mark {
   display: none;
 }
+
+.header__filter .filter-dropdown {
+  float: right;
+  margin-right: 15px;
+}
+.header__filter .filter-dropdown .dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  height: 43px;
+  vertical-align: top;
+}
+.header__filter .filter-dropdown .dropdown .dropdown-block {
+  display: none;
+  position: absolute;
+  top: 52px;
+  left: 0;
+  z-index: 101;
+  padding: 15px;
+  background-color: #EFEDED;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  line-height: 32px;
+  font-size: 13px;
+  color: #848484;
+}
+.header__filter .filter-dropdown .dropdown .dropdown-block:after {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  display: block;
+  border: 7px solid transparent;
+  border-bottom-color: #EFEDED;
+}
+.header__filter .filter-dropdown .dropdown input[type="text"] {
+  border-radius: 2px;
+  border: 2px solid #c8c6c6;
+  padding: 0 5px;
+  width: 30px;
+  height: 28px;
+  text-align: center;
+  background: transparent;
+  color: #848484;
+  font-size: 14px;
+}
+.header__filter .filter-dropdown .dropdown input[type="text"]:focus {
+  border-color: #26b89a;
+  background-color: #FFF;
+}
+.header__filter .filter-dropdown .dropdown.open .dropdown-block {
+  display: block;
+}
+.header__filter .filter-dropdown .dropdown.open .sprite-filter2-time {
+  background: url(../images/sprite-filter2.png) no-repeat;
+  display: inline-block;
+  background-position: -2px -49px;
+  width: 43px;
+  height: 43px;
+}
+.header__filter .filter-dropdown .dropdown.open .sprite-filter2-money {
+  background: url(../images/sprite-filter2.png) no-repeat;
+  display: inline-block;
+  background-position: -142px -49px;
+  width: 43px;
+  height: 43px;
+}
+.header__filter .filter-dropdown .dropdown .dropdown-block_time {
+  width: 240px;
+}
+.header__filter .filter-dropdown .dropdown .dropdown-block_money {
+  width: 280px;
+}
+.header__filter .filter-dropdown .dropdown .dropdown-block_money input[type="text"] {
+  width: 60px;
+}
+.header__filter .filter-dropdown .dropdown .btn {
+  float: right;
+  height: 32px;
+  font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
+}
+
+/* glue: 0.3 hash: 9585c8434a */
+.sprite-filter2-up-active,
+.sprite-filter2-time,
+.sprite-filter2-time-active,
+.sprite-filter2-money,
+.sprite-filter2-money-active,
+.sprite-filter2-theatre-small,
+.sprite-filter2-tag-small,
+.sprite-filter2-ski-small,
+.sprite-filter2-place-small,
+.sprite-filter2-photo-small,
+.sprite-filter2-music-small,
+.sprite-filter2-gun-small,
+.sprite-filter2-food-small,
+.sprite-filter2-fish-small,
+.sprite-filter2-drink-small {
+  background: url(../images/sprite-filter2.png) no-repeat;
+  display: inline-block;
+}
+.sprite-filter2-up-active {
+  background-position: -2px -2px;
+  width: 42px;
+  height: 43px;
+}
+.sprite-filter2-time:hover {
+  background-position: -48px -2px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-time {
+  background-position: -95px -2px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-time-active {
+  background-position: -2px -49px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-money:hover {
+  background-position: -49px -49px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-money {
+  background-position: -142px -2px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-money-active {
+  background-position: -142px -49px;
+  width: 43px;
+  height: 43px;
+}
+.sprite-filter2-theatre-small {
+  background-position: -96px -49px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-tag-small {
+  background-position: -2px -96px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-ski-small {
+  background-position: -36px -96px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-place-small {
+  background-position: -70px -96px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-photo-small {
+  background-position: -104px -96px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-music-small {
+  background-position: -138px -96px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-gun-small {
+  background-position: -2px -130px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-food-small {
+  background-position: -36px -130px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-fish-small {
+  background-position: -70px -130px;
+  width: 30px;
+  height: 30px;
+}
+.sprite-filter2-drink-small {
+  background-position: -104px -130px;
+  width: 30px;
+  height: 30px;
+}
