@@ -43,4 +43,3 @@
       @mapView = new Point.Map model: @model
       @show @mapView,
         region: @layout.mapRegion
-        loading: true

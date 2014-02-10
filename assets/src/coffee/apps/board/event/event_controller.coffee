@@ -43,4 +43,3 @@
       @mapView = new Event.Map  model: @model
       @show @mapView,
         region: @layout.mapRegion
-        loading: true
