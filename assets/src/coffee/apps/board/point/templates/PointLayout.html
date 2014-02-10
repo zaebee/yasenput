@@ -86,16 +86,20 @@
   <div class="comments-wrap" id="point-comments-region"></div>
 </div><!-- class="popup-content" -->
 
+{{#if likeusers}}
 <div class="popupwin__content clearfix">
   <div class="title title_blue title_bg_light">Им понравилось:</div>
   <ul class="peoples">
-    <li class="peoples__item">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
+    {{#likeusers}}
+      <li class="peoples__item">
+        <a href="#" class="peoples__link">
+          <img src="{{icon}}" alt="{{ first_name }} {{ last_name}}" class="peoples__img">
+        </a>
+      </li>
+    {{/likeusers}}
   </ul>
 </div><!-- class="popup-content" -->
+{{/if}}
 
 {{#if sets}}
 <div class="popupwin__content clearfix">
@@ -108,16 +112,6 @@
         </a>
       </li>
     {{/sets}}
-    <li class="peoples__item hide">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
-    <li class="peoples__item hide">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
     <li class="peoples__item">
       <a href="#" class="peoples__link peoples__link_all js-more-people">
         Ещё
