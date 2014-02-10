@@ -12,26 +12,41 @@
       @stepNameRegion.$el.show()
 
 
-  class Point.StepName extends App.Views.ItemView
+  class Point.StepName extends App.Views.Layout
     template: 'PointStepName'
-    className: 'popupwin__content clearfix'
+    regions:
+      imgsRegion: '#imgs-region'
 
     events:
       'blur .form__field_name input': 'setName'
       'blur .form__field_description textarea': 'setDescription'
+      'click .dz-details': 'setMainImage'
       'click .js-next': 'nextStep'
       'submit form': 'nextStep'
 
+    onClose: ->
+      @stopListening()
+      @model.unset()
+
     onShow: ->
+      id = @model.get 'id'
+      if id
+        url = "/photos/point/#{id}/add"
+      else
+        url = "/photos/add"
       @$('#place-dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
         paramName:'img'
+        url: url
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
         success: (file, data) =>
           img = data[0]
           imgs = @model.get 'imgs'
-          imgs.push img.id
+          imgs.push img
           @model.set 'imgs', imgs
+          @model.trigger 'change:imgs'
 
     setName: (event) ->
       target = $(event.currentTarget)
@@ -44,6 +59,12 @@
       target = $(event.currentTarget)
       description = target.val()
       @model.set description: description
+
+    setMainImage: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      @$('.dz-details').not(target).removeClass 'main-image'
+      target.toggleClass 'main-image'
 
     nextStep: (event) ->
       event.preventDefault()
@@ -63,7 +84,7 @@
     events:
       'click .categories__link': 'selectRootLabel'
       'click .tags__link': 'selectAdditionalLabel'
-      'blur .field__input-map input': 'setAddress'
+      'change .field__input-map input': 'setAddress'
       'select2-removed': 'removeLabel'
       'click .js-back': 'backStep'
       'click .js-next': 'nextStep'
@@ -119,7 +140,27 @@
     setAddress: (event) ->
       target = $(event.currentTarget)
       address = target.val()
-      @model.set address: address
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        App.ymaps.geocode(address).then (res) =>
+          #@$el.find('[name=address]').change()
+          first = res.geoObjects.get(0)
+          coords = first.geometry.getCoordinates()
+          @model.setCoordinates coords
+          #@map.geoObjects.add @model.placemark
+          #@map.setCenter coords, 12
+
+          latitude = coords[0]
+          longitude = coords[1]
+          @model.set(
+            'address': address
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
 
     backStep: (event) ->
       event.preventDefault()
@@ -138,7 +179,49 @@
       else
         @$('.field__input-map').addClass 'error'
 
+    initMap: ->
+      console.log 'initMap'
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        if not @map
+          @map = new App.ymaps.Map 'map-point-add',
+            center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+            zoom: 12
+          , autoFitToViewport: 'always'
+          @map.controls.add('zoomControl')
+
+        App.execute 'when:fetched', @model, =>
+          if @model.get 'latitude'
+            @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+            @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+            @map.geoObjects.add @model.placemark
+
+        @map.events.remove 'click'
+        @map.events.add 'click', (event) =>
+          coords = event.get('coordPosition')
+          @map.geoObjects.remove @model.placemark
+          @model.setCoordinates coords
+          @map.geoObjects.add @model.placemark
+          App.ymaps.geocode(coords).then (res) =>
+            first = res.geoObjects.get(0)
+            address = first.properties.get 'metaDataProperty.GeocoderMetaData.text'
+            @$('[name=address]').val address
+            @model.set(
+              'address': address
+              {silent: true}
+            )
+
+          longitude = coords[1]
+          latitude = coords[0]
+          @model.set(
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+
     onShow: ->
+      console.log 'onShow'
       @$('.categories__link').tooltip()
       @$('.select-type').select2
         containerCssClass: 'select2-container_tags'
@@ -164,6 +247,18 @@
       else
         @$('.categories__link').eq(0).trigger 'click'
       @$('.select-type').select2 'data', tags
+
+
+      @$('.map_popupwin').resizable
+        minHeight: 80,
+        handles: "s"
+        resize: ( event, ui )  =>
+          $this = $(this)
+          if ui.size.height > 440
+            $this.addClass('open')
+          else
+            $this.removeClass('open')
+      @initMap()
 
     onClose: ->
       @stopListening()
@@ -197,7 +292,32 @@
       @model.save null,
         success: =>
           App.addPointPopup.close()
+          App.vent.trigger 'show:detail:popup', @model
 
     backStep: (event) ->
       event.preventDefault()
       @trigger 'show:step:what'
+
+    onClose: ->
+      @stopListening()
+      @model.unset()
+
+  class Point.Imgs extends App.Views.ItemView
+    template: 'ImgsList'
+    modelEvents:
+      'change:imgs': 'render'
+
+    events:
+      'click .js-delete': 'deleteImg'
+
+    deleteImg: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      data = target.data()
+      #event.val = data.id
+      console.log data
+      #@model. trigger 'select2-removed', event
+
+    onClose: ->
+      @stopListening()
+      @model.unset()

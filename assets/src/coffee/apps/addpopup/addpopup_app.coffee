@@ -17,15 +17,26 @@
     event: ->
       new AddPopupApp.Event.Controller
 
-  App.vent.on 'show:add:place:popup', (params = {}) ->
-    _.defaults params
+  App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()
-    new AddPopupApp.Point.Controller params
+    if model instanceof App.Entities.Point
+      new AddPopupApp.Point.Controller model: model
+    if model instanceof App.Entities.Event
+      new AddPopupApp.Event.Controller model: model
+    if model instanceof App.Entities.Route
+      new AddPopupApp.Route.Controller model: model
 
-  App.vent.on 'show:add:event:popup', (params = {}) ->
-    _.defaults params
+  App.vent.on 'show:add:place:popup', ->
     App.addPopupRegion.close()
-    new AddPopupApp.Event.Controller params
+    API.point()
+
+  App.vent.on 'show:add:event:popup', ->
+    App.addPopupRegion.close()
+    API.event()
+
+  App.vent.on 'show:add:route:popup', ->
+    App.addPopupRegion.close()
+    API.route()
 
   App.addInitializer ->
     new AddPopupApp.Router

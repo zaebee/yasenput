@@ -45,7 +45,7 @@
     showEditPopup: (event) ->
       event.preventDefault()
       console.log event
-      App.vent.trigger 'show:add:place:popup', model: @model
+      App.vent.trigger 'show:edit:popup', @model
 
     showRemovePopup: (event) ->
       event.preventDefault()
@@ -86,14 +86,14 @@
       }
       placemark.model = this
       App.mmap_points.push [this.model.attributes.latitude, this.model.attributes.longitude]
-      
+
       if App.route_points
         trig = 0
         num = 0
         $(App.route_points).each ->
           if this == that
             App.route_points.splice num, 1
-            
+
             App.mmap.geoObjects.each (geoObject)->
               if geoObject.model && geoObject.model == that
                 App.mmap.geoObjects.remove geoObject
@@ -133,8 +133,8 @@
               </div>
             </li>'
 
-      
-      
+
+
       console.log App.route_points
       route_p = []
 
@@ -155,9 +155,7 @@
             console.log 'строим маршрут'
             App.mmap.geoObjects.add route
             App.t_route = route
-
         else 
-          
           App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
             console.log 'test'
             route.getPaths().options.set

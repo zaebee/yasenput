@@ -21,10 +21,11 @@
       'click .js-popup-add': 'showAddPopup'
       'click .js-popupwin-authorization': 'showLoginPopup'
       'click .js-profile-menu': 'showProfileMenu'
+      'select2-selecting': 'selectItem'
 
     initialize: ->
       user = App.request 'get:my:profile'
-      #@listenTo @user, 'change:authorized', @render
+      #@listenTo user, 'change', @render
 
     showAddPopup: (e) ->
       e.preventDefault()
@@ -39,6 +40,9 @@
       target = $(e.currentTarget)
       target.toggleClass 'open'
       @$('.profile-menu').slideToggle()
+
+    selectItem: (event) ->
+      console.log event
 
     format: (state) ->
       originalOption = state.element
@@ -189,3 +193,14 @@
   class Show.PopupLogin extends App.Views.ItemView
     template: 'PopupLogin'
     className: 'popupwin__scrollbox'
+
+
+  class Show.PopupInfo extends App.Views.ItemView
+    template: 'PopupInfo'
+    className: 'popupwin__scrollbox'
+
+    initialize: (options) ->
+      @message = options.message
+
+    templateHelpers: ->
+      message: @message

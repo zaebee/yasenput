@@ -2460,6 +2460,9 @@ textarea {
 .form_dashboard .form__field {
   margin-bottom: 35px;
 }
+.form_dashboard .form__field.form__field__control {
+  text-align:right;
+}
 .form_dashboard label {
   display: inline-block;
   margin-right: 10px;
@@ -3043,6 +3046,11 @@ textarea {
 }
 .bxslider .item {
   float: left;
+  text-align: center;
+  overflow: hidden;
+}
+.bxslider .item.empty {
+    float:none;
 }
 .bx-wrapper {
   position: relative;
@@ -3441,6 +3449,7 @@ a {
 .header__user .link-user {
   display: inline-block;
   max-width: 160px;
+  min-width: 100px;
   text-decoration: none;
   line-height: 16px;
   color: #787777;
@@ -4463,11 +4472,13 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 13px;
   color: #969696;
+  min-width:160px;
 }
 .place-info .user .img {
   display: block;
   float: left;
   margin-right: 5px;
+  width: 38px;
 }
 .place-info .user .name {
   line-height: 17px;
@@ -4636,6 +4647,7 @@ a {
 .event-step_what .already-added {
   top: 40px;
 }
+.place-step_name .already-added-photos,
 .event-step_what .already-added-photos {
   padding: 15px;
 }
@@ -5660,201 +5672,6 @@ a {
   margin-top: 37px;
   margin-right: 20px;
 }
-.dropzone {
-  position: relative;
-  border-radius: 3px;
-  margin-bottom: 40px;
-  padding: 10px 0 40px 10px;
-  width: 305px;
-  min-height: 145px;
-  background: url(../images/pattern-content.png) repeat 0 0;
-}
-.dropzone:before {
-  content: 'Выбрать файл';
-  position: absolute;
-  left: 0;
-  bottom: -35px;
-  border-radius: 3px;
-  padding: 7px 15px 8px;
-  background-color: #C0C0C0;
-  line-height: 13px;
-  font-size: 13px;
-  color: #FFF;
-  cursor: pointer;
-}
-.dropzone:before:hover {
-  background-color: #C8C8C8;
-}
-.dropzone:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  margin-top: -60px;
-  margin-left: -90px;
-  width: 180px;
-  height: 119px;
-  background: url(../images/digital-camera.png) no-repeat 0 0;
-}
-.dropzone .text-no-photo {
-  position: absolute;
-  bottom: 17px;
-  left: 0;
-  right: 0;
-  display: block;
-  text-align: center;
-  font-size: 15px;
-  color: #A5A5A5;
-}
-.dz-default.dz-message {
-  position: absolute;
-  left: 0;
-  bottom: 15px;
-  width: 100%;
-  text-align: center;
-  font-size: 15px;
-  font-weight: bold;
-  color: #A5A5A5;
-  cursor: default;
-}
-.dz-preview {
-  position: relative;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  width: 90px;
-  height: 90px;
-  vertical-align: top;
-}
-.dz-preview img {
-  border-radius: 3px;
-  width: 90px;
-  height: 90px;
-}
-.dz-preview:hover img {
-  display: none;
-}
-.dz-preview .dz-details {
-  position: relative;
-}
-.dz-preview .dz-details:before {
-  content: 'Сделать главной';
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 3px;
-  padding: 60px 0 15px;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  text-align: center;
-  letter-spacing: -0.6px;
-  line-height: 15px;
-  font-size: 13px;
-  font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
-  color: #FFF;
-}
-.dz-preview .dz-details:after {
-  content: '';
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  margin-left: -15px;
-  background: url(../images/sprite.png) no-repeat;
-  display: inline-block;
-  background-position: -92px -268px;
-  width: 30px;
-  height: 21px;
-  display: none;
-}
-.dz-preview .dz-remove {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 5;
-  background: url(../images/sprite.png) no-repeat;
-  display: inline-block;
-  background-position: -128px -347px;
-  width: 15px;
-  height: 15px;
-  text-indent: -9999px;
-  cursor: pointer;
-  display: none;
-}
-.dz-preview.dz-processing {
-  width: 100%;
-  height: auto;
-  overflow: hidden;
-}
-.dz-preview.dz-processing .dz-details:after {
-  display: none;
-}
-.dz-preview.dz-processing .dz-details:before {
-  display: none;
-}
-.dz-preview.dz-processing .dz-progress {
-  display: block;
-  float: left;
-  margin-top: 5px;
-  border-radius: 3px;
-  width: 140px;
-  height: 10px;
-  background-color: #FFF;
-}
-.dz-preview.dz-processing .dz-upload {
-  display: block;
-  border-radius: 3px;
-  height: 10px;
-  background-color: #64CBB6;
-}
-.dz-preview.dz-processing .dz-details {
-  float: right;
-  margin-right: 30px;
-  width: 130px;
-  overflow: hidden;
-}
-.dz-preview.dz-processing .dz-details .dz-filename {
-  display: inline;
-  font-size: 11px;
-  color: #8E8E8E;
-}
-.dz-preview.dz-processing img {
-  display: none;
-}
-.dz-preview.dz-processing .dz-remove {
-  background: url(../images/sprite.png) no-repeat;
-  display: inline-block;
-  background-position: -407px -118px;
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  top: 5px;
-  right: 14px;
-  text-indent: -9999px;
-}
-.dz-preview:hover {
-  cursor: pointer;
-}
-.dz-preview:hover .dz-details:before,
-.dz-preview:hover .dz-details:after {
-  display: block;
-}
-.dz-preview:hover .dz-remove {
-  display: block;
-}
-.dz-filename {
-  display: none;
-}
-.dz-size {
-  display: none;
-}
-.dz-success-mark {
-  display: none;
-}
-.dz-error-mark {
-  display: none;
-}
 .already-added {
   position: absolute;
   z-index: 10;
@@ -6689,8 +6506,52 @@ a {
 .field__input-place.error .select2-choices,
 #dt_start.error, #dt_end.error,
 .comment-form textarea.error,
+.field.error input,
 .form__field_name.error input,
 .form__field_date.error input,
 .field__input-map.error input {
     border: 1px solid #EA5854 !important;
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+
+input[type="radio"][disabled],
+input[type="checkbox"][disabled],
+input[type="radio"][readonly],
+input[type="checkbox"][readonly] {
+  background-color: transparent;
+}
+
+.link.disabled,
+.link[disabled] {
+  color: #333333;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+}
+
+.link.disabled:hover,
+.link[disabled]:hover,
+.link.disabled,
+.link[disabled] {
+  cursor: default;
+  opacity: 0.25;
+  filter: alpha(opacity=25);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+button.js-finish {
+    height:30px;
+}
+button[disabled].js-finish {
+    opacity: .3;
 }

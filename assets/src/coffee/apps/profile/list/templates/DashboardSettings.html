@@ -5,7 +5,7 @@
   </div>
   <div class="btns btns_picture">
     <a href="#?" class="btn btn_color_green" onclick="document.getElementById('uploadAvatar').click();return false;">Сменить автар</a>
-    <input id="uploadAvatar" name="avatar" type="file" style="visibility: hidden;width:0px;height:0px;">
+    <input id="uploadAvatar" name="avatar" type="file" style="visibility:hidden;width:0px;height:0px;display:none;">
     <a href="#?" class="btn btn_color_blue">Аватар из вконтакте</a>
   </div>
   <div class="btns btns_ctrls">
@@ -18,34 +18,40 @@
 <div class="form form_dashboard">
   <div class="form__field">
     <label>Ваш email:</label>
-    <input type="text" value="{{emal}}">
+    <input name="email" type="text" value="{{email}}">
   </div>
   <div class="form__field">
     <label>Ваше имя:</label>
-    <input type="text"value="{{first_name}} {{last_name}}">
+    <input name="fullname" type="text" value="{{first_name}} {{last_name}}">
   </div>
   <div class="form__field">
     <label>Ваш ник:</label>
-    <input type="text" value="{{username}}">
-  </div>
-  <div class="form__field">
-    <label>Местоположение:</label>
-    <input type="text" placeholder="Например: Вологда" value="{{address}}">
-  </div>
-  <div class="form__field">
-    <label>Ваш телефон:</label>
-    <input type="text" value="{{phone}}">
-  </div>
-  <div class="form__field">
-    <label>Ваш сайт:</label>
-    <input type="text" placeholder="Например: https://vk.com/ivan" value="{{website}}">
+    <input name="username" type="text" value="{{username}}">
   </div>
   <div class="form__field">
     <label>О себе:</label>
-    <textarea placeholder="Напишите немного о себе">{{about}}</textarea>
+    <textarea name="about" placeholder="Напишите немного о себе">{{about}}</textarea>
   </div>
 </div>
 
+<div class="form form_dashboard">
+  <div class="form__field">
+    <label>Ваш телефон:</label>
+    <input name="phone" type="text" value="{{phone}}">
+  </div>
+  <div class="form__field">
+    <label>Ваш сайт:</label>
+    <input name="website" type="text" placeholder="Например: https://vk.com/ivan" value="{{website}}">
+  </div>
+  <div class="form__field">
+    <label>Местоположение:</label>
+    <input name="city" type="text" placeholder="Например: Вологда" value="{{city}}">
+  </div>
+  <div class="form__field form__field__control">
+    <a href="#?" class="btn btn_color_blue save-settings">Сохранить</a><br>
+  </div>
+</div>
+<!--
 <div class="form form_dashboard">
   <div class="form__field">
     <label>Организация:</label>
@@ -60,3 +66,4 @@
     <input type="text">
   </div>
 </div>
+-->

@@ -16,6 +16,8 @@
     photoPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_add-photos')
     addPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_add')
     loginPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_authorization')
+    infoPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_info')
+    commercialPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_login-commercial')
 
     pointPopup: Marionette.Region.Modal.extend(el: '.popupwin_place')
     eventPopup: Marionette.Region.Modal.extend(el: '.popupwin_event')
@@ -26,6 +28,7 @@
     addEventPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-event')
     addRoutePopup: Marionette.Region.Modal.extend(el: '.popupwin_add-route')
     addTripPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-trip')
+
 
   App.reqres.setHandler 'default:region', ->
     App.boardRegion
