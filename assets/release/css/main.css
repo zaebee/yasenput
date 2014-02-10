@@ -4647,6 +4647,7 @@ a {
 .event-step_what .already-added {
   top: 40px;
 }
+.place-step_name .already-added-photos,
 .event-step_what .already-added-photos {
   padding: 15px;
 }
@@ -6546,4 +6547,11 @@ input[type="checkbox"][readonly] {
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
+}
+
+button.js-finish {
+    height:30px;
+}
+button[disabled].js-finish {
+    opacity: .3;
 }
