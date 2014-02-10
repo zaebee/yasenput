@@ -6,13 +6,13 @@ do (Backbone, $, Dropzone) ->
     else
       $('.header__user .profile-menu').hide()
       $('.js-profile-menu').removeClass 'open'
-      $('.dropdown').removeClass 'open'
 
     if $(e.target).closest('.filter-type').length
       return
     else
       $('.filter-type__list').hide()
       $('.header__filter .js-open').removeClass 'open'
+      $('.dropdown').removeClass 'open'
 
   $.ajaxSetup
     headers:
