@@ -138,7 +138,6 @@
       tags = @$('.select-type').select2 'data', tags
 
     setAddress: (event) ->
-      console.log 'FOOOO'
       target = $(event.currentTarget)
       address = target.val()
       if App.ymaps is undefined
@@ -154,7 +153,6 @@
 
           latitude = coords[0]
           longitude = coords[1]
-          console.log coords
           @model.set(
             'address': address
             'longitude': longitude
@@ -186,15 +184,18 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        @map = @map or new App.ymaps.Map 'map-point-add',
-          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 12
-        , autoFitToViewport: 'always'
+        if not @map
+          @map = new App.ymaps.Map 'map-point-add',
+            center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+            zoom: 12
+          , autoFitToViewport: 'always'
+          @map.controls.add('zoomControl')
 
         App.execute 'when:fetched', @model, =>
-          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-          @map.geoObjects.add @model.placemark
+          if @model.get 'latitude'
+            @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+            @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+            @map.geoObjects.add @model.placemark
 
         @map.events.remove 'click'
         @map.events.add 'click', (event) =>
@@ -204,8 +205,12 @@
           @map.geoObjects.add @model.placemark
           App.ymaps.geocode(coords).then (res) =>
             first = res.geoObjects.get(0)
-            @$('[name=address]').val first.properties.get 'metaDataProperty.GeocoderMetaData.text'
-            #@$el.find('[name=address]').change()
+            address = first.properties.get 'metaDataProperty.GeocoderMetaData.text'
+            @$('[name=address]').val address
+            @model.set(
+              'address': address
+              {silent: true}
+            )
 
           longitude = coords[1]
           latitude = coords[0]
