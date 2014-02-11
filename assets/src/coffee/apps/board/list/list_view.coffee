@@ -61,7 +61,14 @@
         App.vent.trigger 'show:login:popup'
 
     mark: ->
-      console.log this.model.attributes
+
+      #задаю константы
+      $list = $('.route-list')
+
+      $box = new Object()
+      $box.id = 1
+      $box.img = "/static/images/place-unknown.png"
+      $box.type = 'место'
 
       id_icon = [[1,[[80,0], [112, 36]]], #достопримечательности
         [2,[[0,40], [32, 76]]], #охота
@@ -75,97 +82,58 @@
         [1136,[[0,80], [32, 116]]]] #другое
       that = this
       sprite_coords = [[0,0], [32, 36]]
+
+      #подбирается нужная иконка из спрайта
       $(id_icon).each ->
         if this[0] == that.model.attributes.tags[0].id
           sprite_coords = this[1]
 
+      #создание плэйсмарки(на карту она кладётся позже)
       placemark = new App.ymaps.Placemark [this.model.attributes.latitude, this.model.attributes.longitude],{}, {
         iconImageClipRect: sprite_coords,
         iconImageHref: 'static/images/sprite-baloon.png',
         iconImageSize: [32, 36]
       }
-      placemark.model = this
-      App.mmap_points.push [this.model.attributes.latitude, this.model.attributes.longitude]
+      placemark.model = this #связываю плэйсмарк и модель
+      App.placemark = placemark
+      $box.name = placemark.model.model.attributes.name #берём имя для item в правом блоке карты
 
-      if App.route_points
+      #работа непосредственно с маршрутиком
+      if App.route_points #проверка, существует ли маршрут сейчас
         trig = 0
         num = 0
         $(App.route_points).each ->
-          if this == that
-            App.route_points.splice num, 1
-
+          if this == that #проверка, существует ли эта точка в маршруте
+            App.route_points.splice num, 1 #если есть, то удаляется
+            App.remPlaceFromList $box, $list, $(".map_main"), that #удаляем точку из правого блока карты
             App.mmap.geoObjects.each (geoObject)->
-              if geoObject.model && geoObject.model == that
-                App.mmap.geoObjects.remove geoObject
-                console.log 'удалаяем плэйсмарк'
-            trig = 1
+              if geoObject.model && geoObject.model == that #аналогичная ситуация с плэйсмаркой на карте
+                App.mmap.geoObjects.remove geoObject #удаляем
+            trig = 1 #ставим флаг, что у нас удалялась точка и на карту новых плэйсмарок стаивть не нужно
           num += 1
-        if trig == 0
-          App.mmap.geoObjects.add placemark
-          $('.route_right').append '<li class="item">
-              <span class="drag"></span>
-              <span class="number">'+ (App.route_points.length+1)+'</span>
-              <img src="/static/images/place-unknown.png" alt="" class="img" width="44px" height="44px">
-              <div class="text">
-                <span class="text__place">'+ placemark.model.model.attributes.name+ '</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>'
-          #$('.route-list').dragdrop 'destroy'
-          App.route_points.push that
-          App.dragAndDropSetup $('.map_main') 
-          #$('.route-list').find(".list").jScrollPane autoReinitialise: true
 
+
+        if trig == 0 #проверка, удалялась ли точка
+          App.mmap.geoObjects.add placemark #ставим плэйсмарк на карту
+          App.route_points.push that #добавляем точку в массив точек маршрута
+          App.addPlaceToList $box, $list, $(".map_main"), that #добавляем точку в правый блок на карте
       else 
-        App.route_points = []
-        App.route_points.push that
-        App.mmap.geoObjects.add placemark
-        $('.route-list_deleteable').css 'display', 'block'
-        console.log placemark
-        $('.route_right').append '
-            <li class="item">
-              <span class="drag"></span>
-              <span class="number">1</span>
-              <img src="/static/images/place-unknown.png" alt="" class="img" width="44px" height="44px">
-              <div class="text">
-                <span class="text__place">'+ placemark.model.model.attributes.name+ '</span>
-                <span class="text__type c-place">место</span>
-              </div>
-            </li>'
+        App.route_points = [] #создаём массив точек маршрута, раз он не существовал
+        App.route_points.push that #заносим первую точку
+        App.mmap.geoObjects.add placemark #ставим на карту плэйсмарк
+        App.addPlaceToList $box, $list, $(".map_main"), that #добавляем точку в правый блок карты
+        
+      
+      
+      
+      route_p = [] #масив яндекс-точек маршрута
 
-
-
-      console.log App.route_points
-      route_p = []
-
-      $(App.route_points).each ->
+      $(App.route_points).each -> #заносим в массив яндекс-точек все точки маршрута
         route_p.push {type: 'wayPoint', point:[this.model.attributes.latitude, this.model.attributes.longitude]}
-      if App.t_route
-        App.mmap.geoObjects.remove App.t_route
+      if App.t_route #если на карте есть маршрут
+        App.mmap.geoObjects.remove App.t_route #то удаляем его
       if route_p.length > 1
-        if !App.mroute
-          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->
-            console.log 'test'
-            route.getPaths().options.set
-              balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
-              strokeColor: 'ca7953',
-              opacity: 0.9,
-              noPlacemark: true
-            route.getWayPoints().options.set 'visible', false
-            console.log 'строим маршрут'
-            App.mmap.geoObjects.add route
-            App.t_route = route
-        else 
-          App.mroute = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
-            console.log 'test'
-            route.getPaths().options.set
-              balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
-              strokeColor: 'ca7953',
-              opacity: 0.9,
-              noPlacemark: true
-            route.getWayPoints().options.set 'visible', false
-            App.mmap.geoObjects.add route
-            App.t_route = route
+        App.draw_route route_p # рисуем маршрут на карте
 
 
   class List.Yapens extends App.Views.CollectionView
