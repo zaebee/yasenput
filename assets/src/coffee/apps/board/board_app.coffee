@@ -9,6 +9,7 @@
   class BoardApp.Router extends Marionette.AppRouter
     appRoutes:
       '': 'index'
+      'point/:id': 'popup'
 
   API =
     index: ->
@@ -18,6 +19,10 @@
       new BoardApp.List.Controller
         content: 'ypi'
         user: null
+
+    popup: (id) ->
+      model = new App.Entities.Point id: id
+      App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->
     if model instanceof App.Entities.Point
