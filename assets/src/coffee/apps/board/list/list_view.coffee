@@ -105,7 +105,7 @@
         $(App.route_points).each ->
           if this == that #проверка, существует ли эта точка в маршруте
             App.route_points.splice num, 1 #если есть, то удаляется
-            App.remPlaceFromList $box, $list, $(".map_main"), that #удаляем точку из правого блока карты
+            App.remPlaceFromList $list, that #удаляем точку из правого блока карты
             App.mmap.geoObjects.each (geoObject)->
               if geoObject.model && geoObject.model == that #аналогичная ситуация с плэйсмаркой на карте
                 App.mmap.geoObjects.remove geoObject #удаляем
