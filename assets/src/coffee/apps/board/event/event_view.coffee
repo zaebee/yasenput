@@ -79,6 +79,8 @@
       @onShow()
 
     onShow: ->
+      if not @model.get('imgs').length
+        return
       @bxPagerInit()
       sliderPlace = @$('.bxslider-place').bxSlider
         pagerCustom: '#bx-pager'
@@ -100,6 +102,36 @@
 
   class Event.Map extends App.Views.ItemView
     template: 'EventMap'
+    className: 'map map_popupwin'
+
+    onShow: ->
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        map = new App.ymaps.Map 'map-event',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+
+        points = @model.get 'points'
+        _.each points, (point) =>
+          placemark = new App.ymaps.Placemark [point.latitude, point.longitude],{}, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }
+          map.geoObjects.add placemark
+          map.setCenter([point.latitude, point.longitude], 12)
+
+      @$el.resizable
+        minHeight: 80,
+        handles: "s"
+        resize: ( event, ui )  =>
+          $this = $(this)
+          if ui.size.height > 440
+            $this.addClass('open')
+          else
+            $this.removeClass('open')
 
 
   class Event.Comments extends App.Views.ItemView
@@ -144,6 +176,8 @@
   class Event.AddPhoto extends App.Views.ItemView
     template: 'AddPhotoPopup'
     className: 'popupwin__scrollbox'
+    ui:
+      'finishBtn': '.js-finish'
     events:
       'click .js-finish': 'addImage'
 
@@ -155,6 +189,8 @@
     onShow: ->
       id = @model.get 'id'
       @$('#photos-dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
         url: "/photos/event/#{id}/add"
         paramName:'img'
         headers:
@@ -164,3 +200,4 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
+          @ui.finishBtn.prop 'disabled', false

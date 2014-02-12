@@ -25,12 +25,17 @@
 
     showStepName: ->
       @nameView = new Point.StepName model: @model
-      @show @nameView,
-        region: @layout.stepNameRegion
-        loading: true
+      @listenTo @nameView, 'show', =>
+        imgsView = new Point.Imgs
+          model: @model
+        @nameView.imgsRegion.show imgsView
       @listenTo @nameView, 'show:step:what', ->
         @layout.stepNameRegion.$el.hide()
         @layout.stepWhatRegion.$el.show()
+
+      @show @nameView,
+        region: @layout.stepNameRegion
+        loading: true
 
     showStepWhat: ->
       App.execute 'when:fetched', @tags, =>

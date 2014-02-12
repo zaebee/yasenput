@@ -19,6 +19,10 @@
     popup = new HeaderApp.Show.PopupLogin
     App.loginPopupRegion.show popup
 
+  App.vent.on 'show:info:popup', (message) ->
+    popup = new HeaderApp.Show.PopupInfo message: message
+    App.infoPopupRegion.show popup
+
   App.vent.on 'show:destination:region', () ->
     App.headerRegion.$el.removeClass 'header_small'
     App.headerRegion.currentView.destinationRegion.$el.removeClass 'hide'

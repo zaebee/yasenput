@@ -6,6 +6,7 @@
   <div class="description">
     <h3 class="description__title">{{name}}</h3>
     <p class="description__text">{{description}}</p>
+    <!--
     <div class="description__additional commercial-info">
       <div class="commercial-info__head">
         <ul class="list">
@@ -78,28 +79,29 @@
         </ul>
       </div>
     </div>
+    -->
     <div class="description__address">{{address}}</div>
   </div>
 
-  <div class="map map_popupwin">
-    <a href="#" class="map__close sprite-close js-map-close"></a>
-    <div class="map__container" id="map2"></div>
-    <a href="#" class="btn-open js-map-open"></a>
-  </div>
+  <div id="point-map-region"></div>
 
   <div class="comments-wrap" id="point-comments-region"></div>
 </div><!-- class="popup-content" -->
 
+{{#if likeusers}}
 <div class="popupwin__content clearfix">
   <div class="title title_blue title_bg_light">Им понравилось:</div>
   <ul class="peoples">
-    <li class="peoples__item">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
+    {{#likeusers}}
+      <li class="peoples__item">
+        <a href="#" class="peoples__link">
+          <img src="{{icon}}" alt="{{ first_name }} {{ last_name}}" class="peoples__img">
+        </a>
+      </li>
+    {{/likeusers}}
   </ul>
 </div><!-- class="popup-content" -->
+{{/if}}
 
 {{#if sets}}
 <div class="popupwin__content clearfix">
@@ -112,16 +114,6 @@
         </a>
       </li>
     {{/sets}}
-    <li class="peoples__item hide">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
-    <li class="peoples__item hide">
-      <a href="#" class="peoples__link">
-        <img src="/static/images/guest.png" alt="user" class="peoples__img">
-      </a>
-    </li>
     <li class="peoples__item">
       <a href="#" class="peoples__link peoples__link_all js-more-people">
         Ещё

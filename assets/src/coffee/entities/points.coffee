@@ -62,11 +62,18 @@
   App.reqres.setHandler 'get:detail:point', (point) ->
     API.getDetail point
 
-  App.reqres.setHandler 'like:point', (point) ->
-    response = API.like point
+  App.reqres.setHandler 'like:point', (model) ->
+    response = API.like model
     response.done (data) ->
-      point.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
-    point
+      ##TODO fix updating point if like is fail 
+      ## because it returns Object with error message
+      attrs = data[0]
+      if attrs
+        model.set
+          likes_count: attrs.likes_count
+          isliked: attrs.isliked
+          likeusers: attrs.likeusers
+    model
 
   App.reqres.setHandler 'comment:point', (point, params = {}) ->
     response = API.comment point, params

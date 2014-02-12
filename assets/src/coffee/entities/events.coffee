@@ -67,7 +67,14 @@
   App.reqres.setHandler 'like:event', (model) ->
     response = API.like model
     response.done (data) ->
-      model.set data[0] ##TODO fix updating point if like is fail because it returns Object with error message
+      ##TODO fix updating point if like is fail 
+      ## because it returns Object with error message
+      attrs = data[0]
+      if attrs
+        model.set
+          likes_count: attrs.likes_count
+          isliked: attrs.isliked
+          likeusers: attrs.likeusers
     model
 
   App.reqres.setHandler 'comment:event', (model, params = {}) ->

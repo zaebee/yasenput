@@ -17,4 +17,5 @@ class EditPointForm(ModelForm):
 class AddEventForm(ModelForm):
     class Meta:
         model = Events
-        exclude = ('author', 'tags')
+        exclude = ('author', 'reviews', 'collections', 'tags', 'imgs', 'likeusers', 'visitusers',
+                   'followers', 'visits', 'likes', 'been')

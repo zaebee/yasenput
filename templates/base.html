@@ -66,8 +66,9 @@
             id: {{user.id}},
             first_name: '{{ user.first_name }}',
             last_name: '{{ user.last_name }}',
-            avatar: '{{ user.person.avatar }}',
-            icon: '{{ user.person.icon }}',
+            avatar: '{{ user.person.avatar|default:"/static/images/user-unknown.png" }}',
+            icon: '{{ user.person.icon|default:"/static/images/user-unknown.png" }}',
+            icon_small: '{{ user.person.icon|default:"/static/images/user-unknown-small.png" }}',
             count_liked_objects: {{ count_liked_objects|default:0 }},
             count_commented_objects: {{ count_commented_objects|default:0 }},
           };
