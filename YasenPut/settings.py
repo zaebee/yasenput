@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os.path
 from os import path
 
@@ -10,6 +11,11 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'info@yasenput.ru'
 EMAIL_HOST_PASSWORD = 'ya$enputinfo'
+
+def rel(*x):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+sys.path.insert(0, rel('../apps'))
 
 DICTS_PATH = '/home/tenoclock/yasenput/dicts'
 
