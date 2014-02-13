@@ -10,13 +10,13 @@
     {{/if}}
     {{#if editable}}
     <div class="btns">
-      <a href="#?" class="btn btn_color_green btn_edit">Редактировать</a>
-      <a href="#?" class="btn btn_color_red btn_remove">Удалить</a>
+      <a href="#event/{{id}}/edit" class="btn btn_color_green btn_edit">Редактировать</a>
+      <a href="#event/{{id}}/delete" class="btn btn_color_red btn_remove">Удалить</a>
     </div>
     {{else}}
     <div class="icons">
       <a class="icon sprite-place" data-toggle="tooltip" title="Добавить событие"></a>
-      <a href="#?" class="icon sprite-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" title="Нравится"></a>
+      <a href="#" class="icon sprite-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" title="Нравится"></a>
     </div>
     {{/if}}
   </a>

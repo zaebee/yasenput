@@ -103,7 +103,7 @@
     template: 'PointMap'
     className: 'map map_popupwin'
     events:
-      'click .ui-resizable-handle': 'mapResize'
+      'click .map__container': 'mapResize'
       'click .js-map-close': 'mapClose'
 
     onShow: ->

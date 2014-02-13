@@ -23,9 +23,9 @@
       if @model.get('editable') then 'box box_dashboard' else 'box'
 
     events:
-      #'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
-      #'click .js-popupwin-event': -> @trigger 'show:detail:popup', @model
-      #'click .js-popupwin-route': -> @trigger 'show:detail:popup', @model
+      'click .js-popupwin-place': 'showDetailPopup'
+      'click .js-popupwin-event': 'showDetailPopup'
+      'click .js-popupwin-route': 'showDetailPopup'
 
       'click .sprite-like': 'like'
       'click .sprite-place': 'mark'
@@ -42,9 +42,18 @@
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
 
+    showDetailPopup: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger:false
+      console.log event
+      App.vent.trigger 'show:detail:popup', @model
+
     showEditPopup: (event) ->
       event.preventDefault()
       console.log event
+      url = $(event.currentTarget).prop 'hash'
+      Yapp.navigate url, trigger:false
       App.vent.trigger 'show:edit:popup', @model
 
     showRemovePopup: (event) ->

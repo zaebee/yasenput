@@ -59,7 +59,8 @@
     )
     BoardApp.board.show BoardApp.board.yapensView,
       region: App.boardRegion
-      loading: true
+      loading:
+        loadingType: 'opacity'
 
   App.vent.on 'filter:all:yapens', (params = {}) ->
     App.updateSettings params
