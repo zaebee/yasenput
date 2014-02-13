@@ -8,14 +8,17 @@
 
   class AddPopupApp.Router extends Marionette.AppRouter
     appRoutes:
-      'add/point/': 'point'
-      'add/event/': 'event'
+      'add/point': 'point'
+      'add/event': 'event'
+      'add/route': 'route'
 
   API =
     point: ->
       new AddPopupApp.Point.Controller
     event: ->
       new AddPopupApp.Event.Controller
+    route: ->
+      new AddPopupApp.Route.Controller
 
   App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()
