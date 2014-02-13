@@ -112,20 +112,16 @@
             trig = 1 #ставим флаг, что у нас удалялась точка и на карту новых плэйсмарок стаивть не нужно
           num += 1
 
-
         if trig == 0 #проверка, удалялась ли точка
           App.mmap.geoObjects.add placemark #ставим плэйсмарк на карту
           App.route_points.push that #добавляем точку в массив точек маршрута
           App.addPlaceToList $box, $list, $(".map_main"), that #добавляем точку в правый блок на карте
-      else 
+      else
         App.route_points = [] #создаём массив точек маршрута, раз он не существовал
         App.route_points.push that #заносим первую точку
         App.mmap.geoObjects.add placemark #ставим на карту плэйсмарк
         App.addPlaceToList $box, $list, $(".map_main"), that #добавляем точку в правый блок карты
-        
-      
-      
-      
+
       route_p = [] #масив яндекс-точек маршрута
 
       $(App.route_points).each -> #заносим в массив яндекс-точек все точки маршрута
@@ -153,17 +149,21 @@
         onFetch: -> $('.loader').removeClass 'hide'
         success: -> $('.loader').addClass 'hide'
 
-    onAfterItemAdded: (itemView) ->
+    onAfterItemAdded: (itemView, data) ->
       if @wall
-        #itemView.$el.imagesLoaded =>
         @wall.appended itemView.$el
+        @wall.reloadItems()
+
+    onCollectionRendered: ->
+      App.execute 'when:fetched', @collection, =>
+        console.log 'collection rendered. We rebuild masonry layout'
+        @wall.layout() if @wall
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>
         console.log 'collection fetched', @collection
-        @$el.imagesLoaded =>
-          @wall = new Masonry @el,
-            itemSelector: '.box'
+        @wall = @wall or new Masonry @el,
+          itemSelector: '.box'
 
     onClose: ->
       @infiniScroll.destroy()

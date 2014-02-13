@@ -89,8 +89,8 @@
         event.preventDefault()
         console.log event
       data = event.object
-      App.updateSettings s: if data then data.name else ''
-      App.vent.trigger 'filter:all:yapens'
+      params = s: if data then data.name else ''
+      App.vent.trigger 'filter:all:yapens', params
 
     format: (state) ->
       originalOption = state.element
@@ -154,8 +154,7 @@
         return
       $target.toggleClass 'active'
       tags = _.map @$('.categories__link.sprite-filter-photo.active'), (type) -> $(type).data('id')
-      App.updateSettings tags: tags.join ','
-      App.vent.trigger 'filter:all:yapens'
+      App.vent.trigger 'filter:all:yapens', tags: tags.join ','
 
     filterAllCategory: (event) ->
       event.preventDefault()
@@ -166,8 +165,7 @@
         $(event.target).addClass 'active'
         @ui.filterAllCategory.addClass 'active'
       tags = _.map @$('.categories__link.sprite-filter-photo.active'), (type) -> $(type).data('id')
-      App.updateSettings tags: tags.join ','
-      App.vent.trigger 'filter:all:yapens'
+      App.vent.trigger 'filter:all:yapens', tags: tags.join ','
 
     openFilterType: (event) ->
       event.preventDefault()
@@ -178,8 +176,7 @@
       $target = $(event.target)
       $target.toggleClass 'active'
       models = _.map @$('.filter-type__link.active'), (type) -> $(type).data('models')
-      App.updateSettings models: models.join ','
-      App.vent.trigger 'filter:all:yapens'
+      App.vent.trigger 'filter:all:yapens', models: models.join ','
 
     filterDropdown: (event) ->
       event.preventDefault()

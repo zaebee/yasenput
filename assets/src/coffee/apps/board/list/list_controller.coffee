@@ -4,20 +4,16 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
-      #App.updateSettings content: @options.content or 'ypi'
-      App.updateSettings @options
-      @yapens = App.request 'get:all:yapens', App.settings
-      @showYapens()
+      @yapens = App.request 'get:all:yapens', @options
+      @yapensView = @yapensView or new List.Yapens collection: @yapens
+    
+      @yapensView.on 'childview:show:detail:popup', (iv, model) ->
+        App.vent.trigger 'show:detail:popup', model
+
+      @show @yapensView,
+        region: App.boardRegion
+        loading: true
 
     onClose: ->
       @stopListening()
-      @yapens.reset()
-
-    showYapens: ->
-      yapensView = new List.Yapens collection: @yapens
-      yapensView.on 'childview:show:detail:popup', (iv, model) ->
-        App.vent.trigger 'show:detail:popup', model
-
-      @show yapensView,
-        region: App.boardRegion
-        loading: true
+      @yapensView.close()

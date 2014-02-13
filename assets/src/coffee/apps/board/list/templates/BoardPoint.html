@@ -1,6 +1,6 @@
 <div class="box__title box__title_type_place">Место</div>
 <div class="box__img">
-  <a href="#?" class="js-popupwin-place">
+  <a href="#point/{{id}}" class="js-popupwin-place">
     {{#if imgs}}
       <img src="{{imgs.[0].thumbnail207}}" height="{{imgs.[0].thumbnail207_height}}" alt="{{name}}" class="img">
     {{else}}
@@ -14,7 +14,7 @@
     {{else}}
     <div class="icons">
       <a class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>
-      <a href="#?" class="icon sprite-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" title="Нравится"></a>
+      <a href="#" class="icon sprite-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" title="Нравится"></a>
     </div>
     {{/if}}
   </a>

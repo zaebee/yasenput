@@ -12,12 +12,12 @@
 
   API =
     getEntities: (params = {}) ->
-      yapens = new Entities.YapensCollection
-      yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
-      yapens.fetch
+      @yapens = @yapens or new Entities.YapensCollection
+      @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
+      @yapens.fetch
         reset: true
         data: params
-      yapens
+      @yapens
 
     search: (params = {}, callback) ->
       _.defaults params,
@@ -30,7 +30,7 @@
 
 
   App.reqres.setHandler 'get:all:yapens', (params = {}) ->
-    API.getEntities params
+    @yapens = API.getEntities params
   
   App.reqres.setHandler 'search:all:yapens', (params = {}, callback) ->
     API.search params, callback

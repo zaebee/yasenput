@@ -7,7 +7,7 @@
   <li class="item">
     <a href="#?" class="btn-like {{#if isliked}}active{{/if}}" data-toggle="tooltip" data-original-title="Вы должны залогиниться" data-placement="bottom">
       <span class="icon sprite-like-user"></span>
-      <span class="text">{{likes_count}}</span>
+      <span class="text">{{#if likes_count}}{{likes_count}}{{else}}0{{/if}}</span>
     </a>
   </li>
   <li class="item">

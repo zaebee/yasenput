@@ -9,19 +9,29 @@
   class BoardApp.Router extends Marionette.AppRouter
     appRoutes:
       '': 'index'
-      'point/:id': 'popup'
-
+      'point/:id': 'point'
+      'event/:id': 'event'
+      'route/:id': 'route'
+  
   API =
     index: ->
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
-      new BoardApp.List.Controller
-        content: 'ypi'
-        user: null
 
-    popup: (id) ->
-      model = new App.Entities.Point id: id
+    point: (id) ->
+      console.log 'catch  url point:', id
+      model = BoardApp.board.yapens.get id
+      if !model
+        model = new App.Entities.Point id: id
+      App.vent.trigger 'show:detail:popup', model
+
+    event: (id) ->
+      model = BoardApp.board.yapens.get id
+      App.vent.trigger 'show:detail:popup', model
+
+    route: (id) ->
+      model = new App.Entities.Route id: id
       App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->
@@ -32,10 +42,23 @@
     if model instanceof App.Entities.Route
       new BoardApp.Route.Controller model: model
 
+  App.vent.on 'change:settings', (changed) ->
+    console.log 'settings changed', changed
+    @fetch.abort() if @fetch
+
+    @fetch = BoardApp.board.yapens.fetch(
+      reset:true,
+      data: Yapp.settings
+    )
+    BoardApp.board.show BoardApp.board.yapensView,
+      region: App.boardRegion
+      loading: true
+
   App.vent.on 'filter:all:yapens', (params = {}) ->
-    _.defaults params
-    new BoardApp.List.Controller params
+    App.updateSettings params
+
 
   App.addInitializer ->
+    BoardApp.board = new BoardApp.List.Controller App.settings
     new BoardApp.Router
       controller: API
