@@ -24,14 +24,21 @@
       model = BoardApp.board.yapens.get id
       if !model
         model = new App.Entities.Point id: id
+        BoardApp.board.yapens.add model
       App.vent.trigger 'show:detail:popup', model
 
     event: (id) ->
       model = BoardApp.board.yapens.get id
+      if !model
+        model = new App.Entities.Event id: id
+        BoardApp.board.yapens.add model
       App.vent.trigger 'show:detail:popup', model
 
     route: (id) ->
       model = new App.Entities.Route id: id
+      if !model
+        model = new App.Entities.Event id: id
+        BoardApp.board.yapens.add model
       App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->

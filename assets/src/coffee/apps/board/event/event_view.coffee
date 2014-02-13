@@ -10,8 +10,8 @@
       tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
-    events:
-      'click .js-popupwin-place': 'showPointPopup'
+    #events:
+      #'click .js-popupwin-place': 'showPointPopup'
 
     showPointPopup: (event) ->
       event.preventDefault()
@@ -31,6 +31,8 @@
       'click .btn-like': 'eventLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
+      'click .ui-resizable-handle': 'mapResize'
+      'click .js-map-close': 'mapClose'
 
     initialize: ->
       @listenTo @model, 'event:like:response', @eventLikeResponse
@@ -49,6 +51,16 @@
     upload: (e) ->
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
+
+    mapResize:(event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').addClass 'open'
+
+    mapClose: (event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').removeClass 'open'
 
 
   class Event.Photo extends App.Views.ItemView

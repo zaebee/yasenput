@@ -29,6 +29,8 @@
       'click .btn-like': 'pointLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
+      'click .ui-resizable-handle': 'mapResize'
+      'click .js-map-close': 'mapClose'
 
     initialize: ->
       @listenTo @model, 'point:like:response', @pointLikeResponse
@@ -48,6 +50,16 @@
     upload: (e) ->
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
+
+    mapResize:(event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').addClass 'open'
+
+    mapClose: (event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').removeClass 'open'
 
 
   class Point.Photo extends App.Views.ItemView
