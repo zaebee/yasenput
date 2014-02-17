@@ -668,7 +668,7 @@ class PointAdd(PointsBaseView):
         id = kwargs.get('id')
         t0 = time.time()
         point = MainModels.Points.objects.filter(id=id)
-        point = point.extra(select = {
+        point = point.extra(select={
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
@@ -994,9 +994,9 @@ class AddReviewToEvent(View):
         if not review_text:
             return JsonHTTPResponse({"id":id,
                                      "status": 1,
-                                     "txt":"Напишите текст комментария"})
+                                     "txt": "Напишите текст комментария"})
 
-        event= get_object_or_404(MainModels.Events, id=id)
+        event = get_object_or_404(MainModels.Events, id=id)
         if event.reviews.filter(author=author).exists():
             last_review = event.reviews.filter(author=author).latest('updated')
             if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
@@ -1008,9 +1008,9 @@ class AddReviewToEvent(View):
             review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
         event.reviews.add(review)
-        return JsonHTTPResponse({"id":id,
+        return JsonHTTPResponse({"id": id,
                                  "status": 0,
-                                 "txt":"Комментарий добавлен"})
+                                 "txt": "Комментарий добавлен"})
 
 
 class AddReviewToPoint(View):
@@ -1022,9 +1022,9 @@ class AddReviewToPoint(View):
         review_text = request.POST.get('review', None)
         review_text = review_text.replace('\n', '<br>')
         if not review_text:
-            return JsonHTTPResponse({"id":id,
+            return JsonHTTPResponse({"id": id,
                                      "status": 1,
-                                     "txt":"Напишите текст комментария"})
+                                     "txt": "Напишите текст комментария"})
 
         point = get_object_or_404(MainModels.Points, id=id)
         if point.reviews.filter(author=author).exists():
@@ -1038,9 +1038,9 @@ class AddReviewToPoint(View):
             review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
         point.reviews.add(review)
-        return JsonHTTPResponse({"id":id,
+        return JsonHTTPResponse({"id": id,
                                  "status": 0,
-                                 "txt":"Комментарий добавлен"})
+                                 "txt": "Комментарий добавлен"})
 
 
 class GetTags(View):
@@ -1052,7 +1052,7 @@ class GetTags(View):
         if level:
             tags_l = tags_l.filter(level=level)
         YpJson = YpSerialiser()
-        tags = json.loads(YpJson.serialize(tags_l, fields = ['id', 'name', 'level', 'parent', 'icons', 'style']))
+        tags = json.loads(YpJson.serialize(tags_l, fields=['id', 'name', 'level', 'parent', 'icons', 'style']))
         return JsonHTTPResponse(tags)
 
 

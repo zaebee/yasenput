@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'apps.descriptions',
     'apps.djangosphinx',
     'apps.api',
+    'apps.trips',
     'south',
     'django_ipgeobase',
     # Uncomment the next line to enable the admin:
