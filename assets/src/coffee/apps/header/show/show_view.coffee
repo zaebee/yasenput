@@ -193,6 +193,7 @@
 
     events:
       'click .js-popup-add-place': -> App.vent.trigger 'show:add:place:popup'
+      'click .js-popup-add-route': -> App.vent.trigger 'show:add:route:popup'
       'click .js-popup-add-event': -> App.vent.trigger 'show:add:event:popup'
 
 
