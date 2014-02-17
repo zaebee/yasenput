@@ -1,6 +1,35 @@
-do (Backbone) ->
+do (Backbone, $, Dropzone) ->
+
+  $(document).click (e) ->
+    if $(e.target).closest('.header__user').length
+      return
+    else
+      $('.header__user .profile-menu').hide()
+      $('.js-profile-menu').removeClass 'open'
+
+    if $(e.target).closest('.filter-type').length
+      return
+    else
+      $('.filter-type__list').hide()
+      $('.header__filter .js-open').removeClass 'open'
+
+    if $(e.target).closest('.filter-dropdown').length
+      return
+    else
+      $('.dropdown').removeClass 'open'
+
+  $.ajaxSetup
+    headers:
+      'X-CSRFToken': $.cookie('csrftoken')
+
+  Dropzone.autoDiscover = false
+
+  Backbone.emulateJSON = true
+  Backbone.emulateHTTP = true
 
   _.extend Backbone.Marionette.Application::,
+
+    settings: {}
 
     navigate: (route, options = {}) ->
       Backbone.history.navigate route, options
@@ -56,3 +85,24 @@ do (Backbone) ->
             if cookie.substring(0, name.length + 1) is (name + '=')
               cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
       return cookieValue
+
+    apiRequest: (options) ->
+      url = @API_BASE_URL + options.url
+      #url = options.url
+      console.log ["#{options.type} request to #{url} with data:", options.data]
+      $.ajax
+        url: url
+        type: options.type
+        dataType: options.dataType or 'json'
+        processData: options.processData
+        contentType: options.contentType
+        data: options.data
+        beforeSend: (xhr) => xhr.setRequestHeader('X-CSRFToken', @getCookie('csrftoken'))
+        success: (response) ->
+          console.log ['response from API: ', response]
+          if options.successCallback
+            params = [response]
+            _.each options.params, (p)->
+              params.push p
+            options.successCallback.apply options.context, params
+

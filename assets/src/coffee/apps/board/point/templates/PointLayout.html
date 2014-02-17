@@ -1,0 +1,124 @@
+<div class="popupwin__content clearfix">
+  <div id="point-header-region" class="place-info clearfix"></div>
+  
+  <div id="point-photo-region"></div> 
+
+  <div class="description">
+    <h3 class="description__title">{{name}}</h3>
+    <p class="description__text">{{description}}</p>
+    <!--
+    <div class="description__additional commercial-info">
+      <div class="commercial-info__head">
+        <ul class="list">
+          <li class="item item_phone">8 (817) 272-45-50</li>
+          <li class="item item_site"><a href="#" class="link">mysite.ru</a></li>
+          <li class="item item_tw"><a href="#" class="link">@kirillo_belozer</a></li>
+          <li class="item item_vk"><a href="#" class="link">vk.com/groupname</a></li>
+        </ul>
+        <a href="#" class="link-open js-open"></a>
+      </div>
+      <div class="commercial-info__body clearfix">
+        <ul class="list list_first">
+          <li class="item">
+            <div class="entry-title">Время работы:</div>
+            <div class="text">
+              Пн-Пт    12:20 - 22:00<br>
+              Сб-Вс    12:00 - 18:00
+            </div>
+          </li>
+          <li class="item">
+            <div class="entry-title">Кредитные карты:</div>
+            <div class="text">
+              Да (вкл. Visa, Master Card)
+            </div>
+          </li>
+          <li class="item">
+            <div class="entry-title">Уличная веранда:  </div>
+            <div class="text">
+              Да
+            </div>
+          </li>
+        </ul>
+        <ul class="list list_second">
+          <li class="item">
+            <div class="entry-title">Цена:</div>
+            <div class="text">
+              500 <span class="sprite-ruble-commercial"></span>
+            </div>
+          </li>
+          <li class="item">
+            <div class="entry-title">Предлагается:</div>
+            <div class="text">
+              Бизнес-ланч,<br>
+              Линия раздачи
+            </div>
+          </li>
+          <li class="item">
+            <div class="entry-title">Доставка:  </div>
+            <div class="text">
+              Да
+            </div>
+          </li>
+        </ul>
+        <ul class="list list_third">
+          <li class="item">
+            <div class="entry-title">Бронирование:</div>
+            <div class="text">
+              да
+            </div>
+          </li>
+          <li class="item">
+            <div class="entry-title">WiFi:</div>
+            <div class="text">
+              Бесплатный
+            </div>
+          </li>
+          <li class="item">
+            <a href="#" class="link-changes">Хочу предложить изменения</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    -->
+    <div class="description__address">{{address}}</div>
+  </div>
+
+  <div id="point-map-region"></div>
+
+  <div class="comments-wrap" id="point-comments-region"></div>
+</div><!-- class="popup-content" -->
+
+{{#if likeusers}}
+<div class="popupwin__content clearfix">
+  <div class="title title_blue title_bg_light">Им понравилось:</div>
+  <ul class="peoples">
+    {{#likeusers}}
+      <li class="peoples__item">
+        <a href="#" class="peoples__link">
+          <img src="{{icon}}" alt="{{ first_name }} {{ last_name}}" class="peoples__img">
+        </a>
+      </li>
+    {{/likeusers}}
+  </ul>
+</div><!-- class="popup-content" -->
+{{/if}}
+
+{{#if sets}}
+<div class="popupwin__content clearfix">
+  <div class="title title_green title_bg_light">Добавили к себе в путешествие:</div>
+  <ul class="peoples">
+    {{#sets}}
+      <li class="peoples__item">
+        <a href="#" class="peoples__link">
+          <img src="{{author.icon}}" alt="user" class="peoples__img">
+        </a>
+      </li>
+    {{/sets}}
+    <li class="peoples__item">
+      <a href="#" class="peoples__link peoples__link_all js-more-people">
+        Ещё
+      </a>
+    </li>
+  </ul>
+</div><!-- class="popup-content" -->
+{{/if}}

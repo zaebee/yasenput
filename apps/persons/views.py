@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -17,14 +19,14 @@ from pymorphy import get_morph
 
 def JsonHTTPResponse(json):
         return HttpResponse(simplejson.dumps(json), mimetype="application/json")
-    
+
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
 
 
 class PersonsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-    
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax:
@@ -61,7 +63,7 @@ class FollowPerson(PersonsBaseView):
                 import sys
                 print sys.exc_info()
                 return JsonHTTPResponse({"id": id, "status": 0, "txt": "ошибка процедуры подписи на изменения персоны"})
-            else: 
+            else:
                 return JsonHTTPResponse({"id": id, "status": 2, "txt": ""})
         else:
             return JsonHTTPResponse({"status": 0, "txt": "некорректно задан id места", "id": 0})
@@ -74,14 +76,14 @@ class SearchPerson(PersonsBaseView):
         params = request.GET
         COUNT_ELEMENTS = 5
         errors = []
-               
+
         limit = COUNT_ELEMENTS
         offset = 0
-        
+
         form = forms.SearchForm(params)
         if form.is_valid():
-            #pointsreq = MainModels.Person.objects;           
-            
+            #pointsreq = MainModels.Person.objects;
+
             name = form.cleaned_data.get("s")
             users_list = []
             morph = get_morph('/home/tenoclock/yasenput/dicts')
@@ -102,24 +104,24 @@ class SearchPerson(PersonsBaseView):
                             for splited_item in search_query:
                                 if not MainModels.Person.objects.get(id = splited_item['id']) in users_list:
                                    users_list.append(MainModels.Person.objects.get(id = splited_item['id']))
-                
-                        
-                
 
 
-            content = form.cleaned_data.get("content") 
+
+
+
+            content = form.cleaned_data.get("content")
             if content == 'new':
                 pointsreq  = pointsreq.order_by('-id')
             elif content == "popular":
                 pointsreq  = pointsreq.annotate(usfiliwers=Count('followers__id')).order_by('-usfiliwers', '-id')
-            else:   
+            else:
                 pointsreq  = users_list
-                
-                
+
+
             points = users_list[offset:limit]
-            
+
             YpJson = YpSerialiser()
-            return HttpResponse(YpJson.serialize(points, fields=("username", "first_name", "last_name")), 
+            return HttpResponse(YpJson.serialize(points, fields=("username", "first_name", "last_name")),
                                 mimetype="application/json")
         else:
             e = form.errors
@@ -129,31 +131,51 @@ class SearchPerson(PersonsBaseView):
 
 
 class PersonAccount(PersonsBaseView):
-    http_method_names = ('get',)
+    http_method_names = ('get', 'post')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST.get('model', None)
+        user_dict = json.loads(data)
+        author = MainModels.Person.objects.filter(user=request.user)
+        if 'fullname' in user_dict:
+            fullname = user_dict.pop('fullname', '').split(' ', 1)
+            if len(fullname) == 2:
+                user_dict['first_name'], user_dict['last_name'] = fullname
+            elif fullname[0]:
+                user_dict['first_name'] = fullname[0]
+                user_dict['last_name'] = ''
+
+        try:
+            author.update(**user_dict)
+        except Exception, e:
+            return JsonHTTPResponse({"status": 1, "txt": str(e)})
+
+        return self.get(request)
 
     def get(self, request, *args, **kwargs):
         person = MainModels.Person.objects.filter(username=request.user).extra(
                 select={"liked_points": "select count(*) from main_points_likeusers where user_id=main_person.user_id",
                         "liked_events": "select count(*) from main_events_likeusers where user_id=main_person.user_id",
                         "liked_photos": "select count(*) from photos_photos_likeusers where user_id=main_person.user_id",
-                        
+
                         "added_points": "select count(*) from main_points where author_id=main_person.user_id",
                         "added_events": "select count(*) from main_events where author_id=main_person.user_id",
                         "added_photos": "select count(*) from photos_photos where author_id=main_person.user_id",
-                        
+
                         "want_visit_points": "select count(*) from main_points_visitusers where user_id=main_person.user_id",
                         "want_visit_events": "select count(*) from main_events_visitusers where user_id=main_person.user_id",
-                        
+
                         "person_followers": "select count(*) from main_person_followers where user_id=main_person.user_id",
                         }
             )
-        
+
         YpJson = YpSerialiser()
-        return HttpResponse(YpJson.serialize(person, 
+        return HttpResponse(YpJson.serialize(person,
                                              extras=["liked_points", "liked_events", "liked_photod",
                                                      "added_points", "added_events", "added_photos",
-                                                     "want_visit_points", "want_visit_events", 
-                                                     "person_followers"
-                                                     ], 
-                                             fields=("username", "first_name", "last_name")),
+                                                     "want_visit_points", "want_visit_events",
+                                                     "person_followers", "icon", "icon_small"
+                                                     ],
+                                             fields=("username", "first_name", "last_name", "email",
+                                                     "avatar", "phone", "city", "website", "about")),
                             mimetype="application/json")

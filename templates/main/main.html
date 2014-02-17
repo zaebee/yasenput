@@ -3,24 +3,25 @@
 {% block seo %}
     {% include 'includes/seo.html' %}
 {% endblock %}
+{% block title %}Ясен Путь{% endblock %}
+
 
 {% block wrap %}
-    <header id="header">
-    </header><!--/ #header-->
+  <div class="page">
+    <header id="header-region" class="header"></header>
 
-    {% block mainmap %}
-      <div id="yandex-map" class="toggle-block main-map"></div>
-    {% endblock %}
+    <section class="container">
+      <div id="map-region"></div>
+      <div id="board-region" class="constrain"></div>
+      <div class="loader hide"></div>
+    </section>
 
-    {% block content %}
-      <div id="content"></div>
-    {% endblock %}
-
-    <footer id="footer">
+    <footer id="footer-region" class="footer">
     </footer>
+  </div>
 {% endblock %}
 
 {% block popups %}
+    <div class="overlay"></div>
     {% include 'includes/popups.html' %}
-    {% include 'includes/confirm-remove-photo.html' %}
 {% endblock %}

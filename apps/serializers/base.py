@@ -70,7 +70,7 @@ class Serializer(base.Serializer):
             for extra in self.extras:
                 self.handle_extra_field(obj, extra)
             self.end_object(obj)
-	    
+
         self.end_serialization()
         return self.getvalue()
 

@@ -4,109 +4,46 @@
 # @main
 ###
 
-Yapp = window.Yapp
+@Yapp = do (Backbone, Marionette) ->
+  App = new Marionette.Application
 
-# Application initializer
-Yapp.addInitializer ->
-  console.log 'application initializing'
-  if window.location.href.search('#!') != -1
-    window.location.replace(window.location.href.split('#!').join('').split('//').join('/').replace('http:','http:/'))
-  @settings = {}
-  @isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)
+  App.addRegions
+    headerRegion:'#header-region'
+    boardRegion:'#board-region'
+    footerRegion:'#footer-region'
+    mapRegion: '#map-region'
 
-  ## TODO: set page content for showing big ajax-loader
-  # application regions
-  @addRegions(
-    header:'#header'
-    map:'#yandex-map'
-    content:'#content'
-    routePanel:'#panel-add-path'
-    footer:'#footer'
-    popup: Yapp.Common.PopupRegion
-  )
+    photoPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_add-photos')
+    addPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_add')
+    loginPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_authorization')
+    infoPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_info')
+    commercialPopupRegion: Marionette.Region.Modal.extend(el: '.popupwin_login-commercial')
 
-  # creates command for toggle map
-  @commands.setHandler(
-    'toggleMap'
-    (state) ->
-      Yapp.map.$el.toggleClass 'map-opened'
-      $('#wrap').toggleClass 'map-opened'
+    pointPopup: Marionette.Region.Modal.extend(el: '.popupwin_place')
+    eventPopup: Marionette.Region.Modal.extend(el: '.popupwin_event')
+    routePopup: Marionette.Region.Modal.extend(el: '.popupwin_route')
+    tripPopup: Marionette.Region.Modal.extend(el: '.popupwin_trip')
 
-      if state and state = 'open'
-        Yapp.map.$el.addClass 'map-opened'
-        $('#wrap').addClass 'map-opened'
+    addPointPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-place')
+    addEventPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-event')
+    addRoutePopup: Marionette.Region.Modal.extend(el: '.popupwin_add-route')
+    addTripPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-trip')
 
-      text = if Yapp.map.$el.find('.a-toggle').html() is 'Свернуть карту' then 'Развернуть карту' else 'Свернуть карту'
-      Yapp.map.$el.find('.a-toggle').html text
-  )
 
-  # create a handler for Yapp.request('request') - it send ajax request to the API
-  # it requires options: type (HTTP-method), url (relative), successCallback and context for callback,
-  # data - to send to the API and params - array of params to pass to the successCallback
-  # Even in new API we should save this handler - for simply ajax requests
-  @reqres.setHandler(
-    'request'
-    (options)->
-      url = Yapp.API_BASE_URL + options.url
-      url = options.url
-      console.log ["#{options.type} request to #{url} with data:", options.data]
-      $.ajax
-        url: url
-        type: options.type
-        dataType: options.dataType or 'json'
-        processData: options.processData
-        contentType: options.contentType
-        data: options.data
-        success: (response) ->
-          console.log ['response from API: ', response]
-          if options.successCallback
-            params = [response]
-            _.each options.params, (p)->
-              params.push p
-            options.successCallback.apply options.context, params
-  )
+  App.reqres.setHandler 'default:region', ->
+    App.boardRegion
 
-# set user info from API when application started
-Yapp.on 'start', ->
-  console.log 'starting application'
+  App.rootRoute = '/'
 
-  @user = new Yapp.User.Profile(USER)
-  @runApplication()
+  App.commands.setHandler 'register:instance', (instance, id) ->
+    App.register instance, id
 
-  $(document).ajaxStart( ->
-    $('.spinner').show()
-    $('.GridFooter').show()
-  ).ajaxStop( ->
-    $('.spinner').hide()
-    $('.GridFooter').hide()
-  )
+  App.commands.setHandler 'unregister:instance', (instance, id) ->
+    App.unregister instance, id
 
-  $(document).on 'click', 'a.nonav', (event) ->
-    href = $(@).attr 'href'
-    protocol = @protocol + '//'
-    if href and href.slice(0, protocol.length) isnt protocol and href.indexOf('javascript:') isnt 0
-      event.preventDefault()
-      event.stopPropagation()
-      Backbone.history.navigate href, true
+  App.on 'initialize:after', (options) ->
+    @startHistory()
+    @navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
 
-# init all modules for fully working application
-Yapp.runApplication = ->
-  if @isMobile
-    $('body').addClass 'mobile'
+  App
 
-  @Common.start()
-  ## TODO: replace by smth like if $('#big-loader').length
-  @Map.start()
-  @Points.start()
-  @Routes.start()
-
-  # if user not authorized we show popup with login buttons
-  @vent.on 'user:notauthorized', ->
-    Yapp.popup.show new Yapp.Common.AuthPopupView
-
-  Backbone.history.start(
-    pushState: true
-    trackDirection: true
-  )
-
-Yapp.start()

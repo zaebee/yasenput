@@ -1,0 +1,23 @@
+{{#if points}}
+<div class="popupwin__content clearfix">
+  <div class="popupwin__title clearfix">
+    <div class="steps__title">Добавленные места</div>
+  </div>
+  <div class="already-added-photos">
+    <ul class="list clearfix">
+      {{#each points}}
+      <li class="item">
+        <a href="#" class="link">
+          {{#if imgs}}
+          <img src="{{imgs.[0].thumbnail104x104}}" alt="" class="img">
+          {{else}}
+          <img src="/static/images/place-unknown.png" alt="" class="img">
+          {{/if}}
+          <span data-id="{{id}}" class="icon icon_delete sprite-delete-added-photo js-delete"></span>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+{{/if}}

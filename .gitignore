@@ -9,6 +9,8 @@ settings_local.py
 /assets/admin/*
 /assets/node_modules/*
 /assets/debug/*
+/data/*
+/logs/*
 migrations
 .DS_Store
 ._*

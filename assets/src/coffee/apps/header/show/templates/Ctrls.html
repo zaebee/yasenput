@@ -1,0 +1,44 @@
+<div class="header__search">
+  <input type="text" placeholder="Места, маршруты, события...">
+</div><!-- class="header__search" -->
+
+<a href="/" class="logo">
+  <img src="/static/images/logo.png" alt="ЯсенПуть">
+</a>
+
+<div class="header__btns">
+  {{#if user.authorized}}
+  <a href="#?" class="btn btn_action_add btn_color_green js-popup-add">
+    <span class="sprite-add"></span>
+  </a>
+    <div class="header__user">
+      <a href="#dashboard/" class="link-user">
+        <img src="{{#if user.icon}}{{user.icon}}{{else}}{{user.avatar}}{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
+        {{user.first_name}}<br>{{user.last_name}} 
+      </a>
+      <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
+      <ul class="profile-menu">
+        <li class="item">
+          <a href="#dashboard/" class="link">
+            <span class="icon sprite-bag"></span>
+            Я создал
+          </a>
+          <a href="#dashboard/likes/" class="link">
+            <span class="icon sprite-heart"></span>
+            Мне нравится
+          </a>
+          <a href="#dashboard/settings/" class="link">
+            <span class="icon sprite-settings"></span>
+            Настройки
+          </a>
+          <a href="/logout/" class="link">
+            <span class="icon sprite-power"></span>
+            Выход
+          </a>
+        </li>
+      </ul>
+    </div>
+  {{else}}
+  <a href="#?" class="btn btn_color_blue js-popupwin-authorization">Войти</a>
+  {{/if}}
+</div><!-- class="header__btns" -->
