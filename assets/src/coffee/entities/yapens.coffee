@@ -12,10 +12,10 @@
 
   API =
     getEntities: (params = {}) ->
-      yapens = new Entities.YapensCollection
-      yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
-      yapens.fetch
-        reset: true
+      @yapens = @yapens or new Entities.YapensCollection
+      @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
+      @yapens.fetch
+        #reset: true
         data: params
       yapens
 

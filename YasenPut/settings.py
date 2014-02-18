@@ -75,7 +75,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/media'))
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/debug'))
+STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, 'assets/release'))
+ASSETS_DEBUG = False
 
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(SITE_ROOT, 'assets')),

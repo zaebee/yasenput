@@ -22,6 +22,27 @@
     className: ->
       if @model.get('editable') then 'box box_dashboard' else 'box'
 
+    events: () ->
+     if Modernizr.touch
+      'click .js-popupwin-place': 'showDetailPopup'
+      'click .js-popupwin-event': 'showDetailPopup'
+      'click .js-popupwin-route': 'showDetailPopup'
+
+      'click .sprite-like': 'like'
+      'click .sprite-place': 'mark'
+      'click .btn_edit': 'showEditPopup'
+      'click .btn_remove': 'showRemovePopup'
+     else
+      'touchstart.touch .js-popupwin-place': 'showDetailPopup'
+      'touchstart.touch .js-popupwin-event': 'showDetailPopup'
+      'touchstart.touch .js-popupwin-route': 'showDetailPopup'
+
+      'touchstart.touch .sprite-like': 'like'
+      'touchstart.touch .sprite-place': 'mark'
+      'touchstart.touch .btn_edit': 'showEditPopup'
+      'touchstart.touch .btn_remove': 'showRemovePopup'
+
+    ###
     events:
       'click .js-popupwin-place': -> @trigger 'show:detail:popup', @model
       'click .js-popupwin-event': -> @trigger 'show:detail:popup', @model
@@ -31,16 +52,21 @@
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
+    ###
 
+    ### 
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'
       'change:imgs': 'render'
+    ###
 
     onRender: ->
       console.log 'onRender model'
+      ###
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
+      ###
 
     showEditPopup: (event) ->
       event.preventDefault()
