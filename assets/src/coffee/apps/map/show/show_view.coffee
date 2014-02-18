@@ -184,6 +184,7 @@
       App.remPlaceFromList = ($list, $model) ->
         #console.log App.models_dict[$($list.find(".item").eq(routeItemNumber)).attr('model').toString()]
         console.log 'удаление из списка'
+        console.log $list
         $list.find('li').each ->
           console.log this, $(this).attr('model'), $model.model.id
           if $(this).attr('model') == $model.model.id.toString()

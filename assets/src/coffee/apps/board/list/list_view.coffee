@@ -22,6 +22,27 @@
     className: ->
       if @model.get('editable') then 'box box_dashboard' else 'box'
 
+    events: () ->
+     if Modernizr.touch
+      'click .js-popupwin-place': 'showDetailPopup'
+      'click .js-popupwin-event': 'showDetailPopup'
+      'click .js-popupwin-route': 'showDetailPopup'
+
+      'click .sprite-like': 'like'
+      'click .sprite-place': 'mark'
+      'click .btn_edit': 'showEditPopup'
+      'click .btn_remove': 'showRemovePopup'
+     else
+      'touchstart.touch .js-popupwin-place': 'showDetailPopup'
+      'touchstart.touch .js-popupwin-event': 'showDetailPopup'
+      'touchstart.touch .js-popupwin-route': 'showDetailPopup'
+
+      'touchstart.touch .sprite-like': 'like'
+      'touchstart.touch .sprite-place': 'mark'
+      'touchstart.touch .btn_edit': 'showEditPopup'
+      'touchstart.touch .btn_remove': 'showRemovePopup'
+
+    ###
     events:
       'click .js-popupwin-place': 'showDetailPopup'
       'click .js-popupwin-event': 'showDetailPopup'
@@ -31,16 +52,21 @@
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
+    ###
 
+    ### 
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'
       'change:imgs': 'render'
+    ###
 
     onRender: ->
       console.log 'onRender model'
+      ###
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
+      ###
 
     showDetailPopup: (event) ->
       event.preventDefault()
@@ -114,7 +140,7 @@
         $(App.route_points).each ->
           if this == that #проверка, существует ли эта точка в маршруте
             App.route_points.splice num, 1 #если есть, то удаляется
-            App.remPlaceFromList $box, $list, $(".map_main"), that #удаляем точку из правого блока карты
+            App.remPlaceFromList $list, that #удаляем точку из правого блока карты
             App.mmap.geoObjects.each (geoObject)->
               if geoObject.model && geoObject.model == that #аналогичная ситуация с плэйсмаркой на карте
                 App.mmap.geoObjects.remove geoObject #удаляем
