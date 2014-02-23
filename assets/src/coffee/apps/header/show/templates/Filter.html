@@ -9,10 +9,6 @@
   <li class="categories__item"><a href="#?" class="categories__link sprite-filter-photo" data-toggle="tooltip" title="Фото"></a></li>
   -->
 </ul>
-<div class="filter-sort">
-  <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
-  <a href="#?" class="sprite-filter-up" data-toggle="tooltip" data-placement="bottom" title="Популярное"></a>
-</div>
 <div class="filter-type">
   <a href="#?" class="btn btn_color_grey js-open">Выберите тип</a>
   <ul class="filter-type__list">
@@ -28,11 +24,44 @@
     <li class="filter-type__item">
       <a data-models="events" href="#?" class="filter-type__link c-yellow">События</a>
     </li>
+    <!--
     <li class="filter-type__item filter-type__item_checkbox">
       <label class="checkbox-label">
         <input type="checkbox">
         <span class="checkbox-bg"></span>
       </label>
     </li>
+    -->
   </ul>
+</div>
+
+<div class="filter-sort">
+  <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
+  <a href="#?" class="sprite-filter-up" data-toggle="tooltip" data-placement="bottom" title="Популярное"></a>
+</div>
+<!--
+-->
+<div class="filter-dropdown">
+  <div class="dropdown">
+    <a href="" class="link sprite-filter2-time" title="Продолжительность" data-toggle="dropdown"></a>
+    <div class="dropdown-block dropdown-block_time">
+      от&nbsp;
+      <input type="text">&nbsp;&nbsp;
+      до&nbsp;
+      <input type="text">&nbsp;&nbsp;
+      дней
+      <button class="btn btn_color_green-dark">Ок</button>
+    </div>
+  </div>
+  <div class="dropdown">
+    <a href="" class="link sprite-filter2-money" title="Диапазон цен" data-toggle="dropdown"></a>
+    <div class="dropdown-block dropdown-block_money">
+      от&nbsp;
+      <input type="text">&nbsp;&nbsp;
+      до&nbsp;
+      <input type="text">&nbsp;
+      <span class="sprite-ruble-dark"></span>
+      <button class="btn btn_color_green-dark">Ок</button>
+    </div>
+  </div>
 </div>

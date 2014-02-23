@@ -21,10 +21,11 @@
       'click .js-popup-add': 'showAddPopup'
       'click .js-popupwin-authorization': 'showLoginPopup'
       'click .js-profile-menu': 'showProfileMenu'
+      'select2-selecting': 'selectItem'
 
     initialize: ->
       user = App.request 'get:my:profile'
-      #@listenTo @user, 'change:authorized', @render
+      #@listenTo user, 'change', @render
 
     showAddPopup: (e) ->
       e.preventDefault()
@@ -39,6 +40,9 @@
       target = $(e.currentTarget)
       target.toggleClass 'open'
       @$('.profile-menu').slideToggle()
+
+    selectItem: (event) ->
+      console.log event
 
     format: (state) ->
       originalOption = state.element
@@ -134,6 +138,7 @@
       'click .categories__link_type_all': 'filterAllCategory'
       'click .filter-type > a': 'openFilterType'
       'click .filter-type__link': 'filterType'
+      'click .filter-dropdown a': 'filterDropdown'
 
     ui:
       filterTypeList: '.filter-type__list'
@@ -175,6 +180,11 @@
       models = _.map @$('.filter-type__link.active'), (type) -> $(type).data('models')
       App.updateSettings models: models.join ','
       App.vent.trigger 'filter:all:yapens'
+
+    filterDropdown: (event) ->
+      event.preventDefault()
+      @$('.dropdown').removeClass 'open'
+      $(event.currentTarget).parent().toggleClass 'open'
 
 
   class Show.PopupAdd extends App.Views.ItemView

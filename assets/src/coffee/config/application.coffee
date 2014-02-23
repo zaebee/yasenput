@@ -13,6 +13,11 @@ do (Backbone, $, Dropzone) ->
       $('.filter-type__list').hide()
       $('.header__filter .js-open').removeClass 'open'
 
+    if $(e.target).closest('.filter-dropdown').length
+      return
+    else
+      $('.dropdown').removeClass 'open'
+
   $.ajaxSetup
     headers:
       'X-CSRFToken': $.cookie('csrftoken')

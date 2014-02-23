@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\coffee\points\views\PointListView.coffee - yasenput</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="yasenput"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Yapp.Events.EventListView.html">Yapp.Events.EventListView</a></li>
+            
+                <li><a href="../classes/Yapp.Points.PointListView.html">Yapp.Points.PointListView</a></li>
+            
+                <li><a href="../classes/Yapp.Routes.RouteListView.html">Yapp.Routes.RouteListView</a></li>
+            
+                <li><a href="../classes/Yapp.Trips.TripListView.html">Yapp.Trips.TripListView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Events.html">Events</a></li>
+            
+                <li><a href="../modules/Points.html">Points</a></li>
+            
+                <li><a href="../modules/Routes.html">Routes</a></li>
+            
+                <li><a href="../modules/Trips.html">Trips</a></li>
+            
+                <li><a href="../modules/Yapp.html">Yapp</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\coffee\points\views\PointListView.coffee</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+###*
+# Submodule for all points functionality
+# @module Yapp
+# @submodule Points
+###
+
+Yapp = window.Yapp
+
+###*
+# Composite view for the soft table
+# @class Yapp.Points.PointListView
+# @extends Marionette.CompositeView
+# @constructor
+###
+class Yapp.Points.PointListView extends Marionette.CompositeView
+
+  ###*
+  # Required field for Marionette.View
+  # @property template
+  # @type Object
+  # @default Templates.PointListView
+  ###
+  template: Templates.PointListView
+
+  ###*
+  # @property className
+  # @type String
+  # @default &#x27;items&#x27;
+  ###
+  className: &#x27;items&#x27;
+
+  ###*
+  # @property id
+  # @type String
+  # @default &#x27;items&#x27;
+  ###
+  id: &#x27;items&#x27;
+
+  ###*
+  # @property itemView
+  # @type Object
+  # @default itemView
+  ###
+  itemView: Yapp.Points.PointItemView
+
+  ###*
+  # @property emptyView
+  # @type Object
+  # @default emptyView
+  ###
+  emptyView: Yapp.Points.PointEmptyView
+
+  ###*
+  # Init method of the view
+  # @method initialize
+  ###
+  initialize: -&gt;
+    console.log &#x27;initializing Yapp.Points.PointListView&#x27;
+    _.bindAll @, &#x27;onShow&#x27;, &#x27;updateCollection&#x27;
+    @listenTo Yapp.Common.headerView, &#x27;update:multisearch&#x27;, @updateCollection,
+
+    # add infiniScroll for point collection
+    @extraParams = Yapp.settings
+    @infiniScroll = new Backbone.InfiniScroll @collection,
+      success: @onShow
+      scrollOffset: 350
+      includePage: true
+      extraParams: @extraParams
+
+  ###*
+  # After render method of the view
+  # @event onRender
+  ###
+  onRender: -&gt;
+    console.log &#x27;onRender trigger&#x27;
+    hasVScroll = document.body.scrollHeight &gt; document.body.clientHeight
+    $(window).trigger &#x27;scroll&#x27; if !hasVScroll
+
+  ###*
+  # After close method of the view.
+  # @event onClose
+  ###
+  onClose: -&gt;
+    console.log &#x27;onClose trigger&#x27;
+    @wall.destroy()
+    @infiniScroll.destroy()
+    @remove()
+
+  ###*
+  # Fired when view fully rendered.
+  # @event onShow
+  ###
+  onShow: -&gt;
+    console.log &#x27;onShow trigger&#x27;
+    ## this need for MapView
+    Yapp.Points.trigger &#x27;update:collection&#x27;, @collection
+    @$el.find(&#x27;[data-toggle=tooltip]&#x27;).tooltip()
+    if @wall then @wall.reload() else @wall = new Masonry @el,
+      columnWidth: 241
+      isFitWidth: true
+    hasVScroll = document.body.scrollHeight &gt; document.body.clientHeight
+    $(window).trigger &#x27;scroll&#x27; if !hasVScroll
+
+  ###*
+  # Fired when collection fully rendered.
+  # @event onCompositeCollectionRendered
+  ###
+  onCompositeCollectionRendered: -&gt;
+    console.log &#x27;onCompositeCollectionRendered trigger&#x27;
+    @$el.find(&#x27;[data-toggle=tooltip]&#x27;).tooltip()
+    @wall.reload() if @wall
+    hasVScroll = document.body.scrollHeight &gt; document.body.clientHeight
+    $(window).trigger &#x27;scroll&#x27; if !hasVScroll
+
+  ###*
+  # Fired when update:multisrearch in Yapp.Common.headerView occur.
+  # @param {Object} response Response data from server api
+  # @param {Object} searchOptions Search params getted from multisearch input
+  # @event updateCollection
+  ###
+  updateCollection: (response, searchOptions) -&gt;
+    @extraParams = _.extend @extraParams, searchOptions
+    yapens = new Yapp.Points.PointCollection response
+    @collection.reset yapens.models
+    yapens.reset()
+
+    @infiniScroll.destroy()
+    @infiniScroll = new Backbone.InfiniScroll @collection,
+      success: @onShow
+      scrollOffset: 350
+      includePage: true
+      extraParams: @extraParams
+    ## this need for MapView
+    Yapp.Points.trigger &#x27;update:collection&#x27;, @collection
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

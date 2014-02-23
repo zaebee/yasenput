@@ -43,10 +43,10 @@
       <div class="form__field form__field_date clearfix">
         <label>Дата проведения:</label>
         <div class="item">
-          <input id="dt_start" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
+          <input value="{{#if dt_start}}{{dateFormat dt_start format='DD.MM.YYYY'}}{{/if}}" id="dt_start" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
         </div> &mdash;
         <div class="item">
-          <input id="dt_end" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
+          <input value="{{#if dt_end}}{{dateFormat dt_end format='DD.MM.YYYY'}}{{/if}}" id="dt_end" type="text" class="js-datapicker" placeholder="дд.мм.гггг">
         </div>
       </div>
       <div class="form__field form__field_description">

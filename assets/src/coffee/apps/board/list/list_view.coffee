@@ -45,7 +45,7 @@
     showEditPopup: (event) ->
       event.preventDefault()
       console.log event
-      App.vent.trigger 'show:add:place:popup', model: @model
+      App.vent.trigger 'show:edit:popup', @model
 
     showRemovePopup: (event) ->
       event.preventDefault()
@@ -112,7 +112,6 @@
             trig = 1 #ставим флаг, что у нас удалялась точка и на карту новых плэйсмарок стаивть не нужно
           num += 1
 
-        
 
         if trig == 0 #проверка, удалялась ли точка
           App.mmap.geoObjects.add placemark #ставим плэйсмарк на карту

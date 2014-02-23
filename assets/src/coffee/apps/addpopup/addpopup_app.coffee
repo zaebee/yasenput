@@ -19,10 +19,12 @@
 
   App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()
-    switch model.get 'type_of_item'
-      when 'point' then new AddPopupApp.Point.Controller model: model
-      when 'event' then new AddPopupApp.Event.Controller model: model
-      when 'route' then new AddPopupApp.Route.Controller model: model
+    if model instanceof App.Entities.Point
+      new AddPopupApp.Point.Controller model: model
+    if model instanceof App.Entities.Event
+      new AddPopupApp.Event.Controller model: model
+    if model instanceof App.Entities.Route
+      new AddPopupApp.Route.Controller model: model
 
   App.vent.on 'show:add:place:popup', ->
     App.addPopupRegion.close()

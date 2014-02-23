@@ -3046,6 +3046,11 @@ textarea {
 }
 .bxslider .item {
   float: left;
+  text-align: center;
+  overflow: hidden;
+}
+.bxslider .item.empty {
+    float:none;
 }
 .bx-wrapper {
   position: relative;
@@ -3637,7 +3642,8 @@ a {
   margin-right: 45px;
 }
 .header__filter .filter-sort {
-  float: left;
+  float: right;
+  margin-right: 15px;
 }
 .header__filter .filter-type {
   float: right;
@@ -4467,11 +4473,13 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 13px;
   color: #969696;
+  min-width:160px;
 }
 .place-info .user .img {
   display: block;
   float: left;
   margin-right: 5px;
+  width: 38px;
 }
 .place-info .user .name {
   line-height: 17px;
@@ -4640,6 +4648,7 @@ a {
 .event-step_what .already-added {
   top: 40px;
 }
+.place-step_name .already-added-photos,
 .event-step_what .already-added-photos {
   padding: 15px;
 }
@@ -4898,6 +4907,8 @@ a {
 }
 .peoples__img {
   border-radius: 3px;
+  height: 38px;
+  width: 38px;
 }
 /*$baloon*/
 .baloon {
@@ -6539,4 +6550,11 @@ input[type="checkbox"][readonly] {
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
+}
+
+button.js-finish {
+    height:30px;
+}
+button[disabled].js-finish {
+    opacity: .3;
 }

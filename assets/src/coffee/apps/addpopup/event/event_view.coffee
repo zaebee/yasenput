@@ -108,7 +108,7 @@
       @rootLabels = @collection.toJSON().filter (label) -> label.level is 0
       @additionalLabels = @collection.toJSON().filter (label) -> label.level is 1
       @otherLabels = @collection.toJSON().filter (label) -> label.level is 2
-      @listenTo @model, 'sync', @closePopup
+      @labels = {}
 
     templateHelpers: ->
       rootLabels: @rootLabels
@@ -162,7 +162,10 @@
       @model.set tags: tags
       if @model.get('points').length
         @$('.field__input-place').removeClass 'error'
-        @model.save()
+        @model.save null,
+          success: =>
+            App.addEventPopup.close()
+            App.vent.trigger 'show:detail:popup', @model
       else
         @$('.field__input-place').addClass 'error'
 
@@ -209,6 +212,12 @@
         formatSelection: @format_tags
         tokenSeparators: [","]
         escapeMarkup: (m) -> m
+
+      tags = _.filter @model.get('tags'), (el) -> el.level isnt 0
+      tags = _.map tags, (el) -> id:el.id, text:el.name
+      @$('.field_tags .select-type').select2 'data', tags
+      points = _.map @model.get('points'), (el) -> id:el.id, name:el.name, type:'point'
+      @$('.field__input-place .select-type').select2 'data', points
 
     closePopup: (model, resp, options) ->
       console.log 'event saved', model, resp, options
