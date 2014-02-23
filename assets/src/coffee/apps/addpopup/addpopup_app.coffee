@@ -16,6 +16,8 @@
       new AddPopupApp.Point.Controller
     event: ->
       new AddPopupApp.Event.Controller
+    route: ->
+      new AddPopupApp.Route.Controller
 
   App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()

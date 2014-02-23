@@ -57,9 +57,9 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(points,
                                 fields=['main_img', 'dt_start', 'dt_end', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked'],
+                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking',
-                                        'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count'],
+                                        'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price'],
                                 relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
@@ -88,7 +88,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                fields=['id','p','days','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
                                 extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
@@ -266,21 +266,31 @@ class ItemsList(PointsBaseView):
     log = logger
     def get(self, request, *args, **kwargs):
         params = request.GET
-
+        price = "$"
+        duration = "$"
+        models = ['points','routes','events']
+        
         sets = "set"
-        models = ['points','sets','routes','events']
         search_res_points = search_res_sets = search_res_routes = search_res_events = MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
+        if params.get('price'):
+            models = ['routes']
+            price = params.get('price').split(',')
+        if params.get('duration'):
+            models = ['routes']
+            duration = params.get('duration').split(',')
         if 'points' in models:
             t0 = time.time()
             search_res_points = MainModels.Points.search.query(params.get('s', ''))
             self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
+        '''
         if 'sets' in models:
             t0 = time.time()
             search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
             self.log.info('Sets search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
+        '''
         if 'routes' in models:
             t0 = time.time()
             search_res_routes = MainModels.Routes.search.query(params.get('s',''))
@@ -357,8 +367,35 @@ class ItemsList(PointsBaseView):
         search_res_routes_list = []
         for route in search_res_routes.all():
             points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            dur_succses = 0
+            price_success = 0
+            self.log.info('Price %s' % type(price))
             if len(points_l) > 0:
-                search_res_routes_list.append(int(route.id))
+                if type(price) is not str:
+                    self.log.info('INSIDE')
+                    
+                    self.log.info('Price %s' % int(price[0]))
+                    if route.price:
+                        if (route.price <= int(price[1])) and (route.price >= int(price[0])):
+                            price_success = "1"
+                else:
+                    price_success = "1"
+                if duration != "$":
+                    if route.days:
+                        if (route.days <= float(duration[1])) and (route.days >= float(duration[0])):
+                            dur_success = "1"
+                    
+                    
+                else:
+                    dur_success = "1"
+                self.log.info('price_success %s' % price_success)
+                if (dur_success == "1") and (price_success == "1"):
+                    self.log.info('price_success %s' % price_success)
+                    search_res_routes_list.append(int(route.id))
+
+        if (type(price) is not str) or (type(duration) is not str):
+            search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
+
 
         search_res_events_list = []
         for event in search_res_events.all():
@@ -393,7 +430,8 @@ class ItemsList(PointsBaseView):
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
-                 }), search_res_sets, search_res_events, search_res_routes.extra(select={
+                 }), 
+                    search_res_sets, search_res_events, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
 
@@ -918,8 +956,8 @@ class Route(View):
             positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
             points = YpJson.serialize(positions, fields=['position', 'point'],
                                       relations={'point': {
-                                        'fields':['id','p', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
-                                'extras':['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
+                                        'fields':['id','p', 'days', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                'extras':['likes_count', 'days', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},

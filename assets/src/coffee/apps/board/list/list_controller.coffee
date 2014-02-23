@@ -17,6 +17,7 @@
       yapensView = new List.Yapens collection: @yapens
       yapensView.on 'childview:show:detail:popup', (iv, model) ->
         App.vent.trigger 'show:detail:popup', model
+        console.log '@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
       @show yapensView,
         region: App.boardRegion

@@ -1,4 +1,27 @@
 # Adding helper to Handlebars for using {{#ifEquals a b}} conditions in templates
+Handlebars.registerHelper "ifCond", (v1, operator, v2, options) ->
+  switch operator
+    when "=="
+      (if (v1 is v2) then options.fn(this) else options.inverse(this))
+    when "==="
+      (if (v1 is v2) then options.fn(this) else options.inverse(this))
+    when "<"
+      (if (v1 < v2) then options.fn(this) else options.inverse(this))
+    when "<="
+      (if (v1 <= v2) then options.fn(this) else options.inverse(this))
+    when ">"
+      (if (v1 > v2) then options.fn(this) else options.inverse(this))
+    when ">="
+      (if (v1 >= v2) then options.fn(this) else options.inverse(this))
+    when "&&"
+      (if (v1 and v2) then options.fn(this) else options.inverse(this))
+    when "||"
+      (if (v1 or v2) then options.fn(this) else options.inverse(this))
+    when "!="
+      (if (v1 != v2) then options.fn(this) else options.inverse(this))
+    else
+      options.inverse this
+
 Handlebars.registerHelper('ifEquals', (v1, v2, options) ->
   if v1?.toString() is v2?.toString()
     return options.fn @
