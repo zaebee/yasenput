@@ -19,6 +19,8 @@
         new Entities.Point attrs, options
       else if attrs.type_of_item is 'set' ## is collection type
         new Entities.Set attrs, options
+      else if attrs.type_of_item is 'trip' ## is trip type
+        new Entities.Set attrs, options
       else if attrs.type_of_item is 'route' ## is route type
         new Entities.Route attrs, options
       else if attrs.type_of_item is 'event' ## is event type
