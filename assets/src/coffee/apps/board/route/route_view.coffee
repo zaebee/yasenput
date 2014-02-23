@@ -106,21 +106,35 @@
     onShow: ->
       if App.ymaps is undefined
         return
-      console.log "map is start"
-      App.ymaps.ready =>
+      console.log "map is start", @model.id.attributes.points
+      App.ymaps.ready => 
         map = new App.ymaps.Map 'map-route',
           center: [56, 45]
-          zoom: 12
+          zoom: 7
         , autoFitToViewport: 'always'
-        '''
-        placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
-          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-          iconImageHref: 'static/images/sprite-baloon.png',
-          iconImageSize: [32, 36]
-        }
-        map.geoObjects.add placemark
-        map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-        '''
+        route_p = []
+        that = @model
+        for i in @model.id.attributes.points
+          placemark = new App.ymaps.Placemark [i.latitude, i.longitude],{}, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }
+          map.geoObjects.add placemark
+          route_p.push {type: 'wayPoint', point:[i.latitude, i.longitude]}
+        #map.setCenter([this.get('latitude'), @model.get('longitude')], 12)
+        App.mroute_det = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+          route.getPaths().options.set
+            balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
+            strokeColor: 'ca7953',
+            opacity: 0.9,
+            noPlacemark: true
+          route.getWayPoints().options.set 'visible', false
+          map.geoObjects.add route
+          $('.route_name').html(that.id.attributes.name)
+          $('.route_description').html(that.id.attributes.description)
+          $('.route_author').html(that.id.attributes.author.first_name+' '+that.id.attributes.author.last_name)
+          $('.route_img').css('src',that.id.attributes.author.icon)
       @$el.resizable
         minHeight: 80,
         handles: "s"
