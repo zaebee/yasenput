@@ -2,7 +2,7 @@
 
 from django.conf.urls import *
 from apps.api.v1.views import *
-from apps.collections.views import *
+from apps.trips.v1.views import *
 from apps.api.v1.comments_v import Comment, CommentDel
 
 urlpatterns = patterns('',
@@ -15,9 +15,15 @@ urlpatterns = patterns('',
     url(r'^points/(?P<id>\d+)/like/', LikePoint.as_view()),
     url(r'^points/(?P<id>\d+)/review/', AddReviewToPoint.as_view()),
 
-    url(r'^sets/(?P<id>\d+)/$', OneCollection.as_view()),
-    url(r'^sets/(?P<id>\d+)/like/$', LikeCollection.as_view()),
-    url(r'^sets/(?P<id>\d+)/points/(?P<point_id>\d+)/$', CollectionAdd.as_view()),
+    # url(r'^sets/(?P<id>\d+)/$', OneCollection.as_view()),
+    # url(r'^sets/(?P<id>\d+)/like/$', LikeCollection.as_view()),
+    # url(r'^sets/(?P<id>\d+)/points/(?P<point_id>\d+)/$', CollectionAdd.as_view()),
+
+    url(r'^trips$', Trip.as_view()),
+    url(r'^trips/(?P<id>\d+)/$', Trip.as_view()),
+    # url(r'^trips/(?P<id>\d+)/like/$', LikeTrip.as_view()),
+    # url(r'^trips/(?P<id>\d+)/blocks/(?P<block_id>\d+)/$', AddBlock.as_view()),
+
 
     url(r'^route/*$', Route.as_view()),
     url(r'^route/(?P<id>\d+)/$', Route.as_view()),

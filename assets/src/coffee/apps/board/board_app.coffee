@@ -34,6 +34,7 @@
 
   App.vent.on 'filter:all:yapens', (params = {}) ->
     _.defaults params
+    console.log '!@#!@#!@#',params
     new BoardApp.List.Controller params
 
   App.addInitializer ->

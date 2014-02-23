@@ -12,6 +12,10 @@
 
   API =
     getEntities: (params = {}) ->
+      if App.price and App.price != '$'
+        params.price = App.price
+      if App.delay and App.delay != '$'
+        params.duration = App.delay
       yapens = new Entities.YapensCollection
       yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
       yapens.fetch

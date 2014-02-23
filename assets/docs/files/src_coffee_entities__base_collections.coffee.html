@@ -41,13 +41,25 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Yapp.Events.EventListView.html">Yapp.Events.EventListView</a></li>
+            
                 <li><a href="../classes/Yapp.Points.PointListView.html">Yapp.Points.PointListView</a></li>
+            
+                <li><a href="../classes/Yapp.Routes.RouteListView.html">Yapp.Routes.RouteListView</a></li>
+            
+                <li><a href="../classes/Yapp.Trips.TripListView.html">Yapp.Trips.TripListView</a></li>
             
             </ul>
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Events.html">Events</a></li>
+            
                 <li><a href="../modules/Points.html">Points</a></li>
+            
+                <li><a href="../modules/Routes.html">Routes</a></li>
+            
+                <li><a href="../modules/Trips.html">Trips</a></li>
             
                 <li><a href="../modules/Yapp.html">Yapp</a></li>
             
@@ -110,6 +122,8 @@
       if attrs.type_of_item is &#x27;point&#x27; ## is point type
         new Entities.Point attrs, options
       else if attrs.type_of_item is &#x27;set&#x27; ## is collection type
+        new Entities.Set attrs, options
+      else if attrs.type_of_item is &#x27;trip&#x27; ## is trip type
         new Entities.Set attrs, options
       else if attrs.type_of_item is &#x27;route&#x27; ## is route type
         new Entities.Route attrs, options

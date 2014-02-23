@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'apps.descriptions',
     'apps.djangosphinx',
     'apps.api',
+    'apps.trips',
     'south',
     'django_ipgeobase',
     # Uncomment the next line to enable the admin:
@@ -215,7 +216,7 @@ VKONTAKTE_OAUTH2_EXTRA_SCOPE = ''
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
     'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.contrib.vkontakte.VKontakteOAuth2Backend',
+    'social_auth.backends.contrib.vk.VKOAuth2Backend',
     'social_auth.backends.contrib.odnoklassniki.OdnoklassnikiBackend',
     'django.contrib.auth.backends.ModelBackend',
 )

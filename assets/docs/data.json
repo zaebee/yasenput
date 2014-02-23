@@ -111,6 +111,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\coffee\\entities\\trips.coffee": {
+            "name": "src\\coffee\\entities\\trips.coffee",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\coffee\\entities\\users.coffee": {
             "name": "src\\coffee\\entities\\users.coffee",
             "modules": {},
@@ -125,6 +132,17 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\coffee\\events\\views\\EventListView.coffee": {
+            "name": "src\\coffee\\events\\views\\EventListView.coffee",
+            "modules": {
+                "Events": 1
+            },
+            "classes": {
+                "Yapp.Events.EventListView": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\coffee\\points\\views\\PointListView.coffee": {
             "name": "src\\coffee\\points\\views\\PointListView.coffee",
             "modules": {
@@ -132,6 +150,28 @@
             },
             "classes": {
                 "Yapp.Points.PointListView": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\coffee\\routes\\views\\RouteListView.coffee": {
+            "name": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "modules": {
+                "Routes": 1
+            },
+            "classes": {
+                "Yapp.Routes.RouteListView": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\coffee\\trips\\views\\TripListView.coffee": {
+            "name": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "modules": {
+                "Trips": 1
+            },
+            "classes": {
+                "Yapp.Trips.TripListView": 1
             },
             "fors": {},
             "namespaces": {}
@@ -158,16 +198,22 @@
             "name": "Yapp",
             "submodules": {
                 "Yapp": 1,
-                "Points": 1
+                "Events": 1,
+                "Points": 1,
+                "Routes": 1,
+                "Trips": 1
             },
             "classes": {
-                "Yapp.Points.PointListView": 1
+                "Yapp.Events.EventListView": 1,
+                "Yapp.Points.PointListView": 1,
+                "Yapp.Routes.RouteListView": 1,
+                "Yapp.Trips.TripListView": 1
             },
             "fors": {},
             "is_submodule": 1,
             "namespaces": {},
             "module": "Yapp",
-            "file": "src\\coffee\\points\\views\\PointListView.coffee",
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
             "line": 9,
             "description": "Main application module. It's Marionette.Application instance and namespace of all project classes",
             "addpopupapp": "",
@@ -178,6 +224,21 @@
             "tag": "module",
             "itemtype": "main",
             "entities": ""
+        },
+        "Events": {
+            "name": "Events",
+            "submodules": {},
+            "classes": {
+                "Yapp.Events.EventListView": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Yapp",
+            "namespace": "",
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 9,
+            "description": "Submodule for all events functionality"
         },
         "Points": {
             "name": "Points",
@@ -193,9 +254,56 @@
             "file": "src\\coffee\\points\\views\\PointListView.coffee",
             "line": 9,
             "description": "Submodule for all points functionality"
+        },
+        "Routes": {
+            "name": "Routes",
+            "submodules": {},
+            "classes": {
+                "Yapp.Routes.RouteListView": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Yapp",
+            "namespace": "",
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 9,
+            "description": "Submodule for all routes functionality"
+        },
+        "Trips": {
+            "name": "Trips",
+            "submodules": {},
+            "classes": {
+                "Yapp.Trips.TripListView": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Yapp",
+            "namespace": "",
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 9,
+            "description": "Submodule for all trips functionality"
         }
     },
     "classes": {
+        "Yapp.Events.EventListView": {
+            "name": "Yapp.Events.EventListView",
+            "shortname": "Yapp.Events.EventListView",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Yapp",
+            "submodule": "Events",
+            "namespace": "",
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 9,
+            "description": "Composite view for the soft table",
+            "extends": "Marionette.CompositeView",
+            "is_constructor": 1
+        },
         "Yapp.Points.PointListView": {
             "name": "Yapp.Points.PointListView",
             "shortname": "Yapp.Points.PointListView",
@@ -212,6 +320,40 @@
             "description": "Composite view for the soft table",
             "extends": "Marionette.CompositeView",
             "is_constructor": 1
+        },
+        "Yapp.Routes.RouteListView": {
+            "name": "Yapp.Routes.RouteListView",
+            "shortname": "Yapp.Routes.RouteListView",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Yapp",
+            "submodule": "Routes",
+            "namespace": "",
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 9,
+            "description": "Composite view for the soft table",
+            "extends": "Marionette.CompositeView",
+            "is_constructor": 1
+        },
+        "Yapp.Trips.TripListView": {
+            "name": "Yapp.Trips.TripListView",
+            "shortname": "Yapp.Trips.TripListView",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Yapp",
+            "submodule": "Trips",
+            "namespace": "",
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 9,
+            "description": "Composite view for the soft table",
+            "extends": "Marionette.CompositeView",
+            "is_constructor": 1
         }
     },
     "classitems": [
@@ -221,7 +363,7 @@
             "description": "MapApp module.",
             "bmodule": "Yapp",
             "mapapp": "",
-            "class": "Yapp.Points.PointListView"
+            "class": "Yapp.Events.EventListView"
         },
         {
             "file": "src\\coffee\\entities\\_base\\collections.coffee",
@@ -229,17 +371,17 @@
             "description": "Set model as Yapp.Points.Point",
             "itemtype": "property",
             "name": "model",
-            "class": "Yapp.Points.PointListView",
+            "class": "Yapp.Events.EventListView",
             "module": "Yapp",
             "submodule": "Yapp"
         },
         {
             "file": "src\\coffee\\entities\\_base\\collections.coffee",
-            "line": 29,
+            "line": 31,
             "description": "The collection initializer",
             "itemtype": "method",
             "name": "initialize",
-            "class": "Yapp.Points.PointListView",
+            "class": "Yapp.Events.EventListView",
             "module": "Yapp",
             "submodule": "Yapp"
         },
@@ -249,7 +391,7 @@
             "description": "The model initializer",
             "itemtype": "method",
             "name": "initialize",
-            "class": "Yapp.Points.PointListView",
+            "class": "Yapp.Events.EventListView",
             "module": "Yapp",
             "submodule": "Yapp"
         },
@@ -261,9 +403,137 @@
             "name": "idAttribute",
             "type": "String",
             "default": "'unid'",
-            "class": "Yapp.Points.PointListView",
+            "class": "Yapp.Events.EventListView",
             "module": "Yapp",
             "submodule": "Yapp"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 17,
+            "description": "Required field for Marionette.View",
+            "itemtype": "property",
+            "name": "template",
+            "type": "Object",
+            "default": "Templates.EventListView",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 25,
+            "itemtype": "property",
+            "name": "className",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 32,
+            "itemtype": "property",
+            "name": "id",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 39,
+            "itemtype": "property",
+            "name": "itemView",
+            "type": "Object",
+            "default": "itemView",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 46,
+            "itemtype": "property",
+            "name": "emptyView",
+            "type": "Object",
+            "default": "emptyView",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 53,
+            "description": "Init method of the view",
+            "itemtype": "method",
+            "name": "initialize",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 70,
+            "description": "After render method of the view",
+            "itemtype": "event",
+            "name": "onRender",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 79,
+            "description": "After close method of the view.",
+            "itemtype": "event",
+            "name": "onClose",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 89,
+            "description": "Fired when view fully rendered.",
+            "itemtype": "event",
+            "name": "onShow",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 104,
+            "description": "Fired when collection fully rendered.",
+            "itemtype": "event",
+            "name": "onCompositeCollectionRendered",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
+        },
+        {
+            "file": "src\\coffee\\events\\views\\EventListView.coffee",
+            "line": 115,
+            "description": "Fired when update:multisrearch in Yapp.Common.headerView occur.",
+            "params": [
+                {
+                    "name": "response",
+                    "description": "Response data from server api",
+                    "type": "Object"
+                },
+                {
+                    "name": "searchOptions",
+                    "description": "Search params getted from multisearch input",
+                    "type": "Object"
+                }
+            ],
+            "itemtype": "event",
+            "name": "updateCollection",
+            "class": "Yapp.Events.EventListView",
+            "module": "Yapp",
+            "submodule": "Events"
         },
         {
             "file": "src\\coffee\\points\\views\\PointListView.coffee",
@@ -394,6 +664,262 @@
             "submodule": "Points"
         },
         {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 17,
+            "description": "Required field for Marionette.View",
+            "itemtype": "property",
+            "name": "template",
+            "type": "Object",
+            "default": "Templates.RouteListView",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 25,
+            "itemtype": "property",
+            "name": "className",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 32,
+            "itemtype": "property",
+            "name": "id",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 39,
+            "itemtype": "property",
+            "name": "itemView",
+            "type": "Object",
+            "default": "itemView",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 46,
+            "itemtype": "property",
+            "name": "emptyView",
+            "type": "Object",
+            "default": "emptyView",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 53,
+            "description": "Init method of the view",
+            "itemtype": "method",
+            "name": "initialize",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 70,
+            "description": "After render method of the view",
+            "itemtype": "event",
+            "name": "onRender",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 79,
+            "description": "After close method of the view.",
+            "itemtype": "event",
+            "name": "onClose",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 89,
+            "description": "Fired when view fully rendered.",
+            "itemtype": "event",
+            "name": "onShow",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 104,
+            "description": "Fired when collection fully rendered.",
+            "itemtype": "event",
+            "name": "onCompositeCollectionRendered",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\routes\\views\\RouteListView.coffee",
+            "line": 115,
+            "description": "Fired when update:multisrearch in Yapp.Common.headerView occur.",
+            "params": [
+                {
+                    "name": "response",
+                    "description": "Response data from server api",
+                    "type": "Object"
+                },
+                {
+                    "name": "searchOptions",
+                    "description": "Search params getted from multisearch input",
+                    "type": "Object"
+                }
+            ],
+            "itemtype": "event",
+            "name": "updateCollection",
+            "class": "Yapp.Routes.RouteListView",
+            "module": "Yapp",
+            "submodule": "Routes"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 17,
+            "description": "Required field for Marionette.View",
+            "itemtype": "property",
+            "name": "template",
+            "type": "Object",
+            "default": "Templates.TripListView",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 25,
+            "itemtype": "property",
+            "name": "className",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 32,
+            "itemtype": "property",
+            "name": "id",
+            "type": "String",
+            "default": "'items'",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 39,
+            "itemtype": "property",
+            "name": "itemView",
+            "type": "Object",
+            "default": "itemView",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 46,
+            "itemtype": "property",
+            "name": "emptyView",
+            "type": "Object",
+            "default": "emptyView",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 53,
+            "description": "Init method of the view",
+            "itemtype": "method",
+            "name": "initialize",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 70,
+            "description": "After render method of the view",
+            "itemtype": "event",
+            "name": "onRender",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 79,
+            "description": "After close method of the view.",
+            "itemtype": "event",
+            "name": "onClose",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 89,
+            "description": "Fired when view fully rendered.",
+            "itemtype": "event",
+            "name": "onShow",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 104,
+            "description": "Fired when collection fully rendered.",
+            "itemtype": "event",
+            "name": "onCompositeCollectionRendered",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
+            "file": "src\\coffee\\trips\\views\\TripListView.coffee",
+            "line": 115,
+            "description": "Fired when update:multisrearch in Yapp.Common.headerView occur.",
+            "params": [
+                {
+                    "name": "response",
+                    "description": "Response data from server api",
+                    "type": "Object"
+                },
+                {
+                    "name": "searchOptions",
+                    "description": "Search params getted from multisearch input",
+                    "type": "Object"
+                }
+            ],
+            "itemtype": "event",
+            "name": "updateCollection",
+            "class": "Yapp.Trips.TripListView",
+            "module": "Yapp",
+            "submodule": "Trips"
+        },
+        {
             "file": "src\\coffee\\release-only.coffee",
             "line": 1,
             "description": "There is settings is needed only release mode such as DEBUG=False, HOST settings,etc..",
@@ -461,6 +987,10 @@
         {
             "message": "unknown tag: entities",
             "line": " src\\coffee\\entities\\tags.coffee:1"
+        },
+        {
+            "message": "unknown tag: entities",
+            "line": " src\\coffee\\entities\\trips.coffee:1"
         },
         {
             "message": "unknown tag: entities",

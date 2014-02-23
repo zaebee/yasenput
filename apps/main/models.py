@@ -168,8 +168,8 @@ class Points(models.Model):
         verbose_name_plural = u'Точки'
 
     name = models.CharField('Название', max_length=255, blank=True)
-    longitude = models.DecimalField('Широта', max_digits=25, decimal_places=20, blank=True)
-    latitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20, blank=True)
+    longitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20, blank=True)
+    latitude = models.DecimalField('Широта', max_digits=25, decimal_places=20, blank=True)
     description = models.TextField(null=True, blank=True)
     reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     tags = models.ManyToManyField(Tags, null=True, blank=True)
@@ -279,6 +279,8 @@ class Routes(models.Model):
     updated = models.DateTimeField('Изменен', auto_now=True)
     author = models.ForeignKey(Person, unique=False)
     coords = models.TextField('Все координаты')
+    days = models.IntegerField('Количество дней', blank=True, serialize=True, null=True)
+    price = models.DecimalField('Цена', max_digits=25, decimal_places=2, blank=True)
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     unid = '1'
     ypi = models.IntegerField(default=0, blank=True)

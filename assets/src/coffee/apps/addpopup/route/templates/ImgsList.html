@@ -1,0 +1,19 @@
+{{#if imgs}}
+<div class="popupwin__content clearfix">
+  <div class="popupwin__title clearfix">
+    <div class="steps__title">Добавленные фотографии</div>
+  </div>
+  <div class="already-added-photos">
+    <ul class="list clearfix">
+      {{#each imgs}}
+      <li class="item mb10">
+        <a href="#" class="link">
+          <img src="{{thumbnail104x104}}" alt="" class="img">
+          <span data-id="{{id}}" class="icon icon_delete sprite-delete-added-photo js-delete"></span>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+{{/if}}
