@@ -349,10 +349,10 @@ class ItemsList(PointsBaseView):
             else:
                 ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                 ipgeobase = ipgeobases[0]
-            ln_left = ipgeobase.longitude - 0.1
-            ln_right = ipgeobase.longitude + 0.1
-            lt_left = ipgeobase.latitude - 0.1
-            lt_right = ipgeobase.latitude + 0.1
+            ln_left = 1
+            ln_right = 100
+            lt_left = 1
+            lt_right = 100
 
         t0 = time.time()
         search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
@@ -367,7 +367,7 @@ class ItemsList(PointsBaseView):
         search_res_routes_list = []
         for route in search_res_routes.all():
             points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            dur_succses = 0
+            dur_success = 0
             price_success = 0
             self.log.info('Price %s' % type(price))
             if len(points_l) > 0:

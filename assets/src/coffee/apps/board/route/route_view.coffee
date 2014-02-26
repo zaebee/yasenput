@@ -114,7 +114,21 @@
         , autoFitToViewport: 'always'
         route_p = []
         that = @model
+        $('.route_items_det').html('')
+        num = 1
         for i in @model.id.attributes.points
+          $('.route_items_det').append('<li class="item">
+                    <a class="link-wrap js-popupwin-place">
+                      <span class="drag"></span>
+                      <span class="number">'+num+'</span>
+                      <img src="'+i.imgs[0]+'" alt="" class="img">
+                      <div class="text">
+                        <span class="text__place">'+i.name+'</span>
+                        <span class="text__type c-place">место</span>
+                      </div>
+                    </a>
+                  </li>')
+          num += 1
           placemark = new App.ymaps.Placemark [i.latitude, i.longitude],{}, {
             iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
             iconImageHref: 'static/images/sprite-baloon.png',
