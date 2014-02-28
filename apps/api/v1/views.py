@@ -349,10 +349,10 @@ class ItemsList(PointsBaseView):
             else:
                 ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                 ipgeobase = ipgeobases[0]
-            ln_left = 1
-            ln_right = 100
-            lt_left = 1
-            lt_right = 100
+            ln_left = float(1)
+            ln_right = float(100)
+            lt_left = float(1)
+            lt_right = float(100)
 
         t0 = time.time()
         search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
