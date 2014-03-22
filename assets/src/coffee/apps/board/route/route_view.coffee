@@ -134,6 +134,9 @@
             iconImageHref: 'static/images/sprite-baloon.png',
             iconImageSize: [32, 36]
           }
+          $(".route_comment_form").submit (event) ->
+            event.preventDefault()
+            return
           map.geoObjects.add placemark
           route_p.push {type: 'wayPoint', point:[i.latitude, i.longitude]}
         #map.setCenter([this.get('latitude'), @model.get('longitude')], 12)

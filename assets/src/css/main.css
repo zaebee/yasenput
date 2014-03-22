@@ -3986,6 +3986,9 @@ a {
   -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
 }
+.box.choosed {
+  border: solid 2px #26b89a;
+}
 .box .btn-delete {
   position: absolute;
   z-index: 20;
