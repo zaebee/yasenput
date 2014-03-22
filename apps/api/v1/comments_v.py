@@ -63,7 +63,6 @@ class Comment(CommentBaseView):
     http_method_names = ('post','get')
     paginate_by = 20
 
-
     def post(self, request, *args, **kwargs):
         json = YpSerialiser()
         form = CommentForm(request.POST)

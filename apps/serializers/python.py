@@ -105,7 +105,7 @@ class Serializer(base.Serializer):
         Called to handle a ManyToManyField.
         Recursively serializes relations specified in the 'relations' option.
         """
-        if field.rel.through._meta.auto_created or field.name == 'points':
+        if field.rel.through._meta.auto_created or field.name == 'points' or field.name == 'blocks':
             fname = field.name
             if fname in self.relations:
                 # perform full serialization of M2M
