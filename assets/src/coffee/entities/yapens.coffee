@@ -15,9 +15,9 @@
       @yapens = @yapens or new Entities.YapensCollection
       @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
       @yapens.fetch
-        #reset: true
+        reset: true
         data: params
-      yapens
+      @yapens
 
     search: (params = {}, callback) ->
       _.defaults params,

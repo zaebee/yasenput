@@ -10,8 +10,8 @@
       tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
-    events:
-      'click .js-popupwin-place': 'showPointPopup'
+    #events:
+      #'click .js-popupwin-place': 'showPointPopup'
 
     showPointPopup: (event) ->
       event.preventDefault()
@@ -31,6 +31,8 @@
       'click .btn-like': 'eventLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
+      'click .ui-resizable-handle': 'mapResize'
+      'click .js-map-close': 'mapClose'
 
     initialize: ->
       @listenTo @model, 'event:like:response', @eventLikeResponse
@@ -103,6 +105,9 @@
   class Event.Map extends App.Views.ItemView
     template: 'EventMap'
     className: 'map map_popupwin'
+    events:
+      'click .map__container': 'mapResize'
+      'click .js-map-close': 'mapClose'
 
     onShow: ->
       if App.ymaps is undefined
@@ -132,6 +137,16 @@
             $this.addClass('open')
           else
             $this.removeClass('open')
+
+    mapResize:(event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').addClass 'open'
+
+    mapClose: (event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').removeClass 'open'
 
 
   class Event.Comments extends App.Views.ItemView

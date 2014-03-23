@@ -291,8 +291,10 @@
       event.preventDefault()
       @model.save null,
         success: =>
-          App.addPointPopup.close()
+          App.addEventPopup.close()
+          App.BoardApp.board.yapens.add @model, at:0
           App.vent.trigger 'show:detail:popup', @model
+          App.BoardApp.board.yapensView.render()
 
     backStep: (event) ->
       event.preventDefault()

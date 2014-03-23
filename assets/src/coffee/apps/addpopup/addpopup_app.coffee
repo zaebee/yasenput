@@ -8,8 +8,9 @@
 
   class AddPopupApp.Router extends Marionette.AppRouter
     appRoutes:
-      'add/point/': 'point'
-      'add/event/': 'event'
+      'add/point': 'point'
+      'add/event': 'event'
+      'add/route': 'route'
 
   API =
     point: ->

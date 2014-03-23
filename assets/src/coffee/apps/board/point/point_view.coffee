@@ -102,6 +102,9 @@
   class Point.Map extends App.Views.ItemView
     template: 'PointMap'
     className: 'map map_popupwin'
+    events:
+      'click .map__container': 'mapResize'
+      'click .js-map-close': 'mapClose'
 
     onShow: ->
       if App.ymaps is undefined
@@ -129,6 +132,16 @@
             $this.addClass('open')
           else
             $this.removeClass('open')
+
+    mapResize:(event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').addClass 'open'
+
+    mapClose: (event) ->
+      console.log event
+      event.preventDefault()
+      @$('.ui-resizable').removeClass 'open'
 
 
   class Point.Comments extends App.Views.ItemView

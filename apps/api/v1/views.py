@@ -609,7 +609,6 @@ class PointAdd(PointsBaseView):
                             img_id = image.get('id', image)
                             img = PhotosModels.Photos.objects.get(id=img_id)
                             point.imgs.add(img)
-                            #originalPoint.imgs.add(img)
                         except:
                             message = "ошибка добавления изображения"
                             pass
