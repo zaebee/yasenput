@@ -9,7 +9,6 @@ do (Backbone, Marionette) ->
     open: (view) ->
       console.info 'current', @current
       @current = @current or Backbone.history.getFragment()
-      console.info 'current', @current
       @prevModal = $('.modal.in').not @$el
       if @prevModal.length
         @prevModal.css 'z-index', 1000
