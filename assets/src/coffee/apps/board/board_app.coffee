@@ -20,15 +20,14 @@
       App.vent.trigger 'hide:dashboard:region'
 
     point: (id) ->
-      console.log 'catch  url point:', id
-      model = BoardApp.board.yapens.get id
+      model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Point id: id
         BoardApp.board.yapens.add model
       App.vent.trigger 'show:detail:popup', model
 
     event: (id) ->
-      model = BoardApp.board.yapens.get id
+      model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Event id: id
         BoardApp.board.yapens.add model
