@@ -4,6 +4,11 @@ import sys
 import os.path
 from os import path
 
+try:
+    from .settings_local import *
+except:
+    pass
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -217,7 +222,7 @@ SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
 LOGIN_ERROR_URL                   = '/login/error/'
 SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
 
-SOCIAL_AUTH_ENABLED_BACKENDS = ('vkontakte-oauth2',)
+SOCIAL_AUTH_ENABLED_BACKENDS = ('vk-oauth',)
 VKONTAKTE_OAUTH2_EXTRA_SCOPE = ''
 
 AUTHENTICATION_BACKENDS = (

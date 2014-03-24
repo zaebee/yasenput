@@ -19,7 +19,7 @@
         @model.fetch
           success: =>
             App.addRoutePopup.show @layout, loading: true
-
+            
     onClose: ->
       @stopListening()
 
