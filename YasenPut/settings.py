@@ -4,6 +4,11 @@ import sys
 import os.path
 from os import path
 
+try:
+    from .settings_local import *
+except:
+    pass
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
