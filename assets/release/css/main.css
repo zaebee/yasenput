@@ -6598,3 +6598,7 @@ button[disabled].js-finish {
 .box__img:hover .days {
   display: block;
 }
+
+#grid {
+    position:relative;
+}
