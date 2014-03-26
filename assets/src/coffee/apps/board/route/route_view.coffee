@@ -106,8 +106,8 @@
     onShow: ->
       if App.ymaps is undefined
         return
-      console.log "map is start", @model.id.attributes.points
-      App.ymaps.ready => 
+      console.log "map is start", @model.get 'points'
+      App.ymaps.ready =>
         map = new App.ymaps.Map 'map-route',
           center: [56, 45]
           zoom: 7
@@ -116,7 +116,7 @@
         that = @model
         $('.route_items_det').html('')
         num = 1
-        for i in @model.id.attributes.points
+        for i in @model.get 'points'
           $('.route_items_det').append('<li class="item">
                     <a class="link-wrap js-popupwin-place">
                       <span class="drag"></span>

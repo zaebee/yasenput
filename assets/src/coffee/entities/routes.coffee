@@ -13,13 +13,12 @@
       App.API_BASE_URL + "/api/v1/route/"
 
   API =
-    getDetail: (id, params = {}) ->
-      _.defaults params
-      route = new Entities.Route unid: id
-      route.fetch
+    getDetail: (model, params = {}) ->
+      model.id = model.get('id') or model.get('unid')
+      model.fetch
         reset: true
         data: params
-      route
+      model
       
-  App.reqres.setHandler 'get:detail:route', (id) ->
-    API.getDetail id
+  App.reqres.setHandler 'get:detail:route', (model) ->
+    API.getDetail model

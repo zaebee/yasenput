@@ -33,34 +33,34 @@
         invalid
 
   API =
-    getDetail: (point, params = {}) ->
-      point.id = point.get('id') or point.get('unid')
+    getDetail: (model, params = {}) ->
+      model.id = model.get('id') or model.get('unid')
       _.defaults params
-      point.fetch
+      model.fetch
         reset: true
         data: params
-      point
+      model
 
-    like: (point, params = {}) ->
-      id = point.get('id') or point.get('unid')
+    like: (model, params = {}) ->
+      id = model.get('id') or model.get('unid')
       App.apiRequest
         url: App.API_BASE_URL + "/api/v1/points/#{id}/like/"
         type: 'POST'
-        successCallback: (data) -> point.trigger 'point:like:response', data
+        successCallback: (data) -> model.trigger 'point:like:response', data
         data:
           id: id
 
-    comment: (point, params = {}) ->
+    comment: (model, params = {}) ->
       _.defaults params
-      id = point.get('id') or point.get('unid')
+      id = model.get('id') or model.get('unid')
       App.apiRequest
         url: App.API_BASE_URL + "/api/v1/points/#{id}/review/"
         type: 'POST'
-        successCallback: (data) -> point.trigger 'point:comment:response', data
+        successCallback: (data) -> model.trigger 'point:comment:response', data
         data: params
 
-  App.reqres.setHandler 'get:detail:point', (point) ->
-    API.getDetail point
+  App.reqres.setHandler 'get:detail:point', (model) ->
+    API.getDetail model
 
   App.reqres.setHandler 'like:point', (model) ->
     response = API.like model
@@ -75,6 +75,6 @@
           likeusers: attrs.likeusers
     model
 
-  App.reqres.setHandler 'comment:point', (point, params = {}) ->
-    response = API.comment point, params
-    point
+  App.reqres.setHandler 'comment:point', (model, params = {}) ->
+    response = API.comment model, params
+    model
