@@ -89,7 +89,6 @@ do (Backbone, $, Dropzone) ->
     apiRequest: (options) ->
       url = @API_BASE_URL + options.url
       #url = options.url
-      console.log "!!!!!!!!!!!!!!!!!!!!!!"
       console.log ["#{options.type} request to #{url} with data:", options.data]
       $.ajax
         url: url
