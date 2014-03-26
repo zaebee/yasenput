@@ -8,7 +8,6 @@
 
       @layout = new Route.Layout model: @model
       @listenTo @layout, 'show', =>
-        @showPhotos()
         @showHeader()
         @showComments()
         @showMap()
@@ -26,12 +25,6 @@
       @headerView = new Route.Header model: @model
       @show @headerView,
         region: @layout.headerRegion
-
-    showPhotos: ->
-      @photoView = new Route.Photo model: @model
-      @show @photoView,
-        region: @layout.photoRegion
-        loading: true
 
     showComments: ->
       @commentsView = new Route.Comments model: @model
