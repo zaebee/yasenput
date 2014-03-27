@@ -4,15 +4,22 @@
     template: 'RouteLayout'
     regions:
       headerRegion: '#route-header-region'
-      photoRegion: '#route-photo-region'
+      asideRegion: '#route-aside-region'
       mapRegion: '#route-map-region'
       commentsRegion: '#route-comments-region'
       tagsRegion: '#route-tags-region'
 
     className: 'popupwin__scrollbox'
+    modelEvents:
+      'change:name' : 'updateText'
+      'change:description' : 'updateText'
 
     events:
       'click .js-open': 'toggleCommercial'
+
+    updateText:  ->
+      @$('.route_name').text @model.get('name')
+      @$('.route_description').text @model.get('description')
 
     toggleCommercial: (event) ->
       event.preventDefault()
@@ -23,8 +30,7 @@
   class Route.Header extends App.Views.ItemView
     template: 'RouteHeader'
     modelEvents:
-      'change:isliked': 'render'
-      'change:likes_count': 'render'
+      'change': 'render'
     events:
       'click .btn-like': 'routeLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
@@ -50,68 +56,66 @@
       $(e.currentTarget).toggleClass 'active'
 
 
+  class Route.Aside extends App.Views.ItemView
+    template: 'RouteAside'
+    className: 'popupwin__aside'
+    modelEvents:
+      'change': 'render'
+
+
   class Route.Map extends App.Views.ItemView
     template: 'RouteMap'
     className: 'map map_popupwin'
 
-    onShow: ->
+    initMap: ->
       if App.ymaps is undefined
+        @map = null
         return
       console.log "map is start", @model.get 'points'
       App.ymaps.ready =>
-        map = new App.ymaps.Map 'map-route',
+        @map = new App.ymaps.Map 'map-route',
           center: [56, 45]
           zoom: 7
         , autoFitToViewport: 'always'
+
+
         route_p = []
-        that = @model
-        $('.route_items_det').html('')
-        num = 1
-        for i in @model.get 'points'
-          $('.route_items_det').append('<li class="item">
-                    <a class="link-wrap js-popupwin-place">
-                      <span class="drag"></span>
-                      <span class="number">'+num+'</span>
-                      <img src="'+i.imgs[0]+'" alt="" class="img">
-                      <div class="text">
-                        <span class="text__place">'+i.name+'</span>
-                        <span class="text__type c-place">место</span>
-                      </div>
-                    </a>
-                  </li>')
-          num += 1
-          placemark = new App.ymaps.Placemark [i.latitude, i.longitude],{}, {
+        _.each @model.get('points'), (data) =>
+          point = data.point
+          coords = [point.latitude, point.longitude]
+          coords = coords.map String
+          placemark = new App.ymaps.Placemark coords,{
+            id: "map-point#{data.id}"
+          }, {
             iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageHref: '/static/images/sprite-baloon.png',
             iconImageSize: [32, 36]
           }
-          $(".route_comment_form").submit (event) ->
-            event.preventDefault()
-            return
-          map.geoObjects.add placemark
-          route_p.push {type: 'wayPoint', point:[i.latitude, i.longitude]}
-        #map.setCenter([this.get('latitude'), @model.get('longitude')], 12)
-        App.mroute_det = App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) ->  
+          @map.geoObjects.add placemark
+          route_p.push type: 'wayPoint', point:coords
+
+        App.ymaps.route(route_p, { mapStateAutoApply: true }).then  (route) =>
           route.getPaths().options.set
             balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
             strokeColor: 'ca7953',
             opacity: 0.9,
             noPlacemark: true
           route.getWayPoints().options.set 'visible', false
-          map.geoObjects.add route
-          $('.route_name').html(that.id.attributes.name)
-          $('.route_description').html(that.id.attributes.description)
-          $('.route_author').html(that.id.attributes.author.first_name+' '+that.id.attributes.author.last_name)
-          $('.route_img').css('src',that.id.attributes.author.icon)
-      @$el.resizable
-        minHeight: 80,
-        handles: "s"
-        resize: ( event, ui )  =>
-          $this = $(this)
-          if ui.size.height > 440
-            $this.addClass('open')
-          else
-            $this.removeClass('open')
+          @map.geoObjects.add route
+
+    onShow: ->
+      App.execute 'when:fetched', @model, =>
+        @initMap()
+
+        @$el.resizable
+          minHeight: 80,
+          handles: "s"
+          resize: ( event, ui )  =>
+            $this = $(this)
+            if ui.size.height > 440
+              $this.addClass('open')
+            else
+              $this.removeClass('open')
 
 
   class Route.Comments extends App.Views.ItemView
@@ -151,33 +155,3 @@
     template: 'RouteTags'
     modelEvents:
       'change:tags': 'render'
-
-
-  class Route.AddPhoto extends App.Views.ItemView
-    template: 'AddPhotoPopup'
-    className: 'popupwin__scrollbox'
-    ui:
-      'finishBtn': '.js-finish'
-    events:
-      'click .js-finish': 'addImage'
-
-    addImage: (event) ->
-      event.preventDefault()
-      @model.trigger 'change:imgs'
-      App.photoPopupRegion.close()
-
-    onShow: ->
-      id = @model.get 'id'
-      @$('#photos-dropzone').dropzone
-        dictDefaultMessage: 'Перетащите сюда фотографии'
-        addRemoveLinks: true
-        url: "/photos/route/#{id}/add"
-        paramName:'img'
-        headers:
-          'X-CSRFToken': $.cookie('csrftoken')
-        success: (file, data) =>
-          img = data[0]
-          imgs = @model.get 'imgs'
-          imgs.push img
-          @model.set 'imgs', imgs
-          @ui.finishBtn.prop 'disabled', false

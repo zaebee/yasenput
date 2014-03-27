@@ -37,7 +37,7 @@
       @commentsView = new Point.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
-        loading: true
+        loading: false
 
     showMap: ->
       @mapView = new Point.Map model: @model

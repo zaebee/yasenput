@@ -29,7 +29,7 @@
         , autoFitToViewport: 'always'
         #App.mmap = @yandexmap
 
-      $list = $('.route-list') 
+      $list = $('.route-list')
 
       $('.map').resizable
         minHeight: 80,
@@ -52,10 +52,10 @@
           myMap8.container.fitToViewport();
           myMap9.container.fitToViewport();
           myMap10.container.fitToViewport();
-          ###   
-            
+          ###
+
       App.popupwinInit = (object) ->
-  
+
         #var z = 1000 + 100*($('.popupwin.active').length);
         maxZ = 1000
         $(".popupwin.active").each ->
@@ -84,10 +84,10 @@
         if $(".page").find(".popupwin.active").length < 1
           $(".overlay").fadeOut()
           $("body").css "overflow-y", "auto"
-        return        
+        return
 
       App.draw_route = (points) ->
-        App.mroute = App.ymaps.route(points, { mapStateAutoApply: true }).then  (route) ->  
+        App.mroute = App.ymaps.route(points, { mapStateAutoApply: true }).then  (route) ->
           route.getPaths().options.set
             balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
             strokeColor: 'ca7953',
@@ -105,7 +105,7 @@
           if $(this).attr 'model'
             s = $(this).attr 'model'
             App.route_points.push App.models_dict[s.toString()] #добавляем все точки в маршрут в новом порядке
-        
+
         console.log App.route_points
         route_p = [] #масив яндекс-точек маршрута
 
@@ -159,7 +159,7 @@
         $list.css "display", "block"  if $list.css("display") is "none"
         console.log $model.model
         number++
-        if !App.models_dict 
+        if !App.models_dict
           App.models_dict = new Object()
         App.models_dict[$model.model.id] = $model
         console.log 'DICTIONARY', App.models_dict
@@ -232,7 +232,7 @@
           scrollTop = parseInt($list.find(".jspPane").css("top").split("px")[0])
           itemTop = itemTop + scrollTop
         $list.find(".delete-item").css "top", itemTop + "px"
-      
+
       #удаление из списка на карте по клику на крестик
       $(".route-list.route-list_deleteable .js-delete").click ->
         $this = $(this)
@@ -251,13 +251,13 @@
             trig = 1 #ставим флаг, что у нас удалялась точка и на карту новых плэйсмарок стаивть не нужно
           num += 1
         App.change_route_numeration ''
-      
+
       $(".trip-list.trip-list_deleteable .js-delete").click ->
         $this = $(this)
         $list = $this.closest(".trip-list")
         $removeElement = $list.find(".item").eq(routeItemNumber)
         id = $removeElement.data("id")
-        
+
         # if ($list.find('.jspPane').length) {
         #   var element = $list.find('.list').jScrollPane({});
         #   var api = element.data('jsp');
@@ -272,6 +272,6 @@
       # $list.find('.list').jScrollPane({
       #   autoReinitialise: true
       # });
-      
+
   class Show.Tags extends App.Views.ItemView
     template: 'IconTemplate'

@@ -122,7 +122,7 @@
         _.each points, (point) =>
           placemark = new App.ymaps.Placemark [point.latitude, point.longitude],{}, {
             iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageHref: '/static/images/sprite-baloon.png',
             iconImageSize: [32, 36]
           }
           map.geoObjects.add placemark

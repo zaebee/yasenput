@@ -31,13 +31,13 @@
       @photoView = new Event.Photo model: @model
       @show @photoView,
         region: @layout.photoRegion
-        loading: true
+        loading: false
 
     showComments: ->
       @commentsView = new Event.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
-        loading: true
+        loading: false
 
     showMap: ->
       @mapView = new Event.Map  model: @model

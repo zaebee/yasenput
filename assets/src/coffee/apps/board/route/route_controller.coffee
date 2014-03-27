@@ -10,6 +10,7 @@
       @listenTo @layout, 'show', =>
         @showHeader()
         @showComments()
+        @showAside()
         @showMap()
       ###
         @sidebarView()
@@ -30,7 +31,12 @@
       @commentsView = new Route.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
-        loading: true
+        loading: false
+
+    showAside: ->
+      @asideView = new Route.Aside model: @model
+      @show @asideView,
+        region: @layout.asideRegion
 
     showMap: ->
       @mapView = new Route.Map model: @model

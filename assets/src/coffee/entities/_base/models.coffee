@@ -25,10 +25,10 @@
         return
       App.ymaps.ready =>
         @placemark = new App.ymaps.Placemark null,{
-          id: 'map-point'
+          id: "map-point#{@id}"
         }, {
           iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-          iconImageHref: 'static/images/sprite-baloon.png',
+          iconImageHref: '/static/images/sprite-baloon.png',
           iconImageSize: [32, 36]
         }
 
@@ -59,6 +59,6 @@
             id: 'map-point'
           }, {
             iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: 'static/images/sprite-baloon.png',
+            iconImageHref: '/static/images/sprite-baloon.png',
             iconImageSize: [32, 36]
           }
