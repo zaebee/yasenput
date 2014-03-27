@@ -944,7 +944,7 @@ class Route(View):
             author = YpJson.serialize([route],
                                       fields=['author', 'name', 'description', 'coords', 'points'],
                                       relations={
-                                          'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
+                                          'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'], 'extras':['icon']},
                                           'points': {
                                               'fields': ['route', 'position'],
                                               'relation': {
@@ -978,6 +978,8 @@ class Route(View):
                 'id':route.id,
                 'name':route.name,
                 'description':route.description,
+                'price': float(route.price),
+                'days': route.days,
                 'coords':route.coords,
                 'author':json.loads(author)[0]['author'],
                 'points':json.loads(points),
