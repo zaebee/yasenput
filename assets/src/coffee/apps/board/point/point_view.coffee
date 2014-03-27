@@ -10,9 +10,18 @@
       tagsRegion: '#point-tags-region'
 
     className: 'popupwin__scrollbox'
+    modelEvents:
+      'change:name' : 'updateText'
+      'change:description' : 'updateText'
+      'change:address' : 'updateText'
 
     events:
       'click .js-open': 'toggleCommercial'
+
+    updateText:  ->
+      @$('.description__title').text @model.get('name')
+      @$('.description__text').text @model.get('description')
+      @$('.description__address').text @model.get('address')
 
     toggleCommercial: (event) ->
       event.preventDefault()

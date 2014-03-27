@@ -3,23 +3,7 @@
   
   <div id="event-photo-region"></div> 
 
-  <div class="description">
-    <h3 class="description__title">{{name}}</h3>
-    <p class="description__text">{{description}}</p>
-    {{#if points}}
-    <div class="description__places">
-      <div class="title"><span class="c-event">Событие</span> проходит в местах:</div>
-      <ul class="list">
-        {{#each points}}
-        <li class="item">
-          <a data-id="{{id}}" href="#point/{{id}}" class="link c-place js-popupwin-place">{{name}}</a>
-          <div class="description__address">{{address}}</div>
-        </li>
-        {{/each}}
-      </ul>
-    </div>
-    {{/if}}
-  </div>
+  <div id="event-description-region"></div> 
 
   <div id="event-map-region"></div>
 

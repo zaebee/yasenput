@@ -5,6 +5,7 @@
     regions:
       headerRegion: '#event-header-region'
       photoRegion: '#event-photo-region'
+      descRegion: '#event-description-region'
       mapRegion: '#event-map-region'
       commentsRegion: '#event-comments-region'
       tagsRegion: '#event-tags-region'
@@ -51,6 +52,12 @@
     upload: (e) ->
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
+
+  class Event.Description extends App.Views.ItemView
+    template: 'EventDescription'
+    className: 'description'
+    modelEvents:
+      'change': 'render'
 
 
   class Event.Photo extends App.Views.ItemView

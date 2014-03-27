@@ -12,10 +12,6 @@
         @showComments()
         @showAside()
         @showMap()
-      ###
-        @sidebarView()
-        @tagsView()
-      ###
       #App.execute 'when:fetched', @model, =>
       App.routePopup.show @layout, loading: true
 

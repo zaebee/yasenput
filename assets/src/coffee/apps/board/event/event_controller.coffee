@@ -9,13 +9,10 @@
       @layout = new Event.Layout model: @model
       @listenTo @layout, 'show', =>
         @showPhotos()
+        @showDescription()
         @showHeader()
         @showComments()
         @showMap()
-      ###
-        @sidebarView()
-        @tagsView()
-      ###
       #App.execute 'when:fetched', @model, =>
       App.eventPopup.show @layout, loading: true
 
@@ -31,6 +28,12 @@
       @photoView = new Event.Photo model: @model
       @show @photoView,
         region: @layout.photoRegion
+        loading: false
+
+    showDescription: ->
+      @descView = new Event.Description model: @model
+      @show @descView,
+        region: @layout.descRegion
         loading: false
 
     showComments: ->
