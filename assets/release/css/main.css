@@ -5511,6 +5511,7 @@ a {
 .route-list .img {
   float: left;
   border-radius: 2px;
+  height:44px;
 }
 .route-list .text {
   margin-left: 50px;
@@ -6602,3 +6603,7 @@ button[disabled].js-finish {
 #grid {
     position:relative;
 }
+
+.dashboard-settings input:focus {
+    background:#fff;
+};
