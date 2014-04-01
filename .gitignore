@@ -11,6 +11,7 @@ settings_local.py
 /assets/debug/*
 /data/*
 /logs/*
+.env
 migrations
 .DS_Store
 ._*
