@@ -22,7 +22,7 @@ def rel(*x):
 
 sys.path.insert(0, rel('../apps'))
 
-DICTS_PATH = '/home/tenoclock/yasenput/dicts'
+DICTS_PATH = '/home/tenoclock/Projects/yp/yasenput/dicts'
 
 SPHINX_API_VERSION = 0x119
 

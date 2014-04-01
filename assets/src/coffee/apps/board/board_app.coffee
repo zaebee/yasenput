@@ -12,6 +12,7 @@
       'point/:id': 'point'
       'event/:id': 'event'
       'route/:id': 'route'
+      'trip/:id': 'trip'
   
   API =
     index: ->
@@ -34,6 +35,13 @@
       App.vent.trigger 'show:detail:popup', model
 
     route: (id) ->
+      model = BoardApp.board.yapens.findWhere id: id
+      if !model
+        model = new App.Entities.Route id: id
+        BoardApp.board.yapens.add model
+      App.vent.trigger 'show:detail:popup', model
+
+    trip: (id) ->
       model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Route id: id
