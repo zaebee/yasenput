@@ -47,7 +47,6 @@ def get_user_avatar(strategy, details, response, uid=None, user=None, is_new=Fal
     if not user:
         return
 
-    import ipdb;ipdb.set_trace()
     profile = user.person
 
     if strategy.backend.name == 'facebook':
