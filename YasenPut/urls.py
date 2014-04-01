@@ -31,12 +31,16 @@ urlpatterns = patterns('',
     url(r'^tags/', include('apps.tags.urls')),
     url(r'^reviews/', include('apps.reviews.urls')),
     url(r'news/', include('apps.news.urls')),
-    url(r'', include('social_auth.urls')),
     url(r'', include('apps.main.urls')),
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^layout/', direct_to_template, {'template': 'layout/index.html'}),
     (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 )
+
+urlpatterns += patterns('',
+    url(r'^auth/', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^admin/', include(admin.site.urls)),
+)
+
 if settings.DEBUG:
     urlpatterns += patterns('',
         (r'^static/(?P<path>.*)$', 'django.views.static.serve',

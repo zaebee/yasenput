@@ -1,21 +1,29 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 
+import uuid
+import os.path
 from django.contrib.auth.models import User, UserManager
 from django.db.models.signals import post_save
 from django.db import models
+
 from sorl.thumbnail import ImageField
-import uuid
-import os.path
+from pytils.translit import slugify as default_slugify
 from sorl.thumbnail.shortcuts import get_thumbnail
 from django.contrib.contenttypes import generic
 from apps.comments.models import Comments
 from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 #from apps.collections.models import Collections
 
+
+def get_avatars_dir(instance, filename):
+    name, ext = os.path.splitext(filename)
+    return 'avatar/%s%s' % (default_slugify(name), ext)
+
+
 class Person(User):
     user = models.OneToOneField(User, parent_link=True)
-    avatar = ImageField(upload_to='avatar',
+    avatar = ImageField(upload_to=get_avatars_dir,
                         verbose_name=u'Аватарка',
                         blank=True, null=True)
     phone = models.CharField(u'Телефон', max_length=80, blank=True, null=True)

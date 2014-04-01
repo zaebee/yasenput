@@ -143,7 +143,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'apps.api.context_processors.assets_debug',
-    'social_auth.context_processors.social_auth_by_type_backends',
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
 )
 
 ROOT_URLCONF = 'YasenPut.urls'
@@ -163,7 +164,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     #'django.contrib.staticfiles',
     #'django.contrib.comments',
-    'social_auth',
+    'social.apps.django_app.default',
     'sorl.thumbnail',
     #'taggit',
     #'grappelli.dashboard',
@@ -199,64 +200,56 @@ SERIALIZATION_MODULES = {
 VKONTAKTE_APP_ID = '3252137'
 VKONTAKTE_APP_SECRET = 'C7lHtirBTryT1j3lKeGF'
 VK_EXTRA_SCOPE = ['friends','wall','offline']
-#VK_EXTRA_SCOPE = ['friends','wall','offline']
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = VKONTAKTE_APP_ID
+SOCIAL_AUTH_VK_OAUTH2_SECRET = VKONTAKTE_APP_SECRET
+
+#SOCIAL_AUTH_TWITTER_KEY         = 'NLP8agaVjbMxjDDKRvkemQ'
+#SOCIAL_AUTH_TWITTER_SECRET      = '0Hmv1ypJGU1AOig4kQpkbSQKMwZexbwUuFfEc9w4F8'
+
+#SOCIAL_AUTH_FACEBOOK_KEY              = '276074215884264'
+#SOCIAL_AUTH_FACEBOOK_SECRET          = '901010032efd438880c0993b3fa4306f'
+
 VK_APP_ID = VKONTAKTE_APP_ID
 VK_API_SECRET = VKONTAKTE_APP_SECRET
-#VKONTAKTE_APP_AUTH={'key':'iframe_app_secret_key', 'user_mode': 2, 'id':'iframe_app_id'}
-VKONTAKTE_APP_AUTH                = None
-#SOCIAL_AUTH_USER_MODEL = 'apps.main.Person'
-#AUTH_PROFILE_MODULE =
-#AUTH_USER_MODEL = 'apps.main.Person'
-#AUTH_PROFILE_MODULE = 'apps.main.Person'
-#AUTH_USER_MODEL = 'main.Person'
-AUTH_PROFILE_MODULE = 'main.Person'
-#SOCIAL_AUTH_USER_MODEL           = 'main.Person'
-SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
-SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_CREATE_USERS          = True
-SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
-SOCIAL_AUTH_DEFAULT_USERNAME      = 'socialauth_user'
-SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
-LOGIN_ERROR_URL                   = '/login/error/'
-SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
 
-SOCIAL_AUTH_ENABLED_BACKENDS = ('vk-oauth',)
-VKONTAKTE_OAUTH2_EXTRA_SCOPE = ''
+AUTH_PROFILE_MODULE = 'main.Person'
+
+
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.twitter.TwitterBackend',
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.contrib.vk.VKOAuth2Backend',
-    'social_auth.backends.contrib.odnoklassniki.OdnoklassnikiBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'social.backends.vk.VKOAuth2',
+    'social.backends.twitter.TwitterOAuth',
+    #'social.backends.google.GoogleOAuth',
+    'social.backends.facebook.FacebookOAuth2',
+    #'social.backends.linkedin.LinkedinOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
 )
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
+SOCIAL_AUTH_FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'ru_RU'}
+
+SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'social.apps.django_app.default.models.DjangoStorage'
+
 SOCIAL_AUTH_PIPELINE = (
-    #    'social_auth.backends.pipeline.social.social_auth_user',
-    #    'social_auth.backends.pipeline.associate.associate_by_email',
-    #    'social_auth.backends.pipeline.misc.save_status_to_session',
-    ##    'apps.main.pipeline.redirect_to_form',
-    ##    'apps.main.pipeline.username',
-    #    'social_auth.backends.pipeline.user.create_user',
-    #    'social_auth.backends.pipeline.social.associate_user',
-    #    'social_auth.backends.pipeline.social.load_extra_data',
-    #    'social_auth.backends.pipeline.user.update_user_details',
-    #    'social_auth.backends.pipeline.misc.save_status_to_session',
-    'social_auth.backends.pipeline.social.social_auth_user',
-    #'social_auth.backends.pipeline.associate.associate_by_email',
-    'social_auth.backends.pipeline.user.get_username',
-    'social_auth.backends.pipeline.user.create_user',
-    'social_auth.backends.pipeline.social.associate_user',
-    'social_auth.backends.pipeline.social.load_extra_data',
-    'social_auth.backends.pipeline.user.update_user_details',
-    'apps.main.pipeline.get_user_avatar'
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'apps.main.pipeline.update_profile',
+    'apps.main.pipeline.get_user_avatar',
+    #'apps.main.pipeline.get_user_avatar'
 )
 LOGGING = {
     'version': 1,
