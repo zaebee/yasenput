@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^set', 'apps.main.views.index'),
     url(r'^route', 'apps.main.views.index'),
     url(r'^event', 'apps.main.views.index'),
+    url(r'^trip', 'apps.main.views.index'),
 
     url(r'^map', 'apps.main.views.index'),
     url(r'^new', 'apps.main.views.index'),

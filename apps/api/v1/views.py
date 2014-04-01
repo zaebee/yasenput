@@ -26,6 +26,7 @@ from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 from apps.points import forms
 from apps.main.forms import AddEventForm
 from apps.main import models as MainModels
+from apps.trips import models as TripModels
 from apps.reviews import models as ReviewsModels
 from apps.photos.models import *
 from apps.tags import models as TagsModels
@@ -88,8 +89,8 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
-                                extras=['likes_count', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
+                                fields=['id','p','days','blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
+                                extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
@@ -110,6 +111,32 @@ class PointsBaseView(View):
                                                                                 },}},
                                                                     'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']},
+                                                        },
+                                                    },
+                                            'blocks': {'fields': ['imgs', 'name', 'id','txt','points','events','position'],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}},
+                                                                    'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},
+                                                        'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
+                                                        'extras':['reviewusersplus'],
+                                                        'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
+                                                    'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
+                                                                                'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},},
+                                                                                'limit': LIMITS.IMAGES_LIST.COMMENTS_COUNT
+                                                                                },}},
+                                                                    'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                        'extras': ['icon']},
+                                                        },
+                                                    },
+
                                                         },
                                                     },
 
@@ -268,7 +295,8 @@ class ItemsList(PointsBaseView):
         params = request.GET
         price = "$"
         duration = "$"
-        models = ['points','routes','events']
+        models = ['points','routes','events','trips']
+        #models = ['trips']
         
         sets = "set"
         search_res_points = search_res_sets = search_res_routes = search_res_events = MainModels.Points.search.none()
@@ -298,6 +326,11 @@ class ItemsList(PointsBaseView):
         if 'events' in models:
             t0 = time.time()
             search_res_events = MainModels.Events.search.query(params.get('s',''))
+            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
+
+        if 'trips' in models:
+            t0 = time.time()
+            search_res_trips = TripModels.Trips.search.query(params.get('s',''))
             self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         #search_res_sets_ex = search_res_sets
 
@@ -431,7 +464,7 @@ class ItemsList(PointsBaseView):
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
                  }), 
-                    search_res_sets, search_res_events, search_res_routes.extra(select={
+                    search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
 

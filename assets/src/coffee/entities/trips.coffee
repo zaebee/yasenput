@@ -13,13 +13,13 @@
       App.API_BASE_URL + "/api/v1/trips/"
 
   API =
-    getDetailSets: (id, params = {}) ->
+    getDetailSets: (model, params = {}) ->
+      model.id = model.get('id') or model.get('unid')
       _.defaults params
-      trips = new Entities.Set unid: id
-      trips.fetch
+      model.fetch
         reset: true
         data: params
-      trips
+      model
 
-  App.reqres.setHandler 'get:detail:trips', (id) ->
-    API.getDetailSets id
+  App.reqres.setHandler 'get:detail:trip', (model) ->
+    API.getDetailSets model

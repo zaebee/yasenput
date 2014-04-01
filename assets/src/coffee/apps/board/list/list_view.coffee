@@ -14,6 +14,9 @@
         return 'BoardSet'
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
+      else if @model.get('type_of_item') is 'trip'
+        console.log 'trip selected'
+        return 'BoardTrip'
       else if @model.get('type_of_item') is 'event'
         return 'BoardEvent'
       else
@@ -36,6 +39,7 @@
       'click .js-popupwin-place': 'showDetailPopup'
       'click .js-popupwin-event': 'showDetailPopup'
       'click .js-popupwin-route': 'showDetailPopup'
+      'click .js-popupwin-trip': 'showDetailPopup'
 
       'click .sprite-like': 'like'
       'click .sprite-place': 'mark'
@@ -69,6 +73,7 @@
       ###
 
     showDetailPopup: (event) ->
+      console.log 'show popup'
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, trigger:false
