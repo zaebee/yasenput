@@ -1,6 +1,6 @@
 __author__ = 'art'
 from django.forms import ModelForm
-from apps.main.models import Points, Events
+from apps.main.models import Points, Events, Order
 
 class AddPointForm(ModelForm):
     class Meta:
@@ -19,3 +19,8 @@ class AddEventForm(ModelForm):
         model = Events
         exclude = ('author', 'reviews', 'collections', 'tags', 'imgs', 'likeusers', 'visitusers',
                    'followers', 'visits', 'likes', 'been')
+
+
+class OrderForm(ModelForm):
+    class Meta:
+        model = Order
