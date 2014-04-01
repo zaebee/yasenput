@@ -72,7 +72,6 @@
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, trigger:false
-      console.log event
       App.vent.trigger 'show:detail:popup', @model
 
     showEditPopup: (event) ->

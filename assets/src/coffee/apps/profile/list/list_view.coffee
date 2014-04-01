@@ -9,6 +9,9 @@
     modelEvents:
       'change': 'calculateTotalAdded render'
 
+    events:
+      'click .item .link.nonav': 'link'
+
     initialize: (options) ->
       @section = options.section
       App.execute 'when:fetched', @model, =>
@@ -25,6 +28,11 @@
     onRender: ->
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
+
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger: true
 
 
   class List.ProfileSettings extends App.Views.ItemView
