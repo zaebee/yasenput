@@ -43,18 +43,22 @@
 
     trip: (id) ->
       model = BoardApp.board.yapens.findWhere id: id
+      console.log 'inside trip choise'
       if !model
-        model = new App.Entities.Route id: id
+        model = new App.Entities.Trip id: id
         BoardApp.board.yapens.add model
       App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->
+    console.log 'model trip', model
     if model instanceof App.Entities.Point
       new BoardApp.Point.Controller model: model
     if model instanceof App.Entities.Event
       new BoardApp.Event.Controller model: model
     if model instanceof App.Entities.Route
       new BoardApp.Route.Controller model: model
+    if model instanceof App.Entities.Trip
+      new BoardApp.Trip.Controller model: model
 
   App.vent.on 'change:settings', (changed) ->
     console.log 'settings changed', changed

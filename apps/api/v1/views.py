@@ -136,7 +136,7 @@ class PointsBaseView(View):
                                                         'extras': ['icon']},
                                                         },
                                                     },
-                                                        
+
                                                         },
                                                     },
 
@@ -295,8 +295,8 @@ class ItemsList(PointsBaseView):
         params = request.GET
         price = "$"
         duration = "$"
-        #models = ['points','routes','events','trips']
-        models = ['trips']
+        models = ['points','routes','events','trips']
+        #models = ['trips']
         
         sets = "set"
         search_res_points = search_res_sets = search_res_routes = search_res_events = MainModels.Points.search.none()

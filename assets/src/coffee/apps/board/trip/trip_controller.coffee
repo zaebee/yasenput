@@ -1,4 +1,4 @@
-@Yapp.module 'BoardApp.Route', (Trip, App, Backbone, Marionette, $, _) ->
+@Yapp.module 'BoardApp.Trip', (Trip, App, Backbone, Marionette, $, _) ->
 
   class Trip.Controller extends App.Controllers.Base
 
