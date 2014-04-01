@@ -21,4 +21,6 @@ urlpatterns = patterns('',
     url(r'^dashboard', 'apps.main.views.index'),
     url(r'^add_collection', 'apps.main.views.index'),
 
+    url(r'^order', 'apps.main.views.order'),
+
 )

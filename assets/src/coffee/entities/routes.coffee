@@ -19,6 +19,8 @@
         reset: true
         data: params
       model
+
       
   App.reqres.setHandler 'get:detail:route', (model) ->
     API.getDetail model
+

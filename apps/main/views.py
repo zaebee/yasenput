@@ -2,8 +2,8 @@
 __author__ = 'art'
 
 import time
-from django.template.context import RequestContext
-from django.shortcuts import render_to_response, render
+import json
+from django.shortcuts import render
 from apps.main.models import Categories, Points, Routes, Person, Events
 from apps.collections.models import Collections
 from apps.comments.models import Comments
@@ -11,7 +11,7 @@ from apps.photos.models import Photos
 from apps.tags.models import Tags
 from math import *
 from apps.main.forms import AddPointForm, EditPointForm
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -21,6 +21,7 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.conf import settings
 from apps.main import models as MainModels
+from apps.main.forms import OrderForm
 
 import logging
 logger = logging.getLogger(__name__)
@@ -329,9 +330,17 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
+def order(request):
+    if request.is_ajax() and request.method == 'POST':
+        form = OrderForm(request.POST or None)
+        if form.is_valid():
+            order = form.save()
+            return HttpResponse(json.dumps({'success': True}), mimetype="application/json")
+    raise Http404
+
 
 def yapdd(request):
     return HttpResponse('b3be50c0ce9a')
 
 def googlewm(request):
-    return HttpResponse('google-site-verification: google351823d6b3cb8bda.html')	
+    return HttpResponse('google-site-verification: google351823d6b3cb8bda.html')

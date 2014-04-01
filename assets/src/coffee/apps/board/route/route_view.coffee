@@ -62,6 +62,14 @@
     modelEvents:
       'change': 'render'
 
+    events:
+      'click .js-popup-order-route': 'showOrderPopup'
+
+    showOrderPopup: (event) ->
+      event.preventDefault()
+      view = new Route.OrderRoute model: @model
+      App.orderRoutePopup.show view
+
 
   class Route.Map extends App.Views.ItemView
     template: 'RouteMap'
@@ -155,3 +163,51 @@
     template: 'RouteTags'
     modelEvents:
       'change:tags': 'render'
+
+
+  class Route.OrderRoute extends App.Views.ItemView
+    template: 'OrderRoute'
+    className: 'popupwin__scrollbox'
+    ui:
+      fullname: '[name=fullname]'
+      email: '[name=email]'
+      phone: '[name=phone]'
+    events:
+      'click .js-finish': 'saveInfo'
+
+    saveInfo: (event) ->
+      event.preventDefault()
+      if @ui.fullname.val()
+        fullname = @ui.fullname.val()
+        @ui.fullname.parent().removeClass 'error'
+      else
+        @ui.fullname.parent().addClass 'error'
+
+      if @ui.email.val()
+        email = @ui.email.val()
+        @ui.email.parent().removeClass 'error'
+      else
+        @ui.email.parent().addClass 'error'
+
+      if @ui.phone.val()
+        phone = @ui.phone.val()
+        @ui.phone.parent().removeClass 'error'
+      else
+        @ui.phone.parent().addClass 'error'
+
+      if fullname and email and phone
+        console.log fullname, email, phone
+        App.apiRequest
+          url: '/order/'
+          type: 'POST'
+          data :
+            fullname: fullname
+            phone: phone
+            email: email
+            route: @model.get 'id'
+          successCallback: (result) ->
+            console.log result
+            App.orderRoutePopup.close()
+            App.vent.trigger 'show:info:popup', 'Спасибо, вам перезвонят для уточнения информации'
+      else
+        return

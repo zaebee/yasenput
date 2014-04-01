@@ -343,3 +343,14 @@ class Profile(models.Model):
 
     class Admin:
         pass
+
+
+class Order(models.Model):
+    phone = models.CharField(u'Телефон', max_length=80, blank=True, null=True)
+    fullname = models.CharField(u'ФИО', max_length=80, blank=True, null=True)
+    email = models.CharField(u'Email', max_length=80, blank=True, null=True)
+    route = models.ForeignKey(Routes, blank=True, null=True)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.email, self.fullname)
+
