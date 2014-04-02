@@ -22,7 +22,7 @@
       section: @section
 
     calculateTotalAdded: ->
-        total_added = @model.get('added_events') + @model.get('added_points')
+        total_added = @model.get('added_events') + @model.get('added_points') + @model.get('added_routes') + @model.get('added_trips')
         @model.set 'total_added', total_added
 
     onRender: ->

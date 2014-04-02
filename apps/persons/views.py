@@ -160,6 +160,8 @@ class PersonAccount(PersonsBaseView):
 
                         "added_points": "select count(*) from main_points where author_id=main_person.user_id",
                         "added_events": "select count(*) from main_events where author_id=main_person.user_id",
+                        "added_routes": "select count(*) from main_routes where author_id=main_person.user_id",
+                        "added_trips": "select count(*) from trips_trips where author_id=main_person.user_id",
                         "added_photos": "select count(*) from photos_photos where author_id=main_person.user_id",
 
                         "want_visit_points": "select count(*) from main_points_visitusers where user_id=main_person.user_id",
@@ -172,7 +174,7 @@ class PersonAccount(PersonsBaseView):
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize(person,
                                              extras=["liked_points", "liked_events", "liked_photod",
-                                                     "added_points", "added_events", "added_photos",
+                                                     "added_points", "added_events", "added_routes", "added_trips",
                                                      "want_visit_points", "want_visit_events",
                                                      "person_followers", "icon", "icon_small"
                                                      ],

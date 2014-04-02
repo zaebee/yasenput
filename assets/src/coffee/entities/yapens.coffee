@@ -14,7 +14,8 @@
     getEntities: (params = {}) ->
       @yapens = @yapens or new Entities.YapensCollection
       @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
-      @yapens.fetch
+      @fetch.abort() if @fetch
+      @fetch = @yapens.fetch
         reset: true
         data: params
       @yapens
