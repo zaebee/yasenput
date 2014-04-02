@@ -1,0 +1,72 @@
+{{#each blocks}}
+<style type="text/css">
+  .bx-pager{
+    display: none !important;
+  }
+  .bx-controls-direction {
+    top: 240px !important;
+  }
+</style>
+<div class="trip-view" data-step="1">
+  <div class="slider">
+    <ul class="bxslider bxslider-trip-1">
+      {{#each imgs}}
+      <li class="item"><img src="{{thumbnail560}}" class="img" /></li>
+      {{/each}}
+    </ul>
+    <!--<div class="bx-pager" id="bx-pager-trip-1" style="display: none">
+      <div class="bx-pager__viewport">
+        <div class="bx-pager__scrollbox">
+          <a data-slide-index="0" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-7.png" class="img"/>
+          </a>
+          <a data-slide-index="1" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-8.png" class="img"/>
+          </a>
+          <a data-slide-index="2" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-7.png" class="img"/>
+          </a>
+          <a data-slide-index="3" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-8.png" class="img"/>
+          </a>
+          <a data-slide-index="4" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-7.png" class="img"/>
+          </a>
+          <a data-slide-index="5" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-8.png" class="img"/>
+          </a>
+          <a data-slide-index="6" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-7.png" class="img"/>
+          </a>
+          <a data-slide-index="7" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-8.png" class="img"/>
+          </a>
+          <a data-slide-index="8" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-7.png" class="img"/>
+          </a>
+          <a data-slide-index="9" href="" class="bx-pager__item">
+            <img src="media/uploads/thumb-8.png" class="img"/>
+          </a>
+        </div>
+      </div>
+    </div>-->
+  </div>
+  <div class="description">
+    <h3 class="description__title">{{name}}</h3>
+    <p class="description__text">{{txt}}</p>
+    <div class="description__places">
+      <!--<div class="title">Прикрепленные места и события</div>-->
+      <!--<ul class="list">
+        <li class="item"><a href="#?" class="link c-place">Архиерейское подворье</a></li>
+        <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
+      </ul>-->
+    </div>
+    <!--<div class="description__address">Вологодская область, г. Кириллов, 161100</div>-->
+  </div>
+  <!--<div class="map map_popupwin">
+    <a href="#?" class="map__close sprite-close js-map-close"></a>
+    <div class="map__container" id="map9"></div>
+    <a href="#?" class="btn-open js-map-open"></a>
+  </div>-->
+</div>
+{{/each}}

@@ -8,18 +8,24 @@
       mapRegion: '#trip-map-region'
       commentsRegion: '#trip-comments-region'
       tagsRegion: '#trip-tags-region'
+      blocksRegion: '#trip-blocks-region'
 
     className: 'popupwin__scrollbox'
     modelEvents:
       'change:name' : 'updateText'
-      'change:description' : 'updateText'
+      #'change:author' : 'updateText'
 
     events:
       'click .js-open': 'toggleCommercial'
 
     updateText:  ->
+      console.log('model ',@model)
       @$('.trip_name').text @model.get('name')
-      @$('.trip_description').text @model.get('description')
+      @$('.trip_author').text @model.get('author').first_name+' '+@model.get('author').last_name
+      @$('.trip_author_ava').attr 'src', @model.get('author').avatar
+      
+
+
 
     toggleCommercial: (event) ->
       event.preventDefault()
@@ -62,6 +68,20 @@
     modelEvents:
       'change': 'render'
 
+    initialize: ->
+      console.log @model
+
+  class Trip.Blocks extends App.Views.ItemView
+    template: 'TripBlock'
+    className: 'popupwin__blocks'
+    modelEvents:
+      'change': 'render'
+
+    initialize: ->
+      console.log @model
+
+    onRender: ->
+      sliderPlace = @$('.bxslider').bxSlider()
 
   class Trip.Map extends App.Views.ItemView
     template: 'TripMap'

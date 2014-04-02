@@ -1,24 +1,39 @@
-<div class="route-list popupwin__content">
-  <div class="title">Добавленные места и события</div>
-  <ul class="list">
-    {{#each points}}
-    <li class="item">
-      <a href="#?" class="close js-delete"></a>
-      <a href="#?" class="link-wrap js-popupwin-place">
-      <span class="drag"></span>
-      <span class="number">{{position}}</span>
-      <img src="{{point.imgs.[0].thumbnail104x104}}" alt="" class="img">
-      <div class="text">
-        <span class="text__place">{{point.name}}</span>
-      <span class="text__type c-place">место</span>
-      </div>
-      </a>
-    </li>
-    {{/each}}
-  </ul>
-</div>
-<div class="route-aside-commercial popupwin__content">
-  <div class="price">{{price}} <span class="sprite-ruble-green-big"></span></div>
-  <div class="text">Цена данного маршрута вместе с <a href="#?">Белкотур</a></div>
-  <a href="#?" class="btn btn_color_blue js-popup-order-route">Заказать маршрут</a>
+<div class="popupwin__aside">
+  <div class="trip-list popupwin__content">
+    <div class="title">Содержание</div>
+    <ul class="list" id="trip_blcks">
+    {{#each blocks}}
+      <li class="item clearfix" id="tmpl_blck" data-step="1">
+        <span class="number">{{plus @index 1}}</span>
+        <div class="text">
+          <a class="text__place name__blck">{{name}}</a>
+        </div>
+      </li>
+      {{/each}}
+    </ul>
+  </div><!-- class="trip-list" -->
+  <!--<div class="route-list popupwin__content">
+    <div class="title">Участники</div>
+    <ul class="list">
+      <li class="item">
+        <span class="drag"></span>
+        <span class="number">1</span>
+        <img src="media/uploads/route-1.png" alt="" class="img">
+        <div class="text">
+          <span class="text__place">Владимир Вязников</span>
+          <span class="text__type c-place">организатор</span>
+        </div>
+      </li>
+      <li class="item">
+        <span class="drag"></span>
+        <span class="number">2</span>
+        <img src="media/uploads/route-2.png" alt="" class="img">
+        <div class="text">
+          <span class="text__place">Виталий Меньшиков</span>
+          <span class="text__type c-user">участник</span>
+        </div>
+      </li>
+    </ul>
+  </div>--><!-- class="route-list" -->
+  <!--<div class="map-aside" id="map11"></div>-->
 </div>
