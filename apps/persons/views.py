@@ -138,7 +138,7 @@ class PersonAccount(PersonsBaseView):
         user_dict = json.loads(data)
         author = MainModels.Person.objects.filter(user=request.user)
         if 'fullname' in user_dict:
-            fullname = user_dict.pop('fullname', '').split(' ', 1)
+            fullname = user_dict.pop('fullname', '').strip().split(' ', 1)
             if len(fullname) == 2:
                 user_dict['first_name'], user_dict['last_name'] = fullname
             elif fullname[0]:

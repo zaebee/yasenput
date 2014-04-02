@@ -21,6 +21,7 @@
       new AddPopupApp.Route.Controller
 
   App.vent.on 'show:edit:popup', (model) ->
+    console.log model
     App.addPopupRegion.close()
     if model instanceof App.Entities.Point
       new AddPopupApp.Point.Controller model: model
