@@ -22,40 +22,28 @@
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
 
-    point: (id) ->
+    getModel: (entity, id) ->
       if !BoardApp.board
         BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
-        model = new App.Entities.Point id: id
+        model = new entity id: id
         BoardApp.board.yapens.add model
+
+    point: (id) ->
+      model = @getModel App.Entities.Point, id
       App.vent.trigger 'show:detail:popup', model
 
     event: (id) ->
-      if !BoardApp.board
-        BoardApp.board = new BoardApp.List.Controller App.settings
-      model = BoardApp.board.yapens.findWhere id: id
-      if !model
-        model = new App.Entities.Event id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Event, id
       App.vent.trigger 'show:detail:popup', model
 
     route: (id) ->
-      if !BoardApp.board
-        BoardApp.board = new BoardApp.List.Controller App.settings
-      model = BoardApp.board.yapens.findWhere id: id
-      if !model
-        model = new App.Entities.Route id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Route, id
       App.vent.trigger 'show:detail:popup', model
 
     trip: (id) ->
-      if !BoardApp.board
-        BoardApp.board = new BoardApp.List.Controller App.settings
-      model = BoardApp.board.yapens.findWhere id: id
-      if !model
-        model = new App.Entities.Trip id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Trip, id
       App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->
