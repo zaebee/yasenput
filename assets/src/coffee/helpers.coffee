@@ -96,3 +96,8 @@ Handlebars.registerHelper('safe', (str, options)->
   new Handlebars.SafeString str
 )
 
+Handlebars.registerHelper "plus", (lvalue, rvalue, options) ->
+  lvalue = parseFloat(lvalue)
+  rvalue = parseFloat(rvalue)
+  lvalue + rvalue
+
