@@ -4,7 +4,7 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
-      @yapens = App.request 'get:all:yapens', @options
+      @yapens = @yapens or App.request 'get:all:yapens', @options
       @yapensView = @yapensView or new List.Yapens collection: @yapens
     
       @yapensView.on 'childview:show:detail:popup', (iv, model) ->

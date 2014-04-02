@@ -16,11 +16,15 @@
   
   API =
     index: ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
 
     point: (id) ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Point id: id
@@ -28,6 +32,8 @@
       App.vent.trigger 'show:detail:popup', model
 
     event: (id) ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Event id: id
@@ -35,6 +41,8 @@
       App.vent.trigger 'show:detail:popup', model
 
     route: (id) ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Route id: id
@@ -42,6 +50,8 @@
       App.vent.trigger 'show:detail:popup', model
 
     trip: (id) ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
         model = new App.Entities.Trip id: id
@@ -59,13 +69,8 @@
       new BoardApp.Trip.Controller model: model
 
   App.vent.on 'change:settings', (changed) ->
+    BoardApp.board = new BoardApp.List.Controller App.settings
     console.log 'settings changed', changed
-    @fetch.abort() if @fetch
-
-    @fetch = BoardApp.board.yapens.fetch(
-      reset:true,
-      data: Yapp.settings
-    )
     BoardApp.board.show BoardApp.board.yapensView,
       region: App.boardRegion
       loading: true
@@ -75,6 +80,5 @@
 
 
   App.addInitializer ->
-    BoardApp.board = new BoardApp.List.Controller App.settings
     new BoardApp.Router
       controller: API

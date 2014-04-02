@@ -205,6 +205,7 @@
           itemSelector: '.box'
 
     onClose: ->
+      console.log 'onClose yapens'
       @infiniScroll.destroy()
       @wall.destroy() if @wall
       @remove()
