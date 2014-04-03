@@ -9,6 +9,9 @@
     modelEvents:
       'change': 'calculateTotalAdded render'
 
+    events:
+      'click .item .link.nonav': 'link'
+
     initialize: (options) ->
       @section = options.section
       App.execute 'when:fetched', @model, =>
@@ -19,12 +22,17 @@
       section: @section
 
     calculateTotalAdded: ->
-        total_added = @model.get('added_events') + @model.get('added_points')
+        total_added = @model.get('added_events') + @model.get('added_points') + @model.get('added_routes') + @model.get('added_trips')
         @model.set 'total_added', total_added
 
     onRender: ->
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
+
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger: true
 
 
   class List.ProfileSettings extends App.Views.ItemView

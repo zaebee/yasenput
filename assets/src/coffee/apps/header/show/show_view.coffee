@@ -22,10 +22,17 @@
       'click .js-popupwin-authorization': 'showLoginPopup'
       'click .js-profile-menu': 'showProfileMenu'
       'select2-selecting': 'selectItem'
+      'click .item .link.nonav': 'link'
+      'click .link-user': 'link'
 
     initialize: ->
       user = App.request 'get:my:profile'
       #@listenTo user, 'change', @render
+
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger: true
 
     showAddPopup: (e) ->
       e.preventDefault()
@@ -210,10 +217,16 @@
       'click .js-popup-add-route': -> App.vent.trigger 'show:add:route:popup'
       'click .js-popup-add-event': -> App.vent.trigger 'show:add:event:popup'
 
+    initialize: ->
+      @changeUrl = true
+
 
   class Show.PopupLogin extends App.Views.ItemView
     template: 'PopupLogin'
     className: 'popupwin__scrollbox'
+
+    initialize: ->
+      @changeUrl = true
 
 
   class Show.PopupInfo extends App.Views.ItemView
@@ -222,6 +235,7 @@
 
     initialize: (options) ->
       @message = options.message
+      @changeUrl = true
 
     templateHelpers: ->
       message: @message

@@ -16,41 +16,37 @@
   
   API =
     index: ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
 
-    point: (id) ->
+    getModel: (entity, id) ->
+      if !BoardApp.board
+        BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
-        model = new App.Entities.Point id: id
+        model = new entity id: id
         BoardApp.board.yapens.add model
+
+    point: (id) ->
+      model = @getModel App.Entities.Point, id
       App.vent.trigger 'show:detail:popup', model
 
     event: (id) ->
-      model = BoardApp.board.yapens.findWhere id: id
-      if !model
-        model = new App.Entities.Event id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Event, id
       App.vent.trigger 'show:detail:popup', model
 
     route: (id) ->
-      model = BoardApp.board.yapens.findWhere id: id
-      if !model
-        model = new App.Entities.Route id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Route, id
       App.vent.trigger 'show:detail:popup', model
 
     trip: (id) ->
-      model = BoardApp.board.yapens.findWhere id: id
-      console.log 'inside trip choise'
-      if !model
-        model = new App.Entities.Trip id: id
-        BoardApp.board.yapens.add model
+      model = @getModel App.Entities.Trip, id
       App.vent.trigger 'show:detail:popup', model
 
   App.vent.on 'show:detail:popup', (model) ->
-    console.log 'model trip', model
     if model instanceof App.Entities.Point
       new BoardApp.Point.Controller model: model
     if model instanceof App.Entities.Event
@@ -61,13 +57,8 @@
       new BoardApp.Trip.Controller model: model
 
   App.vent.on 'change:settings', (changed) ->
+    BoardApp.board = new BoardApp.List.Controller App.settings
     console.log 'settings changed', changed
-    @fetch.abort() if @fetch
-
-    @fetch = BoardApp.board.yapens.fetch(
-      reset:true,
-      data: Yapp.settings
-    )
     BoardApp.board.show BoardApp.board.yapensView,
       region: App.boardRegion
       loading: true
@@ -77,6 +68,5 @@
 
 
   App.addInitializer ->
-    BoardApp.board = new BoardApp.List.Controller App.settings
     new BoardApp.Router
       controller: API

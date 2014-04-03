@@ -59,6 +59,15 @@
     modelEvents:
       'change': 'render'
 
+    events:
+      'click .js-popupwin-place': 'showPointPopup'
+
+    showPointPopup: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger: true
+      #App.vent.trigger 'show:detail:popup', @model
+
 
   class Event.Photo extends App.Views.ItemView
     template: 'EventPhoto'

@@ -11,7 +11,7 @@
   class Entities.Model extends Backbone.Model
 
     url: ->
-      @id = @id or @get('id')
+      @id = @get('id') or @id
       origUrl = Backbone.Model.prototype.url.call @
       origUrl + if origUrl.charAt(origUrl.length - 1) is '/' then '' else '/'
 

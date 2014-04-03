@@ -77,7 +77,6 @@
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, trigger:false
-      console.log event
       App.vent.trigger 'show:detail:popup', @model
 
     showEditPopup: (event) ->
@@ -206,6 +205,7 @@
           itemSelector: '.box'
 
     onClose: ->
+      console.log 'onClose yapens'
       @infiniScroll.destroy()
       @wall.destroy() if @wall
       @remove()

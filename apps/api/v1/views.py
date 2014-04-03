@@ -297,9 +297,8 @@ class ItemsList(PointsBaseView):
         duration = "$"
         models = ['points','routes','events','trips']
         #models = ['trips']
-        
-        sets = "set"
-        search_res_points = search_res_sets = search_res_routes = search_res_events = MainModels.Points.search.none()
+
+        search_res_points = search_res_sets = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
