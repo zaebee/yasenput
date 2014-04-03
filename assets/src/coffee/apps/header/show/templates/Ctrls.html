@@ -14,7 +14,7 @@
     <div class="header__user">
       <a href="/#dashboard/" class="link-user">
         <img src="{{#if user.icon}}{{user.icon}}{{else}}{{user.avatar}}{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
-        {{user.first_name}}<br>{{user.last_name}} 
+        <span class="first-name">{{user.first_name}}</span><br><span class="last-name">{{user.last_name}}</span>
       </a>
       <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
       <ul class="profile-menu">

@@ -27,7 +27,11 @@
 
     initialize: ->
       user = App.request 'get:my:profile'
-      #@listenTo user, 'change', @render
+      @listenTo user, 'change', @changeUser
+
+    changeUser: (user) ->
+      @$('.first-name').text user.get 'first_name'
+      @$('.last-name').text user.get 'last_name'
 
     link: (event) ->
       event.preventDefault()

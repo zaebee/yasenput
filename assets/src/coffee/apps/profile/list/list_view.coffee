@@ -69,15 +69,17 @@
       @model.set
         email: @ui.email.val()
         fullname: @ui.fullname.val()
-        username: @ui.username.val()
         about: @ui.about.val()
         phone: @ui.phone.val()
         website: @ui.website.val()
         city: @ui.city.val()
       @model.save @model.changed,
         patch: true
-        success: =>
-          App.vent.trigger 'show:info:popup', 'Данные успешно сохранены'
+        success: (response) =>
+          if response.status
+            App.vent.trigger 'show:info:popup', response.txt
+          else
+            App.vent.trigger 'show:info:popup', 'Данные успешно сохранены'
 
 
   class List.CommercialView extends App.Views.ItemView

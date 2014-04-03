@@ -201,19 +201,10 @@ VKONTAKTE_APP_ID = '3252137'
 VKONTAKTE_APP_SECRET = 'C7lHtirBTryT1j3lKeGF'
 VK_EXTRA_SCOPE = ['friends','wall','offline']
 
-SOCIAL_AUTH_VK_OAUTH2_KEY = VKONTAKTE_APP_ID
-SOCIAL_AUTH_VK_OAUTH2_SECRET = VKONTAKTE_APP_SECRET
+SOCIAL_AUTH_VK_OAUTH2_KEY = ''
+SOCIAL_AUTH_VK_OAUTH2_SECRET = ''
 
-#SOCIAL_AUTH_TWITTER_KEY         = 'NLP8agaVjbMxjDDKRvkemQ'
-#SOCIAL_AUTH_TWITTER_SECRET      = '0Hmv1ypJGU1AOig4kQpkbSQKMwZexbwUuFfEc9w4F8'
-
-#SOCIAL_AUTH_FACEBOOK_KEY              = '276074215884264'
-#SOCIAL_AUTH_FACEBOOK_SECRET          = '901010032efd438880c0993b3fa4306f'
-
-VK_APP_ID = VKONTAKTE_APP_ID
-VK_API_SECRET = VKONTAKTE_APP_SECRET
-
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/dashboard/settings/'
 LOGIN_REDIRECT_URL = '/'
 
 AUTH_PROFILE_MODULE = 'main.Person'
@@ -230,6 +221,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SOCIAL_AUTH_FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'ru_RU'}
 
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
@@ -246,7 +238,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details',
+    #'social.pipeline.user.user_details',
     'apps.main.pipeline.update_profile',
     'apps.main.pipeline.get_user_avatar',
     #'apps.main.pipeline.get_user_avatar'

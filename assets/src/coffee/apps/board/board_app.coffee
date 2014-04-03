@@ -9,6 +9,7 @@
   class BoardApp.Router extends Marionette.AppRouter
 
     appRoutes:
+      '_=_': 'index'
       '': 'index'
       'point/:id': 'point'
       'event/:id': 'event'

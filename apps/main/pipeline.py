@@ -13,18 +13,16 @@ def make_upload_path_avatar(subtype):
 
 @partial
 def update_profile(strategy, details, response, uid=None, user=None, is_new=False, *args, **kwargs):
-    if user:
+    if user and is_new:
         p = user.person
         if details.get('password'):
             user.set_password(details['password'])
         user.email = details['email'] if details['email'] else user.email
 
         if 'first_name' in details and not p.first_name:
-            p.first_name = details['first_name']
+            user.first_name = p.first_name = details['first_name']
         if 'last_name' in details and not p.last_name:
-            p.last_name = details['last_name']
-        if 'third_name' in details and not p.third_name:
-            p.third_name = details['third_name']
+            user.last_name = p.last_name = details['last_name']
 
         user.save()
         p.save()
