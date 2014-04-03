@@ -21,12 +21,7 @@
     updateText:  ->
       console.log('model ',@model)
       @$('.trip_name').text @model.get('name')
-      @$('.trip_author').text @model.get('author').first_name+' '+@model.get('author').last_name
-      #@$('.trip_author_ava').attr 'src', @model.get('author').icon
       
-
-
-
     toggleCommercial: (event) ->
       event.preventDefault()
       @$('.js-open').toggleClass 'active'
@@ -88,7 +83,7 @@
     initialize: ->
       console.log @model
 
-    onRender: ->
+    onShow: ->
       sliderPlace = @$('.bxslider').bxSlider()
 
   class Trip.Map extends App.Views.ItemView

@@ -1,328 +1,293 @@
-
-          <div class="popupwin__route-wrap clearfix">
-          <div id="trip-aside-region"></div>
-            <div class="popupwin__content">
-              <div class="place-info clearfix">
-                <a href="#?" class="user">
-                  <img src="{{author.icon}}" alt="" class="img trip_author_ava">
-                  <span class="name trip_author"></span><br>
-                  добавил <span class="type c-trip">путешествие</span>
-                </a>
-                <ul class="actions">
-                  <li class="item">
-                    <!--<a href="#?" class="btn-like">
-                      <span class="icon sprite-like-user"></span>
-                      <span class="text">4</span>
-                    </a>-->
-                  </li>
-                  <li class="item">
-                    <!--<a href="#?" class="btn-upload">
-                      <span class="icon sprite-upload"></span>
-                    </a>-->
-                    <div class="soc-wrap">
-                      <ul class="soc-list">
-                        <li class="soc-list__item">
-                          <a href="#?" class="btn-soc btn-soc_tw">Twitter</a>
-                        </li>
-                        <li class="soc-list__item">
-                          <a href="#?" class="btn-soc btn-soc_vk">Вконтакте</a>
-                        </li>
-                        <li class="soc-list__item">
-                          <a href="#?" class="btn-soc btn-soc_fb">Facebook</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="title-trip c-place trip_name">{{ name }}</div>
-              <div id="trip-blocks-region"></div>
-              <!--<div class="trip-view" data-step="1">
-                <div class="slider">
-                  <ul class="bxslider bxslider-trip-1">
-                    <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
-                  </ul>
-                  <div class="bx-pager" id="bx-pager-trip-1">
-                    <div class="bx-pager__viewport">
-                      <div class="bx-pager__scrollbox">
-                        <a data-slide-index="0" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="1" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="2" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="3" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="4" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="5" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="6" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="7" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="8" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="9" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="description">
-                  <h3 class="description__title">Подготовка</h3>
-                  <p class="description__text">А никакой подготовки собственно и не было. Сидел я как-то новости читал, думу думал. Индексы падают, работы нет и неизвестно, кризис в разгаре. Террористы опять захватили самолет. На улице скоро документы будут проверять у лиц с нечисто американцским происхождением.<br>
-                  Грустно. Думаю, вылечу я отсюда скоро, не иначе. Неужто Голливуда так и неувижу?.. А надо сказать, что любовь к Голливуду, привитая мне советской пропагандой середины 80-х и глупы фильм про мальчонка, который попал в прошлое и изменил своих</p>
-                  <div class="description__places">
-                    <div class="title">Прикрепленные места и события</div>
-                    <ul class="list">
-                      <li class="item"><a href="#?" class="link c-place">Архиерейское подворье</a></li>
-                      <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
-                    </ul>
-                  </div>
-                  <div class="description__address">Вологодская область, г. Кириллов, 161100</div>
-                </div>
-                <div class="map map_popupwin">
-                  <a href="#?" class="map__close sprite-close js-map-close"></a>
-                  <div class="map__container" id="map9"></div>
-                  <a href="#?" class="btn-open js-map-open"></a>
-                </div>
-              </div>
-              <div class="trip-view" data-step="2">
-                <div class="slider">
-                  <ul class="bxslider bxslider-trip-2">
-                    <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
-                    <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
-                  </ul>
-                  <div class="bx-pager" id="bx-pager-trip-2">
-                    <div class="bx-pager__viewport">
-                      <div class="bx-pager__scrollbox">
-                        <a data-slide-index="0" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="1" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="2" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="3" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="4" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="5" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="6" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="7" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                        <a data-slide-index="8" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-7.png" class="img"/>
-                        </a>
-                        <a data-slide-index="9" href="" class="bx-pager__item">
-                          <img src="media/uploads/thumb-8.png" class="img"/>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="description">
-                  <h3 class="description__title">День Х</h3>
-                  <p class="description__text">А никакой подготовки собственно и не было. Сидел я как-то новости читал, думу думал. Индексы падают, работы нет и неизвестно, кризис в разгаре. Террористы опять захватили самолет. На улице скоро документы будут проверять у лиц с нечисто американцским происхождением.<br>
-                  Грустно. Думаю, вылечу я отсюда скоро, не иначе. Неужто Голливуда так и неувижу?.. А надо сказать, что любовь к Голливуду, привитая мне советской пропагандой середины 80-х и глупы фильм про мальчонка, который попал в прошлое и изменил своих</p>
-                  <div class="description__places">
-                    <div class="title">Прикрепленные места и события</div>
-                    <ul class="list">
-                      <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
-                    </ul>
-                  </div>
-                  <div class="description__address">Вологодская область, г. Кириллов, 161100</div>
-                </div>
-                <div class="map map_popupwin">
-                  <a href="#?" class="map__close sprite-close js-map-close"></a>
-                  <div class="map__container" id="map10"></div>
-                  <a href="#?" class="btn-open js-map-open"></a>
-                </div>
-              </div>-->
-              <!--<div class="comments-wrap">
-                <ul class="comments">
-                  <li class="comments__item">
-                    <a href="#?" class="photo">
-                      <img src="media/uploads/user-comments-1.png" alt="user1" class="photo__img">
-                    </a>
-                    <div class="text">
-                      <div class="text__info">
-                        <a href="#?" class="name">Нина Реджинова</a>
-                        <span class="time">&bull; 12.04.2013 в 17:27</span>
-                      </div>
-                      <div class="text__comment">В XVI веке рядом с ним появился малый Ивановский монастырь.</div>
-                    </div>
-                  </li>
-                  <li class="comments__item">
-                    <a href="#?" class="photo">
-                      <img src="media/uploads/user-comments-2.png" alt="user1" class="photo__img">
-                    </a>
-                    <div class="text">
-                      <div class="text__info">
-                        <a href="#?" class="name">Константин Васильевич</a>
-                        <span class="time">&bull; 12.04.2013 в 17:27</span>
-                      </div>
-                      <div class="text__comment">Одно из самых древних и самых известных подворий монастыря было Кремлёвское Кирилловское подворье — подворье Кирилло-Белозерского монастыря в Московском Кремле. Подворье находилось недалеко от Фроловских ворот (ныне Спасская башня)</div>
-                    </div>
-                  </li>
-                  <li class="comments__item">
-                    <a href="#?" class="photo">
-                      <img src="media/uploads/user-comments-3.png" alt="user1" class="photo__img">
-                    </a>
-                    <div class="text">
-                      <div class="text__info">
-                        <a href="#?" class="name">Виталий Вадимович</a>
-                        <span class="time">&bull; 12.04.2013 в 17:27</span>
-                      </div>
-                      <div class="text__comment">В комплекс Кирилло-Белозерского монастыря входят ансамбли Большого Успенского и Ивановского монастырей</div>
-                    </div>
-                  </li>
-                  <li class="comments__item">
-                    <form action="/">
-                      <a href="#?" class="photo">
-                        <img src="media/uploads/user-comments-4.png" alt="user1" class="photo__img">
-                      </a>
-                      <div class="text">
-                        <textarea placeholder="Написать комментарий"></textarea>
-                        <input type="submit" class="btn btn_color_blue" value="Комментировать">
-                      </div>
-                    </form>
-                  </li>
-                </ul>
-              </div>-->
-            </div><!-- class="popup-content" -->
-            <!--<div class="popupwin__content">
-              <div class="title title_blue title_bg_light">Им понравилось:</div>
-              <ul class="peoples">
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-                <li class="peoples__item">
-                  <a href="#?" class="peoples__link">
-                    <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
-                  </a>
-                </li>
-              </ul>
-            </div>--><!-- class="popup-content" -->
+<div class="popupwin__route-wrap clearfix">
+<div id="trip-aside-region"></div>
+  <div class="popupwin__content">
+    <div class="place-info clearfix" id="trip-header-region"></div>
+    <div class="title-trip c-place trip_name">{{ name }}</div>
+    <div id="trip-blocks-region"></div>
+    <!--<div class="trip-view" data-step="1">
+      <div class="slider">
+        <ul class="bxslider bxslider-trip-1">
+          <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-3.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-4.png" class="img" /></li>
+        </ul>
+        <div class="bx-pager" id="bx-pager-trip-1">
+          <div class="bx-pager__viewport">
+            <div class="bx-pager__scrollbox">
+              <a data-slide-index="0" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="1" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="2" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="3" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="4" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="5" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="6" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="7" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="8" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="9" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+            </div>
           </div>
-
-      
+        </div>
+      </div>
+      <div class="description">
+        <h3 class="description__title">Подготовка</h3>
+        <p class="description__text">А никакой подготовки собственно и не было. Сидел я как-то новости читал, думу думал. Индексы падают, работы нет и неизвестно, кризис в разгаре. Террористы опять захватили самолет. На улице скоро документы будут проверять у лиц с нечисто американцским происхождением.<br>
+        Грустно. Думаю, вылечу я отсюда скоро, не иначе. Неужто Голливуда так и неувижу?.. А надо сказать, что любовь к Голливуду, привитая мне советской пропагандой середины 80-х и глупы фильм про мальчонка, который попал в прошлое и изменил своих</p>
+        <div class="description__places">
+          <div class="title">Прикрепленные места и события</div>
+          <ul class="list">
+            <li class="item"><a href="#?" class="link c-place">Архиерейское подворье</a></li>
+            <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
+          </ul>
+        </div>
+        <div class="description__address">Вологодская область, г. Кириллов, 161100</div>
+      </div>
+      <div class="map map_popupwin">
+        <a href="#?" class="map__close sprite-close js-map-close"></a>
+        <div class="map__container" id="map9"></div>
+        <a href="#?" class="btn-open js-map-open"></a>
+      </div>
+    </div>
+    <div class="trip-view" data-step="2">
+      <div class="slider">
+        <ul class="bxslider bxslider-trip-2">
+          <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-5.png" class="img" /></li>
+          <li class="item"><img src="media/uploads/slide-6.png" class="img" /></li>
+        </ul>
+        <div class="bx-pager" id="bx-pager-trip-2">
+          <div class="bx-pager__viewport">
+            <div class="bx-pager__scrollbox">
+              <a data-slide-index="0" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="1" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="2" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="3" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="4" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="5" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="6" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="7" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+              <a data-slide-index="8" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-7.png" class="img"/>
+              </a>
+              <a data-slide-index="9" href="" class="bx-pager__item">
+                <img src="media/uploads/thumb-8.png" class="img"/>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="description">
+        <h3 class="description__title">День Х</h3>
+        <p class="description__text">А никакой подготовки собственно и не было. Сидел я как-то новости читал, думу думал. Индексы падают, работы нет и неизвестно, кризис в разгаре. Террористы опять захватили самолет. На улице скоро документы будут проверять у лиц с нечисто американцским происхождением.<br>
+        Грустно. Думаю, вылечу я отсюда скоро, не иначе. Неужто Голливуда так и неувижу?.. А надо сказать, что любовь к Голливуду, привитая мне советской пропагандой середины 80-х и глупы фильм про мальчонка, который попал в прошлое и изменил своих</p>
+        <div class="description__places">
+          <div class="title">Прикрепленные места и события</div>
+          <ul class="list">
+            <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
+          </ul>
+        </div>
+        <div class="description__address">Вологодская область, г. Кириллов, 161100</div>
+      </div>
+      <div class="map map_popupwin">
+        <a href="#?" class="map__close sprite-close js-map-close"></a>
+        <div class="map__container" id="map10"></div>
+        <a href="#?" class="btn-open js-map-open"></a>
+      </div>
+    </div>-->
+    <!--<div class="comments-wrap">
+      <ul class="comments">
+        <li class="comments__item">
+          <a href="#?" class="photo">
+            <img src="media/uploads/user-comments-1.png" alt="user1" class="photo__img">
+          </a>
+          <div class="text">
+            <div class="text__info">
+              <a href="#?" class="name">Нина Реджинова</a>
+              <span class="time">&bull; 12.04.2013 в 17:27</span>
+            </div>
+            <div class="text__comment">В XVI веке рядом с ним появился малый Ивановский монастырь.</div>
+          </div>
+        </li>
+        <li class="comments__item">
+          <a href="#?" class="photo">
+            <img src="media/uploads/user-comments-2.png" alt="user1" class="photo__img">
+          </a>
+          <div class="text">
+            <div class="text__info">
+              <a href="#?" class="name">Константин Васильевич</a>
+              <span class="time">&bull; 12.04.2013 в 17:27</span>
+            </div>
+            <div class="text__comment">Одно из самых древних и самых известных подворий монастыря было Кремлёвское Кирилловское подворье — подворье Кирилло-Белозерского монастыря в Московском Кремле. Подворье находилось недалеко от Фроловских ворот (ныне Спасская башня)</div>
+          </div>
+        </li>
+        <li class="comments__item">
+          <a href="#?" class="photo">
+            <img src="media/uploads/user-comments-3.png" alt="user1" class="photo__img">
+          </a>
+          <div class="text">
+            <div class="text__info">
+              <a href="#?" class="name">Виталий Вадимович</a>
+              <span class="time">&bull; 12.04.2013 в 17:27</span>
+            </div>
+            <div class="text__comment">В комплекс Кирилло-Белозерского монастыря входят ансамбли Большого Успенского и Ивановского монастырей</div>
+          </div>
+        </li>
+        <li class="comments__item">
+          <form action="/">
+            <a href="#?" class="photo">
+              <img src="media/uploads/user-comments-4.png" alt="user1" class="photo__img">
+            </a>
+            <div class="text">
+              <textarea placeholder="Написать комментарий"></textarea>
+              <input type="submit" class="btn btn_color_blue" value="Комментировать">
+            </div>
+          </form>
+        </li>
+      </ul>
+    </div>-->
+  </div><!-- class="popup-content" -->
+  <!--<div class="popupwin__content">
+    <div class="title title_blue title_bg_light">Им понравилось:</div>
+    <ul class="peoples">
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-2.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-3.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-4.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-yp.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+      <li class="peoples__item">
+        <a href="#?" class="peoples__link">
+          <img src="media/uploads/user-comments-1.png" alt="user" class="peoples__img">
+        </a>
+      </li>
+    </ul>
+  </div>--><!-- class="popup-content" -->
+</div>
