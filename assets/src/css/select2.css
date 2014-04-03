@@ -313,10 +313,6 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 
 .select2-search input.select2-active {
     background: #fff url('../images/select2-spinner.gif') no-repeat 100%;
-    background: url('../images/select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-    background: url('../images/select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('../images/select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('../images/select2-spinner.gif') no-repeat 100%, linear-gradient(top, #fff 85%, #eee 99%);
 }
 
 .select2-container-active .select2-choice,
@@ -361,6 +357,17 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 .select2-dropdown-open .select2-choice .select2-arrow b {
     border-left-color: #53b6d8;
     background-position: center -21px;
+}
+
+.select2-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
 
 /* results */
