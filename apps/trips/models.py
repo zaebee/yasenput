@@ -9,6 +9,7 @@ class Blocks(models.Model):
     class Meta:
         verbose_name = u'Блоки путешествия'
         verbose_name_plural = u'Блоки путешествия'
+        ordering = ('position',)
     name = models.CharField('Название', max_length=255)
     txt = models.TextField('Текст', blank=True, null=True, serialize=True)
     imgs = models.ManyToManyField(Photos, null=True, blank=True, related_name="photos_blocks", serialize=True)
