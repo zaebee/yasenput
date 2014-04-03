@@ -9,6 +9,11 @@
   </a>
 </div>
 <div class="box__description">
+  {{#if price}}
+  <div class="price price_green">
+    {{price}} <span class="sprite-ruble-white"></span>
+  </div>
+  {{/if}}
   <div class="name">{{name}}</div>
   <!--<span class="info info_like">{{likes_count}}</span>-->
   <!--<span class="info info_comment">0</span>-->
