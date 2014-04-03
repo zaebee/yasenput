@@ -69,7 +69,8 @@
               _.map el, (item) ->
                 item.type = type
               el
-            results: _.flatten results
+            results: _.filter _.flatten(results), (el) ->
+              el.type isnt 'users' and el.type isnt 'tags'
         formatResult: @format
         formatSelection: @format
         minimumInputLength: 3
@@ -94,9 +95,9 @@
       ## stop form submitting and page reload
       if event.type is 'submit'
         event.preventDefault()
-        console.log event
       data = event.object
       params = s: if data then data.name else ''
+      console.log data
       App.vent.trigger 'filter:all:yapens', params
 
     format: (state) ->
@@ -115,11 +116,13 @@
           data: (term, page) ->
             s: term
           results: (data, page) ->
+            console.log data
             results = _.map data, (el, type) ->
               _.map el, (item) ->
                 item.type = type
               el
-            results: _.flatten results
+            results: _.filter _.flatten(results), (el) ->
+              el.type isnt 'users' and el.type isnt 'tags'
         formatResult: @format
         formatSelection: @format
         minimumInputLength: 1

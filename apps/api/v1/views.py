@@ -242,9 +242,14 @@ class Search(PointsBaseView):
         offset = 0
 
         #points:
-        search_res_points = MainModels.Points.search.query(params.get("s"))
-        search_res_sets = CollectionsModels.Collections.search.query(params.get("s"))
-        all_items = QuerySetJoin(search_res_points.extra(select = {'type_of_item': 1}), search_res_sets.extra(select = {'type_of_item': 2}))
+        points = MainModels.Points.search.query(params.get("s"))
+        points = QuerySetJoin(points.extra(select = {'type_of_item': 1}))
+        events = MainModels.Events.search.query(params.get("s"))
+        events = QuerySetJoin(events.extra(select = {'type_of_item': 2}))
+        routes = MainModels.Routes.search.query(params.get("s"))
+        routes = QuerySetJoin(routes.extra(select = {'type_of_item': 3}))
+        trips = TripModels.Trips.search.query(params.get("s"))
+        trips  = QuerySetJoin(trips.extra(select = {'type_of_item': 4}))
 
 
         #users:
@@ -282,10 +287,20 @@ class Search(PointsBaseView):
         tags = pointsreq[offset:limit]
 
         YpJson = YpSerialiser()
-        points = json.loads(YpJson.serialize(all_items, fields = ['id','name', 'address']))
+        points = json.loads(YpJson.serialize(points, fields = ['id','name', 'address']))
+        events = json.loads(YpJson.serialize(events, fields = ['id','name']))
+        routes = json.loads(YpJson.serialize(routes, fields = ['id','name']))
+        trips = json.loads(YpJson.serialize(trips, fields = ['id','name']))
         tags = json.loads(YpJson.serialize(tags, fields = ['name','level']))
         users = json.loads(YpJson.serialize(users, fields = ['id','first_name', 'last_name']))
-        return HttpResponse(simplejson.dumps({"points": points, "tags": tags, "users": users}))
+        return HttpResponse(simplejson.dumps({
+            "points": points,
+            'events': events,
+            'routes': routes,
+            'trips': trips,
+            "tags": tags,
+            "users": users,
+        }))
 
 
 class ItemsList(PointsBaseView):
