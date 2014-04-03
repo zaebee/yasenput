@@ -34,6 +34,7 @@ class Trips(models.Model):
     blocks = models.ManyToManyField(Blocks, blank=True, serialize=True)
     ypi = 100
     type_of_item = 'trip'
+    price = models.DecimalField('Цена', max_digits=25, decimal_places=2, blank=True)
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     searchdelta = SphinxQuerySet(index="trips_trips",
                                 mode = 'SPH_MATCH_EXTENDED2',
@@ -41,10 +42,3 @@ class Trips(models.Model):
 
     def __unicode__(self):
         return self.name
-
-
-
-class BlockPosition(models.Model):
-    trip = models.ForeignKey(Trips)
-    block = models.ForeignKey('Blocks')
-    position = models.IntegerField(default=1)

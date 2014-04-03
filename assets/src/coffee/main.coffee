@@ -23,6 +23,7 @@
     eventPopup: Marionette.Region.Modal.extend(el: '.popupwin_event')
     routePopup: Marionette.Region.Modal.extend(el: '.popupwin_route')
     orderRoutePopup: Marionette.Region.Modal.extend(el: '.popupwin_order-route')
+    #orderTripPopup: Marionette.Region.Modal.extend(el: '.popupwin_order-route')
     tripPopup: Marionette.Region.Modal.extend(el: '.popupwin_trip')
 
     addPointPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-place')

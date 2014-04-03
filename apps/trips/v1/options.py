@@ -19,7 +19,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560', 'thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -37,7 +37,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -52,7 +52,7 @@ class TripOption():
                         },
                         'likeusers': PersonOption.relations.getPersonShortRelation(),
                         'imgs': {
-                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                             'relations': {
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -82,7 +82,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -100,7 +100,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -115,7 +115,7 @@ class TripOption():
                         },
                         'likeusers': PersonOption.relations.getPersonShortRelation(),
                         'imgs': {
-                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                             'relations': {
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -145,7 +145,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -163,7 +163,7 @@ class TripOption():
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'imgs': {
-                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
                                     'relations': {
                                         'author': PersonOption.relations.getPersonShortRelation(),
                                         'likeusers': PersonOption.relations.getPersonShortRelation(),
@@ -178,7 +178,7 @@ class TripOption():
                         },
                         'likeusers': PersonOption.relations.getPersonShortRelation(),
                         'imgs': {
-                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560', 'thumbnail625x370'),
                             'relations': {
                                 'author': PersonOption.relations.getPersonShortRelation(),
                                 'likeusers': PersonOption.relations.getPersonShortRelation(),

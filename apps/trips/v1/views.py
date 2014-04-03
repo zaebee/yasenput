@@ -10,7 +10,7 @@ from django.utils import simplejson
 from apps.trips import forms
 from apps.trips import models as TripsModels
 from apps.main import models as MainModels
-from apps.trips.models import Trips, BlockPosition, Blocks
+from apps.trips.models import Trips, Blocks
 from apps.comments import models as CommentsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from apps.trips.v1.options import TripOption
@@ -88,8 +88,8 @@ class Trip(View):
                                 block_obj.imgs.add(img)
 
                         block_obj.save()
-                        BlockPos = BlockPosition(trip=trip, block=block_obj)
-                        BlockPos.save()
+                        #BlockPos = BlockPosition(trip=trip, block=block_obj)
+                        #BlockPos.save()
                 trip.save()
                 YpJson = YpSerialiser()
                 trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
@@ -157,8 +157,8 @@ class Trip(View):
                             block_obj.imgs.add(img)
 
                     block_obj.save()
-                    BlockPos = BlockPosition(trip=trip, block=block_obj)
-                    BlockPos.save()
+                    #BlockPos = BlockPosition(trip=trip, block=block_obj)
+                    #BlockPos.save()
             trip.save()
             YpJson = YpSerialiser()
             trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())

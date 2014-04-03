@@ -98,7 +98,7 @@ class OneTrip(View):
                     },
                     'likeusers': {'fields': ('last_name', 'first_name', 'avatar')},
                     'imgs': {
-                        'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560'),
+                        'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560', 'thumbnail625x370'),
                         'relations': {
                             'author': {'fields': ('last_name', 'first_name', 'avatar')},
                             'likeusers': {'fields': ('last_name', 'first_name', 'avatar')},
@@ -211,7 +211,7 @@ class TripsList(View):
                                                  relations={'blocks': {'fields': ('id', 'name', 'txt', 'likeusers', 'points', 'events', 'imgs'),
                                                                        'relations': {
                                                                             'author': {'fields': ('first_name', 'last_name', 'avatar')},
-                                                                            'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail104x104'),
+                                                                            'imgs': {'extras': ('thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail625x370'),
                                                                                   'limit': LIMITS.POINTS_LIST.IMAGES_COUNT},
                                                                             },
                                                                             'points': {'fields': ('name', 'address', 'longitude', 'latitude')},
