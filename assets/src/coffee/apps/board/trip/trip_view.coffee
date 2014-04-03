@@ -75,11 +75,12 @@
     initialize: ->
       console.log @model
 
+
   class Trip.Blocks extends App.Views.ItemView
     template: 'TripBlock'
     className: 'popupwin__blocks'
     modelEvents:
-      'change': 'render'
+      'change': 'render onShow'
     events:
       'click .link.c-place': 'showPointPopup'
 
@@ -93,6 +94,7 @@
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, trigger: true
+
 
   class Trip.Map extends App.Views.ItemView
     template: 'TripMap'
