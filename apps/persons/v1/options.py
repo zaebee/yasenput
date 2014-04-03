@@ -7,4 +7,4 @@ class PersonOption:
     class relations:
         @staticmethod
         def getPersonShortRelation():
-            return {'fields': ('first_name', 'last_name', 'avatar')}
+            return {'fields': ('first_name', 'last_name', 'avatar', 'icon'), 'extras': ['icon']}
