@@ -74,17 +74,19 @@
     initialize: ->
       console.log @model
 
+
   class Trip.Blocks extends App.Views.ItemView
     template: 'TripBlock'
     className: 'popupwin__blocks'
     modelEvents:
-      'change': 'render'
+      'change': 'render onShow'
 
     initialize: ->
       console.log @model
 
     onShow: ->
       sliderPlace = @$('.bxslider').bxSlider()
+
 
   class Trip.Map extends App.Views.ItemView
     template: 'TripMap'
