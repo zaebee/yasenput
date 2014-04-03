@@ -20,6 +20,8 @@ migrations
 *.swo
 *.swn
 .svn
+.env_/
+.env/
 *.orig
 _build
 build

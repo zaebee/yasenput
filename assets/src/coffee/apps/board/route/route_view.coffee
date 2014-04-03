@@ -204,7 +204,8 @@
             fullname: fullname
             phone: phone
             email: email
-            route: @model.get 'id'
+            cont_id: @model.get 'id'
+            cont_type: 'route'
           successCallback: (result) ->
             console.log result
             App.orderRoutePopup.close()

@@ -357,7 +357,8 @@ class Order(models.Model):
     phone = models.CharField(u'Телефон', max_length=80, blank=True, null=True)
     fullname = models.CharField(u'ФИО', max_length=80, blank=True, null=True)
     email = models.CharField(u'Email', max_length=80, blank=True, null=True)
-    route = models.ForeignKey(Routes, blank=True, null=True)
+    cont_id = models.IntegerField(u'id контента', blank=True,null=True)
+    cont_type = models.CharField(u'тип контента', max_length=80, blank=True, null=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.email, self.fullname)
