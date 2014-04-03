@@ -64,6 +64,7 @@
       console.log 'show popup'
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
+      #App.navigate url, trigger:true
       App.navigate url, trigger:false
       App.vent.trigger 'show:detail:popup', @model
 
@@ -71,7 +72,8 @@
       event.preventDefault()
       console.log event
       url = $(event.currentTarget).prop 'hash'
-      Yapp.navigate url, trigger:false
+      #App.navigate url, trigger:true
+      App.navigate url, trigger:false
       App.vent.trigger 'show:edit:popup', @model
 
     showRemovePopup: (event) ->
