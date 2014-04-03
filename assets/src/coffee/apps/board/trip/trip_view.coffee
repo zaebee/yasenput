@@ -80,8 +80,8 @@
       @popupwin.scroll =>
         if @$el.length
           @$el.css
-            '-webkit-transform':  'translateY(' + @popupwin.scrollTop()+'px)'
-            'transform':  'translateY(' + @popupwin.scrollTop()+'px)'
+            '-webkit-transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
+            'transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
 
     onClose: ->
       @popupwin.off 'scroll'
