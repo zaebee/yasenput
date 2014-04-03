@@ -5,16 +5,20 @@ do (Backbone, Marionette) ->
     constructor: ->
       _.extend @, Backbone.Events
       _.bindAll @
+      @history = []
 
     open: (view) ->
       console.info 'current', @current
-      @current = Backbone.history.getFragment()
+      @current = Backbone.history.fragment
       @prevModal = $('.modal.in').not @$el
       if @prevModal.length
         @prevModal.css 'z-index', 1000
       @$el.find('.modal-dialog').empty().append view.el
       @$el.on 'hidden.bs.modal', @closeModal
       @changeUrl = view.changeUrl
+
+    onBeforeShow: (view) ->
+      return
 
     onShow: (view) ->
       @setupBindings view
@@ -31,6 +35,15 @@ do (Backbone, Marionette) ->
 
     setupBindings: (view) ->
       @listenTo view, 'modal:close', @closeModal
+
+    storeRoute: ->
+      console.log 'store route', @history
+      @history.push Backbone.history.fragment
+
+    previous: ->
+      if @history.length > 1
+        @navigate @history[@history.length-2], true
+        @history = @history.slice(0, -1)
 
     closeModal: (e) ->
       console.log 'close popup:url:', @current

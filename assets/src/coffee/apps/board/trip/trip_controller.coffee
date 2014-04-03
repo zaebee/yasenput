@@ -8,7 +8,7 @@
 
       @layout = new Trip.Layout model: @model
       @listenTo @layout, 'show', =>
-        #@showHeader()
+        @showHeader()
         #@showComments()
         @showAside()
         @showBlocks()

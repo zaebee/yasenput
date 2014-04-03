@@ -47,18 +47,6 @@
       'click .btn_remove': 'showRemovePopup'
 
     ###
-    events:
-      'click .js-popupwin-place': 'showDetailPopup'
-      'click .js-popupwin-event': 'showDetailPopup'
-      'click .js-popupwin-route': 'showDetailPopup'
-
-      'click .sprite-like': 'like'
-      'click .sprite-place': 'mark'
-      'click .btn_edit': 'showEditPopup'
-      'click .btn_remove': 'showRemovePopup'
-    ###
-
-    ###
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'
@@ -76,6 +64,7 @@
       console.log 'show popup'
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
+      #App.navigate url, trigger:true
       App.navigate url, trigger:false
       App.vent.trigger 'show:detail:popup', @model
 
@@ -83,7 +72,8 @@
       event.preventDefault()
       console.log event
       url = $(event.currentTarget).prop 'hash'
-      Yapp.navigate url, trigger:false
+      #App.navigate url, trigger:true
+      App.navigate url, trigger:false
       App.vent.trigger 'show:edit:popup', @model
 
     showRemovePopup: (event) ->

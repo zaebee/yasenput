@@ -2303,7 +2303,7 @@
 }
 .popupwin_trip .route-list .list,
 .popupwin_trip .trip-list .list {
-  max-height: 122px;
+  max-height: 1022px;
   overflow: hidden;
 }
 .popupwin_trip .bx-pager {
@@ -6607,3 +6607,4 @@ button[disabled].js-finish {
 .dashboard-settings input:focus {
     background:#fff;
 };
+
