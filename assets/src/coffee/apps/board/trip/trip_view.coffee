@@ -97,9 +97,40 @@
 
     initialize: ->
       console.log @model
+      @bxPagerInit = ->
+        @$('.bx-pager').each ->
+          $this = $(this)
+          $item = $this.find('.bx-pager__item:first-child')
+          itemLength = $item.outerWidth true
+          itemCount = $this.find('.bx-pager__item').length
+          $this.find('.bx-pager__scrollbox').width(itemLength * itemCount)
+          $(this).find('.bx-pager__viewport').scrollLeft(0)
 
     onShow: ->
-      sliderPlace = @$('.bxslider').bxSlider()
+      @bxPagerInit()
+      _.each @model.get('blocks'), (block) =>
+        if not block.imgs.length
+          return
+        @$('.bxslider-trip-' + block.position).bxSlider
+          pagerCustom: '#bx-pager-' + block.position
+          onSliderLoad: =>
+            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft(-100)
+
+          onSlideNext: ($slideElement, oldIndex, newIndex) =>
+            coordX = @$('#bx-pager-' + block.position + ' .bx-pager__scrollbox .active')
+              .position().left + @$('#bx-pager-' + block.position + ' .bx-pager__item')
+              .outerWidth(true)
+            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft coordX
+            if @$('#bx-pager-' + block.position + ' .bx-pager__item:first-child').index() is newIndex
+              @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft 0
+
+          onSlidePrev: ($slideElement, oldIndex, newIndex) =>
+            coordX = @$('#bx-pager-' + block.position + ' .bx-pager__scrollbox .active')
+              .position().left - @$('#bx-pager .bx-pager__item')
+              .outerWidth(true)
+            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft coordX
+            if @$('#bx-pager-' + block.position + ' .bx-pager__item:last-child').index() is newIndex
+              @$('#bx-pager' + block.position + ' .bx-pager__viewport').scrollLeft $('#bx-pager-' + block.position + ' .bx-pager__viewport').width()
 
     showPointPopup: (event) ->
       event.preventDefault()

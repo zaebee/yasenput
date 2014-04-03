@@ -1,52 +1,28 @@
 {{#each blocks}}
-<style type="text/css">
-  .bx-pager{
-    display: none !important;
-  }
-</style>
-<div class="trip-view" data-step="1">
+<div class="trip-view" data-step="{{position}}">
   <div class="slider">
-    <ul class="bxslider bxslider-trip-1">
-      {{#each imgs}}
-      <li class="item"><img src="{{thumbnail625x370}}" class="img" /></li>
-      {{/each}}
+    <ul class="bxslider bxslider-trip-{{position}}">
+      {{#if imgs}}
+        {{#imgs}}
+          <li class="item"><img src="{{thumbnail625x370}}" class="img" /></li>
+        {{/imgs}}
+      {{else}}
+      <li class="item empty"><img src="/static/images/place-unknown.png" class="img" /></li>
+      {{/if}}
     </ul>
-    <!--<div class="bx-pager" id="bx-pager-trip-1" style="display: none">
+    <div class="bx-pager" id="bx-pager-{{position}}">
       <div class="bx-pager__viewport">
         <div class="bx-pager__scrollbox">
-          <a data-slide-index="0" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-7.png" class="img"/>
-          </a>
-          <a data-slide-index="1" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-8.png" class="img"/>
-          </a>
-          <a data-slide-index="2" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-7.png" class="img"/>
-          </a>
-          <a data-slide-index="3" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-8.png" class="img"/>
-          </a>
-          <a data-slide-index="4" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-7.png" class="img"/>
-          </a>
-          <a data-slide-index="5" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-8.png" class="img"/>
-          </a>
-          <a data-slide-index="6" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-7.png" class="img"/>
-          </a>
-          <a data-slide-index="7" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-8.png" class="img"/>
-          </a>
-          <a data-slide-index="8" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-7.png" class="img"/>
-          </a>
-          <a data-slide-index="9" href="" class="bx-pager__item">
-            <img src="media/uploads/thumb-8.png" class="img"/>
-          </a>
+          {{#imgs}}
+          <a data-slide-index="{{@index}}" href="#" class="bx-pager__item">
+            <img src="{{thumbnail104x104}}" class="img"/>
+            </a>
+          {{/imgs}}
         </div>
       </div>
-    </div>-->
+    </div>
+    <a href="#" class="btn-photo-add js-popup-add-photos">Добавить</a>
+
   </div>
   <div class="description">
     <h3 class="description__title">{{name}}</h3>
