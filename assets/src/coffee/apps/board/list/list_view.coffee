@@ -47,18 +47,6 @@
       'click .btn_remove': 'showRemovePopup'
 
     ###
-    events:
-      'click .js-popupwin-place': 'showDetailPopup'
-      'click .js-popupwin-event': 'showDetailPopup'
-      'click .js-popupwin-route': 'showDetailPopup'
-
-      'click .sprite-like': 'like'
-      'click .sprite-place': 'mark'
-      'click .btn_edit': 'showEditPopup'
-      'click .btn_remove': 'showRemovePopup'
-    ###
-
-    ###
     modelEvents:
       'change:likes_count': 'render'
       'change:reviews': 'render'

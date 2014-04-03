@@ -7,6 +7,7 @@
 @Yapp.module 'BoardApp', (BoardApp, App, Backbone, Marionette, $, _) ->
 
   class BoardApp.Router extends Marionette.AppRouter
+
     appRoutes:
       '': 'index'
       'point/:id': 'point'
