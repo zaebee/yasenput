@@ -201,13 +201,14 @@
 
     saveInfo: (event) ->
       event.preventDefault()
+      r = /^\w+@\w+\.\w{2,4}$/i
       if @ui.fullname.val()
         fullname = @ui.fullname.val()
         @ui.fullname.parent().removeClass 'error'
       else
         @ui.fullname.parent().addClass 'error'
 
-      if @ui.email.val()
+      if @ui.email.val() and r.test(@ui.email.val())
         email = @ui.email.val()
         @ui.email.parent().removeClass 'error'
       else
