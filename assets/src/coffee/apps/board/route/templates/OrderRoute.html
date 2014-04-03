@@ -5,15 +5,27 @@
   <div class="form">
     <div class="field">
       <label>Ваши ФИО:</label>
-      <input name="fullname" type="text">
+      {{#if user.first_name}}
+      <input name="fullname" type="text" value="{{user.first_name}} {{user.last_name}}">
+      {{else}}
+      <input name="fullname" type="text" value="{{user.first_name}} {{user.last_name}}">
+      {{/if}}
     </div>
     <div class="field field_email">
       <label>E-mail:</label>
+      {{#if user.email}}
+      <input name="email" type="text" value="{{user.email}}">
+      {{else}}
       <input name="email" type="text">
+      {{/if}}
     </div>
     <div class="field field_phone">
       <label>Телефон:</label>
+      {{#if user.phone}}
+      <input name="phone" type="text" placeholder="* (***) ***-**-**" value="{{user.phone}}">
+      {{else}}
       <input name="phone" type="text" placeholder="* (***) ***-**-**">
+      {{/if}}
     </div>
     <div class="note">Все поля обязательны для заполнения</div>
   </div>
