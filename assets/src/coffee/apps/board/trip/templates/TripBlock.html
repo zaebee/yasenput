@@ -52,11 +52,12 @@
     <h3 class="description__title">{{name}}</h3>
     <p class="description__text">{{txt}}</p>
     <div class="description__places">
-      <!--<div class="title">Прикрепленные места и события</div>-->
-      <!--<ul class="list">
-        <li class="item"><a href="#?" class="link c-place">Архиерейское подворье</a></li>
-        <li class="item"><a href="#?" class="link c-event">Ферапонтов монастырь</a></li>
-      </ul>-->
+      <div class="title">Прикрепленные места <!--и события--></div>
+      <ul class="list">
+        {{#each points}}
+        <li class="item"><a href="/#point/{{id}}" class="link c-place">{{name}}е</a></li>
+        {{/each}}
+      </ul>
     </div>
     <!--<div class="description__address">Вологодская область, г. Кириллов, 161100</div>-->
   </div>

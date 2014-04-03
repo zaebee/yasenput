@@ -80,12 +80,19 @@
     className: 'popupwin__blocks'
     modelEvents:
       'change': 'render'
+    events:
+      'click .link.c-place': 'showPointPopup'
 
     initialize: ->
       console.log @model
 
     onShow: ->
       sliderPlace = @$('.bxslider').bxSlider()
+
+    showPointPopup: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).prop 'hash'
+      App.navigate url, trigger: true
 
   class Trip.Map extends App.Views.ItemView
     template: 'TripMap'

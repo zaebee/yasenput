@@ -4476,7 +4476,7 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 13px;
   color: #969696;
-  min-width:160px;
+  min-width:200px;
 }
 .place-info .user .img {
   display: block;
@@ -6608,3 +6608,6 @@ button[disabled].js-finish {
     background:#fff;
 };
 
+.user_in_popup{
+  width: 200px;
+}
