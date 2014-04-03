@@ -51,6 +51,7 @@
   <div class="description">
     <h3 class="description__title">{{name}}</h3>
     <p class="description__text">{{txt}}</p>
+    {{#if points}}
     <div class="description__places">
       <div class="title">Прикрепленные места <!--и события--></div>
       <ul class="list">
@@ -59,6 +60,7 @@
         {{/each}}
       </ul>
     </div>
+    {{/if}}
     <!--<div class="description__address">Вологодская область, г. Кириллов, 161100</div>-->
   </div>
   <!--<div class="map map_popupwin">
