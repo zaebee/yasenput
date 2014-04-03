@@ -75,6 +75,17 @@
     initialize: ->
       console.log @model
 
+    onShow: ->
+      @popupwin = @$el.closest '.popupwin'
+      @popupwin.scroll =>
+        if @$el.length
+          @$el.css
+            '-webkit-transform':  'translateY(' + @popupwin.scrollTop()+'px)'
+            'transform':  'translateY(' + @popupwin.scrollTop()+'px)'
+
+    onClose: ->
+      @popupwin.off 'scroll'
+
 
   class Trip.Blocks extends App.Views.ItemView
     template: 'TripBlock'
