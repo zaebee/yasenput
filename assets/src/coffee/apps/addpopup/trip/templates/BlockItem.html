@@ -1,0 +1,46 @@
+<div class="popupwin__container clearfix">
+  <div class="form">
+    
+    <div class="form__field form__field_title">
+      <span class="number">{{position}}</span>
+      <span class="span-title editable" data-text="Блок вашего путешествия:">{{#if name}}{{name}}{{else}}Блок вашего путешествия:{{/if}}</span>
+
+      <div class="form__field form__field_description hide">
+        <input type="text" placeholder="Введите заголовок" class="input-title" value="{{name}}">
+        <span class="star">*</span>
+      </div>
+    
+    </div>
+    
+    <div class="form__field photo-upload">
+      <form action="/file-upload" class="dropzone clearfix" id="trip-dropzone-1">
+        <div class="fallback">
+          <input name="file" type="file" multiple />
+        </div>
+      </form>
+    </div>
+    
+    <div class="form__field mb20">
+      <textarea id="tinyeditor-2" class="tinyeditor" placeholder="Добавьте описание путешествия и фотографий загруженных выше">{{txt}}</textarea>
+    </div>
+    
+    <div class="form__field form__field_add-stuff">
+      <a href="#" class="btn btn_color_blue js-add-place">Прикрепить места и события</a>
+      {{#if points}}
+      <div class="already-added-photos">
+        <ul class="list clearfix">
+          {{#each points}}
+          <li class="item item_place">
+            <a href="#" class="link" alt="{{name}}">
+              <img src="{{imgs.[0].thumbnail104x104}}" alt="{{name}}" class="img">
+              <span class="icon icon_delete sprite-delete-added-photo js-delete"></span>
+            </a>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+    </div>
+
+  </div>
+</div>

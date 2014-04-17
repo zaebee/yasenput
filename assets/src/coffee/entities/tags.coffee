@@ -23,4 +23,7 @@
   App.reqres.setHandler 'get:all:tags', (params = {level:0}) ->
     if params.level is false
       delete params.level
-    API.getTags(params)
+      return API.getTags(params)
+    else if params.level is 0
+      @rootTags = @rootTags or API.getTags(params)
+      return @rootTags

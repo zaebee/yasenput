@@ -2233,6 +2233,9 @@
 .popupwin_add-place-to-trip .modal-dialog {
     width:940px;
 }
+.popupwin_add-trip .modal-dialog {
+    width:900px;
+}
 .popupwin_add-trip .popupwin__content {
   width: 665px;
 }
@@ -2265,7 +2268,7 @@
 }
 .popupwin_add-trip .form__field_description input[type="text"] {
   padding-right: 20px;
-  width: 370px;
+  width: 380px;
 }
 .popupwin_add-trip .form__field_description .star {
   position: relative;
@@ -2411,7 +2414,7 @@ textarea {
 }
 .form textarea {
   padding: 10px;
-  background-color: transparent;
+  background-color: #fff;
 }
 .form__field {
   margin-bottom: 20px;
@@ -4719,10 +4722,20 @@ a {
   float: left;
   margin: 0 auto;
 }
+.trip-step__container .editable {
+  border: 1px dashed;
+  cursor: pointer;
+  display: block;
+  margin-left: 30px;
+  padding: 2px 0;
+}
 .trip-step__container .form__field_title {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 18px;
   color: #AAA;
+}
+.trip-step__container textarea {
+    height:80px;
 }
 .trip-step__container .number {
   display: inline-block;
@@ -4738,6 +4751,7 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 18px;
   color: #FFF;
+  float: left;
 }
 .trip-step__aside {
   position: relative;
@@ -4747,7 +4761,7 @@ a {
 }
 .trip-step__block_title input[type="text"] {
   border-color: #53B6D8;
-  background: transparent;
+  background: #fff;
 }
 .trip-add-place {
   position: relative;
@@ -4848,7 +4862,6 @@ a {
   background-position: -407px -174px;
   width: 10px;
   height: 10px;
-  display: none;
 }
 .trip-list_draggable .item:hover {
   background-color: #E5E5E5;
@@ -6643,5 +6656,9 @@ button[disabled].js-finish {
 };
 
 .user_in_popup{
-  width: 200px;
+    width: 200px;
+}
+
+#trip-grid-region {
+  
 }
