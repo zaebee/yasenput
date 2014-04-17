@@ -31,6 +31,8 @@
     addRoutePopup: Marionette.Region.Modal.extend(el: '.popupwin_add-route')
     addTripPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-trip')
 
+    addPlaceToTripPopup: Marionette.Region.Modal.extend(el: '.popupwin_add-place-to-trip')
+
 
   App.reqres.setHandler 'default:region', ->
     App.boardRegion

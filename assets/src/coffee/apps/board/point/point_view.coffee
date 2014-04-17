@@ -114,6 +114,7 @@
     events:
       'click .map__container': 'mapResize'
       'click .js-map-close': 'mapClose'
+      'click .js-map-open': 'mapOpen'
 
     onShow: ->
       if App.ymaps is undefined
@@ -132,25 +133,18 @@
         map.geoObjects.add placemark
         map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
 
-      @$el.resizable
-        minHeight: 80,
-        handles: "s"
-        resize: ( event, ui )  =>
-          $this = $(this)
-          if ui.size.height > 440
-            $this.addClass('open')
-          else
-            $this.removeClass('open')
-
     mapResize:(event) ->
       console.log event
       event.preventDefault()
-      @$('.ui-resizable').addClass 'open'
+      @$el.addClass 'open'
 
     mapClose: (event) ->
-      console.log event
       event.preventDefault()
-      @$('.ui-resizable').removeClass 'open'
+      @$el.removeClass 'open'
+
+    mapOpen: (event) ->
+      event.preventDefault()
+      @$el.addClass 'open'
 
 
   class Point.Comments extends App.Views.ItemView

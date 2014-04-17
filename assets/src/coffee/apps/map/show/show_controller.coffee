@@ -9,7 +9,8 @@
       @listenTo @layout, 'show', =>
         @mapView()
 
-      @show @layout
+      ## disable map on main page
+      #@show @layout
 
     getLayoutView: ->
       new Show.Layout

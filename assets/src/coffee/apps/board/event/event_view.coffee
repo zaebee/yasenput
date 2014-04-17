@@ -32,7 +32,6 @@
       'click .btn-like': 'eventLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
-      'click .ui-resizable-handle': 'mapResize'
       'click .js-map-close': 'mapClose'
 
     initialize: ->
@@ -122,7 +121,8 @@
     template: 'EventMap'
     className: 'map map_popupwin'
     events:
-      'click .map__container': 'mapResize'
+      'click .map__container': 'mapOpen'
+      'click .js-map-open': 'mapOpen'
       'click .js-map-close': 'mapClose'
 
     onShow: ->
@@ -144,25 +144,15 @@
           map.geoObjects.add placemark
           map.setCenter([point.latitude, point.longitude], 12)
 
-      @$el.resizable
-        minHeight: 80,
-        handles: "s"
-        resize: ( event, ui )  =>
-          $this = $(this)
-          if ui.size.height > 440
-            $this.addClass('open')
-          else
-            $this.removeClass('open')
-
-    mapResize:(event) ->
+    mapOpen:(event) ->
       console.log event
       event.preventDefault()
-      @$('.ui-resizable').addClass 'open'
+      @$el.addClass 'open'
 
     mapClose: (event) ->
       console.log event
       event.preventDefault()
-      @$('.ui-resizable').removeClass 'open'
+      @$el.removeClass 'open'
 
 
   class Event.Comments extends App.Views.ItemView

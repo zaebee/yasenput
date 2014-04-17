@@ -12,9 +12,12 @@
 
   API =
     getEntities: (params = {}) ->
-      @yapens = @yapens or new Entities.YapensCollection
-      @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
       @fetch.abort() if @fetch
+      if params.new
+        @yapens = new Entities.YapensCollection
+      else
+        @yapens = @yapens or new Entities.YapensCollection
+      @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
       @fetch = @yapens.fetch
         reset: true
         data: params
@@ -32,6 +35,6 @@
 
   App.reqres.setHandler 'get:all:yapens', (params = {}) ->
     API.getEntities params
-  
+
   App.reqres.setHandler 'search:all:yapens', (params = {}, callback) ->
     API.search params, callback

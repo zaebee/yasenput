@@ -205,9 +205,14 @@
     filterType: (event) ->
       event.preventDefault()
       $target = $(event.target)
+      @$('.filter-type__link').removeClass 'active'
       $target.toggleClass 'active'
+      name = $target.data('name')
+      @$('.filter-type .js-open').text name
+
       models = _.map @$('.filter-type__link.active'), (type) -> $(type).data('models')
       App.vent.trigger 'filter:all:yapens', models: models.join ','
+      @ui.filterTypeList.toggle()
 
     filterDropdown: (event) ->
       event.preventDefault()

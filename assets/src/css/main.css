@@ -2230,6 +2230,9 @@
 .popupwin_add-trip textarea:focus {
   border-color: #53b6d8;
 }
+.popupwin_add-place-to-trip .modal-dialog {
+    width:940px;
+}
 .popupwin_add-trip .popupwin__content {
   width: 665px;
 }
@@ -3690,6 +3693,7 @@ a {
 .filter-type .btn {
   padding: 13px 58px 14px 18px;
   font-size: 14px;
+  width:100px;
 }
 .filter-type .btn.open {
   background-color: #dbdddf;
@@ -4258,8 +4262,14 @@ a {
   position: fixed !important;
   top: 64px !important;
 }
+.map.open {
+    height: 450px;
+}
 .map.open .map-counter {
   display: none;
+}
+.map.open .map__open {
+    display:none;
 }
 .map.open .map__close {
   display: block;
@@ -4302,6 +4312,18 @@ a {
 }
 .map_route {
   height: 150px;
+}
+.map__open {
+    right: 41%;
+    background: #fff;
+    padding: 10px;
+    text-decoration: none;
+    position: absolute;
+    display: block;
+    top: 20px;
+    z-index: 5;
+    border-radius: 5px;
+    font-weight: 600;
 }
 .map__close {
   display: none;

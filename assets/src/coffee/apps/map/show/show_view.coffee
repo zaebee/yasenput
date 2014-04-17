@@ -31,29 +31,6 @@
 
       $list = $('.route-list')
 
-      $('.map').resizable
-        minHeight: 80,
-        handles: "s"
-        resize: ( event, ui )  =>
-          $this = $(this)
-          if ui.size.height > 440
-            $this.addClass('open')
-          else
-            $this.removeClass('open')
-
-          ###
-          myMap.container.fitToViewport();
-          myMap2.container.fitToViewport();
-          myMap3.container.fitToViewport();
-          myMap4.container.fitToViewport();
-          myMap5.container.fitToViewport();
-          myMap6.container.fitToViewport();
-          myMap7.container.fitToViewport();
-          myMap8.container.fitToViewport();
-          myMap9.container.fitToViewport();
-          myMap10.container.fitToViewport();
-          ###
-
       App.popupwinInit = (object) ->
 
         #var z = 1000 + 100*($('.popupwin.active').length);
