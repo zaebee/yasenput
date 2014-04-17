@@ -1,3 +1,4 @@
+<a href="#" class="btn-delete js-delete-from-trip"></a>
 <div class="box__title box__title_type_event">
   Событие {{#if dt_start}}{{dateFormat dt_start format="D.MM"}}&ndash;{{/if}}{{#if dt_end}}{{dateFormat dt_end format="D.MM"}}{{/if}}
 </div>
@@ -7,6 +8,11 @@
       <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" height="{{imgs.[0].thumbnail207_height}}" class="img">
     {{else}}
       <img src="/static/images/place-unknown.png" height="174" alt="{{name}}" class="img">
+    {{/if}}
+    {{#if addtotrip}}
+    <div class="btns">
+      <a href="#" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в маршрут</a>
+    </div>
     {{/if}}
     {{#if editable}}
     <div class="btns">

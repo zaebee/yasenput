@@ -18,16 +18,25 @@
     onClose: ->
       @stopListening()
 
-    showContent: ->
-      App.execute 'when:fetched', [@collection, @tags], =>
-        @contentView = new PlaceToTrip.Content
-          tags: @tags
-          model: @model
-          collection: @collection
-        @show @contentView,
-          region: @layout.contentRegion
+    showGrid: (view) ->
+      @gridView = new PlaceToTrip.Grid
+        collection: @collection
+      @show @gridView,
+        region: view.gridRegion
+        loading: true
 
     showAside: ->
       @asideView = new PlaceToTrip.Aside model: @model
       @show @asideView,
         region: @layout.asideRegion
+
+    showContent: ->
+      App.execute 'when:fetched', @tags, =>
+        @contentView = new PlaceToTrip.Content
+          tags: @tags
+          model: @model
+
+        @listenTo @contentView, 'show', =>
+          @showGrid @contentView
+        @show @contentView,
+          region: @layout.contentRegion

@@ -1,3 +1,4 @@
+<a href="#" class="btn-delete js-delete-from-trip"></a>
 <div class="box__title box__title_type_place">Место</div>
 <div class="box__img">
   <a href="#point/{{id}}" class="js-popupwin-place">
@@ -5,6 +6,11 @@
       <img src="{{imgs.[0].thumbnail207}}" height="{{imgs.[0].thumbnail207_height}}" alt="{{name}}" class="img">
     {{else}}
       <img src="/static/images/place-unknown.png" height="174" alt="{{name}}" class="img">
+    {{/if}}
+    {{#if addtotrip}}
+    <div class="btns">
+      <a href="#" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в маршрут</a>
+    </div>
     {{/if}}
     {{#if editable}}
     <div class="btns">

@@ -23,8 +23,12 @@
       console.log "initializing Entities.Model"
       if App.ymaps is undefined
         return
+      if @get('latitude') and @get('longitude')
+        coords = [@get('latitude'), @get('longitude')]
+      else
+        coords = null
       App.ymaps.ready =>
-        @placemark = new App.ymaps.Placemark null,{
+        @placemark = new App.ymaps.Placemark coords,{
           id: "map-point#{@id}"
         }, {
           iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
@@ -56,7 +60,7 @@
       else
         App.ymaps.ready =>
           @placemark = new App.ymaps.Placemark coords,{
-            id: 'map-point'
+            id: "map-point#{@id}"
           }, {
             iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
             iconImageHref: '/static/images/sprite-baloon.png',

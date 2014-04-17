@@ -11,6 +11,8 @@
       'add/point': 'point'
       'add/event': 'event'
       'add/route': 'route'
+      'add/trip': 'trip'
+      'add/placetotrip': 'placetotrip'
 
   API =
     point: ->
@@ -19,9 +21,12 @@
       new AddPopupApp.Event.Controller
     route: ->
       new AddPopupApp.Route.Controller
+    trip: ->
+      new AddPopupApp.Trip.Controller
+    placetotrip: ->
+      new AddPopupApp.PlaceToTrip.Controller
 
   App.vent.on 'show:edit:popup', (model) ->
-    console.log model
     App.addPopupRegion.close()
     if model instanceof App.Entities.Point
       new AddPopupApp.Point.Controller model: model
@@ -29,6 +34,8 @@
       new AddPopupApp.Event.Controller model: model
     if model instanceof App.Entities.Route
       new AddPopupApp.Route.Controller model: model
+    if model instanceof App.Entities.Trip
+      new AddPopupApp.Trip.Controller model: model
 
   App.vent.on 'show:add:place:popup', ->
     App.addPopupRegion.close()
@@ -41,6 +48,14 @@
   App.vent.on 'show:add:route:popup', ->
     App.addPopupRegion.close()
     API.route()
+
+  App.vent.on 'show:add:trip:popup', ->
+    App.addPopupRegion.close()
+    API.trip()
+
+  App.vent.on 'show:add:placetotrip:popup', ->
+    App.addPopupRegion.close()
+    API.placetotrip()
 
   App.addInitializer ->
     new AddPopupApp.Router
