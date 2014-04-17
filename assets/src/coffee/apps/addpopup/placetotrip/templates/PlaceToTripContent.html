@@ -1,0 +1,87 @@
+<div class="popupwin__title clearfix">
+  <div class="steps">
+    <div class="steps__title">
+      <span class="title-place">Добавьте места и события в свое путешествие</span>
+    </div>
+  </div>
+</div>
+<div class="route-search">
+  <select data-placeholder="Поиск по местам и событиям">
+    <option></option>
+    <option value="1" data-type="g" data-city="г. Вологда">Вологодские узоры</option>
+    <option value="2" data-type="y" data-city="г. Вологда">Вологодские мероприятия</option>
+    <option value="3" data-type="b" data-city="г. Вологда">Вологодские кафе</option>
+    <option value="4" data-type="br" data-city="г. Вологда">Вологодские места отдыха</option>
+    <option value="5" data-type="g" data-city="г. Вологда">Вологодские дороги</option>
+  </select>
+</div>
+<div class="route-categories">
+  <ul class="categories">
+    {{#each tags}}
+      <li class="categories__item">
+        <a href="#" class="categories__link sprite-filter-photo {{style}}" data-id="{{id}}" data-toggle="tooltip" data-placement="bottom" title="{{name}}"></a>
+      </li>
+    {{/each}}
+    <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
+  </ul>
+</div>
+<div class="map map_popupwin map_route">
+  <div class="map__container" id="map8"></div>
+  <a href="#?" class="btn-open js-map-open"></a>
+</div>
+<div class="route-grid" id="trip-grid">
+
+  {{#each events}}
+  <div class="box" data-type="event" data-id="2" data-pic-small="media/uploads/route-2.png">
+    <a href="#?" class="btn-delete js-delete-from-trip"></a>
+    <div class="box__title box__title_type_event">Событие 14.09-20.10</div>
+    <div class="box__img">
+      <a href="#?">
+        <img src="media/uploads/box-4.png" alt="church" class="img">
+        <div class="btns">
+          <a href="#?" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в маршрут</a>
+        </div>
+      </a>
+    </div>
+    <div class="box__description">
+      <a href="#?">
+        <div class="name">Российский дельфинарий Впервые в Вологде</div>
+        <span class="info info_like">12</span>
+        <span class="info info_comment">11</span>
+      </a>
+    </div>
+    <div class="box__person">
+      <a href="#?">
+        <img src="media/uploads/user-2.png" alt="user" class="img">
+        <div class="text">
+          Опубликовал<br>
+          <span class="name">Виталий Рибаков</span>
+        </div>
+      </a>
+    </div>
+  </div><!-- class="box" -->
+  {{/each}}
+
+  {{#each collection}}
+  <div class="box" data-type="{{type_of_item}}" data-id="{{id}}" data-pic-small="{{imgs.[0].thumbnail104x104}}">
+    <a href="#?" class="btn-delete js-delete-from-trip"></a>
+    <div class="box__title box__title_type_place">Место</div>
+    <div class="box__img">
+      <a href="#?">
+        <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" height="{{imgs.[0].thumbnail207_height}}" class="img">
+        <div class="btns">
+          <a href="#?" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в маршрут</a>
+        </div>
+      </a>
+    </div>
+    <div class="box__description">
+      <a href="#?">
+        <div class="name">{{name}}</div>
+        <span class="info info_like">{{likes_count}}</span>
+        <span class="info info_comment">{{reviewusersplus}}</span>
+      </a>
+    </div>
+  </div><!-- class="box" -->
+  {{/each}}
+
+</div><!-- class="content" -->
