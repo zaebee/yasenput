@@ -27,15 +27,7 @@
         coords = [@get('latitude'), @get('longitude')]
       else
         coords = null
-      App.ymaps.ready =>
-        @placemark = new App.ymaps.Placemark coords,{
-          id: "map-point#{@id}"
-        }, {
-          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-          iconImageHref: '/static/images/sprite-baloon.png',
-          iconImageSize: [32, 36]
-        }
-
+      @setCoordinates coords
 
     ###*
     # Set unigue attribute for model
@@ -54,15 +46,27 @@
       response
 
     setCoordinates: (coords) ->
-      coords = coords.map String
+      if coords isnt null
+        coords = coords.map String
+      imgs = @get 'imgs'
+      if imgs and imgs.length
+        img = imgs[0].thumbnail104x104
+      else
+        img = '/static/images/place-unknown.png'
       if @placemark
         @placemark.geometry.setCoordinates coords
       else
         App.ymaps.ready =>
           @placemark = new App.ymaps.Placemark coords,{
             id: "map-point#{@id}"
+            name: @get 'name'
+            address: @get 'address'
+            img: img
           }, {
-            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: '/static/images/sprite-baloon.png',
+            iconImageClipRect: [[80,0], [112, 36]] ## TODO fix hardcoded tag icons
+            iconImageHref: '/static/images/sprite-baloon.png'
             iconImageSize: [32, 36]
+            balloonContentLayout: 'point#BCLayout'
+            balloonCloseButton: false
+            #hideIconOnBalloonOpen: false
           }

@@ -4963,15 +4963,17 @@ a {
 /*$baloon*/
 .baloon {
   display: none;
-  position: absolute;
+  /*position: absolute;*/
   z-index: 50;
   top: 100px;
   left: 50%;
-  border-radius: 3px;
   width: 270px;
   overflow: hidden;
+  /*
+  border-radius: 3px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  */
   background-color: #FFF;
 }
 .baloon__head {
@@ -4995,11 +4997,12 @@ a {
 }
 .baloon__head .title.title_tag {
   color: #967ADC;
+  background: none;
 }
 .baloon__head .title.title_tag .icon {
   background: url(../images/sprite-filter2.png) no-repeat;
   display: inline-block;
-  background-position: -82px -2px;
+  background-position: -2px -96px;
   width: 30px;
   height: 30px;
 }
@@ -5129,6 +5132,7 @@ a {
   float: left;
   margin-right: 5px;
   border-radius: 3px;
+  width: 55px;
 }
 .baloon__body .type {
   position: absolute;
@@ -6660,5 +6664,6 @@ button[disabled].js-finish {
 }
 
 #trip-grid-region {
-  
+    background: url(../images/loader.gif) no-repeat center bottom;
+    min-height: 220px;
 }

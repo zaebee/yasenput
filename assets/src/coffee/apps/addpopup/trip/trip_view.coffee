@@ -38,13 +38,14 @@
       'click .js-add-place': 'addPlace'
       'click .form__field_title': 'editableBlockTitle'
       'blur .input-title': 'saveBlockTitle'
+      'blur .tinyeditor': 'saveBlockTxt'
 
     changePosition: ->
       @$('.number').text @model.get 'position'
 
     addPlace: (event) ->
       event.preventDefault()
-      App.vent.trigger 'show:add:placetotrip:popup'
+      App.vent.trigger 'show:add:placetotrip:popup', @model
 
     editableBlockTitle: (event) ->
       event.preventDefault()
@@ -63,6 +64,11 @@
       @$('.form__field_description').addClass 'hide'
       @model.set name: name
       @model.collection.trigger 'block:change'
+
+    saveBlockTxt: (event) ->
+      event.preventDefault()
+      txt = @$('.tinyeditor').val()
+      @model.set txt: txt
 
 
   class Trip.Blocks extends App.Views.CollectionView

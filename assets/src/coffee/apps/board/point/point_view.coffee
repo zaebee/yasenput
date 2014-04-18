@@ -116,22 +116,28 @@
       'click .js-map-close': 'mapClose'
       'click .js-map-open': 'mapOpen'
 
+    modelEvents: ->
+      'change:latitude': 'setPlacemark'
+
     onShow: ->
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        map = new App.ymaps.Map 'map-point',
+        @geoMap = new App.ymaps.Map 'map-point',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
           zoom: 12
         , autoFitToViewport: 'always'
+        @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+        @geoMap.setCenter [@model.get('latitude'), @model.get('longitude')], 12
+        @geoMap.geoObjects.add @model.placemark
 
-        placemark = new App.ymaps.Placemark [@model.get('latitude'), @model.get('longitude')],{}, {
-          iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-          iconImageHref: '/static/images/sprite-baloon.png',
-          iconImageSize: [32, 36]
-        }
-        map.geoObjects.add placemark
-        map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+    setPlacemark: ->
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+        @geoMap.setCenter [@model.get('latitude'), @model.get('longitude')], 12
+        @geoMap.geoObjects.add @model.placemark
 
     mapResize:(event) ->
       console.log event

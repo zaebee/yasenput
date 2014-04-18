@@ -23,8 +23,8 @@
       new AddPopupApp.Route.Controller
     trip: ->
       new AddPopupApp.Trip.Controller
-    placetotrip: ->
-      new AddPopupApp.PlaceToTrip.Controller
+    placetotrip: (model) ->
+      new AddPopupApp.PlaceToTrip.Controller model: model
 
   App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()
@@ -53,9 +53,9 @@
     App.addPopupRegion.close()
     API.trip()
 
-  App.vent.on 'show:add:placetotrip:popup', ->
+  App.vent.on 'show:add:placetotrip:popup', (model) ->
     App.addPopupRegion.close()
-    API.placetotrip()
+    API.placetotrip model
 
   App.addInitializer ->
     new AddPopupApp.Router
