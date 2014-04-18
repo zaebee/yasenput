@@ -14,10 +14,16 @@
     className: 'trip-step__aside'
 
     initialize: ->
+      @user = App.request 'get:my:profile'
+      @collection = @options.collection
       @listenTo @collection, 'block:change', @render
+
+    templateHelpers: ->
+      items: @collection.toJSON()
 
     events:
       'click .js-delete': 'deleteBlock'
+      'click .js-finish-preview': 'tripPreview'
 
     collectionEvents: ->
       'add': 'setBlockPosition render'
@@ -28,6 +34,12 @@
       position = $(event.currentTarget).data 'position'
       block = @collection.findWhere position: position
       @collection.remove block
+
+    tripPreview: (event) ->
+      event.preventDefault()
+      @model.set author: @user.toJSON()
+      @model.set blocks: @collection.toJSON()
+      App.vent.trigger 'show:detail:popup', @model
 
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
@@ -56,7 +68,10 @@
       blocksRegion: '#trip-blocks-region'
 
     events:
-      'click .js-map-open': 'mapOpen'
+      'blur .form__field_name input': 'setTripName'
+
+    setTripName: (event) ->
+      @model.set name: $('.form__field_name input').val()
 
     onShow: ->
       return
@@ -79,6 +94,10 @@
   class Trip.BlockItem extends App.Views.Layout
     className: 'trip-step__block popupwin__content mb10 clearfix'
     template: 'BlockItem'
+    initialize: ->
+      @addRegions
+        blockPointsRegion: "#blockitem-points-region-#{@model.cid}"
+        blockImgsRegion: "#blockitem-imgs-region-#{@model.cid}"
 
     modelEvents:
       'change:position': 'changePosition'
@@ -95,9 +114,6 @@
     onShow: ->
       pointsView = new Trip.Points model: @model
       imgsView = new Trip.Imgs model: @model
-      @addRegions
-        blockPointsRegion: "#blockitem-points-region-#{@model.cid}"
-        blockImgsRegion: "#blockitem-imgs-region-#{@model.cid}"
       @blockPointsRegion.show pointsView
       @blockImgsRegion.show imgsView
 
@@ -145,12 +161,6 @@
         position = @collection.indexOf(item) + 1
         item.set position: position, silence: true
 
-    onCollectionRendered: ->
-      console.log 'blocks rendered.'
-
-    onShow: ->
-      console.log 'collection onShow', @collection
-
     onClose: ->
       @remove()
       @stopListening()
@@ -181,12 +191,18 @@
       cid: @model.cid
 
     onShow: ->
+      mockFile = name: "Image", size: 12345
+      imgs = @model.get 'imgs'
       id = @model.get 'id'
       if id
         url = "/photos/block/#{id}/add"
       else
         url = "/photos/add"
-      @$('.dropzone').dropzone
+      @$("#trip-dropzone-#{@model.cid}").dropzone
+        init: ->
+          _.each imgs, (img) =>
+            @emit "addedfile", mockFile
+            @emit "thumbnail", mockFile, img.thumbnail104x104
         dictDefaultMessage: 'Перетащите сюда фотографии'
         addRemoveLinks: true
         paramName:'img'
@@ -198,4 +214,4 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
-          @model.trigger 'change:imgs'
+          #@model.trigger 'change:imgs'

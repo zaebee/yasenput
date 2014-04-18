@@ -4,8 +4,9 @@
 
     initialize: ->
       console.log 'initialize AddPopupApp.Trip.Controller'
-      @blocks = App.request 'get:empty:blocks'
       @model = @options.model or new App.Entities.Trip
+      blocks = @model.get 'blocks'
+      @blocks = App.request 'get:blocks', blocks
       @layout = new Trip.Layout model: @model
 
       @listenTo @layout, 'show', =>
@@ -19,7 +20,7 @@
 
     showAside: ->
       @asideView = new Trip.Aside
-        #model: @model
+        model: @model
         collection: @blocks
       @show @asideView,
         region: @layout.asideRegion

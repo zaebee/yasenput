@@ -4,7 +4,10 @@
 
     initialize: ->
       console.log 'initialize BoardApp.Trip.Controller'
-      @model = App.request 'get:detail:trip', @options.model
+      if @options.model.id
+        @model = App.request 'get:detail:trip', @options.model
+      else
+        @model = @options.model
 
       @layout = new Trip.Layout model: @model
       @listenTo @layout, 'show', =>
