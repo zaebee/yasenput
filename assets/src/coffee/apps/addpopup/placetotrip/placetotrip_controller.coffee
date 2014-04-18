@@ -5,13 +5,15 @@
     initialize: ->
       console.log 'initialize AddPopupApp.PlaceToTrip.Controller'
       @tags = App.request 'get:all:tags'
-      @collection = App.request 'get:all:yapens', new: true, models:'points,events'
       @model = @options.model or new App.Entities.Trip
+      @collection = App.request 'get:all:yapens', new: true, models:'points,events'
+      ## store places and events adding to trip
+      @tripyapens = new App.Entities.YapensCollection
       @layout = new PlaceToTrip.Layout model: @model
 
       @listenTo @layout, 'show', =>
-        @showAside()
         @showContent()
+        @showAside()
 
       App.addPlaceToTripPopup.show @layout, loading: true
             
@@ -21,12 +23,16 @@
     showGrid: (view) ->
       @gridView = new PlaceToTrip.Grid
         collection: @collection
+        tripyapens: @tripyapens
       @show @gridView,
         region: view.gridRegion
         loading: true
 
     showAside: ->
-      @asideView = new PlaceToTrip.Aside model: @model
+      @asideView = new PlaceToTrip.Aside
+        model: @model
+        collection: @collection
+        tripyapens: @tripyapens
       @show @asideView,
         region: @layout.asideRegion
 
@@ -35,6 +41,8 @@
         @contentView = new PlaceToTrip.Content
           tags: @tags
           model: @model
+          collection: @collection
+          tripyapens: @tripyapens
 
         @listenTo @contentView, 'show', =>
           @showGrid @contentView

@@ -21,7 +21,7 @@
     </div>
     
     <div class="form__field mb20">
-      <textarea id="tinyeditor-2" class="tinyeditor" placeholder="Добавьте описание путешествия и фотографий загруженных выше">{{txt}}</textarea>
+      <textarea id="tinyeditor-{{position}}" class="tinyeditor" placeholder="Добавьте описание путешествия и фотографий загруженных выше">{{txt}}</textarea>
     </div>
     
     <div class="form__field form__field_add-stuff">
@@ -31,8 +31,8 @@
         <ul class="list clearfix">
           {{#each points}}
           <li class="item item_place">
-            <a href="#" class="link" alt="{{name}}">
-              <img src="{{imgs.[0].thumbnail104x104}}" alt="{{name}}" class="img">
+            <a href="/#{{type_of_item}}/{{id}}" class="link" title="{{name}}">
+              <img src="{{#if imgs}}{{imgs.[0].thumbnail104x104}}{{else}}/static/images/place-unknown.png{{/if}}" alt="{{name}}" class="img">
               <span class="icon icon_delete sprite-delete-added-photo js-delete"></span>
             </a>
           </li>

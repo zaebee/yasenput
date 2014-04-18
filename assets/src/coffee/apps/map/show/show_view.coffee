@@ -4,13 +4,42 @@
   class Show.Layout extends App.Views.Layout
     template: 'MapView'
     className: 'map map_main'
-    regions:
-      tagsRegion: '#m-ico-group'
-    events:
-      'click .a-toggle': 'toggleMap'
-    toggleMap: (e) ->
-      e.preventDefault()
-      App.execute 'toggle:map'
+
+    initialize: ->
+      console.log 'initialize MapApp.Show.Layout'
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        PointBalloonContentLayoutClass = App.ymaps.templateLayoutFactory.createClass(
+          "
+          <div class='baloon'>
+            <div class='baloon__head'>
+              <a href='#' class='title title_tag'>
+              <i class='icon'></i>
+                $[properties.name|не указано]
+              </a>
+              <a href='#' class='close'></a>
+            </div>
+            <div class='baloon__body'>
+              <div class='text'>
+                <img src='$[properties.img|#]' alt='' class='img'>
+                $[properties.address|не указано]
+              </div>
+            </div>
+          </div>
+          ",
+          build: ->
+            @constructor.superclass.build.call @
+            $('.baloon .close').on 'click', layout: @, @closeBaloon
+          clear: ->
+            $('.baloon .close').off 'click', layout: @, @closeBaloon
+            @constructor.superclass.clear.call @
+          closeBaloon: (event) ->
+            event.preventDefault()
+            data = event.data.layout.getData()
+            data.geoObject.balloon.close()
+        )
+        App.ymaps.layout.storage.add 'point#BCLayout', PointBalloonContentLayoutClass
 
 
   class Show.Map extends App.Views.ItemView
@@ -93,7 +122,6 @@
           App.mmap.geoObjects.remove App.t_route #то удаляем его
         if route_p.length > 1
           App.draw_route route_p # рисуем маршрут на карте
-
 
 
       App.dragAndDropSetup = (container) ->

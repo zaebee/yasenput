@@ -1,17 +1,28 @@
+{{#if points}}
 <div class="route-list route-list_deleteable route-list_draggable mb20">
   <div class="title">Добавленные места и события</div>
   <ul class="list">
-    <li class="item hide">
+    {{#each points}}
+    <li data-id="{{id}}" data-type="{{type_of_item}}" class="item">
       <span class="drag"></span>
-      <span class="number">0</span>
-      <img src="" alt="" class="img">
+      <span class="number">{{#plus @index 1}}{{/plus}}</span>
+      <img src="{{#if imgs}}{{imgs.[0].thumbnail104x104}}{{else}}/static/images/place-unknown.png{{/if}}" alt="{{name}}" class="img">
       <div class="text">
-        <span class="text__place"></span>
-        <span class="text__type"></span>
+        <span class="text__place">{{name}}</span>
+        {{#ifEquals type_of_item 'point'}}
+        <span class="text__type c-place">место</span>
+        {{/ifEquals}}
+        {{#ifEquals type_of_item 'event'}}
+        <span class="text__type c-place">
+          событие {{#if dt_start}}{{dateFormat dt_start format="D.MM"}}&mdash;{{/if}}{{#if dt_end}}{{dateFormat dt_end format="D.MM"}}{{/if}}
+        </span>
+        {{/ifEquals}}
       </div>
     </li>
+    {{/each}}
   </ul>
 </div><!-- class="route-list" -->
 <div class="trip-ctrls">
   <a href="#?" class="btn btn_color_blue btn_finish js-finish-adding">Готово</a>
 </div>
+{{/if}}
