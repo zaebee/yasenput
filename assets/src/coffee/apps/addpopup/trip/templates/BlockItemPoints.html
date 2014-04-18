@@ -1,0 +1,14 @@
+{{#if points}}
+<div class="already-added-photos">
+  <ul class="list clearfix">
+    {{#each points}}
+    <li class="item item_place">
+      <a href="/#{{type_of_item}}/{{id}}" class="link" title="{{name}}">
+        <img src="{{#if imgs}}{{imgs.[0].thumbnail104x104}}{{else}}/static/images/place-unknown.png{{/if}}" alt="{{name}}" class="img">
+        <span class="icon icon_delete sprite-delete-added-photo js-delete"></span>
+      </a>
+    </li>
+    {{/each}}
+  </ul>
+</div>
+{{/if}}
