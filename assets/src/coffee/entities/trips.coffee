@@ -10,6 +10,7 @@
 
   class Entities.TripBlock extends Entities.Model
     defaults:
+      imgs: []
       events: []
       points: []
       position: 1

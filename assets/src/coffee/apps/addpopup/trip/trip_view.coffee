@@ -7,6 +7,45 @@
     regions:
       asideRegion: '#trip-aside-region'
       contentRegion: '#trip-content-region'
+
+
+  class Trip.Aside extends App.Views.ItemView
+    template: 'AddTripAside'
+    className: 'trip-step__aside'
+
+    initialize: ->
+      @listenTo @collection, 'block:change', @render
+
+    events:
+      'click .js-delete': 'deleteBlock'
+
+    collectionEvents: ->
+      'add': 'setBlockPosition render'
+      'remove': 'setBlockPosition render'
+
+    deleteBlock: (event) ->
+      event.preventDefault()
+      position = $(event.currentTarget).data 'position'
+      block = @collection.findWhere position: position
+      @collection.remove block
+
+    setBlockPosition: (model, collection, options) ->
+      @collection.each (item) =>
+        position = @collection.indexOf(item) + 1
+        item.set position: position, silence: true
+
+    onShow: ->
+      @popupwin = @$el.closest '.popupwin'
+      @popupwin.scroll =>
+        if @$el.length
+          @$el.css
+            '-webkit-transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
+            'transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
+
+    onClose: ->
+      @popupwin.off 'scroll'
+      @remove()
+      @stopListening()
     
 
   class Trip.Content extends App.Views.Layout
@@ -26,12 +65,22 @@
       @stopListening()
 
 
-  class Trip.BlockItem extends App.Views.ItemView
+  class Trip.Action extends App.Views.ItemView
+    template: 'AddTripAction'
+    className: 'popupwin__content popupwin__content_actions clearfix'
+    events:
+      'click .js-add-block': 'addBlock'
+    addBlock: (event) ->
+      event.preventDefault()
+      block = new App.Entities.TripBlock
+      @options.collection.add block
+
+
+  class Trip.BlockItem extends App.Views.Layout
     className: 'trip-step__block popupwin__content mb10 clearfix'
     template: 'BlockItem'
 
     modelEvents:
-      'change:points': 'render'
       'change:position': 'changePosition'
 
     events:
@@ -39,6 +88,18 @@
       'click .form__field_title': 'editableBlockTitle'
       'blur .input-title': 'saveBlockTitle'
       'blur .tinyeditor': 'saveBlockTxt'
+
+    templateHelpers: ->
+      cid: @model.cid
+
+    onShow: ->
+      pointsView = new Trip.Points model: @model
+      imgsView = new Trip.Imgs model: @model
+      @addRegions
+        blockPointsRegion: "#blockitem-points-region-#{@model.cid}"
+        blockImgsRegion: "#blockitem-imgs-region-#{@model.cid}"
+      @blockPointsRegion.show pointsView
+      @blockImgsRegion.show imgsView
 
     changePosition: ->
       @$('.number').text @model.get 'position'
@@ -84,9 +145,6 @@
         position = @collection.indexOf(item) + 1
         item.set position: position, silence: true
 
-    onAfterItemAdded: (itemView, data) ->
-      console.log 'block added', itemView
-
     onCollectionRendered: ->
       console.log 'blocks rendered.'
 
@@ -98,54 +156,46 @@
       @stopListening()
 
 
-  class Trip.Aside extends App.Views.ItemView
-    template: 'AddTripAside'
-    className: 'trip-step__aside'
-
-    initialize: ->
-      @listenTo @collection, 'block:change', @render
+  class Trip.Points extends App.Views.ItemView
+    template: 'BlockItemPoints'
+    modelEvents: ->
+      'change:points': 'render'
 
     events:
-      'click .js-delete': 'deleteBlock'
+      'click .link': 'showPopup'
+      'click .js-delete': 'deletePoint'
 
-    collectionEvents: ->
-      'add': 'setBlockPosition render'
-      'remove': 'setBlockPosition render'
-
-    deleteBlock: (event) ->
+    showPopup: (event) ->
       event.preventDefault()
-      position = $(event.currentTarget).data 'position'
-      block = @collection.findWhere position: position
-      @collection.remove block
+      console.log event
 
-    setBlockPosition: (model, collection, options) ->
-      @collection.each (item) =>
-        position = @collection.indexOf(item) + 1
-        item.set position: position, silence: true
+    deletePoint: (event) ->
+      event.preventDefault()
+      console.log event
+
+
+  class Trip.Imgs extends App.Views.ItemView
+    template: 'BlockItemImgs'
+
+    templateHelpers: ->
+      cid: @model.cid
 
     onShow: ->
-      @popupwin = @$el.closest '.popupwin'
-      @popupwin.scroll =>
-        if @$el.length
-          @$el.css
-            '-webkit-transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
-            'transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
-
-    onClose: ->
-      @popupwin.off 'scroll'
-      @remove()
-      @stopListening()
-
-
-  class Trip.Action extends App.Views.ItemView
-    template: 'AddTripAction'
-    className: 'popupwin__content popupwin__content_actions clearfix'
-
-    events:
-      'click .js-add-block': 'addBlock'
-
-    addBlock: (event) ->
-      event.preventDefault()
-      block = new App.Entities.TripBlock
-      @options.collection.add block
-
+      id = @model.get 'id'
+      if id
+        url = "/photos/block/#{id}/add"
+      else
+        url = "/photos/add"
+      @$('.dropzone').dropzone
+        dictDefaultMessage: 'Перетащите сюда фотографии'
+        addRemoveLinks: true
+        paramName:'img'
+        url: url
+        headers:
+          'X-CSRFToken': $.cookie('csrftoken')
+        success: (file, data) =>
+          img = data[0]
+          imgs = @model.get 'imgs'
+          imgs.push img
+          @model.set 'imgs', imgs
+          @model.trigger 'change:imgs'
