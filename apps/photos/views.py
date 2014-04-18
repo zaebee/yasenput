@@ -48,12 +48,12 @@ class PhotosBaseView(View):
             user = MainModels.User.objects.get(username = request.user)
             photo_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM photos_photos_likeusers WHERE photos_photos_likeusers.photos_id = photos_photos.id and photos_photos_likeusers.user_id = '+str(user.id)
         else:
-            photo_isliked = "select 0" 
+            photo_isliked = "select 0"
         args = {"select": {'isliked': photo_isliked,
                  'likes_count': 'SELECT count(*) FROM photos_photos_likeusers WHERE photos_photos_likeusers.photos_id = photos_photos.id',
                }}
         return args
-    
+
 
 class PhotosList(MultipleObjectMixin, PhotosBaseView):
     http_method_names = ('post',)
@@ -102,7 +102,7 @@ class PhotosAdd(PhotosBaseView):
                 object.imgs.add(photo)
             json = YpSerialiser()
             return HttpResponse(json.serialize([photo], excludes=("img"),
-                                               extras=('thumbnail104x104', 'img_url', 'thumbnail560', 'thumbnail207', 'thumbnail207_height'),
+                                               extras=('thumbnail104x104', 'img_url', 'thumbnail560', 'thumbnail207', 'thumbnail625x370', 'thumbnail207_height'),
                                                relations={
                                                    'author': {
                                                        'fields': ('first_name', 'last_name', 'avatar')
@@ -122,7 +122,7 @@ class PhotosDetail(PhotosBaseView):
             if photo.count() > 0:
                 return self.photoList(photo)
         return HttpResponse(simplejson.dumps({'id': 0, 'status': 1, 'txt': "Некорректно задан id"}), mimetype="application/json")
-    
+
 
 class PhotosDel(PhotosBaseView):
     http_method_names = ('post',)

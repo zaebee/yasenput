@@ -36,10 +36,10 @@
     </ul>
   </div>--><!-- class="route-list" -->
   <!--<div class="map-aside" id="map11"></div>-->
-{{#ifCond price '!=' 0}}
+{{#if price}}
 <div class="route-aside-commercial popupwin__content trip_aside" {{#ifCond price '!=' 0}}style="display:block;"{{/ifCond}}>
   <div class="price">{{price}} <span class="sprite-ruble-green-big"></span></div>
   <div class="text"> Цена экскурсии вместе с <a href="#?">{{author.first_name}}</a></div>
   <a href="#?" class="btn btn_color_blue js-popup-order-route">ЗАКАЗАТЬ</a>
 </div>
-{{/ifCond}}
+{{/if}}

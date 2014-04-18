@@ -9,7 +9,7 @@
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
   class Entities.TripBlock extends Entities.Model
-    defaults:
+    defaults: ->
       imgs: []
       events: []
       points: []
@@ -21,15 +21,22 @@
     model: Entities.TripBlock
 
   class Entities.Trip extends Entities.Model
+    defaults: ->
+      blocks: []
     urlRoot: ->
       App.API_BASE_URL + "/api/v1/trips/"
 
   API =
-    getBlocks: (params = {}) ->
-      block = new Entities.TripBlock
-      blocks = new Entities.TripBlocks [block]
+    getBlocks: (blocks) ->
+      if blocks.length
+        _.map blocks, (el) -> el.unid = el.id
+        blocks = new Entities.TripBlocks blocks
+      else
+        block = new Entities.TripBlock
+        blocks = new Entities.TripBlocks [block]
+      blocks
 
-    getDetailSets: (model, params = {}) ->
+    getDetailTrip: (model, params = {}) ->
       model.id = model.get('id') or model.get('unid')
       _.defaults params
       model.fetch
@@ -38,7 +45,7 @@
       model
 
   App.reqres.setHandler 'get:detail:trip', (model) ->
-    API.getDetailSets model
+    API.getDetailTrip model
 
-  App.reqres.setHandler 'get:empty:blocks', () ->
-    API.getBlocks()
+  App.reqres.setHandler 'get:blocks', (blocks) ->
+    API.getBlocks blocks
