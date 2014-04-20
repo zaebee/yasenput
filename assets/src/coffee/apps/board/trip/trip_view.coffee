@@ -13,26 +13,20 @@
     className: 'popupwin__scrollbox'
     modelEvents:
       'change:name' : 'updateText'
-      #'change:author' : 'updateText'
-
-    events:
-      'click .js-open': 'toggleCommercial'
 
     updateText:  ->
-      console.log('model ',@model)
-      @$('.trip_name').text @model.get('name')
-
-      
-    toggleCommercial: (event) ->
-      event.preventDefault()
-      @$('.js-open').toggleClass 'active'
-      @$('.commercial-info__body ').slideToggle()
+      @$('.trip_name span').text @model.get('name')
+      @$('.description__text').text @model.get('description')
 
 
   class Trip.Header extends App.Views.ItemView
     template: 'TripHeader'
     modelEvents:
-      'change': 'render'
+      'change:author': 'render'
+      'change:isliked': 'render'
+      'change:likes_count': 'render'
+      'change:likeusers': 'render'
+
     events:
       'click .btn-like': 'tripLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
@@ -136,61 +130,6 @@
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, trigger: true
-
-
-  class Trip.Map extends App.Views.ItemView
-    template: 'TripMap'
-    className: 'map map_popupwin'
-
-    initMap: ->
-      if App.ymaps is undefined
-        @map = null
-        return
-      console.log "map is start", @model.get 'points'
-      App.ymaps.ready =>
-        @map = new App.ymaps.Map 'map-trip',
-          center: [56, 45]
-          zoom: 7
-        , autoFitToViewport: 'always'
-
-
-        trip_p = []
-        _.each @model.get('points'), (data) =>
-          point = data.point
-          coords = [point.latitude, point.longitude]
-          coords = coords.map String
-          placemark = new App.ymaps.Placemark coords,{
-            id: "map-point#{data.id}"
-          }, {
-            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
-            iconImageHref: '/static/images/sprite-baloon.png',
-            iconImageSize: [32, 36]
-          }
-          @map.geoObjects.add placemark
-          trip_p.push type: 'wayPoint', point:coords
-
-        App.ymaps.trip(trip_p, { mapStateAutoApply: true }).then  (trip) =>
-          trip.getPaths().options.set
-            balloonContenBodyLayout: App.ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
-            strokeColor: 'ca7953',
-            opacity: 0.9,
-            noPlacemark: true
-          trip.getWayPoints().options.set 'visible', false
-          @map.geoObjects.add trip
-
-    onShow: ->
-      App.execute 'when:fetched', @model, =>
-        @initMap()
-
-        @$el.resizable
-          minHeight: 80,
-          handles: "s"
-          resize: ( event, ui )  =>
-            $this = $(this)
-            if ui.size.height > 440
-              $this.addClass('open')
-            else
-              $this.removeClass('open')
 
 
   class Trip.Comments extends App.Views.ItemView

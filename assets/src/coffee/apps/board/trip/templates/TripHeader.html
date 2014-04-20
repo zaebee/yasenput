@@ -1,14 +1,14 @@
-<a href="#?" class="user user_in_popup">
+<a href="#" class="user user_in_popup">
   <img src="{{author.icon}}" alt="" class="img">
   <span class="name trip_author">{{author.first_name}} {{author.last_name}}</span><br>
   добавил <span class="type c-trip">путешествие</span>
 </a>
 <ul class="actions">
   <li class="item">
-    <!--<a href="#?" class="btn-like">
+    <a href="#" class="btn-like {{#ifBelong author likeusers}}active{{/ifBelong}}" data-toggle="tooltip" data-original-title="" data-placement="bottom">
       <span class="icon sprite-like-user"></span>
-      <span class="text">4</span>
-    </a>-->
+      <span class="text">{{#if likeusers.length}}{{likeusers.length}}{{else}}0{{/if}}</span>
+    </a>
   </li>
   <li class="item">
     <!--<a href="#?" class="btn-upload">
