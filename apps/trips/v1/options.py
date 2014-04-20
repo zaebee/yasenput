@@ -12,6 +12,11 @@ class TripOption():
                 'author': PersonOption.relations.getPersonShortRelation(),
                 'admins': PersonOption.relations.getPersonShortRelation(),
                 'members': PersonOption.relations.getPersonShortRelation(),
+                'reviews': {
+                    'relations': {
+                        'author': PersonOption.relations.getPersonShortRelation(),
+                    }
+                },
                 'blocks': {
                     'relations': {
                         'points': {
@@ -67,7 +72,7 @@ class TripOption():
                 }
             }
             return relations
-    
+
         @staticmethod
         def getTripShortRelation():
             relations = {
@@ -130,7 +135,7 @@ class TripOption():
                 }
             }
             return relations
-    
+
         @staticmethod
         def getTripSuperShotRelation():
             relations = {
@@ -193,6 +198,6 @@ class TripOption():
                 }
             }
             return relations
-        
+
     class extras:
         pass

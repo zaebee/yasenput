@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
 __author__ = 'art'
 
+import json
+import time
+import logging
+from datetime import datetime, timedelta
+
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
+
 from apps.trips import forms
 from apps.trips import models as TripsModels
 from apps.main import models as MainModels
 from apps.trips.models import Trips, Blocks
 from apps.comments import models as CommentsModels
+from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 from apps.trips.v1.options import TripOption
-import json
-import time
-import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -166,7 +171,26 @@ class Trip(View):
         else:
             return JsonHTTPResponse({"id": 0, "status": 1, "txt": "Error"})
 
+
 class LikeTrip(TripsBaseView):
+
+    http_method_names = ('post',)
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        id = kwargs.get('id', None)
+        trip = get_object_or_404(Trips, id=id)
+
+        if request.user in trip.likeusers.all():
+            trip.likeusers.remove(request.user)
+        else:
+            trip.likeusers.add(request.user)
+        YpJson = YpSerialiser()
+        trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
+        return HttpResponse(trip, mimetype="application/json")
+
+
+class _LikeTrip(TripsBaseView):
     http_method_names = ('post',)
 
     @method_decorator(login_required)
@@ -195,3 +219,33 @@ class LikeTrip(TripsBaseView):
                 'message': ', '.join(errors)
             })
         return JsonHTTPResponse(result)
+
+
+class AddReviewToTrip(View):
+    http_method_names = ('post')
+
+    def post(self, request, *args, **kwargs):
+        author = request.user.person
+        id = kwargs.get('id', None)
+        review_text = request.POST.get('review', None)
+        review_text = review_text.replace('\n', '<br>')
+        if not review_text:
+            return JsonHTTPResponse({"id":id,
+                                     "status": 1,
+                                     "txt": "Напишите текст комментария"})
+
+        trip = get_object_or_404(Trips, id=id)
+        if trip.reviews.filter(author=author).exists():
+            last_review = trip.reviews.filter(author=author).latest('updated')
+            if datetime.utcnow().replace(tzinfo=None) - last_review.updated.replace(tzinfo=None) < timedelta(days=1):
+                review = last_review
+                review.review = review_text
+            else:
+                review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
+        else:
+            review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
+        review.save()
+        trip.reviews.add(review)
+        return JsonHTTPResponse({"id": id,
+                                 "status": 0,
+                                 "txt": "Комментарий добавлен"})
