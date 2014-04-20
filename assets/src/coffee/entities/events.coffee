@@ -12,7 +12,8 @@
     urlRoot:
       App.API_BASE_URL + "/api/v1/events/"
 
-    defaults:
+    defaults: ->
+      type_of_item: 'event'
       dt_start: ''
       dt_end: ''
       ypi: 0

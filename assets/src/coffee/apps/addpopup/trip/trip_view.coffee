@@ -40,6 +40,10 @@
       @model.set author: @user.toJSON()
       @model.set blocks: @collection.toJSON()
       App.vent.trigger 'show:detail:popup', @model
+      uniqueId = "trip/#{@model.cid}"
+      json = JSON.stringify @model.toJSON()
+      localStorage.setItem uniqueId, json
+      App.navigate "preview/#{uniqueId}"
 
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
@@ -104,7 +108,7 @@
 
     events:
       'click .js-add-place': 'addPlace'
-      'click .form__field_title': 'editableBlockTitle'
+      'click .span-title': 'editableBlockTitle'
       'blur .input-title': 'saveBlockTitle'
       'blur .tinyeditor': 'saveBlockTxt'
 

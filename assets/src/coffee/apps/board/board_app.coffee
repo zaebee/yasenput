@@ -15,6 +15,7 @@
       'event/:id': 'event'
       'route/:id': 'route'
       'trip/:id': 'trip'
+      'preview/:type/:id': 'preview'
   
   API =
     index: ->
@@ -29,7 +30,7 @@
         BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere id: id
       if !model
-        model = new entity id: id
+        model = new entity unid: id
         BoardApp.board.yapens.add model
 
     point: (id) ->
@@ -47,6 +48,21 @@
     trip: (id) ->
       model = @getModel App.Entities.Trip, id
       App.vent.trigger 'show:detail:popup', model
+
+    preview: (type, id) ->
+      data = localStorage.getItem "#{type}/#{id}"
+      if data
+        data = JSON.parse data
+        if type is 'point'
+          model = new App.Entities.Point data
+        if type is 'event'
+          model = new App.Entities.Event data
+        if type is 'route'
+          model = new App.Entities.Route data
+        if type is 'trip'
+          model = new App.Entities.Trip data
+        App.vent.trigger 'show:detail:popup', model
+
 
   App.vent.on 'show:detail:popup', (model) ->
     if model instanceof App.Entities.Point

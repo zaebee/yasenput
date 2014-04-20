@@ -12,7 +12,8 @@
     urlRoot:
       App.API_BASE_URL + "/api/v1/points/"
 
-    defaults:
+    defaults: ->
+      type_of_item: 'point'
       priority: 0
       longitude: 0.0
       latitude: 0.0
