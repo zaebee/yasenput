@@ -3,7 +3,7 @@
   Событие {{#if dt_start}}{{dateFormat dt_start format="D.MM"}}&ndash;{{/if}}{{#if dt_end}}{{dateFormat dt_end format="D.MM"}}{{/if}}
 </div>
 <div class="box__img">
-  <a href="#event/{{id}}" class="js-popupwin-event">
+  <a href="/#event/{{id}}" class="js-popupwin-event">
     {{#if imgs}}
       <img src="{{imgs.[0].thumbnail207}}" alt="{{name}}" height="{{imgs.[0].thumbnail207_height}}" class="img">
     {{else}}
@@ -16,8 +16,8 @@
     {{/if}}
     {{#if editable}}
     <div class="btns">
-      <a href="#event/{{id}}/edit" class="btn btn_color_green btn_edit">Редактировать</a>
-      <a href="#event/{{id}}/delete" class="btn btn_color_red btn_remove">Удалить</a>
+      <a href="/#event/{{id}}/edit" class="btn btn_color_green btn_edit">Редактировать</a>
+      <a href="/#event/{{id}}/delete" class="btn btn_color_red btn_remove">Удалить</a>
     </div>
     {{else}}
     <div class="icons">

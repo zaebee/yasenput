@@ -62,7 +62,7 @@ module.exports = function(grunt) {
             'src/lib/json2.js',
             'src/lib/spin.min.js',
             'src/lib/moment.min.js',
-            //'src/lib/masonry.min.js',
+            'src/lib/storage.min.js',
             'src/lib/moment.ru.js',
             'src/lib/handlebars.js',
             'src/lib/lodash.min.js',

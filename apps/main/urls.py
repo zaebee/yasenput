@@ -3,25 +3,27 @@ __author__ = 'art'
 
 from django.conf.urls import *
 
-urlpatterns = patterns('',
-    url(r'^$', 'apps.main.views.index'),
-    url(r'^routes', 'apps.main.views.index'),
-    url(r'^points', 'apps.main.views.index'),
-    url(r'^want', 'apps.main.views.index'),
-    url(r'^myroutes', 'apps.main.views.index'),
-    url(r'^mypoints', 'apps.main.views.index'),
-    url(r'^tag', 'apps.main.views.index'),
-    url(r'^point', 'apps.main.views.index'),
-    url(r'^set', 'apps.main.views.index'),
-    url(r'^route', 'apps.main.views.index'),
-    url(r'^event', 'apps.main.views.index'),
-    url(r'^trip', 'apps.main.views.index'),
+urlpatterns = patterns('apps.main.views',
+    url(r'^$', 'index'),
+    url(r'^routes', 'index'),
+    url(r'^points', 'index'),
+    url(r'^want', 'index'),
+    url(r'^myroutes', 'index'),
+    url(r'^mypoints', 'index'),
+    url(r'^tag', 'index'),
+    url(r'^point/(?P<id>\d+)$', 'point'),
+    url(r'^set', 'index'),
+    url(r'^route', 'index'),
+    url(r'^event', 'index'),
+    url(r'^trip', 'index'),
 
-    url(r'^map', 'apps.main.views.index'),
-    url(r'^new', 'apps.main.views.index'),
-    url(r'^dashboard', 'apps.main.views.index'),
-    url(r'^add_collection', 'apps.main.views.index'),
+    url(r'^preview/[_/\w\d]+$', 'index'),
 
-    url(r'^order', 'apps.main.views.order'),
+    url(r'^map', 'index'),
+    url(r'^new', 'index'),
+    url(r'^dashboard', 'index'),
+    url(r'^add_collection', 'index'),
+
+    url(r'^order', 'order'),
 
 )

@@ -129,47 +129,10 @@ def make_upload_path(instance, filename):
     return u"point/%s" % (uuid.uuid4().hex + os.path.splitext(filename)[1])
 
 
-"""
-class Photos(models.Model):
-    class Meta:
-        verbose_name = u'Фотографии'
-        verbose_name_plural = u'Фотографии'
-
-    name = models.CharField(max_length=255)
-    img = models.ImageField(max_length=255, upload_to=make_upload_path)
-    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='photos_users_likes', serialize=True)
-    created = models.DateTimeField('Создан', auto_now_add=True)
-    updated = models.DateTimeField('Изменен', auto_now_add=True, auto_now=True)
-
-    def natural_key(self):
-        return (self.img.name)
-
-    def __unicode__(self):
-        return self.name
-
-    def thumbnail80(self):
-        im = get_thumbnail(self.img, '80')
-        return im.url
-
-    def thumbnail207(self):
-        im = get_thumbnail(self.img, '207')
-        return im.url
-
-    def thumbnail325(self):
-        im = get_thumbnail(self.img, 'x325')
-        return im.url
-
-    def thumbnail104x104(self):
-        im = get_thumbnail(self.img, '104x104', crop="center center")
-        return im.url
-"""
-
-
 class Points(models.Model):
     from apps.tags.models import Tags
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
-    from apps.descriptions.models import Descriptions
 
     class Meta:
         verbose_name = u'Точки'
@@ -217,15 +180,11 @@ class Points(models.Model):
                                 rankmode = 'SPH_RANK_NONE')
 
 
-
-    '''
-    def sets_count(self):
-        i = 0
-        for s in Collections.objects.all():
-            if self in s.points:
-                i += 1
-        return i
-    '''
+    @property
+    def main_image(self):
+        if self.imgs.exists():
+            img = self.imgs.latest('id')
+            return img.thumbnail207()
 
     def _likes(self):
         return self.likeusers.count()
@@ -246,7 +205,6 @@ class Points(models.Model):
 class PointsByUser(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
-    from apps.descriptions.models import Descriptions
 
     class Meta:
         verbose_name = u'Точки глазами пользователя'

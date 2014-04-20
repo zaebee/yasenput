@@ -11,6 +11,8 @@
   class Entities.Route extends Entities.Model
     urlRoot: ->
       App.API_BASE_URL + "/api/v1/route/"
+    defaults: ->
+      type_of_item: 'route'
 
   API =
     getDetail: (model, params = {}) ->
