@@ -184,12 +184,11 @@ INSTALLED_APPS = (
     'apps.djangosphinx',
     'apps.api',
     'apps.trips',
+
+    'annoying',
     'south',
     'django_ipgeobase',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 
 )
 SERIALIZATION_MODULES = {

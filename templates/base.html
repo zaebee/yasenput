@@ -14,10 +14,15 @@
     <meta name='yandex-verification' content='60f6a0548c244c61' />
     {% block seo %}{% endblock %}
     <!--<meta name="fragment" content="!">-->
-    <meta name="keywords" content="{% block keywords %}{% endblock %}">
-    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}путешествия по россии, туризм, охота, рыбалка, отпуск, отпускные турпакеты, места, поездка, планирование, отель, мотель, мини отель, ночлег и завтрак, гостиница, утеводитель, карты, лыжи, достопримечательности, рестораны, российские достопримечательности, туризм по россии, деревня, отдых душой, интересные места, путешествия на автомобиле, путеводители, маршруты, туры, путевка{% endblock %}">
+    <meta name="description" content="{% block description %}Сервис ЯсенПуть объединяет в себе все, что нужно туристу: отзывы об отелях и ресторанах, фотографии и полезные советы по турам и маршрутам. Все достопримечательности в одном месте. С сервисом ЯсенПуть начнется ваше хорошо спланированное путешествие по России. Сервис подбора путешествий, бронирование билетов и гостиниц.{% endblock %}">
 
-    <title>{% block title %}{% endblock %}</title>
+    <meta property="og:image" content="{% block og_image %}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% endblock %}">
+
+
+    <title>{% block title %}ЯсенПуть - туристический онлайн сервис с отзывами туристов{% endblock %}</title>
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
@@ -33,7 +38,6 @@
   </head>
 
   <body class="front">
-    <div id="fb-root"></div>
     {% csrf_token %}
 
     {% block wrap %}{% endblock %}
@@ -50,13 +54,9 @@
     {% if ASSETS_DEBUG %}
       <script src="{{ STATIC_URL }}js/libs.js"></script>
       <script src="{{ STATIC_URL }}js/plugins.js"></script>
-
-      {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
     {% else %}
-      {# application.main #}
       <script src="{{ STATIC_URL }}js/application.js"></script>
-
       {% include 'includes/metrika.html' %}
     {% endif %}
 
