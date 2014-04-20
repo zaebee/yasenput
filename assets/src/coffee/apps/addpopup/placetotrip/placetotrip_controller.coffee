@@ -5,7 +5,7 @@
     initialize: ->
       console.log 'initialize AddPopupApp.PlaceToTrip.Controller'
       @tags = App.request 'get:all:tags'
-      @model = @options.model or new App.Entities.Trip
+      @model = @options.model or new App.Entities.TripBlock
       @collection = App.request 'get:all:yapens', new: true, models:'points,events'
       ## store places and events adding to trip
       @tripyapens = new App.Entities.YapensCollection

@@ -17,8 +17,8 @@
 {% endblock %}
 
 {% block og_image %}{% if og_image %}http://yasenput.ru{{ og_image }}{% endif %}{% endblock %}
-{% block og_title %}{% if title %}{{ title }} - ЯсенПуть | Путешествуй вместе с нами{% endif %}{% endblock %}
-{% block og_description %}{{ description }}{% endblock %}
+{% block og_title %}{% if title %}{{ title }}{% endif %}{% endblock %}
+{% block og_description %}{{ description|default:"ЯсенПуть путешествуй вместе с нами" }}{% endblock %}
 
 
 

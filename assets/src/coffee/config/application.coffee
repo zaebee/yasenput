@@ -29,6 +29,37 @@ do (Backbone, $, Dropzone) ->
 
   _.extend Backbone.Marionette.Application::,
 
+    buttonSpinner: (button, button_text, spinner) ->
+      result = {}
+      spinner_options =
+        lines: 11
+        length: 4
+        width: 2
+        radius: 3
+        trail: 60
+        speed: 1
+        shadow: false
+        left: 15
+
+      result.button = button
+      result.button_static_text = button.text()
+      result.button_spinning_text = button_text
+      result.spinner = spinner
+      result.start = ->
+        result.button
+          .text(result.button_spinning_text)
+          .addClass('disabled')
+          .prop('disabled', true)
+        result.spinner.spin spinner_options
+
+      result.stop = ->
+        result.button
+          .text(result.button_static_text)
+          .removeClass('disabled')
+          .prop('disabled', false)
+        result.spinner.spin false
+      return result
+
     settings: {}
 
     navigate: (route, options = {}) ->
