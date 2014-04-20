@@ -21,7 +21,8 @@ urlpatterns = patterns('',
 
     url(r'^trips$', Trip.as_view()),
     url(r'^trips/(?P<id>\d+)/$', Trip.as_view()),
-    # url(r'^trips/(?P<id>\d+)/like/$', LikeTrip.as_view()),
+    url(r'^trips/(?P<id>\d+)/like/$', LikeTrip.as_view()),
+    url(r'^trips/(?P<id>\d+)/review/', AddReviewToTrip.as_view()),
     # url(r'^trips/(?P<id>\d+)/blocks/(?P<block_id>\d+)/$', AddBlock.as_view()),
 
 

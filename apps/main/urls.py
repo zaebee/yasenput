@@ -11,11 +11,12 @@ urlpatterns = patterns('apps.main.views',
     url(r'^myroutes', 'index'),
     url(r'^mypoints', 'index'),
     url(r'^tag', 'index'),
-    url(r'^point/(?P<id>\d+)$', 'point'),
     url(r'^set', 'index'),
     url(r'^route', 'index'),
     url(r'^event', 'index'),
-    url(r'^trip', 'index'),
+
+    url(r'^point/(?P<id>\d+)$', 'point'),
+    url(r'^trip/(?P<id>\d+)$', 'trip'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),
 

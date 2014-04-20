@@ -14,8 +14,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 
-from apps.main import models as MainModels
 from apps.serializers.json import Serializer
+from apps.trips.models import Trips
+from apps.main import models as MainModels
 from apps.main.forms import OrderForm
 
 import logging
@@ -64,6 +65,16 @@ def point(request, id):
         data['title'] = point.name
         data['description'] = point.description
         data['og_image'] = point.main_image
+    return render(request, 'main/main.html', data)
+
+
+def trip(request, id):
+    data = {}
+    trip = get_object_or_None(Trips, id=id)
+    if trip:
+        data['title'] = trip.name
+        data['description'] = trip.description
+        data['og_image'] = trip.main_image
     return render(request, 'main/main.html', data)
 
 

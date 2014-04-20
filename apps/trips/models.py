@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
+
 from apps.main.models import Person, Routes,  Points, Events
 from apps.photos.models import Photos
+from apps.reviews.models import Reviews
+
 from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
+
 
 class Blocks(models.Model):
     class Meta:
@@ -21,11 +25,14 @@ class Blocks(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Trips(models.Model):
     class Meta:
         verbose_name = u'Путешествия'
         verbose_name_plural = u'Путешествия'
     name = models.CharField('Название', max_length=255)
+    description = models.TextField(null=True, blank=True)
+    reviews = models.ManyToManyField(Reviews, null=True, blank=True, serialize=True)
     members = models.ManyToManyField(User, null=True, blank=True, related_name='trip_memeber_users', serialize=True)
     admins = models.ManyToManyField(User, null=True, blank=True, related_name='trip_admins_users', serialize=True)
     author = models.ForeignKey(Person, unique=False)
@@ -43,3 +50,11 @@ class Trips(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def main_image(self):
+        if self.blocks.exists():
+            block = self.blocks.all()[0]
+            if block.imgs.exists():
+                img = block.imgs.latest('id')
+                return img.thumbnail207()

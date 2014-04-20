@@ -12,10 +12,9 @@
       @layout = new Trip.Layout model: @model
       @listenTo @layout, 'show', =>
         @showHeader()
-        #@showComments()
+        @showComments()
         @showAside()
         @showBlocks()
-        #@showMap()
       #App.execute 'when:fetched', @model, =>
       App.tripPopup.show @layout, loading: true
 
@@ -40,11 +39,5 @@
 
     showBlocks: ->
       @blocksView = new Trip.Blocks model: @model
-      console.log '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
       @show @blocksView,
         region: @layout.blocksRegion
-
-    showMap: ->
-      @mapView = new Trip.Map model: @model
-      @show @mapView,
-        region: @layout.mapRegion

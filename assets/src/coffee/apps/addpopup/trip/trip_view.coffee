@@ -73,9 +73,13 @@
 
     events:
       'blur .form__field_name input': 'setTripName'
+      'blur .form__field_description textarea': 'setTripDescription'
 
     setTripName: (event) ->
       @model.set name: $('.form__field_name input').val()
+
+    setTripDescription: (event) ->
+      @model.set description: $('.form__field_description textarea').val()
 
     onShow: ->
       return
