@@ -70,31 +70,12 @@ class Trip(View):
                 blocks = data.get('blocks')
                 if blocks is not None:
                     for block in blocks:
+                        block['points'] = [point['id'] for point in block['points']]
+                        block['imgs'] = [img['id'] for img in block['imgs']]
                         block_form = forms.AddBlockForm(block)
-                        block_obj = block_form.save(commit=False)
-                        block_obj.save()
-
-                        points = block.get("points")
-                        if points is not None:
-                            for point_id in points:
-                                point = MainModels.Points.objects.get(id=point_id)
-                                block_obj.points.add(point)
-
-                        events = block.get("events")
-                        if events is not None:
-                            for event_id in events:
-                                event = MainModels.Events.objects.get(id=event_id)
-                                block_obj.events.add(event)
-
-                        imgs = block.get("imgs")
-                        if imgs is not None:
-                            for img_id in imgs:
-                                img = MainModels.Events.objects.get(id=img_id)
-                                block_obj.imgs.add(img)
-
-                        block_obj.save()
-                        #BlockPos = BlockPosition(trip=trip, block=block_obj)
-                        #BlockPos.save()
+                        if block_form.is_valid():
+                            block_obj = block_form.save()
+                            trip.blocks.add(block_obj)
                 trip.save()
                 YpJson = YpSerialiser()
                 trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())

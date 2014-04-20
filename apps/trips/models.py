@@ -31,7 +31,7 @@ class Trips(models.Model):
         verbose_name = u'Путешествия'
         verbose_name_plural = u'Путешествия'
     name = models.CharField('Название', max_length=255)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True, default='')
     reviews = models.ManyToManyField(Reviews, null=True, blank=True, serialize=True)
     members = models.ManyToManyField(User, null=True, blank=True, related_name='trip_memeber_users', serialize=True)
     admins = models.ManyToManyField(User, null=True, blank=True, related_name='trip_admins_users', serialize=True)
@@ -56,5 +56,5 @@ class Trips(models.Model):
         if self.blocks.exists():
             block = self.blocks.all()[0]
             if block.imgs.exists():
-                img = block.imgs.latest('id')
+                img = block.imgs.all()[0]
                 return img.thumbnail207()

@@ -262,8 +262,8 @@
       'change:points': 'render'
 
     events:
-      'click .categories__link': 'selectRootLabel'
       'click .item': 'setMapCenter'
+      'click .js-finish-adding': 'addPoints'
 
     onShow: ->
       @popupwin = @$el.closest '.popupwin'
@@ -290,6 +290,10 @@
       type = $(event.currentTarget).data 'type'
       model = @yapens.findWhere id: id, type_of_item: type
       @yapens.trigger 'set:map:center', model
+
+    addPoints: (event) ->
+      event.preventDefault()
+      App.addPlaceToTripPopup.close()
       
     onClose: ->
       @popupwin.off 'scroll'

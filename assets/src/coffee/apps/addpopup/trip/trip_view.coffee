@@ -40,10 +40,11 @@
       @model.set author: @user.toJSON()
       @model.set blocks: @collection.toJSON()
       App.vent.trigger 'show:detail:popup', @model
-      uniqueId = "trip/#{@model.cid}"
-      json = JSON.stringify @model.toJSON()
-      localStorage.setItem uniqueId, json
-      App.navigate "preview/#{uniqueId}"
+      if @model.isNew()
+        uniqueId = "trip/#{@model.cid}"
+        json = JSON.stringify @model.toJSON()
+        localStorage.setItem uniqueId, json
+        App.navigate "preview/#{uniqueId}"
 
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
@@ -93,10 +94,28 @@
     className: 'popupwin__content popupwin__content_actions clearfix'
     events:
       'click .js-add-block': 'addBlock'
+      'click .js-finish': 'saveTrip'
+
+    initialize: ->
+      @user = App.request 'get:my:profile'
+      @collection = @options.collection
+
     addBlock: (event) ->
       event.preventDefault()
       block = new App.Entities.TripBlock
       @options.collection.add block
+
+    saveTrip: (event) ->
+      event.preventDefault()
+      @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
+      @spinner.start()
+      @model.set author: @user.toJSON()
+      @model.set blocks: @collection.toJSON()
+      @model.save null,
+        success: =>
+          @spinner.stop()
+          App.addTripPopup.close()
+          App.vent.trigger 'show:detail:popup', @model
 
 
   class Trip.BlockItem extends App.Views.Layout
@@ -180,7 +199,7 @@
       'change:points': 'render'
 
     events:
-      'click .link': 'showPopup'
+      #'click .link': 'showPopup'
       'click .js-delete': 'deletePoint'
 
     showPopup: (event) ->
@@ -189,7 +208,12 @@
 
     deletePoint: (event) ->
       event.preventDefault()
-      console.log event
+      data = $(event.currentTarget).data()
+      points = @model.get 'points'
+      pointIdx = _.findIndex points, data
+      points.splice pointIdx, 1
+      @model.set points: points
+      @model.trigger 'change:points'
 
 
   class Trip.Imgs extends App.Views.ItemView

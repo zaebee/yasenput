@@ -20,6 +20,7 @@ class TripOption():
                 'blocks': {
                     'relations': {
                         'points': {
+                            'extras': ('type_of_item',),
                             'relations': {
                                 'tags': {'fields': ('name', 'id', 'level')},
                                 'author': PersonOption.relations.getPersonShortRelation(),
