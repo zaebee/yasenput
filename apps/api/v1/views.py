@@ -389,7 +389,7 @@ class ItemsList(PointsBaseView):
         else:
             #GET CLIENT IP:
             remote_address = request.META.get('REMOTE_ADDR')
-            ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address
+            ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address or "213.176.241.10"
             self.log.info('Client IP:' + str(ip))
             ipgeobases = IPGeoBase.objects.by_ip(ip)
             if ipgeobases:
