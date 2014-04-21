@@ -3,7 +3,7 @@
   class Trip.Layout extends App.Views.Layout
     template: 'AddTripLayout'
     className: 'popupwin__scrollbox'
-    
+
     regions:
       asideRegion: '#trip-aside-region'
       contentRegion: '#trip-content-region'
@@ -63,7 +63,7 @@
       @popupwin.off 'scroll'
       @remove()
       @stopListening()
-    
+
 
   class Trip.Content extends App.Views.Layout
     template: 'AddTripContent'
@@ -148,8 +148,9 @@
     onShow: ->
       pointsView = new Trip.Points model: @model
       imgsView = new Trip.Imgs model: @model
-      @blockPointsRegion.show pointsView
-      @blockImgsRegion.show imgsView
+      App.execute 'when:fetched', @model, =>
+        @blockPointsRegion.show pointsView
+        @blockImgsRegion.show imgsView
 
     changePosition: ->
       @$('.number').text @model.get 'position'
@@ -193,7 +194,7 @@
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
         position = @collection.indexOf(item) + 1
-        item.set position: position#, silence: true
+        item.set position: position
 
     onClose: ->
       @remove()
