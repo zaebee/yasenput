@@ -230,7 +230,7 @@
     templateHelpers: ->
       cid: @model.cid
 
-    onShow: ->
+    onRender: ->
       mockFile = name: "Image", size: 12345
       imgs = @model.get 'imgs'
       id = @model.get 'id'
@@ -254,4 +254,3 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
-          #@model.trigger 'change:imgs'
