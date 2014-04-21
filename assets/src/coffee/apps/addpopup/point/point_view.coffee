@@ -294,6 +294,7 @@
           App.addPointPopup.close()
           App.BoardApp.board.yapens.add @model, at:0
           App.vent.trigger 'show:detail:popup', @model
+          App.navigate "point/#{@model.get('id')}"
           App.BoardApp.board.yapensView.render()
 
     backStep: (event) ->

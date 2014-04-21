@@ -166,6 +166,9 @@
     className: 'content'
     id: 'grid'
 
+    getEmptyView: ->
+      App.HeaderApp.Show.PopupAdd
+
     itemViewOptions: () ->
       editable: !!App.settings.user
 
@@ -191,8 +194,11 @@
     onShow: ->
       App.execute 'when:fetched', @collection, =>
         console.log 'collection fetched', @collection
-        @wall = @wall or new Masonry @el,
-          itemSelector: '.box'
+        if @collection.length
+          @wall = @wall or new Masonry @el,
+            itemSelector: '.box'
+        else
+          @wall.destroy() if @wall
 
     onClose: ->
       console.log 'onClose yapens'

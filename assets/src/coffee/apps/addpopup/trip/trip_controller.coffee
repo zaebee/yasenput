@@ -13,7 +13,12 @@
         @showAside()
         @showContent()
 
-      App.addTripPopup.show @layout, loading: true
+      if @model.isNew()
+        App.addTripPopup.show @layout, loading: true
+      else
+        @model.fetch
+          success: =>
+            App.addTripPopup.show @layout, loading: true
             
     onClose: ->
       @stopListening()

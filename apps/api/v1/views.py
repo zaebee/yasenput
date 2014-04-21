@@ -353,11 +353,11 @@ class ItemsList(PointsBaseView):
         if params.get('user'):
             t0 = time.time()
             search_res_points_list = search_res_points.filter(author_id = params.get('user'))
-            search_res_sets_list = search_res_sets.filter(author_id = params.get('user'))
+            search_res_trips_list = search_res_trips.filter(author_id = params.get('user'))
             search_res_routes_list = search_res_routes.filter(author_id = params.get('user'))
             search_res_events_list = search_res_events.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_sets_list) > 0) | (Count(search_res_routes_list)>0) | (Count(search_res_events_list)>0):
-                search_res_sets = search_res_sets_list
+            if (Count(search_res_points_list) > 0) | (Count(search_res_trips_list) > 0) | (Count(search_res_routes_list)>0) | (Count(search_res_events_list)>0):
+                search_res_trips = search_res_trips_list
                 search_res_points = search_res_points_list
                 search_res_routes = search_res_routes_list
                 search_res_events = search_res_events_list
@@ -402,25 +402,35 @@ class ItemsList(PointsBaseView):
             lt_right = float(100)
 
         t0 = time.time()
-        search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-        self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
+        search_res_points_list = search_res_points.filter(
+            longitude__lte=ln_right).filter(
+                longitude__gte=ln_left).filter(
+                    latitude__lte=lt_right).filter(latitude__gte=lt_left)
+        self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
+            time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
         search_res_sets_list = []
 
         for collection in search_res_sets.all():
-            points_l = collection.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            points_l = collection.points.filter(
+                longitude__lte = ln_right).filter(
+                    longitude__gte = ln_left).filter(
+                        latitude__lte = lt_right).filter(latitude__gte = lt_left)
             if len(points_l) > 0:
                 search_res_sets_list.append(int(collection.id))
 
         search_res_routes_list = []
         for route in search_res_routes.all():
-            points_l = route.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            points_l = route.points.filter(
+                longitude__lte=ln_right).filter(
+                    longitude__gte=ln_left).filter(
+                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
             dur_success = 0
             price_success = 0
             self.log.info('Price %s' % type(price))
             if len(points_l) > 0:
                 if type(price) is not str:
                     self.log.info('INSIDE')
-                    
+
                     self.log.info('Price %s' % int(price[0]))
                     if route.price:
                         if (route.price <= int(price[1])) and (route.price >= int(price[0])):
@@ -431,8 +441,7 @@ class ItemsList(PointsBaseView):
                     if route.days:
                         if (route.days <= float(duration[1])) and (route.days >= float(duration[0])):
                             dur_success = "1"
-                    
-                    
+
                 else:
                     dur_success = "1"
                 self.log.info('price_success %s' % price_success)
@@ -446,7 +455,10 @@ class ItemsList(PointsBaseView):
 
         search_res_events_list = []
         for event in search_res_events.all():
-            points_l = event.points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
+            points_l = event.points.filter(
+                longitude__lte=ln_right).filter(
+                    longitude__gte=ln_left).filter(
+                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
             if len(points_l) > 0:
                 search_res_events_list.append(int(event.id))
 
