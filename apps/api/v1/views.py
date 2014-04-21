@@ -380,6 +380,7 @@ class ItemsList(PointsBaseView):
 
         if params.get('coord_left'):
             #top left coords
+            self.log.info('get coord_left')
             ln_left = float(json.loads(params.get('coord_left')).get('ln'))
             lt_left = float(json.loads(params.get('coord_left')).get('lt'))
             #top right coords
@@ -391,15 +392,25 @@ class ItemsList(PointsBaseView):
             ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address
             self.log.info('Client IP:' + str(ip))
             ipgeobases = IPGeoBase.objects.by_ip(ip)
-            if ipgeobases.exists():
-                ipgeobase = ipgeobases[0]
+            if ipgeobases:
+                if ipgeobases.exists():
+                    ipgeobase = ipgeobases[0]
+                else:
+                    ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
+                    ipgeobase = ipgeobases[0]
+                    self.log.info('no client ip in base')
+                ln_left = ipgeobase.latitude-0.1
+                ln_right = ipgeobase.latitude-0.1
+                lt_left = ipgeobase.latitude+0.1
+                lt_right = ipgeobase.latitude+0.1
             else:
                 ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                 ipgeobase = ipgeobases[0]
-            ln_left = float(1)
-            ln_right = float(100)
-            lt_left = float(1)
-            lt_right = float(100)
+                self.log.info('no client ip in base')
+                ln_left = ipgeobase.latitude-0.1
+                ln_right = ipgeobase.latitude-0.1
+                lt_left = ipgeobase.latitude+0.1
+                lt_right = ipgeobase.latitude+0.1
 
         t0 = time.time()
         search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
