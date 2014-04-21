@@ -225,13 +225,29 @@
     className: 'popupwin__scrollbox'
 
     events:
-      'click .js-popup-add-place': -> App.vent.trigger 'show:add:place:popup'
-      'click .js-popup-add-event': -> App.vent.trigger 'show:add:event:popup'
-      'click .js-popup-add-route': -> App.vent.trigger 'show:add:route:popup'
-      'click .js-popup-add-trip': -> App.vent.trigger 'show:add:trip:popup'
+      'click .js-popup-add-place': 'showAddPlacePopup'
+      'click .js-popup-add-event': 'showAddEventPopup'
+      'click .js-popup-add-route': 'showAddRoutePopup'
+      'click .js-popup-add-trip': 'showAddTripPopup'
 
     initialize: ->
       @changeUrl = true
+
+    showAddPlacePopup: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'show:add:place:popup'
+
+    showAddEventPopup: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'show:add:event:popup'
+
+    showAddRoutePopup: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'show:add:route:popup'
+
+    showAddTripPopup: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'show:add:trip:popup'
 
 
   class Show.PopupLogin extends App.Views.ItemView

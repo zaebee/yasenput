@@ -148,9 +148,8 @@
     onShow: ->
       pointsView = new Trip.Points model: @model
       imgsView = new Trip.Imgs model: @model
-      App.execute 'when:fetched', @model, =>
-        @blockPointsRegion.show pointsView
-        @blockImgsRegion.show imgsView
+      @blockPointsRegion.show pointsView
+      @blockImgsRegion.show imgsView
 
     changePosition: ->
       @$('.number').text @model.get 'position'
