@@ -2230,6 +2230,12 @@
 .popupwin_add-trip textarea:focus {
   border-color: #53b6d8;
 }
+.popupwin_add-place-to-trip .modal-dialog {
+    width:940px;
+}
+.popupwin_add-trip .modal-dialog {
+    width:900px;
+}
 .popupwin_add-trip .popupwin__content {
   width: 665px;
 }
@@ -2262,7 +2268,7 @@
 }
 .popupwin_add-trip .form__field_description input[type="text"] {
   padding-right: 20px;
-  width: 370px;
+  width: 380px;
 }
 .popupwin_add-trip .form__field_description .star {
   position: relative;
@@ -2408,7 +2414,7 @@ textarea {
 }
 .form textarea {
   padding: 10px;
-  background-color: transparent;
+  background-color: #fff;
 }
 .form__field {
   margin-bottom: 20px;
@@ -3690,6 +3696,7 @@ a {
 .filter-type .btn {
   padding: 13px 58px 14px 18px;
   font-size: 14px;
+  width:100px;
 }
 .filter-type .btn.open {
   background-color: #dbdddf;
@@ -4258,8 +4265,14 @@ a {
   position: fixed !important;
   top: 64px !important;
 }
+.map.open {
+    height: 450px;
+}
 .map.open .map-counter {
   display: none;
+}
+.map.open .map__open {
+    display:none;
 }
 .map.open .map__close {
   display: block;
@@ -4302,6 +4315,18 @@ a {
 }
 .map_route {
   height: 150px;
+}
+.map__open {
+    right: 41%;
+    background: #fff;
+    padding: 10px;
+    text-decoration: none;
+    position: absolute;
+    display: block;
+    top: 20px;
+    z-index: 5;
+    border-radius: 5px;
+    font-weight: 600;
 }
 .map__close {
   display: none;
@@ -4697,10 +4722,20 @@ a {
   float: left;
   margin: 0 auto;
 }
+.trip-step__container .editable {
+  border: 1px dashed;
+  cursor: pointer;
+  display: block;
+  margin-left: 30px;
+  padding: 2px 0;
+}
 .trip-step__container .form__field_title {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 18px;
   color: #AAA;
+}
+.trip-step__container textarea {
+    height:80px;
 }
 .trip-step__container .number {
   display: inline-block;
@@ -4716,6 +4751,7 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 18px;
   color: #FFF;
+  float: left;
 }
 .trip-step__aside {
   position: relative;
@@ -4725,7 +4761,7 @@ a {
 }
 .trip-step__block_title input[type="text"] {
   border-color: #53B6D8;
-  background: transparent;
+  background: #fff;
 }
 .trip-add-place {
   position: relative;
@@ -4826,7 +4862,6 @@ a {
   background-position: -407px -174px;
   width: 10px;
   height: 10px;
-  display: none;
 }
 .trip-list_draggable .item:hover {
   background-color: #E5E5E5;
@@ -4928,15 +4963,17 @@ a {
 /*$baloon*/
 .baloon {
   display: none;
-  position: absolute;
+  /*position: absolute;*/
   z-index: 50;
   top: 100px;
   left: 50%;
-  border-radius: 3px;
   width: 270px;
   overflow: hidden;
+  /*
+  border-radius: 3px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  */
   background-color: #FFF;
 }
 .baloon__head {
@@ -4960,11 +4997,12 @@ a {
 }
 .baloon__head .title.title_tag {
   color: #967ADC;
+  background: none;
 }
 .baloon__head .title.title_tag .icon {
   background: url(../images/sprite-filter2.png) no-repeat;
   display: inline-block;
-  background-position: -82px -2px;
+  background-position: -2px -96px;
   width: 30px;
   height: 30px;
 }
@@ -5063,11 +5101,12 @@ a {
   top: 0;
   right: 0;
   display: block;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #e5e5e5;
   border-top-right-radius: 3px;
   height: 100%;
   width: 38px;
-  background-color: #EFEFEF;
+  background-color: #fff;
+  opacity: 1;
 }
 .baloon__head .close:after {
   content: '';
@@ -5094,6 +5133,7 @@ a {
   float: left;
   margin-right: 5px;
   border-radius: 3px;
+  width: 55px;
 }
 .baloon__body .type {
   position: absolute;
@@ -6621,5 +6661,10 @@ button[disabled].js-finish {
 };
 
 .user_in_popup{
-  width: 200px;
+    width: 200px;
+}
+
+#trip-grid-region {
+    background: url(../images/loader.gif) no-repeat center bottom;
+    min-height: 220px;
 }
