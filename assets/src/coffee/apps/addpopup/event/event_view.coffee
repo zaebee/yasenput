@@ -168,7 +168,9 @@
             App.BoardApp.board.yapens.add @model, at:0
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "event/#{@model.get('id')}"
-            App.BoardApp.board.yapensView.render()
+            yapensView = App.BoardApp.board.yapensView.render()
+            if yapensView.wall
+              yapensView.wall.reloadItems() & yapensView.wall.layout()
       else
         @$('.field__input-place').addClass 'error'
 
