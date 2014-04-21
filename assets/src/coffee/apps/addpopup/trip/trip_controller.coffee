@@ -9,12 +9,22 @@
       @blocks = App.request 'get:blocks', blocks
       @layout = new Trip.Layout model: @model
 
+      @listenTo @model, 'spinner:start', @startSpinner
       @listenTo @layout, 'show', =>
         @showAside()
         @showContent()
 
-      App.addTripPopup.show @layout, loading: true
-            
+      if @model.isNew()
+        App.addTripPopup.show @layout, loading: true
+      else
+        @model.fetch
+          success: =>
+            App.addTripPopup.show @layout, loading: true
+            @spinner.stop() if @spinner
+
+    startSpinner: (spinner) ->
+      @spinner = spinner
+
     onClose: ->
       @stopListening()
 

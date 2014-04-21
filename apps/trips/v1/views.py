@@ -51,7 +51,12 @@ class Trip(View):
             data = params.get('model', "{}")
             data = json.loads(data)
 
-            form = forms.AddTripForm(data)
+            ## update point with PUT emulate
+            if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
+                form = forms.AddTripForm(data,
+                                          instance=Trips.objects.get(pk=kwargs.get('id')))
+            else:
+                form = forms.AddTripForm(data)
             if form.is_valid():
                 trip = form.save(commit=False)
                 person = MainModels.Person.objects.get(username=request.user)
@@ -68,15 +73,21 @@ class Trip(View):
 
                 #Blocks
                 blocks = data.get('blocks')
+                block_ids = [block.get('id') for block in blocks]
+                b = trip.blocks.exclude(id__in=block_ids)
+                trip.blocks.remove(*b)
                 if blocks is not None:
                     for block in blocks:
                         block['points'] = [point['id'] for point in block['points']]
                         block['imgs'] = [img['id'] for img in block['imgs']]
-                        block_form = forms.AddBlockForm(block)
+                        if block.get('id'):
+                            block_obj = Blocks.objects.get(id=block.get('id'))
+                            block_form = forms.AddBlockForm(block, instance=block_obj)
+                        else:
+                            block_form = forms.AddBlockForm(block)
                         if block_form.is_valid():
                             block_obj = block_form.save()
                             trip.blocks.add(block_obj)
-                trip.save()
                 YpJson = YpSerialiser()
                 trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
                 return HttpResponse(trip, mimetype="application/json")
@@ -90,67 +101,6 @@ class Trip(View):
         trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
         self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, kwargs.get('id')))
         return HttpResponse(trip, mimetype="application/json")
-
-    def put(self, request, *args, **kwargs):
-        params = request.POST.copy()
-        data = params.get('model', "{}")
-        data = json.loads(data)
-
-        form = forms.AddTripForm(data, instance=Trips.objects.get(pk=data.get("id")))
-        if form.is_valid():
-            trip = form.save(commit=False)
-            person = MainModels.Person.objects.get(username=request.user)
-            trip.author = person
-            trip.save()
-            trip.admins.add(person)
-
-            #Members
-            members = data.get('members')
-            trip.members.clear()
-            if members is not None:
-                for member_id in members:
-                    member = MainModels.Points.objects.get(id=member_id)
-                    trip.members.add(member)
-
-            #Blocks
-            blocks = data.get('blocks')
-            trip.blocks.clear()
-            if blocks is not None:
-                for block in blocks:
-                    block_form = forms.AddBlockForm(block)
-                    block_obj = block_form.save(commit=False)
-                    block_obj.save()
-
-                    points = block.get("points")
-                    block_obj.points.clear()
-                    if points is not None:
-                        for point_id in points:
-                            point = MainModels.Points.objects.get(id=point_id)
-                            block_obj.points.add(point)
-
-                    events = block.get("events")
-                    block_obj.points.clear()
-                    if events is not None:
-                        for event_id in events:
-                            event = MainModels.Events.objects.get(id=event_id)
-                            block_obj.events.add(event)
-
-                    imgs = block.get("imgs")
-                    block_obj.imgs.clear()
-                    if imgs is not None:
-                        for img_id in imgs:
-                            img = MainModels.Events.objects.get(id=img_id)
-                            block_obj.imgs.add(img)
-
-                    block_obj.save()
-                    #BlockPos = BlockPosition(trip=trip, block=block_obj)
-                    #BlockPos.save()
-            trip.save()
-            YpJson = YpSerialiser()
-            trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
-            return HttpResponse(trip, mimetype="application/json")
-        else:
-            return JsonHTTPResponse({"id": 0, "status": 1, "txt": "Error"})
 
 
 class LikeTrip(TripsBaseView):

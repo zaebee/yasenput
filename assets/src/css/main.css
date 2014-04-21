@@ -1961,6 +1961,9 @@
   font-size: 22px;
   color: #53B6D8;
 }
+#board-region .popupwin__title {
+    display:none;
+}
 .popupwin__title .close {
   position: absolute;
   top: 10px;
@@ -4664,7 +4667,7 @@ a {
 .event-step_what .map {
   border-bottom: none;
   margin: 0 -20px;
-  height: 250px;
+  height: 330px;
 }
 .place-step_what .field .tag {
   margin-left: 5px;
