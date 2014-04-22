@@ -399,18 +399,18 @@ class ItemsList(PointsBaseView):
                     ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                     ipgeobase = ipgeobases[0]
                     self.log.info('no client ip in base')
-                ln_left = ipgeobase.longitude-0.01
-                ln_right = ipgeobase.longitude-0.01
-                lt_left = ipgeobase.latitude+0.01
-                lt_right = ipgeobase.latitude+0.01
+                ln_left = ipgeobase.longitude-0.1
+                ln_right = ipgeobase.longitude+0.1
+                lt_left = ipgeobase.latitude-0.1
+                lt_right = ipgeobase.latitude+0.1
             else:
                 ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                 ipgeobase = ipgeobases[0]
                 self.log.info('no client ip in base')
-                ln_left = ipgeobase.longitude-0.01
-                ln_right = ipgeobase.longitude-0.01
-                lt_left = ipgeobase.latitude+0.01
-                lt_right = ipgeobase.latitude+0.01
+                ln_left = ipgeobase.longitude-0.1
+                ln_right = ipgeobase.longitude+0.1
+                lt_left = ipgeobase.latitude-0.1
+                lt_right = ipgeobase.latitude+0.1
                 self.log.info(ipgeobase.city)
 
         t0 = time.time()
@@ -419,6 +419,7 @@ class ItemsList(PointsBaseView):
             longitude__lte=ln_right).filter(
                 longitude__gte=ln_left).filter(
                     latitude__lte=lt_right).filter(latitude__gte=lt_left)
+        #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
         search_res_sets_list = []
