@@ -11,26 +11,16 @@
     appRoutes:
       '_=_': 'index'
       '': 'index'
-      'city/:city/': 'city'
       'point/:id': 'point'
       'event/:id': 'event'
       'route/:id': 'route'
       'trip/:id': 'trip'
       'preview/:type/:id': 'preview'
-      'city/:city_code': 'city'
+      'city/:city_code/': 'city'
   
   API =
     index: ->
       console.log 'index'
-      if !BoardApp.board
-        BoardApp.board = new BoardApp.List.Controller App.settings
-      App.vent.trigger 'show:map:region'
-      App.vent.trigger 'show:destination:region'
-      App.vent.trigger 'hide:dashboard:region'
-
-    city: (city)->
-      console.log App.settings
-      App.city = city
       if !BoardApp.board
         BoardApp.board = new BoardApp.List.Controller App.settings
       App.vent.trigger 'show:map:region'
@@ -80,8 +70,7 @@
         App.vent.trigger 'show:detail:popup', model
 
     city: (city_code) ->
-      console.log city_code
-      App.updateSettings s: city_code
+      App.updateSettings city: city_code
 
 
   App.vent.on 'show:detail:popup', (model) ->

@@ -13,7 +13,7 @@ sitemaps = {
 
 urlpatterns = patterns('apps.main.views',
     url(r'^$', 'index'),
-    url(r'city/(?P<city>[\w|-]+)/$','index'),
+    url(r'city/(?P<city>[_\w|-]+)/$','index'),
     url(r'^routes', 'index'),
     url(r'^points', 'index'),
     url(r'^want', 'index'),
@@ -28,7 +28,6 @@ urlpatterns = patterns('apps.main.views',
     url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),
-    url(r'^city/[_/\w\d]+$', 'index'),
 
     url(r'^map', 'index'),
     url(r'^new', 'index'),

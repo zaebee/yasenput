@@ -4,7 +4,6 @@
 
     initialize: ->
       console.log 'initialize BoardApp.List.Controller'
-      App.updateSettings city: App.city
       @yapens = @yapens or App.request 'get:all:yapens', @options
       @yapensView = @yapensView or new List.Yapens collection: @yapens
     
