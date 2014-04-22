@@ -411,6 +411,7 @@ class ItemsList(PointsBaseView):
                 ln_right = ipgeobase.latitude-0.1
                 lt_left = ipgeobase.latitude+0.1
                 lt_right = ipgeobase.latitude+0.1
+                self.log.info(ipgeobase.city)
 
         t0 = time.time()
         search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
