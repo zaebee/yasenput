@@ -6,8 +6,9 @@
       console.log 'initialize AddPopupApp.Event.Controller'
       @tags = App.request 'get:all:tags', level: false
       @model = @options.model or new App.Entities.Event
-
       @layout = new Event.Layout model: @model
+
+      @listenTo @model, 'spinner:start', @startSpinner
       @listenTo @layout, 'show', =>
         @showStepName()
         @showStepWhat()
@@ -18,6 +19,10 @@
         @model.fetch
           success: =>
             App.addEventPopup.show @layout, loading: true
+            @spinner.stop() if @spinner
+            
+    startSpinner: (spinner) ->
+      @spinner = spinner
 
     onClose: ->
       @stopListening()

@@ -3,7 +3,7 @@
   class Trip.Layout extends App.Views.Layout
     template: 'AddTripLayout'
     className: 'popupwin__scrollbox'
-    
+
     regions:
       asideRegion: '#trip-aside-region'
       contentRegion: '#trip-content-region'
@@ -49,7 +49,7 @@
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
         position = @collection.indexOf(item) + 1
-        item.set position: position, silence: true
+        item.set position: position
 
     onShow: ->
       @popupwin = @$el.closest '.popupwin'
@@ -63,7 +63,7 @@
       @popupwin.off 'scroll'
       @remove()
       @stopListening()
-    
+
 
   class Trip.Content extends App.Views.Layout
     template: 'AddTripContent'
@@ -107,14 +107,21 @@
 
     saveTrip: (event) ->
       event.preventDefault()
+      if @model.get 'name'
+        $('.form__field_name').removeClass 'error'
+      else
+        $('.form__field_name').addClass 'error'
+        return
       @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
       @spinner.start()
       @model.set author: @user.toJSON()
       @model.set blocks: @collection.toJSON()
       @model.save null,
         success: =>
+          localStorage.removeItem "trip/#{@model.cid}"
           @spinner.stop()
           App.addTripPopup.close()
+          App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
 
 
@@ -186,7 +193,7 @@
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
         position = @collection.indexOf(item) + 1
-        item.set position: position, silence: true
+        item.set position: position
 
     onClose: ->
       @remove()
@@ -222,7 +229,7 @@
     templateHelpers: ->
       cid: @model.cid
 
-    onShow: ->
+    onRender: ->
       mockFile = name: "Image", size: 12345
       imgs = @model.get 'imgs'
       id = @model.get 'id'
@@ -246,4 +253,3 @@
           imgs = @model.get 'imgs'
           imgs.push img
           @model.set 'imgs', imgs
-          #@model.trigger 'change:imgs'

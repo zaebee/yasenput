@@ -294,7 +294,10 @@
           App.addPointPopup.close()
           App.BoardApp.board.yapens.add @model, at:0
           App.vent.trigger 'show:detail:popup', @model
-          App.BoardApp.board.yapensView.render()
+          App.navigate "point/#{@model.get('id')}"
+          yapensView = App.BoardApp.board.yapensView.render()
+          if yapensView.wall
+            yapensView.wall.reloadItems() & yapensView.wall.layout()
 
     backStep: (event) ->
       event.preventDefault()

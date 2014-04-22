@@ -8,6 +8,7 @@
       @model = @options.model or new App.Entities.Point
       @layout = new Point.Layout model: @model
 
+      @listenTo @model, 'spinner:start', @startSpinner
       @listenTo @layout, 'show', =>
         @showStepName()
         @showStepWhat()
@@ -19,6 +20,10 @@
         @model.fetch
           success: =>
             App.addPointPopup.show @layout, loading: true
+            @spinner.stop() if @spinner
+
+    startSpinner: (spinner) ->
+      @spinner = spinner
 
     onClose: ->
       @stopListening()

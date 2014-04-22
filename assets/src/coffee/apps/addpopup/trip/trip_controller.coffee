@@ -5,16 +5,28 @@
     initialize: ->
       console.log 'initialize AddPopupApp.Trip.Controller'
       @model = @options.model or new App.Entities.Trip
-      blocks = @model.get 'blocks'
-      @blocks = App.request 'get:blocks', blocks
       @layout = new Trip.Layout model: @model
 
+      @listenTo @model, 'spinner:start', @startSpinner
       @listenTo @layout, 'show', =>
         @showAside()
         @showContent()
 
-      App.addTripPopup.show @layout, loading: true
-            
+      if @model.isNew()
+        blocks = @model.get 'blocks'
+        @blocks = App.request 'get:blocks', blocks
+        App.addTripPopup.show @layout, loading: true
+      else
+        @model.fetch
+          success: =>
+            blocks = @model.get 'blocks'
+            @blocks = App.request 'get:blocks', blocks
+            App.addTripPopup.show @layout, loading: true
+            @spinner.stop() if @spinner
+
+    startSpinner: (spinner) ->
+      @spinner = spinner
+
     onClose: ->
       @stopListening()
 
