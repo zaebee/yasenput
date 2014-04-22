@@ -128,8 +128,9 @@
 
     showPointPopup: (event) ->
       event.preventDefault()
-      url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger: true
+      if @model.get 'id'
+        url = $(event.currentTarget).prop 'hash'
+        App.navigate url, trigger: true
 
 
   class Trip.Comments extends App.Views.ItemView

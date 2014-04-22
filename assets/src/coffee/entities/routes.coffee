@@ -25,4 +25,3 @@
       
   App.reqres.setHandler 'get:detail:route', (model) ->
     API.getDetail model
-
