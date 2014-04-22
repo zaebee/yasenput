@@ -72,10 +72,6 @@
       console.log city_code
       App.updateSettings s: city_code
 
-      ## code below is working too
-      #App.vent.trigger 'filter:all:yapens',
-      #  s: city_code
-
 
   App.vent.on 'show:detail:popup', (model) ->
     if model instanceof App.Entities.Point

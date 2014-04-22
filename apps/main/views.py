@@ -12,7 +12,7 @@ from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from apps.serializers.json import Serializer
 from apps.trips.models import Trips
@@ -60,7 +60,7 @@ def index(request):
 
 def point(request, id):
     data = {}
-    point = get_object_or_None(MainModels.Points, id=id)
+    point = get_object_or_404(MainModels.Points, id=id)
     if point:
         data['title'] = point.name
         data['description'] = point.description
@@ -70,7 +70,7 @@ def point(request, id):
 
 def trip(request, id):
     data = {}
-    trip = get_object_or_None(Trips, id=id)
+    trip = get_object_or_404(Trips, id=id)
     if trip:
         data['title'] = trip.name
         data['description'] = trip.description

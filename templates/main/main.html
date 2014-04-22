@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block description %}
-  {{ description|default:block.super }}
+  {{ description|truncatewords:40|default:block.super }}
 {% endblock %}
 
 {% block og_image %}{% if og_image %}http://yasenput.ru{{ og_image }}{% else %}http://yasenput.ru{{ STATIC_URL }}images/logo.png{% endif %}{% endblock %}
 {% block og_title %}{% if title %}{{ title }}{% endif %}{% endblock %}
-{% block og_description %}{{ description|default:"ЯсенПуть путешествуй вместе с нами" }}{% endblock %}
+{% block og_description %}{{ description|truncatewords:40|default:"ЯсенПуть путешествуй вместе с нами" }}{% endblock %}
 
 
 
