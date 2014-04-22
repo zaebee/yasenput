@@ -195,11 +195,12 @@ class Points(models.Model):
     likes = property(_likes)
     visits = property(_visits)
 
-
     def __unicode__(self):
         return self.name
 
-
+    @models.permalink
+    def get_absolute_url(self):
+        return ('point_detail', None, {'id': self.id})
 
 
 class PointsByUser(models.Model):

@@ -58,3 +58,7 @@ class Trips(models.Model):
             if block.imgs.exists():
                 img = block.imgs.all()[0]
                 return img.thumbnail207()
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('trip_detail', None, {'id': self.id})

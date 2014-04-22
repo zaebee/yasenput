@@ -3,6 +3,14 @@ __author__ = 'art'
 
 from django.conf.urls import *
 
+from django.contrib.sitemaps.views import sitemap
+from apps.main.sitemap import TripsSitemap, PointsSitemap
+
+sitemaps = {
+    'trip': TripsSitemap,
+    'point': PointsSitemap,
+}
+
 urlpatterns = patterns('apps.main.views',
     url(r'^$', 'index'),
     url(r'^routes', 'index'),
@@ -15,8 +23,8 @@ urlpatterns = patterns('apps.main.views',
     url(r'^route', 'index'),
     url(r'^event', 'index'),
 
-    url(r'^point/(?P<id>\d+)$', 'point'),
-    url(r'^trip/(?P<id>\d+)$', 'trip'),
+    url(r'^point/(?P<id>\d+)$', 'point', name='point_detail'),
+    url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),
 
@@ -27,4 +35,8 @@ urlpatterns = patterns('apps.main.views',
 
     url(r'^order', 'order'),
 
+)
+
+urlpatterns += patterns('',
+    (r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
 )
