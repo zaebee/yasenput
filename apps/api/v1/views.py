@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
-import random
 import json
 import time
-import ast
+
+from datetime import datetime, timedelta
 
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.utils.encoding import smart_str
-from django.utils.timezone import utc
 from django.http import Http404, HttpResponse, QueryDict
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.db.models import Count
-from django.db import connection
-from datetime import datetime, timedelta
+from django.conf import settings
 
 from django_ipgeobase.models import IPGeoBase
 
 from querysetjoin import QuerySetJoin
 from pymorphy import get_morph
+from annoying.functions import get_object_or_None
 
 from apps.djangosphinx.models import SphinxSearch, SphinxQuerySet
 
@@ -33,14 +31,15 @@ from apps.tags import models as TagsModels
 from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
-from apps.reviews import models as ReviewsModels
 from apps.serializers.json import Serializer as YpSerialiser
 
 from YasenPut.limit_config import LIMITS
-import YasenPut.settings
+
 from geopy import geocoders
 import logging
 logger = logging.getLogger(__name__)
+DICTS_PATH = getattr(settings, 'DICTS_PATH')
+
 
 def JsonHTTPResponse(json):
     return HttpResponse(simplejson.dumps(json), mimetype="application/json")
@@ -254,7 +253,7 @@ class Search(PointsBaseView):
 
         #users:
         users_list = []
-        morph = get_morph(YasenPut.settings.DICTS_PATH)
+        morph = get_morph(DICTS_PATH)
         search = SphinxQuerySet(index="auth_user")
         name_morph = morph.normalize(params.get("s").upper())
         phrase_list = params.get("s").split(' ')
@@ -264,8 +263,9 @@ class Search(PointsBaseView):
                 for name_m in name_morph:
                     search_query = search.query(name_m)
                     for splited_item in search_query:
-                        if not MainModels.Person.objects.get(id = splited_item['id']) in users_list:
-                           users_list.append(MainModels.Person.objects.get(id = splited_item['id']))
+                        user = get_object_or_None(MainModels.Person, id=splited_item['id'])
+                        if user and user not in users_list:
+                           users_list.append(user)
 
         users = users_list[offset:limit]
 
