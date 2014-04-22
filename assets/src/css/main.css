@@ -6542,7 +6542,7 @@ a {
 }
 
 #point-photo-region .loading-container {
-    background: #dfdfdf;
+    background: #fff;
 }
 .js-popup-add-photos {
     background: rgb(24,24,24);
@@ -6665,9 +6665,4 @@ button[disabled].js-finish {
 
 .user_in_popup{
     width: 200px;
-}
-
-#trip-grid-region {
-    background: url(../images/loader.gif) no-repeat center bottom;
-    min-height: 220px;
 }

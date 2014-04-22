@@ -94,6 +94,7 @@ STATICFILES_DIRS = (
     #    'd:/dev/djcode/YasenPut/assets/',
 )
 STATICFILES_URL = '/assets'
+
 DATABASE_ENGINE = 'mysql'
 DATABASE_HOST = '127.0.0.1'
 DATABASE_PORT = '3306'
