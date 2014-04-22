@@ -39,7 +39,7 @@ class YpSerialiser(Serializer):
 
 
 @csrf_exempt
-def index(request):
+def index(request, **kwargs):
     if '_escaped_fragment_' in request.GET:
         if str(request.GET['_escaped_fragment_']) == '':
             points = MainModels.Points.objects.all().order_by('-updated')[:100]
@@ -55,6 +55,9 @@ def index(request):
         if request.user.is_authenticated():
             t0 = time.time()
             logger.info('index view queries complete (%.2f sec.)' % (time.time()-t0))
+        if kwargs:
+            request.GET = request.GET.copy()
+            request.GET['city'] = kwargs['city']
         return render(request, template_name, {})
 
 

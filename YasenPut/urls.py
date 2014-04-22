@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^tags/', include('apps.tags.urls')),
     url(r'^reviews/', include('apps.reviews.urls')),
     url(r'news/', include('apps.news.urls')),
+    
     url(r'', include('apps.main.urls')),
     url(r'^layout/', direct_to_template, {'template': 'layout/index.html'}),
     (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),

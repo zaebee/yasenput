@@ -5,6 +5,7 @@ from django.conf.urls import *
 
 urlpatterns = patterns('apps.main.views',
     url(r'^$', 'index'),
+    url(r'city/(?P<city>[\w|-]+)/$','index'),
     url(r'^routes', 'index'),
     url(r'^points', 'index'),
     url(r'^want', 'index'),
