@@ -129,7 +129,7 @@
     showPointPopup: (event) ->
       event.preventDefault()
       if @model.get 'id'
-        url = $(event.currentTarget).prop 'hash'
+        url = $(event.currentTarget).attr 'href'
         App.navigate url, trigger: true
 
 

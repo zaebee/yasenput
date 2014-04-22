@@ -8,11 +8,18 @@ do (Backbone, Marionette) ->
       @history = []
 
     open: (view) ->
-      console.info 'current', @current
       @current = Backbone.history.fragment
-      @prevModal = $('.modal.in').not @$el
+      console.info 'current', @current
+      $modals = $('.modal.in').not @$el
+      prevModal = _.max $modals, (chr) -> $(chr).css('z-index')
+      if _.isEmpty(prevModal)
+        @prevModal = $modals.first()
+      else
+        @prevModal = $(prevModal)
+      @zIndex = parseInt @$el.css('z-index'), 10
       if @prevModal.length
-        @prevModal.css 'z-index', 1000
+        @prevModal.css 'z-index', @zIndex - 50
+
       @$el.find('.modal-dialog').empty().append view.el
       @$el.on 'hidden.bs.modal', @closeModal
       @changeUrl = view.changeUrl
@@ -54,15 +61,11 @@ do (Backbone, Marionette) ->
         e.preventDefault()
         e.stopPropagation()
         console.info 'navigate to previous modal', @current
-        Backbone.history.navigate @current,
-          trigger: false
         @current = null
-        @prevModal.css 'z-index', 1050
+        @prevModal.css 'z-index', @zIndex + 50
         $('body').addClass 'modal-open'
       else if @changeUrl
         console.info 'navigate to previous modal', @current
-        Backbone.history.navigate @current,
-          trigger: false
-      else
-        Backbone.history.navigate Backbone.history.root,
-          trigger: false
+
+      Backbone.history.navigate Backbone.history.root,
+        trigger: false
