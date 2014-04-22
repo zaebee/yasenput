@@ -38,7 +38,7 @@ from apps.serializers.json import Serializer as YpSerialiser
 
 from YasenPut.limit_config import LIMITS
 import YasenPut.settings
-
+from geopy import geocoders
 import logging
 logger = logging.getLogger(__name__)
 
@@ -308,6 +308,7 @@ class ItemsList(PointsBaseView):
     log = logger
     def get(self, request, *args, **kwargs):
         params = request.GET
+        #self.log.info('city = ' + params.get('city'))
         price = "$"
         duration = "$"
         models = ['points','routes','events','trips']
@@ -377,44 +378,56 @@ class ItemsList(PointsBaseView):
             search_res_routes = MainModels.Routes.search.none()
             search_res_sets = CollectionsModels.Collections.search.none()
             self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
-
-        if params.get('coord_left'):
-            #top left coords
-            self.log.info('get coord_left')
-            ln_left = float(json.loads(params.get('coord_left')).get('ln'))
-            lt_left = float(json.loads(params.get('coord_left')).get('lt'))
-            #top right coords
-            ln_right = float(json.loads(params.get('coord_right')).get('ln'))
-            lt_right = float(json.loads(params.get('coord_right')).get('lt'))
-        else:
-            #GET CLIENT IP:
-            remote_address = request.META.get('REMOTE_ADDR')
-            ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address or "213.176.241.10"
-            self.log.info('Client IP:' + str(ip))
-            ipgeobases = IPGeoBase.objects.by_ip(ip)
-            if ipgeobases:
-                if ipgeobases.exists():
-                    ipgeobase = ipgeobases[0]
-                else:
-                    ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
-                    ipgeobase = ipgeobases[0]
-                    self.log.info('no client ip in base')
-                ln_left = ipgeobase.longitude-0.1
-                ln_right = ipgeobase.longitude+0.1
-                lt_left = ipgeobase.latitude-0.1
-                lt_right = ipgeobase.latitude+0.1
+        if not params.get('s'):
+            if params.get('city'):
+                g = geocoders.GoogleV3()
+                place, (lt, ln) = g.geocode(params.get('city'))
+                ln_left = ln-0.1
+                ln_right = ln+0.1
+                lt_left = lt-0.1
+                lt_right = lt+0.1
             else:
-                ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
-                ipgeobase = ipgeobases[0]
-                self.log.info('no client ip in base')
-                ln_left = ipgeobase.longitude-0.1
-                ln_right = ipgeobase.longitude+0.1
-                lt_left = ipgeobase.latitude-0.1
-                lt_right = ipgeobase.latitude+0.1
-                self.log.info(ipgeobase.city)
-
+                if params.get('coord_left'):
+                    #top left coords
+                    self.log.info('get coord_left')
+                    ln_left = float(json.loads(params.get('coord_left')).get('ln'))
+                    lt_left = float(json.loads(params.get('coord_left')).get('lt'))
+                    #top right coords
+                    ln_right = float(json.loads(params.get('coord_right')).get('ln'))
+                    lt_right = float(json.loads(params.get('coord_right')).get('lt'))
+                else:
+                    #GET CLIENT IP:
+                    remote_address = request.META.get('REMOTE_ADDR')
+                    ip = request.META.get('HTTP_X_FORWARDED_FOR') or remote_address or "213.176.241.10"
+                    self.log.info('Client IP:' + str(ip))
+                    ipgeobases = IPGeoBase.objects.by_ip(ip)
+                    if ipgeobases:
+                        if ipgeobases.exists():
+                            ipgeobase = ipgeobases[0]
+                        else:
+                            ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
+                            ipgeobase = ipgeobases[0]
+                            self.log.info('no client ip in base')
+                        ln_left = ipgeobase.longitude-0.1
+                        ln_right = ipgeobase.longitude+0.1
+                        lt_left = ipgeobase.latitude-0.1
+                        lt_right = ipgeobase.latitude+0.1
+                    else:
+                        ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
+                        ipgeobase = ipgeobases[0]
+                        self.log.info('no client ip in base')
+                        ln_left = ipgeobase.longitude-0.1
+                        ln_right = ipgeobase.longitude+0.1
+                        lt_left = ipgeobase.latitude-0.1
+                        lt_right = ipgeobase.latitude+0.1
+                        self.log.info(ipgeobase.city)
+        else:
+            ln_left = 0
+            ln_right = 100
+            lt_left = 0
+            lt_right = 100
         t0 = time.time()
-        self.log.info(str(ln_left)+' '+str(lt_left)+' '+str(ln_right)+' '+str(lt_right))
+        #self.log.info(str(ln_left)+' '+str(lt_left)+' '+str(ln_right)+' '+str(lt_right))
         search_res_points_list = search_res_points.filter(
             longitude__lte=ln_right).filter(
                 longitude__gte=ln_left).filter(
