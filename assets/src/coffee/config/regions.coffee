@@ -62,7 +62,7 @@ do (Backbone, Marionette) ->
         e.stopPropagation()
         console.info 'navigate to previous modal', @current
         @current = null
-        @prevModal.css 'z-index', @zIndex + 50
+        @prevModal.css 'z-index', ''
         $('body').addClass 'modal-open'
       else if @changeUrl
         console.info 'navigate to previous modal', @current
