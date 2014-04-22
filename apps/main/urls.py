@@ -27,6 +27,7 @@ urlpatterns = patterns('apps.main.views',
     url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),
+    url(r'^city/[_/\w\d]+$', 'index'),
 
     url(r'^map', 'index'),
     url(r'^new', 'index'),

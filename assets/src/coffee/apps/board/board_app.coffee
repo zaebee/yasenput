@@ -16,6 +16,7 @@
       'route/:id': 'route'
       'trip/:id': 'trip'
       'preview/:type/:id': 'preview'
+      'city/:city_code': 'city'
   
   API =
     index: ->
@@ -66,6 +67,14 @@
         if type is 'trip'
           model = new App.Entities.Trip data
         App.vent.trigger 'show:detail:popup', model
+
+    city: (city_code) ->
+      console.log city_code
+      App.updateSettings s: city_code
+
+      ## code below is working too
+      #App.vent.trigger 'filter:all:yapens',
+      #  s: city_code
 
 
   App.vent.on 'show:detail:popup', (model) ->
