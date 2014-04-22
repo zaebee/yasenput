@@ -287,7 +287,7 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     padding: 10px 14px 12px;
     width: 474px;
     height: 46px;
-    background: transparent;
+    background: #fff;
     box-shadow: 0px 0px 5px rgba(38, 184, 154, 0.5);
     -webkit-box-shadow: 0px 0px 5px rgba(38, 184, 154, 0.5);
     line-height: 20px;

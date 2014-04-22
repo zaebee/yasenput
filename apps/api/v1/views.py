@@ -293,14 +293,14 @@ class Search(PointsBaseView):
         trips = json.loads(YpJson.serialize(trips, fields = ['id','name']))
         tags = json.loads(YpJson.serialize(tags, fields = ['name','level']))
         users = json.loads(YpJson.serialize(users, fields = ['id','first_name', 'last_name']))
-        return HttpResponse(simplejson.dumps({
+        return JsonHTTPResponse({
             "points": points,
             'events': events,
             'routes': routes,
             'trips': trips,
             "tags": tags,
             "users": users,
-        }))
+        })
 
 
 class ItemsList(PointsBaseView):
