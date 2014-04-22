@@ -26,12 +26,16 @@
       App.vent.trigger 'hide:dashboard:region'
 
     getModel: (entity, id) ->
+      item = new entity unid: id
       if !BoardApp.board
         BoardApp.board = new BoardApp.List.Controller App.settings
-      model = BoardApp.board.yapens.findWhere id: id
+      model = BoardApp.board.yapens.findWhere
+        id: id
+        type_of_item: item.get 'type_of_item'
       if !model
-        model = new entity unid: id
+        model = item
         BoardApp.board.yapens.add model
+      model
 
     point: (id) ->
       model = @getModel App.Entities.Point, id

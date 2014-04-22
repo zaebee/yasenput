@@ -1,41 +1,42 @@
-
-  <div class="trip-list popupwin__content">
-    <div class="title">Содержание</div>
-    <ul class="list" id="trip_blcks">
-    {{#each blocks}}
-      <li class="item clearfix" id="tmpl_blck" data-step="1">
-        <span class="number">{{plus @index 1}}</span>
-        <div class="text">
-          <a class="text__place name__blck">{{name}}</a>
-        </div>
-      </li>
-      {{/each}}
-    </ul>
-  </div><!-- class="trip-list" -->
-  <!--<div class="route-list popupwin__content">
-    <div class="title">Участники</div>
-    <ul class="list">
-      <li class="item">
-        <span class="drag"></span>
-        <span class="number">1</span>
-        <img src="media/uploads/route-1.png" alt="" class="img">
-        <div class="text">
-          <span class="text__place">Владимир Вязников</span>
-          <span class="text__type c-place">организатор</span>
-        </div>
-      </li>
-      <li class="item">
-        <span class="drag"></span>
-        <span class="number">2</span>
-        <img src="media/uploads/route-2.png" alt="" class="img">
-        <div class="text">
-          <span class="text__place">Виталий Меньшиков</span>
-          <span class="text__type c-user">участник</span>
-        </div>
-      </li>
-    </ul>
-  </div>--><!-- class="route-list" -->
-  <!--<div class="map-aside" id="map11"></div>-->
+{{#if blocks}}<div class="trip-list popupwin__content">
+  <div class="title">Содержание</div>
+  <ul class="list" id="trip_blcks">
+  {{#each blocks}}
+    <li class="item clearfix" id="tmpl_blck" data-step="1">
+      <span class="number">{{plus @index 1}}</span>
+      <div class="text">
+        <a class="text__place name__blck">{{name}}</a>
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+</div><!-- class="trip-list" -->
+{{/if}}
+<!--
+<div class="route-list popupwin__content">
+  <div class="title">Участники</div>
+  <ul class="list">
+    <li class="item">
+      <span class="drag"></span>
+      <span class="number">1</span>
+      <img src="media/uploads/route-1.png" alt="" class="img">
+      <div class="text">
+        <span class="text__place">Владимир Вязников</span>
+        <span class="text__type c-place">организатор</span>
+      </div>
+    </li>
+    <li class="item">
+      <span class="drag"></span>
+      <span class="number">2</span>
+      <img src="media/uploads/route-2.png" alt="" class="img">
+      <div class="text">
+        <span class="text__place">Виталий Меньшиков</span>
+        <span class="text__type c-user">участник</span>
+      </div>
+    </li>
+  </ul>
+</div>
+--><!-- class="route-list" -->
 {{#if price}}
 <div class="route-aside-commercial popupwin__content trip_aside" {{#ifCond price '!=' 0}}style="display:block;"{{/ifCond}}>
   <div class="price">{{price}} <span class="sprite-ruble-green-big"></span></div>

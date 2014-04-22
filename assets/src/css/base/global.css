@@ -108,5 +108,12 @@
     margin: 0 auto;
     width: 186px;
     height: 186px;
-    background: url(../../images/loader.gif);
+    background: url(../../images/loader-white.gif) no-repeat center;
+}
+
+#board-region .loader {
+    margin: 0 auto;
+    width: 186px;
+    height: 186px;
+    background: url(../../images/loader.gif) no-repeat center;
 }

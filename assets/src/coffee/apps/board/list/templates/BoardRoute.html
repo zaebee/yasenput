@@ -12,15 +12,15 @@
     {{/if}}
     {{#ifCond days '!=' 0}}
     <div class="days">
-                  <div class="days__circle">
-                    <span class="days__count">{{days}}</span>
-                    <br> дней
-                  </div>
-                </div>
+      <div class="days__circle">
+        <span class="days__count">{{days}}</span>
+        <br> дней
+      </div>
+    </div>
     {{/ifCond}}
     <div class="icons">
       <!--<a href="#" class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>-->
-      <a class="icon sprite-like" data-toggle="tooltip" title="Нравится"></a>
+      <!--<a class="icon sprite-like" data-toggle="tooltip" title="Нравится"></a>-->
     </div>
   </a>
 </div>
@@ -31,7 +31,7 @@
   </div>
   {{/ifCond}}
   <div class="name">{{name}}</div>
-  <span class="info info_like">{{likes_count}}</span>
+  <span class="info info_like">{{#if likes_count}}{{likes_count}}{{else}}0{{/if}}</span>
   <span class="info info_comment">0</span>
 </div>
 <div class="box__person">
