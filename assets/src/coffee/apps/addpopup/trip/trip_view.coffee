@@ -206,12 +206,14 @@
       'change:points': 'render'
 
     events:
-      #'click .link': 'showPopup'
+      'click .link': 'showPopupPoint'
       'click .js-delete': 'deletePoint'
 
-    showPopup: (event) ->
+    showPopupPoint: (event) ->
       event.preventDefault()
       console.log event
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, trigger: true
 
     deletePoint: (event) ->
       event.preventDefault()

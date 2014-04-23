@@ -62,19 +62,19 @@
     showDetailPopup: (event) ->
       console.log 'show popup'
       event.preventDefault()
-      url = $(event.currentTarget).prop 'hash'
+      url = $(event.currentTarget).attr 'href'
       App.navigate url, trigger:false
       App.vent.trigger 'show:detail:popup', @model
 
     showEditPopup: (event) ->
       event.preventDefault()
       btn = $(event.currentTarget)
+      url = btn.attr 'href'
       spinner = App.buttonSpinner btn, 'Загружаю', btn
       spinner.start()
-      url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger:false
       App.vent.trigger 'show:edit:popup', @model
       @model.trigger 'spinner:start', spinner
+      App.navigate url, trigger:false
 
     showRemovePopup: (event) ->
       event.preventDefault()

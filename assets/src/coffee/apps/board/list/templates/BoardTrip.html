@@ -1,6 +1,6 @@
 <div class="box__title box__title_type_trip">{{#if price}}Экскурсия{{else}}Путешествие{{/if}}</div>
 <div class="box__img">
-  <a href="/#trip/{{id}}" class="js-popupwin-trip">
+  <a href="/trip/{{id}}" class="js-popupwin-trip">
     {{#if blocks}}
       {{#if blocks.[0].imgs}}
         <img src="{{blocks.[0].imgs.[0].thumbnail207}}" height="{{blocks.[0].imgs.[0].thumbnail207_height}}" alt="{{name}}" class="img">
@@ -10,11 +10,14 @@
     {{else}}
       <img src="/static/images/place-unknown.png" height="174" alt="{{name}}" class="img">
     {{/if}}
+
     {{#if editable}}
-    <div class="btns">
-      <a href="/#trip/{{id}}/edit" class="btn btn_color_green btn_edit">Редактировать</a>
-      <a href="/#trip/{{id}}/delete" class="btn btn_color_red btn_remove">Удалить</a>
-    </div>
+      {{#ifContains author.id user}}
+        <div class="btns">
+          <a href="/trip/{{id}}/edit" class="btn btn_color_green btn_edit">Редактировать</a>
+          <a href="/#trip/{{id}}/delete" class="btn btn_color_red btn_remove">Удалить</a>
+        </div>
+      {{/ifContains}}
     {{else}}
     <div class="icons">
       <!--<a href="#" class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>
