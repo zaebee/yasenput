@@ -2049,7 +2049,8 @@
   margin: 0 0 20px;
   float: left;
 }
-.popupwin__aside {
+.popupwin__aside,
+.trip-step__aside {
   position: relative;
   float: right;
   -webkit-transition: -webkit-transform .5s ease-out;
@@ -6656,6 +6657,10 @@ button[disabled].js-finish {
   display: block;
 }
 
+#trip-grid-region {
+    background: url(../images/loader-white.gif) no-repeat center top;
+    min-height: 150px;
+}
 #grid {
     position:relative;
 }
@@ -6666,4 +6671,36 @@ button[disabled].js-finish {
 
 .user_in_popup{
     width: 200px;
+}
+.dd-placeholder, .dd-empty, .ui-sortable-placeholder {
+    margin: 5px 0;
+    padding: 0;
+    min-height: 30px;
+    background: #f2fbff;
+    border: 1px dashed #b6bcbf;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.dd-item, .dd-empty, .dd-placeholder, .ui-sortable-placeholder {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: 20px;
+    font-size: 13px;
+    line-height: 20px;
+}
+.dd-placeholder,
+.ui-sortable-placeholder {
+    height:40px !important;
+    visibility:visible !important;
+}
+.dd-dragel {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9999;
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }

@@ -111,7 +111,8 @@
     background: url(../../images/loader-white.gif) no-repeat center;
 }
 
-#board-region .loader {
+#board-region .loader,
+#board-region + .loader {
     margin: 0 auto;
     width: 186px;
     height: 186px;

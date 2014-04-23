@@ -1,16 +1,18 @@
-<div class="trip-list trip-list_deleteable route-list_draggable popupwin__content">
+<div class="trip-list trip-list_deleteable dd route-list_draggable popupwin__content">
   {{#if items}}
   <div class="title">Содержание</div>
-  <ul class="list">
+  <ul class="list dd-list">
     {{#each items}}
-    <li class="item clearfix" data-step="{{position}}">
-      <span class="drag"></span>
-      <span class="number">{{position}}</span>
-      <div class="text">
-        <span class="text__place">{{name}}</span>
-        <span class="text__type"></span>
+    <li class="item dd-item clearfix" data-id="{{position}}" data-step="{{position}}">
+      <div class="dd-handle">
+        <span class="drag"></span>
+        <span class="number">{{position}}</span>
+        <div class="text">
+          <span class="text__place">{{name}}</span>
+          <span class="text__type"></span>
+        </div>
+        <a data-position="{{position}}" href="#" class="delete-item js-delete"></a>
       </div>
-      <a data-position="{{position}}" href="#" class="delete-item js-delete"></a>
     </li>
     {{/each}}
   </ul>

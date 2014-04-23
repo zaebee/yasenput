@@ -15,7 +15,7 @@
         @showContent()
         @showAside()
 
-      App.addPlaceToTripPopup.show @layout, loading: true
+      App.addPlaceToTripPopup.show @layout
             
     onClose: ->
       @stopListening()
@@ -26,7 +26,6 @@
         tripyapens: @tripyapens
       @show @gridView,
         region: view.gridRegion
-        loading: true
 
     showAside: ->
       @asideView = new PlaceToTrip.Aside
