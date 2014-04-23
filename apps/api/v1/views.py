@@ -719,15 +719,7 @@ class PointAdd(PointsBaseView):
                 point = MainModels.Points.objects.all().filter(id=id_l)
                 YpJson = YpSerialiser()
                 t0 = time.time()
-                sets_list = CollectionsModels.Collections.objects.all()
                 self.log.info('Get collections for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-                sets_l = []
-                #TO DO не перебором!!!
-                t0 = time.time()
-                for set_t in sets_list.all():
-                    for point_t in set_t.points.all():
-                        if point_t.id == point[0].id:
-                            sets_l.append(set_t.id)
                 if request.user.is_authenticated():
                     if request.user in point[0].likeusers.all():
                         isliked = 1
@@ -737,7 +729,6 @@ class PointAdd(PointsBaseView):
                     isliked = 0
 
                 t0 = time.time()
-                sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
                 imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
                 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
                 'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
@@ -762,7 +753,6 @@ class PointAdd(PointsBaseView):
 
                 return JsonHTTPResponse({
                  'id':int(id_l),
-                 'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
                  'name': point[0].name,
                  'description':point[0].description,
                  'latitude':str(point[0].latitude),
@@ -788,7 +778,6 @@ class PointAdd(PointsBaseView):
         return JsonHTTPResponse({"id": 0, "status": 1, "txt": ", ".join(errors)})
 
     def get(self, request, *args, **kwargs):
-        params = request.GET
         id = kwargs.get('id')
         t0 = time.time()
         point = MainModels.Points.objects.filter(id=id)
@@ -802,15 +791,7 @@ class PointAdd(PointsBaseView):
         self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         YpJson = YpSerialiser()
         t0 = time.time()
-        sets_list = CollectionsModels.Collections.objects.all()
         self.log.info('Get collections for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
-        sets_l = []
-        #TO DO не перебором!!!
-        t0 = time.time()
-        for set_t in sets_list.all():
-            for point_t in set_t.points.all():
-                if point_t.id == point[0].id:
-                    sets_l.append(set_t.id)
         if request.user.is_authenticated():
             if request.user in point[0].likeusers.all():
                 isliked = 1
@@ -820,7 +801,6 @@ class PointAdd(PointsBaseView):
             isliked = 0
 
         t0 = time.time()
-        sets_li = CollectionsModels.Collections.objects.all().filter(id__in = sets_l )
         imgs = YpJson.serialize(point, fields = ['imgs'], relations = {'imgs': {'fields': ['author', 'comments', 'likeusers'],
         'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},
         'comments':{'fields':['txt','created','id','author'], 'relations': {'author' : {'fields' : ['id', 'first_name', 'last_name', 'avatar']},}} },
@@ -846,7 +826,6 @@ class PointAdd(PointsBaseView):
         #point imlens.ru= json.loads(self.getSerializeCollections(point))
         return JsonHTTPResponse({
          'id':int(id),
-         'sets':json.loads(self.getSerializeCollections(sets_li[:3])),
          'name': point[0].name,
          'description':point[0].description,
          'latitude':str(point[0].latitude),
