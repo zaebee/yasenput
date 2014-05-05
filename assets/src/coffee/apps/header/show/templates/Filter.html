@@ -1,4 +1,23 @@
 <ul class="categories">
+  <li class="categories__item categories__item_btn">
+  <a href="/trip" class="categories__link btn btn_color_blue {{#ifEquals settings.models 'trips'}}btn_color_green{{/ifEquals}}" data-model="trips" title="Показать только бесплатные путешествия">Путешествия</a>
+  </li>
+  <li class="categories__item categories__item_btn">
+    <a href="/trip" class="categories__link btn btn_color_blue {{#ifEquals settings.models 'trips'}}btn_color_green{{/ifEquals}}" data-model="trips" title="Показать только платные экскурсии">Экскурсии</a>
+  </li>
+  <li class="categories__item categories__item_btn">
+    <a href="/point" class="categories__link btn btn_color_blue {{#ifEquals settings.models 'points'}}btn_color_green{{/ifEquals}}" data-model="points" title="Показать только места">Места</a>
+  </li>
+  <li class="categories__item categories__item_btn">
+    <a href="/event" class="categories__link btn btn_color_blue {{#ifEquals settings.models 'events'}}btn_color_green{{/ifEquals}}" data-model="events" title="Показатьтолько события">События</a>
+  </li>
+  <li class="categories__item categories__item_btn">
+    <a href="/route" class="categories__link btn btn_color_blue {{#ifEquals settings.models 'routes'}}btn_color_green{{/ifEquals}}" data-model="routes" title="Показать только маршруты">Маршруты</a>
+  </li>
+</ul>
+
+<!--
+<ul class="categories">
   {{#each items}}
   <li class="categories__item">
     <a href="#" class="categories__link sprite-filter-photo {{style}}" data-id="{{id}}" data-toggle="tooltip" data-placement="bottom" title="{{name}}"></a>
@@ -27,7 +46,6 @@
   </ul>
 </div>
 
-<!--
 <div class="filter-sort">
   <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
   <a href="#?" class="sprite-filter-up" data-toggle="tooltip" data-placement="bottom" title="Популярное"></a>

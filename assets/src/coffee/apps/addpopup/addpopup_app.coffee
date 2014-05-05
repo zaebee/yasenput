@@ -6,13 +6,12 @@
 
 @Yapp.module 'AddPopupApp', (AddPopupApp, App, Backbone, Marionette, $, _) ->
 
-  class AddPopupApp.Router extends Marionette.AppRouter
-    appRoutes:
-      'add/point': 'point'
-      'add/event': 'event'
-      'add/route': 'route'
-      'add/trip': 'trip'
-      'add/placetotrip': 'placetotrip'
+  appRoutes =
+    'add/point': 'point'
+    'add/event': 'event'
+    'add/route': 'route'
+    'add/trip': 'trip'
+    'add/placetotrip': 'placetotrip'
 
   API =
     point: ->
@@ -58,5 +57,5 @@
     API.placetotrip model
 
   App.addInitializer ->
-    new AddPopupApp.Router
-      controller: API
+    App.router.processAppRoutes API,
+      appRoutes

@@ -24,6 +24,9 @@ do (Backbone, Marionette) ->
       @$el.on 'hidden.bs.modal', @closeModal
       @changeUrl = view.changeUrl
 
+    onRoute: (name, path) ->
+      console.log 'call onRoute', name, path
+
     onBeforeShow: (view) ->
       return
 

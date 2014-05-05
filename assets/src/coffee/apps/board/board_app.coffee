@@ -6,21 +6,27 @@
 
 @Yapp.module 'BoardApp', (BoardApp, App, Backbone, Marionette, $, _) ->
 
-  class BoardApp.Router extends Marionette.AppRouter
+  appRoutes =
+    '_=_': 'index'
+    '': 'index'
+    'point': 'pointList'
+    'point/:id': 'point'
 
-    appRoutes:
-      '_=_': 'index'
-      '': 'index'
-      'point/:id': 'point'
-      'event/:id': 'event'
-      'route/:id': 'route'
-      'trip/:id': 'trip'
-      'preview/:type/:id': 'preview'
-      'city/:city_code/': 'city'
+    'event': 'eventList'
+    'event/:id': 'event'
+
+    'route': 'routeList'
+    'route/:id': 'route'
+
+    'trip': 'tripList'
+    'trip/:id': 'trip'
+
+    'preview/:type/:id': 'preview'
+    'city/:city_code/': 'city'
+
   
   API =
     index: ->
-      console.log 'index'
       if !BoardApp.board
         BoardApp.board = new BoardApp.List.Controller App.settings
       App.vent.trigger 'show:map:region'
@@ -72,6 +78,18 @@
     city: (city_code) ->
       App.updateSettings city: city_code
 
+    pointList: (model) ->
+      App.updateSettings models: 'points'
+
+    eventList: (model) ->
+      App.updateSettings models: 'events'
+
+    routeList: (model) ->
+      App.updateSettings models: 'routes'
+
+    tripList: (model) ->
+      App.updateSettings models: 'trips'
+
 
   App.vent.on 'show:detail:popup', (model) ->
     if model instanceof App.Entities.Point
@@ -95,5 +113,5 @@
 
 
   App.addInitializer ->
-    new BoardApp.Router
-      controller: API
+    App.router.processAppRoutes API,
+      appRoutes

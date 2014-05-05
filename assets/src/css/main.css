@@ -3691,6 +3691,11 @@ a {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   color: #848484;
 }
+.categories__item.categories__item_btn {
+    width: auto;
+    letter-spacing:0;
+    vertical-align:sub;
+}
 .categories__item:last-child {
   margin-right: 0;
 }

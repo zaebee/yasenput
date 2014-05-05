@@ -22,8 +22,6 @@
 
     filterView: ->
       App.execute 'when:fetched', @tags, =>
-      #  tags = @tags.where level: 0
-      #  console.log tags
         filterView = new Show.Filter collection: @tags
         @show filterView, region: @layout.filterRegion
 
@@ -32,4 +30,3 @@
 
     onClose: ->
       @stopListening()
-      #@yapens.reset()

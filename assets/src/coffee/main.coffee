@@ -6,7 +6,15 @@
 
 @Yapp = do (Backbone, Marionette) ->
   App = new Marionette.Application
+  class App.Router extends Marionette.AppRouter
+    onRoute: (e) ->
+      console.log 'onRoute fired', e
 
+  App.rootRoute = '/'
+  App.history = []
+  App.router = new App.Router
+
+  ## define all application regions
   App.addRegions
     headerRegion:'#header-region'
     boardRegion:'#board-region'
@@ -37,8 +45,6 @@
   App.reqres.setHandler 'default:region', ->
     App.boardRegion
 
-  App.rootRoute = '/'
-
   App.commands.setHandler 'register:instance', (instance, id) ->
     App.register instance, id
 
@@ -48,6 +54,9 @@
   App.on 'initialize:after', (options) ->
     @startHistory()
     @navigate(@rootRoute, trigger: true) unless @getCurrentRoute()
+    if @getCurrentRoute()
+      @history.push @getCurrentRoute()
+    else
+      @history.push @rootRoute
 
   App
-

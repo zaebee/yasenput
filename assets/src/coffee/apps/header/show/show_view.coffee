@@ -160,10 +160,23 @@
       filterTypeList: '.filter-type__list'
       filterAllCategory: '.categories__link'
 
+    templateHelpers: ->
+      settings: App.settings
+
     onShow: ->
       $('[data-toggle=tooltip]').tooltip()
 
     filterCategory: (event) ->
+      event.preventDefault()
+      @ui.filterAllCategory.removeClass 'btn_color_green'
+      $target = $(event.currentTarget)
+      $target.addClass 'btn_color_green'
+      url = $target.attr 'href'
+      App.navigate url, trigger:true
+      #models = _.map @$('.categories__link.btn_color_green'), (type) -> $(type).data('model')
+      #App.vent.trigger 'filter:all:yapens', models: models.join ','
+
+    filterTags: (event) ->
       event.preventDefault()
       $target = $(event.target)
       if $target.hasClass 'categories__link_type_all'
@@ -231,23 +244,36 @@
       'click .js-popup-add-trip': 'showAddTripPopup'
 
     initialize: ->
+      @user = App.request 'get:my:profile'
       @changeUrl = true
 
     showAddPlacePopup: (event) ->
       event.preventDefault()
-      App.vent.trigger 'show:add:place:popup'
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        App.vent.trigger 'show:add:place:popup'
 
     showAddEventPopup: (event) ->
       event.preventDefault()
-      App.vent.trigger 'show:add:event:popup'
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        App.vent.trigger 'show:add:event:popup'
 
     showAddRoutePopup: (event) ->
       event.preventDefault()
-      App.vent.trigger 'show:add:route:popup'
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        App.vent.trigger 'show:add:route:popup'
 
     showAddTripPopup: (event) ->
       event.preventDefault()
-      App.vent.trigger 'show:add:trip:popup'
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        App.vent.trigger 'show:add:trip:popup'
 
 
   class Show.PopupLogin extends App.Views.ItemView

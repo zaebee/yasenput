@@ -6,11 +6,10 @@
 
 @Yapp.module 'ProfileApp', (ProfileApp, App, Backbone, Marionette, $, _) ->
 
-  class ProfileApp.Router extends Marionette.AppRouter
-    appRoutes:
-      'dashboard/': 'index'
-      'dashboard/likes/': 'likes'
-      'dashboard/settings/': 'settings'
+  appRoutes =
+    'dashboard/': 'index'
+    'dashboard/likes/': 'likes'
+    'dashboard/settings/': 'settings'
 
   API =
     index: ->
@@ -42,5 +41,5 @@
       App.headerRegion.currentView.dashboardRegion.$el.addClass 'hide'
 
   App.addInitializer ->
-    new ProfileApp.Router
-      controller: API
+    App.router.processAppRoutes API,
+      appRoutes
