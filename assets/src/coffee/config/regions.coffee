@@ -9,7 +9,7 @@ do (Backbone, Marionette) ->
 
     open: (view) ->
       @current = Backbone.history.fragment
-      console.info 'current', @current
+      console.info 'current url', @current
       $modals = $('.modal.in').not @$el
       prevModal = _.max $modals, (chr) -> $(chr).css('z-index')
       if _.isEmpty(prevModal)
@@ -22,7 +22,7 @@ do (Backbone, Marionette) ->
 
       @$el.find('.modal-dialog').empty().append view.el
       @$el.on 'hidden.bs.modal', @closeModal
-      @changeUrl = view.changeUrl
+      @saveUrl = view.saveUrl
 
     onRoute: (name, path) ->
       console.log 'call onRoute', name, path
@@ -63,12 +63,11 @@ do (Backbone, Marionette) ->
       if @prevModal.length
         e.preventDefault()
         e.stopPropagation()
-        console.info 'navigate to previous modal', @current
         @current = null
         @prevModal.css 'z-index', ''
         $('body').addClass 'modal-open'
-      else if @changeUrl
-        console.info 'navigate to previous modal', @current
 
-      Backbone.history.navigate Backbone.history.root,
-        trigger: false
+      if not @saveUrl
+        console.info 'navigate to previous modal', @current
+        Backbone.history.navigate Backbone.history.root,
+          trigger: false

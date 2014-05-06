@@ -42,19 +42,19 @@ do (Backbone, $, Dropzone) ->
         left: 15
 
       result.button = button
-      result.button_static_text = button.text()
+      result.button_static_text = button.html()
       result.button_spinning_text = button_text
       result.spinner = spinner
       result.start = ->
         result.button
-          .text(result.button_spinning_text)
+          .html(result.button_spinning_text)
           .addClass('disabled')
           .prop('disabled', true)
         result.spinner.spin spinner_options
 
       result.stop = ->
         result.button
-          .text(result.button_static_text)
+          .html(result.button_static_text)
           .removeClass('disabled')
           .prop('disabled', false)
         result.spinner.spin false

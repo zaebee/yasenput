@@ -173,8 +173,6 @@
       $target.addClass 'btn_color_green'
       url = $target.attr 'href'
       App.navigate url, trigger:true
-      #models = _.map @$('.categories__link.btn_color_green'), (type) -> $(type).data('model')
-      #App.vent.trigger 'filter:all:yapens', models: models.join ','
 
     filterTags: (event) ->
       event.preventDefault()
@@ -245,7 +243,7 @@
 
     initialize: ->
       @user = App.request 'get:my:profile'
-      @changeUrl = true
+      @saveUrl = true
 
     showAddPlacePopup: (event) ->
       event.preventDefault()
@@ -281,7 +279,7 @@
     className: 'popupwin__scrollbox'
 
     initialize: ->
-      @changeUrl = true
+      @saveUrl = true
 
 
   class Show.PopupInfo extends App.Views.ItemView
@@ -290,7 +288,7 @@
 
     initialize: (options) ->
       @message = options.message
-      @changeUrl = true
+      @saveUrl = true
 
     templateHelpers: ->
       message: @message
