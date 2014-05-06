@@ -217,7 +217,7 @@
       event.preventDefault()
       console.log event
       url = $(event.currentTarget).attr 'href'
-      App.navigate url, trigger: true
+      App.navigate url, true
 
     deletePoint: (event) ->
       event.preventDefault()

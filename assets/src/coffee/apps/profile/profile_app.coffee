@@ -7,21 +7,21 @@
 @Yapp.module 'ProfileApp', (ProfileApp, App, Backbone, Marionette, $, _) ->
 
   appRoutes =
-    'dashboard/': 'index'
-    'dashboard/likes/': 'likes'
-    'dashboard/settings/': 'settings'
+    'dashboard/': 'dashboard'
+    'dashboard/likes/': 'dashboardLikes'
+    'dashboard/settings/': 'dashboardSettings'
 
   API =
-    index: ->
+    dashboard: ->
       console.log 'ProfileApp index url'
       new ProfileApp.List.Controller
 
-    likes: ->
+    dashboardLikes: ->
       console.log 'ProfileApp likes url'
       new ProfileApp.List.Controller
         section: 'likes'
 
-    settings: ->
+    dashboardSettings: ->
       console.log 'ProfileApp settings url'
       new ProfileApp.List.Controller
         section: 'settings'

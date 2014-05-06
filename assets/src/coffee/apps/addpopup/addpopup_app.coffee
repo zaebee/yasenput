@@ -7,22 +7,22 @@
 @Yapp.module 'AddPopupApp', (AddPopupApp, App, Backbone, Marionette, $, _) ->
 
   appRoutes =
-    'add/point': 'point'
-    'add/event': 'event'
-    'add/route': 'route'
-    'add/trip': 'trip'
-    'add/placetotrip': 'placetotrip'
+    'add/point': 'addPoint'
+    'add/event': 'addEvent'
+    'add/route': 'addRoute'
+    'add/trip': 'addTrip'
+    'add/placetotrip': 'addPlacetotrip'
 
   API =
-    point: ->
+    addPoint: ->
       new AddPopupApp.Point.Controller
-    event: ->
+    addEvent: ->
       new AddPopupApp.Event.Controller
-    route: ->
+    addRoute: ->
       new AddPopupApp.Route.Controller
-    trip: ->
+    addTrip: ->
       new AddPopupApp.Trip.Controller
-    placetotrip: (model) ->
+    addPlacetotrip: (model) ->
       new AddPopupApp.PlaceToTrip.Controller model: model
 
   App.vent.on 'show:edit:popup', (model) ->
@@ -38,23 +38,23 @@
 
   App.vent.on 'show:add:place:popup', ->
     App.addPopupRegion.close()
-    API.point()
+    API.addPoint()
 
   App.vent.on 'show:add:event:popup', ->
     App.addPopupRegion.close()
-    API.event()
+    API.addEvent()
 
   App.vent.on 'show:add:route:popup', ->
     App.addPopupRegion.close()
-    API.route()
+    API.addRoute()
 
   App.vent.on 'show:add:trip:popup', ->
     App.addPopupRegion.close()
-    API.trip()
+    API.addTrip()
 
   App.vent.on 'show:add:placetotrip:popup', (model) ->
     App.addPopupRegion.close()
-    API.placetotrip model
+    API.addPlacetotrip model
 
   App.addInitializer ->
     App.router.processAppRoutes API,
