@@ -36,7 +36,7 @@
     link: (event) ->
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger: true
+      App.navigate url, true
 
     showAddPopup: (e) ->
       e.preventDefault()
@@ -172,7 +172,7 @@
       $target = $(event.currentTarget)
       $target.addClass 'btn_color_green'
       url = $target.attr 'href'
-      App.navigate url, trigger:true
+      App.navigate url, true
 
     filterTags: (event) ->
       event.preventDefault()

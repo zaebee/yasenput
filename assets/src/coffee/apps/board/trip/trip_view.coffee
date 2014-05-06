@@ -130,7 +130,7 @@
       event.preventDefault()
       if @model.get 'id'
         url = $(event.currentTarget).attr 'href'
-        App.navigate url, trigger: true
+        App.navigate url, true
 
 
   class Trip.Comments extends App.Views.ItemView
@@ -186,6 +186,9 @@
       phone: '[name=phone]'
     events:
       'click .js-finish': 'saveInfo'
+
+    initialize: ->
+      @saveUrl = true
 
     saveInfo: (event) ->
       event.preventDefault()

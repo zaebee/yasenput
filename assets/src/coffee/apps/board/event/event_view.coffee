@@ -11,16 +11,6 @@
       tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
-    #events:
-      #'click .js-popupwin-place': 'showPointPopup'
-
-    showPointPopup: (event) ->
-      event.preventDefault()
-      data = $(event.currentTarget).data()
-      point = new App.Entities.Point
-        unid: data.id
-        type_of_item: 'point'
-      App.vent.trigger 'show:detail:popup', point
 
 
   class Event.Header extends App.Views.ItemView
@@ -63,9 +53,8 @@
 
     showPointPopup: (event) ->
       event.preventDefault()
-      url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger: true
-      #App.vent.trigger 'show:detail:popup', @model
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
 
   class Event.Photo extends App.Views.ItemView

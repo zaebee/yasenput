@@ -32,7 +32,7 @@
     link: (event) ->
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger: true
+      App.navigate url, true
 
 
   class List.ProfileSettings extends App.Views.ItemView

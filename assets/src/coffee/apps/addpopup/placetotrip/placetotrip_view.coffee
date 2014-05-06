@@ -188,8 +188,7 @@
       event.preventDefault()
       console.log event
       url = $(event.currentTarget).prop 'hash'
-      App.navigate url, trigger: true
-      #@model.trigger 'delete:from:trip', @model
+      App.navigate url, true
 
     deletePoint: (event) ->
       event.preventDefault()

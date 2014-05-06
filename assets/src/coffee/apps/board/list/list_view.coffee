@@ -63,8 +63,7 @@
       console.log 'show popup'
       event.preventDefault()
       url = $(event.currentTarget).attr 'href'
-      App.navigate url, trigger:false
-      App.vent.trigger 'show:detail:popup', @model
+      App.navigate url, true
 
     showEditPopup: (event) ->
       event.preventDefault()
@@ -74,7 +73,7 @@
       spinner.start()
       App.vent.trigger 'show:edit:popup', @model
       @model.trigger 'spinner:start', spinner
-      App.navigate url, trigger:false
+      App.navigate url, true
 
     showRemovePopup: (event) ->
       event.preventDefault()
