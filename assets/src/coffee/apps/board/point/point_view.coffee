@@ -112,7 +112,6 @@
     template: 'PointMap'
     className: 'map map_popupwin'
     events:
-      'click .map__container': 'mapResize'
       'click .js-map-close': 'mapClose'
       'click .js-map-open': 'mapOpen'
 
@@ -120,29 +119,21 @@
       'change:latitude': 'setPlacemark'
 
     onShow: ->
-      if App.ymaps is undefined
-        return
-      App.ymaps.ready =>
-        @geoMap = new App.ymaps.Map 'map-point',
-          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 12
-        , autoFitToViewport: 'always'
-        @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-        @geoMap.setCenter [@model.get('latitude'), @model.get('longitude')], 12
-        @geoMap.geoObjects.add @model.placemark
+      @setPlacemark()
 
     setPlacemark: ->
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
+        @geoMap = @geoMap or new App.ymaps.Map 'map-point',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+          controls : ['zoomControl']
+        , autoFitToViewport: 'always'
         @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-        @geoMap.setCenter [@model.get('latitude'), @model.get('longitude')], 12
         @geoMap.geoObjects.add @model.placemark
-
-    mapResize:(event) ->
-      console.log event
-      event.preventDefault()
-      @$el.addClass 'open'
+        @geoMap.setCenter [@model.get('latitude'), @model.get('longitude')], 12
+        @geoMap.controls.add('zoomControl')
 
     mapClose: (event) ->
       event.preventDefault()

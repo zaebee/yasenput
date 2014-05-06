@@ -121,7 +121,6 @@
     template: 'EventMap'
     className: 'map map_popupwin'
     events:
-      'click .map__container': 'mapOpen'
       'click .js-map-open': 'mapOpen'
       'click .js-map-close': 'mapClose'
 
@@ -129,7 +128,7 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        map = new App.ymaps.Map 'map-event',
+        @geoMap = new App.ymaps.Map 'map-event',
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
           zoom: 12
         , autoFitToViewport: 'always'
@@ -141,8 +140,9 @@
             iconImageHref: '/static/images/sprite-baloon.png',
             iconImageSize: [32, 36]
           }
-          map.geoObjects.add placemark
-          map.setCenter([point.latitude, point.longitude], 12)
+          @geoMap.geoObjects.add placemark
+          @geoMap.setCenter([point.latitude, point.longitude], 12)
+          @geoMap.controls.add('zoomControl')
 
     mapOpen:(event) ->
       console.log event
