@@ -7,9 +7,7 @@ import logging
 from datetime import datetime, timedelta
 
 from django.views.generic.base import View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 
@@ -30,16 +28,6 @@ def JsonHTTPResponse(json):
 
 def SerializeHTTPResponse(json):
         return HttpResponse(json.serialize(json), mimetype="application/json")
-
-#Trips
-class TripsBaseView(View):
-    COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
-            raise Http404
-        return super(TripsBaseView, self).dispatch(request, *args, **kwargs)
 
 
 class Trip(View):
@@ -103,13 +91,16 @@ class Trip(View):
         return HttpResponse(trip, mimetype="application/json")
 
 
-class LikeTrip(TripsBaseView):
+class LikeTrip(View):
 
     http_method_names = ('post',)
 
-    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         id = kwargs.get('id', None)
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id":id,
+                                     "status": 1,
+                                     "txt":"Вы не авторизованы"})
         trip = get_object_or_404(Trips, id=id)
 
         if request.user in trip.likeusers.all():
@@ -119,37 +110,6 @@ class LikeTrip(TripsBaseView):
         YpJson = YpSerialiser()
         trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
         return HttpResponse(trip, mimetype="application/json")
-
-
-class _LikeTrip(TripsBaseView):
-    http_method_names = ('post',)
-
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        id = kwargs.get('id', None)
-        errors = []
-        result = {
-            'id': int(id),
-            'status': 200,
-            'message': u'Ваш голос учтен'
-        }
-
-        form = forms.AddTripForm({id: id})
-        if form.is_valid():
-            trip = Trips.objects.get(id=int(id))
-            if request.user.person in trip.likeusers.all():
-                trip.likeusers.remove(request.user.person)
-            else:
-                trip.likeusers.add(request.user.person)
-        else:
-            e = form.errors
-            for er in e:
-                errors.append(er + ':' + e[er][0])
-            result.update({
-                'status': 400,
-                'message': ', '.join(errors)
-            })
-        return JsonHTTPResponse(result)
 
 
 class AddReviewToTrip(View):
