@@ -63,6 +63,7 @@
             address: @get 'address'
             img: img
           }, {
+            iconLayout: 'default#image',
             iconImageClipRect: [[80,0], [112, 36]] ## TODO fix hardcoded tag icons
             iconImageHref: '/static/images/sprite-baloon.png'
             iconImageSize: [32, 36]

@@ -4,6 +4,15 @@
   добавил <span class="type c-trip">путешествие</span>
 </a>
 <ul class="actions">
+  <!--
+  {{#ifContains author.id user}}
+  <li class="item">
+    <a href="#" class="btn btn_color_blue" title="Редактировать">
+      Редактировать
+    </a>
+  </li>
+  {{/ifContains}}
+  -->
   <li class="item">
     <a href="#" class="btn-like {{#ifBelong author likeusers}}active{{/ifBelong}}" data-toggle="tooltip" data-original-title="" data-placement="bottom">
       <span class="icon sprite-like-user"></span>
@@ -11,19 +20,19 @@
     </a>
   </li>
   <li class="item">
-    <!--<a href="#?" class="btn-upload">
+    <a href="#" class="btn-upload" title="Поделиться в соц. сетях">
       <span class="icon sprite-upload"></span>
-    </a>-->
+    </a>
     <div class="soc-wrap">
       <ul class="soc-list">
         <li class="soc-list__item">
-          <a href="#?" class="btn-soc btn-soc_tw">Twitter</a>
+        <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http://yasenput.ru/trip/{{id}}&text={{name}}&url=http://yasenput.ru/trip/{{id}}&via=yasenput" class="btn-soc btn-soc_tw">Twitter</a>
         </li>
         <li class="soc-list__item">
-          <a href="#?" class="btn-soc btn-soc_vk">Вконтакте</a>
+          <a target="_blank" href="http://vk.com/share.php?url=http://yasenput.ru/trip/{{id}}" class="btn-soc btn-soc_vk">Вконтакте</a>
         </li>
         <li class="soc-list__item">
-          <a href="#?" class="btn-soc btn-soc_fb">Facebook</a>
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yasenput.ru/trip/{{id}}&display=popup" class="btn-soc btn-soc_fb">Facebook</a>
         </li>
       </ul>
     </div>

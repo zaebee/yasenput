@@ -67,7 +67,7 @@
       App.orderRoutePopup.show view
 
     initialize: ->
-      console.log @model
+      @saveUrl = true
 
     onShow: ->
       @popupwin = @$el.closest '.popupwin'
@@ -139,6 +139,7 @@
     tagName: 'ul'
     events:
       'submit .comment-form': 'addComment'
+      'click .login__link': 'showLoginPopup'
     modelEvents:
       'change:reviews': 'render'
 
@@ -164,6 +165,11 @@
         @$('.comment-form').parent().addClass 'loading'
       else
         @$('[name=review_text]').addClass 'error'
+        @$('[name=review_text]').focus()
+
+    showLoginPopup: (e) ->
+      e.preventDefault()
+      App.vent.trigger 'show:login:popup'
 
 
   class Trip.Tags extends App.Views.ItemView

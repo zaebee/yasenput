@@ -70,6 +70,9 @@
       view = new Route.OrderRoute model: @model
       App.orderRoutePopup.show view
 
+    initialize: ->
+      @saveUrl = true
+
     onShow: ->
       @popupwin = @$el.closest '.popupwin'
       @popupwin.scroll =>
@@ -143,6 +146,7 @@
     tagName: 'ul'
     events:
       'submit .comment-form': 'addComment'
+      'click .login__link': 'showLoginPopup'
     modelEvents:
       'change:reviews': 'render'
 

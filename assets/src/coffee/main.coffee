@@ -7,8 +7,6 @@
 @Yapp = do (Backbone, Marionette) ->
   App = new Marionette.Application
   class App.Router extends Marionette.AppRouter
-    onRoute: (e) ->
-      console.log 'onRoute fired', e
 
   App.rootRoute = '/'
   App.history = []

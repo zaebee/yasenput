@@ -269,36 +269,18 @@ class Search(PointsBaseView):
 
         users = users_list[offset:limit]
 
-        #tags:
-        name_spl = params.get("s").split(' ')
-
-        pointsreq = []
-        blocklist = []
-        for phrase in name_spl:
-            if phrase.encode('utf-8') != '':
-                pointsrq = TagsModels.Tags.search.query(phrase)
-                for item2 in pointsreq:
-                    blocklist.append(item2.id)
-                for item1 in pointsrq:
-                    if item1.id in blocklist:
-                        item2 = item1
-                    else:
-                        pointsreq.append(item1)
-        tags = pointsreq[offset:limit]
 
         YpJson = YpSerialiser()
         points = json.loads(YpJson.serialize(points, fields = ['id','name', 'address']))
         events = json.loads(YpJson.serialize(events, fields = ['id','name']))
         routes = json.loads(YpJson.serialize(routes, fields = ['id','name']))
         trips = json.loads(YpJson.serialize(trips, fields = ['id','name']))
-        tags = json.loads(YpJson.serialize(tags, fields = ['name','level']))
         users = json.loads(YpJson.serialize(users, fields = ['id','first_name', 'last_name']))
         return JsonHTTPResponse({
             "points": points,
             'events': events,
             'routes': routes,
             'trips': trips,
-            "tags": tags,
             "users": users,
         })
 
@@ -408,18 +390,18 @@ class ItemsList(PointsBaseView):
                             ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                             ipgeobase = ipgeobases[0]
                             self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude-0.1
-                        ln_right = ipgeobase.longitude+0.1
-                        lt_left = ipgeobase.latitude-0.1
-                        lt_right = ipgeobase.latitude+0.1
+                        ln_left = ipgeobase.longitude or 0 - 0.1
+                        ln_right = ipgeobase.longitude or 0 + 0.1
+                        lt_left = ipgeobase.latitude or 0 - 0.1
+                        lt_right = ipgeobase.latitude or 0 + 0.1
                     else:
                         ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                         ipgeobase = ipgeobases[0]
                         self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude-0.1
-                        ln_right = ipgeobase.longitude+0.1
-                        lt_left = ipgeobase.latitude-0.1
-                        lt_right = ipgeobase.latitude+0.1
+                        ln_left = ipgeobase.longitude or 0 - 0.1
+                        ln_right = ipgeobase.longitude or 0 + 0.1
+                        lt_left = ipgeobase.latitude or 0 - 0.1
+                        lt_right = ipgeobase.latitude or 0 + 0.1
                         self.log.info(ipgeobase.city)
         else:
             ln_left = 0.0
