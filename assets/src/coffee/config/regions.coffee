@@ -3,7 +3,6 @@ do (Backbone, Marionette) ->
   class Marionette.Region.Modal extends Marionette.Region
 
     initialize: (options) ->
-      console.log 'region initialize', options
       _.extend @, Backbone.Events
       _.bindAll @
 
@@ -56,5 +55,5 @@ do (Backbone, Marionette) ->
         $('body').addClass 'modal-open'
 
       if not @saveUrl
-        console.info 'navigate to previous modal', @current
+        console.info 'navigate to previous'
         @app.trigger 'route:back'

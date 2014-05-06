@@ -25,7 +25,7 @@
 
     photoPopupRegion: selector: '.popupwin_add-photos', regionType: modalRegion
     addPopupRegion: selector: '.popupwin_add', regionType: modalRegion
-    loginPopupRegion: selector: '.popupwin_authorizatio', regionType: modalRegion
+    loginPopupRegion: selector: '.popupwin_authorization', regionType: modalRegion
     infoPopupRegion: selector: '.popupwin_info', regionType: modalRegion
     commercialPopupRegion: selector: '.popupwin_login-commercial', regionType: modalRegion
 
@@ -53,9 +53,8 @@
 
   App.on 'route:back', ->
     console.log 'fired back url'
-    if @history.length > 1
-      @navigate @history[@history.length-2]
-      @history = @history.slice(0, -1)
+    @navigate @history[@history.length-2] or @rootRoute
+    @history = @history.slice(0, -1)
 
   App.on 'initialize:after', (options) ->
     @startHistory()
