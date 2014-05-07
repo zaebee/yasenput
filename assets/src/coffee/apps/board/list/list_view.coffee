@@ -3,6 +3,7 @@
 
   class List.Yapen extends App.Views.ItemView
     initialize: (options) ->
+      @user = App.request 'get:my:profile'
       @model.set 'editable', options.editable
       @listenTo @model, 'point:like:response', @likeResponse
       @listenTo @model, 'event:like:response', @likeResponse
@@ -19,13 +20,19 @@
       else if @model.get('type_of_item') is 'event'
         return 'BoardEvent'
       else
-        return 'BoardPoint'
+        return 'EmptyTrip'
 
     className: ->
-      if @model.get('editable') then 'box box_dashboard' else 'box'
+      if @model.get('empty')
+        return 'box empty'
+      else if @model.get('editable')
+        return 'box box_dashboard'
+      else
+        return 'box'
 
     events: () ->
      if Modernizr.touch
+      'touchstart.touch .js-popupwin-add-trip': 'showAddTripPopup'
       'touchstart.touch .js-popupwin-place': 'showDetailPopup'
       'touchstart.touch .js-popupwin-event': 'showDetailPopup'
       'touchstart.touch .js-popupwin-route': 'showDetailPopup'
@@ -35,6 +42,7 @@
       'touchstart.touch .btn_edit': 'showEditPopup'
       'touchstart.touch .btn_remove': 'showRemovePopup'
      else
+      'click .js-popupwin-add-trip': 'showAddTripPopup'
       'click .js-popupwin-place': 'showDetailPopup'
       'click .js-popupwin-event': 'showDetailPopup'
       'click .js-popupwin-route': 'showDetailPopup'
@@ -58,6 +66,13 @@
       @tips = @$('.box__img .icon').tooltip
         placement: 'bottom'
       ###
+
+    showAddTripPopup: (event) ->
+      event.preventDefault()
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        App.navigate '/add/trip', true
 
     showDetailPopup: (event) ->
       console.log 'show popup'

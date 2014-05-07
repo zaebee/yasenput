@@ -9,18 +9,29 @@
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
   class Entities.YapensCollection extends Entities.Collection
+      url: App.API_BASE_URL + '/api/v1/yapens/'
 
   API =
     getEntities: (params = {}) ->
       @fetch.abort() if @fetch
+      withoutEmpty = params.withoutEmpty
+      delete params.withoutEmpty
       if params.new
+        delete params.new
         @yapens = new Entities.YapensCollection
       else
         @yapens = @yapens or new Entities.YapensCollection
-      @yapens.url = App.API_BASE_URL + '/api/v1/yapens/'
+
       @fetch = @yapens.fetch
         reset: true
         data: params
+        success: (collection) ->
+          ## if need card for adding trip we show it
+          if not withoutEmpty
+            model = new Entities.Model empty: true
+            collection.add model, at: 0
+          collection
+
       @yapens
 
     search: (params = {}, callback) ->
