@@ -289,7 +289,7 @@ class ItemsList(PointsBaseView):
     http_method_names = ('get',)
     log = logger
     def get(self, request, *args, **kwargs):
-        params = request.GET
+        params = request.GET.copy()
         #self.log.info('city = ' + params.get('city'))
         price = "$"
         duration = "$"
@@ -498,7 +498,7 @@ class ItemsList(PointsBaseView):
                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
-                 }), 
+                 }),
                     search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
