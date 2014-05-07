@@ -38,8 +38,8 @@
       if !BoardApp.board
         BoardApp.board = new BoardApp.List.Controller App.settings
       model = BoardApp.board.yapens.findWhere
-        id: id
-        type_of_item: item.get 'type_of_item'
+        id: parseInt id, 10
+        type_of_item: item.get('type_of_item')
       if !model
         model = item
         BoardApp.board.yapens.add model

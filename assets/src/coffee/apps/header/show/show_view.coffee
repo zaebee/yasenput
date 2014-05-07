@@ -101,7 +101,7 @@
         event.preventDefault()
       data = event.object
       params = s: if data then data.name else ''
-      if data.upperCorner
+      if data and data.upperCorner
         params.coord_left = JSON.stringify _.zipObject(['ln','lt'], data.lowerCorner.split(' '))
         params.coord_right = JSON.stringify _.zipObject(['ln','lt'], data.upperCorner.split(' '))
         params.s = ''
@@ -119,7 +119,10 @@
 
     searchQuery: (query) ->
       data = {}
-      geocode = App.ymaps.geocode query.term, json: true, kind: 'locality'
+      geocode = App.ymaps.geocode query.term,
+        json: true
+        kind: 'locality'
+        results: 2
       App.request 'search:all:yapens', s: query.term, (res) ->
         data.results = _.map res, (el, type) ->
           _.map el, (item) -> item.type = type
@@ -157,13 +160,6 @@
           if query.term
             return _.sortBy results, 'id'
           results
-        createSearchChoice: (term) ->
-          result =
-            id: -2
-            type: 'custom'
-            name: term
-            address: ''
-          return result
 
 
   class Show.Filter extends App.Views.ItemView
