@@ -101,12 +101,42 @@
         event.preventDefault()
       data = event.object
       params = s: if data then data.name else ''
-      console.log data
+      if data.upperCorner
+        params.coord_left = JSON.stringify _.zipObject(['ln','lt'], data.lowerCorner.split(' '))
+        params.coord_right = JSON.stringify _.zipObject(['ln','lt'], data.upperCorner.split(' '))
+        params.s = ''
+      console.log 'yapens request params', params
       App.vent.trigger 'filter:all:yapens', params
 
     format: (state) ->
       originalOption = state.element
-      "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
+      """<span data-id='#{state.id}' class='type type_#{state.type}'
+          data-lowerCorner='#{state.lowerCorner}' data-upperCorner='#{state.upperCorner}'>
+          #{state.name}
+          <i>#{state.address}</i>
+          </span>
+      """
+
+    searchQuery: (query) ->
+      data = {}
+      geocode = App.ymaps.geocode query.term, json: true, kind: 'locality'
+      App.request 'search:all:yapens', s: query.term, (res) ->
+        data.results = _.map res, (el, type) ->
+          _.map el, (item) -> item.type = type
+          el
+        geocode.then (res) ->
+          console.log 'geocode response', res
+          geocodeResults = _.map res.GeoObjectCollection.featureMember, (el) ->
+            id: -1
+            name: el.GeoObject.name
+            type:'geocode'
+            address: el.GeoObject.description or ''
+            lowerCorner: el.GeoObject.boundedBy.Envelope.lowerCorner
+            upperCorner: el.GeoObject.boundedBy.Envelope.upperCorner
+          data.results.push geocodeResults
+          data.results = _.filter _.flatten(data.results), (el) ->
+            el.type isnt 'users' and el.type isnt 'tags'
+          query.callback data
 
     onShow: ->
       @$('#destination-input').select2
@@ -114,32 +144,25 @@
         dropdownCssClass: 'select2-drop_destination'
         quietMillis: 750
         allowClear: true
-        ajax:
-          dataType: 'json'
-          url: App.API_BASE_URL + '/api/v1/search/'
-          data: (term, page) ->
-            s: term
-          results: (data, page) ->
-            console.log data
-            results = _.map data, (el, type) ->
-              _.map el, (item) ->
-                item.type = type
-              el
-            results: _.filter _.flatten(results), (el) ->
-              el.type isnt 'users' and el.type isnt 'tags'
+        query: @searchQuery
         formatResult: @format
         formatSelection: @format
-        minimumInputLength: 1
+        minimumInputLength: 3
         formatInputTooShort: ->
-          'Введите хотя бы 1 символ'
+          'Введите хотя бы 3 символа'
         formatNoMatches: ->
           'Ничего не найдено'
         escapeMarkup: (m) -> m
+        sortResults: (results, container, query) ->
+          if query.term
+            return _.sortBy results, 'id'
+          results
         createSearchChoice: (term) ->
           result =
-            id: 0
+            id: -2
             type: 'custom'
             name: term
+            address: ''
           return result
 
 
