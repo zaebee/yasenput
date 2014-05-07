@@ -4014,6 +4014,16 @@ a {
   -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
 }
+.box.empty {
+  border: dashed 2px #26b89a;
+  width:228px;
+  cursor: pointer;
+}
+.box.empty a {
+    text-decoration:none;
+    padding-top:50px;
+    display:block;
+}
 .box.choosed {
   border: solid 2px #26b89a;
 }
