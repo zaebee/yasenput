@@ -158,6 +158,7 @@
           )
           @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
           @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+          @map.geoObjects.add @model.placemark
 
     backStep: (event) ->
       event.preventDefault()
