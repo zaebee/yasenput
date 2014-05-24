@@ -3694,7 +3694,12 @@ a {
 .categories__item.categories__item_btn {
     width: auto;
     letter-spacing:0;
-    vertical-align:sub;
+}
+.categories__item.categories__item_btn .btn {
+    padding: 15px 15px 15px 40px;
+    background-image: url(../images/map.png);
+    background-repeat: no-repeat;
+    background-position: 10px center;
 }
 .categories__item:last-child {
   margin-right: 0;
@@ -4293,6 +4298,9 @@ a {
 .map.open .map__open {
     display:none;
 }
+.map.open .map__clear {
+  display: block;
+}
 .map.open .map__close {
   display: block;
 }
@@ -4329,8 +4337,10 @@ a {
 }
 .map_popupwin:after,
 .map_popupwin:before {
+/*
   background-image: none;
   background-color: #d9dbdc;
+*/
 }
 .map_route {
   height: 150px;
