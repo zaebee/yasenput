@@ -1,9 +1,20 @@
 <div class="trip-step__blocks">
 
   <div class="trip-step__block trip-step__block_title popupwin__content mb10 clearfix">
+    {{#if user.dealer}}
+    <div class="popupwin__title fs18 clearfix">
+      <div class="steps">
+        <ul class="steps__list steps__list_trip">
+          <li class="steps__item active">1</li>
+          <li class="steps__item">2</li>
+        </ul>
+      </div>
+    </div>
+    {{else}}
     <div class="popupwin__title fs18 clearfix">
       Создание путешествия
     </div>
+    {{/if}}
     <div class="popupwin__container clearfix">
       <div class="form">
         <div class="form__field form__field_name">

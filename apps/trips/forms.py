@@ -7,7 +7,7 @@ from apps.trips.models import Trips, Blocks
 class AddTripForm(ModelForm):
     class Meta:
         model = Trips
-        exclude = ('members', 'admins', 'author', 'routes', 'likeusers', 'blocks', 'reviews', 'countmembers')
+        exclude = ('members', 'admins', 'author', 'routes', 'likeusers', 'blocks', 'reviews')
 
 
 class AddBlockForm(ModelForm):
