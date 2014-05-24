@@ -159,7 +159,6 @@
       @blockPointsRegion.show pointsView
       @blockImgsRegion.show imgsView
       @initMap()
-      @setAddress()
 
     changePosition: ->
       @$('.number').text @model.get 'position'
@@ -192,16 +191,8 @@
       @model.set txt: txt
 
     setAddress: (event) ->
-      if event
-        target = $(event.currentTarget)
-        address = target.val()
-      else
-        address = @model.get 'address'
-      if address
-        @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-        @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-        @map.geoObjects.add @model.placemark
-        return
+      target = $(event.currentTarget)
+      address = target.val()
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
@@ -220,6 +211,7 @@
           )
           @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
           @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+          @map.geoObjects.add @model.placemark
 
     initMap: ->
       console.log 'initMap'
@@ -232,6 +224,13 @@
             zoom: 12
           , autoFitToViewport: 'always'
           @map.controls.add('zoomControl')
+          address = @model.get 'address'
+          if address
+            console.log @model.get('latitude'), @model.get('longitude')
+            console.log @model
+            @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+            @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+            @map.geoObjects.add @model.placemark
 
         @map.events.remove 'click'
         @map.events.add 'click', (event) =>
