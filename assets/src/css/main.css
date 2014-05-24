@@ -1896,6 +1896,9 @@
 .star {
   color: #EA5854;
 }
+.rouble {
+  font-family: Rouble;
+}
 /*$popupwin*/
 .overlay {
   display: none;
@@ -3284,6 +3287,10 @@ textarea {
   font-family: DinCondensedProItalic;
   src: url('fonts/Din_Text_Condensed_Pro/pfdintextcondpro-italic.eot');
   src: url('fonts/Din_Text_Condensed_Pro/pfdintextcondpro-italic.eot') format('embedded-opentype'), url('fonts/Din_Text_Condensed_Pro/pfdintextcondpro-italic.woff') format('woff'), url('fonts/Din_Text_Condensed_Pro/pfdintextcondpro-italic.ttf') format('truetype'), url('fonts/Din_Text_Condensed_Pro/pfdintextcondpro-italic.svg#PFDinTextCondProItalic') format('svg');
+}
+@font-face {
+  font-family: Rouble;
+  src: url('fonts/rouble/rouble.eot') format('eot'), url('fonts/rouble/rouble.otf') format('opentype'), url('fonts/rouble/rouble.woff') format('woff'), url('fonts/rouble/rouble.ttf') format('truetype'), url('fonts/rouble/rouble.svg#ALSRubl') format('svg');
 }
 body {
   font: 12px 'Open Sans', Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
@@ -4760,6 +4767,22 @@ a {
   max-height: 200px;
   overflow: hidden;
 }
+.trip-step_commerce {
+  display: none;
+  width: 580px;
+}
+.trip-step_commerce .trip-step__block {
+  width: 580px;
+}
+.trip-step_commerce .popupwin__container {
+  padding: 30px 20px;
+}
+.trip-step_commerce .popupwin__footer .btn {
+  width: 175px;
+  text-align: center;
+  font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
+  font-size: 14px;
+}
 .trip-step__container {
   float: left;
   margin: 0 auto;
@@ -6063,6 +6086,10 @@ a {
   float: left;
   margin-right: 40px;
 }
+.toggle-list__body .form .rouble {
+  font-size: 16px;
+  color: #A0A0A0;
+}
 .toggle-list__body .form .item_add-contacts {
   width: 185px;
 }
@@ -6175,6 +6202,165 @@ a {
 }
 .toggle-list__body .form-detail .field_price input[type="text"]:focus {
   border-color: #26B89A;
+}
+.toggle-list_trip .btn {
+  font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
+}
+.toggle-list_trip .toggle-list__title {
+  font-weight: normal;
+  color: #3AA1C4;
+}
+.toggle-list_trip .toggle-list__title:after {
+  border-top-color: #73b4cd;
+}
+.toggle-list_trip .toggle-list__title.active {
+  color: #FFF;
+}
+.toggle-list_trip .toggle-list__title.active:after {
+  border-top-color: transparent;
+  border-bottom-color: #fff;
+}
+.toggle-list_trip .form label {
+  font-size: 13px;
+  font-weight: normal;
+}
+.toggle-list_trip .form input[type="text"],
+.toggle-list_trip .form textarea {
+  border-color: #c8c6c6;
+  background-color: #FAFAFA;
+}
+.toggle-list_trip .form input[type="text"]:focus,
+.toggle-list_trip .form textarea:focus {
+  border-color: #26b89a;
+}
+.toggle-list_trip .form input[type="text"] {
+  height: 32px;
+}
+.toggle-list_trip .form .btn {
+  float: right;
+  margin-top: 23px;
+  font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
+}
+.toggle-list_trip .form__field {
+  overflow: hidden;
+}
+.toggle-list_trip .form__item-wrap {
+  float: left;
+  width: 413px;
+}
+.toggle-list_trip .form__item {
+  float: left;
+  margin-right: 40px;
+}
+.toggle-list_trip .form__item_men-count input[type="text"] {
+  width: 115px;
+}
+.toggle-list_trip .form__item_price input[type="text"] {
+  width: 83px;
+}
+.toggle-list_trip .form__item_time {
+  overflow: hidden;
+}
+.toggle-list_trip .form__item_time input[type="text"] {
+  margin-right: 5px;
+  width: 53px;
+}
+.toggle-list_trip .form__item_time label {
+  display: inline-block;
+}
+.toggle-list_trip .form__item_date {
+  position: relative;
+}
+.toggle-list_trip .form__item_date input[type="text"] {
+  padding-right: 30px;
+  width: 115px;
+}
+.toggle-list_trip .form__item_date .ui-datepicker-trigger {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+.toggle-list_trip .form__item_start label {
+  display: inline-block;
+}
+.toggle-list_trip .form__item_start input[type="text"] {
+  margin-left: 5px;
+  width: 65px;
+}
+.toggle-list_trip .form__item_begin input[type="text"] {
+  width: 105px;
+}
+.toggle-list_trip .form__item_service textarea {
+  width: 230px;
+  height: 70px;
+}
+.toggle-list_trip .form__item_service-price input[type="text"] {
+  width: 83px;
+}
+.toggle-list_trip .subtitle {
+  padding-top: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #5A5A5A;
+}
+.toggle-list_trip .form__field_tour {
+  position: relative;
+  padding: 10px 15px;
+  border-radius: 4px;
+  background: url(../images/pattern-content-transparent.png) repeat 0 0 #dae9ef;
+}
+.toggle-list_trip .form__field_tour .date {
+  font-weight: bold;
+  font-size: 13px;
+  color: #EA5854;
+}
+.toggle-list_trip .form__field_tour .time {
+  font-size: 12px;
+  font-weight: bold;
+  color: #848484;
+}
+.toggle-list_trip .form__field_tour .close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: url(../images/sprite.png) no-repeat;
+  display: inline-block;
+  background-position: -393px -204px;
+  width: 13px;
+  height: 13px;
+}
+.toggle-list_trip .form__field_service {
+  position: relative;
+  padding: 10px 45px 10px 15px;
+  border-radius: 4px;
+  background: #FFF;
+}
+.toggle-list_trip .form__field_service .service {
+  font-weight: bold;
+  font-size: 12px;
+  color: #848484;
+}
+.toggle-list_trip .form__field_service .price {
+  float: right;
+  font-weight: bold;
+  font-size: 14px;
+  color: #26B89A;
+}
+.toggle-list_trip .form__field_service .rouble {
+  font-weight: normal;
+  font-size: 14px;
+  color: #26B89A;
+}
+.toggle-list_trip .form__field_service .close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: url(../images/sprite.png) no-repeat;
+  display: inline-block;
+  background-position: -393px -204px;
+  width: 13px;
+  height: 13px;
 }
 /*$working-time*/
 .working-period__choice {
@@ -6672,7 +6858,8 @@ input[type="checkbox"][readonly] {
           box-shadow: none;
 }
 
-button.js-finish {
+button.js-finish,
+button.js-next {
     height:30px;
 }
 button[disabled].js-finish {

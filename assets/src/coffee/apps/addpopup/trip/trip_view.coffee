@@ -7,6 +7,62 @@
     regions:
       asideRegion: '#trip-aside-region'
       contentRegion: '#trip-content-region'
+      commerceRegion: '#trip-commerce-region'
+
+
+  class Trip.Commerce extends App.Views.ItemView
+    template: 'AddTripCommerce'
+    className: 'trip-step__block trip-step__block_title popupwin__content mb10 clearfix'
+
+    events:
+      'blur [name=countmembers]': 'setMembers'
+      'blur [name=price]': 'setPrice'
+      'click .js-back': 'backStep'
+      'click .js-finish': 'saveTrip'
+
+    initialize: ->
+      @user = App.request 'get:my:profile'
+      @collection = @options.collection
+
+    setMembers: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      countmembers = target.val()
+      @model.set countmembers: countmembers
+
+    setPrice: (event) ->
+      event.preventDefault()
+      target = $(event.currentTarget)
+      price = target.val()
+      @model.set price: price
+
+    backStep: (event) ->
+      event.preventDefault()
+      @trigger 'show:step:content'
+
+    saveTrip: (event) ->
+      event.preventDefault()
+      if @model.get 'name'
+        $('.form__field_name').removeClass 'error'
+      else
+        $('.form__field_name').addClass 'error'
+        $('.js-finish, .js-next').tooltip 'show'
+        return
+      @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
+      @spinner.start()
+      @model.set author: @user.toJSON()
+      @model.set blocks: @collection.toJSON()
+      @model.save null,
+        success: =>
+          localStorage.removeItem "trip/#{@model.cid}"
+          @spinner.stop()
+          App.addTripPopup.close()
+          App.navigate "trip/#{@model.get('id')}"
+          App.vent.trigger 'show:detail:popup', @model
+          App.BoardApp.board.yapens.add @model, at:0
+          yapensView = App.BoardApp.board.yapensView.render()
+          if yapensView.wall
+            yapensView.wall.reloadItems() & yapensView.wall.layout()
 
 
   class Trip.Aside extends App.Views.ItemView
@@ -78,6 +134,7 @@
 
     setTripName: (event) ->
       @model.set name: $('.form__field_name input').val()
+      $('.js-finish, .js-next').tooltip 'destroy'
 
     setTripDescription: (event) ->
       @model.set description: $('.form__field_description textarea').val()
@@ -95,6 +152,7 @@
     events:
       'click .js-add-block': 'addBlock'
       'click .js-finish': 'saveTrip'
+      'click .js-next': 'showCommerce'
 
     initialize: ->
       @user = App.request 'get:my:profile'
@@ -105,12 +163,22 @@
       block = new App.Entities.TripBlock
       @options.collection.add block
 
+    showCommerce: (event) ->
+      event.preventDefault()
+      if @model.get 'name'
+        $('.form__field_name').removeClass 'error'
+        @trigger 'show:step:commerce'
+      else
+        $('.form__field_name').addClass 'error'
+        $('.js-finish, .js-next').tooltip 'show'
+
     saveTrip: (event) ->
       event.preventDefault()
       if @model.get 'name'
         $('.form__field_name').removeClass 'error'
       else
         $('.form__field_name').addClass 'error'
+        $('.js-finish, .js-next').tooltip 'show'
         return
       @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
       @spinner.start()

@@ -11,6 +11,7 @@
       @listenTo @layout, 'show', =>
         @showAside()
         @showContent()
+        @showCommerce()
 
       if @model.isNew()
         blocks = @model.get 'blocks'
@@ -43,6 +44,10 @@
         collection: @blocks
       @show @actionView,
         region: view.actionRegion
+      @listenTo @actionView, 'show:step:commerce', ->
+        @layout.contentRegion.$el.hide()
+        @layout.asideRegion.$el.hide()
+        @layout.commerceRegion.$el.show()
 
     showBlocks: (view) ->
       @blocksView = new Trip.Blocks
@@ -61,3 +66,14 @@
 
       @show @contentView,
         region: @layout.contentRegion
+
+    showCommerce: ->
+      @commerceView = new Trip.Commerce
+        model: @model
+        collection: @blocks
+      @show @commerceView,
+        region: @layout.commerceRegion
+      @listenTo @commerceView, 'show:step:content', ->
+        @layout.commerceRegion.$el.hide()
+        @layout.contentRegion.$el.show()
+        @layout.asideRegion.$el.show()

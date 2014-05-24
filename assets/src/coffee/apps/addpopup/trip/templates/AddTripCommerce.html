@@ -1,0 +1,170 @@
+<div class="popupwin__title fs18 clearfix">
+  <div class="steps">
+    <ul class="steps__list steps__list_trip">
+      <li class="steps__item active">1</li>
+      <li class="steps__item active">2</li>
+    </ul>
+  </div>
+</div>
+<div class="popupwin__container clearfix">
+  <section class="toggle-list toggle-list_trip">
+    <!--
+    <div class="toggle-list__item">
+      <div class="toggle-list__title">
+        <label class="check-wrap">
+          <input type="checkbox" class="check-wrap__input">
+          <span class="check-wrap__icon"></span>
+        </label>
+        Индивидуальный тур
+      </div>
+      <div class="toggle-list__body">
+        <div class="form">
+          <div class="form__field">
+            <div class="form__item form__item_men-count">
+              <label>Макс. кол-во человек:</label>
+              <input type="text">
+            </div>
+            <div class="form__item form__item_price">
+              <label>Цена за тур:</label>
+              <input type="text">
+              <span class="rouble">o</span>
+            </div>
+          </div>
+          <div class="form__field">
+            <label>Продолжительность тура:</label>
+            <div class="form__item form__item_time">
+              <input type="text">
+              <label>дней</label>
+            </div>
+            <div class="form__item form__item_time">
+              <input type="text">
+              <label>часов</label>
+            </div>
+            <div class="form__item form__item_time">
+              <input type="text">
+              <label>минут</label>
+            </div>
+          </div>
+          <div class="form__field">
+            <div class="form__item-wrap">
+              <div class="form__item form__item_date">
+                <label>Дата проведения:</label>
+                <input type="text" class="js-datapicker input-date" placeholder="дд.мм.гггг">
+              </div>
+              <label>Время начала</label>
+              <div class="form__item form__item_start">
+                <label>от</label>
+                <input type="text" class="input-time-from">
+              </div>
+              <div class="form__item form__item_start">
+                <label>до</label>
+                <input type="text" class="input-time-to">
+              </div>
+            </div>
+            <a href="#?" class="btn btn_color_green js-add-tour-item">Добавить</a>
+          </div>
+          <div class="form__field">
+            <div class="subtitle">
+              Добавьте дополнительные услуги
+            </div>
+          </div>
+          <div class="form__field">
+            <div class="form__item-wrap">
+              <div class="form__item form__item_service">
+                <label>Наименование услуги:</label>
+                <textarea></textarea>
+              </div>
+              <div class="form__item form__item_service-price">
+                <label>Цена за услугу:</label>
+                <input type="text">
+                <span class="rouble">o</span>
+              </div>
+            </div>
+            <a href="#?" class="btn btn_color_green js-add-tour-service">Добавить</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    -->
+    <!-- class="toggle-list__item" -->
+    <div class="toggle-list__item">
+      <div class="toggle-list__title">
+        <label class="check-wrap">
+          <!--
+          <input type="checkbox" class="check-wrap__input">
+          -->
+          <span class="check-wrap__icon"></span>
+        </label>
+        Групповой тур
+      </div>
+      <div class="toggle-list__body" style="display:block;">
+        <div class="form">
+          <div class="form__field">
+            <div class="form__item form__item_men-count">
+              <label>Макс. кол-во человек:</label>
+              <input name="countmembers" value="{{countmembers}}" type="text">
+            </div>
+            <div class="form__item form__item_price">
+              <label>Цена за человека:</label>
+              <input name="price" value="{{price}}" type="text">
+              <span class="rouble">o</span>
+            </div>
+          </div>
+          <div class="form__field">
+            <label>Продолжительность тура:</label>
+            <div class="form__item form__item_time">
+              <input name="duration_days" value="{{duration_days}}" type="text">
+              <label>дней</label>
+            </div>
+            <div class="form__item form__item_time">
+              <input name="duration_hours" value="{{duration_hours}}" type="text">
+              <label>часов</label>
+            </div>
+            <div class="form__item form__item_time">
+              <input name="duration_minutes" value="{{duration_minutes}}" type="text">
+              <label>минут</label>
+            </div>
+          </div>
+          <!--
+          <div class="form__field">
+            <div class="form__item-wrap">
+              <div class="form__item form__item_date">
+                <label>Дата проведения:</label>
+                <input type="text" class="js-datapicker input-date" placeholder="дд.мм.гггг">
+              </div>
+              <label>Время начала</label>
+              <div class="form__item form__item_begin">
+                <input type="text" class="input-start">
+              </div>
+            </div>
+            <a href="#?" class="btn btn_color_green js-add-tour-item">Добавить</a>
+          </div>
+          <div class="form__field">
+            <div class="subtitle">
+              Добавьте дополнительные услуги
+            </div>
+          </div>
+          <div class="form__field">
+            <div class="form__item-wrap">
+              <div class="form__item form__item_service">
+                <label>Наименование услуги:</label>
+                <textarea></textarea>
+              </div>
+              <div class="form__item form__item_service-price">
+                <label>Цена за услугу:</label>
+                <input type="text">
+                <span class="rouble">o</span>
+              </div>
+            </div>
+            <a href="#?" class="btn btn_color_green js-add-tour-service">Добавить</a>
+          </div>
+          -->
+        </div>
+      </div>
+    </div><!-- class="toggle-list__item" -->
+  </section><!-- class="toggle-list toggle-list_trip" -->
+</div>
+<div class="popupwin__footer clearfix">
+  <a href="#" class="btn btn_color_yel left js-back">Назад</a>
+  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue right js-finish">Готово</button>
+</div>
