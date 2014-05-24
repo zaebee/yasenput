@@ -145,6 +145,10 @@
       'click .span-title': 'editableBlockTitle'
       'blur .input-title': 'saveBlockTitle'
       'blur .tinyeditor': 'saveBlockTxt'
+      'click .js-map-close': 'mapClose'
+      'click .js-map-clear': 'mapClear'
+      'click .js-map-open': 'mapOpen'
+      'change .field__input-map input': 'setAddress'
 
     templateHelpers: ->
       cid: @model.cid
@@ -154,6 +158,8 @@
       imgsView = new Trip.Imgs model: @model
       @blockPointsRegion.show pointsView
       @blockImgsRegion.show imgsView
+      @initMap()
+      @setAddress()
 
     changePosition: ->
       @$('.number').text @model.get 'position'
@@ -184,6 +190,89 @@
       event.preventDefault()
       txt = @$('.tinyeditor').val()
       @model.set txt: txt
+
+    setAddress: (event) ->
+      if event
+        target = $(event.currentTarget)
+        address = target.val()
+      else
+        address = @model.get 'address'
+      if address
+        @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+        @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+        @map.geoObjects.add @model.placemark
+        return
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        App.ymaps.geocode(address).then (res) =>
+          first = res.geoObjects.get(0)
+          coords = first.geometry.getCoordinates()
+          @model.setCoordinates coords
+
+          latitude = coords[0]
+          longitude = coords[1]
+          @model.set(
+            'address': address
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+
+    initMap: ->
+      console.log 'initMap'
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        if not @map
+          @map = new App.ymaps.Map "map-block-#{@model.cid}",
+            center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+            zoom: 12
+          , autoFitToViewport: 'always'
+          @map.controls.add('zoomControl')
+
+        @map.events.remove 'click'
+        @map.events.add 'click', (event) =>
+          coords = event.get('coordPosition')
+          @map.geoObjects.remove @model.placemark
+          @model.setCoordinates coords
+          @map.geoObjects.add @model.placemark
+          App.ymaps.geocode(coords).then (res) =>
+            first = res.geoObjects.get(0)
+            address = first.properties.get 'metaDataProperty.GeocoderMetaData.text'
+            @$('[name^=address]').val address
+            @model.set(
+              'address': address
+              {silent: true}
+            )
+          longitude = coords[1]
+          latitude = coords[0]
+          @model.set(
+            'longitude': longitude
+            'latitude': latitude
+            {silent: true}
+          )
+
+    mapClear: (event) ->
+      event.preventDefault()
+      @$('[name^=address]').val ''
+      @map.geoObjects.remove @model.placemark
+      @model.set(
+        'longitude': null
+        'latitude': null
+        'address': ''
+        {silent: true}
+      )
+
+    mapClose: (event) ->
+      event.preventDefault()
+      @$('.map').removeClass 'open'
+
+    mapOpen: (event) ->
+      event.preventDefault()
+      @$('.map').addClass 'open'
 
 
   class Trip.Blocks extends App.Views.CollectionView

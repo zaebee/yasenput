@@ -32,6 +32,7 @@
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
+      App.updateSettings user: null
 
     getModel: (entity, id) ->
       item = new entity unid: id
@@ -110,7 +111,6 @@
 
   App.vent.on 'filter:all:yapens', (params = {}) ->
     App.updateSettings params
-
 
   App.addInitializer ->
     App.router.processAppRoutes API,

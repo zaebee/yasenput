@@ -17,6 +17,18 @@
     <div class="form__field mb20">
       <textarea id="tinyeditor-{{position}}" class="tinyeditor" placeholder="Добавьте описание путешествия и фотографий загруженных выше">{{txt}}</textarea>
     </div>
+
+    <div class="field">
+      <div class="map map_popupwin mb10">
+        <a href="#" class="map__open js-map-open">Отметить на карте</a>
+        <a href="#" class="map__clear js-map-close">Свернуть карту</a>
+        <div class="map__container" id="map-block-{{cid}}"></div>
+      </div>
+      <div class="field__input-map">
+        <input name="address-block-{{cid}}" type="text" placeholder="Город, улица, дом" value="{{address}}">
+      </div>
+      <a href="#" class="map__close sprite-close js-map-clear"></a>
+    </div>
     
     <div class="form__field form__field_add-stuff">
       <a href="#" class="btn btn_color_blue js-add-place">Прикрепить места и события</a>

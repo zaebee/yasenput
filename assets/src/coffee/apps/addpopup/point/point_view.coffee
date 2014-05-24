@@ -144,12 +144,9 @@
         return
       App.ymaps.ready =>
         App.ymaps.geocode(address).then (res) =>
-          #@$el.find('[name=address]').change()
           first = res.geoObjects.get(0)
           coords = first.geometry.getCoordinates()
           @model.setCoordinates coords
-          #@map.geoObjects.add @model.placemark
-          #@map.setCenter coords, 12
 
           latitude = coords[0]
           longitude = coords[1]
@@ -247,7 +244,6 @@
       else
         @$('.categories__link').eq(0).trigger 'click'
       @$('.select-type').select2 'data', tags
-
 
       @$('.map_popupwin').resizable
         minHeight: 80,

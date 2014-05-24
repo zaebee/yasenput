@@ -23,6 +23,11 @@ urlpatterns = patterns('apps.main.views',
     url(r'^set', 'index'),
     url(r'^route', 'index'),
     url(r'^event', 'index'),
+    url(r'^trip', 'index'),
+
+    url(r'^add/point', 'index'),
+    url(r'^add/event', 'index'),
+    url(r'^add/trip', 'index'),
 
     url(r'^point/(?P<id>\d+)$', 'point', name='point_detail'),
     url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),

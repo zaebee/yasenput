@@ -24,6 +24,7 @@
       'select2-selecting': 'selectItem'
       'click .item .link.nonav': 'link'
       'click .link-user': 'link'
+      'click .logo': 'link'
 
     initialize: ->
       user = App.request 'get:my:profile'

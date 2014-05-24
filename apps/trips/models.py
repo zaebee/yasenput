@@ -21,6 +21,9 @@ class Blocks(models.Model):
     points = models.ManyToManyField(Points, null=True, blank=True, serialize=True)
     events = models.ManyToManyField(Events, null=True, blank=True, serialize=True)
     position = models.IntegerField(default=1)
+    longitude = models.DecimalField('Долгота', max_digits=25, decimal_places=20, blank=True)
+    latitude = models.DecimalField('Широта', max_digits=25, decimal_places=20, blank=True)
+    address = models.TextField('Адрес', blank=True)
 
     def __unicode__(self):
         return self.name

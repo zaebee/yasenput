@@ -88,6 +88,8 @@
       'change': 'render onShow'
     events:
       'click .link.c-place': 'showPointPopup'
+      'click .js-map-close': 'mapClose'
+      'click .js-map-open': 'mapOpen'
 
     initialize: ->
       console.log @model
@@ -103,6 +105,8 @@
     onShow: ->
       @bxPagerInit()
       _.each @model.get('blocks'), (block) =>
+        if block.address
+          @setPlacemark block
         if not block.imgs.length
           return
         @$('.bxslider-trip-' + block.position).bxSlider
@@ -128,9 +132,31 @@
 
     showPointPopup: (event) ->
       event.preventDefault()
-      if @model.get 'id'
-        url = $(event.currentTarget).attr 'href'
-        App.navigate url, true
+      console.log event
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
+    setPlacemark: (block) ->
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @geoMap = @geoMap or new App.ymaps.Map "map#{block.position}",
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+          controls : ['zoomControl']
+        , autoFitToViewport: 'always'
+        @model.setCoordinates [block.latitude, block.longitude]
+        @geoMap.geoObjects.add @model.placemark
+        @geoMap.setCenter [block.latitude, block.longitude], 12
+        @geoMap.controls.add('zoomControl')
+
+    mapClose: (event) ->
+      event.preventDefault()
+      @$('.map').removeClass 'open'
+
+    mapOpen: (event) ->
+      event.preventDefault()
+      @$('.map').addClass 'open'
 
 
   class Trip.Comments extends App.Views.ItemView

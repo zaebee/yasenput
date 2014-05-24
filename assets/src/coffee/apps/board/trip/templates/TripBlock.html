@@ -37,15 +37,16 @@
       </ul>
     </div>
     {{/if}}
-    <!--<div class="description__address">Вологодская область, г. Кириллов, 161100</div>-->
+    <div class="description__address">{{address}}</div>
   </div>
-  <!--
-  <div class="map map_popupwin">
-    <a href="#?" class="map__close sprite-close js-map-close"></a>
+
+  {{#if address}}
+  <div class="map map_popupwin mb10">
+    <a href="#" class="map__open js-map-open">Открыть карту</a>
+    <a href="#" class="map__close sprite-close js-map-close"></a>
     <div class="map__container" id="map{{position}}"></div>
-    <a href="#?" class="btn-open js-map-open"></a>
   </div>
-  -->
+  {{/if}}
 </div>
 <div class="line" style="display: block; height:6px; background: #616161;"></div>
 {{/each}}
