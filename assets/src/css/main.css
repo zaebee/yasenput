@@ -4347,6 +4347,18 @@ a {
     border-radius: 5px;
     font-weight: 600;
 }
+.map__clear {
+    background: #fff;
+    padding: 10px;
+    text-decoration: none;
+    right: 5px;
+    top: 17px;
+    position:absolute;
+    z-index:99;
+    display: none;
+    border-radius: 5px;
+    font-weight: 600;
+}
 .map__close {
   display: none;
   position: absolute;
@@ -4779,9 +4791,31 @@ a {
   float: right;
   width: 220px;
 }
+.trip-step__block .field {
+    position:relative;
+}
+.trip-step__block .field__input-map {
+    position: absolute;
+    z-index: 999;
+    width: 78%;
+    top: 20px;
+    left: 1%;
+    display:none;
+}
+.trip-step__block .map.open + .field__input-map,
+.trip-step__block .map.open + .field__input-map + .map__close {
+    display:block;
+}
 .trip-step__block_title input[type="text"] {
   border-color: #53B6D8;
   background: #fff;
+}
+.trip-step__block .map__close {
+    right: 140px;
+    z-index: 999;
+    width: 25px;
+    height: 25px;
+    top: 21px;
 }
 .trip-add-place {
   position: relative;
