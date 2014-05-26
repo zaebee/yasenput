@@ -18,6 +18,7 @@
     'route': 'routeList'
     'route/:id': 'route'
 
+    'tour': 'tourList'
     'trip': 'tripList'
     'trip/:id': 'trip'
 
@@ -32,7 +33,9 @@
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
-      App.updateSettings user: null
+      App.updateSettings
+        user: null
+        models: null
 
     getModel: (entity, id) ->
       item = new entity unid: id
@@ -87,6 +90,9 @@
 
     routeList: (model) ->
       App.updateSettings models: 'routes'
+
+    tourList: (model) ->
+      App.updateSettings models: 'tours'
 
     tripList: (model) ->
       App.updateSettings models: 'trips'

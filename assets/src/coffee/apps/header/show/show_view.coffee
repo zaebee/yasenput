@@ -173,12 +173,15 @@
       'click .filter-type > a': 'openFilterType'
       'click .filter-type__link': 'filterType'
       'click .filter-dropdown a': 'filterDropdown'
-      'click .yp_price_sub': 'priceSearch'
-      'click .yp_delay_sub': 'delaySearch'
 
     ui:
       filterTypeList: '.filter-type__list'
       filterAllCategory: '.categories__link'
+
+    initialize: ->
+      App.vent.on 'change:settings', (changed) =>
+        if _.has changed, 'models'
+          @render()
 
     templateHelpers: ->
       settings: App.settings
@@ -188,9 +191,9 @@
 
     filterCategory: (event) ->
       event.preventDefault()
-      @ui.filterAllCategory.removeClass 'btn_color_green'
+      @ui.filterAllCategory.removeClass 'btn_color_green active'
       $target = $(event.currentTarget)
-      $target.addClass 'btn_color_green'
+      $target.addClass 'btn_color_green active'
       url = $target.attr 'href'
       App.navigate url, true
 
@@ -202,21 +205,6 @@
       $target.toggleClass 'active'
       tags = _.map @$('.categories__link.sprite-filter-photo.active'), (type) -> $(type).data('id')
       App.vent.trigger 'filter:all:yapens', tags: tags.join ','
-
-    priceSearch: ->
-      if $('.price_start').val() == '' || $('.price_end').val() == ''
-        App.price = '$'
-      else
-        App.price = ''+$('.price_start').val().toString().replace(/[^\d]/gi, '') + ',' + $('.price_end').val().toString().replace(/[^\d]/gi, '')
-        App.vent.trigger 'filter:all:yapens'
-
-    delaySearch: ->
-      if $('.delay_start').val() == '' || $('.delay_end').val() == ''
-        App.delay = '$'
-      else
-        App.delay = ''+$('.delay_start').val().toString().replace(/[^\d]/gi, '') + ',' + $('.delay_end').val().toString().replace(/[^\d]/gi, '')
-        App.vent.trigger 'filter:all:yapens'
-
 
     filterAllCategory: (event) ->
       event.preventDefault()
