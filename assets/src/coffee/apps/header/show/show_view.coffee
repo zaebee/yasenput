@@ -269,6 +269,9 @@
     initialize: ->
       @saveUrl = true
 
+    templateHelpers: ->
+      current: App.getCurrentRoute()
+
 
   class Show.PopupInfo extends App.Views.ItemView
     template: 'PopupInfo'
