@@ -310,12 +310,10 @@ class ItemsList(PointsBaseView):
             t0 = time.time()
             search_res_points = MainModels.Points.search.query(params.get('s', ''))
             self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        '''
-        if 'sets' in models:
+        if 'tours' in models:
             t0 = time.time()
-            search_res_sets = CollectionsModels.Collections.search.query(params.get('s', ''))
-            self.log.info('Sets search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        '''
+            search_res_trips = TripModels.Trips.search.filter(price__gt=0).query(params.get('s',''))
+            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         if 'routes' in models:
             t0 = time.time()
             search_res_routes = MainModels.Routes.search.query(params.get('s',''))
@@ -327,8 +325,8 @@ class ItemsList(PointsBaseView):
 
         if 'trips' in models:
             t0 = time.time()
-            search_res_trips = TripModels.Trips.search.query(params.get('s',''))
-            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
+            search_res_trips = TripModels.Trips.search.filter(price__lte=0).query(params.get('s',''))
+            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
         #search_res_sets_ex = search_res_sets
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
