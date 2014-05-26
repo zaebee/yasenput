@@ -3702,9 +3702,23 @@ a {
     width: auto;
     letter-spacing:0;
 }
+.categories__item.categories__item_btn .btn[data-model=tours] {
+    background-image: url(../images/megaphone.png);
+}
+.categories__item.categories__item_btn .btn[data-model=trips] {
+    background-image: url(../images/luggage.png);
+}
+.categories__item.categories__item_btn .btn[data-model=points] {
+    background-image: url(../images/location.png);
+}
+.categories__item.categories__item_btn .btn[data-model=events] {
+    background-image: url(../images/calendar.png);
+}
+.categories__item.categories__item_btn .btn[data-model=routes] {
+    background-image: url(../images/map.png);
+}
 .categories__item.categories__item_btn .btn {
     padding: 15px 15px 15px 40px;
-    background-image: url(../images/map.png);
     background-repeat: no-repeat;
     background-position: 10px center;
 }
