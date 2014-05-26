@@ -178,6 +178,6 @@ class PersonAccount(PersonsBaseView):
                                                      "want_visit_points", "want_visit_events",
                                                      "person_followers", "icon", "icon_small"
                                                      ],
-                                             fields=("username", "first_name", "last_name", "email",
+                                             fields=("username", "first_name", "last_name", "email", "dealer",
                                                      "avatar", "phone", "city", "website", "about")),
                             mimetype="application/json")
