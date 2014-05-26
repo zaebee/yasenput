@@ -6979,3 +6979,22 @@ button[disabled].js-finish {
     padding: 0;
     list-style: none;
 }
+#destination-form.fixed {
+    position: fixed;
+    top: 14px;
+    z-index: 999;
+    left: 62px;
+}
+#destination-form.fixed .select2-choice {
+    width:300px;
+}
+#destination-form.fixed .select2-choice abbr {
+    top: 10px;
+    right: 35px;
+}
+#destination-form.fixed .select2-container .select2-choice > .select2-chosen {
+    margin-right:45px;
+}
+#destination-form.fixed button {
+    display:none;
+}
