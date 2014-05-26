@@ -34,6 +34,7 @@ class Person(User):
                                        blank=True,
                                        related_name='person_users_followers',
                                        serialize=True)
+    dealer = models.BooleanField(u'Дилер', default=False)
     objects = UserManager()
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     searchdelta = SphinxQuerySet(index="main_person",
