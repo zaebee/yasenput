@@ -21,7 +21,6 @@
       'click .js-popup-add': 'showAddPopup'
       'click .js-popupwin-authorization': 'showLoginPopup'
       'click .js-profile-menu': 'showProfileMenu'
-      'select2-selecting': 'selectItem'
       'click .item .link.nonav': 'link'
       'click .link-user': 'link'
       'click .logo': 'link'
@@ -53,38 +52,6 @@
       target.toggleClass 'open'
       @$('.profile-menu').slideToggle()
 
-    selectItem: (event) ->
-      console.log event
-
-    format: (state) ->
-      originalOption = state.element
-      "<span data-id='" + state.id + "' class='type type_" + state.type + "'>" + state.name + "</span>"
-
-    onShow: ->
-      @$('input').select2
-        allowClear: true
-        ajax:
-          dataType: 'json'
-          url: App.API_BASE_URL + '/api/v1/search/'
-          data: (term, page) ->
-            s: term
-          results: (data, page) ->
-            console.log data
-            results = _.map data, (el, type) ->
-              _.map el, (item) ->
-                item.type = type
-              el
-            results: _.filter _.flatten(results), (el) ->
-              el.type isnt 'users' and el.type isnt 'tags'
-        formatResult: @format
-        formatSelection: @format
-        minimumInputLength: 3
-        formatInputTooShort: ->
-          'Введите хотя бы 3 символа'
-        formatNoMatches: ->
-          'Ничего не найдено'
-        escapeMarkup: (m) -> m
-  
 
   class Show.Destination extends App.Views.ItemView
     template: 'Destination'
@@ -142,10 +109,8 @@
             el.type isnt 'users' and el.type isnt 'tags'
           query.callback data
 
-    onShow: ->
-      @$('#destination-input').select2
-        containerCssClass: 'select2-container_destination'
-        dropdownCssClass: 'select2-drop_destination'
+    initSelect2: (params = {}) ->
+      _.defaults params,
         quietMillis: 750
         allowClear: true
         query: @searchQuery
@@ -161,6 +126,21 @@
           if query.term
             return _.sortBy results, 'id'
           results
+        containerCssClass: 'select2-container_destination'
+        dropdownCssClass: 'select2-drop_destination'
+      @$('#destination-input').select2 params
+
+    onShow: ->
+      @initSelect2()
+      $(window).scroll =>
+        if $(window).scrollTop() > 150 and $(window).scrollTop() < 300
+          @$('#destination-form').addClass 'fixed'
+          @$('#destination-form .select2-container').removeClass 'select2-container_destination'
+          $('.select2-drop').removeClass 'select2-drop_destination'
+        if $(window).scrollTop() < 150
+          @$('#destination-form').removeClass 'fixed'
+          @$('#destination-form .select2-container').addClass 'select2-container_destination'
+          $('.select2-drop').addClass 'select2-drop_destination'
 
 
   class Show.Filter extends App.Views.ItemView
