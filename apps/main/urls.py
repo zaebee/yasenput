@@ -24,6 +24,7 @@ urlpatterns = patterns('apps.main.views',
     url(r'^route', 'index'),
     url(r'^event', 'index'),
     url(r'^trip', 'index'),
+    url(r'^tour', 'index'),
 
     url(r'^add/point', 'index'),
     url(r'^add/event', 'index'),
