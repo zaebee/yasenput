@@ -268,9 +268,44 @@
     className: 'popupwin__content clearfix'
 
     events:
+      'click .working-days__item': 'toggleDay'
+      'click .js-add-days': 'addDays'
+      'click .js-delete': 'daysDelete'
       'click .toggle-list__title': 'toggleList'
+      'click .js-select-quasi': 'openQuasi'
+
       'click .js-back': 'backStep'
       'click .js-finish': 'finishStep'
+
+    toggleDay: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      $target.toggleClass 'active'
+
+    addDays: (event) ->
+      event.preventDefault()
+      start_time = @$('.start-time').val()
+      end_time = @$('.end-time').val()
+      days = _.map @$('.working-days__item.active'), (el) -> $(el).text()
+      days = days.join ','
+      tpl = """
+          <li class="item">
+          <span class="days">#{days}</span>
+          <span class="time">#{start_time}—#{end_time}</span>
+          <a href="#" class="delete js-delete"></a>
+          </li>
+          """
+      @$('.working-period__result').append tpl
+      @$('.working-days__item').removeClass 'active'
+
+    daysDelete: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      $target.parent().remove()
+
+    openQuasi: (event) ->
+      event.preventDefault()
+      @$('.select-quasi__list').toggle()
 
     toggleList: (event) ->
       event.preventDefault
