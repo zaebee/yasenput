@@ -7,6 +7,9 @@
     regions:
       asideRegion: '#placetotrip-aside-region'
       contentRegion: '#placetotrip-content-region'
+
+    initialize: (options) ->
+      @saveUrl = true
     
 
   class PlaceToTrip.Content extends App.Views.Layout
