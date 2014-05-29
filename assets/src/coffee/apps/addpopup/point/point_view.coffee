@@ -171,7 +171,7 @@
         @$('.field__input-map').removeClass 'error'
         @trigger 'show:step:commers'
         tags = @$('.select-type').select2 'val'
-        rootTag = $('.categories__link.active').data() or id: 1 ## if not root tag selected
+        rootTag = @$('.categories__link.active').data() or id: 1 ## if not root tag selected
         tags.push rootTag.id
         @model.set tags: tags
       else
@@ -245,16 +245,6 @@
       else
         @$('.categories__link').eq(0).trigger 'click'
       @$('.select-type').select2 'data', tags
-
-      @$('.map_popupwin').resizable
-        minHeight: 80,
-        handles: "s"
-        resize: ( event, ui )  =>
-          $this = $(this)
-          if ui.size.height > 440
-            $this.addClass('open')
-          else
-            $this.removeClass('open')
       @initMap()
 
     onClose: ->

@@ -20,7 +20,9 @@
 
     updateText:  ->
       @$('.description__title').text @model.get('name')
-      @$('.description__text').text @model.get('description')
+      description = @model.get 'description'
+      description = description.split('\n').join('<br>')
+      @$('.description__text').html description
       @$('.description__address').text @model.get('address')
 
     toggleCommercial: (event) ->
