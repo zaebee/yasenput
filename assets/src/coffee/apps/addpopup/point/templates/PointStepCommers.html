@@ -16,21 +16,21 @@
         <div class="field clearfix">
           <div class="item item_add-cont">
             <label>Телефон:</label>
-            <input type="text">
+            <input name="phone" type="text">
           </div>
           <div class="item item_add-cont">
             <label>Группа vkontakte:</label>
-            <input type="text" placeholder="vk.com/groupname">
+            <input name="vk" type="text" placeholder="vk.com/groupname">
           </div>
         </div>
         <div class="field clearfix">
           <div class="item item_add-cont">
             <label>Веб-сайт:</label>
-            <input type="text">
+            <input name="website" type="text">
           </div>
           <div class="item item_add-cont">
             <label>Twitter:</label>
-            <input type="text" placeholder="@twittername">
+            <input name="twitter" type="text" placeholder="@twittername">
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@
             </ul>
             <div class="working-time clearfix">
               <input type="text" value="10:00" class="start-time">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;<input type="text" value="18:00" class="end-time">
-              <a href="#?" class="btn btn_color_green js-add-days">Добавить</a>
+              <a href="#" class="btn btn_color_green js-add-days">Добавить</a>
             </div>
             <div class="note">Вы можете выбрать один или несколько дней</div>
           </div>
@@ -61,7 +61,7 @@
             <li class="item hide">
               <span class="days"></span>
               <span class="time"></span>
-              <a href="#?" class="delete js-delete"></a>
+              <a href="#" class="delete js-delete"></a>
             </li>
           </ul>
         </section>
@@ -74,7 +74,7 @@
           <div class="field field_price clearfix">
             <label>Цена:</label>
             <div class="input-wrap right">
-              от<input type="text">&nbsp;&nbsp;&nbsp;&nbsp;до <input type="text">&nbsp;<span class="sprite-ruble-dark"></span>
+              от<input name="price_start" type="text">&nbsp;&nbsp;&nbsp;&nbsp;до <input name="price_end" type="text">&nbsp;<span class="sprite-ruble-dark"></span>
             </div>
           </div>
           <div class="field clearfix">
@@ -85,22 +85,22 @@
                 <ul class="select-quasi__list">
                   <li class="select-quasi__item">
                     <label>
-                      <input type="checkbox"><span></span> Завтрак
+                      <input name="services" value="breakfast" type="checkbox"><span></span> Завтрак
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input type="checkbox"><span></span> Бизнес-ланч
+                      <input name="services" value="lunch" type="checkbox"><span></span> Бизнес-ланч
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input type="checkbox"><span></span> Линия раздачи еды
+                      <input name="services" value="foodline" type="checkbox"><span></span> Линия раздачи еды
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input type="checkbox"><span></span> Ужин
+                      <input name="services" value="dinner" type="checkbox"><span></span> Ужин
                     </label>
                   </li>
                 </ul>
@@ -110,46 +110,46 @@
           <div class="field field_sub clearfix">
             <label>Кредитные карты:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="group1" data-value="open"><span></span>Да</label>
-              <label><input type="radio" name="group1" checked="checked" data-value="close"><span></span>Нет</label>
+              <label><input type="radio" name="credit_card" value="yes" data-value="open"><span></span>Да</label>
+              <label><input type="radio" name="credit_card" value="no" checked="checked" data-value="close"><span></span>Нет</label>
             </div>
             <div class="input-wrap input-wrap_checkbox clear clearfix">
-              <label><input type="checkbox"><span></span> Visa</label>
-              <label><input type="checkbox"><span></span> MasterCard</label>
-              <label><input type="checkbox"><span></span> American Express</label>
-              <label><input type="checkbox"><span></span> Discover</label>
+              <label><input name="credit_card_type" value="Visa" type="checkbox"><span></span> Visa</label>
+              <label><input name="credit_card_type" value="MasterCard" type="checkbox"><span></span> MasterCard</label>
+              <label><input name="credit_card_type" value="American Express" type="checkbox"><span></span> American Express</label>
+              <label><input name="credit_card_type" value="Discover" type="checkbox"><span></span> Discover</label>
             </div>
           </div>
           <div class="field clearfix">
             <label>Бронирование:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="group2"><span></span>Да</label>
-              <label><input type="radio" name="group2" checked="checked"><span></span>Нет</label>
+              <label><input type="radio" name="booking" value="yes"><span></span>Да</label>
+              <label><input type="radio" name="booking" value="no" checked="checked"><span></span>Нет</label>
             </div>
           </div>
           <div class="field field_sub clearfix">
             <label>WiFi:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="group3" data-value="open"><span></span>Да</label>
-              <label><input type="radio" name="group3" checked="checked" data-value="close"><span></span>Нет</label>
+              <label><input type="radio" name="wifi" value="yes" data-value="open"><span></span>Да</label>
+              <label><input type="radio" name="wifi" value="no" checked="checked" data-value="close"><span></span>Нет</label>
             </div>
             <div class="input-wrap input-wrap_checkbox clear clearfix">
-              <label><input type="checkbox"><span></span> Бесплатный</label>
-              <label><input type="checkbox"><span></span> Платный</label>
+              <label><input name="wifi_type" value="free" type="checkbox"><span></span> Бесплатный</label>
+              <label><input name="wifi_type" value="payed" type="checkbox"><span></span> Платный</label>
             </div>
           </div>
           <div class="field clearfix">
             <label>Уличная веранда:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="group4"><span></span>Да</label>
-              <label><input type="radio" name="group4" checked="checked"><span></span>Нет</label>
+              <label><input type="radio" name="terrace" value="yes"><span></span>Да</label>
+              <label><input type="radio" name="terrace" value="no" checked="checked"><span></span>Нет</label>
             </div>
           </div>
           <div class="field field_price clearfix">
             <label>Доставка:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="group5"><span></span>Да</label>
-              <label><input type="radio" name="group5" checked="checked"><span></span>Нет</label>
+              <label><input type="radio" name="delivery" value="yes"><span></span>Да</label>
+              <label><input type="radio" name="delivery" value="no" checked="checked"><span></span>Нет</label>
             </div>
           </div>
         </div>
@@ -158,6 +158,6 @@
   </section><!-- class="toggle-list" -->
 </div>
 <div class="popupwin__footer clearfix">
-  <a href="#?" class="btn btn_color_green left js-back">Назад</a>
-  <a href="#?" class="btn btn_color_blue right js-finish">Готово</a>
+  <a href="#" class="btn btn_color_green left js-back">Назад</a>
+  <button href="#" class="btn btn_color_blue right js-finish">Готово</button>
 </div>

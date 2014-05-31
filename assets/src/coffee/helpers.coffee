@@ -96,6 +96,14 @@ Handlebars.registerHelper('safe', (str, options)->
   new Handlebars.SafeString str
 )
 
+## returns safe string
+Handlebars.registerHelper('br', (str, options)->
+  if str
+    str = str.split '\n'
+    str = str.join '<br>'
+  new Handlebars.SafeString str
+)
+
 Handlebars.registerHelper "plus", (lvalue, rvalue, options) ->
   lvalue = parseFloat(lvalue)
   rvalue = parseFloat(rvalue)

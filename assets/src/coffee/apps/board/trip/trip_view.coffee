@@ -16,7 +16,9 @@
 
     updateText:  ->
       @$('.trip_name span').text @model.get('name')
-      @$('.description__text').text @model.get('description')
+      description = @model.get 'description'
+      description = description.split('\n').join('<br>')
+      @$('.description__text').html description
 
 
   class Trip.Header extends App.Views.ItemView

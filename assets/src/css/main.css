@@ -6231,6 +6231,7 @@ a {
 }
 .toggle-list__body .form-detail .field_price input[type="text"]:focus {
   border-color: #26B89A;
+  background: #fff;
 }
 .toggle-list_trip .btn {
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
@@ -6997,4 +6998,8 @@ button[disabled].js-finish {
 }
 #destination-form.fixed button {
     display:none;
+}
+.search-example {
+    text-decoration:none;
+    border-bottom: 1px dashed;
 }

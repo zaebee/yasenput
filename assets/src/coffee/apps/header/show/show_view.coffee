@@ -61,6 +61,7 @@
       'submit #destination-form': 'submitSearch'
       'select2-selecting #destination-input':'submitSearch'
       'select2-clearing #destination-input':'submitSearch'
+      'click .search-example': 'searchExample'
 
     submitSearch: (event) ->
       ## TODO fix search params
@@ -69,11 +70,22 @@
         event.preventDefault()
       data = event.object
       params = s: if data then data.name else ''
+      params.city = null
       if data and data.upperCorner
         params.coord_left = JSON.stringify _.zipObject(['ln','lt'], data.lowerCorner.split(' '))
         params.coord_right = JSON.stringify _.zipObject(['ln','lt'], data.upperCorner.split(' '))
-        params.s = ''
+      else
+        params.coord_left = null
+        params.coord_right = null
       console.log 'yapens request params', params
+      App.vent.trigger 'filter:all:yapens', params
+
+    searchExample: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      data = $target.data()
+      params = city: data.name
+      @$('#destination-input').select2 'data', data
       App.vent.trigger 'filter:all:yapens', params
 
     format: (state) ->
@@ -268,6 +280,9 @@
 
     initialize: ->
       @saveUrl = true
+
+    templateHelpers: ->
+      current: App.getCurrentRoute()
 
 
   class Show.PopupInfo extends App.Views.ItemView

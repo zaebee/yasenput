@@ -372,12 +372,13 @@
     showPopupPoint: (event) ->
       event.preventDefault()
       console.log event
-      url = $(event.currentTarget).attr 'href'
+      url = $(event.target).attr 'href'
       App.navigate url, true
 
     deletePoint: (event) ->
       event.preventDefault()
-      data = $(event.currentTarget).data()
+      event.stopPropagation()
+      data = $(event.target).data()
       points = @model.get 'points'
       pointIdx = _.findIndex points, data
       points.splice pointIdx, 1
@@ -390,6 +391,11 @@
 
     templateHelpers: ->
       cid: @model.cid
+
+    removePhoto: (event) ->
+      console.log event
+      event.preventDefault()
+      event.stopPropagation()
 
     onRender: ->
       mockFile = name: "Image", size: 12345

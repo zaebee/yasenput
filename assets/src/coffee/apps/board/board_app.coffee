@@ -28,8 +28,6 @@
   
   API =
     index: ->
-      if !BoardApp.board
-        BoardApp.board = new BoardApp.List.Controller App.settings
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
