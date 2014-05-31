@@ -392,6 +392,11 @@
     templateHelpers: ->
       cid: @model.cid
 
+    removePhoto: (event) ->
+      console.log event
+      event.preventDefault()
+      event.stopPropagation()
+
     onRender: ->
       mockFile = name: "Image", size: 12345
       imgs = @model.get 'imgs'

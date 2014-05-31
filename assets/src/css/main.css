@@ -6999,3 +6999,7 @@ button[disabled].js-finish {
 #destination-form.fixed button {
     display:none;
 }
+.search-example {
+    text-decoration:none;
+    border-bottom: 1px dashed;
+}
