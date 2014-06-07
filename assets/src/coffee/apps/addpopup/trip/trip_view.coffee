@@ -214,14 +214,52 @@
       'blur .input-title': 'saveBlockTitle'
       'blur .tinyeditor': 'saveBlockTxt'
       'click .js-map-close': 'mapClose'
-      'click .js-map-clear': 'mapClear'
       'click .js-map-open': 'mapOpen'
-      'change .field__input-map input': 'setAddress'
+      'select2-selecting .field__input-map input':'setAddress'
+      'select2-clearing .field__input-map input':'mapClear'
 
     templateHelpers: ->
       cid: @model.cid
 
+    format: (state) ->
+      originalOption = state.element
+      """<span data-id='#{state.id}' class='type type_#{state.type}'
+          data-pos='#{state.pos}'>
+          #{state.name}
+          <i>#{state.address}</i>
+          </span>
+      """
+
+    searchQuery: (query) ->
+      data = {}
+      geocode = App.ymaps.geocode query.term,
+        json: true
+        kind: 'locality'
+        results: 10
+      geocode.then (res) ->
+        console.log 'geocode response', res
+        geocodeResults = _.map res.GeoObjectCollection.featureMember, (el) ->
+          id: -1
+          name: el.GeoObject.name
+          type:'geocode'
+          address: el.GeoObject.description or ''
+          pos: el.GeoObject.Point.pos
+        data.results = geocodeResults
+        query.callback data
+
     onShow: ->
+      @$('.field__input-map input').select2
+        allowClear: true
+        quietMillis: 750
+        containerCssClass: 'select2-container_trip'
+        dropdownCssClass: 'select2-drop_trip'
+        query: @searchQuery
+        formatResult: @format
+        formatSelection: @format
+        minimumInputLength: 3
+        formatInputTooShort: -> 'Введите хотя бы 3 символа'
+        formatNoMatches: -> 'Ничего не найдено'
+        escapeMarkup: (m) -> m
       pointsView = new Trip.Points model: @model
       imgsView = new Trip.Imgs model: @model
       @blockPointsRegion.show pointsView
@@ -259,27 +297,21 @@
       @model.set txt: txt
 
     setAddress: (event) ->
-      target = $(event.currentTarget)
-      address = target.val()
-      if App.ymaps is undefined
-        return
-      App.ymaps.ready =>
-        App.ymaps.geocode(address).then (res) =>
-          first = res.geoObjects.get(0)
-          coords = first.geometry.getCoordinates()
-          @model.setCoordinates coords
-
-          latitude = coords[0]
-          longitude = coords[1]
-          @model.set(
-            'address': address
-            'longitude': longitude
-            'latitude': latitude
-            {silent: true}
-          )
-          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-          @map.geoObjects.add @model.placemark
+      data = event.object
+      address = data.name + ' ' + data.address
+      coords = data.pos.split ' '
+      latitude = coords[1]
+      longitude = coords[0]
+      @model.setCoordinates [latitude, longitude]
+      @model.set(
+        'address': address
+        'longitude': longitude
+        'latitude': latitude
+        {silent: true}
+      )
+      @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+      @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+      @map.geoObjects.add @model.placemark
 
     initMap: ->
       console.log 'initMap'
@@ -294,8 +326,9 @@
           @map.controls.add('zoomControl')
           address = @model.get 'address'
           if address
-            console.log @model.get('latitude'), @model.get('longitude')
-            console.log @model
+            @$('.field__input-map input').select2 'data',
+              name: ''
+              address: address
             @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
             @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
             @map.geoObjects.add @model.placemark
@@ -309,7 +342,9 @@
           App.ymaps.geocode(coords).then (res) =>
             first = res.geoObjects.get(0)
             address = first.properties.get 'metaDataProperty.GeocoderMetaData.text'
-            @$('[name^=address]').val address
+            @$('.field__input-map input').select2 'data',
+              name: ''
+              address: address
             @model.set(
               'address': address
               {silent: true}
@@ -323,8 +358,6 @@
           )
 
     mapClear: (event) ->
-      event.preventDefault()
-      @$('[name^=address]').val ''
       @map.geoObjects.remove @model.placemark
       @model.set(
         'longitude': null

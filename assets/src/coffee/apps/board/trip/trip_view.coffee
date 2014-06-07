@@ -128,7 +128,7 @@
             coordX = @$('#bx-pager-' + block.position + ' .bx-pager__scrollbox .active')
               .position().left - @$('#bx-pager .bx-pager__item')
               .outerWidth(true)
-            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft coordX
+            @$("#bx-pager-#{block.position} .bx-pager__viewport").scrollLeft coordX
             if @$('#bx-pager-' + block.position + ' .bx-pager__item:last-child').index() is newIndex
               @$('#bx-pager' + block.position + ' .bx-pager__viewport').scrollLeft $('#bx-pager-' + block.position + ' .bx-pager__viewport').width()
 
@@ -139,26 +139,28 @@
       App.navigate url, true
 
     setPlacemark: (block) ->
+      model = new App.Entities.TripBlock block
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        @geoMap = @geoMap or new App.ymaps.Map "map#{block.position}",
+        geoMap = new App.ymaps.Map "map#{block.position}",
           center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
           zoom: 12
           controls : ['zoomControl']
         , autoFitToViewport: 'always'
-        @model.setCoordinates [block.latitude, block.longitude]
-        @geoMap.geoObjects.add @model.placemark
-        @geoMap.setCenter [block.latitude, block.longitude], 12
-        @geoMap.controls.add('zoomControl')
+        geoMap.geoObjects.add model.placemark
+        geoMap.setCenter [block.latitude, block.longitude], 12
+        geoMap.controls.add('zoomControl')
 
     mapClose: (event) ->
       event.preventDefault()
-      @$('.map').removeClass 'open'
+      $target = $(event.currentTarget)
+      $target.parent().removeClass 'open'
 
     mapOpen: (event) ->
       event.preventDefault()
-      @$('.map').addClass 'open'
+      $target = $(event.currentTarget)
+      $target.parent().addClass 'open'
 
 
   class Trip.Comments extends App.Views.ItemView

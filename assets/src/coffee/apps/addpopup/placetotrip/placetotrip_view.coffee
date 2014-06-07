@@ -159,7 +159,6 @@
       else if @model.get('type_of_item') is 'route'
         return 'BoardRoute'
       else if @model.get('type_of_item') is 'trip'
-        console.log 'trip selected'
         return 'BoardTrip'
       else if @model.get('type_of_item') is 'event'
         return 'BoardEvent'
