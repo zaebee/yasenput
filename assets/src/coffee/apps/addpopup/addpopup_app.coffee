@@ -12,6 +12,10 @@
     'add/route': 'addRoute'
     'add/trip': 'addTrip'
     'add/placetotrip': 'addPlacetotrip'
+    'point/:id/edit': 'stubUrl'
+    'event/:id/edit': 'stubUrl'
+    'route/:id/edit': 'stubUrl'
+    'trip/:id/edit': 'stubUrl'
 
   API =
     addPoint: ->
@@ -24,6 +28,8 @@
       new AddPopupApp.Trip.Controller
     addPlacetotrip: (model) ->
       new AddPopupApp.PlaceToTrip.Controller model: model
+    stubUrl: (id) ->
+      console.log 'fired url', id
 
   App.vent.on 'show:edit:popup', (model) ->
     App.addPopupRegion.close()
