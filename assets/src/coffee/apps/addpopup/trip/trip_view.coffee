@@ -59,7 +59,7 @@
           App.addTripPopup.close()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
-          App.BoardApp.board.yapens.add @model, at:0
+          App.BoardApp.board.yapens.add @model, at:1
           yapensView = App.BoardApp.board.yapensView.render()
           if yapensView.wall
             yapensView.wall.reloadItems() & yapensView.wall.layout()

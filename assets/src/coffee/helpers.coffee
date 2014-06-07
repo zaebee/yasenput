@@ -104,6 +104,17 @@ Handlebars.registerHelper('br', (str, options)->
   new Handlebars.SafeString str
 )
 
+## returns safe string
+Handlebars.registerHelper('working_hours', (str, options)->
+  if str
+    result = str.split ' '
+    if result.length is 2
+      html = """<span class="days">#{result[0]}</span>
+                <span class="time">#{result[1]}</span>
+              """
+      new Handlebars.SafeString html
+)
+
 Handlebars.registerHelper "plus", (lvalue, rvalue, options) ->
   lvalue = parseFloat(lvalue)
   rvalue = parseFloat(rvalue)

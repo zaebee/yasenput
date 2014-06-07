@@ -8,10 +8,11 @@
 
       @layout = new Point.Layout model: @model
       @listenTo @layout, 'show', =>
-        @showPhotos()
         @showHeader()
-        @showComments()
+        @showPhotos()
+        @showDescription()
         @showMap()
+        @showComments()
       ###
         @sidebarView()
         @tagsView()
@@ -33,13 +34,18 @@
         region: @layout.photoRegion
         loading: true
 
-    showComments: ->
-      @commentsView = new Point.Comments model: @model
-      @show @commentsView,
-        region: @layout.commentsRegion
-        loading: false
+    showDescription: ->
+      @descView = new Point.Description model: @model
+      @show @descView,
+        region: @layout.descriptionRegion
 
     showMap: ->
       @mapView = new Point.Map model: @model
       @show @mapView,
         region: @layout.mapRegion
+
+    showComments: ->
+      @commentsView = new Point.Comments model: @model
+      @show @commentsView,
+        region: @layout.commentsRegion
+        loading: false

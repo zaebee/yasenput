@@ -159,6 +159,8 @@ class Points(models.Model):
     parking = models.BooleanField(default=False)
 
     priority = models.IntegerField(default=0, blank=False)
+    additional = models.TextField('Дополнительные данные',
+                                  blank=True, null=True)
 
     ypi = models.IntegerField(default=0, blank=True)
     type_of_item = "point"
