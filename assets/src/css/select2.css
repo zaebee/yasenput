@@ -34,7 +34,7 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
     width: 230px;
     height: 32px;
     padding: 0 0 0 10px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     position: relative;
 
     border: 1px solid #bababa;
@@ -335,6 +335,18 @@ Version: 3.4.4 Timestamp: Thu Oct 24 13:23:11 PDT 2013
 }
 .select2-container_route.select2-dropdown-open .select2-choice {
     width: 648px;
+}
+.select2-drop_route .select2-search {
+    width:600px;
+}
+.select2-container_trip {
+    width:100%;
+}
+.select2-container_trip .select2-choice {
+    width: 96%;
+}
+.select2-drop_trip .select2-search {
+    width:90%;
 }
 
 .select2-dropdown-open.select2-drop-above .select2-choice,

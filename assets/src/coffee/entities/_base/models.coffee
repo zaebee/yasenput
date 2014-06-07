@@ -58,7 +58,7 @@
       else
         App.ymaps.ready =>
           @placemark = new App.ymaps.Placemark coords,{
-            id: "map-point#{@id}"
+            id: "map-point#{@id or @get('id')}"
             name: @get 'name'
             address: @get 'address'
             img: img

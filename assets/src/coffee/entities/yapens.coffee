@@ -9,7 +9,7 @@
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
   class Entities.YapensCollection extends Entities.Collection
-      url: App.API_BASE_URL + '/api/v1/yapens/'
+    url: App.API_BASE_URL + '/api/v1/yapens/'
 
   API =
     getEntities: (params = {}) ->
