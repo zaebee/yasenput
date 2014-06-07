@@ -3,7 +3,9 @@
     <ul class="steps__list steps__list_place">
       <li class="steps__item active">1</li>
       <li class="steps__item active">2</li>
+      {{#if user.dealer}}
       <li class="steps__item">3</li>
+      {{/if}}
     </ul>
   </div>
 </div>
@@ -24,7 +26,7 @@
     <div class="field__title">
       Можете указать тип места:
     </div>
-    <div class="select-type"></div>
+    <input type="text" class="select-type" placeholder="Можете указать тип места">
     <ul class="tags">
       {{#each additionalLabels}}
       <li class="tags__item">
@@ -48,5 +50,9 @@
 </div>
 <div class="popupwin__footer clearfix">
   <a href="#" class="btn btn_color_green left js-back">Назад</a>
+  {{#if user.dealer}}
   <a href="#" class="btn btn_color_blue right js-next">Следующий шаг</a>
+  {{else}}
+  <button href="#" class="btn btn_color_blue right js-finish">Готово</button>
+  {{/if}}
 </div>

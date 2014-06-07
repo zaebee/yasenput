@@ -812,6 +812,7 @@ class PointAdd(PointsBaseView):
          'longitude': str(point[0].longitude),
          'address':point[0].address,
          'likes_count': point[0].likes_count,
+         'additional': point[0].additional,
          'invalid':point[0].invalid,
          'wifi': point[0].wifi,
          'parking':point[0].parking,
@@ -819,7 +820,8 @@ class PointAdd(PointsBaseView):
          'author':json.loads(author)[0]['author'],
          'tags': json.loads(tags)[0]['tags'],
          'reviews': json.loads(reviews)[0]['reviews'],
-         'isliked': int(isliked)})
+         'isliked': int(isliked)
+        })
 
 
 class LikePoint(PointsBaseView):

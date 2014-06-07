@@ -88,6 +88,7 @@
       'select2-removed': 'removeLabel'
       'click .js-back': 'backStep'
       'click .js-next': 'nextStep'
+      'click .js-finish': 'finishStep'
 
     initialize: ->
       @rootLabels = @collection.toJSON().filter (label) -> label.level is 0
@@ -96,6 +97,7 @@
       @labels = {}
 
     templateHelpers: ->
+      user: App.request('get:my:profile').toJSON()
       rootLabels: @rootLabels
       additionalLabels: @additionalLabels
 
@@ -174,6 +176,32 @@
         rootTag = @$('.categories__link.active').data() or id: 1 ## if not root tag selected
         tags.push rootTag.id
         @model.set tags: tags
+      else
+        @$('.field__input-map').addClass 'error'
+
+    finishStep: (event) ->
+      event.preventDefault()
+      isValid = @model.isValid()
+      if _.indexOf(@model.validationError, 'address') < 0
+        @$('.field__input-map').removeClass 'error'
+        @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
+        tags = @$('.select-type').select2 'val'
+        rootTag = @$('.categories__link.active').data() or id: 1 ## if not root tag selected
+        tags.push rootTag.id
+        @model.set tags: tags
+        additional = @model.get 'additional'
+        @model.set additional: JSON.stringify(additional), {silent:true}
+        @spinner.start()
+        @model.save null,
+          success: =>
+            @spinner.stop()
+            App.addPointPopup.close()
+            App.BoardApp.board.yapens.add @model, at:1
+            App.vent.trigger 'show:detail:popup', @model
+            App.navigate "point/#{@model.get('id')}"
+            yapensView = App.BoardApp.board.yapensView.render()
+            if yapensView.wall
+              yapensView.wall.reloadItems() & yapensView.wall.layout()
       else
         @$('.field__input-map').addClass 'error'
 
@@ -256,6 +284,16 @@
   class Point.StepCommers extends App.Views.ItemView
     template: 'PointStepCommers'
     className: 'popupwin__content clearfix'
+    modelEvents:
+      'change:additional': 'render'
+
+    onBeforeRender: ->
+      additional = @model.get 'additional'
+      if additional and _.isString additional
+        try
+          @model.set 'additional', JSON.parse(additional), {silent: true}
+        catch err
+          console.error err
 
     events:
       'click .working-days__item': 'toggleDay'
@@ -280,8 +318,9 @@
       days = days.join ','
       tpl = """
           <li class="item">
-          <span class="days">#{days}</span>
+          <span class="days">#{days or 'ПН-ВС'}</span>
           <span class="time">#{start_time}—#{end_time}</span>
+          <input name="working_hours" type="hidden" value="#{days or 'ПН-ВС'} #{start_time}-#{end_time}">
           <a href="#" class="delete js-delete"></a>
           </li>
           """
@@ -309,12 +348,30 @@
         target.addClass 'active'
         target.siblings('.toggle-list__body').slideDown()
 
+    setAdditionalData: ->
+      data = @$el.find('input').serializeArray()
+      working_hours = _(data).filter({name: 'working_hours'})
+        .pluck('value').value()
+      services = _(data).filter({name: 'services'})
+        .pluck('value').value()
+      data = _.reduce data, (result, el) ->
+        result[el.name] = el.value
+        result
+      , {}
+      data.working_hours = working_hours
+      data.services = services
+      @model.set additional: JSON.stringify(data), {silent:true}
+
     finishStep: (event) ->
       event.preventDefault()
+      @setAdditionalData()
+      @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
+      @spinner.start()
       @model.save null,
         success: =>
+          @spinner.stop()
           App.addPointPopup.close()
-          App.BoardApp.board.yapens.add @model, at:0
+          App.BoardApp.board.yapens.add @model, at:1
           App.vent.trigger 'show:detail:popup', @model
           App.navigate "point/#{@model.get('id')}"
           yapensView = App.BoardApp.board.yapensView.render()
@@ -328,6 +385,7 @@
     onClose: ->
       @stopListening()
       @model.unset()
+
 
   class Point.Imgs extends App.Views.ItemView
     template: 'ImgsList'

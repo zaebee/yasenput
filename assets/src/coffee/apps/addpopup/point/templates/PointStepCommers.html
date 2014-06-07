@@ -16,21 +16,21 @@
         <div class="field clearfix">
           <div class="item item_add-cont">
             <label>Телефон:</label>
-            <input name="phone" type="text">
+            <input name="phone" type="text" value="{{additional.phone}}">
           </div>
           <div class="item item_add-cont">
             <label>Группа vkontakte:</label>
-            <input name="vk" type="text" placeholder="vk.com/groupname">
+            <input name="vk" type="text" placeholder="vk.com/groupname" value="{{additional.vk}}">
           </div>
         </div>
         <div class="field clearfix">
           <div class="item item_add-cont">
             <label>Веб-сайт:</label>
-            <input name="website" type="text">
+            <input name="website" type="text" placeholder="example.com" value="{{additional.website}}">
           </div>
           <div class="item item_add-cont">
             <label>Twitter:</label>
-            <input name="twitter" type="text" placeholder="@twittername">
+            <input name="twitter" type="text" placeholder="@twittername" value="{{additional.twitter}}">
           </div>
         </div>
       </div>
@@ -43,11 +43,11 @@
         <section class="working-period clearfix">
           <div class="working-period__choice">
             <ul class="working-days">
-              <li class="working-days__item" data-number="1">ПН</li>
-              <li class="working-days__item" data-number="2">ВТ</li>
-              <li class="working-days__item" data-number="3">СР</li>
-              <li class="working-days__item" data-number="4">ЧТ</li>
-              <li class="working-days__item" data-number="5">ПТ</li>
+              <li class="working-days__item active" data-number="1">ПН</li>
+              <li class="working-days__item active" data-number="2">ВТ</li>
+              <li class="working-days__item active" data-number="3">СР</li>
+              <li class="working-days__item active" data-number="4">ЧТ</li>
+              <li class="working-days__item active" data-number="5">ПТ</li>
               <li class="working-days__item" data-number="6">СБ</li>
               <li class="working-days__item" data-number="7">ВС</li>
             </ul>
@@ -58,11 +58,13 @@
             <div class="note">Вы можете выбрать один или несколько дней</div>
           </div>
           <ul class="working-period__result">
-            <li class="item hide">
-              <span class="days"></span>
-              <span class="time"></span>
-              <a href="#" class="delete js-delete"></a>
-            </li>
+            {{#each additional.working_hours}}
+              <li class="item">
+                {{working_hours .}}
+                <input type="hidden" name="working_hours" value="{{.}}">
+                <a href="#" class="delete js-delete"></a>
+              </li>
+            {{/each}}
           </ul>
         </section>
       </div>
@@ -74,7 +76,8 @@
           <div class="field field_price clearfix">
             <label>Цена:</label>
             <div class="input-wrap right">
-              от<input name="price_start" type="text">&nbsp;&nbsp;&nbsp;&nbsp;до <input name="price_end" type="text">&nbsp;<span class="sprite-ruble-dark"></span>
+              от <input name="price_start" type="text" value="{{additional.price_start}}">&nbsp;&nbsp;&nbsp;&nbsp;
+              до <input name="price_end" type="text" value="{{additional.price_end}}">&nbsp;<span class="sprite-ruble-dark"></span>
             </div>
           </div>
           <div class="field clearfix">
@@ -85,22 +88,26 @@
                 <ul class="select-quasi__list">
                   <li class="select-quasi__item">
                     <label>
-                      <input name="services" value="breakfast" type="checkbox"><span></span> Завтрак
+                      <input name="services" value="Завтрак" type="checkbox" {{#ifContains 'Завтрак' additional.services}}checked="checked"{{/ifContains}}>
+                      <span></span> Завтрак
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input name="services" value="lunch" type="checkbox"><span></span> Бизнес-ланч
+                      <input name="services" value="Бизнес-ланч" type="checkbox" {{#ifContains 'Бизнес-ланч' additional.services}}checked="checked"{{/ifContains}}>
+                      <span></span> Бизнес-ланч
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input name="services" value="foodline" type="checkbox"><span></span> Линия раздачи еды
+                      <input name="services" value="Линия раздачи еды" type="checkbox" {{#ifContains 'Линия раздачи еды' additional.services}}checked="checked"{{/ifContains}}>
+                      <span></span> Линия раздачи еды
                     </label>
                   </li>
                   <li class="select-quasi__item">
                     <label>
-                      <input name="services" value="dinner" type="checkbox"><span></span> Ужин
+                      <input name="services" value="Ужин" type="checkbox" {{#ifContains 'Ужин' additional.services}}checked="checked"{{/ifContains}}>
+                      <span></span> Ужин
                     </label>
                   </li>
                 </ul>
@@ -110,8 +117,14 @@
           <div class="field field_sub clearfix">
             <label>Кредитные карты:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="credit_card" value="yes" data-value="open"><span></span>Да</label>
-              <label><input type="radio" name="credit_card" value="no" checked="checked" data-value="close"><span></span>Нет</label>
+              <label>
+                <input type="radio" name="credit_card" value="Да" {{#ifEquals additional.credit_card 'Да'}}checked="checked"{{/ifEquals}}>
+                <span></span>Да
+              </label>
+              <label>
+                <input type="radio" name="credit_card" value="Нет" {{#ifEquals additional.credit_card 'Да'}}{{else}}checked="checked"{{/ifEquals}}>
+                <span></span>Нет
+              </label>
             </div>
             <div class="input-wrap input-wrap_checkbox clear clearfix">
               <label><input name="credit_card_type" value="Visa" type="checkbox"><span></span> Visa</label>
@@ -123,33 +136,57 @@
           <div class="field clearfix">
             <label>Бронирование:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="booking" value="yes"><span></span>Да</label>
-              <label><input type="radio" name="booking" value="no" checked="checked"><span></span>Нет</label>
+              <label>
+                <input type="radio" name="booking" value="Да" {{#ifEquals additional.booking 'Да'}}checked="checked"{{/ifEquals}}>
+                <span></span>Да
+              </label>
+              <label>
+                <input type="radio" name="booking" value="Нет" {{#ifEquals additional.booking 'Да'}}{{else}}checked="checked"{{/ifEquals}}>
+                <span></span>Нет
+              </label>
             </div>
           </div>
           <div class="field field_sub clearfix">
             <label>WiFi:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="wifi" value="yes" data-value="open"><span></span>Да</label>
-              <label><input type="radio" name="wifi" value="no" checked="checked" data-value="close"><span></span>Нет</label>
+              <label>
+                <input type="radio" name="wifi" value="Да" {{#ifEquals additional.wifi 'Да'}}checked="checked"{{/ifEquals}}>
+                <span></span>Да
+              </label>
+              <label>
+                <input type="radio" name="wifi" value="Нет" {{#ifEquals additional.wifi 'Да'}}{{else}}checked="checked"{{/ifEquals}}>
+                <span></span>Нет
+              </label>
             </div>
             <div class="input-wrap input-wrap_checkbox clear clearfix">
-              <label><input name="wifi_type" value="free" type="checkbox"><span></span> Бесплатный</label>
-              <label><input name="wifi_type" value="payed" type="checkbox"><span></span> Платный</label>
+              <label><input name="wifi_type" value="Бесплатный" type="checkbox"><span></span> Бесплатный</label>
+              <label><input name="wifi_type" value="Платный" type="checkbox"><span></span> Платный</label>
             </div>
           </div>
           <div class="field clearfix">
             <label>Уличная веранда:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="terrace" value="yes"><span></span>Да</label>
-              <label><input type="radio" name="terrace" value="no" checked="checked"><span></span>Нет</label>
+              <label>
+                <input type="radio" name="terrace" value="Да" {{#ifEquals additional.terrace 'Да'}}checked="checked"{{/ifEquals}}>
+                <span></span>Да
+              </label>
+              <label>
+                <input type="radio" name="terrace" value="Нет" {{#ifEquals additional.terrace 'ДА'}}{{else}}checked="checked"{{/ifEquals}}>
+                <span></span>Нет
+              </label>
             </div>
           </div>
           <div class="field field_price clearfix">
             <label>Доставка:</label>
             <div class="input-wrap input-wrap_radio right">
-              <label><input type="radio" name="delivery" value="yes"><span></span>Да</label>
-              <label><input type="radio" name="delivery" value="no" checked="checked"><span></span>Нет</label>
+              <label>
+                <input type="radio" name="delivery" value="Да" {{#ifEquals additional.delivery 'Да'}}checked="checked"{{/ifEquals}}>
+                <span></span>Да
+              </label>
+              <label>
+                <input type="radio" name="delivery" value="Нет" {{#ifEquals additional.delivery 'Да'}}{{else}}checked="checked"{{/ifEquals}}>
+                <span></span>Нет
+              </label>
             </div>
           </div>
         </div>

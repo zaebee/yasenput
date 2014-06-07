@@ -5,30 +5,12 @@
     regions:
       headerRegion: '#point-header-region'
       photoRegion: '#point-photo-region'
+      descriptionRegion: '#point-description-region'
       mapRegion: '#point-map-region'
       commentsRegion: '#point-comments-region'
       tagsRegion: '#point-tags-region'
 
     className: 'popupwin__scrollbox'
-    modelEvents:
-      'change:name' : 'updateText'
-      'change:description' : 'updateText'
-      'change:address' : 'updateText'
-
-    events:
-      'click .js-open': 'toggleCommercial'
-
-    updateText:  ->
-      @$('.description__title').text @model.get('name')
-      description = @model.get 'description'
-      description = description.split('\n').join('<br>')
-      @$('.description__text').html description
-      @$('.description__address').text @model.get('address')
-
-    toggleCommercial: (event) ->
-      event.preventDefault()
-      @$('.js-open').toggleClass 'active'
-      @$('.commercial-info__body ').slideToggle()
 
 
   class Point.Header extends App.Views.ItemView
@@ -108,6 +90,30 @@
           @$('#bx-pager .bx-pager__viewport').scrollLeft coordX
           if @$('#bx-pager .bx-pager__item:last-child').index() is newIndex
             @$('#bx-pager .bx-pager__viewport').scrollLeft $('#bx-pager .bx-pager__viewport').width()
+
+
+  class Point.Description extends App.Views.ItemView
+    template: 'PointDescription'
+    modelEvents:
+      'change:name': 'render'
+      'change:address': 'render'
+      'change:description': 'render'
+      'change:additional': 'render'
+    events:
+      'click .js-open': 'toggleCommercial'
+
+    toggleCommercial: (event) ->
+      event.preventDefault()
+      @$('.js-open').toggleClass 'active'
+      @$('.commercial-info__body ').slideToggle()
+
+    onBeforeRender: ->
+      additional = @model.get 'additional'
+      if additional and _.isString additional
+        try
+          @model.set 'additional', JSON.parse(additional), {silent: true}
+        catch err
+          console.error err
 
 
   class Point.Map extends App.Views.ItemView

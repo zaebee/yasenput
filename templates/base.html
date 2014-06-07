@@ -73,6 +73,7 @@
             avatar: '{{ user.person.avatar|default:"/static/images/user-unknown.png" }}',
             icon: '{{ user.person.icon|default:"/static/images/user-unknown.png" }}',
             icon_small: '{{ user.person.icon|default:"/static/images/user-unknown-small.png" }}',
+            dealer: {{ user.person.dealer|lower }},
           };
         {% else %}
           Yapp.USER = {authorized: false};

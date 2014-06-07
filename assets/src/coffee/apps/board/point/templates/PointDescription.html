@@ -1,0 +1,96 @@
+<h3 class="description__title">{{name}}</h3>
+{{#if description}}
+  <p class="description__text">{{br description}}</p>
+{{/if}}
+{{#if additional}}
+<div class="description__additional commercial-info">
+  <div class="commercial-info__head">
+    <ul class="list">
+      {{#if additional.phone}}
+      <li class="item item_phone">{{additional.phone}}</li>
+      {{/if}}
+      {{#if additional.website}}
+        <li class="item item_site"><a href="http://{{additional.website}}" target="_blank" class="link">{{additional.website}}</a></li>
+      {{/if}}
+      {{#if additional.twitter}}
+        <li class="item item_tw"><a href="http://twitter.com/{{additional.twitter}}" target="_blank" class="link">{{additional.twitter}}</a></li>
+      {{/if}}
+      {{#if additional.vk}}
+        <li class="item item_vk"><a href="http://{{additional.vk}}" target="_blank" class="link">{{additional.vk}}</a></li>
+      {{/if}}
+    </ul>
+    <a href="#" class="link-open js-open"></a>
+  </div>
+  <div class="commercial-info__body clearfix">
+    <ul class="list list_first">
+      <li class="item">
+        <div class="entry-title">Время работы:</div>
+        <div class="text">
+          {{#each additional.working_hours}}
+          {{.}}<br>
+          {{/each}}
+        </div>
+      </li>
+      <li class="item">
+        <div class="entry-title">Кредитные карты:</div>
+        <div class="text">
+          {{additional.credit_card}}
+        </div>
+      </li>
+      <li class="item">
+        <div class="entry-title">Уличная веранда:  </div>
+        <div class="text">
+          {{additional.terrace}}
+        </div>
+      </li>
+    </ul>
+    <ul class="list list_second">
+      <li class="item">
+        <div class="entry-title">Цена:</div>
+        <div class="text">
+          {{#if additional.price_start}}
+          {{additional.price_start}} <span class="sprite-ruble-commercial"></span>&nbsp;
+          {{/if}}
+          {{#if additional.price_end}}
+          -&nbsp;{{additional.price_end}} <span class="sprite-ruble-commercial"></span>
+          {{/if}}
+        </div>
+      </li>
+      <li class="item">
+        <div class="entry-title">Предлагается:</div>
+        <div class="text">
+          {{#each additional.services}}
+          {{.}}<br>
+          {{/each}}
+        </div>
+      </li>
+      <li class="item">
+        <div class="entry-title">Доставка:  </div>
+        <div class="text">
+          {{additional.delivery}}
+        </div>
+      </li>
+    </ul>
+    <ul class="list list_third">
+      <li class="item">
+        <div class="entry-title">Бронирование:</div>
+        <div class="text">
+          {{additional.booking}}
+        </div>
+      </li>
+      <li class="item">
+        <div class="entry-title">WiFi:</div>
+        <div class="text">
+          {{additional.wifi}}
+        </div>
+      </li>
+      <!--
+      <li class="item">
+        <a href="#" class="link-changes">Хочу предложить изменения</a>
+      </li>
+      -->
+    </ul>
+  </div>
+</div>
+{{/if}}
+<div class="description__address">{{address}}</div>
