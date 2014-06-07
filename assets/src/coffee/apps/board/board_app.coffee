@@ -33,7 +33,7 @@
       App.vent.trigger 'hide:dashboard:region'
       App.updateSettings
         user: null
-        models: null
+        models: 'trips'
 
     getModel: (entity, id) ->
       item = new entity unid: id

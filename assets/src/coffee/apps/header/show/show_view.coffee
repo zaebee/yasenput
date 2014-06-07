@@ -103,6 +103,8 @@
         json: true
         kind: 'locality'
         results: 2
+        boundedBy: [[41.18599, 19.484764], [81.886117, 191.204665]] ## TODO FIX hardcoded Russia bounds
+        strictBounds: true
       App.request 'search:all:yapens', s: query.term, (res) ->
         data.results = _.map res, (el, type) ->
           _.map el, (item) -> item.type = type
