@@ -31,9 +31,11 @@
       App.vent.trigger 'show:map:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
-      App.updateSettings
-        user: null
-        models: 'trips'
+      App.ymaps.ready =>
+        App.updateSettings
+          user: null
+          city: App.ymaps.geolocation.city
+          models: App.settings.models or 'trips'
 
     getModel: (entity, id) ->
       item = new entity unid: id
