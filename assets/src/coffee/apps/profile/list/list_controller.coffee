@@ -25,7 +25,6 @@
         section: @options.section
       @show dashboardView,
         region: App.headerRegion.currentView.dashboardRegion
-        loading: true
       App.vent.trigger 'hide:map:region'
       App.vent.trigger 'hide:destination:region'
       App.vent.trigger 'show:dashboard:region'
@@ -34,11 +33,17 @@
       App.vent.trigger 'filter:all:yapens',
         user: @user.get 'id'
         s: null
+        city: null
+        coord_left: null
+        coord_right: null
 
     showMyLikes: ->
       App.vent.trigger 'filter:all:yapens',
         user: @user.get 'id'
         s: null
+        city: null
+        coord_left: null
+        coord_right: null
 
     showSettings: ->
       settingsView = new List.ProfileSettings model: @user

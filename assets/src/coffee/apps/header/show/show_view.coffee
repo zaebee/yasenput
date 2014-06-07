@@ -146,7 +146,12 @@
 
     onShow: ->
       @initSelect2()
-      $(window).scroll =>
+      App.vent.on 'change:settings', (changed) =>
+        if _.has changed, 'city'
+          @$('#destination-input').select2 'data',
+            name: App.settings.city
+            address: ''
+      $(window).on 'scroll.Yapp', =>
         if $(window).scrollTop() > 150 and $(window).scrollTop() < 300
           @$('#destination-form').addClass 'fixed'
           @$('#destination-form .select2-container').removeClass 'select2-container_destination'
@@ -155,6 +160,9 @@
           @$('#destination-form').removeClass 'fixed'
           @$('#destination-form .select2-container').addClass 'select2-container_destination'
           $('.select2-drop').addClass 'select2-drop_destination'
+
+    onClose: ->
+      $(window).off 'scroll.Yapp'
 
 
   class Show.Filter extends App.Views.ItemView
