@@ -36,6 +36,8 @@
           user: null
           city: App.ymaps.geolocation.city
           models: App.settings.models or 'trips'
+          coord_left: null
+          coord_right: null
 
     getModel: (entity, id) ->
       item = new entity unid: id
