@@ -132,7 +132,7 @@ class PhotosDel(PhotosBaseView):
         status = 0
         txt = ""
         try:
-            photo = Photos.objects.get(pk=pk, author=request.user.get_profile())
+            photo = Photos.objects.get(pk=pk, author=request.user.person)
         except Photos.DoesNotExist:
             txt = u'Указаный объект не найден'
             status = 1

@@ -14,6 +14,7 @@ def make_upload_path(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return u'point/%s/%s/%s/%s.jpg' % (filename[:2], filename[3:5], filename[6:8], filename)
 
+
 class Photos(models.Model):
     class Meta:
         verbose_name = u'Фотографии'
