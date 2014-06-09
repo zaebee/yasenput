@@ -15,7 +15,6 @@
         @showComments()
         @showAside()
         @showBlocks()
-      #App.execute 'when:fetched', @model, =>
       App.tripPopup.show @layout, loading: true
 
     onClose: ->

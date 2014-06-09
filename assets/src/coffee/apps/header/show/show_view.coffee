@@ -60,7 +60,7 @@
     events:
       'submit #destination-form': 'submitSearch'
       'select2-selecting #destination-input':'submitSearch'
-      'select2-clearing #destination-input':'submitSearch'
+      'select2-clearing #destination-input':'clearSearch'
       'click .search-example': 'searchExample'
 
     submitSearch: (event) ->
@@ -69,24 +69,38 @@
       if event.type is 'submit'
         event.preventDefault()
       data = event.object
-      params = s: if data then data.name else ''
-      params.city = null
+      params = s: if data then data.name else (App.settings.s or '')
       if data and data.upperCorner
         params.coord_left = JSON.stringify _.zipObject(['ln','lt'], data.lowerCorner.split(' '))
         params.coord_right = JSON.stringify _.zipObject(['ln','lt'], data.upperCorner.split(' '))
-      else
+        params.s = null
+        params.city = null
+      if params.s
+        params.city = null
         params.coord_left = null
         params.coord_right = null
       console.log 'yapens request params', params
-      App.vent.trigger 'filter:all:yapens', params
+      App.updateSettings params
+
+    clearSearch: (event) ->
+      App.updateSettings
+        s: null
+        city: null
+        user: null
+        coord_left: null
+        coord_right: null
 
     searchExample: (event) ->
       event.preventDefault()
       $target = $(event.currentTarget)
       data = $target.data()
-      params = city: data.name
+      params =
+        city: data.name
+        s: null
+        coord_left: null
+        coord_right: null
       @$('#destination-input').select2 'data', data
-      App.vent.trigger 'filter:all:yapens', params
+      App.updateSettings params
 
     format: (state) ->
       originalOption = state.element
@@ -147,9 +161,9 @@
     onShow: ->
       @initSelect2()
       App.vent.on 'change:settings', (changed) =>
-        if _.has changed, 'city'
+        if App.settings.city and _.has changed, 'city'
           @$('#destination-input').select2 'data',
-            name: App.settings.city
+            name: App.settings.city or ''
             address: ''
       $(window).on 'scroll.Yapp', =>
         if $(window).scrollTop() > 150 and $(window).scrollTop() < 300

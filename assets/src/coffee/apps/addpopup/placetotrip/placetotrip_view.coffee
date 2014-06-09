@@ -29,9 +29,6 @@
       'select2-selecting': 'searchItem'
       'select2-clearing':'searchClear'
 
-    templateHelpers: ->
-      tags: @options.tags.toJSON()
-
     setMapCenter: (model) ->
       if model.get('type_of_item') is 'point'
         coords = model.placemark.geometry.getCoordinates()

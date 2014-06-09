@@ -5,7 +5,6 @@
     initialize: ->
       console.log 'initialize HeaderApp.Show.Controller'
       @layout = @getLayoutView()
-      #@tags = App.request 'get:all:tags'
       @listenTo @layout, 'show', =>
         @ctrlsView()
         @destinationView()
@@ -21,8 +20,6 @@
       @show destinationView, region: @layout.destinationRegion
 
     filterView: ->
-      #App.execute 'when:fetched', @tags, =>
-      #filterView = new Show.Filter collection: @tags
       filterView = new Show.Filter
       @show filterView, region: @layout.filterRegion
 
