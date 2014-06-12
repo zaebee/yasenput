@@ -84,6 +84,7 @@ module.exports = function(grunt) {
             'src/css/main.css',
             'src/css/dropzone.css',
             'src/css/media.css',
+            'src/css/photoview.css',
             'src/css/bootstrap.css',
             'src/css/fancybox/jquery.fancybox.css'
           ],
