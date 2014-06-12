@@ -21,8 +21,6 @@
     ###
     initialize: ->
       console.log "initializing Entities.Model"
-      if App.ymaps is undefined
-        return
       if @get('latitude') and @get('longitude')
         coords = [@get('latitude'), @get('longitude')]
       else
@@ -54,6 +52,11 @@
         img = '/static/images/place-unknown.png'
       if @placemark
         @placemark.geometry.setCoordinates coords
+        @placemark.properties.set
+          id: "map-point#{@id or @get('id')}"
+          name: @get 'name'
+          address: @get 'address'
+          img: img
       else
         App.ymaps.ready =>
           @placemark = new App.ymaps.Placemark coords,{
@@ -70,3 +73,4 @@
             balloonCloseButton: false
             #hideIconOnBalloonOpen: false
           }
+      return @placemark

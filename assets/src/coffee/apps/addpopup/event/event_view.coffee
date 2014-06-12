@@ -120,7 +120,7 @@
 
     format_place: (state) ->
       originalOption = state.element
-      "<span data-id='#{state.id}' class='type type_#{state.type}'>#{state.name}</span>"
+      "<span data-id='#{state.id}' class='type type_#{state.type}'>#{state.name}<i>#{state.address or ''}</i></span>"
 
     selectAdditionalLabel: (event) ->
       event.preventDefault()
@@ -141,15 +141,21 @@
       point = new App.Entities.Point unid: id
       point.fetch()
       App.execute 'when:fetched', point, =>
+        @$('.field__input-place').removeClass 'error'
+        coords = [point.get('latitude'), point.get('longitude')]
+        point.setCoordinates coords
+        @map.geoObjects.add point.placemark
+        @storage = App.ymaps.geoQuery @map.geoObjects
+        @map.setCenter coords
         points.push point.toJSON()
         @model.set points: points
         @model.trigger 'change:points'
-        @$('.field__input-place').removeClass 'error'
-      window.model = @model
 
     removePoint: (event) ->
       _.remove @model.get('points'), (point) -> point.id is event.val
       @$('.field__input-place .select-type').select2 'data', @model.get('points')
+      @storage.search("properties.id='map-point#{event.val}'").removeFromMap @map
+      @storage = App.ymaps.geoQuery @map.geoObjects
       @model.trigger 'change:points'
 
     backStep: (event) ->
@@ -174,7 +180,26 @@
       else
         @$('.field__input-place').addClass 'error'
 
+    initMap: ->
+      console.log 'initMap'
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @map = @map or new App.ymaps.Map 'map-event-add',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+        @map.controls.add('zoomControl')
+        points = @model.get 'points'
+        _.each points, (el) =>
+          point = new App.Entities.Point el
+          @map.geoObjects.add point.placemark
+          coords = point.placemark.geometry.getCoordinates()
+          @map.setCenter coords
+        @storage = App.ymaps.geoQuery @map.geoObjects
+
     onShow: ->
+      @initMap()
       @$('.field__input-place .select-type').select2
         containerCssClass: 'select2-container_tags'
         dropdownCssClass: 'select2-drop_tags'
@@ -236,10 +261,18 @@
 
     events:
       'click .js-delete': 'deletePoint'
+      'click .item .link': 'showPoint'
 
     deletePoint: (event) ->
       event.preventDefault()
+      event.stopPropagation()
       target = $(event.currentTarget)
       data = target.data()
       event.val = data.id
       @model. trigger 'select2-removed', event
+
+    showPoint: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      url = $target.attr 'href'
+      App.navigate url, true

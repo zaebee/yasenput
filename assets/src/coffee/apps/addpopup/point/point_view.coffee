@@ -210,12 +210,11 @@
       if App.ymaps is undefined
         return
       App.ymaps.ready =>
-        if not @map
-          @map = new App.ymaps.Map 'map-point-add',
-            center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-            zoom: 12
-          , autoFitToViewport: 'always'
-          @map.controls.add('zoomControl')
+        @map = @map or new App.ymaps.Map 'map-point-add',
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+        @map.controls.add('zoomControl')
 
         App.execute 'when:fetched', @model, =>
           if @model.get 'latitude'
