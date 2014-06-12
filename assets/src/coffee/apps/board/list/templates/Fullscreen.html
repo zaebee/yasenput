@@ -1,0 +1,42 @@
+<div id="pv_fs_img_wrap">
+  <img src="{{current.img_url}}" style="margin-top: 0px;">
+</div>
+<div id="pv_fs_controls" class="pv_fs_shown" style="display: block;">
+  <div id="pv_fs_topright" class="pv_fs_controls">
+    <table cellspacing="0" cellpadding="0">
+      <tbody>
+        <tr>
+          <td>
+            <div id="pv_fs_num">{{index}} / {{imgs.length}}</div>
+          </td>
+          <td>
+            <div id="pv_fs_close">
+              <div id="pv_fs_close_btn"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  {{#if imgs}}
+  <div id="pv_fs_bottomleft" class="pv_fs_controls" style="{{#if hide}}opacity:0;{{else}}opacity:1;{{/if}}">
+    <ul class="preview-list">
+      {{#each imgs}}
+      <li class="preview-item" data-index="{{@index}}">
+        <a href="#" title="">
+          <img src="{{thumbnail104x104}}" alt="{{name}}">
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
+  <div id="pv_fs_left_wrap" class="pv_fs_controls">
+    <div id="pv_fs_left"></div>
+  </div>
+  <div id="pv_fs_right_wrap" class="pv_fs_controls">
+    <div id="pv_fs_right"></div>
+  </div>
+</div>
