@@ -45,8 +45,10 @@
 
   class Point.Photo extends App.Views.ItemView
     template: 'PointPhoto'
+    className: 'slider'
     events:
       'click .btn-photo-add': 'showPhotoPopup'
+      'click .btn-fullsize': 'fullsize'
     modelEvents:
       'change:imgs': 'addedImage'
 
@@ -65,6 +67,11 @@
       addPhotoView = new Point.AddPhoto
         model: @model
       App.photoPopupRegion.show addPhotoView
+
+    fullsize: (event) ->
+      event.preventDefault()
+      view = new Point.FullscreenPhoto model: @model
+      App.photoviewRegion.show view
 
     addedImage: ->
       @render()
@@ -225,3 +232,70 @@
           imgs.push img
           @model.set 'imgs', imgs
           @ui.finishBtn.prop 'disabled', false
+
+
+  class Point.FullscreenPhoto extends App.Views.ItemView
+    template: 'Fullscreen'
+    className: 'fixed'
+    id: 'pv_fullscreen'
+    events:
+      'click #pv_fs_close': 'closeFullscreen'
+      'click #pv_fs_left_wrap': 'prev'
+      'click #pv_fs_right_wrap': 'next'
+      'click #pv_fs_img_wrap img': 'next'
+      'click .preview-item': 'photo'
+      'mouseleave #pv_fs_bottomleft': 'hidePreview'
+      'mouseenter #pv_fs_bottomleft': 'showPreview'
+
+    initialize: ->
+      @imgs = @model.get 'imgs'
+      @current = _.findWhere @imgs, id: @options.imgId
+      @current = @current or _.first @imgs
+      @currentIndex = _.findIndex @imgs, @current
+      @hide = true
+ 
+    templateHelpers: ->
+      current: @current
+      index: @currentIndex + 1
+      hide: @hide
+
+    closeFullscreen: (event) ->
+      event.preventDefault()
+      @close()
+
+    next: (event) ->
+      event.preventDefault()
+      if @currentIndex is @imgs.length - 1
+        @currentIndex = 0
+      else
+        @currentIndex += 1
+      @current = @imgs[@currentIndex]
+      @render()
+    
+    prev: (event) ->
+      event.preventDefault()
+      if @currentIndex is 0
+        @currentIndex = @imgs.length - 1
+      else
+        @currentIndex -= 1
+      @current = @imgs[@currentIndex]
+      @render()
+
+    photo: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      index = $target.data 'index'
+      @currentIndex = index
+      @current = @imgs[@currentIndex]
+      @render()
+
+    hidePreview: (event) ->
+      event.preventDefault()
+      @$('#pv_fs_bottomleft').css('opacity', 0)
+      @hide = true
+
+    showPreview: (event) ->
+      event.preventDefault()
+      console.log event
+      @$('#pv_fs_bottomleft').css('opacity', 1)
+      @hide = false

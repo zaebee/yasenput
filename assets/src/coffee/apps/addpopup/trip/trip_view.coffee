@@ -422,25 +422,25 @@
   class Trip.Imgs extends App.Views.ItemView
     template: 'BlockItemImgs'
 
+    initialize: ->
+      @listenTo @model, 'success:delete:photo', @successDeletePhoto
+
     templateHelpers: ->
       cid: @model.cid
 
-    removePhoto: (event) ->
-      console.log event
-      event.preventDefault()
-      event.stopPropagation()
-
     onRender: ->
-      mockFile = name: "Image", size: 12345
       imgs = @model.get 'imgs'
       id = @model.get 'id'
+      view = @
       if id
         url = "/photos/block/#{id}/add"
       else
         url = "/photos/add"
       @$("#trip-dropzone-#{@model.cid}").dropzone
         init: ->
+          view.dropzone = @
           _.each imgs, (img) =>
+            mockFile = name: "Image#{_.uniqueId()}", size: 12345, id: img.id
             @emit "addedfile", mockFile
             @emit "thumbnail", mockFile, img.thumbnail104x104
         dictDefaultMessage: 'Перетащите сюда фотографии'
@@ -449,8 +449,22 @@
         url: url
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
-        success: (file, data) =>
+        success: (file, data) ->
           img = data[0]
-          imgs = @model.get 'imgs'
+          imgs = view.model.get 'imgs'
           imgs.push img
-          @model.set 'imgs', imgs
+          file.id = img.id
+          view.model.set 'imgs', imgs
+        removedfile: (file) ->
+          console.log file, 'deleted'
+          #App.request 'delete:photo', view.model, file
+
+    successDeletePhoto: (data, file) ->
+      window.view = @
+      if data.status
+        console.log 'error', data.msg
+        #view = new App.HeaderApp.Show.PopupInfo message: data.txt
+        #App.infoPopupRegion.show view
+      else
+        console.log 'photo deleted'
+        @dropzone.removeFile file
