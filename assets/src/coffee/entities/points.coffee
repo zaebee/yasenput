@@ -60,13 +60,14 @@
         successCallback: (data) -> model.trigger 'point:comment:response', data
         data: params
 
-    deletePhoto: (model, params = {}) ->
-      _.defaults params
+    deletePhoto: (model, file) ->
       App.apiRequest
         url: App.API_BASE_URL + "/photos/del"
         type: 'POST'
-        successCallback: (data) -> model.trigger 'photo:delete:response', data
-        data: params
+        successCallback: (data) -> model.trigger 'success:delete:photo', data, file
+        data:
+          id: file.id
+      model
 
   App.reqres.setHandler 'get:detail:point', (model) ->
     API.getDetail model
@@ -88,6 +89,5 @@
     response = API.comment model, params
     model
 
-  App.reqres.setHandler 'delete:photo', (model, params = {}) ->
-    response = API.deletePhoto model, params
-    model
+  App.reqres.setHandler 'delete:photo', (model, file) ->
+    API.deletePhoto model, file
