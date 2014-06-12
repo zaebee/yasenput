@@ -253,7 +253,7 @@
       @current = @current or _.first @imgs
       @currentIndex = _.findIndex @imgs, @current
       @hide = true
- 
+
     templateHelpers: ->
       current: @current
       index: @currentIndex + 1
@@ -271,7 +271,7 @@
         @currentIndex += 1
       @current = @imgs[@currentIndex]
       @render()
-    
+
     prev: (event) ->
       event.preventDefault()
       if @currentIndex is 0
