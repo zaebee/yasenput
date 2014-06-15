@@ -1,22 +1,21 @@
 {{#reviews}}
   <li class="comments__item">
     <a href="#" class="photo">
-      <img src="{{author.icon}}" alt="user1" class="photo__img">
+      <img src="{{author.icon}}" alt="{{author.first_name}} {{author.last_name}}" class="photo__img">
     </a>
     <div class="text">
       <div class="text__info">
         <a href="#" class="name">{{author.first_name}} {{author.last_name}}</a>
         <span class="time">&bull; {{dateFormat created}}</span>
       </div>
-      <div class="text__comment">{{safe review}}</div>
+      <div class="text__comment">{{review}}</div>
     </div>
   </li>
 {{/reviews}}
-{{#if user.authorized}}
 <li class="comments__item">
   <form class="comment-form" action="/">
     <a href="#" class="photo">
-      <img src="{{user.icon}}" alt="user1" class="photo__img">
+      <img src="{{#if user.authorized}}{{user.icon}}{{else}}/static/images/user-unknown-small.png{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo__img">
     </a>
     <div class="text">
       <textarea name="review_text" placeholder="Написать комментарий"></textarea>
@@ -24,10 +23,3 @@
     </div>
   </form>
 </li>
-{{else}}
-<li class="comments__item">
-<p>
-  <a class="login__link link" href="#">Войдите</a>, чтобы оставить комментарий
-</p>
-</li>
-{{/if}}

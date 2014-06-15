@@ -171,6 +171,7 @@
 
     initialize: ->
       @listenTo @model, 'point:comment:response', @pointCommentResponse
+      @user = App.request 'get:my:profile'
 
     pointCommentResponse: (data) ->
       if data.status is 0
@@ -185,6 +186,9 @@
 
     addComment: (event) ->
       event.preventDefault()
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+        return
       review_text = @$('[name=review_text]').val()
       if review_text
         App.request 'comment:point', @model, review: review_text
