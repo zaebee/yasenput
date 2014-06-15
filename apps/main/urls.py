@@ -27,19 +27,19 @@ urlpatterns = patterns('apps.main.views',
 
     url(r'^preview/[_/\w\d]+$', 'index'),
 
-    url(r'^point', 'index'),
-    url(r'^route', 'index'),
-    url(r'^event', 'index'),
-    url(r'^trip', 'index'),
-    url(r'^tour', 'index'),
+    url(r'^point$', 'index'),
+    url(r'^route$', 'index'),
+    url(r'^event$', 'index'),
+    url(r'^trip$', 'index'),
+    url(r'^tour$', 'index'),
 
-    url(r'^add/point', 'index'),
-    url(r'^add/event', 'index'),
-    url(r'^add/trip', 'index'),
+    url(r'^add/point$', 'index'),
+    url(r'^add/event$', 'index'),
+    url(r'^add/trip$', 'index'),
 
     url(r'^map', 'index'),
     url(r'^new', 'index'),
-    url(r'^dashboard', 'index'),
+    url(r'^dashboard$', 'index'),
     url(r'^add_collection', 'index'),
 
     url(r'^order', 'order'),
