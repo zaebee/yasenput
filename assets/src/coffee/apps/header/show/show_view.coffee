@@ -99,8 +99,8 @@
         s: null
         coord_left: null
         coord_right: null
-      @$('#destination-input').select2 'data', data
       App.updateSettings params
+      @$('#destination-input').select2 'data', data
 
     format: (state) ->
       originalOption = state.element
