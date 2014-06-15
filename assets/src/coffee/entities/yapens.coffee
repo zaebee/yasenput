@@ -31,7 +31,6 @@
             model = new Entities.Model empty: true
             collection.add model, at: 0
           collection
-
       @yapens
 
     search: (params = {}, callback) ->
