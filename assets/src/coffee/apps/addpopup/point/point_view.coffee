@@ -29,19 +29,29 @@
       @model.unset()
 
     onShow: ->
+      view = @
+      imgs = @model.get 'imgs'
       id = @model.get 'id'
       if id
         url = "/photos/point/#{id}/add"
       else
         url = "/photos/add"
       @$('#place-dropzone').dropzone
+        init: ->
+          view.dropzone = @
+          _.each imgs, (img) =>
+            mockFile = name: "Image#{_.uniqueId()}", size: 12345, id: img.id
+            @emit "addedfile", mockFile
+            @emit "thumbnail", mockFile, img.thumbnail104x104
         dictDefaultMessage: 'Перетащите сюда фотографии'
         addRemoveLinks: true
         paramName:'img'
         url: url
+        maxFilesize: 20
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
         success: (file, data) =>
+          $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
           imgs = @model.get 'imgs'
           imgs.push img
@@ -84,8 +94,9 @@
     events:
       'click .categories__link': 'selectRootLabel'
       'click .tags__link': 'selectAdditionalLabel'
-      'change .field__input-map input': 'setAddress'
-      'select2-removed': 'removeLabel'
+      'select2-removed .tags-additional': 'removeLabel'
+      'select2-selecting .field__input-map input':'setAddress'
+      'select2-clearing .field__input-map input':'mapClear'
       'click .js-back': 'backStep'
       'click .js-next': 'nextStep'
       'click .js-finish': 'finishStep'
@@ -104,6 +115,32 @@
     format: (state) ->
       originalOption = state.element
       "<span data-id='#{state.id}'>#{state.text}</span>"
+
+    formatPoint: (state) ->
+      originalOption = state.element
+      """<span data-id='#{state.id}' class='type type_#{state.type}'
+          data-pos='#{state.pos}'>
+          #{state.name}
+          <i>#{state.address}</i>
+          </span>
+      """
+
+    searchQuery: (query) ->
+      data = {}
+      geocode = App.ymaps.geocode query.term,
+        json: true
+        kind: 'locality'
+        results: 10
+      geocode.then (res) ->
+        console.log 'geocode response', res
+        geocodeResults = _.map res.GeoObjectCollection.featureMember, (el) ->
+          id: -1
+          name: el.GeoObject.name
+          type:'geocode'
+          address: el.GeoObject.description or ''
+          pos: el.GeoObject.Point.pos
+        data.results = geocodeResults
+        query.callback data
 
     selectRootLabel: (event) ->
       event.preventDefault()
@@ -139,28 +176,30 @@
       _.remove tags, (el) -> el.id is event.val
       tags = @$('.select-type').select2 'data', tags
 
+    mapClear: (event) ->
+      @map.geoObjects.remove @model.placemark
+      @model.set(
+        'longitude': null
+        'latitude': null
+        'address': ''
+        {silent: true}
+      )
     setAddress: (event) ->
-      target = $(event.currentTarget)
-      address = target.val()
-      if App.ymaps is undefined
-        return
-      App.ymaps.ready =>
-        App.ymaps.geocode(address).then (res) =>
-          first = res.geoObjects.get(0)
-          coords = first.geometry.getCoordinates()
-          @model.setCoordinates coords
-
-          latitude = coords[0]
-          longitude = coords[1]
-          @model.set(
-            'address': address
-            'longitude': longitude
-            'latitude': latitude
-            {silent: true}
-          )
-          @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
-          @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
-          @map.geoObjects.add @model.placemark
+      data = event.object
+      address = data.address
+      coords = data.pos.split ' '
+      latitude = coords[1]
+      longitude = coords[0]
+      @model.setCoordinates [latitude, longitude]
+      @model.set(
+        'address': address
+        'longitude': longitude
+        'latitude': latitude
+        {silent: true}
+      )
+      @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
+      @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+      @map.geoObjects.add @model.placemark
 
     backStep: (event) ->
       event.preventDefault()
@@ -218,6 +257,9 @@
 
         App.execute 'when:fetched', @model, =>
           if @model.get 'latitude'
+            @$('.field__input-map input').select2 'data',
+              name: ''
+              address: @model.get 'address' or ''
             @model.setCoordinates [@model.get('latitude'), @model.get('longitude')]
             @map.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
             @map.geoObjects.add @model.placemark
@@ -231,7 +273,9 @@
           App.ymaps.geocode(coords).then (res) =>
             first = res.geoObjects.get(0)
             address = first.properties.get 'metaDataProperty.GeocoderMetaData.text'
-            @$('[name=address]').val address
+            @$('.field__input-map input').select2 'data',
+              name: ''
+              address: address
             @model.set(
               'address': address
               {silent: true}
@@ -247,6 +291,19 @@
 
     onShow: ->
       console.log 'onShow'
+      @$('.field__input-map input').select2
+        allowClear: true
+        quietMillis: 750
+        containerCssClass: 'select2-container_trip'
+        dropdownCssClass: 'select2-drop_trip'
+        query: @searchQuery
+        formatResult: @formatPoint
+        formatSelection: @formatPoint
+        minimumInputLength: 3
+        formatInputTooShort: -> 'Введите хотя бы 3 символа'
+        formatNoMatches: -> 'Ничего не найдено'
+        escapeMarkup: (m) -> m
+
       @$('.categories__link').tooltip()
       @$('.select-type').select2
         containerCssClass: 'select2-container_tags'
