@@ -39,7 +39,7 @@ urlpatterns = patterns('apps.main.views',
 
     url(r'^map', 'index'),
     url(r'^new', 'index'),
-    url(r'^dashboard$', 'index'),
+    url(r'^dashboard/?$', 'index'),
     url(r'^add_collection', 'index'),
 
     url(r'^order', 'order'),
