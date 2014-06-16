@@ -296,7 +296,7 @@ class ItemsList(PointsBaseView):
         models = ['points','routes','events','trips']
         #models = ['trips']
 
-        search_res_points = search_res_sets = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
+        search_res_points = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
@@ -327,7 +327,6 @@ class ItemsList(PointsBaseView):
             t0 = time.time()
             search_res_trips = TripModels.Trips.search.filter(price__lte=0).query(params.get('s',''))
             self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        #search_res_sets_ex = search_res_sets
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
@@ -356,7 +355,6 @@ class ItemsList(PointsBaseView):
             search_res_points = search_res_points.filter(tags_id = tags)
             search_res_events = search_res_events.filter(tags_id = tags)
             search_res_routes = MainModels.Routes.search.none()
-            search_res_sets = CollectionsModels.Collections.search.none()
             self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
         if not params.get('s'):
             if params.get('city'):
@@ -388,18 +386,18 @@ class ItemsList(PointsBaseView):
                             ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                             ipgeobase = ipgeobases[0]
                             self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 0 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 0 + 0.1
+                        ln_left = (ipgeobase.longitude or 0) - 0.1
+                        ln_right = (ipgeobase.longitude or 0) + 0.1
+                        lt_left = (ipgeobase.latitude or 0) - 0.1
+                        lt_right = (ipgeobase.latitude or 0) + 0.1
                     else:
                         ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                         ipgeobase = ipgeobases[0]
                         self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 0 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 0 + 0.1
+                        ln_left = (ipgeobase.longitude or 0) - 0.1
+                        ln_right = (ipgeobase.longitude or 0) + 0.1
+                        lt_left = (ipgeobase.latitude or 0) - 0.1
+                        lt_right = (ipgeobase.latitude or 0) + 0.1
                         self.log.info(ipgeobase.city)
         else:
             ln_left = 0.0
@@ -424,15 +422,6 @@ class ItemsList(PointsBaseView):
         #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
-        search_res_sets_list = []
-
-        for collection in search_res_sets.all():
-            points_l = collection.points.filter(
-                longitude__lte = ln_right).filter(
-                    longitude__gte = ln_left).filter(
-                        latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            if len(points_l) > 0:
-                search_res_sets_list.append(int(collection.id))
 
         search_res_routes_list = []
         for route in search_res_routes.all():
@@ -478,11 +467,7 @@ class ItemsList(PointsBaseView):
             if len(points_l) > 0:
                 search_res_events_list.append(int(event.id))
 
-        if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
-            if len(search_res_sets_list) == 0:
-                search_res_sets = none_qs
-            else:
-                search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
+        if ((search_res_points_list.count()) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
             if len(search_res_routes_list) == 0:
                 search_res_routes = none_qs
             else:
@@ -495,7 +480,6 @@ class ItemsList(PointsBaseView):
 
 
         t0 = time.time()
-        search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
         search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
         search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
 
@@ -506,7 +490,7 @@ class ItemsList(PointsBaseView):
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
                  }),
-                    search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
+                    search_res_events, search_res_trips, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
 
@@ -554,7 +538,6 @@ class MapItemsList(PointsBaseView):
             ln_right = float(json.loads(params.get('coord_right')).get('ln'))
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            search_res_sets_list = []
             search_res_points = QuerySetJoin(search_res_points_list).order_by('-ypi')[0:100]
 
 
