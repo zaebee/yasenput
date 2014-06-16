@@ -412,6 +412,15 @@ class ItemsList(PointsBaseView):
             longitude__lte=ln_right).filter(
                 longitude__gte=ln_left).filter(
                     latitude__lte=lt_right).filter(latitude__gte=lt_left)
+        search_res_trips_list = []
+        for trip in search_res_trips:
+            bl = trip.blocks.filter(
+                longitude__lte=ln_right).filter(
+                    longitude__gte=ln_left).filter(
+                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
+            if len(bl) > 0:
+                search_res_trips_list.append(trip) 
+        search_res_trips = search_res_trips_list
         #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
