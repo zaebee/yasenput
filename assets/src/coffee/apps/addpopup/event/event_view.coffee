@@ -40,13 +40,29 @@
         onClose: (selectedDate) =>
           @$( '#dt_start' ).datepicker 'option', 'maxDate', selectedDate
       
+      view = @
+      imgs = @model.get 'imgs'
+      id = @model.get 'id'
+      if id
+        url = "/photos/event/#{id}/add"
+      else
+        url = "/photos/add"
       @$('#place-dropzone').dropzone
+        init: ->
+          view.dropzone = @
+          _.each imgs, (img) =>
+            mockFile = name: "Image#{_.uniqueId()}", size: 12345, id: img.id
+            @emit "addedfile", mockFile
+            @emit "thumbnail", mockFile, img.thumbnail104x104
         dictDefaultMessage: 'Перетащите сюда фотографии'
         addRemoveLinks: true
         paramName:'img'
+        url: url
+        maxFilesize: 20
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
         success: (file, data) =>
+          $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
           imgs = @model.get 'imgs'
           imgs.push img.id

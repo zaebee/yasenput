@@ -2017,6 +2017,7 @@
 }
 .popupwin__content .field {
   margin-bottom: 20px;
+  position: relative;
 }
 .popupwin__content .field__title {
   margin-bottom: 20px;
@@ -2428,7 +2429,7 @@ textarea {
 }
 .form__field_name {
   position: relative;
-  width: 245px;
+  /*width: 245px;*/
 }
 .form__field_name .star {
   position: absolute;
@@ -4724,11 +4725,6 @@ a {
 .event-step_name {
   display: none;
 }
-.place-step_name .form,
-.event-step_name .form {
-  float: left;
-  width: 245px;
-}
 .place-step_what,
 .event-step_what {
   display: none;
@@ -4866,6 +4862,13 @@ a {
 }
 .trip-step__block .field {
     position:relative;
+}
+.point-address-input.field__input-map {
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    top: 20px;
+    left: 0;
 }
 .trip-step__block .field__input-map {
     position: absolute;

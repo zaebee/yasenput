@@ -447,9 +447,11 @@
         addRemoveLinks: true
         paramName:'img'
         url: url
+        maxFilesize: 20
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
         success: (file, data) ->
+          $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
           imgs = view.model.get 'imgs'
           imgs.push img
