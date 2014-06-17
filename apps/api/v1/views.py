@@ -388,18 +388,18 @@ class ItemsList(PointsBaseView):
                             ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                             ipgeobase = ipgeobases[0]
                             self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 0 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 0 + 0.1
+                        ln_left = (ipgeobase.longitude or 0) - 0.1
+                        ln_right = (ipgeobase.longitude or 0) + 0.1
+                        lt_left = (ipgeobase.latitude or 0) - 0.1
+                        lt_right = (ipgeobase.latitude or 0) + 0.1
                     else:
                         ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                         ipgeobase = ipgeobases[0]
                         self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 0 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 0 + 0.1
+                        ln_left = (ipgeobase.longitude or 0) - 0.1
+                        ln_right = (ipgeobase.longitude or 0) + 0.1
+                        lt_left = (ipgeobase.latitude or 0) - 0.1
+                        lt_right = (ipgeobase.latitude or 0) + 0.1
                         self.log.info(ipgeobase.city)
         else:
             ln_left = 0.0
@@ -419,7 +419,7 @@ class ItemsList(PointsBaseView):
                     longitude__gte=ln_left).filter(
                         latitude__lte=lt_right).filter(latitude__gte=lt_left)
             if len(bl) > 0:
-                search_res_trips_list.append(trip) 
+                search_res_trips_list.append(trip)
         search_res_trips = search_res_trips_list
         #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
