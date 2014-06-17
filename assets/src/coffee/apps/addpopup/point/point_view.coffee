@@ -12,10 +12,8 @@
       @stepNameRegion.$el.show()
 
 
-  class Point.StepName extends App.Views.Layout
+  class Point.StepName extends App.Views.ItemView
     template: 'PointStepName'
-    regions:
-      imgsRegion: '#imgs-region'
 
     events:
       'blur .form__field_name input': 'setName'
@@ -209,20 +207,20 @@
       event.preventDefault()
       isValid = @model.isValid()
       if _.indexOf(@model.validationError, 'address') < 0
-        @$('.field__input-map').removeClass 'error'
+        @$('.select2-choice').removeClass 'error'
         @trigger 'show:step:commers'
         tags = @$('.select-type').select2 'val'
         rootTag = @$('.categories__link.active').data() or id: 1 ## if not root tag selected
         tags.push rootTag.id
         @model.set tags: tags
       else
-        @$('.field__input-map').addClass 'error'
+        @$('.select2-choice').addClass 'error'
 
     finishStep: (event) ->
       event.preventDefault()
       isValid = @model.isValid()
       if _.indexOf(@model.validationError, 'address') < 0
-        @$('.field__input-map').removeClass 'error'
+        @$('.select2-choice').removeClass 'error'
         @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
         tags = @$('.select-type').select2 'val'
         rootTag = @$('.categories__link.active').data() or id: 1 ## if not root tag selected
@@ -242,7 +240,7 @@
             if yapensView.wall
               yapensView.wall.reloadItems() & yapensView.wall.layout()
       else
-        @$('.field__input-map').addClass 'error'
+        @$('.select2-choice').addClass 'error'
 
     initMap: ->
       console.log 'initMap'
@@ -437,27 +435,6 @@
     backStep: (event) ->
       event.preventDefault()
       @trigger 'show:step:what'
-
-    onClose: ->
-      @stopListening()
-      @model.unset()
-
-
-  class Point.Imgs extends App.Views.ItemView
-    template: 'ImgsList'
-    modelEvents:
-      'change:imgs': 'render'
-
-    events:
-      'click .js-delete': 'deleteImg'
-
-    deleteImg: (event) ->
-      event.preventDefault()
-      target = $(event.currentTarget)
-      data = target.data()
-      #event.val = data.id
-      console.log data
-      #@model. trigger 'select2-removed', event
 
     onClose: ->
       @stopListening()
