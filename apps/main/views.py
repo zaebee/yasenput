@@ -71,6 +71,16 @@ def point(request, id):
     return render(request, 'main/main.html', data)
 
 
+def event(request, id):
+    data = {}
+    event = get_object_or_404(MainModels.Events, id=id)
+    if event:
+        data['title'] = event.name
+        data['description'] = event.description
+        data['og_image'] = event.main_image
+    return render(request, 'main/main.html', data)
+
+
 def trip(request, id):
     data = {}
     trip = get_object_or_404(Trips, id=id)

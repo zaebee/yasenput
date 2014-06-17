@@ -277,6 +277,12 @@ class Events(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
 
+    @property
+    def main_image(self):
+        if self.imgs.exists():
+            img = self.imgs.latest('id')
+            return img.thumbnail207()
+
     class Meta:
         verbose_name = u'События'
         verbose_name_plural = u'События'
