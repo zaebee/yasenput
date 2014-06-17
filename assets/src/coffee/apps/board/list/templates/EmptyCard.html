@@ -1,0 +1,44 @@
+{{#ifEquals settings.models 'points'}}
+<a href="/add/point" class="js-popupwin-add-trip">
+{{/ifEquals}}
+{{#ifEquals settings.models 'events'}}
+<a href="/add/event" class="js-popupwin-add-trip">
+{{/ifEquals}}
+{{#ifEquals settings.models 'routes'}}
+<a href="/add/route" class="js-popupwin-add-trip">
+{{/ifEquals}}
+{{#ifEquals settings.models 'trips'}}
+<a href="/add/trip" class="js-popupwin-add-trip">
+{{/ifEquals}}
+{{#ifEquals settings.models 'tours'}}
+<a href="/add/trip" class="js-popupwin-add-trip">
+{{/ifEquals}}
+{{^settings.models}}
+<a href="/add/trip" class="js-popupwin-add-trip">
+{{/settings.models}}
+  <div class="box__img">
+    <span class="btn btn_action_add btn_color_green">
+      <span class="sprite-add"></span>
+    </span>
+  </div>
+  <div class="box__description" style="padding-bottom:70px;">
+    {{#ifEquals settings.models 'points'}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свое место</div>
+    {{/ifEquals}}
+    {{#ifEquals settings.models 'events'}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свое событие</div>
+    {{/ifEquals}}
+    {{#ifEquals settings.models 'routes'}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свой маршрут </div>
+    {{/ifEquals}}
+    {{#ifEquals settings.models 'trips'}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свое путешествие</div>
+    {{/ifEquals}}
+    {{#ifEquals settings.models 'tours'}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свою экскурсию</div>
+    {{/ifEquals}}
+    {{^settings.models}}
+      <div class="name" style="text-align: center;font-size: 18px;">Добавь свое путешествие</div>
+    {{/settings.models}}
+  </div>
+</a>

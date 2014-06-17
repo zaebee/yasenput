@@ -20,7 +20,7 @@
       else if @model.get('type_of_item') is 'event'
         return 'BoardEvent'
       else
-        return 'EmptyTrip'
+        return 'EmptyCard'
 
     className: ->
       if @model.get('empty')
@@ -72,7 +72,9 @@
       if not @user.get 'authorized'
         App.vent.trigger 'show:login:popup'
       else
-        App.navigate '/add/trip', true
+        $target = $(event.currentTarget)
+        url = $target.attr 'href'
+        App.navigate url, true
 
     showDetailPopup: (event) ->
       console.log 'show popup'
