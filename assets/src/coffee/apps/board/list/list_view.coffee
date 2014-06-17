@@ -120,15 +120,6 @@
     itemViewOptions: () ->
       editable: !!App.settings.user
 
-    initialize: ->
-      _.bindAll @, 'onShow'
-      @infiniScroll = new Backbone.InfiniScroll @collection,
-        scrollOffset: 350
-        includePage: true
-        extraParams: App.settings
-        onFetch: -> $('.loader').removeClass 'hide'
-        success: -> $('.loader').addClass 'hide'
-
     onAfterItemAdded: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
@@ -147,6 +138,12 @@
             itemSelector: '.box'
         else
           @wall.destroy() if @wall
+        @infiniScroll = new Backbone.InfiniScroll @collection,
+          scrollOffset: 350
+          includePage: true
+          extraParams: App.settings
+          onFetch: -> $('.loader').removeClass 'hide'
+          success: -> $('.loader').addClass 'hide'
 
     onClose: ->
       console.log 'onClose yapens'

@@ -6856,7 +6856,7 @@ a {
     visibility: hidden;
 }
 
-.field__input-place.error .select2-choices,
+.field__input-place.error .select2-choices, .select2-choice.error,
 #dt_start.error, #dt_end.error,
 .comment-form textarea.error,
 .field.error input,
