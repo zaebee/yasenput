@@ -9,9 +9,9 @@
       <li class="item">
         <a href="/point/{{id}}" class="link">
           {{#if imgs}}
-          <img src="{{imgs.[0].thumbnail104x104}}" alt="" class="img">
+          <img src="{{imgs.[0].thumbnail104x104}}" alt="{{name}} {{address}}" class="img">
           {{else}}
-          <img src="/static/images/place-unknown.png" alt="" class="img">
+          <img src="/static/images/place-unknown.png" alt="{{name}} {{address}}" class="img">
           {{/if}}
           <span data-id="{{id}}" class="icon icon_delete sprite-delete-added-photo js-delete"></span>
         </a>

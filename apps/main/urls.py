@@ -23,6 +23,7 @@ urlpatterns = patterns('apps.main.views',
     url(r'^set', 'index'),
 
     url(r'^point/(?P<id>\d+)$', 'point', name='point_detail'),
+    url(r'^event/(?P<id>\d+)$', 'event', name='event_detail'),
     url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),

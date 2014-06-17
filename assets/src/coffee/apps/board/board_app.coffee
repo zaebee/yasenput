@@ -111,11 +111,8 @@
       new BoardApp.Trip.Controller model: model
 
   App.vent.on 'change:settings', (changed) ->
-    BoardApp.board = new BoardApp.List.Controller App.settings
     console.log 'settings changed', changed
-    BoardApp.board.show BoardApp.board.yapensView,
-      region: App.boardRegion
-      loading: true
+    BoardApp.board = new BoardApp.List.Controller App.settings
 
   App.vent.on 'filter:all:yapens', (params = {}) ->
     App.updateSettings params

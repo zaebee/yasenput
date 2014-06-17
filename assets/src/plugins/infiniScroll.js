@@ -39,6 +39,7 @@
 
     self.destroy = function() {
       $target.off("scroll", self.watchScroll);
+      self.disableFetch();
     };
 
     self.enableFetch = function() {

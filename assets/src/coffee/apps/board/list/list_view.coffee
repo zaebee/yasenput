@@ -20,7 +20,7 @@
       else if @model.get('type_of_item') is 'event'
         return 'BoardEvent'
       else
-        return 'EmptyTrip'
+        return 'EmptyCard'
 
     className: ->
       if @model.get('empty')
@@ -72,7 +72,9 @@
       if not @user.get 'authorized'
         App.vent.trigger 'show:login:popup'
       else
-        App.navigate '/add/trip', true
+        $target = $(event.currentTarget)
+        url = $target.attr 'href'
+        App.navigate url, true
 
     showDetailPopup: (event) ->
       console.log 'show popup'
@@ -120,15 +122,6 @@
     itemViewOptions: () ->
       editable: !!App.settings.user
 
-    initialize: ->
-      _.bindAll @, 'onShow'
-      @infiniScroll = new Backbone.InfiniScroll @collection,
-        scrollOffset: 350
-        includePage: true
-        extraParams: App.settings
-        onFetch: -> $('.loader').removeClass 'hide'
-        success: -> $('.loader').addClass 'hide'
-
     onAfterItemAdded: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
@@ -147,6 +140,12 @@
             itemSelector: '.box'
         else
           @wall.destroy() if @wall
+        @infiniScroll = new Backbone.InfiniScroll @collection,
+          scrollOffset: 350
+          includePage: true
+          extraParams: App.settings
+          onFetch: -> $('.loader').removeClass 'hide'
+          success: -> $('.loader').addClass 'hide'
 
     onClose: ->
       console.log 'onClose yapens'

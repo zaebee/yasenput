@@ -9,7 +9,7 @@
   appRoutes =
     'add/point': 'addPoint'
     'add/event': 'addEvent'
-    'add/route': 'addRoute'
+    'add/route': 'addPlacetotrip'
     'add/trip': 'addTrip'
     'add/placetotrip': 'addPlacetotrip'
     'point/:id/edit': 'stubUrl'
