@@ -157,6 +157,7 @@
     mapOpen: (event) ->
       event.preventDefault()
       @$el.addClass 'open'
+      if @geoMap then @geoMap.setZoom 12
 
 
   class Point.Comments extends App.Views.ItemView

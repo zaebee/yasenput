@@ -4,3 +4,4 @@
 
     templateHelpers: ->
       user: App.request('get:my:profile').toJSON()
+      settings: App.settings

@@ -137,6 +137,7 @@
       console.log event
       event.preventDefault()
       @$el.addClass 'open'
+      if @geoMap then @geoMap.setZoom 12
 
     mapClose: (event) ->
       console.log event
