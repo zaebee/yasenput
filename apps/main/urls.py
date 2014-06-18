@@ -13,7 +13,7 @@ sitemaps = {
 
 urlpatterns = patterns('apps.main.views',
     url(r'^$', 'index'),
-    url(r'city/(?P<city>[_\w|-]+)/$','index'),
+    url(r'city/(?P<city>[_\w|-]+)/$','index', name='city_view'),
     url(r'^routes', 'index'),
     url(r'^points', 'index'),
     url(r'^want', 'index'),

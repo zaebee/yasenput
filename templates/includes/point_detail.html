@@ -1,0 +1,85 @@
+<div class="popupwin__content clearfix" style="margin-top:40px;">
+  <div id="point-header-region" class="place-info clearfix"><div>
+      <a href="#" class="user">
+        <img src="{{ MEDIA_URL }}{{ item.author.avatar }}" alt="{{ item.author.first_name }} {{ item.author.last_name }}" class="img">
+        <span class="name">{{ item.author.first_name }} {{item.author.last_name }}</span><br>
+        добавил <span class="type c-place">место</span>
+      </a>
+      <ul class="actions">
+        <li class="item">
+          <a href="#" class="btn-like " data-toggle="tooltip" data-original-title="" data-placement="bottom">
+            <span class="icon sprite-like-user"></span>
+            <span class="text">{{ item.likes }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="point-photo-region">
+    <div class="slider">
+      <div class="bx-wrapper" style="max-width: 100%;">
+        <div class="bx-viewport" style="height: 560px;">
+          <ul class="bxslider bxslider-place">
+            <li class="item bx-clone" style="width: 625px;">
+              <img src="{{ item.imgs.all.0.thumbnail560 }}" class="img">
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:block;" class="bx-pager" id="bx-pager">
+        <div class="bx-pager__viewport">
+          <div class="bx-pager__scrollbox">
+            {% for img in item.imgs.all %}
+            <a data-slide-index="" href="" class="bx-pager__item active">
+              <img src="{{ img.thumbnail104x104 }}" class="img">
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div> 
+
+  <div id="point-description-region" class="description">
+    <h3 class="description__title">{{ item.name }}</h3>
+
+    <p class="description__text">{{ item.description }}</p>
+
+    <div class="description__address">{{ item.address }}</div>
+  </div>
+
+  <div class="comments-wrap" id="point-comments-region">
+    <ul class="comments">
+      {% for comment in item.reviews.all %}
+      <li class="comments__item">
+        <a href="#" class="photo">
+          <img src="{{ comment.author.avatar.url }}" alt="{{ comment.author.first_name }} {{ comment.author.last_name }}" class="photo__img">
+        </a>
+        <div class="text">
+          <div class="text__info">
+            <a href="#" class="name">{{ comment.author.first_name }} {{ comment.author.last_name }}</a>
+            <span class="time">{{ comment.created }}</span>
+          </div>
+          <div class="text__comment">
+            {{ comment.review }}
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+
+      <li class="comments__item">
+        <form class="comment-form" action="/">
+          <a href="#" class="photo">
+            <img src="/static/images/user-unknown.png" alt="zae bee" class="photo__img">
+          </a>
+          <div class="text">
+            <textarea name="review_text" placeholder="Написать комментарий"></textarea>
+            <input type="submit" class="btn btn_color_blue" value="Комментировать">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>
