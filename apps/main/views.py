@@ -40,6 +40,9 @@ class YpSerialiser(Serializer):
 
 @csrf_exempt
 def index(request, **kwargs):
+    if 'city'in request.GET:
+        city = request.GET.get('city', '/')
+        return redirect('city_view', city=city)
     if '_escaped_fragment_' in request.GET:
         if str(request.GET['_escaped_fragment_']) == '':
             points = MainModels.Points.objects.all().order_by('-updated')[:100]
@@ -65,6 +68,7 @@ def point(request, id):
     data = {}
     point = get_object_or_404(MainModels.Points, id=id)
     if point:
+        data['point'] = point
         data['title'] = point.name
         data['description'] = point.description
         data['og_image'] = point.main_image
@@ -75,6 +79,7 @@ def event(request, id):
     data = {}
     event = get_object_or_404(MainModels.Events, id=id)
     if event:
+        data['event'] = event
         data['title'] = event.name
         data['description'] = event.description
         data['og_image'] = event.main_image
@@ -85,6 +90,7 @@ def trip(request, id):
     data = {}
     trip = get_object_or_404(Trips, id=id)
     if trip:
+        data['trip'] = trip
         data['title'] = trip.name
         data['description'] = trip.description
         data['og_image'] = trip.main_image

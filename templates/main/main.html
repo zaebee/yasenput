@@ -24,11 +24,53 @@
 
 {% block wrap %}
   <div class="page">
-    <header id="header-region" class="header"></header>
+    <header id="header-region" class="header">
+      <div class="header__ctrls">
+        <a href="/" class="logo">
+          <img src="/static/images/logo.png" alt="ЯсенПуть">
+        </a>
+      </div>
+      <div class="header__destination">
+        <div class="constrain">
+          <div class="slogan">Путешествуйте вместе с нами</div>
+          <div class="query">
+            <form id="destination-form" action="/">
+              <input id="destination-input" type="text" placeholder="Куда вы собираетесь?" tabindex="-1" name="city">
+              <button type="submit" class="btn btn_color_blue">Поехали</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="header__filter">
+        <div class="constrain clearfix">
+          <ul class="categories">
+            <li class="categories__item categories__item_btn">
+              <a href="/point" class="categories__link btn btn_color_grey" title="Показать только места">Места</a>
+            </li>
+            <li class="categories__item categories__item_btn">
+              <a href="/event" class="categories__link btn btn_color_grey" title="Показатьтолько события">События</a>
+            </li>
+            <li class="categories__item categories__item_btn">
+              <a href="/route" class="categories__link btn btn_color_grey" title="Показать только маршруты">Маршруты</a>
+            </li>
+            <li class="categories__item categories__item_btn">
+            <a href="/trip" class="categories__link btn btn_color_grey" title="Показать только бесплатные путешествия">Путешествия</a>
+            </li>
+            <li class="categories__item categories__item_btn">
+              <a href="/tour" class="categories__link btn btn_color_grey" title="Показать только платные экскурсии">Экскурсии</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
 
     <section class="container">
       <div id="map-region"></div>
-      <div id="board-region" class="constrain"></div>
+      <div id="board-region" class="constrain">
+        {% if point %}
+        {% include 'includes/point_detail.html' with item=point %}
+        {% endif %}
+      </div>
       <div class="loader hide"></div>
       <div id="photoview-region"></div>
     </section>
