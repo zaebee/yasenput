@@ -438,7 +438,6 @@
         url = "/photos/add"
       @$("#trip-dropzone-#{@model.cid}").dropzone
         init: ->
-          view.dropzone = @
           _.each imgs, (img) =>
             mockFile = name: "Image#{_.uniqueId()}", size: 12345, id: img.id
             @emit "addedfile", mockFile
@@ -458,15 +457,16 @@
           file.id = img.id
           view.model.set 'imgs', imgs
         removedfile: (file) ->
-          console.log file, 'deleted'
-          #App.request 'delete:photo', view.model, file
+          if file.status is 'uploading'
+            @cancelUpload file
+          App.request 'delete:photo', view.model, file
+          @_updateMaxFilesReachedClass()
 
     successDeletePhoto: (data, file) ->
-      window.view = @
-      if data.status
-        console.log 'error', data.msg
-        #view = new App.HeaderApp.Show.PopupInfo message: data.txt
-        #App.infoPopupRegion.show view
+      console.log 'photo deleted'
+      if not file.id
+        @$(file.previewElement).remove()
+      else if data.status
+        alert data.txt
       else
-        console.log 'photo deleted'
-        @dropzone.removeFile file
+        @$(file.previewElement).remove()

@@ -22,6 +22,9 @@
       'click .js-next': 'nextStep'
       'submit form': 'nextStep'
 
+    initialize: ->
+      @listenTo @model, 'success:delete:photo', @successDeletePhoto
+
     onClose: ->
       @stopListening()
       @model.unset()
@@ -36,7 +39,6 @@
         url = "/photos/add"
       @$('#place-dropzone').dropzone
         init: ->
-          view.dropzone = @
           _.each imgs, (img) =>
             mockFile = name: "Image#{_.uniqueId()}", size: 12345, id: img.id
             @emit "addedfile", mockFile
@@ -48,13 +50,27 @@
         maxFilesize: 20
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
-        success: (file, data) =>
+        success: (file, data) ->
           $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
-          imgs = @model.get 'imgs'
+          imgs = view.model.get 'imgs'
           imgs.push img
-          @model.set 'imgs', imgs
-          @model.trigger 'change:imgs'
+          file.id = img.id
+          view.model.set 'imgs', imgs
+        removedfile: (file) ->
+          if file.status is 'uploading'
+            @cancelUpload file
+          App.request 'delete:photo', view.model, file
+          @_updateMaxFilesReachedClass()
+
+    successDeletePhoto: (data, file) ->
+      console.log 'photo deleted'
+      if not file.id
+        @$(file.previewElement).remove()
+      else if data.status
+        alert data.txt
+      else
+        @$(file.previewElement).remove()
 
     setName: (event) ->
       target = $(event.currentTarget)
