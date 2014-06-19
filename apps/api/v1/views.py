@@ -388,18 +388,18 @@ class ItemsList(PointsBaseView):
                             ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                             ipgeobase = ipgeobases[0]
                             self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 200 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 200 + 0.1
+                        ln_left = ipgeobase.longitude - 0.1
+                        ln_right = ipgeobase.longitude + 0.1
+                        lt_left = ipgeobase.latitude - 0.1
+                        lt_right = ipgeobase.latitude + 0.1
                     else:
                         ipgeobases = IPGeoBase.objects.by_ip("213.176.241.10")
                         ipgeobase = ipgeobases[0]
                         self.log.info('no client ip in base')
-                        ln_left = ipgeobase.longitude or 0 - 0.1
-                        ln_right = ipgeobase.longitude or 200 + 0.1
-                        lt_left = ipgeobase.latitude or 0 - 0.1
-                        lt_right = ipgeobase.latitude or 200 + 0.1
+                        ln_left = ipgeobase.longitude - 0.1
+                        ln_right = ipgeobase.longitude + 0.1
+                        lt_left = ipgeobase.latitude - 0.1
+                        lt_right = ipgeobase.latitude + 0.1
                         self.log.info(ipgeobase.city)
         else:
             ln_left = 0.0
