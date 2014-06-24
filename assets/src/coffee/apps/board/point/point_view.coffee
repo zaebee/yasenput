@@ -217,6 +217,10 @@
     events:
       'click .js-finish': 'addImage'
 
+    initialize: ->
+      @listenTo @model, 'success:delete:photo', @successDeletePhoto
+      @saveUrl = true
+
     addImage: (event) ->
       event.preventDefault()
       @model.trigger 'change:imgs'
@@ -224,6 +228,7 @@
 
     onShow: ->
       id = @model.get 'id'
+      view = @
       @$('#photos-dropzone').dropzone
         dictDefaultMessage: 'Перетащите сюда фотографии'
         addRemoveLinks: true
@@ -231,12 +236,33 @@
         paramName:'img'
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
+        error: (file, msg, xhr) ->
+          if xhr.status is 404
+            message = 'Ваша сессия истекла.<br>Пожалуйста, <a href="/">обновите страницу</a>'
+            view = new App.HeaderApp.Show.PopupInfo message: message
+            App.infoPopupRegion.show view
         success: (file, data) =>
+          $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
           imgs = @model.get 'imgs'
           imgs.push img
+          file.id = img.id
           @model.set 'imgs', imgs
           @ui.finishBtn.prop 'disabled', false
+        removedfile: (file) ->
+          if file.status is 'uploading'
+            @cancelUpload file
+          App.request 'delete:photo', view.model, file
+          @_updateMaxFilesReachedClass()
+
+    successDeletePhoto: (data, file) ->
+      console.log 'photo deleted'
+      if not file.id
+        @$(file.previewElement).remove()
+      else if data.status
+        alert data.txt
+      else
+        @$(file.previewElement).remove()
 
 
   class Point.FullscreenPhoto extends App.Views.ItemView

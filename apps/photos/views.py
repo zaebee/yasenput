@@ -18,7 +18,7 @@ class PhotosBaseView(View):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
+        if not request.is_ajax():
             raise Http404
         return super(PhotosBaseView, self).dispatch(request, *args, **kwargs)
 

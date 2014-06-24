@@ -123,4 +123,3 @@ Handlebars.registerHelper "plus", (lvalue, rvalue, options) ->
 Handlebars.registerHelper "toFixed", (lvalue, rvalue, options) ->
   lvalue = parseFloat(lvalue)
   lvalue.toFixed rvalue
-
