@@ -36,6 +36,7 @@
       'touchstart.touch .js-popupwin-place': 'showDetailPopup'
       'touchstart.touch .js-popupwin-event': 'showDetailPopup'
       'touchstart.touch .js-popupwin-route': 'showDetailPopup'
+      'touchstart.touch .js-add-to-trip-popupwin': 'addToTrip'
 
       'touchstart.touch .sprite-like': 'like'
       'touchstart.touch .sprite-place': 'mark'
@@ -47,6 +48,7 @@
       'click .js-popupwin-event': 'showDetailPopup'
       'click .js-popupwin-route': 'showDetailPopup'
       'click .js-popupwin-trip': 'showDetailPopup'
+      'click .js-add-to-trip-popupwin': 'addToTrip'
 
       'click .sprite-like': 'like'
       'click .sprite-place': 'mark'
@@ -82,6 +84,10 @@
       url = $(event.currentTarget).attr 'href'
       App.navigate url, true
 
+    addToTrip: (event) ->
+      event.preventDefault()
+      @model.collection.trigger 'add:to:trip', @model
+
     showEditPopup: (event) ->
       event.preventDefault()
       btn = $(event.currentTarget)
@@ -108,7 +114,7 @@
         App.vent.trigger 'show:login:popup'
 
     mark: (event) ->
-      revent.preventDefault()
+      event.preventDefault()
       console.log event
 
   class List.Yapens extends App.Views.CollectionView

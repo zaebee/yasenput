@@ -7017,6 +7017,38 @@ button[disabled].js-finish {
 #destination-form.fixed button {
     display:none;
 }
+#sidebar-toggler {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 42px;
+    height: 45px;
+    background: url(../images/pattern-content-light.png) repeat 0 0 #e7e7e8;
+    text-decoration: none;
+    font-size: 45px;
+    padding-left: 20px;
+    line-height: 80%;
+}
+#sidebar-region {
+    position: absolute;
+    left: 60px;
+    top: 15px;
+    z-index:10;
+    width:0;
+    overflow: hidden;
+    transition: width 0.3s linear;
+    -webkit-transition: width 0.3s linear;
+}
+#sidebar-region.active {
+    width:220px;
+}
+#sidebar-region.fixed {
+    position: fixed!important;
+    top: 80px!important;
+}
+#sidebar-region.active + #board-region #grid {
+    margin-left:248px;
+}
 .search-example {
     text-decoration:none;
     border-bottom: 1px dashed;

@@ -22,6 +22,7 @@
     boardRegion:'#board-region'
     footerRegion:'#footer-region'
     mapRegion: '#map-region'
+    sidebarRegion: '#sidebar-region'
     photoviewRegion: '#photoview-region'
 
     photoPopupRegion: selector: '.popupwin_add-photos', regionType: modalRegion

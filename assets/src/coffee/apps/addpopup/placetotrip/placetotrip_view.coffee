@@ -264,8 +264,13 @@
       'click .js-finish-adding': 'addPoints'
 
     onShow: ->
+      $(window).on 'scroll.Aside', =>
+        if $(window).scrollTop() > 260 and $(window).scrollTop() < 320
+          @$el.parent('#sidebar-region').addClass 'fixed'
+        if $(window).scrollTop() < 260
+          @$el.parent('#sidebar-region').removeClass 'fixed'
       @popupwin = @$el.closest '.popupwin'
-      @popupwin.scroll =>
+      @popupwin.on 'scroll.Yapp', =>
         if @$el.length
           @$el.css
             '-webkit-transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
@@ -290,9 +295,11 @@
       @yapens.trigger 'set:map:center', model
 
     addPoints: (event) ->
+      console.log 'clicked .js-finish'
       event.preventDefault()
       App.addPlaceToTripPopup.close()
       
     onClose: ->
-      @popupwin.off 'scroll'
+      $(window).off 'scroll.Aside'
+      @popupwin.off 'scroll.Yapp'
       @stopListening()
