@@ -63,6 +63,11 @@
         maxFilesize: 20
         headers:
           'X-CSRFToken': $.cookie('csrftoken')
+        error: (file, msg, xhr) ->
+          if xhr.status is 404
+            message = 'Ваша сессия истекла.<br>Пожалуйста, <a href="/">обновите страницу</a>'
+            view = new App.HeaderApp.Show.PopupInfo message: message
+            App.infoPopupRegion.show view
         success: (file, data) ->
           $(file.previewElement).removeClass('dz-processing').addClass('dz-success')
           img = data[0]
