@@ -57,12 +57,13 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(points,
                                 fields=['main_img', 'dt_start', 'dt_end', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price'],
+                                        'description', 'reviews', 'review_count', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking',
-                                        'reviewusersplus', 'reviewusersminus', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price'],
+                                        'review_count', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price'],
                                 relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
-                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                           'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                         'extras': ['avatar', 'icon'],
                                                          'limit': LIMITS.POINTS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                            'main_img': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail130x130', 'isliked','thumbnail207_height'],
@@ -88,9 +89,10 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
-                                extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
-                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'Address', 'review_count', 'ypi', 'sets_count'],
+                                extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
+                                relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                         'extras': ['avatar', 'icon'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon','avatar']},
@@ -99,8 +101,8 @@ class PointsBaseView(View):
                                            'imgs': {'extras': ['thumbnail207', 'thumbnail560', 'thumbnail104x104', 'thumbnail207_height'],
                                                     'limit': LIMITS.COLLECTIONS_LIST.IMAGES_COUNT
                                                     },
-                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
-                                                        'extras':['reviewusersplus'],
+                                           'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'review_count'],
+                                                        'extras':['review_count'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
@@ -122,8 +124,7 @@ class PointsBaseView(View):
                                                                                 },}},
                                                                     'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']},
-                                                        'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count', 'reviewusersplus'],
-                                                        'extras':['reviewusersplus'],
+                                                        'points': {'fields': ['imgs', 'name', 'author', 'longitude', 'latitude', 'id', 'sets_count'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
@@ -152,8 +153,7 @@ class PointsBaseView(View):
                  'isliked': point_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
                  'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                 'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                 'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                 'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
                  }}
         return args
@@ -191,8 +191,7 @@ class PointsBaseView(View):
                  'isliked': copypoint_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
                  'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
-                 'reviewusersplus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=1',
-                 'reviewusersminus': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and reviews_reviews.rating=0',
+                 'review_count': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
                  }
             }
@@ -296,7 +295,7 @@ class ItemsList(PointsBaseView):
         models = ['points','routes','events','trips']
         #models = ['trips']
 
-        search_res_points = search_res_sets = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
+        search_res_points = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
         if params.get('models'):
             models = params.get('models').split(',')
@@ -327,7 +326,6 @@ class ItemsList(PointsBaseView):
             t0 = time.time()
             search_res_trips = TripModels.Trips.search.filter(price__lte=0).query(params.get('s',''))
             self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        #search_res_sets_ex = search_res_sets
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
@@ -356,7 +354,6 @@ class ItemsList(PointsBaseView):
             search_res_points = search_res_points.filter(tags_id = tags)
             search_res_events = search_res_events.filter(tags_id = tags)
             search_res_routes = MainModels.Routes.search.none()
-            search_res_sets = CollectionsModels.Collections.search.none()
             self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
         if not params.get('s'):
             if params.get('city'):
@@ -426,15 +423,6 @@ class ItemsList(PointsBaseView):
         #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
-        search_res_sets_list = []
-
-        for collection in search_res_sets.all():
-            points_l = collection.points.filter(
-                longitude__lte = ln_right).filter(
-                    longitude__gte = ln_left).filter(
-                        latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            if len(points_l) > 0:
-                search_res_sets_list.append(int(collection.id))
 
         search_res_routes_list = []
         for route in search_res_routes.all():
@@ -480,11 +468,7 @@ class ItemsList(PointsBaseView):
             if len(points_l) > 0:
                 search_res_events_list.append(int(event.id))
 
-        if ((search_res_points_list.count()) > 0) or (len(search_res_sets_list) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
-            if len(search_res_sets_list) == 0:
-                search_res_sets = none_qs
-            else:
-                search_res_sets = CollectionsModels.Collections.objects.all().filter(id__in = search_res_sets_list)
+        if ((search_res_points_list.count()) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
             if len(search_res_routes_list) == 0:
                 search_res_routes = none_qs
             else:
@@ -497,18 +481,18 @@ class ItemsList(PointsBaseView):
 
 
         t0 = time.time()
-        search_res_sets = search_res_sets.extra(select = {"likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id"})
-        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
-        search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
+        search_res_routes = search_res_routes.extra(
+            select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+        search_res_events = search_res_events.extra(
+            select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
 
         all_items = QuerySetJoin(search_res_points.extra(select = {
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating>5',
-                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
+                'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
                 'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                 #'isliked': ''
                  }),
-                    search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
+                    search_res_events, search_res_trips, search_res_routes.extra(select={
                  'p':'SELECT count(*) from main_points'
                  })).order_by('-' + sort)[offset:limit]
 
@@ -556,7 +540,6 @@ class MapItemsList(PointsBaseView):
             ln_right = float(json.loads(params.get('coord_right')).get('ln'))
             lt_right = float(json.loads(params.get('coord_right')).get('lt'))
             search_res_points_list = search_res_points.all().filter(longitude__lte = ln_right).filter(longitude__gte = ln_left).filter(latitude__lte = lt_right).filter(latitude__gte = lt_left)
-            search_res_sets_list = []
             search_res_points = QuerySetJoin(search_res_points_list).order_by('-ypi')[0:100]
 
 
@@ -636,8 +619,7 @@ class PointAddByUser(LoggedPointsBaseView):
                              'parking': 'main_points.parking',
                              'longitude': 'main_points.longitude',
                              'latitude': 'main_points.latitude',
-                             "reviewusersplus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=1",
-                             "reviewusersminus": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id and rating=0",
+                             "review_count": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id",
                              "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
                              "likes_count": "select count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id",
                              "collections_count": "select count(*) from collections_collections_points join main_points on collections_collections_points.points_id=main_points.id where main_points.id=main_pointsbyuser.point_id",
@@ -758,8 +740,7 @@ class PointAdd(PointsBaseView):
                  'tags': json.loads(tags)[0]['tags'],
                  'reviews': json.loads(reviews)[0]['reviews'],
                  'isliked': int(isliked),
-                 'reviewusersplus': 0,
-                 'reviewusersminus': 0,
+                 'review_count': 0,
                  'sets_count': 0})
 
             else:
@@ -774,8 +755,7 @@ class PointAdd(PointsBaseView):
         point = MainModels.Points.objects.filter(id=id)
         point = point.extra(select={
                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=1',
-                'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating=0',
+                'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
 
                 #'isliked': ''
                  })
@@ -1013,9 +993,10 @@ class Route(View):
             positions = MainModels.Position.objects.filter(route=kwargs.get('id'))
             points = YpJson.serialize(positions, fields=['position', 'point'],
                                       relations={'point': {
-                                        'fields':['id','p', 'days', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'reviewusersplus', 'reviewusersminus', 'ypi', 'sets_count'],
-                                'extras':['likes_count', 'days', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'reviewusersplus', 'reviewusersminus', 'sets_count'],
-                                'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
+                                        'fields':['id','p', 'days', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count'],
+                                'extras':['likes_count', 'days', 'p', 'sets', 'isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
+                                'relations':{'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                                           'extras': ['icon'],
                                                          'limit': LIMITS.COLLECTIONS_LIST.LIKEUSERS_COUNT},
                                            'author': {'fields': ['id', 'first_name', 'last_name', 'avatar']},
                                            'tags': {'fields': ['id', 'name', 'level', 'icons', 'style', 'parent']},

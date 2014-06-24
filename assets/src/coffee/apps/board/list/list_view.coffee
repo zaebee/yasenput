@@ -55,12 +55,16 @@
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
 
-    ###
     modelEvents:
-      'change:likes_count': 'render'
-      'change:reviews': 'render'
-      'change:imgs': 'render'
-    ###
+      'change:likes_count': 'renderLikes'
+      'change:reviews': 'renderReviews'
+      #'change:imgs': 'render'
+
+    renderLikes: ->
+      @$('.info_like').text @model.get 'likes_count'
+
+    renderReviews: ->
+      @$('.info_comment').text @model.get('reviews').length
 
     onRender: ->
       console.log 'onRender model'
