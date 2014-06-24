@@ -36,6 +36,7 @@
       'touchstart.touch .js-popupwin-place': 'showDetailPopup'
       'touchstart.touch .js-popupwin-event': 'showDetailPopup'
       'touchstart.touch .js-popupwin-route': 'showDetailPopup'
+      'touchstart.touch .js-add-to-trip-popupwin': 'addToTrip'
 
       'touchstart.touch .sprite-like': 'like'
       'touchstart.touch .sprite-place': 'mark'
@@ -47,18 +48,23 @@
       'click .js-popupwin-event': 'showDetailPopup'
       'click .js-popupwin-route': 'showDetailPopup'
       'click .js-popupwin-trip': 'showDetailPopup'
+      'click .js-add-to-trip-popupwin': 'addToTrip'
 
       'click .sprite-like': 'like'
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
 
-    ###
     modelEvents:
-      'change:likes_count': 'render'
-      'change:reviews': 'render'
-      'change:imgs': 'render'
-    ###
+      'change:likes_count': 'renderLikes'
+      'change:reviews': 'renderReviews'
+      #'change:imgs': 'render'
+
+    renderLikes: ->
+      @$('.info_like').text @model.get 'likes_count'
+
+    renderReviews: ->
+      @$('.info_comment').text @model.get('reviews').length
 
     onRender: ->
       console.log 'onRender model'
@@ -81,6 +87,10 @@
       event.preventDefault()
       url = $(event.currentTarget).attr 'href'
       App.navigate url, true
+
+    addToTrip: (event) ->
+      event.preventDefault()
+      @model.collection.trigger 'add:to:trip', @model
 
     showEditPopup: (event) ->
       event.preventDefault()
@@ -108,7 +118,7 @@
         App.vent.trigger 'show:login:popup'
 
     mark: (event) ->
-      revent.preventDefault()
+      event.preventDefault()
       console.log event
 
   class List.Yapens extends App.Views.CollectionView

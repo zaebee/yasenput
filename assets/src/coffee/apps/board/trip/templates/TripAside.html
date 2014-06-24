@@ -1,9 +1,10 @@
-{{#if blocks}}<div class="trip-list popupwin__content">
+{{#if blocks}}
+<div class="trip-list popupwin__content">
   <div class="title">Содержание</div>
-  <ul class="list" id="trip_blcks">
-  {{#each blocks}}
-    <li class="item clearfix" id="tmpl_blck" data-step="1">
-      <span class="number">{{plus @index 1}}</span>
+  <ul class="list">
+    {{#each blocks}}
+    <li class="item clearfix" data-step="{{position}}">
+      <span class="number">{{position}}</span>
       <div class="text">
         <a class="text__place name__blck">{{name}}</a>
       </div>
