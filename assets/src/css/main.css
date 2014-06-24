@@ -2235,6 +2235,7 @@
 }
 .popupwin_add-trip input[type="text"]:focus,
 .popupwin_add-trip input[type="password"]:focus,
+.popupwin_trip textarea:focus,
 .popupwin_add-trip textarea:focus {
   border-color: #53b6d8;
 }
@@ -2393,6 +2394,9 @@ textarea {
   width: 100%;
   background-color: #F1F1F1;
   color: #959595;
+}
+textarea:focus {
+    background:#fff;
 }
 /*input[type="text"] {
   border: 1px solid #999;

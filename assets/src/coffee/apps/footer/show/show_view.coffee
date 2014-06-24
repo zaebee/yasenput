@@ -9,7 +9,7 @@
       'click .nav__link': 'showStatic'
 
     onRender: ->
-      $(window).scroll =>
+      $(window).on 'scroll.Footer', =>
         if $(window).scrollTop() > 252
           @$('.link-up').addClass('visible')
         else

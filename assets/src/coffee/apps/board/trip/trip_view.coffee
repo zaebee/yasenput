@@ -62,11 +62,22 @@
 
     events:
       'click .js-popup-order-route': 'showOrderPopup'
+      'click .item': 'scrollBlock'
 
     showOrderPopup: (event) ->
       event.preventDefault()
       view = new Trip.OrderRoute model: @model
       App.orderRoutePopup.show view
+
+    scrollBlock: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      step = $target.data 'step'
+      $blockTrip = $target.closest('.popupwin_trip').find ".trip-view[data-step=#{step}]"
+      scrollY = $blockTrip.position().top - 20
+
+      $target.closest('.modal').animate
+        scrollTop: scrollY
 
     initialize: ->
       @saveUrl = true
