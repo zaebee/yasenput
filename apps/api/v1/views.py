@@ -363,6 +363,7 @@ class ItemsList(PointsBaseView):
                 ln_right = ln+0.1
                 lt_left = lt-0.1
                 lt_right = lt+0.1
+                print 'CITY PARAMETER'
             else:
                 if params.get('coord_left'):
                     #top left coords
@@ -481,20 +482,30 @@ class ItemsList(PointsBaseView):
 
 
         t0 = time.time()
-        search_res_routes = search_res_routes.extra(
-            select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
-        search_res_events = search_res_events.extra(
-            select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
-
-        all_items = QuerySetJoin(search_res_points.extra(select = {
-                'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
-                'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
-                #'isliked': ''
-                 }),
-                    search_res_events, search_res_trips, search_res_routes.extra(select={
-                 'p':'SELECT count(*) from main_points'
-                 })).order_by('-' + sort)[offset:limit]
+        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
+        search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
+        if models == ['trips']:
+            all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
+        elif models == ['points']:
+            all_items = QuerySetJoin(search_res_points.extra(select = {
+                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                    'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating>5',
+                    'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
+                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
+                    #'isliked': ''
+                     })).order_by('-' + sort)[offset:limit]
+        elif models == ['events']:
+            all_items = QuerySetJoin(search_res_events).order_by('-' + sort)[offset:limit]
+        else:
+            all_items = QuerySetJoin(search_res_points.extra(select = {
+                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
+                    'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
+                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
+                    #'isliked': ''
+                     }),
+                        search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
+                     'p':'SELECT count(*) from main_points'
+                     })).order_by('-' + sort)[offset:limit]
 
         self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
 
