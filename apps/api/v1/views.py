@@ -503,7 +503,7 @@ class ItemsList(PointsBaseView):
                     'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                     #'isliked': ''
                      }),
-                        search_res_sets, search_res_events, search_res_trips, search_res_routes.extra(select={
+                        search_res_events, search_res_trips, search_res_routes.extra(select={
                      'p':'SELECT count(*) from main_points'
                      })).order_by('-' + sort)[offset:limit]
 
