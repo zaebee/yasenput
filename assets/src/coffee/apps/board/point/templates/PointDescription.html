@@ -8,15 +8,22 @@
     <ul class="list">
       {{#if additional.phone}}
       <li class="item item_phone">{{additional.phone}}</li>
+      {{else}}
+      <li class="item item_phone">Не указано</li>
       {{/if}}
       {{#if additional.website}}
         <li class="item item_site"><a href="http://{{additional.website}}" target="_blank" class="link">{{additional.website}}</a></li>
+      {{else}}
+        <li class="item item_site">Не указано</li>
       {{/if}}
       {{#if additional.twitter}}
-        <li class="item item_tw"><a href="http://twitter.com/{{additional.twitter}}" target="_blank" class="link">{{additional.twitter}}</a></li>
+        <li class="item item_tw">Не указано</li>
+      {{else}}
       {{/if}}
       {{#if additional.vk}}
         <li class="item item_vk"><a href="http://{{additional.vk}}" target="_blank" class="link">{{additional.vk}}</a></li>
+      {{else}}
+        <li class="item item_vk">Не указано</li>
       {{/if}}
     </ul>
     <a href="#" class="link-open js-open"></a>

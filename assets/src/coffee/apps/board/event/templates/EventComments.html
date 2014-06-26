@@ -8,7 +8,7 @@
         <a href="#" class="name">{{author.first_name}} {{author.last_name}}</a>
         <span class="time">&bull; {{dateFormat created}}</span>
       </div>
-      <div class="text__comment">{{review}}</div>
+      <div class="text__comment">{{safe review}}</div>
     </div>
   </li>
 {{/reviews}}
