@@ -11,8 +11,9 @@
         @showPhotos()
         @showDescription()
         @showHeader()
-        @showComments()
         @showMap()
+        @showComments()
+        @showLikes()
       #App.execute 'when:fetched', @model, =>
       App.eventPopup.show @layout, loading: true
 
@@ -36,13 +37,19 @@
         region: @layout.descRegion
         loading: false
 
+    showMap: ->
+      @mapView = new Event.Map  model: @model
+      @show @mapView,
+        region: @layout.mapRegion
+
     showComments: ->
       @commentsView = new Event.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
         loading: false
 
-    showMap: ->
-      @mapView = new Event.Map  model: @model
-      @show @mapView,
-        region: @layout.mapRegion
+    showLikes: ->
+      @likesView = new Event.Likes model: @model
+      @show @likesView,
+        region: @layout.likesRegion
+        loading: false

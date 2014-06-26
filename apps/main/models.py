@@ -284,16 +284,6 @@ class Events(models.Model):
     from apps.photos.models import Photos
     from apps.reviews.models import Reviews
 
-    @property
-    def main_image(self):
-        if self.imgs.exists():
-            img = self.imgs.latest('id')
-            return img.thumbnail207()
-
-    class Meta:
-        verbose_name = u'События'
-        verbose_name_plural = u'События'
-
     dt_start = models.DateTimeField('Начало')
     dt_end = models.DateTimeField('Окончание')
     name = models.CharField('Название', max_length=255)
@@ -303,7 +293,7 @@ class Events(models.Model):
     imgs = models.ManyToManyField(Photos, null=True, blank=True, serialize=True)
     reviews = models.ManyToManyField(Reviews, null=True, blank=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='eventss_users_followers', serialize=True)
-    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_likes', serialize=True)
+    likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='events_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='events_users_visits', serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
     updated = models.DateTimeField('Изменен', auto_now=True)
@@ -316,6 +306,20 @@ class Events(models.Model):
     unid = '1'
     ypi = models.IntegerField(default=0, blank=True)
     type_of_item = 'event'
+
+    @property
+    def main_image(self):
+        if self.imgs.exists():
+            img = self.imgs.latest('id')
+            return img.thumbnail207()
+
+    @property
+    def likes_count(self):
+        return self.likeusers.count()
+
+    class Meta:
+        verbose_name = u'События'
+        verbose_name_plural = u'События'
 
     def __unicode__(self):
         return self.name

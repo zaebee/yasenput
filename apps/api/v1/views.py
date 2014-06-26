@@ -146,13 +146,12 @@ class PointsBaseView(View):
     def getPointsSelect(self, request):
         if request.user.is_authenticated():
             user = MainModels.User.objects.get(username = request.user)
-            point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.user_id = '+str(user.id)
+            point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.person_id = '+str(user.id)
         else:
             point_isliked = "select 0"
         args = {"select": {'id_point': 'select 0',
                  'isliked': point_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
-                 'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
                  }}
         return args
@@ -160,12 +159,11 @@ class PointsBaseView(View):
     def getEventSelect(self, request):
         if request.user.is_authenticated():
             user = MainModels.User.objects.get(username = request.user)
-            isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_events_likeusers WHERE main_events_likeusers.events_id = main_events.id and main_events_likeusers.user_id = '+str(user.id)
+            isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_events_likeusers WHERE main_events_likeusers.events_id = main_events.id and main_events_likeusers.person_id = '+str(user.id)
         else:
             isliked = "select 0"
         args = {"select": {'id_event': 'select 0',
                  'isliked': isliked,
-                 'likes_count': 'SELECT count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id',
                  }}
         return args
 
@@ -189,7 +187,6 @@ class PointsBaseView(View):
                  'latitude': 'main_points.latitude',
                  'isliked': copypoint_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
-                 'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
                  }
             }
@@ -473,7 +470,6 @@ class ItemsList(PointsBaseView):
 
         t0 = time.time()
         search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
-        search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
         if (models == ['trips']) or (models == ['tours']):
             all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
         elif models == ['points']:
@@ -1021,10 +1017,11 @@ class EventLike(PointsBaseView):
                                      "txt":"Вы не авторизованы"})
         event = get_object_or_404(MainModels.Events, id=id)
 
-        if request.user in event.likeusers.all():
-            event.likeusers.remove(request.user)
+        person = request.user.person
+        if person in event.likeusers.all():
+            event.likeusers.remove(person)
         else:
-            event.likeusers.add(request.user)
+            event.likeusers.add(person)
         event = MainModels.Events.objects.filter(id=id).extra(**self.getEventSelect(request))
         return HttpResponse(self.getSerializeCollections(event),
                             mimetype="application/json")
@@ -1194,14 +1191,11 @@ class Event(View):
         id = kwargs.get('id')
         t0 = time.time()
         event = MainModels.Events.objects.filter(id=id)
-        event = event.extra(select = {
-                'likes_count': 'SELECT count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id',
-                 })
         self.log.info('Get event detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         YpJson = YpSerialiser()
         t0 = time.time()
         if request.user.is_authenticated():
-            if request.user in event[0].likeusers.all():
+            if request.user.person in event[0].likeusers.all():
                 isliked = 1
             else:
                 isliked = 0
@@ -1216,6 +1210,9 @@ class Event(View):
         self.log.info('Serialize imgs for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
 
         author = YpJson.serialize(event, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                  'extras': ['icon','avatar']},
+        })
+        likeusers = YpJson.serialize(event, fields = ['likeusers'], relations ={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                   'extras': ['icon','avatar']},
         })
         self.log.info('Serialize author for event complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
@@ -1265,6 +1262,7 @@ class Event(View):
          'tags': json.loads(tags)[0]['tags'],
          'points': json.loads(points)[0]['points'],
          'reviews': json.loads(reviews)[0]['reviews'],
+         'likeusers': json.loads(likeusers)[0]['likeusers'],
          'isliked': int(isliked),
          'likes_count': event[0].likes_count,
         })

@@ -10,20 +10,7 @@
   <div class="comments-wrap" id="event-comments-region"></div>
 </div><!-- class="popup-content" -->
 
-{{#if likeusers}}
-<div class="popupwin__content clearfix">
-  <div class="title title_blue title_bg_light">Им понравилось:</div>
-  <ul class="peoples">
-    {{#likeusers}}
-      <li class="peoples__item">
-        <a href="#" class="peoples__link">
-          <img src="{{icon}}" alt="{{first_name}} {{last_name}}" class="peoples__img">
-        </a>
-      </li>
-    {{/likeusers}}
-  </ul>
-</div><!-- class="popup-content" -->
-{{/if}}
+<div class="popupwin__content clearfix" id="event-likes-region"></div>
 
 {{#if sets}}
 <div class="popupwin__content clearfix">
