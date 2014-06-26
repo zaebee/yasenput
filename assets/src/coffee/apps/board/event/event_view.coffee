@@ -8,6 +8,7 @@
       descRegion: '#event-description-region'
       mapRegion: '#event-map-region'
       commentsRegion: '#event-comments-region'
+      likesRegion: '#event-likes-region'
       tagsRegion: '#event-tags-region'
 
     className: 'popupwin__scrollbox'
@@ -192,6 +193,12 @@
     template: 'EventTags'
     modelEvents:
       'change:tags': 'render'
+
+
+  class Event.Likes extends App.Views.ItemView
+    template: 'EventLikes'
+    modelEvents:
+      'change:likeusers': 'render'
 
 
   class Event.AddPhoto extends App.Views.ItemView
