@@ -103,10 +103,10 @@ class LikeTrip(View):
                                      "txt":"Вы не авторизованы"})
         trip = get_object_or_404(Trips, id=id)
 
-        if request.user in trip.likeusers.all():
-            trip.likeusers.remove(request.user)
+        if request.user.person in trip.likeusers.all():
+            trip.likeusers.remove(request.user.person)
         else:
-            trip.likeusers.add(request.user)
+            trip.likeusers.add(request.user.person)
         YpJson = YpSerialiser()
         trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
         return HttpResponse(trip, mimetype="application/json")

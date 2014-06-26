@@ -149,7 +149,7 @@ class Points(models.Model):
     type = models.ForeignKey(TypePoints, null=True, blank=True)
     address = models.TextField('Адрес', blank=True)
     followers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_followers', serialize=True)
-    likeusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_likes', serialize=True)
+    likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='points_users_likes', serialize=True)
     visitusers = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_visits', serialize=True)
     been = models.ManyToManyField(User, null=True, blank=True, related_name='points_users_been', serialize=True)
 
@@ -171,7 +171,6 @@ class Points(models.Model):
     reviewusersplus = 0
     reviewusersminus = 0
     sets_count = 0
-    likes_count = 0
 
     author = models.ForeignKey(Person, null=True, serialize=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
@@ -182,6 +181,14 @@ class Points(models.Model):
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
 
+
+    @property
+    def likes_count(self):
+        return self.likeusers.count()
+
+    @property
+    def review_count(self):
+        return self.reviews.count()
 
     @property
     def main_image(self):
