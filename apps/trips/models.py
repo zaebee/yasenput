@@ -62,6 +62,14 @@ class Trips(models.Model):
                 img = block.imgs.all()[0]
                 return img.thumbnail207()
 
+    @property
+    def likes_count(self):
+        return self.likeusers.count()
+
+    @property
+    def review_count(self):
+        return self.reviews.count()
+
     @models.permalink
     def get_absolute_url(self):
         return ('trip_detail', None, {'id': self.id})
