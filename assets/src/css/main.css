@@ -5327,8 +5327,8 @@ a {
   margin-bottom: 6px;
   padding-left: 0;
   padding-right: 0;
-  width: 124px;
-  letter-spacing: -0.7px;
+  width: 165px;
+  letter-spacing: 0;
   text-transform: uppercase;
   font-family: DinCondensedPro, Arial, 'Helvetica CY', 'Nimbus Sans L', sans-serif;
   font-size: 13px;
@@ -5341,7 +5341,7 @@ a {
   display: inline-block;
   border-right: 1px solid #eaeaea;
   padding: 28px 14px 22px;
-  width: 124px;
+  width: 175px;
   height: 170px;
   vertical-align: top;
 }
