@@ -48,7 +48,7 @@ class PointsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax:
+        if not request.is_ajax():
             raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
 
@@ -153,7 +153,6 @@ class PointsBaseView(View):
                  'isliked': point_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
                  'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                 'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
                  }}
         return args
@@ -191,29 +190,10 @@ class PointsBaseView(View):
                  'isliked': copypoint_isliked,
                  'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
                  'likes_count': 'SELECT count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id',
-                 'review_count': 'SELECT count(*) from main_pointsbyuser_reviews join reviews_reviews on main_pointsbyuser_reviews.reviews_id=reviews_reviews.id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id',
                  'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
                  }
             }
         return args
-
-    def getCollectionsSelect(self, request):
-        if request.user.is_authenticated():
-            user = MainModels.User.objects.get(username = request.user)
-            collections_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id and collections_collections_likeusers.user_id = '+str(user.id)
-        else:
-            collections_isliked = "select 0"
-        args = {
-                "tables": ["main_points"],
-                "select": {
-                      "isliked": collections_isliked,
-                      "likes_count": "select count(*) from collections_collections_likeusers where collections_collections_likeusers.collections_id=collections_collections.id",
-                      'likes_count_p': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                 #"imgs": 'SELECT count(*) from main_points',
-                    }
-            }
-        return args
-
 
 
     def pointsList(self, points):
@@ -410,7 +390,7 @@ class ItemsList(PointsBaseView):
             longitude__lte=ln_right).filter(
                 longitude__gte=ln_left).filter(
                     latitude__lte=lt_right).filter(latitude__gte=lt_left)
-        
+
         search_res_trips_list = []
         for trip in search_res_trips:
             bl = trip.blocks.filter(
@@ -430,7 +410,7 @@ class ItemsList(PointsBaseView):
                     search_res_trips_list.append(trip)
 
         search_res_trips = search_res_trips_list
-        
+
         #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
@@ -498,9 +478,6 @@ class ItemsList(PointsBaseView):
             all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
         elif models == ['points']:
             all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                    'reviewusersplus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating>5',
-                    'reviewusersminus': 'SELECT count(*) from main_points_reviews join reviews_reviews on main_points_reviews.reviews_id=reviews_reviews.id where main_points_reviews.points_id=main_points.id and reviews_reviews.rating<6',
                     'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                     #'isliked': ''
                      })).order_by('-' + sort)[offset:limit]
@@ -508,8 +485,6 @@ class ItemsList(PointsBaseView):
             all_items = QuerySetJoin(search_res_events).order_by('-' + sort)[offset:limit]
         else:
             all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                    'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
                     'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
                     #'isliked': ''
                      }),
@@ -640,9 +615,7 @@ class PointAddByUser(LoggedPointsBaseView):
                              'parking': 'main_points.parking',
                              'longitude': 'main_points.longitude',
                              'latitude': 'main_points.latitude',
-                             "review_count": "select count(*) from main_pointsbyuser_reviews join reviews_reviews on reviews_reviews.id=main_pointsbyuser_reviews.reviews_id where main_pointsbyuser_reviews.pointsbyuser_id=main_pointsbyuser.id",
                              "beens_count": "select count(*) from main_points_been join main_pointsbyuser on main_points_been.points_id=main_pointsbyuser.point_id",
-                             "likes_count": "select count(*) from main_pointsbyuser_likeusers where main_pointsbyuser_likeusers.pointsbyuser_id=main_pointsbyuser.id",
                              "collections_count": "select count(*) from collections_collections_points join main_points on collections_collections_points.points_id=main_points.id where main_points.id=main_pointsbyuser.point_id",
                              "isliked": isliked_select,
                              "id_point": "select " + str(originalPoint.id)
@@ -774,18 +747,12 @@ class PointAdd(PointsBaseView):
         id = kwargs.get('id')
         t0 = time.time()
         point = MainModels.Points.objects.filter(id=id)
-        point = point.extra(select={
-                'likes_count': 'SELECT count(*) from main_points_likeusers where main_points_likeusers.points_id=main_points.id',
-                'review_count': 'SELECT count(*) from main_points_reviews where main_points_reviews.points_id=main_points.id',
-
-                #'isliked': ''
-                 })
         self.log.info('Get point detail complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         YpJson = YpSerialiser()
         t0 = time.time()
         self.log.info('Get collections for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         if request.user.is_authenticated():
-            if request.user in point[0].likeusers.all():
+            if request.user.person in point[0].likeusers.all():
                 isliked = 1
             else:
                 isliked = 0
@@ -844,26 +811,16 @@ class LikePoint(PointsBaseView):
         if form.is_valid():
             pk = form.cleaned_data["id"]
             try:
-                person = MainModels.Person.objects.get(username=request.user)
-                id_point = form.cleaned_data.get("id_point", 0)
-                if id_point:
-                    point = get_object_or_404(MainModels.PointsByUser, pk=pk)
-                    count = MainModels.PointsByUser.objects.filter(id=pk, likeusers__id=person.id).count()
-                else:
-                    point = get_object_or_404(MainModels.Points, pk=pk)
-                    count = MainModels.Points.objects.filter(id=pk, likeusers__id=person.id).count()
-                if count > 0:
+                person = request.user.person
+                point = get_object_or_404(MainModels.Points, pk=pk)
+                if person in point.likeusers.all():
                     point.likeusers.remove(person)
                 else:
                     point.likeusers.add(person)
-                if id_point:
-                    point = MainModels.PointsByUser.objects.filter(id=pk).extra(**self.getPointsByUserSelect(request))
-                else:
-                    point = MainModels.Points.objects.filter(id=pk).extra(**self.getPointsSelect(request))
             except:
                 return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
             else:
-                return self.pointsList(point)
+                return self.pointsList([point])
         else:
             return JsonHTTPResponse({"status": 1, "txt": "некорректно задан id места", "id": 0})
 
