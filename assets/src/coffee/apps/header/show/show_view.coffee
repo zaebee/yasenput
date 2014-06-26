@@ -97,8 +97,14 @@
       params =
         city: data.name
         s: null
+        #coord_left: JSON.stringify ln: 32.299905, lt: 44.20657
+        #coord_right: JSON.stringify ln: 36.752144, lt: 46.229215
         coord_left: null
         coord_right: null
+      if data and data.upperCorner
+        params.coord_left = JSON.stringify _.zipObject(['ln','lt'], data.lowerCorner.split(' '))
+        params.coord_right = JSON.stringify _.zipObject(['ln','lt'], data.upperCorner.split(' '))
+        params.city = null
       App.updateSettings params
       @$('#destination-input').select2 'data', data
 
