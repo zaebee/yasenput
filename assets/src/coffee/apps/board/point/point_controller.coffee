@@ -13,6 +13,7 @@
         @showDescription()
         @showMap()
         @showComments()
+        @showLikes()
       ###
         @sidebarView()
         @tagsView()
@@ -48,4 +49,10 @@
       @commentsView = new Point.Comments model: @model
       @show @commentsView,
         region: @layout.commentsRegion
+        loading: false
+
+    showLikes: ->
+      @likesView = new Point.Likes model: @model
+      @show @likesView,
+        region: @layout.likesRegion
         loading: false

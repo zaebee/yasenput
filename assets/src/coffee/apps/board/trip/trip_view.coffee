@@ -8,6 +8,7 @@
       mapRegion: '#trip-map-region'
       commentsRegion: '#trip-comments-region'
       tagsRegion: '#trip-tags-region'
+      likesRegion: '#trip-likes-region'
       blocksRegion: '#trip-blocks-region'
 
     className: 'popupwin__scrollbox'
@@ -221,6 +222,13 @@
     template: 'TripTags'
     modelEvents:
       'change:tags': 'render'
+
+
+  class Trip.Likes extends App.Views.ItemView
+    template: 'TripLikes'
+    modelEvents:
+      'change:likeusers': 'render'
+
 
   class Trip.OrderRoute extends App.Views.ItemView
     template: 'OrderTrip'

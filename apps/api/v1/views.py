@@ -769,6 +769,9 @@ class PointAdd(PointsBaseView):
         author = YpJson.serialize(point, fields = ['author'], relations ={'author': {'fields': ['id', 'first_name', 'last_name', 'avatar'],
                                   'extras': ['icon','avatar']},
         })
+        likeusers = YpJson.serialize(point, fields = ['likeusers'], relations ={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
+                                  'extras': ['icon','avatar']},
+        })
         self.log.info('Serialize author for point complete (%.2f sec.) point id: %s' % (time.time()-t0, id))
         t0 = time.time()
         tags = YpJson.serialize(point, fields = ['tags'], relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
@@ -799,6 +802,7 @@ class PointAdd(PointsBaseView):
          'author':json.loads(author)[0]['author'],
          'tags': json.loads(tags)[0]['tags'],
          'reviews': json.loads(reviews)[0]['reviews'],
+         'likeusers': json.loads(likeusers)[0]['likeusers'],
          'isliked': int(isliked)
         })
 

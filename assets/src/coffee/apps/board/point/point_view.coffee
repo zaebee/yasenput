@@ -8,6 +8,7 @@
       descriptionRegion: '#point-description-region'
       mapRegion: '#point-map-region'
       commentsRegion: '#point-comments-region'
+      likesRegion: '#point-likes-region'
       tagsRegion: '#point-tags-region'
 
     className: 'popupwin__scrollbox'
@@ -207,6 +208,12 @@
     template: 'PointTags'
     modelEvents:
       'change:tags': 'render'
+
+
+  class Point.Likes extends App.Views.ItemView
+    template: 'PointLikes'
+    modelEvents:
+      'change:likeusers': 'render'
 
 
   class Point.AddPhoto extends App.Views.ItemView
