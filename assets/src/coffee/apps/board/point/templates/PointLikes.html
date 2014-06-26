@@ -1,0 +1,12 @@
+{{#if likeusers}}
+  <div class="title title_blue title_bg_light">Им понравилось:</div>
+  <ul class="peoples">
+    {{#likeusers}}
+      <li class="peoples__item">
+      <a title="{{first_name}} {{last_name}}" href="#" class="peoples__link">
+          <img src="{{icon}}" alt="{{first_name}} {{last_name}}" class="peoples__img">
+        </a>
+      </li>
+    {{/likeusers}}
+  </ul>
+{{/if}}
