@@ -108,7 +108,8 @@ class LikeTrip(View):
         else:
             trip.likeusers.add(request.user.person)
         YpJson = YpSerialiser()
-        trip = YpJson.serialize([trip], relations=TripOption.relations.getTripRelation())
+        trip = YpJson.serialize([trip], extras=TripOption.getExtras(),
+                                relations=TripOption.relations.getTripRelation())
         return HttpResponse(trip, mimetype="application/json")
 
 

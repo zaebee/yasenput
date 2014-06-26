@@ -58,7 +58,7 @@
     modelEvents:
       'change:likes_count': 'renderLikes'
       'change:reviews': 'renderReviews'
-      #'change:imgs': 'render'
+      'change:imgs': 'render'
 
     renderLikes: ->
       @$('.info_like').text @model.get 'likes_count'

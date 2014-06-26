@@ -200,5 +200,7 @@ class TripOption():
             }
             return relations
 
-    class extras:
-        pass
+
+    @staticmethod
+    def getExtras():
+        return ['likes_count', 'review_count']
