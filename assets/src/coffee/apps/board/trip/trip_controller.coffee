@@ -12,9 +12,10 @@
       @layout = new Trip.Layout model: @model
       @listenTo @layout, 'show', =>
         @showHeader()
-        @showComments()
         @showAside()
         @showBlocks()
+        @showComments()
+        @showLikes()
       App.tripPopup.show @layout, loading: true
 
     onClose: ->
@@ -24,13 +25,6 @@
       @headerView = new Trip.Header model: @model
       @show @headerView,
         region: @layout.headerRegion
-
-    showComments: ->
-      @commentsView = new Trip.Comments model: @model
-      @show @commentsView,
-        region: @layout.commentsRegion
-        loading: false
-
     showAside: ->
       @asideView = new Trip.Aside model: @model
       @show @asideView,
@@ -40,3 +34,15 @@
       @blocksView = new Trip.Blocks model: @model
       @show @blocksView,
         region: @layout.blocksRegion
+
+    showComments: ->
+      @commentsView = new Trip.Comments model: @model
+      @show @commentsView,
+        region: @layout.commentsRegion
+        loading: false
+
+    showLikes: ->
+      @likesView = new Trip.Likes model: @model
+      @show @likesView,
+        region: @layout.likesRegion
+        loading: false
