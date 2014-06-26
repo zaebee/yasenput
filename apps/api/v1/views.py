@@ -421,7 +421,7 @@ class ItemsList(PointsBaseView):
                 search_res_trips_list.append(trip)
 
         for trip in search_res_trips:
-            for block in trip.blocks:
+            for block in trip.blocks.all():
                 bl = block.points.filter(
                 longitude__lte=ln_right).filter(
                     longitude__gte=ln_left).filter(
@@ -494,7 +494,7 @@ class ItemsList(PointsBaseView):
         t0 = time.time()
         search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
         search_res_events = search_res_events.extra(select = {"likes_count": "select count(*) from main_events_likeusers where main_events_likeusers.events_id=main_events.id"})
-        if models == ['trips']:
+        if (models == ['trips']) or (models == ['tours']):
             all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
         elif models == ['points']:
             all_items = QuerySetJoin(search_res_points.extra(select = {
