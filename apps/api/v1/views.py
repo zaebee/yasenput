@@ -221,8 +221,6 @@ class Search(PointsBaseView):
         points = QuerySetJoin(points.extra(select = {'type_of_item': 1}))
         events = MainModels.Events.search.query(params.get("s"))
         events = QuerySetJoin(events.extra(select = {'type_of_item': 2}))
-        routes = MainModels.Routes.search.query(params.get("s"))
-        routes = QuerySetJoin(routes.extra(select = {'type_of_item': 3}))
         trips = TripModels.Trips.search.query(params.get("s"))
         trips  = QuerySetJoin(trips.extra(select = {'type_of_item': 4}))
 
@@ -249,13 +247,11 @@ class Search(PointsBaseView):
         YpJson = YpSerialiser()
         points = json.loads(YpJson.serialize(points, fields = ['id','name', 'address']))
         events = json.loads(YpJson.serialize(events, fields = ['id','name']))
-        routes = json.loads(YpJson.serialize(routes, fields = ['id','name']))
         trips = json.loads(YpJson.serialize(trips, fields = ['id','name']))
         users = json.loads(YpJson.serialize(users, fields = ['id','first_name', 'last_name']))
         return JsonHTTPResponse({
             "points": points,
             'events': events,
-            'routes': routes,
             'trips': trips,
             "users": users,
         })

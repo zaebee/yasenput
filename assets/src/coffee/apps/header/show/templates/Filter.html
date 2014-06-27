@@ -5,9 +5,11 @@
   <li class="categories__item categories__item_btn">
     <a href="/event" class="categories__link btn btn_color_grey {{#ifEquals settings.models 'events'}}btn_color_yel active{{/ifEquals}}" data-model="events" title="Показатьтолько события">События</a>
   </li>
+  <!--
   <li class="categories__item categories__item_btn">
     <a href="/route" class="categories__link btn btn_color_grey {{#ifEquals settings.models 'routes'}}btn_color_brown active{{/ifEquals}}" data-model="routes" title="Показать только маршруты">Маршруты</a>
   </li>
+  -->
   <li class="categories__item categories__item_btn">
   <a href="/trip" class="categories__link btn btn_color_grey {{#ifEquals settings.models 'trips'}}btn_color_blue active{{/ifEquals}}" data-model="trips" title="Показать только бесплатные путешествия">Путешествия</a>
   </li>
@@ -15,6 +17,12 @@
     <a href="/tour" class="categories__link btn btn_color_grey {{#ifEquals settings.models 'tours'}}btn_color_blue active{{/ifEquals}}" data-model="tours" title="Показать только платные экскурсии">Экскурсии</a>
   </li>
 </ul>
+
+<div class="header__search">
+  <form id="header-search-form">
+    <input type="text" placeholder="Поиск по местам ...">
+  </form>
+</div>
 
 <!--
 <ul class="categories">
