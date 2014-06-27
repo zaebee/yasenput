@@ -7,11 +7,6 @@
     {{else}}
       <img src="/static/images/place-unknown.png" height="174" alt="{{name}}" class="img">
     {{/if}}
-    {{#if addtotrip}}
-    <div class="btns">
-      <a href="#" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в путешествие</a>
-    </div>
-    {{/if}}
     {{#if editable}}
       {{#ifContains author.id user}}
         <div class="btns">
@@ -20,6 +15,11 @@
         </div>
       {{/ifContains}}
     {{else}}
+      <div class="btns">
+        <a href="#" class="btn btn_color_blue js-add-to-trip-popupwin">Добавить в путешествие</a>
+      </div>
+      {{#if addtotrip}}
+      {{/if}}
     <div class="icons">
       <!--
       <a class="icon sprite-place" data-toggle="tooltip" title="Добавить место"></a>

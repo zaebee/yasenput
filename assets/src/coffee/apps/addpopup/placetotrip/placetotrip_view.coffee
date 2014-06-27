@@ -243,6 +243,7 @@
     className: 'route-step__aside'
 
     initialize: ->
+      _.bindAll @
       @yapens = @options.tripyapens
       @listenTo @options.collection, 'add:to:trip', @addToTrip
       @listenTo @options.collection, 'delete:from:trip', @deleteFromTrip
@@ -262,13 +263,17 @@
     events:
       'click .item': 'setMapCenter'
       'click .js-finish-adding': 'addPoints'
+      'click .js-show-map': 'showMainMap'
+
+    scrollAside: ->
+      if $(window).scrollTop() > 260 and $(window).scrollTop() < 1000
+        @$el.parent('#sidebar-region').addClass 'fixed'
+      if $(window).scrollTop() < 260
+        @$el.parent('#sidebar-region').removeClass 'fixed'
 
     onShow: ->
-      $(window).on 'scroll.Aside', =>
-        if $(window).scrollTop() > 260 and $(window).scrollTop() < 320
-          @$el.parent('#sidebar-region').addClass 'fixed'
-        if $(window).scrollTop() < 260
-          @$el.parent('#sidebar-region').removeClass 'fixed'
+      scrollAside = _.debounce @scrollAside, 50
+      $(window).on 'scroll.Aside', scrollAside
       @popupwin = @$el.closest '.popupwin'
       @popupwin.on 'scroll.Yapp', =>
         if @$el.length
@@ -298,6 +303,11 @@
       console.log 'clicked .js-finish'
       event.preventDefault()
       App.addPlaceToTripPopup.close()
+
+    showMainMap: (event) ->
+      event.preventDefault()
+      App.boardRegion.reset()
+      App.vent.trigger 'show:map:region', @options.tripyapens
       
     onClose: ->
       $(window).off 'scroll.Aside'

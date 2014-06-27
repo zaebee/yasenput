@@ -140,7 +140,7 @@
     onCollectionRendered: ->
       App.execute 'when:fetched', @collection, =>
         console.log 'collection rendered. We rebuild masonry layout'
-        @wall.layout() if @wall
+        @wall.reloadItems() & @wall.layout() if @wall
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>
@@ -148,6 +148,8 @@
         if @collection.length
           @wall = @wall or new Masonry @el,
             itemSelector: '.box'
+          @wall.reloadItems()
+          @wall.layout()
         else
           @wall.destroy() if @wall
         @infiniScroll = new Backbone.InfiniScroll @collection,

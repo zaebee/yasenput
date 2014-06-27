@@ -40,11 +40,11 @@
 
     showAddPopup: (e) ->
       e.preventDefault()
-      App.addPopupRegion.show(new Show.PopupAdd)
+      App.addPopupRegion.show new Show.PopupAdd
 
     showLoginPopup: (e) ->
       e.preventDefault()
-      App.loginPopupRegion.show(new Show.PopupLogin)
+      App.loginPopupRegion.show new Show.PopupLogin
 
     showProfileMenu: (e) ->
       e.preventDefault()
@@ -277,42 +277,20 @@
     className: 'popupwin__scrollbox'
 
     events:
-      'click .js-popup-add-place': 'showAddPlacePopup'
-      'click .js-popup-add-event': 'showAddEventPopup'
-      'click .js-popup-add-route': 'showAddRoutePopup'
-      'click .js-popup-add-trip': 'showAddTripPopup'
+      'click .stuff-add__link': 'showPopup'
 
     initialize: ->
       @user = App.request 'get:my:profile'
       @saveUrl = true
 
-    showAddPlacePopup: (event) ->
+    showPopup: (event) ->
       event.preventDefault()
+      App.addPopupRegion.close()
+      url = $(event.currentTarget).attr 'href'
       if not @user.get 'authorized'
         App.vent.trigger 'show:login:popup'
       else
-        App.vent.trigger 'show:add:place:popup'
-
-    showAddEventPopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:event:popup'
-
-    showAddRoutePopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:route:popup'
-
-    showAddTripPopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:trip:popup'
+        App.navigate url, true
 
 
   class Show.PopupLogin extends App.Views.ItemView

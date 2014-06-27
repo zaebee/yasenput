@@ -27,7 +27,8 @@
         data: params
         success: (collection) ->
           ## if need card for adding trip we show it
-          if not withoutEmpty
+          #if not withoutEmpty
+          if withoutEmpty
             model = new Entities.Model empty: true
             collection.add model, at: 0
           collection
