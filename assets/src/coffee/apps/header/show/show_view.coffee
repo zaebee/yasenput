@@ -170,12 +170,12 @@
             name: App.settings.city or ''
             address: ''
       fixedDestForm = _.debounce @fixedDestForm, 200
-      $(window).on 'scroll.Header', fixedDestForm
+      $(window).on 'scroll.Header', @fixedDestForm
 
     fixedDestForm: ->
-      if $(window).scrollTop() > 150
+      if $(window).scrollTop() > 120
         @$('#destination-form').addClass 'fixed'
-      if $(window).scrollTop() < 150
+      if $(window).scrollTop() < 120
         @$('#destination-form').removeClass 'fixed'
 
     onClose: ->

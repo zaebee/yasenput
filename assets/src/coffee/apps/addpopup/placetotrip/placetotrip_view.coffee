@@ -266,14 +266,14 @@
       'click .js-show-map': 'showMainMap'
 
     scrollAside: ->
-      if $(window).scrollTop() > 260 and $(window).scrollTop() < 1000
+      if $(window).scrollTop() > 252 and $(window).scrollTop() < 1000
         @$el.parent('#sidebar-region').addClass 'fixed'
-      if $(window).scrollTop() < 260
+      if $(window).scrollTop() < 252
         @$el.parent('#sidebar-region').removeClass 'fixed'
 
     onShow: ->
       scrollAside = _.debounce @scrollAside, 50
-      $(window).on 'scroll.Aside', scrollAside
+      $(window).on 'scroll.Aside', @scrollAside
       @popupwin = @$el.closest '.popupwin'
       @popupwin.on 'scroll.Yapp', =>
         if @$el.length
