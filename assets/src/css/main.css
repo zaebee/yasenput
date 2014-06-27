@@ -7039,22 +7039,8 @@ button[disabled].js-finish {
 }
 #destination-form.fixed {
     position: fixed;
-    top: 14px;
+    top: 8px;
     z-index: 999;
-    left: 62px;
-}
-#destination-form.fixed .select2-choice {
-    width:300px;
-}
-#destination-form.fixed .select2-choice abbr {
-    top: 10px;
-    right: 35px;
-}
-#destination-form.fixed .select2-container .select2-choice > .select2-chosen {
-    margin-right:45px;
-}
-#destination-form.fixed button {
-    display:none;
 }
 #sidebar-toggler {
     position: absolute;
