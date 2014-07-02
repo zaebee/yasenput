@@ -313,3 +313,9 @@
       $(window).off 'scroll.Aside'
       @popupwin.off 'scroll.Yapp'
       @stopListening()
+
+    onRender: ->
+      listHeight = @$('.route-list').height()
+      windowHeight = $(window).height() - 250
+      @$('.route-list').height(if listHeight > windowHeight then windowHeight else listHeight)
+      @$('.route-list').jScrollPane({autoReinitialise:true})
