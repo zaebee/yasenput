@@ -302,6 +302,16 @@
     addPoints: (event) ->
       console.log 'clicked .js-finish'
       event.preventDefault()
+      if not App.addPlaceToTripPopup.currentView
+        spinner = App.buttonSpinner @$('.btn_finish'), 'Сохраняем', @$('.btn_finish')
+        spinner.start()
+        block = @model.toJSON()
+        trip = new App.Entities.Trip
+          name: 'Мое путешествие'
+          blocks: [block]
+          author: App.USER
+        new App.AddPopupApp.Trip.Controller model: trip
+        spinner.stop()
       App.addPlaceToTripPopup.close()
 
     showMainMap: (event) ->

@@ -4392,6 +4392,9 @@ a {
   top: 64px !important;
 }
 .map.open {
+    height: 450px;
+}
+.map_main.open {
     height: 600px;
 }
 .map.open .map-counter {
