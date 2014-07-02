@@ -3690,6 +3690,12 @@ a {
   padding-top: 10px;
   height: 55px;
   background-color: #FFF;
+  z-index: 101;
+}
+.header__filter.fixed {
+    position: fixed;
+    width: 100%;
+    top: 64px
 }
 .header__filter .categories {
   float: left;
@@ -4361,7 +4367,7 @@ a {
 .map_main {
   border-bottom: none;
   margin-bottom: 10px;
-  height: 0;
+  height: 80px;
 }
 .map:before,
 .map:after {
@@ -4387,6 +4393,9 @@ a {
 }
 .map.open {
     height: 450px;
+}
+.map_main.open {
+    height: 600px;
 }
 .map.open .map-counter {
   display: none;
@@ -5999,6 +6008,7 @@ a {
   position: relative;
   float: left;
   margin-right: 10px;
+  margin-bottom: 10px;
   width: 93px;
   height: 93px;
 }
