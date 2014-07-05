@@ -2,7 +2,6 @@
 
 from django.conf.urls import *
 from apps.api.v1.views import *
-from apps.trips.v1.views import *
 from apps.api.v1.comments_v import Comment, CommentDel
 
 urlpatterns = patterns('',
@@ -15,10 +14,14 @@ urlpatterns = patterns('',
     url(r'^points/(?P<id>\d+)/like/', LikePoint.as_view()),
     url(r'^points/(?P<id>\d+)/review/', AddReviewToPoint.as_view()),
 
-    url(r'^trips/$', Trip.as_view()),
-    url(r'^trips/(?P<id>\d+)/$', Trip.as_view()),
-    url(r'^trips/(?P<id>\d+)/like/$', LikeTrip.as_view()),
-    url(r'^trips/(?P<id>\d+)/review/', AddReviewToTrip.as_view()),
+    url(r'^tripblock/$', TripBlocks.as_view()),
+    url(r'^tripblock/(?P<block_id>\d+)/$', TripBlocks.as_view()),
+
+    url(r'^trips/$', AllUserTrips.as_view()),
+    url(r'^trip/$', OneTrip.as_view()),
+    url(r'^trip/(?P<trip_id>\d+)/$', OneTrip.as_view()),
+    url(r'^trip/(?P<trip_id>\d+)/like/$', TripLike.as_view()),
+#    url(r'^trips/(?P<id>\d+)/review/', AddReviewToTrip.as_view()),
     # url(r'^trips/(?P<id>\d+)/blocks/(?P<block_id>\d+)/$', AddBlock.as_view()),
 
     url(r'^route/$', Route.as_view()),
