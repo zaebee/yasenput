@@ -32,6 +32,7 @@ from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
 from apps.serializers.json import Serializer as YpSerialiser
+import apps.trips.v1.options as TripOptions
 import forms as ApiForms
 
 from YasenPut.limit_config import LIMITS
@@ -1391,11 +1392,10 @@ class Trips(View):
             trip.author = person
             trip.save()
 
-            # TODO: спросить как добавляются members
-            #members = params.get('members')
-            #for member in members:
-            #    person = MainModels.Person.objects.get(pk=member)
-            #    trip.members.add(member)
+            members = params.get('members')
+            for member in members:
+                person = MainModels.Person.objects.get(pk=member)
+                trip.members.add(member)
 
             admins = params.get('admins')
             for admin in admins:
@@ -1435,11 +1435,11 @@ class Trips(View):
         if form.is_valid():
             trip = form.save(commit=False)
 
-            # TODO: спросить как добавляются members
-            #members = params.get('members')
-            #for member in members:
-            #    person = MainModels.Person.objects.get(pk=member)
-            #    trip.members.add(member)
+            members = params.get('members')
+            trip.members.remove(*trip.members.all())
+            for member in members:
+                person = MainModels.Person.objects.get(pk=member)
+                trip.members.add(member)
 
             admins = params.get('admins')
             trip.admins.remove(*trip.admins.all())
@@ -1478,6 +1478,21 @@ class Trips(View):
         else:
             return JsonHTTPResponse({"id": trip_id, "status": 403, "message": "Доступ запрещен", "info": "Вы не являетесь автором данного путешествия"})
 
+
+class OneTrip(View):
+    log = logger
+
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        trip = get_object_or_404(TripModels.Trips, pk=kwargs.get("id"))
+        YpJson = YpSerialiser()
+        relations = TripOptions.TripOption.relations.getTripRelation()
+        t0 = time.time()
+        trip = YpJson.serialize([trip], relations=relations)
+        self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, trip.id))
+        return HttpResponse(trip, mimetype="application/json")
+  
  
 class TripLike(View):
     http_method_names = ('post')
@@ -1494,3 +1509,18 @@ class TripLike(View):
         else:
             trip.likeusers.add(request.user)
         return JsonHTTPResponse('like')
+
+
+class OneTripBlock(View):
+    log = logger
+
+    http_method_names = ('get',)
+
+    def get(self, request, *args, **kwargs):
+        block = get_object_or_404(TripModels.Blocks, pk=kwargs.get("id"))
+        YpJson = YpSerialiser()
+        relations = TripOptions.TripOption.relations.getTripRelation()
+        t0 = time.time()
+        block = YpJson.serialize([block], relations=relations)
+        self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, block.id))
+        return HttpResponse(block, mimetype="application/json")
