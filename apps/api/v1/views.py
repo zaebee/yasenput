@@ -1521,6 +1521,8 @@ class OneTripBlock(View):
         YpJson = YpSerialiser()
         relations = TripOptions.TripOption.relations.getTripRelation()
         t0 = time.time()
-        block = YpJson.serialize([block], relations=relations)
+        block = YpJson.serialize([block], 
+                                 fields=["name", "txt", "position", "latitude", "longitude", "address", "ypi"], 
+                                 relations=relations)
         self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, block.id))
         return HttpResponse(block, mimetype="application/json")
