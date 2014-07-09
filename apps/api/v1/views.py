@@ -1269,20 +1269,22 @@ class Event(View):
 
 
 class SafeObjectOperations:
-    # TODO: возможно стоит добавить проверку на тип изменяемого обекта, 
-    # чтоб был списком
     
-    # TODO: обговорить добавление m2m. проверять актуальность добавляемых элементов
-    
-    def add (self, object_for_add, added_content):
+    def add (self, object_for_add, added_content, added_model, error_message):
         if object_for_add and added_content:
             if len(added_content) > 0:
-                object_for_add.add(*added_content)
+                errors = []
+                for content in added_content:
+                    try:
+                        added_model.objects.get(id=content)
+                        object_for_add.add(content)
+                    except:
+                        errors.append(error_message % content)                    
     
-    def update (self, object_for_update, updated_content):
+    def update (self, object_for_update, updated_content, added_model, error_message):
         if object_for_update and updated_content:
             object_for_update.clear()
-            self.add(object_for_update, updated_content)
+            self.add(object_for_update, updated_content, added_model, error_message)
 
     def remove (self, object_for_delete, deleted_content):
         if object_for_delete and deleted_content:
@@ -1324,9 +1326,9 @@ class TripBlocks(View, SafeObjectOperations):
         if form.is_valid():
             block = form.save(commit=True)
 
-            self.add(block.points, params.get('points', None))
-            self.add(block.imgs, params.get('imgs', None))
-            self.add(block.events, params.get('events', None))
+            self.add(block.points, params.get('points', None), MainModels.Points, "ошибка добавления места с id='%s'")
+            self.add(block.imgs, params.get('imgs', None), PhotosModels.Photos, "ошибка добавления изображения с id='%s'")
+            self.add(block.events, params.get('events', None), MainModels.Events, "ошибка добавления события с id='%s'")
             return JsonHTTPResponse({"id": block.id, "status": 201, "message": "Блок путешествий создан", "info": ""})
         else:
             e = form.errors
@@ -1348,10 +1350,10 @@ class TripBlocks(View, SafeObjectOperations):
         errors = []
         if form.is_valid():
             block = form.save(commit=True)
-    
-            self.update(block.points, params.get('points', None))
-            self.update(block.imgs, params.get('imgs', None))
-            self.update(block.events, params.get('events', None))
+
+            self.update(block.points, params.get('points', None), MainModels.Points, "ошибка добавления места с id='%s'")
+            self.update(block.imgs, params.get('imgs', None), PhotosModels.Photos, "ошибка добавления изображения с id='%s'")
+            self.update(block.events, params.get('events', None), MainModels.Events, "ошибка добавления события с id='%s'")
             return JsonHTTPResponse({"id": block.id, "status": 201, "message": "Блок путешествий обновлен", "info": ""})
         else:
             e = form.errors
@@ -1432,10 +1434,10 @@ class OneTrip(View, SafeObjectOperations):
             trip.countmembers = len(params.get('members', {}))
             trip.save()
 
-            self.add(trip.members, params.get('members', None))
-            self.add(trip.admins, params.get('admins', None))
-            self.add(trip.routes, params.get('routes', None))
-            self.add(trip.blocks, params.get('blocks', None))
+            self.add(trip.members, params.get('members', None), MainModels.User, "ошибка добавления участника с id='%s'")
+            self.add(trip.admins, params.get('admins', None), MainModels.User, "ошибка добавления администратора с id='%s'")
+            self.add(trip.routes, params.get('routes', None), MainModels.Routes, "ошибка добавления маршрута с id='%s'")
+            self.add(trip.blocks, params.get('blocks', None), TripModels.Blocks, "ошибка добавления блока с id='%s'")
             return JsonHTTPResponse({"id": trip.id, "status": 201, "message": "путешествие создано", "info": ""})
         else:
             e = form.errors
@@ -1455,10 +1457,10 @@ class OneTrip(View, SafeObjectOperations):
             trip.countmembers = len(params.get('members', {}))
             trip = form.save(commit=True)
 
-            self.update(trip.members, params.get('members', None))
-            self.update(trip.admins, params.get('admins', None))
-            self.update(trip.routes, params.get('routes', None))
-            self.update(trip.blocks, params.get('blocks', None))
+            self.update(trip.members, params.get('members', None), MainModels.User, "ошибка добавления участника с id='%s'")
+            self.update(trip.admins, params.get('admins', None), MainModels.User, "ошибка добавления администратора с id='%s'")
+            self.update(trip.routes, params.get('routes', None), MainModels.Routes, "ошибка добавления маршрута с id='%s'")
+            self.update(trip.blocks, params.get('blocks', None), TripModels.Blocks, "ошибка добавления блока с id='%s'")            
             return JsonHTTPResponse({"id": trip.id, "status": 201, "message": "Путешествие обновлено", "info": ""})
         else:
             e = form.errors
