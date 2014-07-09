@@ -17,7 +17,7 @@ from django.conf import settings
 
 from django_ipgeobase.models import IPGeoBase
 
-#from querysetjoin import QuerySetJoin
+from querysetjoin import QuerySetJoin
 from pymorphy import get_morph
 from annoying.functions import get_object_or_None
 
