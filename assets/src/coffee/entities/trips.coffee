@@ -16,6 +16,8 @@
       position: 1
       name: 'Без названия'
       txt: ''
+    urlRoot: ->
+      App.API_BASE_URL + "/api/v1/tripblock/"
 
 
   class Entities.TripBlocks extends Entities.Collection

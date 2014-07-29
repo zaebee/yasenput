@@ -231,7 +231,7 @@
     addImage: (event) ->
       event.preventDefault()
       @model.trigger 'change:imgs'
-      App.photoPopupRegion.close()
+      @trigger 'modal:close'
 
     onShow: ->
       id = @model.get 'id'
@@ -299,7 +299,7 @@
 
     closeFullscreen: (event) ->
       event.preventDefault()
-      @close()
+      @destroy()
 
     next: (event) ->
       event.preventDefault()

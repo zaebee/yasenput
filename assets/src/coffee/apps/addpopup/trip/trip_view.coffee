@@ -15,8 +15,11 @@
     className: 'trip-step__block trip-step__block_title popupwin__content mb10 clearfix'
 
     events:
-      'blur [name=countmembers]': 'setMembers'
-      'blur [name=price]': 'setPrice'
+      'click .toggle-list__title': 'toggleList'
+      'click .js-add-tour-item': 'addTourItem'
+      'click .js-add-tour-service': 'addTourService'
+      'keypress .js-parse-time': 'keypressTime'
+      'keyup .js-parse-time': 'keyupTime'
       'click .js-back': 'backStep'
       'click .js-finish': 'saveTrip'
 
@@ -24,17 +27,87 @@
       @user = App.request 'get:my:profile'
       @collection = @options.collection
 
-    setMembers: (event) ->
-      event.preventDefault()
-      target = $(event.currentTarget)
-      countmembers = target.val()
-      @model.set countmembers: countmembers
+    onShow: ->
+      _this = @
+      firstDate = ''
+      dateActive = false
+      @$( ".js-datapicker-period" ).datepicker
+        showOn: "both"
+        buttonImage: "/static/images/calendar.png"
+        buttonImageOnly: true
+        dateFormat: 'dd.mm.yy'
+        beforeShow: ->
+          $(this).datepicker( "setDate", null )
+          $('#ui-datepicker-div').addClass('ui-datepicker_period')
+          firstDate = ''
+        onSelect: (dateText, inst) ->
+          inst.inline = true
+          dateActive = true
+          if firstDate isnt ''
+            inst.inline = false
+            dateActive = false
+            if ((parseInt(dateText.split('.')[0]) >= parseInt(firstDate.split('.')[0])) ||
+            (parseInt(dateText.split('.')[1]) > parseInt(firstDate.split('.')[1])) ||
+            (parseInt(dateText.split('.')[2]) > parseInt(firstDate.split('.')[2])))
+              $(this).val(firstDate + ' - ' + dateText)
+            else
+              $(this).val('')
+          firstDate = $(this).val().split(' -')[0]
+        onClose: (date,inst) ->
+          inst.inline = false
+          dateActive = false
 
-    setPrice: (event) ->
+    isNumberKey: (evt) ->
+      charCode = if evt.which then evt.which else event.keyCode
+      if charCode > 31 && (charCode < 48 || charCode > 57)
+        return false
+      return true
+
+    keypressTime: (evt) ->
+      $target = $(evt.currentTarget)
+      if @isNumberKey(evt) and ($target.val().length < 5 )
+        return true
+      return false
+
+    keyupTime: (evt) ->
+      $target = $(evt.currentTarget)
+      val = $target.val()
+      charCode = if evt.which then evt.which else event.keyCode
+
+      if (charCode != 8)&&(val.length == 2)
+        $target.val($target.val() + ':')
+
+    toggleList: (event) ->
       event.preventDefault()
-      target = $(event.currentTarget)
-      price = target.val()
-      @model.set price: price
+      console.log event
+      $target = $(event.currentTarget)
+      if $target.hasClass('active')
+        $target.removeClass('active')
+        $target.siblings('.toggle-list__body').slideUp()
+          .find('input, textarea')
+          .addClass('disabled')
+          .prop('disabled', true)
+        $target.find('.check-wrap input').prop('checked', false)
+      else
+        @$('.toggle-list__title').removeClass('active')
+        @$('.toggle-list__body').slideUp()
+          .find('input, textarea')
+          .addClass('disabled')
+          .prop('disabled', true)
+        $target.addClass('active')
+        $target.siblings('.toggle-list__body').slideDown()
+          .find('input, textarea')
+          .removeClass('disabled')
+          .prop('disabled', false)
+        $target.find('.check-wrap input').prop('checked', 'checked')
+
+    addTourItem: (event) ->
+      console.log event
+      event.preventDefault()
+
+    addTourService: (event) ->
+      console.log event
+      event.preventDefault()
 
     backStep: (event) ->
       event.preventDefault()
@@ -56,7 +129,7 @@
         success: =>
           localStorage.removeItem "trip/#{@model.cid}"
           @spinner.stop()
-          App.addTripPopup.close()
+          App.addTripPopup.empty()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
           App.BoardApp.board.yapens.add @model, at:1
@@ -139,9 +212,6 @@
     setTripDescription: (event) ->
       @model.set description: $('.form__field_description textarea').val()
 
-    onShow: ->
-      return
-
     onClose: ->
       @stopListening()
 
@@ -188,7 +258,7 @@
         success: =>
           localStorage.removeItem "trip/#{@model.cid}"
           @spinner.stop()
-          App.addTripPopup.close()
+          App.addTripPopup.empty()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
           App.BoardApp.board.yapens.add @model, at:0
@@ -376,7 +446,7 @@
 
 
   class Trip.Blocks extends App.Views.CollectionView
-    itemView: Trip.BlockItem
+    childView: Trip.BlockItem
     className: 'trip-blocks'
 
     collectionEvents: ->

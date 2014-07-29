@@ -87,7 +87,7 @@
   width: 17px;
   height: 17px;
   opacity: 0.75;
-  background: url(/static/images/sprite.png) no-repeat -406px 0px;
+  background: url(/static/images/sprite.png) no-repeat -410px 0px;
 
   -webkit-transition: opacity 150ms linear;
   -moz-transition: opacity 150ms linear;

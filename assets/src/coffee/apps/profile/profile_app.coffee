@@ -40,6 +40,14 @@
       App.headerRegion.$el.removeClass 'header_small'
       App.headerRegion.currentView.dashboardRegion.$el.addClass 'hide'
 
+  App.vent.on 'show:sidebar:region', () ->
+    App.sidebarRegion.$el.addClass 'active'
+    App.sidebarRegion.$el.removeClass 'hide'
+
+  App.vent.on 'hide:sidebar:region', () ->
+    App.sidebarRegion.$el.removeClass 'active'
+    App.sidebarRegion.$el.addClass 'hide'
+
   App.addInitializer ->
     App.router.processAppRoutes API,
       appRoutes

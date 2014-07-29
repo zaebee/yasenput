@@ -122,7 +122,7 @@
       console.log event
 
   class List.Yapens extends App.Views.CollectionView
-    itemView: List.Yapen
+    childView: List.Yapen
     className: 'content'
     id: 'grid'
 
@@ -132,15 +132,10 @@
     itemViewOptions: () ->
       editable: !!App.settings.user
 
-    onAfterItemAdded: (itemView, data) ->
+    onAddChild: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
         @wall.reloadItems()
-
-    onCollectionRendered: ->
-      App.execute 'when:fetched', @collection, =>
-        console.log 'collection rendered. We rebuild masonry layout'
-        @wall.reloadItems() & @wall.layout() if @wall
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>

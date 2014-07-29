@@ -45,6 +45,7 @@ module.exports = function(grunt) {
             'src/css/media.css',
             'src/css/photoview.css',
             'src/css/bootstrap.css',
+            'src/css/diff.css',
             'src/css/fancybox/jquery.fancybox.css'
           ],
           'debug/js/application.js': [
@@ -86,6 +87,7 @@ module.exports = function(grunt) {
             'src/css/media.css',
             'src/css/photoview.css',
             'src/css/bootstrap.css',
+            'src/css/diff.css',
             'src/css/fancybox/jquery.fancybox.css'
           ],
           'debug/js/application.js': [

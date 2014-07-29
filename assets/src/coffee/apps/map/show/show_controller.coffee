@@ -4,12 +4,12 @@
 
     initialize: ->
       console.log 'initialize MapApp.Show.Controller'
-      @collection = App.request 'get:all:yapens'
+      #@collection = App.request 'get:all:yapens'
       @tripyapens = new App.Entities.YapensCollection
       @layout = @getLayoutView()
-      @listenTo @layout, 'show', =>
-        @showMapView()
-      @showAside()
+      #@listenTo @layout, 'show', =>
+        #@showMapView()
+      #@showAside()
       #@show @layout,
       #  region: App.mapRegion
 

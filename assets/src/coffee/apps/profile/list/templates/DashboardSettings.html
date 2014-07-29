@@ -1,8 +1,8 @@
 {{#if change}}
 <div class="dashboard-change clearfix">
   <div class="picture">
-    <img src="{{icon}}" alt="" class="img">
-    <img src="{{icon_small}}" alt="" class="img">
+    <img src="{{icon}}" alt="{{first_name}} {{last_name}}" class="img">
+    <img src="{{icon_small}}" alt="{{first_name}} {{last_name}}" class="img">
   </div>
   <div class="btns btns_picture">
     <a href="#?" class="btn btn_color_green" onclick="document.getElementById('uploadAvatar').click();return false;">Сменить автар</a>
@@ -49,7 +49,7 @@
     <input name="city" type="text" placeholder="Например: Вологда" value="{{city}}">
   </div>
   <div class="form__field form__field__control">
-    <a href="#?" class="btn btn_color_blue save-settings">Сохранить</a><br>
+    <button class="btn btn_color_blue save-settings">Сохранить</button><br>
   </div>
 </div>
 <!--

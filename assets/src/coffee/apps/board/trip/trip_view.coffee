@@ -95,18 +95,94 @@
       @popupwin.off 'scroll'
 
 
-  class Trip.Blocks extends App.Views.ItemView
+  class Trip.BlockItem extends App.Views.Layout
     template: 'TripBlock'
-    className: 'popupwin__blocks'
-    modelEvents:
-      'change': 'render onShow'
+    className: 'popupwin__blocks mb10'
+
+    initialize: ->
+      @addRegions
+        blockImgsRegion: "#blockitem-imgs-region-#{@model.cid}"
+        blockDescRegion: "#blockitem-description-region-#{@model.cid}"
+
     events:
       'click .link.c-place': 'showPointPopup'
+      'click .js-add-place': 'addPlace'
       'click .js-map-close': 'mapClose'
       'click .js-map-open': 'mapOpen'
 
+    templateHelpers: ->
+      cid: @model.cid
+
+    onShow: ->
+      imgsView = new Trip.BlockImgs model: @model
+      descView = new Trip.BlockDesc model: @model
+      @blockImgsRegion.show imgsView
+      @blockDescRegion.show descView
+      @initMap()
+
+    addPlace: (event) ->
+      event.preventDefault()
+      App.vent.trigger 'show:add:placetotrip:popup', @model
+
+    showPointPopup: (event) ->
+      event.preventDefault()
+      console.log event
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
+    initMap: ->
+      if App.ymaps is undefined
+        return
+      App.ymaps.ready =>
+        @geoMap = @geoMap or new App.ymaps.Map "map#{@model.get('position')}",
+          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
+          zoom: 12
+        , autoFitToViewport: 'always'
+
+        @geoCollection = new App.ymaps.GeoObjectCollection
+        if @model.get 'address'
+          @geoCollection.add @model.placemark
+          @geoMap.setCenter([@model.get('latitude'), @model.get('longitude')], 12)
+        points = @model.get 'points'
+        _.each points, (point) =>
+          placemark = new App.ymaps.Placemark [point.latitude, point.longitude],{}, {
+            iconImageClipRect: [[80,0], [112, 36]], ## TODO fix hardcoded tag icons
+            iconImageHref: '/static/images/sprite-baloon.png',
+            iconImageSize: [32, 36]
+          }
+          @geoCollection.add placemark
+          @geoMap.setCenter([point.latitude, point.longitude], 12)
+        @geoMap.controls.add('zoomControl')
+        @geoMap.geoObjects.add @geoCollection
+
+    mapClose: (event) ->
+      event.preventDefault()
+      @$('.map').removeClass 'open'
+
+    mapOpen: (event) ->
+      event.preventDefault()
+      @$('.map').addClass 'open'
+
+
+  class Trip.Blocks extends App.Views.CollectionView
+    childView: Trip.BlockItem
+    className: 'trip-blocks'
+
+
+  class Trip.BlockDesc extends App.Views.ItemView
+    template: 'TripBlockDesc'
+    className: 'description'
+    modelEvents:
+      'change': 'render'
+
+
+  class Trip.BlockImgs extends App.Views.ItemView
+    template: 'TripBlockPhoto'
+    className: 'slider'
+    modelEvents:
+      'change:imgs': 'onShow'
+
     initialize: ->
-      console.log @model
       @bxPagerInit = ->
         @$('.bx-pager').each ->
           $this = $(this)
@@ -117,62 +193,25 @@
           $(this).find('.bx-pager__viewport').scrollLeft(0)
 
     onShow: ->
-      @bxPagerInit()
-      _.each @model.get('blocks'), (block) =>
-        if block.address
-          @setPlacemark block
-        if not block.imgs.length
-          return
-        @$('.bxslider-trip-' + block.position).bxSlider
-          pagerCustom: '#bx-pager-' + block.position
-          onSliderLoad: =>
-            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft(-100)
-
-          onSlideNext: ($slideElement, oldIndex, newIndex) =>
-            coordX = @$('#bx-pager-' + block.position + ' .bx-pager__scrollbox .active')
-              .position().left + @$('#bx-pager-' + block.position + ' .bx-pager__item')
-              .outerWidth(true)
-            @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft coordX
-            if @$('#bx-pager-' + block.position + ' .bx-pager__item:first-child').index() is newIndex
-              @$('#bx-pager-' + block.position + ' .bx-pager__viewport').scrollLeft 0
-
-          onSlidePrev: ($slideElement, oldIndex, newIndex) =>
-            coordX = @$('#bx-pager-' + block.position + ' .bx-pager__scrollbox .active')
-              .position().left - @$('#bx-pager .bx-pager__item')
-              .outerWidth(true)
-            @$("#bx-pager-#{block.position} .bx-pager__viewport").scrollLeft coordX
-            if @$('#bx-pager-' + block.position + ' .bx-pager__item:last-child').index() is newIndex
-              @$('#bx-pager' + block.position + ' .bx-pager__viewport').scrollLeft $('#bx-pager-' + block.position + ' .bx-pager__viewport').width()
-
-    showPointPopup: (event) ->
-      event.preventDefault()
-      console.log event
-      url = $(event.currentTarget).attr 'href'
-      App.navigate url, true
-
-    setPlacemark: (block) ->
-      model = new App.Entities.TripBlock block
-      if App.ymaps is undefined
+      if not @model.get('imgs').length
         return
-      App.ymaps.ready =>
-        geoMap = new App.ymaps.Map "map#{block.position}",
-          center: [App.ymaps.geolocation.latitude, App.ymaps.geolocation.longitude]
-          zoom: 12
-          controls : ['zoomControl']
-        , autoFitToViewport: 'always'
-        geoMap.geoObjects.add model.placemark
-        geoMap.setCenter [block.latitude, block.longitude], 12
-        geoMap.controls.add('zoomControl')
+      @bxPagerInit()
+      sliderPlace = @$('.bxslider').bxSlider
+        pagerCustom: '.bx-pager'
+        onSliderLoad: =>
+          @$('.bx-pager .bx-pager__viewport').scrollLeft(-100)
 
-    mapClose: (event) ->
-      event.preventDefault()
-      $target = $(event.currentTarget)
-      $target.parent().removeClass 'open'
+        onSlideNext: ($slideElement, oldIndex, newIndex) =>
+          coordX = @$('.bx-pager .bx-pager__scrollbox .active').position().left + @$('.bx-pager .bx-pager__item').outerWidth(true)
+          @$('.bx-pager .bx-pager__viewport').scrollLeft coordX
+          if @$('.bx-pager .bx-pager__item:first-child').index() is newIndex
+            @$('.bx-pager .bx-pager__viewport').scrollLeft 0
 
-    mapOpen: (event) ->
-      event.preventDefault()
-      $target = $(event.currentTarget)
-      $target.parent().addClass 'open'
+        onSlidePrev: ($slideElement, oldIndex, newIndex) =>
+          coordX = @$('.bx-pager .bx-pager__scrollbox .active').position().left - @$('.bx-pager .bx-pager__item').outerWidth(true)
+          @$('.bx-pager .bx-pager__viewport').scrollLeft coordX
+          if @$('.bx-pager .bx-pager__item:last-child').index() is newIndex
+            @$('.bx-pager .bx-pager__viewport').scrollLeft $('.bx-pager .bx-pager__viewport').width()
 
 
   class Trip.Comments extends App.Views.ItemView
@@ -277,7 +316,7 @@
             cont_type: 'trip'
           successCallback: (result) ->
             console.log result
-            App.orderRoutePopup.close()
+            App.orderRoutePopup.empty()
             App.vent.trigger 'show:info:popup', 'Спасибо, вам перезвонят для уточнения информации'
       else
         return

@@ -199,7 +199,7 @@
 
 
   class PlaceToTrip.Grid extends App.Views.CollectionView
-    itemView: PlaceToTrip.GridItem
+    childView: PlaceToTrip.GridItem
     className: 'route-grid'
     id: 'trip-grid'
 
@@ -312,7 +312,7 @@
           author: App.USER
         new App.AddPopupApp.Trip.Controller model: trip
         spinner.stop()
-      App.addPlaceToTripPopup.close()
+      App.addPlaceToTripPopup.empty()
 
     showMainMap: (event) ->
       event.preventDefault()

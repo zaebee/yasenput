@@ -285,7 +285,7 @@
 
     showPopup: (event) ->
       event.preventDefault()
-      App.addPopupRegion.close()
+      App.addPopupRegion.empty()
       url = $(event.currentTarget).attr 'href'
       if not @user.get 'authorized'
         App.vent.trigger 'show:login:popup'
