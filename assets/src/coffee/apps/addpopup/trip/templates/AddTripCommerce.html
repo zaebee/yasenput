@@ -49,16 +49,16 @@
               <div class="form__item-wrap">
                 <div class="form__item form__item_date">
                   <label>Дата проведения:</label>
-                  <input name="personal_date" type="text" class="js-datapicker-period input-date" placeholder="дд.мм.гггг">
+                  <input type="text" class="js-datapicker-period input-date" placeholder="дд.мм.гггг">
                 </div>
                 <label class="label-start">Время начала</label>
                 <div class="form__item form__item_start">
                   <label>от</label>
-                  <input name="personal_time_start" type="text" class="input-time-from js-parse-time" placeholder="00:00">
+                  <input type="text" class="input-start js-parse-time" placeholder="00:00">
                 </div>
                 <div class="form__item form__item_start">
                   <label>до</label>
-                  <input name="personal_time_end" type="text" class="input-time-to js-parse-time" placeholder="00:00">
+                  <input type="text" class="input-end js-parse-time" placeholder="00:00">
                 </div>
               </div>
               <button class="btn btn_color_green js-add-tour-item">Добавить</button>
@@ -72,11 +72,11 @@
               <div class="form__item-wrap">
                 <div class="form__item form__item_service">
                   <label>Наименование услуги:</label>
-                  <textarea name="personal_additional_name"></textarea>
+                  <textarea></textarea>
                 </div>
                 <div class="form__item form__item_service-price">
                   <label>Цена за услугу:</label>
-                  <input name="personal_additional_price" type="text">
+                  <input type="text">
                   <span class="rouble">o</span>
                 </div>
               </div>
@@ -101,26 +101,26 @@
             <div class="form__field">
               <div class="form__item form__item_men-count">
                 <label>Макс. кол-во человек:</label>
-                <input name="countmembers" value="{{countmembers}}" type="text">
+                <input name="group_max_people" value="{{countmembers}}" type="text">
               </div>
               <div class="form__item form__item_price">
                 <label>Цена за человека:</label>
-                <input name="price" value="{{price}}" type="text">
+                <input name="group_price_tour" value="{{price}}" type="text">
                 <span class="rouble">o</span>
               </div>
             </div>
             <div class="form__field">
               <label>Продолжительность тура:</label>
               <div class="form__item form__item_time">
-                <input name="duration_days" value="{{duration_days}}" type="text">
+                <input name="group_dur_days" value="{{duration_days}}" type="text">
                 <label>дней</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="duration_hours" value="{{duration_hours}}" type="text">
+                <input name="group_dur_hours" value="{{duration_hours}}" type="text">
                 <label>часов</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="duration_minutes" value="{{duration_minutes}}" type="text">
+                <input name="group_dur_minutes" value="{{duration_minutes}}" type="text">
                 <label>минут</label>
               </div>
             </div>
@@ -135,7 +135,7 @@
                   <input type="text" class="input-start js-parse-time" placeholder="00:00">
                 </div>
               </div>
-              <a href="#?" class="btn btn_color_green js-add-tour-item">Добавить</a>
+              <a href="#" class="btn btn_color_green js-add-tour-item">Добавить</a>
             </div>
             <div class="form__field">
               <div class="subtitle">
@@ -154,7 +154,7 @@
                   <span class="rouble">o</span>
                 </div>
               </div>
-              <a href="#?" class="btn btn_color_green js-add-tour-service">Добавить</a>
+              <a href="#" class="btn btn_color_green js-add-tour-service">Добавить</a>
             </div>
           </div>
         </form>
