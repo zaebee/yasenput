@@ -11,7 +11,11 @@
     <div class="toggle-list__item">
       <div class="toggle-list__title">
         <label class="check-wrap">
+          {{#if summary_info.personal.personal_price_tour}}
+          <input type="checkbox" class="check-wrap__input" checked="">
+          {{else}}
           <input type="checkbox" class="check-wrap__input">
+          {{/if}}
           <span class="check-wrap__icon"></span>
         </label>
         Индивидуальный тур
@@ -22,26 +26,26 @@
             <div class="form__field">
               <div class="form__item form__item_men-count">
                 <label>Макс. кол-во человек:</label>
-                <input name="personal_max_people" type="text">
+                <input name="personal_max_people" type="text" value="{{summary_info.personal.personal_max_people}}">
               </div>
               <div class="form__item form__item_price">
                 <label>Цена за тур:</label>
-                <input name="personal_price_tour" type="text">
+                <input name="personal_price_tour" type="text" value="{{summary_info.personal.personal_price_tour}}">
                 <span class="rouble">o</span>
               </div>
             </div>
             <div class="form__field">
               <label>Продолжительность тура:</label>
               <div class="form__item form__item_time">
-                <input name="personal_dur_days" type="text">
+                <input name="personal_dur_days" type="text" value="{{summary_info.personal.personal_dur_days}}">
                 <label>дней</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="personal_dur_hours" type="text">
+                <input name="personal_dur_hours" type="text" value="{{summary_info.personal.personal_dur_hours}}">
                 <label>часов</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="personal_dur_minutes" type="text">
+                <input name="personal_dur_minutes" type="text" value="{{summary_info.personal.personal_dur_minutes}}">
                 <label>минут</label>
               </div>
             </div>
@@ -63,6 +67,14 @@
               </div>
               <button class="btn btn_color_green js-add-tour-item">Добавить</button>
             </div>
+            {{#each summary_info.personal.personal_date}}
+            <div class="form__field form__field_tour">
+              <span class="date">{{orderDate 'date' this}}</span>
+              <span class="time"> c {{orderDate 'start' this}} до {{orderDate 'end' this}}</span>
+              <input name="personal_date" type="hidden" value="{{this}}">
+              <a href="#" class="close js-delete-field"></a>
+            </div>
+            {{/each}}
             <div class="form__field">
               <div class="subtitle">
                 Добавьте дополнительные услуги
@@ -82,6 +94,14 @@
               </div>
               <button class="btn btn_color_green js-add-tour-service">Добавить</button>
             </div>
+            {{#each summary_info.personal.additional}}
+            <div class="form__field form__field_service">
+              <span class="service">{{orderService 'name' this}}</span>
+              <span class="price">{{orderService 'price' this}} <span class="rouble">o</span></span>
+              <input name="additional" type="hidden" value="{{this}}">
+              <a href="#" class="close js-delete-field"></a>
+            </div>
+            {{/each}}
           </div>
         </form>
       </div>
@@ -90,7 +110,11 @@
     <div class="toggle-list__item">
       <div class="toggle-list__title">
         <label class="check-wrap">
+          {{#if summary_info.group.group_price_tour}}
+          <input type="checkbox" class="check-wrap__input" checked="">
+          {{else}}
           <input type="checkbox" class="check-wrap__input">
+          {{/if}}
           <span class="check-wrap__icon"></span>
         </label>
         Групповой тур
@@ -101,26 +125,26 @@
             <div class="form__field">
               <div class="form__item form__item_men-count">
                 <label>Макс. кол-во человек:</label>
-                <input name="group_max_people" value="{{countmembers}}" type="text">
+                <input name="group_max_people" value="{{summary_info.group.group_max_people}}" type="text">
               </div>
               <div class="form__item form__item_price">
                 <label>Цена за человека:</label>
-                <input name="group_price_tour" value="{{price}}" type="text">
+                <input name="group_price_tour" value="{{summary_info.group.group_price_tour}}" type="text">
                 <span class="rouble">o</span>
               </div>
             </div>
             <div class="form__field">
               <label>Продолжительность тура:</label>
               <div class="form__item form__item_time">
-                <input name="group_dur_days" value="{{duration_days}}" type="text">
+                <input name="group_dur_days" value="{{summary_info.group.group_dur_days}}" type="text">
                 <label>дней</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="group_dur_hours" value="{{duration_hours}}" type="text">
+                <input name="group_dur_hours" value="{{summary_info.group.group_dur_hours}}" type="text">
                 <label>часов</label>
               </div>
               <div class="form__item form__item_time">
-                <input name="group_dur_minutes" value="{{duration_minutes}}" type="text">
+                <input name="group_dur_minutes" value="{{summary_info.group.group_dur_minutes}}" type="text">
                 <label>минут</label>
               </div>
             </div>
@@ -137,6 +161,14 @@
               </div>
               <a href="#" class="btn btn_color_green js-add-tour-item">Добавить</a>
             </div>
+            {{#each summary_info.group.group_date}}
+            <div class="form__field form__field_tour">
+              <span class="date">{{orderDate 'date' this}}</span>
+              <span class="time"> c {{orderDate 'start' this}}</span>
+              <input name="personal_date" type="hidden" value="{{this}}">
+              <a href="#" class="close js-delete-field"></a>
+            </div>
+            {{/each}}
             <div class="form__field">
               <div class="subtitle">
                 Добавьте дополнительные услуги
@@ -156,6 +188,14 @@
               </div>
               <a href="#" class="btn btn_color_green js-add-tour-service">Добавить</a>
             </div>
+            {{#each summary_info.group.additional}}
+            <div class="form__field form__field_service">
+              <span class="service">{{orderService 'name' this}}</span>
+              <span class="price">{{orderService 'price' this}} <span class="rouble">o</span></span>
+              <input name="additional" type="hidden" value="{{this}}">
+              <a href="#" class="close js-delete-field"></a>
+            </div>
+            {{/each}}
           </div>
         </form>
       </div>

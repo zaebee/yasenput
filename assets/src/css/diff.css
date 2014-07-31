@@ -38,9 +38,6 @@
   max-height: 1022px;
   overflow: hidden;
 }
-textarea:focus {
-    background:#fff;
-}
 .place-step_name {
     display: block;
 }
@@ -597,10 +594,6 @@ button[disabled].js-finish {
     position:relative;
 }
 
-.dashboard-settings input:focus {
-    background:#fff;
-};
-
 .user_in_popup{
     width: 200px;
 }
@@ -733,3 +726,15 @@ input[disabled],
 textarea[disabled] {
     background: #eee !important;
 }
+
+textarea:focus,
+input:focus,
+.dashboard-settings input:focus {
+    background-color:#fff !important;
+}
+
+.popupwin_order-route .additional {
+    margin: 0 0 20px 0;
+}
+.popupwin_order-route .finish-price {
+    margin: 0;

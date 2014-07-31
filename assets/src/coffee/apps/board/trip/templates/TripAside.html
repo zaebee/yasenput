@@ -38,10 +38,27 @@
   </ul>
 </div>
 --><!-- class="route-list" -->
-{{#if price}}
-<div class="route-aside-commercial popupwin__content trip_aside" {{#ifCond price '!=' 0}}style="display:block;"{{/ifCond}}>
-  <div class="price">{{toFixed price 0}} <span class="sprite-ruble-green-big"></span></div>
-  <div class="text"> Цена экскурсии вместе с <a href="#?">{{author.first_name}}</a></div>
-  <a href="#?" class="btn btn_color_blue js-popup-order-route">ЗАКАЗАТЬ</a>
+{{#ifOrderHasPrice summary_info}}
+<div class="route-aside-commercial popupwin__content">
+  {{#if summary_info.personal.personal_price_tour}}
+  Индивидуальный тур:
+  <div class="price">{{summary_info.personal.personal_price_tour}} <span class="sprite-ruble-green-big"></span></div>
+  {{#with summary_info.personal}}
+  <div class="duration">{{duration personal_dur_days personal_dur_hours personal_dur_minutes}}</div>
+  {{/with}}
+  {{/if}}
+  {{#if summary_info.group.group_price_tour}}
+  Групповой тур:
+  <div class="price">{{summary_info.group.group_price_tour}} <span class="sprite-ruble-green-big"></span> / чел</div>
+  {{#with summary_info.group}}
+  <div class="duration">{{duration group_dur_days group_dur_hours group_dur_minutes}}</div>
+  {{/with}}
+  {{/if}}
+  <div class="text">Цена данной экскурсии вместе с <a href="#?">{{author.first_name}} {{author.last_name}}</a></div>
+  <a href="#" class="btn btn_color_blue js-popup-order-route">Сделать заказ</a>
+  <!--
+  <div class="separator">или</div>
+  <a href="#" class="btn btn_color_yel js-popup-order-route">Связаться с гидом</a>
+  -->
 </div>
-{{/if}}
+{{/ifOrderHasPrice}}

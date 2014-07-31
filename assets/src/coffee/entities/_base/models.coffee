@@ -41,7 +41,6 @@
       if not response.unid and response.id
         response.unid = response.id
       if response.summary_info
-        console.log response.summary_info
         response.summary_info = JSON.parse response.summary_info
       response
 

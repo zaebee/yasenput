@@ -129,7 +129,7 @@
     getEmptyView: ->
       App.HeaderApp.Show.PopupAdd
 
-    itemViewOptions: () ->
+    childViewOptions: () ->
       editable: !!App.settings.user
 
     onAddChild: (itemView, data) ->

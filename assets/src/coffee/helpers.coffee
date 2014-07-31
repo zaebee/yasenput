@@ -63,6 +63,21 @@ Handlebars.registerHelper('dateFormat', (context, options) ->
 )
 
 
+Handlebars.registerHelper("duration", (days, hours, minutes, options) ->
+  result = []
+  if window.moment
+    if days
+      result.push  moment.duration({days: days}).humanize()
+    if hours
+      result.push  moment.duration({hours: hours}).humanize()
+    if minutes
+      result.push  moment.duration({minutes: minutes}).humanize()
+    return result.join ' '
+  else
+    return result.join ' ' #dateformat plugin nut available. return data as is.
+)
+
+
 ## it iterate throgh array of keys that represented as string
 Handlebars.registerHelper('eachKey', (keysArray, options)->
   ret = ""
@@ -77,7 +92,6 @@ Handlebars.registerHelper('eachKey', (keysArray, options)->
 Handlebars.registerHelper('splitAddr', (str, limiter, options)->
   str = str.split limiter
   str[2]
-  #new Handlebars.SafeString "#{strBegin}&shy;#{strEnd}"
 )
 
 
@@ -123,3 +137,32 @@ Handlebars.registerHelper "plus", (lvalue, rvalue, options) ->
 Handlebars.registerHelper "toFixed", (lvalue, rvalue, options) ->
   lvalue = parseFloat(lvalue)
   lvalue.toFixed rvalue
+
+Handlebars.registerHelper "orderService", (option, arg, options) ->
+  if option is 'name'
+    result = arg.split(';')[0]
+  else
+    result = arg.split(';')[1]
+  result
+
+Handlebars.registerHelper "orderDate", (option, arg, options) ->
+  if option is 'date'
+    result = arg.split(';')[0]
+  if option is 'start'
+    result = arg.split(';')[1]
+  if option is 'end'
+    result = arg.split(';')[2]
+  result
+
+Handlebars.registerHelper "ifOrderHasPrice", (summary_info, options) ->
+  if _.has(summary_info, 'personal') or _.has(summary_info, 'group')
+    if _.has(summary_info.personal, 'personal_price_tour') or _.has(summary_info.group, 'group_price_tour')
+      return options.fn @
+  return options.inverse @
+
+Handlebars.registerHelper "optionRange", (count, options) ->
+  range = _.range 1, parseInt(count, 10) + 1
+  result = _.reduce range, (sum, i) ->
+    sum + "<option value='#{i}'>#{i}</option>"
+  , ''
+  new Handlebars.SafeString result
