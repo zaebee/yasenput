@@ -411,7 +411,7 @@
       else
         @ui.email.parent().addClass 'error'
 
-      if @$('.js-tour-personal').hasClass 'btn_color_blue'
+      if !@$('.personal-tour').hasClass 'hide'
         data = @$('#orderPersonalTour').serializeArray()
         date = @$('.js-datapicker-personal').val()
         if date

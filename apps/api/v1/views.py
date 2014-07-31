@@ -270,7 +270,6 @@ class ItemsList(PointsBaseView):
         price = "$"
         duration = "$"
         models = ['points','routes','events','trips']
-        #models = ['trips']
 
         search_res_points = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
         none_qs = MainModels.Points.search.none()
