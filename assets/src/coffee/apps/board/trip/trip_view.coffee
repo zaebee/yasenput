@@ -411,7 +411,7 @@
       else
         @ui.email.parent().addClass 'error'
 
-      if !@$('.personal-tour').hasClass 'hide'
+      if @$('.personal-tour').length and !@$('.personal-tour').hasClass 'hide'
         data = @$('#orderPersonalTour').serializeArray()
         date = @$('.js-datapicker-personal').val()
         if date
@@ -419,7 +419,7 @@
           $('.js-datapicker-group').closest('.field').removeClass('error')
         else
           $('.js-datapicker-personal').closest('.field').addClass('error')
-      if !@$('.group-tour').hasClass 'hide'
+      if @$('.group-tour').length and !@$('.group-tour').hasClass 'hide'
         data = @$('#orderGroupTour').serializeArray()
         date = @$('.js-datapicker-group').val()
         if date
