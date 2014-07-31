@@ -20,7 +20,7 @@
 }
 .dz-preview .dz-details.main-image:before,
 .dz-preview .dz-details:before {
-  content: 'Сделать главной';
+  content: '';
   display: none;
   position: absolute;
   top: 0;
@@ -58,18 +58,7 @@
     display:block;
 }
 .dz-preview .dz-remove {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 5;
-  background: url(../images/sprite.png) no-repeat;
-  display: inline-block;
-  background-position: -128px -347px;
-  width: 15px;
-  height: 15px;
-  text-indent: -9999px;
-  cursor: pointer;
-  display: none;
+  background-position: -281px -376px;
 }
 .dz-preview.dz-processing {
   width: 90px;
@@ -104,6 +93,7 @@
 .dz-preview.dz-image-preview .dz-progress {
     position: relative;
     margin-top: 3px;
+    width: 90px;
 }
 .dz-preview.dz-success .dz-progress {
     display:none;
@@ -115,7 +105,7 @@
   background-color: #64CBB6;
 }
 .dz-preview.dz-processing .dz-details {
-  /*float: right;*/
+  float: none;
   margin-right: 30px;
   width: 90px;
   overflow: hidden;
@@ -132,17 +122,15 @@
   display: block;
 }
 .dz-preview.dz-processing .dz-remove {
-    /*
   background: url(../images/sprite.png) no-repeat;
   display: inline-block;
-  background-position: -407px -118px;
-  width: 10px;
-  height: 10px;
+  background-position: -281px -376px;
+  width: 15px;
+  height: 15px;
   position: absolute;
   top: 5px;
-  right: 14px;
+  right: 5px;
   text-indent: -9999px;
-  */
 }
 
 .dropzone {
