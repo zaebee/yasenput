@@ -536,6 +536,9 @@
 .field__input-map.error input {
     border: 1px solid #EA5854 !important;
 }
+.btn {
+    letter-spacing: 0 !important;
+}
 button.btn,
 button.js-finish,
 button.js-next {
@@ -738,3 +741,7 @@ input:focus,
 }
 .popupwin_order-route .finish-price {
     margin: 0;
+}
+.place-info .user {
+    letter-spacing: 0;
+}

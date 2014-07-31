@@ -180,7 +180,8 @@
       data =
         personal: personal_data
         group: group_data
-      console.log data
+      price = personal_data.personal_price_tour or group_data.group_price_tour
+      @model.set price: price, {silent:true}
       @model.set summary_info: JSON.stringify(data), {silent:true}
 
     backStep: (event) ->
