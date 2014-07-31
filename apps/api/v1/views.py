@@ -1269,7 +1269,7 @@ class Event(View):
 
 
 class SafeObjectOperations:
-    
+
     def add (self, object_for_add, added_content, added_model, errors, error_message):
         if object_for_add and added_content:
             if len(added_content) > 0:
@@ -1279,7 +1279,7 @@ class SafeObjectOperations:
                         object_for_add.add(content)
                     except:
                         errors.append(error_message % content)
-    
+
     def update (self, object_for_update, updated_content, added_model, errors, error_message):
         if object_for_update and updated_content:
             object_for_update.clear()
@@ -1296,14 +1296,14 @@ class TripBlocks(View, SafeObjectOperations):
 
     def get(self, request, block_id=0):
         if not block_id:
-            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Некорректный запрос", "info": u"Отсутствует 'id'"}) 
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Некорректный запрос", "info": u"Отсутствует 'id'"})
 
         block = get_object_or_404(TripModels.Blocks, pk=block_id)
         YpJson = YpSerialiser()
         relations = TripOptions.TripOption.relations.getTripRelation()
         t0 = time.time()
-        block = YpJson.serialize([block], 
-                                 fields=["name", "txt", "position", "latitude", "longitude", "address", "ypi"], 
+        block = YpJson.serialize([block],
+                                 fields=["name", "txt", "position", "latitude", "longitude", "address", "ypi"],
                                  relations=relations)
         self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, block_id))
         return HttpResponse(block, mimetype="application/json")
@@ -1311,17 +1311,17 @@ class TripBlocks(View, SafeObjectOperations):
     def post(self, request, block_id=0):
         if not request.user.is_authenticated():
             return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
-        
+
         user = request.user
         params = request.POST.copy()
         if block_id:
             return self.update_block(params, user, block_id)
         else:
             return self.add_block(params)
-        
+
     def add_block(self, params):
-        errors = []       
-        form = ApiForms.AddBlockForm(params)           
+        errors = []
+        form = ApiForms.AddBlockForm(params)
         if form.is_valid():
             block = form.save(commit=True)
 
@@ -1334,14 +1334,14 @@ class TripBlocks(View, SafeObjectOperations):
             for er in e:
                 errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
-        
+
     def is_user_block(self, user, block_id):
         auth_block = TripModels.Trips.objects.filter(Q(blocks__id__contains=block_id) & (Q(author__username=user) | Q(admins__username=user)))
         return auth_block.count() > 0
-    
+
     def update_block(self, params, user, block_id):
         trips_block = get_object_or_404(TripModels.Blocks, pk=block_id)
-                
+
         if not self.is_user_block(user, block_id):
             return JsonHTTPResponse({"id": block_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не имеете прав на для обновления данного блока путешествий"})
 
@@ -1359,23 +1359,23 @@ class TripBlocks(View, SafeObjectOperations):
             for er in e:
                 errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": block_id, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
-            
+
     def delete(self, request, block_id=0):
         if not request.user.is_authenticated():
             return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
 
         if not block_id:
-            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"}) 
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"})
 
         block = get_object_or_404(TripModels.Blocks, pk=block_id)
-        
+
         if not self.is_user_block(request.user, block_id):
             return JsonHTTPResponse({"id": block_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не имеете прав на для удаление данного блока путешествий"})
 
         block.delete()
         return JsonHTTPResponse({"id": block_id, "status": 200, "message": u"Удаление завершено корректно", "info": ""})
 
-        
+
 class AllUserTrips(View):
     http_method_names = ('get',)
     log = logger
@@ -1383,7 +1383,7 @@ class AllUserTrips(View):
     def get(self, request, **kwargs):
         if not request.user.is_authenticated():
             return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
-        
+
         user = get_object_or_404(MainModels.Person, username=request.user)
         user_id = user.id
         user_trips = TripModels.Trips.objects.filter(Q(author=user_id) | Q(admins__id__contains=user_id) | Q(members__id__contains=user_id))
@@ -1401,8 +1401,8 @@ class OneTrip(View, SafeObjectOperations):
 
     def get(self, request, trip_id=0):
         if not trip_id:
-            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"}) 
-        
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"})
+
         trip = get_object_or_404(TripModels.Trips, pk=trip_id)
         YpJson = YpSerialiser()
         relations = TripOptions.TripOption.relations.getTripRelation()
@@ -1410,33 +1410,36 @@ class OneTrip(View, SafeObjectOperations):
         trip = YpJson.serialize([trip], relations=relations)
         self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, trip_id))
         return HttpResponse(trip, mimetype="application/json")
-  
+
     def post(self, request, trip_id=0):
         if not request.user.is_authenticated():
             return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
 
         user = request.user
         params = request.POST.copy()
+        data = params.get('model', "{}")
+        data = json.loads(data)
         if trip_id:
-            return self.update_trip(params, user, trip_id)
+            return self.update_trip(data, user, trip_id)
         else:
-            return self.add_trip(params, user)
-    
+            return self.add_trip(data, user)
+
     def add_trip(self, params, user):
         errors = []
         form = ApiForms.AddTripForm(params)
+        import ipdb;ipdb.set_trace()
         if form.is_valid():
             trip = form.save(commit=False)
 
             person = MainModels.Person.objects.get(username=user)
             trip.author = person
-            trip.countmembers = len(params.getlist('members', {}))
+            #trip.countmembers = len(params.getlist('members', {}))
             trip.save()
 
-            self.add(trip.members, params.getlist('members', None), MainModels.User, errors, u"ошибка добавления участника с id='%s'")
-            self.add(trip.admins, params.getlist('admins', None), MainModels.User, errors, u"ошибка добавления администратора с id='%s'")
-            self.add(trip.routes, params.getlist('routes', None), MainModels.Routes, errors, u"ошибка добавления маршрута с id='%s'")
-            self.add(trip.blocks, params.getlist('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")
+            #self.add(trip.members, params.getlist('members', None), MainModels.User, errors, u"ошибка добавления участника с id='%s'")
+            #self.add(trip.admins, params.getlist('admins', None), MainModels.User, errors, u"ошибка добавления администратора с id='%s'")
+            #self.add(trip.routes, params.getlist('routes', None), MainModels.Routes, errors, u"ошибка добавления маршрута с id='%s'")
+            self.add(trip.blocks, params.get('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")
             print errors
             return JsonHTTPResponse({"id": trip.id, "status": 201, "message": u"Путешествие создано", "info": ", ".join(errors)})
         else:
@@ -1444,10 +1447,10 @@ class OneTrip(View, SafeObjectOperations):
             for er in e:
                 errors.append(er + ':' + e[er][0])
         return JsonHTTPResponse({"id": 0, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
-        
+
     def update_trip(self, params, user, trip_id):
         trip = get_object_or_404(TripModels.Trips, pk=trip_id)
-        
+
         if user != trip.author and user not in trip.admins.all():
             return JsonHTTPResponse({"id": id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не являетесь автором данного путешествия"})
 
@@ -1460,7 +1463,7 @@ class OneTrip(View, SafeObjectOperations):
             self.update(trip.members, params.getlist('members', None), MainModels.User, errors, u"ошибка добавления участника с id='%s'")
             self.update(trip.admins, params.getlist('admins', None), MainModels.User, errors, u"ошибка добавления администратора с id='%s'")
             self.update(trip.routes, params.getlist('routes', None), MainModels.Routes, errors, u"ошибка добавления маршрута с id='%s'")
-            self.update(trip.blocks, params.getlist('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")            
+            self.update(trip.blocks, params.getlist('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")
             return JsonHTTPResponse({"id": trip.id, "status": 201, "message": u"Путешествие обновлено", "info": ", ".join(errors)})
         else:
             e = form.errors
@@ -1473,7 +1476,7 @@ class OneTrip(View, SafeObjectOperations):
             return JsonHTTPResponse({"id": trip_id, "status": 401, "message": u"Неавторизованный доступ"})
 
         if not trip_id:
-            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"}) 
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"})
 
         trip = get_object_or_404(TripModels.Trips, pk=trip_id)
         user = request.user
@@ -1483,7 +1486,7 @@ class OneTrip(View, SafeObjectOperations):
         else:
             return JsonHTTPResponse({"id": trip_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не являетесь автором данного путешествия"})
 
- 
+
 class TripLike(View):
     http_method_names = ('post')
 
@@ -1492,11 +1495,14 @@ class TripLike(View):
             return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
 
         if not trip_id:
-            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"}) 
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"})
 
         trip = get_object_or_404(TripModels.Trips, id=trip_id)
-        if request.user in trip.likeusers.all():
-            trip.likeusers.remove(request.user)
+        if request.user.person in trip.likeusers.all():
+            trip.likeusers.remove(request.user.person)
         else:
-            trip.likeusers.add(request.user)
-        return JsonHTTPResponse('like')
+            trip.likeusers.add(request.user.person)
+        YpJson = YpSerialiser()
+        trip = YpJson.serialize([trip], extras=TripOptions.TripOption.getExtras(),
+                                relations=TripOptions.TripOption.relations.getTripRelation())
+        return HttpResponse(trip, mimetype="application/json")
