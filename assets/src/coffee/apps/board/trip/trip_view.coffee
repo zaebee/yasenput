@@ -419,7 +419,7 @@
           $('.js-datapicker-group').closest('.field').removeClass('error')
         else
           $('.js-datapicker-personal').closest('.field').addClass('error')
-      else
+      if !@$('.group-tour').hasClass 'hide'
         data = @$('#orderGroupTour').serializeArray()
         date = @$('.js-datapicker-group').val()
         if date
