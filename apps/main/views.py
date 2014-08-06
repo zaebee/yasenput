@@ -3,7 +3,6 @@ __author__ = 'art'
 
 import time
 import json
-from django.shortcuts import render
 
 from annoying.functions import get_object_or_None
 
@@ -12,7 +11,10 @@ from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
+
+from templated_email import send_templated_mail
 
 from apps.serializers.json import Serializer
 from apps.trips.models import Trips
@@ -21,6 +23,7 @@ from apps.main.forms import OrderForm
 
 import logging
 logger = logging.getLogger(__name__)
+DEFAULT_FROM_EMAIL = getattr(settings, 'DEFAULT_FROM_EMAIL', 'info@yasenput.ru')
 
 
 class YpSerialiser(Serializer):
@@ -105,7 +108,18 @@ def order(request):
     if request.is_ajax() and request.method == 'POST':
         form = OrderForm(request.POST or None)
         if form.is_valid():
-            form.save()
+            order = form.save()
+            trip = get_object_or_None(Trips, id=order.cont_id)
+            send_templated_mail(
+                template_name='order',
+                from_email=DEFAULT_FROM_EMAIL,
+                recipient_list=[order.email],
+                context={
+                    'fullname':order.fullname,
+                    'info': json.loads(order.summary_info) if order.summary_info else {},
+                    'trip': trip
+                },
+            )
             return HttpResponse(json.dumps({'success': True}), mimetype="application/json")
     raise Http404
 
