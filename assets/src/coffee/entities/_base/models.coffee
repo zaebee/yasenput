@@ -10,8 +10,8 @@
 
   class Entities.Model extends Backbone.Model
 
-    url: ->
-      @id = @get('id') or @id
+    __url: ->
+      console.log 'call id', @id
       origUrl = Backbone.Model.prototype.url.call @
       origUrl + if origUrl.charAt(origUrl.length - 1) is '/' then '' else '/'
 
@@ -21,6 +21,7 @@
     ###
     initialize: ->
       console.log "initializing Entities.Model"
+      @id = @get('id') or @id
       if @get('latitude') and @get('longitude')
         coords = [@get('latitude'), @get('longitude')]
       else
