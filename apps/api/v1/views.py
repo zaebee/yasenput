@@ -52,8 +52,8 @@ class PointsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax():
-            raise Http404
+        #if not request.is_ajax():
+        #    raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
 
 
@@ -93,7 +93,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'Address', 'review_count', 'ypi', 'sets_count'],
+                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count'],
                                 extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                          'extras': ['avatar', 'icon'],
@@ -118,7 +118,7 @@ class PointsBaseView(View):
                                                         'extras': ['icon']},
                                                         },
                                                     },
-                                            'blocks': {'fields': ['imgs', 'name', 'id','txt','points','events','position'],
+                                            'blocks': {'fields': ['imgs', 'name', 'id','txt','points','events','position', 'address', 'longitude', 'latitude'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130', 'thumbnail625x370', 'thumbnail104x104'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
@@ -267,72 +267,35 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         params = request.GET.copy()
         #self.log.info('city = ' + params.get('city'))
-        price = "$"
-        duration = "$"
-        models = ['points','routes','events','trips']
+        models = ['points', 'events','trips', 'tours']
 
-        search_res_points = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
-        none_qs = MainModels.Points.search.none()
+        search_res_points = MainModels.Points.objects.all()
+        search_res_events = MainModels.Events.objects.all()
+        search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True))
+        search_res_tours = TripModels.Trips.objects.filter(price__gt=0)
         if params.get('models'):
             models = params.get('models').split(',')
-        if params.get('price'):
-            models = ['routes']
-            price = params.get('price').split(',')
-        if params.get('duration'):
-            models = ['routes']
-            duration = params.get('duration').split(',')
-        if 'points' in models:
-            t0 = time.time()
-            search_res_points = MainModels.Points.search.query(params.get('s', ''))
-            self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'tours' in models:
-            t0 = time.time()
-            search_res_trips = TripModels.Trips.search.filter(price__gt=0).query(params.get('s',''))
-            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'routes' in models:
-            t0 = time.time()
-            search_res_routes = MainModels.Routes.search.query(params.get('s',''))
-            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'events' in models:
-            t0 = time.time()
-            search_res_events = MainModels.Events.search.query(params.get('s',''))
-            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-
-        if 'trips' in models:
-            t0 = time.time()
-            search_res_trips = TripModels.Trips.search.filter(price__lte=0).query(params.get('s',''))
-            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         if params.get('user'):
             t0 = time.time()
-            search_res_points_list = search_res_points.filter(author_id = params.get('user'))
-            search_res_trips_list = search_res_trips.filter(author_id = params.get('user'))
-            search_res_routes_list = search_res_routes.filter(author_id = params.get('user'))
-            search_res_events_list = search_res_events.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_trips_list) > 0) | (Count(search_res_routes_list)>0) | (Count(search_res_events_list)>0):
-                search_res_trips = search_res_trips_list
-                search_res_points = search_res_points_list
-                search_res_routes = search_res_routes_list
-                search_res_events = search_res_events_list
+            search_res_points = search_res_points.filter(author_id=params.get('user'))
+            search_res_events = search_res_events.filter(author_id=params.get('user'))
+            search_res_trips = search_res_trips.filter(author_id=params.get('user'))
+            search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
         sort = 'ypi'
-        if params.get('content'):
-            sort = params.get('content')
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-        if params.get('tags'):
-            tags = params.get('tags', [])
-            tags = tags.split(',')
-            t0 = time.time()
-            search_res_points = search_res_points.filter(tags_id = tags)
-            search_res_events = search_res_events.filter(tags_id = tags)
-            search_res_routes = MainModels.Routes.search.none()
-            self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
+        ln_left = 0.0
+        ln_right = 200.0
+        lt_left = 0.0
+        lt_right = 200.0
         if not params.get('s'):
             if params.get('city'):
+                """
                 g = geocoders.GoogleV3()
                 place, (lt, ln) = g.geocode(params.get('city'))
                 ln_left = ln-0.1
@@ -340,6 +303,7 @@ class ItemsList(PointsBaseView):
                 lt_left = lt-0.1
                 lt_right = lt+0.1
                 print 'CITY PARAMETER'
+                """
             else:
                 if params.get('coord_left'):
                     #top left coords
@@ -349,6 +313,7 @@ class ItemsList(PointsBaseView):
                     #top right coords
                     ln_right = float(json.loads(params.get('coord_right')).get('ln'))
                     lt_right = float(json.loads(params.get('coord_right')).get('lt'))
+                """
                 else:
                     #GET CLIENT IP:
                     remote_address = request.META.get('REMOTE_ADDR')
@@ -375,120 +340,68 @@ class ItemsList(PointsBaseView):
                         lt_left = ipgeobase.latitude - 0.1
                         lt_right = ipgeobase.latitude + 0.1
                         self.log.info(ipgeobase.city)
-        else:
-            ln_left = 0.0
-            ln_right = 200.0
-            lt_left = 0.0
-            lt_right = 200.0
+                """
         t0 = time.time()
         self.log.info(str(ln_left)+' '+str(lt_left)+' '+str(ln_right)+' '+str(lt_right))
-        search_res_points_list = search_res_points.filter(
-            longitude__lte=ln_right).filter(
-                longitude__gte=ln_left).filter(
-                    latitude__lte=lt_right).filter(latitude__gte=lt_left)
+        Q_points = (
+            Q(longitude__lte=ln_right) &
+            Q(longitude__gte=ln_left) &
+            Q(latitude__lte=lt_right) &
+            Q(latitude__gte=lt_left)
+        )
+        search_res_points = search_res_points.filter(Q_points).distinct()
 
-        search_res_trips_list = []
-        for trip in search_res_trips:
-            bl = trip.blocks.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            if len(bl) > 0:
-                search_res_trips_list.append(trip)
+        Q_blocks = (
+            Q(blocks__longitude__lte=ln_right) &
+            Q(blocks__longitude__gte=ln_left) &
+            Q(blocks__latitude__lte=lt_right) &
+            Q(blocks__latitude__gte=lt_left)
+        )
+        Q_points = (
+            Q(blocks__points__longitude__lte=ln_right) &
+            Q(blocks__points__longitude__gte=ln_left) &
+            Q(blocks__points__latitude__lte=lt_right) &
+            Q(blocks__points__latitude__gte=lt_left)
+        )
+        Q_null = (
+            Q(blocks__longitude__isnull=True) |
+            Q(blocks__longitude__isnull=True) |
+            Q(blocks__latitude__isnull=True) |
+            Q(blocks__latitude__isnull=True)
+        )
 
-        for trip in search_res_trips:
-            for block in trip.blocks.all():
-                bl = block.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-                if (len(bl) > 0) and (trip not in search_res_trips_list):
-                    search_res_trips_list.append(trip)
+        search_res_trips = search_res_trips.filter(Q_blocks | Q_points | Q_null).distinct()
+        search_res_tours = search_res_tours.filter(Q_blocks | Q_points | Q_null).distinct()
 
-        search_res_trips = search_res_trips_list
-
-        #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
 
-        search_res_routes_list = []
-        for route in search_res_routes.all():
-            points_l = route.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            dur_success = 0
-            price_success = 0
-            self.log.info('Price %s' % type(price))
-            if len(points_l) > 0:
-                if type(price) is not str:
-                    self.log.info('INSIDE')
-
-                    self.log.info('Price %s' % int(price[0]))
-                    if route.price:
-                        if (route.price <= int(price[1])) and (route.price >= int(price[0])):
-                            price_success = "1"
-                else:
-                    price_success = "1"
-                if duration != "$":
-                    if route.days:
-                        if (route.days <= float(duration[1])) and (route.days >= float(duration[0])):
-                            dur_success = "1"
-
-                else:
-                    dur_success = "1"
-                self.log.info('price_success %s' % price_success)
-                if (dur_success == "1") and (price_success == "1"):
-                    self.log.info('price_success %s' % price_success)
-                    search_res_routes_list.append(int(route.id))
-
-        if (type(price) is not str) or (type(duration) is not str):
-            search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
-
-
-        search_res_events_list = []
-        for event in search_res_events.all():
-            points_l = event.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            if len(points_l) > 0:
-                search_res_events_list.append(int(event.id))
-
-        if ((search_res_points_list.count()) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
-            if len(search_res_routes_list) == 0:
-                search_res_routes = none_qs
-            else:
-                search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
-            if len(search_res_events_list) == 0:
-                search_res_events = none_qs
-            else:
-                search_res_events = MainModels.Events.objects.all().filter(id__in = search_res_events_list)
-            search_res_points = search_res_points_list
-
+        Q_points = (
+            Q(points__longitude__lte=ln_right) &
+            Q(points__longitude__gte=ln_left) &
+            Q(points__latitude__lte=lt_right) &
+            Q(points__latitude__gte=lt_left)
+        )
+        search_res_events = search_res_events.filter(Q_points).distinct()
 
         t0 = time.time()
-        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
-        if (models == ['trips']) or (models == ['tours']):
+        if models == ['trips']:
             all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
+        elif models == ['tours']:
+            all_items = QuerySetJoin(search_res_tours).order_by('-' + sort)[offset:limit]
         elif models == ['points']:
-            all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
-                    #'isliked': ''
-                     })).order_by('-' + sort)[offset:limit]
+            all_items = QuerySetJoin(search_res_points).order_by('-' + sort)[offset:limit]
         elif models == ['events']:
             all_items = QuerySetJoin(search_res_events).order_by('-' + sort)[offset:limit]
         else:
-            all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
-                    #'isliked': ''
-                     }),
-                        search_res_events, search_res_trips, search_res_routes.extra(select={
-                     'p':'SELECT count(*) from main_points'
-                     })).order_by('-' + sort)[offset:limit]
+            all_items = QuerySetJoin(
+                search_res_points,
+                search_res_events,
+                search_res_trips,
+                search_res_tours
+            ).order_by('-' + sort)[offset:limit]
 
-        self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
-
+        self.log.info('Build points, events, trips, tours complete (%.2f sec.)' % (time.time()-t0))
 
         i = offset
         for item in all_items:
@@ -496,6 +409,7 @@ class ItemsList(PointsBaseView):
             item.unid = i
         t0 = time.time()
         items = json.loads(self.getSerializeCollections(all_items))
+        #import ipdb;ipdb.set_trace()
         self.log.info('Serialize items complete (%.2f sec.) page: %s' % (time.time()-t0, params.get('p', 1)))
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
