@@ -27,6 +27,7 @@
         region: App.headerRegion.currentView.dashboardRegion
       App.vent.trigger 'hide:map:region'
       App.vent.trigger 'hide:destination:region'
+      App.vent.trigger 'hide:sidebar:region'
       App.vent.trigger 'show:dashboard:region'
 
     showMyYapens: ->

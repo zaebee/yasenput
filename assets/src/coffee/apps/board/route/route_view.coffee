@@ -223,7 +223,7 @@
             cont_type: 'route'
           successCallback: (result) ->
             console.log result
-            App.orderRoutePopup.close()
+            App.orderRoutePopup.empty()
             App.vent.trigger 'show:info:popup', 'Спасибо, вам перезвонят для уточнения информации'
       else
         return

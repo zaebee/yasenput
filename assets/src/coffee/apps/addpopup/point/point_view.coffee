@@ -253,7 +253,7 @@
         @model.save null,
           success: =>
             @spinner.stop()
-            App.addPointPopup.close()
+            App.addPointPopup.empty()
             App.BoardApp.board.yapens.add @model, at:1
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "point/#{@model.get('id')}"
@@ -445,7 +445,7 @@
       @model.save null,
         success: =>
           @spinner.stop()
-          App.addPointPopup.close()
+          App.addPointPopup.empty()
           App.BoardApp.board.yapens.add @model, at:1
           App.vent.trigger 'show:detail:popup', @model
           App.navigate "point/#{@model.get('id')}"

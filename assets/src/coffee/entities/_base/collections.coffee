@@ -11,22 +11,23 @@
   class Entities.Collection extends Backbone.Collection
 
     ###*
-    # Set model as Yapp.Points.Point
+    # Set model for collection
     # @property model
     ###
     model: (attrs, options) ->
       if attrs.type_of_item is 'point' ## is point type
-        new Entities.Point attrs, options
-      else if attrs.type_of_item is 'set' ## is collection type
-        new Entities.Set attrs, options
-      else if attrs.type_of_item is 'trip' ## is trip type
-        new Entities.Trip attrs, options
-      else if attrs.type_of_item is 'route' ## is route type
-        new Entities.Route attrs, options
+        model = new Entities.Point attrs, options
       else if attrs.type_of_item is 'event' ## is event type
-        new Entities.Event attrs, options
+        model = new Entities.Event attrs, options
+      else if attrs.type_of_item is 'set' ## is collection type
+        model = new Entities.Set attrs, options
+      else if attrs.type_of_item is 'trip' ## is trip type
+        model = new Entities.Trip attrs, options
+      else if attrs.type_of_item is 'route' ## is route type
+        model = new Entities.Route attrs, options
       else
-        new Entities.Point
+        model = new Entities.Point attrs, options
+      model
 
     ###*
     # The collection initializer

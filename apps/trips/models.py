@@ -43,6 +43,7 @@ class Trips(models.Model):
     routes = models.ManyToManyField(Routes, null=True, blank=True, serialize=True)
     likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='trips_like_users', serialize=True)
     blocks = models.ManyToManyField(Blocks, blank=True, serialize=True)
+    summary_info = models.TextField(null=True, blank=True, default='')
     ypi = 100
     type_of_item = 'trip'
     price = models.DecimalField('Цена', max_digits=25, decimal_places=2, blank=True, null=True)

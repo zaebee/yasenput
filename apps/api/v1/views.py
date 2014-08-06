@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import time
+import sys
+from django.db.models import Q
 
 from datetime import datetime, timedelta
 
@@ -32,6 +34,8 @@ from apps.photos import models as PhotosModels
 from apps.comments import models as CommentsModels
 from apps.collections import models as CollectionsModels
 from apps.serializers.json import Serializer as YpSerialiser
+import apps.trips.v1.options as TripOptions
+import forms as ApiForms
 
 from YasenPut.limit_config import LIMITS
 
@@ -48,8 +52,8 @@ class PointsBaseView(View):
     COMMENT_ALLOWED_MODELS_DICT = dict(CommentsModels.COMMENT_ALLOWED_MODELS)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.is_ajax():
-            raise Http404
+        #if not request.is_ajax():
+        #    raise Http404
         return super(PointsBaseView, self).dispatch(request, *args, **kwargs)
 
 
@@ -89,7 +93,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'Address', 'review_count', 'ypi', 'sets_count'],
+                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count'],
                                 extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                          'extras': ['avatar', 'icon'],
@@ -114,7 +118,7 @@ class PointsBaseView(View):
                                                         'extras': ['icon']},
                                                         },
                                                     },
-                                            'blocks': {'fields': ['imgs', 'name', 'id','txt','points','events','position'],
+                                            'blocks': {'fields': ['imgs', 'name', 'id','txt','points','events','position', 'address', 'longitude', 'latitude'],
                                                         'relations': {'imgs': {'extras': ['thumbnail207', 'thumbnail207_height', 'thumbnail560', 'thumbnail65x52', 'thumbnail135x52', 'thumbnail205x52', 'thumbnail130x130', 'thumbnail625x370', 'thumbnail104x104'],
                                                     'limit': 4, 'relations': {'author': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                         'extras': ['icon']}, 'comments': {'fields': ['txt', 'created', 'author'],
@@ -243,7 +247,6 @@ class Search(PointsBaseView):
 
         users = users_list[offset:limit]
 
-
         YpJson = YpSerialiser()
         points = json.loads(YpJson.serialize(points, fields = ['id','name', 'address']))
         events = json.loads(YpJson.serialize(events, fields = ['id','name']))
@@ -263,73 +266,39 @@ class ItemsList(PointsBaseView):
     def get(self, request, *args, **kwargs):
         params = request.GET.copy()
         #self.log.info('city = ' + params.get('city'))
-        price = "$"
-        duration = "$"
-        models = ['points','routes','events','trips']
-        #models = ['trips']
+        models = ['points', 'events','trips', 'tours']
 
-        search_res_points = search_res_routes = search_res_events = search_res_trips =  MainModels.Points.search.none()
-        none_qs = MainModels.Points.search.none()
+        search_res_points = MainModels.Points.objects.all()
+        search_res_events = MainModels.Events.objects.filter(dt_end__gte=datetime.now())
+        search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True))
+        search_res_tours = TripModels.Trips.objects.filter(price__gt=0)
         if params.get('models'):
             models = params.get('models').split(',')
-        if params.get('price'):
-            models = ['routes']
-            price = params.get('price').split(',')
-        if params.get('duration'):
-            models = ['routes']
-            duration = params.get('duration').split(',')
-        if 'points' in models:
-            t0 = time.time()
-            search_res_points = MainModels.Points.search.query(params.get('s', ''))
-            self.log.info('Points search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'tours' in models:
-            t0 = time.time()
-            search_res_trips = TripModels.Trips.search.filter(price__gt=0).query(params.get('s',''))
-            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'routes' in models:
-            t0 = time.time()
-            search_res_routes = MainModels.Routes.search.query(params.get('s',''))
-            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-        if 'events' in models:
-            t0 = time.time()
-            search_res_events = MainModels.Events.search.query(params.get('s',''))
-            self.log.info('Routes search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
-
-        if 'trips' in models:
-            t0 = time.time()
-            search_res_trips = TripModels.Trips.search.filter(price__lte=0).query(params.get('s',''))
-            self.log.info('Trips search complete (%.2f sec.) query: %s' % (time.time()-t0, params.get('s', '')))
 
         COUNT_ELEMENTS = LIMITS.POINTS_LIST.POINTS_LIST_COUNT
         errors = []
         if params.get('user'):
             t0 = time.time()
-            search_res_points_list = search_res_points.filter(author_id = params.get('user'))
-            search_res_trips_list = search_res_trips.filter(author_id = params.get('user'))
-            search_res_routes_list = search_res_routes.filter(author_id = params.get('user'))
-            search_res_events_list = search_res_events.filter(author_id = params.get('user'))
-            if (Count(search_res_points_list) > 0) | (Count(search_res_trips_list) > 0) | (Count(search_res_routes_list)>0) | (Count(search_res_events_list)>0):
-                search_res_trips = search_res_trips_list
-                search_res_points = search_res_points_list
-                search_res_routes = search_res_routes_list
-                search_res_events = search_res_events_list
+            search_res_points = search_res_points.filter(author_id=params.get('user'))
+            search_res_events = search_res_events.filter(author_id=params.get('user'))
+            search_res_trips = search_res_trips.filter(author_id=params.get('user'))
+            search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
         sort = 'ypi'
-        if params.get('content'):
-            sort = params.get('content')
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
-        if params.get('tags'):
-            tags = params.get('tags', [])
-            tags = tags.split(',')
-            t0 = time.time()
-            search_res_points = search_res_points.filter(tags_id = tags)
-            search_res_events = search_res_events.filter(tags_id = tags)
-            search_res_routes = MainModels.Routes.search.none()
-            self.log.info('Tags search complete (%.2f sec.) tags_ids: %s' % (time.time()-t0, tags))
+        ln_left = 0.0
+        ln_right = 200.0
+        lt_left = 0.0
+        lt_right = 200.0
         if not params.get('s'):
             if params.get('city'):
+                search_res_points = search_res_points.filter(address__icontains=params.get('city'))
+                search_res_events = search_res_events.filter(points__address__icontains=params.get('city'))
+                search_res_trips = search_res_trips.filter(blocks__address__icontains=params.get('city'))
+                search_res_tours = search_res_tours.filter(blocks__address__icontains=params.get('city'))
+                """
                 g = geocoders.GoogleV3()
                 place, (lt, ln) = g.geocode(params.get('city'))
                 ln_left = ln-0.1
@@ -337,6 +306,7 @@ class ItemsList(PointsBaseView):
                 lt_left = lt-0.1
                 lt_right = lt+0.1
                 print 'CITY PARAMETER'
+                """
             else:
                 if params.get('coord_left'):
                     #top left coords
@@ -346,6 +316,7 @@ class ItemsList(PointsBaseView):
                     #top right coords
                     ln_right = float(json.loads(params.get('coord_right')).get('ln'))
                     lt_right = float(json.loads(params.get('coord_right')).get('lt'))
+                """
                 else:
                     #GET CLIENT IP:
                     remote_address = request.META.get('REMOTE_ADDR')
@@ -372,120 +343,73 @@ class ItemsList(PointsBaseView):
                         lt_left = ipgeobase.latitude - 0.1
                         lt_right = ipgeobase.latitude + 0.1
                         self.log.info(ipgeobase.city)
+                """
         else:
-            ln_left = 0.0
-            ln_right = 200.0
-            lt_left = 0.0
-            lt_right = 200.0
+            search_res_points = search_res_points.filter(name__icontains=params.get('s'))
+            search_res_events = search_res_events.filter(name__icontains=params.get('s'))
+            search_res_trips = search_res_trips.filter(name__icontains=params.get('s'))
+            search_res_tours = search_res_tours.filter(name__icontains=params.get('s'))
         t0 = time.time()
         self.log.info(str(ln_left)+' '+str(lt_left)+' '+str(ln_right)+' '+str(lt_right))
-        search_res_points_list = search_res_points.filter(
-            longitude__lte=ln_right).filter(
-                longitude__gte=ln_left).filter(
-                    latitude__lte=lt_right).filter(latitude__gte=lt_left)
+        Q_points = (
+            Q(longitude__lte=ln_right) &
+            Q(longitude__gte=ln_left) &
+            Q(latitude__lte=lt_right) &
+            Q(latitude__gte=lt_left)
+        )
+        search_res_points = search_res_points.filter(Q_points).distinct()
 
-        search_res_trips_list = []
-        for trip in search_res_trips:
-            bl = trip.blocks.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            if len(bl) > 0:
-                search_res_trips_list.append(trip)
+        Q_blocks = (
+            Q(blocks__longitude__lte=ln_right) &
+            Q(blocks__longitude__gte=ln_left) &
+            Q(blocks__latitude__lte=lt_right) &
+            Q(blocks__latitude__gte=lt_left)
+        )
+        Q_points = (
+            Q(blocks__points__longitude__lte=ln_right) &
+            Q(blocks__points__longitude__gte=ln_left) &
+            Q(blocks__points__latitude__lte=lt_right) &
+            Q(blocks__points__latitude__gte=lt_left)
+        )
+        Q_null = (
+            Q(blocks__longitude__isnull=True) |
+            Q(blocks__longitude__isnull=True) |
+            Q(blocks__latitude__isnull=True) |
+            Q(blocks__latitude__isnull=True)
+        )
 
-        for trip in search_res_trips:
-            for block in trip.blocks.all():
-                bl = block.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-                if (len(bl) > 0) and (trip not in search_res_trips_list):
-                    search_res_trips_list.append(trip)
+        search_res_trips = search_res_trips.filter(Q_blocks | Q_points | Q_null).distinct()
+        search_res_tours = search_res_tours.filter(Q_blocks | Q_points | Q_null).distinct()
 
-        search_res_trips = search_res_trips_list
-
-        #search_res_points = search_res_points_list
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
 
-        search_res_routes_list = []
-        for route in search_res_routes.all():
-            points_l = route.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            dur_success = 0
-            price_success = 0
-            self.log.info('Price %s' % type(price))
-            if len(points_l) > 0:
-                if type(price) is not str:
-                    self.log.info('INSIDE')
-
-                    self.log.info('Price %s' % int(price[0]))
-                    if route.price:
-                        if (route.price <= int(price[1])) and (route.price >= int(price[0])):
-                            price_success = "1"
-                else:
-                    price_success = "1"
-                if duration != "$":
-                    if route.days:
-                        if (route.days <= float(duration[1])) and (route.days >= float(duration[0])):
-                            dur_success = "1"
-
-                else:
-                    dur_success = "1"
-                self.log.info('price_success %s' % price_success)
-                if (dur_success == "1") and (price_success == "1"):
-                    self.log.info('price_success %s' % price_success)
-                    search_res_routes_list.append(int(route.id))
-
-        if (type(price) is not str) or (type(duration) is not str):
-            search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
-
-
-        search_res_events_list = []
-        for event in search_res_events.all():
-            points_l = event.points.filter(
-                longitude__lte=ln_right).filter(
-                    longitude__gte=ln_left).filter(
-                        latitude__lte=lt_right).filter(latitude__gte=lt_left)
-            if len(points_l) > 0:
-                search_res_events_list.append(int(event.id))
-
-        if ((search_res_points_list.count()) > 0) or (len(search_res_routes_list) > 0) or (len(search_res_events_list) > 0):
-            if len(search_res_routes_list) == 0:
-                search_res_routes = none_qs
-            else:
-                search_res_routes = MainModels.Routes.objects.all().filter(id__in = search_res_routes_list)
-            if len(search_res_events_list) == 0:
-                search_res_events = none_qs
-            else:
-                search_res_events = MainModels.Events.objects.all().filter(id__in = search_res_events_list)
-            search_res_points = search_res_points_list
-
+        Q_points = (
+            Q(points__longitude__lte=ln_right) &
+            Q(points__longitude__gte=ln_left) &
+            Q(points__latitude__lte=lt_right) &
+            Q(points__latitude__gte=lt_left)
+        )
+        search_res_events = search_res_events.filter(Q_points).distinct()
 
         t0 = time.time()
-        search_res_routes = search_res_routes.extra(select = {"likes_count": "select count(*) from main_routes_likeusers where main_routes_likeusers.routes_id=main_routes.id"})
-        if (models == ['trips']) or (models == ['tours']):
+        if models == ['trips']:
             all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
+        elif models == ['tours']:
+            all_items = QuerySetJoin(search_res_tours).order_by('-' + sort)[offset:limit]
         elif models == ['points']:
-            all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
-                    #'isliked': ''
-                     })).order_by('-' + sort)[offset:limit]
+            all_items = QuerySetJoin(search_res_points).order_by('-' + sort)[offset:limit]
         elif models == ['events']:
             all_items = QuerySetJoin(search_res_events).order_by('-' + sort)[offset:limit]
         else:
-            all_items = QuerySetJoin(search_res_points.extra(select = {
-                    'sets_count': 'SELECT count(*) from collections_collections_points where main_points.id = collections_collections_points.points_id',
-                    #'isliked': ''
-                     }),
-                        search_res_events, search_res_trips, search_res_routes.extra(select={
-                     'p':'SELECT count(*) from main_points'
-                     })).order_by('-' + sort)[offset:limit]
+            all_items = QuerySetJoin(
+                search_res_points,
+                search_res_events,
+                search_res_trips,
+                search_res_tours
+            ).order_by('-' + sort)[offset:limit]
 
-        self.log.info('Build points, sets, routes complete (%.2f sec.)' % (time.time()-t0))
-
+        self.log.info('Build points, events, trips, tours complete (%.2f sec.)' % (time.time()-t0))
 
         i = offset
         for item in all_items:
@@ -493,6 +417,7 @@ class ItemsList(PointsBaseView):
             item.unid = i
         t0 = time.time()
         items = json.loads(self.getSerializeCollections(all_items))
+        #import ipdb;ipdb.set_trace()
         self.log.info('Serialize items complete (%.2f sec.) page: %s' % (time.time()-t0, params.get('p', 1)))
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
@@ -1262,3 +1187,243 @@ class Event(View):
          'isliked': int(isliked),
          'likes_count': event[0].likes_count,
         })
+
+
+class SafeObjectOperations:
+
+    def add (self, object_for_add, added_content, added_model, errors, error_message):
+        if object_for_add and added_content:
+            if len(added_content) > 0:
+                for content in added_content:
+                    try:
+                        added_model.objects.get(id=content)
+                        object_for_add.add(content)
+                    except:
+                        errors.append(error_message % content)
+
+    def update (self, object_for_update, updated_content, added_model, errors, error_message):
+        if object_for_update and updated_content:
+            object_for_update.clear()
+            self.add(object_for_update, updated_content, added_model, errors, error_message)
+
+    def remove (self, object_for_delete, deleted_content):
+        if object_for_delete and deleted_content:
+            object_for_delete.remove(deleted_content)
+
+
+class TripBlocks(View, SafeObjectOperations):
+    http_method_names = ('post', 'get','delete')
+    log = logger
+
+    def get(self, request, block_id=0):
+        if not block_id:
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Некорректный запрос", "info": u"Отсутствует 'id'"})
+
+        block = get_object_or_404(TripModels.Blocks, pk=block_id)
+        YpJson = YpSerialiser()
+        relations = TripOptions.TripOption.relations.getTripRelation()
+        t0 = time.time()
+        block = YpJson.serialize([block],
+                                 fields=["name", "txt", "position", "latitude", "longitude", "address", "ypi"],
+                                 relations=relations)
+        self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, block_id))
+        return HttpResponse(block, mimetype="application/json")
+
+    def post(self, request, block_id=0):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
+
+        user = request.user
+        params = request.POST.copy()
+        if block_id:
+            return self.update_block(params, user, block_id)
+        else:
+            return self.add_block(params)
+
+    def add_block(self, params):
+        errors = []
+        form = ApiForms.AddBlockForm(params)
+        if form.is_valid():
+            block = form.save(commit=True)
+
+            self.add(block.points, params.getlist('points', None), MainModels.Points, errors, u"ошибка добавления места с id='%s'")
+            self.add(block.imgs, params.getlist('imgs', None), PhotosModels.Photos, errors, u"ошибка добавления изображения с id='%s'")
+            self.add(block.events, params.getlist('events', None), MainModels.Events, errors, u"ошибка добавления события с id='%s'")
+            return JsonHTTPResponse({"id": block.id, "status": 201, "message": u"Блок путешествий создан", "info": ""})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
+
+    def is_user_block(self, user, block_id):
+        auth_block = TripModels.Trips.objects.filter(Q(blocks__id__contains=block_id) & (Q(author__username=user) | Q(admins__username=user)))
+        return auth_block.count() > 0
+
+    def update_block(self, params, user, block_id):
+        trips_block = get_object_or_404(TripModels.Blocks, pk=block_id)
+
+        if not self.is_user_block(user, block_id):
+            return JsonHTTPResponse({"id": block_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не имеете прав на для обновления данного блока путешествий"})
+
+        form = ApiForms.AddBlockForm(params, instance=trips_block)
+        errors = []
+        if form.is_valid():
+            block = form.save(commit=True)
+
+            self.update(block.points, params.getlist('points', None), MainModels.Points, errors, u"ошибка добавления места с id='%s'")
+            self.update(block.imgs, params.getlist('imgs', None), PhotosModels.Photos, errors, u"ошибка добавления изображения с id='%s'")
+            self.update(block.events, params.getlist('events', None), MainModels.Events, errors, u"ошибка добавления события с id='%s'")
+            return JsonHTTPResponse({"id": block.id, "status": 201, "message": u"Блок путешествий обновлен", "info": ", ".join(errors)})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": block_id, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
+
+    def delete(self, request, block_id=0):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
+
+        if not block_id:
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"})
+
+        block = get_object_or_404(TripModels.Blocks, pk=block_id)
+
+        if not self.is_user_block(request.user, block_id):
+            return JsonHTTPResponse({"id": block_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не имеете прав на для удаление данного блока путешествий"})
+
+        block.delete()
+        return JsonHTTPResponse({"id": block_id, "status": 200, "message": u"Удаление завершено корректно", "info": ""})
+
+
+class AllUserTrips(View):
+    http_method_names = ('get',)
+    log = logger
+
+    def get(self, request, **kwargs):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
+
+        user = get_object_or_404(MainModels.Person, username=request.user)
+        user_id = user.id
+        user_trips = TripModels.Trips.objects.filter(Q(author=user_id) | Q(admins__id__contains=user_id) | Q(members__id__contains=user_id))
+        YpJson = YpSerialiser()
+        relations = TripOptions.TripOption.relations.getTripRelation()
+        t0 = time.time()
+        trips = YpJson.serialize(user_trips, relations=relations)
+        self.log.info('Serialize trip detail complete (%.2f sec.) user trips, where user id: %s' % (time.time()-t0, user_id))
+        return HttpResponse(trips, mimetype="application/json")
+
+
+class OneTrip(View, SafeObjectOperations):
+    log = logger
+    http_method_names = ('post', 'get', 'delete')
+
+    def get(self, request, trip_id=0):
+        if not trip_id:
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"})
+
+        trip = get_object_or_404(TripModels.Trips, pk=trip_id)
+        YpJson = YpSerialiser()
+        relations = TripOptions.TripOption.relations.getTripRelation()
+        t0 = time.time()
+        trip = YpJson.serialize([trip], relations=relations)
+        self.log.info('Serialize trip detail complete (%.2f sec.) trip id: %s' % (time.time()-t0, trip_id))
+        return HttpResponse(trip, mimetype="application/json")
+
+    def post(self, request, trip_id=0):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
+
+        user = request.user
+        params = request.POST.copy()
+        data = params.get('model', "{}")
+        data = json.loads(data)
+        if trip_id:
+            return self.update_trip(data, user, trip_id)
+        else:
+            return self.add_trip(data, user)
+
+    def add_trip(self, params, user):
+        errors = []
+        form = ApiForms.AddTripForm(params)
+        import ipdb;ipdb.set_trace()
+        if form.is_valid():
+            trip = form.save(commit=False)
+
+            person = MainModels.Person.objects.get(username=user)
+            trip.author = person
+            #trip.countmembers = len(params.getlist('members', {}))
+            trip.save()
+
+            #self.add(trip.members, params.getlist('members', None), MainModels.User, errors, u"ошибка добавления участника с id='%s'")
+            #self.add(trip.admins, params.getlist('admins', None), MainModels.User, errors, u"ошибка добавления администратора с id='%s'")
+            #self.add(trip.routes, params.getlist('routes', None), MainModels.Routes, errors, u"ошибка добавления маршрута с id='%s'")
+            self.add(trip.blocks, params.get('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")
+            print errors
+            return JsonHTTPResponse({"id": trip.id, "status": 201, "message": u"Путешествие создано", "info": ", ".join(errors)})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": 0, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
+
+    def update_trip(self, params, user, trip_id):
+        trip = get_object_or_404(TripModels.Trips, pk=trip_id)
+
+        if user != trip.author and user not in trip.admins.all():
+            return JsonHTTPResponse({"id": id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не являетесь автором данного путешествия"})
+
+        errors = []
+        form = ApiForms.AddTripForm(params, instance=trip)
+        if form.is_valid():
+            trip.countmembers = len(params.getlist('members', {}))
+            trip = form.save(commit=True)
+
+            self.update(trip.members, params.getlist('members', None), MainModels.User, errors, u"ошибка добавления участника с id='%s'")
+            self.update(trip.admins, params.getlist('admins', None), MainModels.User, errors, u"ошибка добавления администратора с id='%s'")
+            self.update(trip.routes, params.getlist('routes', None), MainModels.Routes, errors, u"ошибка добавления маршрута с id='%s'")
+            self.update(trip.blocks, params.getlist('blocks', None), TripModels.Blocks, errors, u"ошибка добавления блока с id='%s'")
+            return JsonHTTPResponse({"id": trip.id, "status": 201, "message": u"Путешествие обновлено", "info": ", ".join(errors)})
+        else:
+            e = form.errors
+            for er in e:
+                errors.append(er + ':' + e[er][0])
+        return JsonHTTPResponse({"id": id, "status": 400, "message": u"Некорректные данные запроса", "info": ", ".join(errors)})
+
+    def delete(self, request, trip_id=0):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": trip_id, "status": 401, "message": u"Неавторизованный доступ"})
+
+        if not trip_id:
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": u"Отсутствует 'id'"})
+
+        trip = get_object_or_404(TripModels.Trips, pk=trip_id)
+        user = request.user
+        if user == trip.author or user in trip.admins.all():
+            trip.delete()
+            return JsonHTTPResponse({"id": trip_id, "status": 200, "message": u"Удаление завершено корректно", "info": ""})
+        else:
+            return JsonHTTPResponse({"id": trip_id, "status": 403, "message": u"Доступ запрещен", "info": u"Вы не являетесь автором данного путешествия"})
+
+
+class TripLike(View):
+    http_method_names = ('post')
+
+    def post(self, request, trip_id=0):
+        if not request.user.is_authenticated():
+            return JsonHTTPResponse({"id": 0, "status": 401, "message": u"Неавторизованный доступ"})
+
+        if not trip_id:
+            return JsonHTTPResponse({"id": 0, "status": 404, "message": u"Введены неполные данные", "info": "Отсутствует 'id'"})
+
+        trip = get_object_or_404(TripModels.Trips, id=trip_id)
+        if request.user.person in trip.likeusers.all():
+            trip.likeusers.remove(request.user.person)
+        else:
+            trip.likeusers.add(request.user.person)
+        YpJson = YpSerialiser()
+        trip = YpJson.serialize([trip], extras=TripOptions.TripOption.getExtras(),
+                                relations=TripOptions.TripOption.relations.getTripRelation())
+        return HttpResponse(trip, mimetype="application/json")

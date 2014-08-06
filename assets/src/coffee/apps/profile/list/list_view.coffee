@@ -121,7 +121,7 @@
 
       if fullname and email and company and phone
         console.log fullname, email, company, phone
-        App.commercialPopupRegion.close()
+        App.commercialPopupRegion.empty()
         App.vent.trigger 'show:info:popup', 'Спасибо, вам перезвонят для уточнения информации'
       else
         return

@@ -28,7 +28,8 @@
   
   API =
     index: ->
-      App.vent.trigger 'show:map:region'
+      #App.vent.trigger 'show:map:region'
+      #App.vent.trigger 'show:sidebar:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
       App.ymaps.ready =>

@@ -1,0 +1,21 @@
+<ul class="bxslider bxslider-trip-{{position}}">
+  {{#if imgs}}
+    {{#imgs}}
+      <li class="item"><img src="{{thumbnail625x370}}" class="img" /></li>
+    {{/imgs}}
+  {{else}}
+  <li class="item empty"><img src="/static/images/place-unknown-big.png" class="img" /></li>
+  {{/if}}
+</ul>
+<div class="bx-pager" id="bx-pager-{{position}}">
+  <div class="bx-pager__viewport">
+    <div class="bx-pager__scrollbox">
+      {{#imgs}}
+      <a data-slide-index="{{@index}}" href="#" class="bx-pager__item">
+        <img src="{{thumbnail104x104}}" class="img"/>
+        </a>
+      {{/imgs}}
+    </div>
+  </div>
+</div>
+<!--<a href="#" class="btn-photo-add js-popup-add-photos">Добавить</a>-->

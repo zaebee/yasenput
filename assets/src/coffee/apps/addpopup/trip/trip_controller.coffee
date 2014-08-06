@@ -59,11 +59,9 @@
     showContent: ->
       @contentView = new Trip.Content
         model: @model
-
       @listenTo @contentView, 'show', =>
         @showActions @contentView
         @showBlocks @contentView
-
       @show @contentView,
         region: @layout.contentRegion
 

@@ -40,11 +40,11 @@
 
     showAddPopup: (e) ->
       e.preventDefault()
-      App.addPopupRegion.show(new Show.PopupAdd)
+      App.addPopupRegion.show new Show.PopupAdd
 
     showLoginPopup: (e) ->
       e.preventDefault()
-      App.loginPopupRegion.show(new Show.PopupLogin)
+      App.loginPopupRegion.show new Show.PopupLogin
 
     showProfileMenu: (e) ->
       e.preventDefault()
@@ -170,12 +170,12 @@
             name: App.settings.city or ''
             address: ''
       fixedDestForm = _.debounce @fixedDestForm, 200
-      $(window).on 'scroll.Header', fixedDestForm
+      $(window).on 'scroll.Header', @fixedDestForm
 
     fixedDestForm: ->
-      if $(window).scrollTop() > 150
+      if $(window).scrollTop() > 120
         @$('#destination-form').addClass 'fixed'
-      if $(window).scrollTop() < 150
+      if $(window).scrollTop() < 120
         @$('#destination-form').removeClass 'fixed'
 
     onClose: ->
@@ -249,7 +249,10 @@
           _.map el, (item) -> item.type = type
           el
         data.results = _.filter _.flatten(data.results), (el) ->
-          el.type isnt 'users' and el.type isnt 'tags'
+          if App.settings.models
+            el.type is App.settings.models
+          else
+            el.type isnt 'users' and el.type isnt 'tags'
         query.callback data
 
     initSelect2: (params = {}) ->
@@ -277,42 +280,20 @@
     className: 'popupwin__scrollbox'
 
     events:
-      'click .js-popup-add-place': 'showAddPlacePopup'
-      'click .js-popup-add-event': 'showAddEventPopup'
-      'click .js-popup-add-route': 'showAddRoutePopup'
-      'click .js-popup-add-trip': 'showAddTripPopup'
+      'click .stuff-add__link': 'showPopup'
 
     initialize: ->
       @user = App.request 'get:my:profile'
       @saveUrl = true
 
-    showAddPlacePopup: (event) ->
+    showPopup: (event) ->
       event.preventDefault()
+      App.addPopupRegion.empty()
+      url = $(event.currentTarget).attr 'href'
       if not @user.get 'authorized'
         App.vent.trigger 'show:login:popup'
       else
-        App.vent.trigger 'show:add:place:popup'
-
-    showAddEventPopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:event:popup'
-
-    showAddRoutePopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:route:popup'
-
-    showAddTripPopup: (event) ->
-      event.preventDefault()
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-      else
-        App.vent.trigger 'show:add:trip:popup'
+        App.navigate url, true
 
 
   class Show.PopupLogin extends App.Views.ItemView

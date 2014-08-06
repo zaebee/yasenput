@@ -1,52 +1,12 @@
-{{#each blocks}}
 <div class="trip-view" data-step="{{position}}">
-  <div class="slider">
-    <ul class="bxslider bxslider-trip-{{position}}">
-      {{#if imgs}}
-        {{#imgs}}
-          <li class="item"><img src="{{thumbnail625x370}}" class="img" /></li>
-        {{/imgs}}
-      {{else}}
-      <li class="item empty"><img src="/static/images/place-unknown-big.png" class="img" /></li>
-      {{/if}}
-    </ul>
-    <div class="bx-pager" id="bx-pager-{{position}}">
-      <div class="bx-pager__viewport">
-        <div class="bx-pager__scrollbox">
-          {{#imgs}}
-          <a data-slide-index="{{@index}}" href="#" class="bx-pager__item">
-            <img src="{{thumbnail104x104}}" class="img"/>
-            </a>
-          {{/imgs}}
-        </div>
-      </div>
-    </div>
-    <!--<a href="#" class="btn-photo-add js-popup-add-photos">Добавить</a>-->
+  <div id="blockitem-imgs-region-{{cid}}"></div> 
 
-  </div>
-  <div class="description">
-    <h3 class="description__title">{{name}}</h3>
-    <p class="description__text">{{br txt}}</p>
-    {{#if points}}
-    <div class="description__places">
-      <div class="title">Прикрепленные места <!--и события--></div>
-      <ul class="list">
-        {{#each points}}
-        <li class="item"><a href="/point/{{id}}" class="link c-place">{{name}}</a></li>
-        {{/each}}
-      </ul>
-    </div>
-    {{/if}}
-    <div class="description__address">{{address}}</div>
-  </div>
+  <div id="blockitem-description-region-{{cid}}"></div> 
 
-  {{#if address}}
   <div class="map map_popupwin mb10">
     <a href="#" class="map__open js-map-open">Открыть карту</a>
     <a href="#" class="map__close sprite-close js-map-close"></a>
     <div class="map__container" id="map{{position}}"></div>
   </div>
-  {{/if}}
 </div>
 <div class="line" style="display: block; height:6px; background: #616161;"></div>
-{{/each}}

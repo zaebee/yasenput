@@ -6,9 +6,9 @@ do (Backbone, Marionette) ->
       _.extend @, Backbone.Events
       _.bindAll @
 
-    open: (view) ->
-      @current = Backbone.history.fragment
-      console.info 'current url', @current
+    attachHtml: (view) ->
+      hash = Backbone.history.fragment
+      console.info 'current url', hash
       $modals = $('.modal.in').not @$el
       prevModal = _.max $modals, (chr) -> $(chr).css('z-index')
       if _.isEmpty(prevModal)
@@ -23,16 +23,13 @@ do (Backbone, Marionette) ->
       @$el.on 'hidden.bs.modal', @closeModal
       @saveUrl = view.saveUrl
 
-    onBeforeShow: (view) ->
-      return
-
     onShow: (view) ->
       @setupBindings view
 
       options = @getDefaultOptions _.result(view, 'modal')
       @$el.modal options
 
-    onClose: (view) ->
+    onEmpty: (view) ->
       @$el.modal 'hide'
 
     getDefaultOptions: (options = {}) ->
@@ -43,17 +40,14 @@ do (Backbone, Marionette) ->
       @listenTo view, 'modal:close', @closeModal
 
     closeModal: (e) ->
-      console.log 'close popup:url:', @current
       @$el.off()
       @stopListening()
-      @close()
+      @empty()
       if @prevModal.length
         e.preventDefault()
         e.stopPropagation()
-        @current = null
         @prevModal.css 'z-index', ''
         $('body').addClass 'modal-open'
-
       if not @saveUrl
         console.info 'navigate to previous'
         @app.trigger 'route:back'

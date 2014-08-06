@@ -338,6 +338,7 @@ class Order(models.Model):
     email = models.CharField(u'Email', max_length=80, blank=True, null=True)
     cont_id = models.IntegerField(u'id контента', blank=True,null=True)
     cont_type = models.CharField(u'тип контента', max_length=80, blank=True, null=True)
+    summary_info = models.TextField(u'Дополнительная информация', blank=True, null=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.email, self.fullname)

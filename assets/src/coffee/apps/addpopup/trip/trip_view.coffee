@@ -15,26 +15,174 @@
     className: 'trip-step__block trip-step__block_title popupwin__content mb10 clearfix'
 
     events:
-      'blur [name=countmembers]': 'setMembers'
-      'blur [name=price]': 'setPrice'
+      'click .toggle-list__title': 'toggleList'
+      'click .js-add-tour-item': 'addTourItem'
+      'click .js-delete-field': 'deleteField'
+      'click .js-add-tour-service': 'addTourService'
+      'keypress .js-parse-time': 'keypressTime'
+      'keyup .js-parse-time': 'keyupTime'
       'click .js-back': 'backStep'
       'click .js-finish': 'saveTrip'
+      'submit form': 'formSubmit'
 
     initialize: ->
       @user = App.request 'get:my:profile'
       @collection = @options.collection
 
-    setMembers: (event) ->
-      event.preventDefault()
-      target = $(event.currentTarget)
-      countmembers = target.val()
-      @model.set countmembers: countmembers
+    onShow: ->
+      _this = @
+      firstDate = ''
+      dateActive = false
+      @$( ".js-datapicker-period" ).datepicker
+        showOn: "both"
+        buttonImage: "/static/images/calendar.png"
+        buttonImageOnly: true
+        dateFormat: 'dd.mm.yy'
+        beforeShow: ->
+          $(this).datepicker( "setDate", null )
+          $('#ui-datepicker-div').addClass('ui-datepicker_period')
+          firstDate = ''
+        onSelect: (dateText, inst) ->
+          inst.inline = true
+          dateActive = true
+          if firstDate isnt ''
+            inst.inline = false
+            dateActive = false
+            if ((parseInt(dateText.split('.')[0]) >= parseInt(firstDate.split('.')[0])) ||
+            (parseInt(dateText.split('.')[1]) > parseInt(firstDate.split('.')[1])) ||
+            (parseInt(dateText.split('.')[2]) > parseInt(firstDate.split('.')[2])))
+              $(this).val(firstDate + ' - ' + dateText)
+            else
+              $(this).val('')
+          firstDate = $(this).val().split(' -')[0]
+        onClose: (date,inst) ->
+          inst.inline = false
+          dateActive = false
 
-    setPrice: (event) ->
+    isNumberKey: (evt) ->
+      charCode = if evt.which then evt.which else event.keyCode
+      if charCode > 31 && (charCode < 48 || charCode > 57)
+        return false
+      return true
+
+    keypressTime: (evt) ->
+      $target = $(evt.currentTarget)
+      if @isNumberKey(evt) and ($target.val().length < 5 )
+        return true
+      return false
+
+    keyupTime: (evt) ->
+      $target = $(evt.currentTarget)
+      val = $target.val()
+      charCode = if evt.which then evt.which else event.keyCode
+
+      if (charCode != 8)&&(val.length == 2)
+        $target.val($target.val() + ':')
+
+    toggleList: (event) ->
       event.preventDefault()
-      target = $(event.currentTarget)
-      price = target.val()
-      @model.set price: price
+      console.log event
+      $target = $(event.currentTarget)
+      if $target.hasClass('active')
+        $target.removeClass('active')
+        $target.siblings('.toggle-list__body').slideUp()
+        $target.find('.check-wrap input').prop('checked', false)
+      else
+        @$('.toggle-list__title').removeClass('active')
+        @$('.toggle-list__body').slideUp()
+        $target.addClass('active')
+        $target.siblings('.toggle-list__body').slideDown()
+        $target.find('.check-wrap input').prop('checked', 'checked')
+      if $target.find('.check-wrap input').is(':checked')
+        $target.siblings('.toggle-list__body')
+          .find('input, textarea')
+          .removeClass('disabled')
+          .prop('disabled', false)
+      else
+        $target.siblings('.toggle-list__body')
+          .find('input, textarea')
+          .addClass('disabled')
+          .prop('disabled', true)
+
+    addTourItem: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      days = $target.parent().find('.input-date').val()
+      start_time = $target.parent().find('.input-start').val()
+      end_time = $target.parent().find('.input-end').val()
+      if end_time
+        tpl = """
+          <div class="form__field form__field_tour">
+            <span class="date">#{days}</span>
+            <span class="time"> c #{start_time} до #{end_time}</span>
+            <input name="personal_date" type="hidden" value="#{days};#{start_time};#{end_time}">
+            <a href="#" class="close js-delete-field"></a></div>
+            """
+      else
+        tpl = """
+          <div class="form__field form__field_tour">
+            <span class="date">#{days}</span>
+            <span class="time"> c #{start_time}</span>
+            <input name="group_date" type="hidden" value="#{days};#{start_time}">
+            <a href="#" class="close js-delete-field"></a></div>
+            """
+      if days and start_time
+        $target.parent().after tpl
+
+    deleteField: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      $target.parent().remove()
+
+    addTourService: (event) ->
+      console.log event
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      name = $target.parent().find('textarea').val()
+      price = $target.parent().find('input').val()
+      personal_form = $target.closest('#personalTour')
+      if personal_form
+        tpl = """
+          <div class="form__field form__field_service">
+            <span class="service">#{name}</span>
+            <span class="price">#{price} <span class="rouble">o</span></span>
+            <input name="additional" type="hidden" value="#{name};#{price}">
+            <a href="#" class="close js-delete-field"></a>
+          </div>
+          """
+      if name and price
+        $target.parent().after tpl
+
+    setAdditionalData: ->
+      data = @$('#personalTour').serializeArray()
+      personal_date = _(data).filter({name: 'personal_date'})
+        .pluck('value').value()
+      additional = _(data).filter({name: 'additional'})
+        .pluck('value').value()
+      personal_data = _.reduce data, (result, el) ->
+        result[el.name] = el.value
+        result
+      , {}
+      personal_data.personal_date = personal_date
+      personal_data.additional = additional
+
+      data = @$('#groupTour').serializeArray()
+      group_date = _(data).filter({name: 'group_date'})
+        .pluck('value').value()
+      additional = _(data).filter({name: 'additional'})
+        .pluck('value').value()
+      group_data = _.reduce data, (result, el) ->
+        result[el.name] = el.value
+        result
+      , {}
+      group_data.group_date = group_date
+      group_data.additional = additional
+      data =
+        personal: personal_data
+        group: group_data
+      price = personal_data.personal_price_tour or group_data.group_price_tour
+      @model.set price: price, {silent:true}
+      @model.set summary_info: JSON.stringify(data), {silent:true}
 
     backStep: (event) ->
       event.preventDefault()
@@ -52,17 +200,21 @@
       @spinner.start()
       @model.set author: @user.toJSON()
       @model.set blocks: @collection.toJSON()
+      @setAdditionalData()
       @model.save null,
         success: =>
           localStorage.removeItem "trip/#{@model.cid}"
           @spinner.stop()
-          App.addTripPopup.close()
+          App.addTripPopup.empty()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
           App.BoardApp.board.yapens.add @model, at:1
           yapensView = App.BoardApp.board.yapensView.render()
           if yapensView.wall
             yapensView.wall.reloadItems() & yapensView.wall.layout()
+
+    formSubmit: (event) ->
+      event.preventDefault()
 
 
   class Trip.Aside extends App.Views.ItemView
@@ -139,9 +291,6 @@
     setTripDescription: (event) ->
       @model.set description: $('.form__field_description textarea').val()
 
-    onShow: ->
-      return
-
     onClose: ->
       @stopListening()
 
@@ -188,7 +337,7 @@
         success: =>
           localStorage.removeItem "trip/#{@model.cid}"
           @spinner.stop()
-          App.addTripPopup.close()
+          App.addTripPopup.empty()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
           App.BoardApp.board.yapens.add @model, at:0
@@ -376,7 +525,7 @@
 
 
   class Trip.Blocks extends App.Views.CollectionView
-    itemView: Trip.BlockItem
+    childView: Trip.BlockItem
     className: 'trip-blocks'
 
     collectionEvents: ->

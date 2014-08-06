@@ -287,7 +287,7 @@
       event.preventDefault()
       @model.save null,
         success: =>
-          App.addRoutePopup.close()
+          App.addRoutePopup.empty()
           App.vent.trigger 'show:detail:popup', @model
 
     backStep: (event) ->

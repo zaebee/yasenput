@@ -4,16 +4,29 @@
 
     initialize: ->
       console.log 'initialize MapApp.Show.Controller'
-
+      #@collection = App.request 'get:all:yapens'
+      @tripyapens = new App.Entities.YapensCollection
       @layout = @getLayoutView()
-      @listenTo @layout, 'show', =>
-        @mapView()
+      #@listenTo @layout, 'show', =>
+        #@showMapView()
+      #@showAside()
+      #@show @layout,
+      #  region: App.mapRegion
 
-      ## disable map on main page
-      #@show @layout
+    showAside: ->
+      @asideView = new App.AddPopupApp.PlaceToTrip.Aside
+        model: new App.Entities.TripBlock
+        collection: @collection
+        tripyapens: @tripyapens
+      @show @asideView,
+        region: App.sidebarRegion
 
     getLayoutView: ->
       new Show.Layout
 
-    mapView: ->
-      new Show.Map
+    showMapView: ->
+      @mapView = new Show.Map
+        tripyapens: @tripyapens
+        collection: @collection
+      @show @mapView,
+        region: @layout.yandexMapRegion

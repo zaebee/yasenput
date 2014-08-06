@@ -1,0 +1,13 @@
+<h3 class="description__title">{{name}}</h3>
+<p class="description__text">{{br txt}}</p>
+{{#if points}}
+<div class="description__places">
+  <div class="title">Прикрепленные места <!--и события--></div>
+  <ul class="list">
+    {{#each points}}
+    <li class="item"><a href="/point/{{id}}" class="link c-place">{{name}}</a></li>
+    {{/each}}
+  </ul>
+</div>
+{{/if}}
+<div class="description__address">{{address}}</div>

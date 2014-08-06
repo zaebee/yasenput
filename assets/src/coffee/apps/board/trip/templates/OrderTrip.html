@@ -1,6 +1,6 @@
 <div class="popupwin__content clearfix">
   <div class="popupwin__title clearfix">
-    Заказать экскурсию
+    Сделать заказ
   </div>
   <div class="form">
     <div class="field">
@@ -12,7 +12,8 @@
       {{/if}}
     </div>
     <div class="field field_email">
-      <label>E-mail:</label>
+      <label>E-mail<span class="star">*</span>:
+      </label>
       {{#if user.email}}
       <input name="email" type="text" value="{{user.email}}">
       {{else}}
@@ -27,9 +28,125 @@
       <input name="phone" type="text" placeholder="* (***) ***-**-**">
       {{/if}}
     </div>
-    <div class="note">Все поля обязательны для заполнения</div>
+    <div class="field clearfix">
+      {{#if summary_info.personal.personal_price_tour}}
+        {{#if summary_info.group.group_price_tour}}
+        <button class="btn btn_color_blue js-tour-personal" style="width:150px;">Индивидуальный</button>
+        <button class="btn btn_color_grey js-tour-group" style="width:150px;">Групповой</button>
+        {{/if}}
+      {{/if}}
+    </div>
+    {{#if summary_info.personal.personal_price_tour}}
+    <form id="orderPersonalTour">
+      <div class="personal-tour">
+        <div class="field clearfix">
+          <div class="item item_count">
+            <label>Кол-во человек<span class="star">*</span>:</label>
+            <div class="select-grey">
+              <select class="js-personal-users" name="user_count">
+                {{optionRange summary_info.personal.personal_max_people}}
+              </select>
+            </div>
+          </div>
+          <div class="item item_date">
+            <label>Дата<span class="star">*</span>:</label>
+            <input name="date" type="text" class="js-datapicker-personal">
+          </div>
+        </div>
+        <!--
+        <div class="field">
+          <label>Выберите время начала<span class="star">*</span>:</label>
+          <div class="select-grey">
+            <select name="time">
+              <option value="1">18:30</option>
+              <option value="2">19:30</option>
+              <option value="3">20:30</option>
+              <option value="4">21:30</option>
+              <option value="5">22:30</option>
+            </select>
+          </div>
+        </div>
+        -->
+        {{#if summary_info.personal.additional}}
+        <div class="field additional">
+          <div class="entry-title">Дополнительные услуги:</div>
+          <ul class="list clearfix">
+            {{#each summary_info.personal.additional}}
+            <li class="item clearfix">
+            <div class="name">{{orderService 'name' this}}</div>
+              <label class="check-wrap">
+                <input class="js-personal-service" name="{{orderService 'name' this}}" value="{{orderService 'price' this}}" type="checkbox">
+                <span class="icon"></span>
+              </label>
+              <div class="price">{{orderService 'price' this}} <span class="rouble">o</span></div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
+        <input type="hidden" name="total_price" value="{{summary_info.personal.personal_price_tour}}">
+        <div class="field finish-price">Итого: <span class="price">{{summary_info.personal.personal_price_tour}} <span class="rouble">o</span></span></div>
+      </div><!-- /personal-tour -->
+    </form>
+    {{/if}}
+
+    {{#if summary_info.group.group_price_tour}}
+    <form id="orderGroupTour">
+      <div class="group-tour {{#if summary_info.personal.personal_price_tour}}hide{{/if}}">
+        <div class="field clearfix">
+          <div class="item item_count">
+            <label>Кол-во человек<span class="star">*</span>:</label>
+            <div class="select-grey">
+              <select class="js-group-users" name="user_count">
+                {{optionRange summary_info.group.group_max_people}}
+              </select>
+            </div>
+          </div>
+          <div class="item item_date">
+            <label>Дата<span class="star">*</span>:</label>
+            <input name="date" type="text" class="js-datapicker-group">
+          </div>
+        </div>
+        <!--
+        <div class="field">
+          <label>Выберите время начала<span class="star">*</span>:</label>
+          <div class="select-grey">
+            <select name="time">
+              <option value="1">18:30</option>
+              <option value="2">19:30</option>
+              <option value="3">20:30</option>
+              <option value="4">21:30</option>
+              <option value="5">22:30</option>
+            </select>
+          </div>
+        </div>
+        -->
+        {{#if summary_info.group.additional}}
+        <div class="field additional">
+          <div class="entry-title">Дополнительные услуги:</div>
+          <ul class="list clearfix">
+            {{#each summary_info.group.additional}}
+            <li class="item clearfix">
+            <div class="name">{{orderService 'name' this}}</div>
+              <label class="check-wrap">
+                <input class="js-group-service" name="{{orderService 'name' this}}" value="{{orderService 'price' this}}" type="checkbox">
+                <span class="icon"></span>
+              </label>
+              <div class="price">{{orderService 'price' this}} <span class="rouble">o</span></div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
+        <input type="hidden" name="total_price" value="{{summary_info.personal.personal_price_tour}}">
+        <div class="field finish-price">Итого: <span class="price">{{summary_info.group.group_price_tour}} <span class="rouble">o</span></span></div>
+      </div><!-- /group-tour -->
+    </form>
+    {{/if}}
+
   </div>
+  <div class="note"><span class="star">*</span> - поля обязательны для заполнения</div>
   <div class="popupwin__footer clearfix">
-    <a href="#?" class="btn btn_color_blue right js-finish">Готово</a>
+    <button class="btn btn_color_blue right js-finish">Оплатить</button>
   </div>
 </div><!-- class="popup-content" -->

@@ -199,7 +199,7 @@
 
 
   class PlaceToTrip.Grid extends App.Views.CollectionView
-    itemView: PlaceToTrip.GridItem
+    childView: PlaceToTrip.GridItem
     className: 'route-grid'
     id: 'trip-grid'
 
@@ -243,6 +243,7 @@
     className: 'route-step__aside'
 
     initialize: ->
+      _.bindAll @
       @yapens = @options.tripyapens
       @listenTo @options.collection, 'add:to:trip', @addToTrip
       @listenTo @options.collection, 'delete:from:trip', @deleteFromTrip
@@ -262,13 +263,17 @@
     events:
       'click .item': 'setMapCenter'
       'click .js-finish-adding': 'addPoints'
+      'click .js-show-map': 'showMainMap'
+
+    scrollAside: ->
+      if $(window).scrollTop() > 252 and $(window).scrollTop() < 1000
+        @$el.parent('#sidebar-region').addClass 'fixed'
+      if $(window).scrollTop() < 252
+        @$el.parent('#sidebar-region').removeClass 'fixed'
 
     onShow: ->
-      $(window).on 'scroll.Aside', =>
-        if $(window).scrollTop() > 260 and $(window).scrollTop() < 320
-          @$el.parent('#sidebar-region').addClass 'fixed'
-        if $(window).scrollTop() < 260
-          @$el.parent('#sidebar-region').removeClass 'fixed'
+      scrollAside = _.debounce @scrollAside, 50
+      $(window).on 'scroll.Aside', @scrollAside
       @popupwin = @$el.closest '.popupwin'
       @popupwin.on 'scroll.Yapp', =>
         if @$el.length
@@ -297,9 +302,30 @@
     addPoints: (event) ->
       console.log 'clicked .js-finish'
       event.preventDefault()
-      App.addPlaceToTripPopup.close()
+      if not App.addPlaceToTripPopup.currentView
+        spinner = App.buttonSpinner @$('.btn_finish'), 'Сохраняем', @$('.btn_finish')
+        spinner.start()
+        block = @model.toJSON()
+        trip = new App.Entities.Trip
+          name: 'Мое путешествие'
+          blocks: [block]
+          author: App.USER
+        new App.AddPopupApp.Trip.Controller model: trip
+        spinner.stop()
+      App.addPlaceToTripPopup.empty()
+
+    showMainMap: (event) ->
+      event.preventDefault()
+      App.boardRegion.reset()
+      App.vent.trigger 'show:map:region', @options.tripyapens
       
     onClose: ->
       $(window).off 'scroll.Aside'
       @popupwin.off 'scroll.Yapp'
       @stopListening()
+
+    onRender: ->
+      listHeight = @$('.route-list').height()
+      windowHeight = $(window).height() - 250
+      @$('.route-list').height(if listHeight > windowHeight then windowHeight else listHeight)
+      @$('.route-list').jScrollPane({autoReinitialise:true})

@@ -32,7 +32,7 @@
       console.log 'fired url', id
 
   App.vent.on 'show:edit:popup', (model) ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     if model instanceof App.Entities.Point
       new AddPopupApp.Point.Controller model: model
     if model instanceof App.Entities.Event
@@ -43,23 +43,23 @@
       new AddPopupApp.Trip.Controller model: model
 
   App.vent.on 'show:add:place:popup', ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     API.addPoint()
 
   App.vent.on 'show:add:event:popup', ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     API.addEvent()
 
   App.vent.on 'show:add:route:popup', ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     API.addRoute()
 
   App.vent.on 'show:add:trip:popup', ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     API.addTrip()
 
   App.vent.on 'show:add:placetotrip:popup', (model) ->
-    App.addPopupRegion.close()
+    App.addPopupRegion.empty()
     API.addPlacetotrip model
 
   App.addInitializer ->

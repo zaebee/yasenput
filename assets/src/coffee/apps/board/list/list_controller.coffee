@@ -10,18 +10,6 @@
       @show @yapensView,
         region: App.boardRegion
         loading: true
-      @showAside()
-
-    showAside: ->
-      if App.board and App.board.asideView
-        @asideView = App.board.asideView
-      else
-        @asideView = @sidebarView or new App.AddPopupApp.PlaceToTrip.Aside
-          model: new App.Entities.TripBlock
-          collection: @yapens
-          tripyapens: new App.Entities.YapensCollection
-        @show @asideView,
-          region: App.sidebarRegion
 
     onClose: ->
       @stopListening()

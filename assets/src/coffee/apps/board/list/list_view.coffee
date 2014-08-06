@@ -122,25 +122,20 @@
       console.log event
 
   class List.Yapens extends App.Views.CollectionView
-    itemView: List.Yapen
+    childView: List.Yapen
     className: 'content'
     id: 'grid'
 
     getEmptyView: ->
       App.HeaderApp.Show.PopupAdd
 
-    itemViewOptions: () ->
+    childViewOptions: () ->
       editable: !!App.settings.user
 
-    onAfterItemAdded: (itemView, data) ->
+    onAddChild: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
         @wall.reloadItems()
-
-    onCollectionRendered: ->
-      App.execute 'when:fetched', @collection, =>
-        console.log 'collection rendered. We rebuild masonry layout'
-        @wall.layout() if @wall
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>
@@ -148,6 +143,8 @@
         if @collection.length
           @wall = @wall or new Masonry @el,
             itemSelector: '.box'
+          @wall.reloadItems()
+          @wall.layout()
         else
           @wall.destroy() if @wall
         @infiniScroll = new Backbone.InfiniScroll @collection,

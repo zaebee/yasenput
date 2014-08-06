@@ -204,3 +204,62 @@ class TripOption():
     @staticmethod
     def getExtras():
         return ['likes_count', 'review_count']
+
+
+class TripBlockOption():
+
+    class relations:
+        @staticmethod
+        def getBlockRelation():
+            relations = {
+                'points': {
+                    'extras': ('type_of_item',),
+                    'relations': {
+                        'tags': {'fields': ('name', 'id', 'level')},
+                        'author': PersonOption.relations.getPersonShortRelation(),
+                        'imgs': {
+                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560', 'thumbnail625x370'),
+                            'relations': {
+                                'author': PersonOption.relations.getPersonShortRelation(),
+                                'likeusers': PersonOption.relations.getPersonShortRelation(),
+                                'comments': {
+                                    'relations': {
+                                        'author': PersonOption.relations.getPersonShortRelation()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                'events': {
+                    'relations': {
+                        'tags': {'fields': ('name', 'id', 'level')},
+                        'author': PersonOption.relations.getPersonShortRelation(),
+                        'imgs': {
+                            'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
+                            'relations': {
+                                'author': PersonOption.relations.getPersonShortRelation(),
+                                'likeusers': PersonOption.relations.getPersonShortRelation(),
+                                'comments': {
+                                    'relations': {
+                                        'author': PersonOption.relations.getPersonShortRelation()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                'imgs': {
+                    'extras': ('thumbnail104x104', 'thumbnail207', 'thumbnail560','thumbnail625x370'),
+                    'relations': {
+                        'author': PersonOption.relations.getPersonShortRelation(),
+                        'likeusers': PersonOption.relations.getPersonShortRelation(),
+                        'comments': {
+                            'relations': {
+                                'author': PersonOption.relations.getPersonShortRelation()
+                            }
+                        }
+                    }
+                }
+            }
+            return relations

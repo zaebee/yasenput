@@ -216,7 +216,7 @@
     addImage: (event) ->
       event.preventDefault()
       @model.trigger 'change:imgs'
-      App.photoPopupRegion.close()
+      App.photoPopupRegion.empty()
 
     onShow: ->
       id = @model.get 'id'

@@ -208,7 +208,7 @@
         @$('.field__input-place').removeClass 'error'
         @model.save null,
           success: =>
-            App.addEventPopup.close()
+            App.addEventPopup.empty()
             App.BoardApp.board.yapens.add @model, at:1
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "event/#{@model.get('id')}"
@@ -289,7 +289,7 @@
 
     closePopup: (model, resp, options) ->
       console.log 'event saved', model, resp, options
-      App.addEventPopup.close()
+      App.addEventPopup.empty()
 
 
   class Event.Points extends App.Views.ItemView
