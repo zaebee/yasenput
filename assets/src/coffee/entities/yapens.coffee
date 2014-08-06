@@ -25,7 +25,7 @@
       @fetch = @yapens.fetch
         reset: true
         data: params
-        success: (collection) ->
+        __success: (collection) ->
           ## if need card for adding trip we show it
           #if not withoutEmpty
           if withoutEmpty
