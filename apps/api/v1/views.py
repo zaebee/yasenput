@@ -393,21 +393,16 @@ class ItemsList(PointsBaseView):
         search_res_events = search_res_events.filter(Q_points).distinct()
 
         t0 = time.time()
-        if models == ['trips']:
-            all_items = QuerySetJoin(search_res_trips).order_by('-' + sort)[offset:limit]
-        elif models == ['tours']:
-            all_items = QuerySetJoin(search_res_tours).order_by('-' + sort)[offset:limit]
-        elif models == ['points']:
-            all_items = QuerySetJoin(search_res_points).order_by('-' + sort)[offset:limit]
-        elif models == ['events']:
-            all_items = QuerySetJoin(search_res_events).order_by('-' + sort)[offset:limit]
-        else:
-            all_items = QuerySetJoin(
-                search_res_points,
-                search_res_events,
-                search_res_trips,
-                search_res_tours
-            ).order_by('-' + sort)[offset:limit]
+        items = []
+        if 'trips' in models:
+            items.append(search_res_trips)
+        if 'tours' in models:
+            items.append(search_res_tours)
+        if 'points' in models:
+            items.append(search_res_points)
+        if 'events' in models:
+            items.append(search_res_events)
+        all_items = QuerySetJoin(*items).order_by('-' + sort)[offset:limit]
 
         self.log.info('Build points, events, trips, tours complete (%.2f sec.)' % (time.time()-t0))
 
