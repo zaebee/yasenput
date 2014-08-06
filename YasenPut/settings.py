@@ -242,6 +242,11 @@ SOCIAL_AUTH_PIPELINE = (
     'apps.main.pipeline.get_user_avatar',
     #'apps.main.pipeline.get_user_avatar'
 )
+
+DEFAULT_FROM_EMAIL = 'info@yasenput.ru'
+TEMPLATED_EMAIL_TEMPLATE_DIR = 'templated_email/' #Use '' for top level template dir
+TEMPLATED_EMAIL_FILE_EXTENSION = 'html'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
