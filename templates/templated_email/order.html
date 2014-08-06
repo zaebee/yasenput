@@ -1,0 +1,104 @@
+{% block subject %}yasenput.pu - Ваш заказ экскурсии{% endblock %}
+
+{% block html %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>yasenput.ru - заказ экскурсии</title>
+</head>
+<body style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+<div style="background: #ffffff;">
+  <table width="700" cellpadding="0" cellspacing="0" align="center" border="0" bgcolor="#ffffff" style="font-family: 'Myriad Pro', Arial,sans-serif; background-color: #ffffff; border: 0;">
+    <tr>
+      <td style="padding-top: 10px;">
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0;">
+          <tr>
+            <td style="width: 510px;">
+              <a href="http://yasenput.ru/" target="_blank"><img src="http://yasenput.ru/static/images/logo.png" width="115" height="41" alt="yasenput.ru" border="0" style="border:0;"></a>
+            </td>
+            <td style="color: #7d7d7d; vertical-align: top;">
+              <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0;">
+                <tr>
+                  <td style="padding-top: 2px; width: 26px;"><img src="http://mebelstock.com/static/i/phone-ico.gif" width="15" height="18" alt="Contact Phone" border="0" style="border:0;"></td>
+                  <td style="padding-top: 2px; font-size: 14px;">+7 906 296-90-11</td>
+                </tr>
+                <tr>
+                  <td style="padding-top: 8px;"><img src="http://mebelstock.com/static/i/mail-ico.gif" width="17" height="11" alt="Support" border="0" style="border:0;"></td>
+                  <td style="padding-top: 4px; font-size: 13px;"><a href="mailto:info@yasenput.ru" style="color: #7d7d7d; text-decoration: none;">info@yasenput.ru</a></td>
+                </tr>
+              </table>
+          </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="font-size: 24px; color: #1a1a1a; font-weight: bold; padding-top: 27px;">Информация по заказу</td>
+    </tr>
+
+    <tr>
+      <td style="font-size: 22px; color: #7d7d7d; padding-top: 23px; padding-left: 2px;">Имя: {{fullname}}<br> Количество человек: {{info.user_count}}<br> Дата: {{info.date}}<br>Сумма: {{info.total_price}} руб.</td>
+    </tr>
+
+    <tr>
+       <td style="vertical-align: top; padding-top: 16px;">
+         <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0;">
+           <tr>
+             <td style="width: 681px; vertical-align: top;">
+               <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0;">
+                 <tr>
+                   <td style="vertical-align: top; padding-left: 21px; padding-top: 11px; background-color: #f8f8f8; border-left: 1px solid #dfdfdf; border-right: 1px solid #dfdfdf; border-bottom: 1px solid #dfdfdf; border-top: 1px solid #dfdfdf;">
+                     <div style="font-size: 17px; color: #000000; font-weight: bold;">Информация об экскурсии</div>
+                     <div style="font-size: 14px; color: #7d7d7d; font-weight: normal; padding-top: 13px; padding-right: 15px; padding-bottom: 10px;">
+                       <h4><a href="http://yasenput.ru/trip/{{trip.id}}">{{ trip.name }}</a></h4>
+                       <p>
+                       {% if trip.main_image %}
+                       <img style="float:left;margin:0 20px 20px 0;" src="http://yasenput.ru/{{ trip.main_image }}">
+                       {% endif %}
+                       При перелетах в/из США/Китай/Германию авиакомпании требуют внесения в оплаченный заказ информации о визовых данных и адресе фактического места пребывания в стране назначения.
+                       Пожалуйста, сообщите эту информацию не позже, чем за 24 часа до вылета. 
+                       Пассажиры, направляющиеся в Тибет (Китай) — кроме визы, должны иметь разрешение на въезд в регион, заранее полученное в Посольстве КНР
+                       </p>
+                       {% if trip.address %}
+                       <p><b>Адрес:</b> {{trip.address}}</p>
+                       {% endif %}
+                    </div>
+                   </td>
+                 </tr>
+               </table>
+             </td>
+           </tr>
+         </table>
+       </td>
+     </tr>
+
+    <tr>
+      <td style="font-size: 16px; color: #7d7d7d; padding-top: 23px; padding-left: 2px;">
+        С уважением, <br>
+        Команда проекта yasenput.ru<br>
+      </td>
+    </tr>
+
+     <tr>
+       <td style="vertical-align: top; color: #a3a3a3; font-size: 14px; text-align: center; padding-top: 30px;">
+         <a href="http://yasenput.ru/" target="_blank" style="text-decoration: none; color: #a3a3a3; padding-right: 5px; padding-left: 5px;">Что такое yasenput.ru?</a>
+         <!--
+         <a href="http://mebelstock.com/about/" target="_blank" style="text-decoration: none; color: #a3a3a3; padding-right: 5px; padding-left: 5px;">О нас</a> /
+         <a href="http://mebelstock.com/contacts/" target="_blank" style="text-decoration: none; color: #a3a3a3; padding-right: 5px; padding-left: 5px;">Контакты</a> /
+         <a href="http://mebelstock.com/import/" target="_blank" style="text-decoration: none; color: #a3a3a3; padding-right: 5px; padding-left: 5px;">Каталог</a> /
+         <a href="http://mebelstock.com/company/" target="_blank" style="text-decoration: none; color: #a3a3a3; padding-right: 5px; padding-left: 5px;">Салоны</a>
+         -->
+       </td>
+     </tr>
+     <tr>
+       <td style="vertical-align: top; color: #777777; padding-top: 25px; text-align: center; font-size: 13px; padding-bottom: 10px;">
+       </td>
+     </tr>
+
+  </table>
+</div>
+</body>
+</html>
+{% endblock %}
