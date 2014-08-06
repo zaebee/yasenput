@@ -249,7 +249,10 @@
           _.map el, (item) -> item.type = type
           el
         data.results = _.filter _.flatten(data.results), (el) ->
-          el.type isnt 'users' and el.type isnt 'tags'
+          if App.settings.models
+            el.type is App.settings.models
+          else
+            el.type isnt 'users' and el.type isnt 'tags'
         query.callback data
 
     initSelect2: (params = {}) ->

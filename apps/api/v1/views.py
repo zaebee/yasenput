@@ -247,7 +247,6 @@ class Search(PointsBaseView):
 
         users = users_list[offset:limit]
 
-
         YpJson = YpSerialiser()
         points = json.loads(YpJson.serialize(points, fields = ['id','name', 'address']))
         events = json.loads(YpJson.serialize(events, fields = ['id','name']))
@@ -270,7 +269,7 @@ class ItemsList(PointsBaseView):
         models = ['points', 'events','trips', 'tours']
 
         search_res_points = MainModels.Points.objects.all()
-        search_res_events = MainModels.Events.objects.all()
+        search_res_events = MainModels.Events.objects.filter(dt_end__gte=datetime.now())
         search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True))
         search_res_tours = TripModels.Trips.objects.filter(price__gt=0)
         if params.get('models'):
@@ -295,6 +294,10 @@ class ItemsList(PointsBaseView):
         lt_right = 200.0
         if not params.get('s'):
             if params.get('city'):
+                search_res_points = search_res_points.filter(address__icontains=params.get('city'))
+                search_res_events = search_res_events.filter(points__address__icontains=params.get('city'))
+                search_res_trips = search_res_trips.filter(blocks__address__icontains=params.get('city'))
+                search_res_tours = search_res_tours.filter(blocks__address__icontains=params.get('city'))
                 """
                 g = geocoders.GoogleV3()
                 place, (lt, ln) = g.geocode(params.get('city'))
@@ -341,6 +344,11 @@ class ItemsList(PointsBaseView):
                         lt_right = ipgeobase.latitude + 0.1
                         self.log.info(ipgeobase.city)
                 """
+        else:
+            search_res_points = search_res_points.filter(name__icontains=params.get('s'))
+            search_res_events = search_res_events.filter(name__icontains=params.get('s'))
+            search_res_trips = search_res_trips.filter(name__icontains=params.get('s'))
+            search_res_tours = search_res_tours.filter(name__icontains=params.get('s'))
         t0 = time.time()
         self.log.info(str(ln_left)+' '+str(lt_left)+' '+str(ln_right)+' '+str(lt_right))
         Q_points = (
