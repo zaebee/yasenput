@@ -8,7 +8,6 @@
         @model = App.request 'get:detail:trip', @options.model
       else
         @model = @options.model
-      @blocks = App.request 'get:blocks', @model.get 'blocks'
 
       @layout = new Trip.Layout model: @model
       @listenTo @layout, 'show', =>
@@ -32,12 +31,14 @@
         region: @layout.asideRegion
 
     showBlocks: ->
-      @blocksView = new Trip.Blocks
-        model: @model
-        collection: @blocks
-      @show @blocksView,
-        region: @layout.blocksRegion
-        loading: true
+      App.execute 'when:fetched', @model, =>
+        @blocks = App.request 'get:blocks', @model.get 'blocks'
+        @blocksView = new Trip.Blocks
+          model: @model
+          collection: @blocks
+        @show @blocksView,
+          region: @layout.blocksRegion
+          loading: true
 
     showComments: ->
       @commentsView = new Trip.Comments model: @model
