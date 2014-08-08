@@ -26,5 +26,5 @@
     getLayoutView: ->
       new Show.Layout
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()

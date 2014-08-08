@@ -113,6 +113,6 @@
       if @geoMap
         @geoObjectsCollection.remove model.placemark
 
-    onClose: ->
+    onDestroy: ->
       console.log 'closed Show.Map view'
       #@stopListening()

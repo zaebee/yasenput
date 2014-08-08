@@ -17,7 +17,7 @@
       #App.execute 'when:fetched', @model, =>
       App.eventPopup.show @layout, loading: true
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showHeader: ->

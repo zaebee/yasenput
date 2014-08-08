@@ -93,7 +93,7 @@
             'transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
       ###
 
-    onClose: ->
+    onDestroy: ->
       @popupwin.off 'scroll'
 
 

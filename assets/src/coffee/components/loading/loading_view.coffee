@@ -4,5 +4,5 @@
     template: 'LoadingView'
     className: "loading-container"
     
-    onClose: ->
-      @close()
+    onDestroy: ->
+      @destroy()

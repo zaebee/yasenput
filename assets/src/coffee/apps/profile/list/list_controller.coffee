@@ -16,7 +16,7 @@
         when 'settings' then @showSettings()
         else @showMyYapens()
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showDashboard: ->

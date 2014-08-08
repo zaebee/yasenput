@@ -25,7 +25,7 @@
     initialize: ->
       @listenTo @model, 'success:delete:photo', @successDeletePhoto
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @model.unset()
 
@@ -350,7 +350,7 @@
       @$('.select-type').select2 'data', tags
       @initMap()
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @collection.reset()
       @model.unset()
@@ -457,6 +457,6 @@
       event.preventDefault()
       @trigger 'show:step:what'
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @model.unset()
