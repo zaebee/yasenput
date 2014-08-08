@@ -136,7 +136,7 @@
         formatNoMatches: -> 'Ничего не найдено'
         escapeMarkup: (m) -> m
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
 
@@ -194,7 +194,7 @@
       console.log event
       #@model.trigger 'delete:from:trip', @model
 
-    onClose: ->
+    onDestroy: ->
       @model.placemark.balloon.close()
 
 
@@ -231,8 +231,8 @@
         @wall = @wall or new Masonry @el,
           itemSelector: '.box'
 
-    onClose: ->
-      console.log 'onClose yapens'
+    onDestroy: ->
+      console.log 'onDestroy yapens'
       #@infiniScroll.destroy()
       @wall.destroy() if @wall
       @remove()
@@ -319,7 +319,7 @@
       App.boardRegion.reset()
       App.vent.trigger 'show:map:region', @options.tripyapens
       
-    onClose: ->
+    onDestroy: ->
       $(window).off 'scroll.Aside'
       @popupwin.off 'scroll.Yapp'
       @stopListening()

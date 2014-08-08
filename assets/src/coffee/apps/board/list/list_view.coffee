@@ -154,8 +154,8 @@
           onFetch: -> $('.loader').removeClass 'hide'
           success: -> $('.loader').addClass 'hide'
 
-    onClose: ->
-      console.log 'onClose yapens'
+    onDestroy: ->
+      console.log 'onDestroy yapens'
       @infiniScroll.destroy()
       @wall.destroy() if @wall
       @remove()

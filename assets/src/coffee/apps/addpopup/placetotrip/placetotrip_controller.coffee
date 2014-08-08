@@ -42,5 +42,5 @@
       @show @gridView,
         region: view.gridRegion
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()

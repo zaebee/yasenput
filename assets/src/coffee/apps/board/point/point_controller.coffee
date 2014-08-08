@@ -21,7 +21,7 @@
       #App.execute 'when:fetched', @model, =>
       App.pointPopup.show @layout, loading: true
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showHeader: ->

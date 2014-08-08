@@ -19,7 +19,7 @@
         @showLikes()
       App.tripPopup.show @layout, loading: true
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showHeader: ->
