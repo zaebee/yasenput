@@ -81,7 +81,7 @@
             '-webkit-transform':  'translateY(' + @popupwin.scrollTop()+'px)'
             'transform':  'translateY(' + @popupwin.scrollTop()+'px)'
 
-    onClose: ->
+    onDestroy: ->
       @popupwin.off 'scroll'
 
 

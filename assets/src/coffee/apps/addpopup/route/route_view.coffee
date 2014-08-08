@@ -25,7 +25,7 @@
       'click .js-next-step': 'nextStep'
       'submit form': 'nextStep'
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @model.unset()
 
@@ -256,7 +256,7 @@
             $this.removeClass('open')
       @initMap()
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @collection.reset()
       @model.unset()
@@ -294,7 +294,7 @@
       event.preventDefault()
       @trigger 'show:step:what'
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @model.unset()
 
@@ -314,6 +314,6 @@
       console.log data
       #@model. trigger 'select2-removed', event
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @model.unset()

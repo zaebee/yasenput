@@ -267,7 +267,7 @@
             '-webkit-transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
             'transform':  'translate3d(0, ' + @popupwin.scrollTop()+'px, 0)'
 
-    onClose: ->
+    onDestroy: ->
       @popupwin.off 'scroll'
       @remove()
       @stopListening()
@@ -291,7 +291,7 @@
     setTripDescription: (event) ->
       @model.set description: $('.form__field_description textarea').val()
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
 
@@ -537,7 +537,7 @@
         position = @collection.indexOf(item) + 1
         item.set position: position
 
-    onClose: ->
+    onDestroy: ->
       @remove()
       @stopListening()
 

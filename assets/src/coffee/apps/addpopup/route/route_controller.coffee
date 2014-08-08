@@ -20,7 +20,7 @@
           success: =>
             App.addRoutePopup.show @layout, loading: true
             
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showStepName: ->

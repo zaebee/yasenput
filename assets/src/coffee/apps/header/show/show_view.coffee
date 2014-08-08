@@ -178,7 +178,7 @@
       if $(window).scrollTop() < 120
         @$('#destination-form').removeClass 'fixed'
 
-    onClose: ->
+    onDestroy: ->
       $(window).off 'scroll.Header'
 
 

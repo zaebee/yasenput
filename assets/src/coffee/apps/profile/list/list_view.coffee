@@ -56,7 +56,7 @@
       $('.header__title').removeClass 'hide'
       $('.header__filter').addClass 'hide'
 
-    onClose: ->
+    onDestroy: ->
       $('.header__title').addClass 'hide'
       $('.header__filter').removeClass 'hide'
 

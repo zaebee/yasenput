@@ -24,7 +24,7 @@
     startSpinner: (spinner) ->
       @spinner = spinner
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
 
     showStepName: ->

@@ -11,6 +11,6 @@
         region: App.boardRegion
         loading: true
 
-    onClose: ->
+    onDestroy: ->
       @stopListening()
       @yapensView.close()
