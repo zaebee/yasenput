@@ -64,17 +64,24 @@ Handlebars.registerHelper('dateFormat', (context, options) ->
 
 
 Handlebars.registerHelper("duration", (days, hours, minutes, options) ->
-  result = []
-  if window.moment
-    if days
-      result.push  moment.duration({days: days}).humanize()
-    if hours
-      result.push  moment.duration({hours: hours}).humanize()
-    if minutes
-      result.push  moment.duration({minutes: minutes}).humanize()
-    return result.join ' '
-  else
-    return result.join ' ' #dateformat plugin nut available. return data as is.
+  plural = (word, num) ->
+    forms = word.split('_')
+    result = if num % 10 is 1 and num % 100 isnt 11 then forms[0] else (if num % 10 >= 2 and num % 10 <= 4 and (num % 100 < 10 or num % 100 >= 20) then forms[1] else forms[2])
+    result
+
+  relativeTimeWithPlural = (number, key) ->
+    format =
+      'mm': 'минута_минуты_минут'
+      'hh': 'час_часа_часов'
+      'dd': 'день_дня_дней'
+      'MM': 'месяц_месяца_месяцев'
+      'yy': 'год_года_лет'
+    number + ' ' + plural(format[key], +number)
+
+  days = if days then relativeTimeWithPlural(days, 'dd') else ''
+  hours = if hours then relativeTimeWithPlural(hours, 'hh') else ''
+  minutes = if minutes then relativeTimeWithPlural(minutes, 'mm') else ''
+  [days, hours, minutes].join ' '
 )
 
 
