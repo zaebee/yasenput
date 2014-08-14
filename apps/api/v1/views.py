@@ -371,15 +371,8 @@ class ItemsList(PointsBaseView):
             Q(blocks__points__latitude__lte=lt_right) &
             Q(blocks__points__latitude__gte=lt_left)
         )
-        Q_null = (
-            Q(blocks__longitude__isnull=True) |
-            Q(blocks__longitude__isnull=True) |
-            Q(blocks__latitude__isnull=True) |
-            Q(blocks__latitude__isnull=True)
-        )
-
-        search_res_trips = search_res_trips.filter(Q_blocks | Q_points | Q_null).distinct()
-        search_res_tours = search_res_tours.filter(Q_blocks | Q_points | Q_null).distinct()
+        search_res_trips = search_res_trips.filter(Q_blocks | Q_points).distinct()
+        search_res_tours = search_res_tours.filter(Q_blocks | Q_points).distinct()
 
         self.log.info('Filtered by coords complete (%.2f sec.) coords: %s/%s' % (
             time.time()-t0, params.get('coord_left', ''), params.get('coord_right', '')))
