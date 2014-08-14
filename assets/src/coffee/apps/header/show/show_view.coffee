@@ -303,8 +303,22 @@
     initialize: ->
       @saveUrl = true
 
+    events:
+      'submit #loginForm': 'submitForm'
+      'click .link': 'link'
+
     templateHelpers: ->
       current: App.getCurrentRoute()
+
+    submitForm: (event) ->
+      event.preventDefault()
+      console.log event
+
+    link: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      url = $target.attr 'href'
+      App.navigate url, true
 
 
   class Show.PopupInfo extends App.Views.ItemView

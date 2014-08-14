@@ -25,6 +25,9 @@
     'preview/:type/:id': 'preview'
     'city/:city_code/': 'city'
 
+    'register/': 'register'
+    'login/': 'login'
+
   
   API =
     index: ->
@@ -99,6 +102,14 @@
 
     tripList: (model) ->
       App.updateSettings models: 'trips'
+
+    register: ->
+      view = new App.ProfileApp.List.CommercialView
+      App.commercialPopupRegion.show view
+
+    login: ->
+      view = new Yapp.HeaderApp.Show.PopupLogin
+      App.loginPopupRegion.show view
 
 
   App.vent.on 'show:detail:popup', (model) ->
