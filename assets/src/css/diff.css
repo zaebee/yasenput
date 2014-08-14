@@ -732,6 +732,8 @@ textarea[disabled] {
 
 textarea:focus,
 input:focus,
+input[type="text"],
+input[type="password"],
 .dashboard-settings input:focus {
     background-color:#fff !important;
 }
@@ -747,4 +749,60 @@ input:focus,
 }
 .select2-hidden-accessible {
     display: none;
+}
+.about .filter-type__item:last-child {
+   border-bottom: none;
+}
+.about-nav {
+    display: block;
+    width: 200px;
+    position: fixed;
+    background: #fff;
+    float: left;
+    margin-right: 30px;
+}
+.text-wrapper {
+    margin: 0 0 30px 220px;
+    min-height: 250px;
+    background: #fff;
+    padding:40px;
+    font-family:DinCondensedProMedium,Arial,'Helvetica CY','Nimbus Sans L',sans-serif;
+}
+.text-wrapper h3 {
+    text-align: center;
+    font-size: 26px;
+    padding-bottom: 1em;
+}
+.text-wrapper p {
+    font-size:23px;
+}
+.text-wrapper ul li {
+    margin: 10px 0 0 20px;
+    font-size:22px;
+}
+.person-card {
+    width: 49%;
+    display: inline-block;
+    font-size: 23px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.about .filter-type__link.active {
+    background: rgba(240,240,240,.9);
+}
+.about .filter-type__link:hover {
+    background: rgba(240,240,240,.9);
+}
+.filter-type__link.active:after {
+    background:none;
+}
+.about .btn {
+    margin-top: 30px;
+    font-size: 23px;
+    height: 40px;
+    line-height: 190%;
+}
+.popupwin_authorization .form__item_email {
+    width: 47%;
 }

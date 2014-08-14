@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'news/', include('apps.news.urls')),
 
     url(r'', include('apps.main.urls')),
-    url(r'^layout/', direct_to_template, {'template': 'layout/index.html'}),
+    url(r'^about/', direct_to_template, {'template': 'about.html'}),
     (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 )
 
