@@ -10,7 +10,7 @@ from math import *
 from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 
@@ -19,7 +19,7 @@ from templated_email import send_templated_mail
 from apps.serializers.json import Serializer
 from apps.trips.models import Trips
 from apps.main import models as MainModels
-from apps.main.forms import OrderForm
+from apps.main.forms import OrderForm, RegistrationForm
 
 import logging
 logger = logging.getLogger(__name__)
@@ -103,6 +103,36 @@ def trip(request, id):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+
+def register_view(request):
+    result = False
+    form = RegistrationForm(request.POST or None)
+
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        username = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+        full_name = form.cleaned_data['full_name']
+        phone = form.cleaned_data['phone']
+
+        person, created = MainModels.Person.objects.get_or_create(username=email,
+                                                     first_name=full_name,
+                                                     dealer = True,
+                                                     phone=phone,
+                                                     email=email,
+                                                    )
+        person.user.set_password(password)
+        person.user.save()
+        user = authenticate(username=email, password=password)
+        login(request, user)
+        result = True
+
+    if result:
+        data = {'created': result}
+        return HttpResponse(json.dumps(data), mimetype="application/json")
+    return render(request, 'main/main.html', {})
+
 
 def order(request):
     if request.is_ajax() and request.method == 'POST':

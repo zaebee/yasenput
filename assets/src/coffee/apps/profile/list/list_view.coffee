@@ -121,7 +121,21 @@
 
       if fullname and email and password and phone
         console.log fullname, email, password, phone
-        App.commercialPopupRegion.empty()
-        App.vent.trigger 'show:info:popup', 'Спасибо, ваш аккаунт зарегистрирован. Теперь вы можете добавлять экскурсии на нашем сайте'
+        App.apiRequest
+          url:'/register/'
+          type:'POST'
+          data:
+            email: email
+            full_name: fullname
+            password: password
+            phone: phone
+          successCallback: (response) ->
+            if response.created
+              App.commercialPopupRegion.empty()
+              App.vent.trigger 'show:info:popup', 'Спасибо, ваш аккаунт зарегистрирован. Теперь вы можете добавлять экскурсии на нашем сайте'
+              setTimeout ->
+                document.location.reload()
+              , 2000
+
       else
         return
