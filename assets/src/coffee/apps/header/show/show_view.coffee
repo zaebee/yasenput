@@ -304,15 +304,11 @@
       @saveUrl = true
 
     events:
-      'submit #loginForm': 'submitForm'
       'click .link.register': 'link'
 
     templateHelpers: ->
       current: App.getCurrentRoute()
-
-    submitForm: (event) ->
-      event.preventDefault()
-      console.log event
+      token: $.cookie 'csrftoken'
 
     link: (event) ->
       event.preventDefault()

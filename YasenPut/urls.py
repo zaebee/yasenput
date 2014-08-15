@@ -2,11 +2,13 @@ from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^api/', include('apps.api.urls')),
     url(r'^logout/$', 'apps.main.views.logout_view'),
+    url(r'^login/$', auth_views.login, name='login'),
     url(r'^google351823d6b3cb8bda.html$', 'apps.main.views.googlewm'),
     url(r'^comments/', include('apps.comments.urls')),
     url(r'^reports/', include('apps.reports.urls')),

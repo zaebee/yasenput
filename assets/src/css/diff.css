@@ -809,3 +809,9 @@ input[type="password"],
 .box__description .price {
     font-size:14px;
 }
+.errorlist {
+    color: red;
+}
+.full-name {
+    float: right;
+}

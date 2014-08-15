@@ -13,7 +13,8 @@
       <li class="soc-reg__item"><a href="#?" class="link link_mail disabled"></a></li>
     </ul>
     <div class="title-entry"><span class="c-place">Вход для гидов через e-mail</span></div>
-    <form method="POST" action="/" id="loginForm">
+    <form method="POST" action="/login/" id="loginForm">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{token}}">
       <div class="form">
         <div class="form__field clearfix">
           <div class="form__item form__item_email left">
@@ -24,7 +25,7 @@
           </div>
         </div>
         <div class="links right">
-          <a href="#register/" class="link register">зарегистрироваться?</a><br>
+          <a href="/register/" class="link register">зарегистрироваться?</a><br>
           <!--<a href="#?" class="link">забыли пароль</a>-->
         </div>
         <input type="submit" value="Войти" class="btn btn_color_blue">
