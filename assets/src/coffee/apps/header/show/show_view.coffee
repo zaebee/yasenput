@@ -305,7 +305,7 @@
 
     events:
       'submit #loginForm': 'submitForm'
-      'click .link': 'link'
+      'click .link.register': 'link'
 
     templateHelpers: ->
       current: App.getCurrentRoute()

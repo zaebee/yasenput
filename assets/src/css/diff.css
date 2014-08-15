@@ -806,3 +806,6 @@ input[type="password"],
 .popupwin_authorization .form__item_email {
     width: 47%;
 }
+.box__description .price {
+    font-size:14px;
+}
