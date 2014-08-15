@@ -38,7 +38,6 @@
       App.ymaps.ready =>
         App.updateSettings
           user: null
-          city: App.ymaps.geolocation.city
           models: App.settings.models or 'trips'
           coord_left: null
           coord_right: null
