@@ -88,8 +88,8 @@
     ui:
       fullname: '[name=fullname]'
       email: '[name=email]'
-      company: '[name=company]'
       phone: '[name=phone]'
+      password: '[name=password]'
     events:
       'click .js-finish': 'saveInfo'
 
@@ -107,11 +107,11 @@
       else
         @ui.email.parent().addClass 'error'
 
-      if @ui.company.val()
-        company = @ui.company.val()
-        @ui.company.parent().removeClass 'error'
+      if @ui.password.val()
+        password = @ui.password.val()
+        @ui.password.parent().removeClass 'error'
       else
-        @ui.company.parent().addClass 'error'
+        @ui.password.parent().addClass 'error'
 
       if @ui.phone.val()
         phone = @ui.phone.val()
@@ -119,9 +119,23 @@
       else
         @ui.phone.parent().addClass 'error'
 
-      if fullname and email and company and phone
-        console.log fullname, email, company, phone
-        App.commercialPopupRegion.empty()
-        App.vent.trigger 'show:info:popup', 'Спасибо, вам перезвонят для уточнения информации'
+      if fullname and email and password and phone
+        console.log fullname, email, password, phone
+        App.apiRequest
+          url:'/register/'
+          type:'POST'
+          data:
+            email: email
+            full_name: fullname
+            password: password
+            phone: phone
+          successCallback: (response) ->
+            if response.created
+              App.commercialPopupRegion.empty()
+              App.vent.trigger 'show:info:popup', 'Спасибо, ваш аккаунт зарегистрирован. Теперь вы можете добавлять экскурсии на нашем сайте'
+              setTimeout ->
+                document.location.reload()
+              , 2000
+
       else
         return

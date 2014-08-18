@@ -3,14 +3,24 @@
 </a>
 
 <div class="header__btns">
-  <a href="#?" class="btn btn_action_add btn_color_green js-popup-add" title="Нажмите, чтобы добавить места, события или путешествия">
+  {{^if user.authorized}}
+  <a href="/about/#about-guide" class="btn btn_color_yellow" style="background:#FCB850" title="">
+  <span class="sprite-help" style="color: #fff;font-size: 14px;">Для гидов</span>
+  </a>
+  {{/if}}
+  <a href="/about/" class="btn btn_color_gray" style="background:#ccc;" title="Информация о проекте">
+  <span class="sprite-help" style="color: #fff;font-size: 22px;">?</span>
+  </a>
+  {{#if user.authorized}}
+  <a href="#" class="btn btn_action_add btn_color_green js-popup-add" title="Нажмите, чтобы добавить места, события или путешествия">
     <span class="sprite-add"></span>
   </a>
+  {{/if}}
   {{#if user.authorized}}
   <div class="header__user">
     <a href="/#dashboard/" class="link-user">
       <img src="{{#if user.icon}}{{user.icon}}{{else}}{{user.avatar}}{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
-      <span class="first-name">{{user.first_name}}</span><br><span class="last-name">{{user.last_name}}</span>
+      <div class="full-name"><span class="first-name">{{user.first_name}}</span><br><span class="last-name">{{user.last_name}}</span></div>
     </a>
     <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
     <ul class="profile-menu">

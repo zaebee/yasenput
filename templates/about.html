@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block seo %}
+    {% include 'includes/seo.html' %}
+{% endblock %}
+
+{% block title %}
+  {{ title }} {{ block.super }}
+{% endblock %}
+
+{% block keywords %}
+  {{ keywords|default:block.super }}
+{% endblock %}
+
+{% block description %}
+  {{ description|truncatewords:40|default:block.super }}
+{% endblock %}
+
+{% block og_image %}{% if og_image %}http://yasenput.ru{{ og_image }}{% else %}http://yasenput.ru{{ STATIC_URL }}images/logo.png{% endif %}{% endblock %}
+{% block og_title %}{% if title %}{{ title }}{% endif %}{% endblock %}
+{% block og_description %}{{ description|truncatewords:40|default:"ЯсенПуть путешествуй вместе с нами" }}{% endblock %}
+
+{% block wrap %}
+  <div class="page">
+    <header id="header-region" class="header_small">
+      <div class="header__ctrls">
+        <div class="constrain">
+          <a href="/" class="logo">
+            <img src="/static/images/logo.png" alt="ЯсенПуть">
+          </a>
+          <div class="header__btns">
+            {% if user.is_authenticated %}
+            <div class="header__user">
+              <a href="/#dashboard/" class="link-user">
+                <img src="{{user.person.icon}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
+                <span class="first-name">{{user.first_name}}</span><br><span class="last-name">{{user.last_name}}</span>
+              </a>
+              <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
+              <ul class="profile-menu">
+                <li class="item">
+                  <a href="/#dashboard/" class="link nonav">
+                    <span class="icon sprite-bag"></span>
+                    Я создал
+                  </a>
+                  <a href="/#dashboard/likes/" class="link nonav">
+                    <span class="icon sprite-heart"></span>
+                    Мне нравится
+                  </a>
+                  <a href="/#dashboard/settings/" class="link nonav">
+                    <span class="icon sprite-settings"></span>
+                    Настройки
+                  </a>
+                  <a href="/logout/" class="link">
+                    <span class="icon sprite-power"></span>
+                    Выход
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {% else %}
+            <a href="/#login/" class="btn btn_color_blue js-popupwin-authorization">Войти</a>
+            {% endif %}
+          </div><!-- class="header__btns" -->
+        </div>
+      </div>
+    </header>
+
+    <section class="container about">
+      <div id="board-region" class="constrain">
+        <ul class="about-nav">
+          <li class="filter-type__item">
+            <a href="#about-project" class="filter-type__link c-trip">О проекте</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#about-team" class="filter-type__link c-event">Команда</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#about-guide" class="filter-type__link c-place">Для гидов</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#about-travel" class="filter-type__link c-trip">Для путешественников</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#about-contacts" class="filter-type__link c-route">Контакты</a>
+          </li>
+        </ul>
+        <div class="text-wrapper" id="about-project">
+          <h3 class="c-trip">ИНТЕРНЕТ СЕРВИС ДЛЯ ТУРИСТОВ</h3>
+          <p>Это сервис, где можно найти и разместить экскурсии, туры, маршруты на самые необычные темы. Он создан для путешественников и знатоков края. </p><br>
+          <p>Если вы планируете путешествие и хотите узнать подробности — заходите на сайт, смотрите списки туров и экскурсий, выбирайте и заказывайте прямо на сайте. </p><br>
+          <p>Если вы готовы провести экскурсию, знаете что-то особенное о своем крае и хотите рассказать об этом другим — добавьте ее на сервис и мы приведем вам клиентов.</p>
+        </div>
+        <div class="text-wrapper" id="about-team">
+          <h3 class="c-event">КОМАНДА ПРОЕКТА</h3>
+        </div>
+        <div class="text-wrapper" id="about-guide">
+          <h3 class="c-place">ДЛЯ ГИДОВ И ТУРИСТИЧЕСКИХ КОМПАНИЙ</h3>
+          <p>Бесплатное размещение своей экскурсии на сайте:</p>
+          <ul>
+            <li>1.  Зарегистрируйтесь на сайте;</li>
+            <li>2. Подробно расскажите про свою экскурсию, разделяя ее на этапы по своему усмотрению (по дням, городам, объектам и т.д.). Объедините в каждом отдельном этапе красочные фотографии, описание, ссылки на места и адреса мест посещения;</li>
+            <li>3. Укажите стоимость и продолжительность экскурсии, добавьте дополнительные услуги и временной диапазон актуальности вашего предложения;</li>
+            <li>4. Получайте запросы на бронирование Ваших экскурсий в личном кабинете и общайтесь с клиентами через систему сообщений на сайте;</li>
+            <li>5. Проведите замечательную экскурсию. Довольные клиенты оставят о вас великолепные отзывы!</li>
+          </ul>
+          <p style="text-align:center;">
+          <a href="/#register/" target="_blank" class="btn btn_color_green">Зарегистрироваться</a>
+          <a href="/#login/" target="_blank" class="btn btn_color_blue">Войти</a>
+          </p>
+        </div>
+        <div class="text-wrapper" id="about-travel">
+          <h3 class="c-trip">ДЛЯ ПУТЕШЕСТВЕННИКОВ</h3>
+          <p>Возможность покупки готовых экскурсий и туров прямо на сайте.</p><br>
+          <p>Бесплатное размещение отчетов о своих путешествиях:</p>
+          <ul>
+            <li>1. Войдите на сайт через профиль своей социальной сети;</li>
+            <li>2. Добавьте новый отчет о своем путешествии;</li>
+            <li>3. Разделите его на этапы по своему усмотрению (по дням, городам, объектам и т.д.);</li>
+            <li>4. Объедините в каждом отдельном этапе красочные фотографии, описание, ссылки на места и адреса;</li>
+            <li>5. Расскажите своим друзьям и знакомым о том, где Вы побывали, поделившись с ними ссылкой на свое путешествие.</li>
+          </ul>
+          <p style="text-align:center;"><a href="#" class="btn btn_color_blue">Опубликуй свое путешествие</a></p>
+        </div>
+        <div class="text-wrapper" id="about-contacts">
+          <h3 class="c-route">КАК С НАМИ СВЯЗАТЬСЯ</h3>
+          <div class="person-card">
+            Андрей Коротков<br>
+            +7 (906) 296-90-11<br>
+            <a href="mailto:pm@yasenput.ru">pm@yasenput.ru</a>
+          </div>
+
+          <div class="person-card">
+            Антон Ботвин<br>
+            +7 (921) 134-22-25<br>
+            <a href="mailto:ceo@yasenput.ru">ceo@yasenput.ru</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer-region" class="footer"></footer>
+  </div>
+{% endblock %}
+
+{% block app %}
+<script>
+$(document).ready(function(){
+  var hash = document.location.hash;
+  $('[href=' + hash + ']').addClass('active');
+  $('.filter-type__link').on('click', function(e) {
+    e.preventDefault();
+    $('.filter-type__link').removeClass('active');
+    $(e.currentTarget).addClass('active');
+    var id = $(e.currentTarget).attr('href');
+    var position = $(id).position();
+    document.location.hash = id;
+    $('body').animate({
+      scrollTop: position.top,
+    }, 'fast');
+  });
+});
+
+</script>
+{% endblock %}

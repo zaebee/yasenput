@@ -135,7 +135,7 @@
     onAddChild: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
-        @wall.reloadItems()
+        @wall.reloadItems() && @wall.layout()
 
     onShow: ->
       App.execute 'when:fetched', @collection, =>

@@ -303,8 +303,18 @@
     initialize: ->
       @saveUrl = true
 
+    events:
+      'click .link.register': 'link'
+
     templateHelpers: ->
       current: App.getCurrentRoute()
+      token: $.cookie 'csrftoken'
+
+    link: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      url = $target.attr 'href'
+      App.navigate url, true
 
 
   class Show.PopupInfo extends App.Views.ItemView
