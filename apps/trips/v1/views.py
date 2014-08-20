@@ -39,6 +39,12 @@ class Trip(View):
             data = params.get('model', "{}")
             data = json.loads(data)
 
+            if request.POST.get('_method') == 'DELETE':
+                trip = Trips.objects.get(pk=kwargs.get('id'))
+                trip.delete()
+                return JsonHTTPResponse({
+                    'deleted': True
+                })
             ## update point with PUT emulate
             if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
                 form = forms.AddTripForm(data,

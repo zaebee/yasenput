@@ -19,6 +19,7 @@
     modelEvents:
       'change:isliked': 'render'
       'change:likes_count': 'render'
+      'change:author': 'render'
     events:
       'click .btn-like': 'pointLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
