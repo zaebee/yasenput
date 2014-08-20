@@ -95,6 +95,7 @@
 
     saveInfo: (event) ->
       event.preventDefault()
+      spinner = App.buttonSpinner $('.js-finish'), 'Подождите', $('.js-finish')
       if @ui.fullname.val()
         fullname = @ui.fullname.val()
         @ui.fullname.parent().removeClass 'error'
@@ -121,6 +122,8 @@
 
       if fullname and email and password and phone
         console.log fullname, email, password, phone
+        spinner.start()
+        @$('.errorlist').text ''
         App.apiRequest
           url:'/register/'
           type:'POST'
@@ -130,12 +133,16 @@
             password: password
             phone: phone
           successCallback: (response) ->
+            spinner.stop()
             if response.created
               App.commercialPopupRegion.empty()
               App.vent.trigger 'show:info:popup', 'Спасибо, ваш аккаунт зарегистрирован. Теперь вы можете добавлять экскурсии на нашем сайте'
               setTimeout ->
                 document.location.reload()
               , 2000
+            if response.errors
+              _.each response.errors, (el, name) ->
+                $("[name=#{name}]").siblings('.errorlist').html el.join('\n')
 
       else
         return

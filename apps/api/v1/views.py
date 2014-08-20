@@ -414,7 +414,6 @@ class ItemsList(PointsBaseView):
             item.unid = i
         t0 = time.time()
         items = json.loads(self.getSerializeCollections(all_items))
-        #import ipdb;ipdb.set_trace()
         self.log.info('Serialize items complete (%.2f sec.) page: %s' % (time.time()-t0, params.get('p', 1)))
         return HttpResponse(json.dumps(items), mimetype="application/json")
 
@@ -555,6 +554,12 @@ class PointAdd(PointsBaseView):
         data = params.get('model', "{}")
         data = json.loads(data)
 
+        if request.POST.get('_method') == 'DELETE':
+            point = MainModels.Points.objects.get(pk=kwargs.get('id'))
+            point.delete()
+            return JsonHTTPResponse({
+                'deleted': True
+            })
         ## update point with PUT emulate
         if request.META.get('HTTP_X_HTTP_METHOD_OVERRIDE') == 'PUT':
             form = forms.AddPointForm(data,
@@ -1039,6 +1044,12 @@ class Event(View):
     def post(self, request, **kwargs):
         DEFAULT_LEVEL = 2
 
+        if request.POST.get('_method') == 'DELETE':
+            event = MainModels.Events.objects.get(pk=kwargs.get('id'))
+            event.delete()
+            return JsonHTTPResponse({
+                'deleted': True
+            })
         errors = []
         params = request.POST.copy()
         data = params.get('model', "{}")
@@ -1345,7 +1356,6 @@ class OneTrip(View, SafeObjectOperations):
     def add_trip(self, params, user):
         errors = []
         form = ApiForms.AddTripForm(params)
-        import ipdb;ipdb.set_trace()
         if form.is_valid():
             trip = form.save(commit=False)
 

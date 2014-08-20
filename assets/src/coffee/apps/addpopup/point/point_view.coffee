@@ -254,7 +254,7 @@
           success: =>
             @spinner.stop()
             App.addPointPopup.empty()
-            App.BoardApp.board.yapens.add @model, at:1
+            App.BoardApp.board.yapens.add @model, at:0
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "point/#{@model.get('id')}"
             yapensView = App.BoardApp.board.yapensView.render()

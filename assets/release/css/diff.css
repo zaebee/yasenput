@@ -815,3 +815,9 @@ input[type="password"],
 .full-name {
     float: right;
 }
+.popupwin_info .popupwin__content {
+    padding: 40px 20px;
+}
+.route-grid {
+    position: relative;
+}

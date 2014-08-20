@@ -208,10 +208,11 @@
           App.addTripPopup.empty()
           App.navigate "trip/#{@model.get('id')}"
           App.vent.trigger 'show:detail:popup', @model
-          App.BoardApp.board.yapens.add @model, at:1
-          yapensView = App.BoardApp.board.yapensView.render()
-          if yapensView.wall
-            yapensView.wall.reloadItems() & yapensView.wall.layout()
+          App.BoardApp.board.yapens.add @model, at:0
+          if App.BoardApp.board and App.BoardApp.board.yapensView
+            yapensView = App.BoardApp.board.yapensView.render()
+            if yapensView.wall
+              yapensView.wall.reloadItems() & yapensView.wall.layout()
 
     formSubmit: (event) ->
       event.preventDefault()

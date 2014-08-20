@@ -209,7 +209,7 @@
         @model.save null,
           success: =>
             App.addEventPopup.empty()
-            App.BoardApp.board.yapens.add @model, at:1
+            App.BoardApp.board.yapens.add @model, at:0
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "event/#{@model.get('id')}"
             yapensView = App.BoardApp.board.yapensView.render()

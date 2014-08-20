@@ -59,6 +59,7 @@
       'change:likes_count': 'renderLikes'
       'change:reviews': 'renderReviews'
       'change:imgs': 'render'
+      'destroy': 'destroyModel'
 
     renderLikes: ->
       @$('.info_like').text @model.get 'likes_count'
@@ -104,6 +105,7 @@
 
     showRemovePopup: (event) ->
       event.preventDefault()
+      @model.destroy()
 
     like: (event) ->
       event.preventDefault()
@@ -121,6 +123,9 @@
       event.preventDefault()
       console.log event
 
+    destroyModel: ->
+      @user.fetch()
+
   class List.Yapens extends App.Views.CollectionView
     childView: List.Yapen
     className: 'content'
@@ -129,7 +134,7 @@
     getEmptyView: ->
       App.HeaderApp.Show.PopupAdd
 
-    childViewOptions: () ->
+    childViewOptions: ->
       editable: !!App.settings.user
 
     onAddChild: (itemView, data) ->
