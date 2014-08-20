@@ -211,7 +211,6 @@
 
     setActiveCategory: (models) ->
       @ui.filterAllCategory.removeClass 'active'
-      console.log models
       @$("[data-model=#{models}]").addClass 'active'
 
     filterCategory: (event) ->

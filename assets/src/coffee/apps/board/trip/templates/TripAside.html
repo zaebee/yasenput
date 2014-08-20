@@ -38,7 +38,7 @@
   </ul>
 </div>
 --><!-- class="route-list" -->
-{{#ifOrderHasPrice summary_info}}
+{{#if price}}
 <div class="route-aside-commercial popupwin__content">
   {{#if summary_info.personal.personal_price_tour}}
   Индивидуальный тур:
@@ -61,4 +61,4 @@
   <a href="#" class="btn btn_color_yel js-popup-order-route">Связаться с гидом</a>
   -->
 </div>
-{{/ifOrderHasPrice}}
+{{/if}}

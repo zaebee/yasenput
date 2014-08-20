@@ -216,20 +216,21 @@
           @collection.add existModel
         @collection.trigger 'add:to:trip', existModel
 
-    onAfterItemAdded: (itemView, data) ->
+    onAddChild: (itemView, data) ->
       if @wall
         @wall.appended itemView.$el
+        @wall.reloadItems() && @wall.layout()
 
-    onCollectionRendered: ->
-      App.execute 'when:fetched', @collection, =>
-        console.log 'collection rendered. We rebuild masonry layout'
-        @wall.reloadItems() & @wall.layout() if @wall
-
-    onShow: ->
+    onRender: ->
       App.execute 'when:fetched', @collection, =>
         console.log 'collection fetched', @collection
-        @wall = @wall or new Masonry @el,
-          itemSelector: '.box'
+        if @collection.length
+          @wall = @wall or new Masonry @el,
+            itemSelector: '.box'
+          @wall.reloadItems()
+          @wall.layout()
+        else
+          @wall.destroy() if @wall
 
     onDestroy: ->
       console.log 'onDestroy yapens'

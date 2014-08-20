@@ -130,8 +130,15 @@ def register_view(request):
 
     if result:
         data = {'created': result}
+    else:
+        data = {
+            'created': result,
+            'errors': form.errors
+        }
+    if request.is_ajax():
         return HttpResponse(json.dumps(data), mimetype="application/json")
-    return render(request, 'main/main.html', {})
+    else:
+        return render(request, 'main/main.html', {})
 
 
 def order(request):
