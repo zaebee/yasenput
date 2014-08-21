@@ -105,7 +105,7 @@
 
     showRemovePopup: (event) ->
       event.preventDefault()
-      @model.destroy()
+      @model.destroy wait: true
 
     like: (event) ->
       event.preventDefault()
@@ -131,15 +131,18 @@
     className: 'content'
     id: 'grid'
 
+    collectionEvents: ->
+      'remove': 'reloadWall'
+
     getEmptyView: ->
       App.HeaderApp.Show.PopupAdd
 
     childViewOptions: ->
       editable: !!App.settings.user
 
-    onAddChild: (itemView, data) ->
+    onAddChild: (childView, data) ->
       if @wall
-        @wall.appended itemView.$el
+        @wall.appended childView.$el
         @wall.reloadItems() && @wall.layout()
 
     onShow: ->
@@ -164,3 +167,10 @@
       @infiniScroll.destroy()
       @wall.destroy() if @wall
       @remove()
+
+    reloadWall: (model, collection, options) ->
+      console.log 'reloadWall', @wall
+      setTimeout =>
+        @wall.reloadItems()
+        @wall.layout()
+      , 500
