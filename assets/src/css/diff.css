@@ -731,7 +731,8 @@ textarea[disabled] {
 }
 
 textarea:focus,
-input:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
 input[type="text"],
 input[type="password"],
 .dashboard-settings input:focus {
@@ -820,4 +821,10 @@ input[type="password"],
 }
 .route-grid {
     position: relative;
+}
+.comments__item.loading {
+    background: url(../images/ajax-loader.gif) no-repeat center;
+}
+.comments__item.loading > form {
+    visibility: hidden;
 }
