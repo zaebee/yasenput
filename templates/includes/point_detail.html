@@ -55,7 +55,7 @@
       {% for comment in item.reviews.all %}
       <li class="comments__item">
         <a href="#" class="photo">
-          <img src="{{ comment.author.avatar.url }}" alt="{{ comment.author.first_name }} {{ comment.author.last_name }}" class="photo__img">
+          <img src="/static/images/user-unknown.png" alt="{{ comment.author.first_name }} {{ comment.author.last_name }}" class="photo__img">
         </a>
         <div class="text">
           <div class="text__info">
@@ -72,7 +72,7 @@
       <li class="comments__item">
         <form class="comment-form" action="/">
           <a href="#" class="photo">
-            <img src="/static/images/user-unknown.png" alt="zae bee" class="photo__img">
+            <img src="/static/images/user-unknown.png" alt="" class="photo__img">
           </a>
           <div class="text">
             <textarea name="review_text" placeholder="Написать комментарий"></textarea>
