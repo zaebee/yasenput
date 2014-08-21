@@ -206,10 +206,13 @@
       @model.set tags: tags
       if @model.get('points').length
         @$('.field__input-place').removeClass 'error'
+        @spinner = new App.buttonSpinner @$('.js-next'), 'Сохраняем', @$('.js-next')
+        @spinner.start()
         @model.save null,
           success: =>
             App.addEventPopup.empty()
             App.BoardApp.board.yapens.add @model, at:0
+            @spinner.stop()
             App.vent.trigger 'show:detail:popup', @model
             App.navigate "event/#{@model.get('id')}"
             yapensView = App.BoardApp.board.yapensView.render()
