@@ -67,8 +67,11 @@
 
     showOrderPopup: (event) ->
       event.preventDefault()
-      view = new Trip.OrderRoute model: @model
-      App.orderRoutePopup.show view
+      if @user.get 'authorized'
+        view = new Trip.OrderRoute model: @model
+        App.orderRoutePopup.show view
+      else
+        App.vent.trigger 'show:login:popup'
 
     scrollBlock: (event) ->
       event.preventDefault()
@@ -81,6 +84,7 @@
         scrollTop: scrollY
 
     initialize: ->
+      @user = App.request 'get:my:profile'
       @saveUrl = true
 
     onShow: ->

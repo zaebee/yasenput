@@ -67,6 +67,12 @@
           </div>
         </div>
         -->
+        {{#if summary_info.personal.meet_point}}
+        <div class="field clearfix">
+          <label>Место сбора:</label>
+          <p>{{summary_info.personal.meet_point}}</p>
+        </div>
+        {{/if}}
         {{#if summary_info.personal.additional}}
         <div class="field additional">
           <div class="entry-title">Дополнительные услуги:</div>
@@ -121,6 +127,12 @@
           </div>
         </div>
         -->
+        {{#if summary_info.group.meet_point}}
+        <div class="field clearfix">
+          <label>Место сбора:</label>
+          <p>{{summary_info.group.meet_point}}</p>
+        </div>
+        {{/if}}
         {{#if summary_info.group.additional}}
         <div class="field additional">
           <div class="entry-title">Дополнительные услуги:</div>

@@ -304,6 +304,7 @@
 
     events:
       'click .link.register': 'link'
+      'change [name=agree]': 'checkedAgreement'
 
     templateHelpers: ->
       current: App.getCurrentRoute()
@@ -314,6 +315,13 @@
       $target = $(event.currentTarget)
       url = $target.attr 'href'
       App.navigate url, true
+
+    checkedAgreement: (event) ->
+      event.preventDefault()
+      if $('[name=agree]').is(':checked')
+        @$('input[type=submit]').prop('disabled', false)
+      else
+        @$('input[type=submit]').prop('disabled', true)
 
 
   class Show.PopupInfo extends App.Views.ItemView
