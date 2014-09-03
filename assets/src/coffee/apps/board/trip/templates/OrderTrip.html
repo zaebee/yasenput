@@ -1,3 +1,34 @@
+<div id="trip-aside-region">
+  <div class="popupwin__aside" style="margin-right: -150px;">
+
+    <div class="route-aside-commercial popupwin__content" style="width: 230px;">
+      <div class="title">Условия отмены бронирования</div>
+      <ul class="list moneyback clearfix">
+
+        <li class="item clearfix" data-step="1">
+          <span class="percent green">100%</span>
+          <div class="text">
+            Полный возврат при отмене за 2 дня до начала экскурсии
+          </div>
+        </li>
+        <li class="item clearfix" data-step="1">
+          <span class="percent yellow">50%</span>
+          <div class="text">
+            Возврат 50%, при отмене за 2 дня
+          </div>
+        </li>
+        <li class="item clearfix" data-step="1">
+          <span class="percent red">0%</span>
+          <div class="text">
+            При отмене бронирования менее чем за 2 дня, средства не возвращаются
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <div class="popupwin__content clearfix">
   <div class="popupwin__title clearfix">
     Сделать заказ
@@ -30,7 +61,7 @@
     </div>
     <div class="field clearfix">
       {{#if summary_info.personal.personal_price_tour}}
-        {{#if summary_info.group.group_price_tour}}
+        {{#if summary_info.group.group_price_adult}}
         <button class="btn btn_color_blue js-tour-personal" style="width:150px;">Индивидуальный</button>
         <button class="btn btn_color_grey js-tour-group" style="width:150px;">Групповой</button>
         {{/if}}

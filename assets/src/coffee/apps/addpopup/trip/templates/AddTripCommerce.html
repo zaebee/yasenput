@@ -133,12 +133,23 @@
           <div class="form">
             <div class="form__field">
               <div class="form__item form__item_men-count">
-                <label>Макс. кол-во человек:</label>
-                <input name="group_max_people" value="{{summary_info.group.group_max_people}}" type="text">
+                <label>Макс. кол-во взрослых:</label>
+                <input name="group_max_adult" value="{{summary_info.group.group_max_adult}}" type="text">
               </div>
               <div class="form__item form__item_price">
                 <label>Цена за человека:</label>
-                <input name="group_price_tour" value="{{summary_info.group.group_price_tour}}" type="text">
+                <input name="group_price_adult" value="{{summary_info.group.group_price_adult}}" type="text">
+                <span class="rouble">o</span>
+              </div>
+            </div>
+            <div class="form__field">
+              <div class="form__item form__item_men-count">
+                <label>Макс. кол-во детей:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input name="group_max_children" value="{{summary_info.group.group_max_children}}" type="text">
+              </div>
+              <div class="form__item form__item_price">
+                <label>Цена за ребенка:</label>
+                <input name="group_price_children" value="{{summary_info.group.group_price_children}}" type="text">
                 <span class="rouble">o</span>
               </div>
             </div>
