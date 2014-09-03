@@ -8,6 +8,9 @@
 # Yapp.Entities module definition
 @Yapp.module 'Entities', (Entities, App, Backbone, Marionette, $, _) ->
 
+  class Entities.TripOrder extends Entities.Model
+    urlRoot: "/order/"
+
   class Entities.TripBlock extends Entities.Model
     defaults: ->
       imgs: []
