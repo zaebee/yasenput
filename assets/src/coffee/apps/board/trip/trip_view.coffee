@@ -452,8 +452,18 @@
         @$('[data-date]').text data.date
         @$('[data-time]').text @order.fullname
         @$('[data-price]').text data.total_price
-        @$('.first').addClass 'hide'
-        @$('.second').removeClass 'hide'
+        spinner = new App.buttonSpinner @$('.js-next-second'), 'Далее', @$('.js-next-second')
+        spinner.start()
+        App.apiRequest
+          url: '/order/'
+          type: 'POST'
+          data : @order
+          successCallback: (result) =>
+            console.log result
+            spinner.stop()
+            @$('.first').addClass 'hide'
+            @$('.second').removeClass 'hide'
+            @$('#assistant-form .assistant-fields').html result.form
       window.data = data
       window.order= @order
 
@@ -464,11 +474,3 @@
 
     saveInfo: (event) ->
       event.preventDefault()
-      App.apiRequest
-        url: '/order/'
-        type: 'POST'
-        data : @order
-        successCallback: (result) ->
-          console.log result
-          App.orderRoutePopup.empty()
-          App.vent.trigger 'show:info:popup', 'Спасибо, с вами свяжутся для уточнения информации'
