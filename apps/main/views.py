@@ -15,6 +15,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 
 from templated_email import send_templated_mail
+from payanyway.django.forms import MonetaForm
 
 from apps.serializers.json import Serializer
 from apps.trips.models import Trips
@@ -24,6 +25,7 @@ from apps.main.forms import OrderForm, RegistrationForm
 import logging
 logger = logging.getLogger(__name__)
 DEFAULT_FROM_EMAIL = getattr(settings, 'DEFAULT_FROM_EMAIL', 'info@yasenput.ru')
+MONETA_ACCOUNT_ID = getattr(settings, 'MONETA_ACCOUNT_ID', 0)
 
 
 class YpSerialiser(Serializer):
@@ -146,6 +148,14 @@ def order(request):
         form = OrderForm(request.POST or None)
         if form.is_valid():
             order = form.save()
+            info = json.loads(order.summary_info)
+            moneta_form = MonetaForm(
+                account_id=MONETA_ACCOUNT_ID,
+                transaction_id=order.id,
+                amount='%.2f' % float(info['total_price']),
+                #use_signature=True,
+                #description=order.
+            )
             trip = get_object_or_None(Trips, id=order.cont_id)
             send_templated_mail(
                 template_name='order',
@@ -157,7 +167,11 @@ def order(request):
                     'trip': trip
                 },
             )
-            return HttpResponse(json.dumps({'success': True}), mimetype="application/json")
+            data = {
+                'success': True,
+                'form': moneta_form.as_p()
+            }
+            return HttpResponse(json.dumps(data), mimetype="application/json")
     raise Http404
 
 
