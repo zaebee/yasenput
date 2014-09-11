@@ -1,3 +1,9 @@
+.container {
+    margin-bottom:115px;
+}
+.footer {
+    height:105px;
+}
 #header-region + section {
     min-height: 350px;
 }
@@ -859,3 +865,11 @@ input[type="password"],
 .moneyback .percent.red {
     background: #EA5854;
 }
+
+.text-wrapper h4 {
+    font-size: 24px;
+    text-align: center;
+    margin: 40px 0 10px;
+    color: #26b89a;
+}
+
