@@ -67,6 +67,15 @@
               </div>
               <button class="btn btn_color_green js-add-tour-item">Добавить</button>
             </div>
+
+            <div class="form__field">
+              <div class="form__item-wrap">
+                <div class="form__item form__item_start_place" style="width:100%">
+                  <label>Место сбора:</label>
+                  <textarea name="meet_point" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами"></textarea>
+                </div>
+              </div>
+            </div>
             {{#each summary_info.personal.personal_date}}
             <div class="form__field form__field_tour">
               <span class="date">{{orderDate 'date' this}}</span>
@@ -124,7 +133,7 @@
           <div class="form">
             <div class="form__field">
               <div class="form__item form__item_men-count">
-                <label>Макс. кол-во человек:</label>
+                <label>Макс. кол-во взрослых:</label>
                 <input name="group_max_people" value="{{summary_info.group.group_max_people}}" type="text">
               </div>
               <div class="form__item form__item_price">
@@ -133,6 +142,19 @@
                 <span class="rouble">o</span>
               </div>
             </div>
+            <!--
+            <div class="form__field">
+              <div class="form__item form__item_men-count">
+                <label>Макс. кол-во детей:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input name="group_max_children" value="{{summary_info.group.group_max_children}}" type="text">
+              </div>
+              <div class="form__item form__item_price">
+                <label>Цена за ребенка:</label>
+                <input name="group_price_children" value="{{summary_info.group.group_price_children}}" type="text">
+                <span class="rouble">o</span>
+              </div>
+            </div>
+            -->
             <div class="form__field">
               <label>Продолжительность тура:</label>
               <div class="form__item form__item_time">
@@ -161,6 +183,16 @@
               </div>
               <a href="#" class="btn btn_color_green js-add-tour-item">Добавить</a>
             </div>
+
+            <div class="form__field">
+              <div class="form__item-wrap">
+                <div class="form__item form__item_start_place" style="width:100%">
+                  <label>Место сбора:</label>
+                  <textarea name="start_place" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами"></textarea>
+                </div>
+              </div>
+            </div>
+
             {{#each summary_info.group.group_date}}
             <div class="form__field form__field_tour">
               <span class="date">{{orderDate 'date' this}}</span>

@@ -18,12 +18,21 @@
     <div class="popupwin__container clearfix">
       <div class="form">
         <div class="form__field form__field_name">
+          {{#if user.dealer}}
+          <label>Общее название экскурсии:</label>
+          <input type="text" placeholder="Например: семидневная экскурсия по Калифорнии" value="{{name}}">
+          {{else}}
           <label>Общее название путешествия:</label>
           <input type="text" placeholder="Например: семидневное путешествие по Калифорнии" value="{{name}}">
+          {{/if}}
           <span class="star">*</span>
         </div>
         <div class="form__field form__field_description">
+          {{#if user.dealer}}
+          <label>Общее описание экскурсии:</label>
+          {{else}}
           <label>Общее описание путешествия:</label>
+          {{/if}}
           <textarea>{{description}}</textarea>
         </div>
       </div>

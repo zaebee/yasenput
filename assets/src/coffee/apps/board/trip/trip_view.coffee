@@ -67,8 +67,11 @@
 
     showOrderPopup: (event) ->
       event.preventDefault()
-      view = new Trip.OrderRoute model: @model
-      App.orderRoutePopup.show view
+      if @user.get 'authorized'
+        view = new Trip.OrderRoute model: @model
+        App.orderRoutePopup.show view
+      else
+        App.vent.trigger 'show:login:popup'
 
     scrollBlock: (event) ->
       event.preventDefault()
@@ -81,6 +84,7 @@
         scrollTop: scrollY
 
     initialize: ->
+      @user = App.request 'get:my:profile'
       @saveUrl = true
 
     onShow: ->
@@ -279,6 +283,8 @@
       email: '[name=email]'
       phone: '[name=phone]'
     events:
+      'click .js-next-second': 'showSecondStep'
+      'click .js-next-third': 'showThirdStep'
       'click .js-finish': 'saveInfo'
       'click .js-tour-personal': 'activePersonalTour'
       'click .js-tour-group': 'activeGroupTour'
@@ -400,7 +406,7 @@
       @$('#orderGroupTour [name=total_price]').val price
       @$('#orderGroupTour .finish-price .price').html price + ' <span class="rouble">o</span>'
 
-    saveInfo: (event) ->
+    showSecondStep: (event) ->
       event.preventDefault()
       fullname = @ui.fullname.val()
       phone = @ui.phone.val()
@@ -410,7 +416,6 @@
         @ui.email.parent().removeClass 'error'
       else
         @ui.email.parent().addClass 'error'
-
       if @$('.personal-tour').length and !@$('.personal-tour').hasClass 'hide'
         data = @$('#orderPersonalTour').serializeArray()
         date = @$('.js-datapicker-personal').val()
@@ -432,21 +437,40 @@
         result[el.name] = el.value
         result
       , {}
-
+      @order =
+        fullname: fullname
+        phone: phone
+        email: email
+        cont_id: @model.get 'id'
+        cont_type: 'trip'
+        summary_info: JSON.stringify data
       if date and email
+        @$('[data-fullname]').text @order.fullname
+        @$('[data-email]').text @order.email
+        @$('[data-phone]').text @order.phone or 'Не указан'
+        @$('[data-people]').text data.user_count
+        @$('[data-date]').text data.date
+        @$('[data-time]').text @order.fullname
+        @$('[data-price]').text data.total_price
+        spinner = new App.buttonSpinner @$('.js-next-second'), 'Далее', @$('.js-next-second')
+        spinner.start()
         App.apiRequest
           url: '/order/'
           type: 'POST'
-          data :
-            fullname: fullname
-            phone: phone
-            email: email
-            cont_id: @model.get 'id'
-            cont_type: 'trip'
-            summary_info: JSON.stringify data
-          successCallback: (result) ->
+          data : @order
+          successCallback: (result) =>
             console.log result
-            App.orderRoutePopup.empty()
-            App.vent.trigger 'show:info:popup', 'Спасибо, с вами свяжутся для уточнения информации'
-      else
-        return
+            spinner.stop()
+            @$('.first').addClass 'hide'
+            @$('.second').removeClass 'hide'
+            @$('#assistant-form .assistant-fields').html result.form
+      window.data = data
+      window.order= @order
+
+    showThirdStep: (event) ->
+      event.preventDefault()
+      @$('.second').addClass 'hide'
+      @$('.third').removeClass 'hide'
+
+    saveInfo: (event) ->
+      event.preventDefault()

@@ -1,3 +1,9 @@
+.container {
+    margin-bottom:115px;
+}
+.footer {
+    height:105px;
+}
 #header-region + section {
     min-height: 350px;
 }
@@ -828,3 +834,42 @@ input[type="password"],
 .comments__item.loading > form {
     visibility: hidden;
 }
+
+.moneyback {
+    margin-top: 20px;
+}
+.moneyback .item {
+    margin-right: 0;
+}
+.moneyback .text {
+    float:right;
+    width: 180px;
+}
+.moneyback .percent {
+    float: left;
+    border-radius: 100px;
+    padding: 5px;
+    color: #fff;
+    margin: 0px 10px 10px 0;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+.moneyback .percent.green {
+    background: #26B89A;
+}
+.moneyback .percent.yellow {
+    background: #FCB850;
+}
+.moneyback .percent.red {
+    background: #EA5854;
+}
+
+.text-wrapper h4 {
+    font-size: 24px;
+    text-align: center;
+    margin: 40px 0 10px;
+    color: #26b89a;
+}
+

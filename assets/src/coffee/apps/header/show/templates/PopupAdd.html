@@ -28,8 +28,13 @@
     -->
     <li class="stuff-add__item">
       <a href="/add/trip" class="stuff-add__link js-popup-add-trip">
+        {{#if user.dealer}}
+        <span class="icon icon_trip"></span>
+        <span class="btn btn_color_blue">Добавить экскурсию</span>
+        {{else}}
         <span class="icon icon_trip"></span>
         <span class="btn btn_color_blue">Добавить путешествие</span>
+        {{/if}}
         <span class="text">Фото, маршруты, события, места</span>
       </a>
     </li>

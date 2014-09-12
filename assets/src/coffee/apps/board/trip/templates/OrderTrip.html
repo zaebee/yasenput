@@ -1,4 +1,35 @@
-<div class="popupwin__content clearfix">
+<div id="trip-aside-region">
+  <div class="popupwin__aside" style="margin-right: -150px;">
+
+    <div class="route-aside-commercial popupwin__content" style="width: 230px;">
+      <div class="title">Условия отмены бронирования</div>
+      <ul class="list moneyback clearfix">
+
+        <li class="item clearfix" data-step="1">
+          <span class="percent green">100%</span>
+          <div class="text">
+            Полный возврат при отмене за 2 дня до начала экскурсии
+          </div>
+        </li>
+        <li class="item clearfix" data-step="1">
+          <span class="percent yellow">50%</span>
+          <div class="text">
+            Возврат 50%, при отмене за 2 дня
+          </div>
+        </li>
+        <li class="item clearfix" data-step="1">
+          <span class="percent red">0%</span>
+          <div class="text">
+            При отмене бронирования менее чем за 2 дня, средства не возвращаются
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div class="popupwin__content clearfix first">
   <div class="popupwin__title clearfix">
     Сделать заказ
   </div>
@@ -67,6 +98,12 @@
           </div>
         </div>
         -->
+        {{#if summary_info.personal.meet_point}}
+        <div class="field clearfix">
+          <label>Место сбора:</label>
+          <p>{{summary_info.personal.meet_point}}</p>
+        </div>
+        {{/if}}
         {{#if summary_info.personal.additional}}
         <div class="field additional">
           <div class="entry-title">Дополнительные услуги:</div>
@@ -121,6 +158,12 @@
           </div>
         </div>
         -->
+        {{#if summary_info.group.meet_point}}
+        <div class="field clearfix">
+          <label>Место сбора:</label>
+          <p>{{summary_info.group.meet_point}}</p>
+        </div>
+        {{/if}}
         {{#if summary_info.group.additional}}
         <div class="field additional">
           <div class="entry-title">Дополнительные услуги:</div>
@@ -147,6 +190,61 @@
   </div>
   <div class="note"><span class="star">*</span> - поля обязательны для заполнения</div>
   <div class="popupwin__footer clearfix">
-    <button class="btn btn_color_blue right js-finish">Оплатить</button>
+    <button class="btn btn_color_blue right js-next-second">Далее</button>
   </div>
+</div><!-- class="popup-content" -->
+
+
+<div class="popupwin__content clearfix hide second">
+  <div class="popupwin__title clearfix">
+    Заказ экскурсии
+  </div>
+  <div class="form">
+    <div class="field">
+      <label>Название экскурсии</label>
+      <div class="title">{{name}}</div>
+    </div>
+    <div class="field">
+      <label>Ваши ФИО</label>
+      <div class="title" data-fullname></div>
+    </div>
+    <div class="field">
+      <label>E-mail
+      <div class="title" data-email></div>
+      </label>
+    </div>
+    <div class="field">
+      <label>Телефон</label>
+      <div class="title" data-phone></div>
+    </div>
+    <div class="field">
+      <label>Количество участников</label>
+      <div class="title" data-people></div>
+    </div>
+    <div class="field">
+      <label>Дата</label>
+      <div class="title" data-date></div>
+    </div>
+    <!--
+    <div class="field">
+      <label>Время</label>
+      <div class="title" data-time></div>
+    </div>
+    <div class="field">
+      <label>Дополнительные услуги</label>
+      <div class="title"></div>
+    </div>
+    -->
+    <div class="field finish-price">
+      Итого: <span class="price" data-price></span><span class="rouble"> o</span>
+    </div>
+
+  </div>
+  <form id="assistant-form" action="https://www.payanyway.ru/assistant.htm" method="post">
+    <div class="assistant-fields">
+    </div>
+    <div class="popupwin__footer clearfix">
+      <button type="submit" class="btn btn_color_blue right">Оплатить</button>
+    </div>
+  </form>
 </div><!-- class="popup-content" -->
