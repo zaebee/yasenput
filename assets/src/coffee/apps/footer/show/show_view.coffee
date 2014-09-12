@@ -6,7 +6,7 @@
 
     events:
       'click .js-up': 'scrollTop'
-      'click .nav__link': 'showStatic'
+      #'click .nav__link': 'showStatic'
 
     onRender: ->
       $(window).on 'scroll.Footer', =>
