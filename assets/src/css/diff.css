@@ -1,8 +1,8 @@
 .container {
-    margin-bottom:115px;
+    margin-bottom:85px;
 }
 .footer {
-    height:105px;
+    height:65px;
 }
 #header-region + section {
     min-height: 350px;

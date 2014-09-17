@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block seo %}
+    {% include 'includes/seo.html' %}
+{% endblock %}
+
+{% block title %}
+  Способы оплаты {{ title }} {{ block.super }}
+{% endblock %}
+
+{% block keywords %}
+  {{ keywords|default:block.super }}
+{% endblock %}
+
+{% block description %}
+  {{ description|truncatewords:40|default:block.super }}
+{% endblock %}
+
+{% block og_image %}{% if og_image %}http://yasenput.ru{{ og_image }}{% else %}http://yasenput.ru{{ STATIC_URL }}images/logo.png{% endif %}{% endblock %}
+{% block og_title %}{% if title %}{{ title }}{% endif %}{% endblock %}
+{% block og_description %}{{ description|truncatewords:40|default:"ЯсенПуть путешествуй вместе с нами" }}{% endblock %}
+
+{% block wrap %}
+  <div class="page">
+    <header id="header-region" class="header_small">
+      <div class="header__ctrls">
+        <div class="constrain">
+          <a href="/" class="logo">
+            <img src="/static/images/logo.png" alt="ЯсенПуть">
+          </a>
+          <div class="header__btns">
+            {% if user.is_authenticated %}
+            <div class="header__user">
+              <a href="/#dashboard/" class="link-user">
+                <img src="{{user.person.icon}}" alt="{{user.first_name}} {{user.last_name}}" class="photo">
+                <span class="first-name">{{user.first_name}}</span><br><span class="last-name">{{user.last_name}}</span>
+              </a>
+              <a href="#?" class="btn btn_color_blue js-profile-menu"></a>
+              <ul class="profile-menu">
+                <li class="item">
+                  <a href="/#dashboard/" class="link nonav">
+                    <span class="icon sprite-bag"></span>
+                    Я создал
+                  </a>
+                  <a href="/#dashboard/likes/" class="link nonav">
+                    <span class="icon sprite-heart"></span>
+                    Мне нравится
+                  </a>
+                  <a href="/#dashboard/settings/" class="link nonav">
+                    <span class="icon sprite-settings"></span>
+                    Настройки
+                  </a>
+                  <a href="/logout/" class="link">
+                    <span class="icon sprite-power"></span>
+                    Выход
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {% else %}
+            <a href="/#login/" class="btn btn_color_blue js-popupwin-authorization">Войти</a>
+            {% endif %}
+          </div><!-- class="header__btns" -->
+        </div>
+      </div>
+    </header>
+
+    <section class="container about">
+      <div id="board-region" class="constrain">
+        <ul class="about-nav">
+          <li class="filter-type__item">
+            <a href="#money-cash" class="filter-type__link c-trip">Безналичный расчет</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#money-cards" class="filter-type__link c-event">Банковские карты</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#money-e" class="filter-type__link c-trip">Электронные деньги</a>
+          </li>
+          <li class="filter-type__item">
+            <a href="#money-contacts" class="filter-type__link c-event">Контакты</a>
+          </li>
+        </ul>
+        <div class="text-wrapper" id="money-cash">
+          <h3 class="c-trip">БЕЗНАЛИЧНЫЙ РАСЧЕТ</h3>
+          <p>После оформления заказа будет сформирован счёт на оплату, который Вы можете распечатать и оплатить. Денежные средства поступят на наш счёт в течение 2-3 рабочих дней после оплаты заказа. </p>
+          <p>Оплата заказов клиентами - юридическими лицами возможна только по безналичному расчёту. </p>
+          <p>Все необходимые для бухгалтерии документы (оригинал счёта на оплату, счёт-фактура, накладная) выдаются вместе с заказом при получении.</p>
+        </div>
+        <div class="text-wrapper" id="money-cards">
+          <h3 class="c-event">БАНКОВСКИЕ КАРТЫ</h3>
+          <p>Сервис приёма оплаты предоставлен <a href="http://payanyway.ru/">PayAnyWay</a>.</p>
+
+          <br>
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tbody>
+            <tr>
+            <td width="100" valign="top">
+            <p><img src="https://www.moneta.ru/info/public/requirements/visa.png"></p>
+            <p><img src="https://www.moneta.ru/info/public/requirements/mastercard.png"></p>
+
+            </td>
+            <td valign="top">
+            <p style="font-size:16px;">PayAnyWay не передает данные Вашей карты магазину и иным третьим лицам. Безопасность платежей с помощью банковских карт обеспечивается технологиями защищенного соединения HTTPS и двухфакторной аутентификации пользователя 3D Secure.</p>
+            <p style="font-size:16px;">В соответствии с ФЗ «О защите прав потребителей» в случае, если Вам оказана услуга или реализован товар ненадлежащего качества, платеж может быть возвращен на банковскую карту, с которой производилась оплата. Порядок возврата средств уточняйте у администрации интернет-магазина.</p>
+            </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-wrapper" id="money-e">
+          <h3 class="c-trip">ЭЛЕКТРОННЫЕ ДЕНЬГИ</h3>
+          <table border="0" cellspacing="0" cellpadding="0">
+          <tbody>
+          <tr>
+          <td width="100" valign="top">
+          <p><a href="http://www.moneta.ru/" target="_blank"><img src="https://www.moneta.ru/info/public/requirements/moneta.png"></a></p>
+          </td>
+          <td valign="top">
+          <p><strong>Монета.Ру</strong>
+          <br>Для осуществления оплаты с помощью платежной системы Монета.Ру вам необходимо иметь кошелек, зарегистрировать который можно на сайте системы.
+          <br>Способы пополнения кошелька можно найти на сайте Монета.Ру в разделе «Как пополнить». Зачисление платежей через Монета.Ру происходит мгновенно.</p>
+          </td>
+          </tr>
+
+          <tr>
+          <td width="100" valign="top">
+          <p><a href="http://www.megastock.ru/" target="_blank"><img src="https://www.moneta.ru/info/public/requirements/wm_transparent.png"></a></p>
+
+          </td>
+          <td valign="top">
+          <p><strong>WebMoney</strong>
+          <br>Для совершения оплаты вы должны быть зарегистрированы в системе WebMoney Transfer. К оплате принимаются титульные знаки WMR, зачисление денег происходит мгновенно.</p>
+          </td>
+          </tr>
+
+          <tr>
+          <td width="100" valign="top">
+          <p><a href="https://money.yandex.ru/" target="_blank"><img src="https://www.moneta.ru/info/public/requirements/yandexmoney.png"></a></p>
+          </td>
+          <td valign="top">
+          <p><strong>Яндекс.Деньги</strong>
+          <br>Для осуществления оплаты с помощью сервиса Яндекс.Деньги вам необходимо иметь кошелек, зарегистрированный на сайте платежной системы.
+          <br>Зачисление платежей через платежную систему Яндекс.Деньги происходит мгновенно.</p>
+          </td>
+          </tr>
+          <tr>
+          <td width="100" valign="top">
+          <p><a href="https://www.qiwi.ru/" target="_blank"><img src="https://www.moneta.ru/info/public/requirements/qiwi.png"></a></p>
+          </td>
+          <td valign="top">
+          <p><strong>QIWI Кошелек</strong>
+          <br>Выберите в качестве оплаты QIWI Кошелёк и введите номер своего сотового телефона. Оплатите созданный автоматически счёт на сайте платежной системы.
+          <br>Если у вас нет QIWI Кошелька, вам необходимо зарегистрировать его на сайте сервиса или в любом из приложений QIWI Кошелька.</p>
+          </td>
+          </tr>
+          </tbody>
+          </table>
+
+        </div>
+        <div class="text-wrapper" id="money-contacts">
+          <h3 class="c-route">КАК С НАМИ СВЯЗАТЬСЯ</h3>
+          <div class="person-card">
+            Андрей Коротков<br>
+            +7 (906) 296-90-11<br>
+            <a href="mailto:pm@yasenput.ru">pm@yasenput.ru</a>
+          </div>
+
+          <div class="person-card">
+            Антон Ботвин<br>
+            +7 (921) 134-22-25<br>
+            <a href="mailto:ceo@yasenput.ru">ceo@yasenput.ru</a>
+          </div>
+          <h4>Юридическая информация</h4>
+          <p>
+          Общество с ограниченной ответственностью «ЯсенПуть»<br>
+          Адрес: 160019, г. Вологда, ул. Некрасовский пер., д. 15, кв. 77<br>
+          ИНН 3525283139, КПП 352501001,<br>
+          ОГРН 1123525011741<br>
+          Расчётный счёт № 40702810212000006038<br>
+          Отделение №8638 Сбербанка России<br>
+          г. Вологда<br>
+          БИК 041909644<br>
+          Кор. счёт № 30101810900000000644<br>
+          info@yasenput.ru
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer-region" class="footer">
+      <div class="logo"><img src="/static/images/logo-footer.png" alt="ЯсенПуть" class="img"></div>
+
+      <div class="constrain">
+        <nav class="nav" style="float: left;padding: 10px 0;">
+          <ul class="nav_list">
+            <li class="nav__item"><a href="/about/" class="nav__link">О проекте</a></li>
+            <li class="nav__item"><a href="/about#about-contacts" class="nav__link">Контакты</a></li>
+            <li class="nav__item"><a href="/terms" class="nav__link">Соглашение</a></li>
+          </ul>
+        </nav>
+        <nav class="nav" style="float: right;">
+          <ul class="nav_list" style="padding: 10px 0;">
+            <li class="nav__item">
+            <a href="/payments/">
+            <img style="height:40px;" src="/static/images/payanyway.gif">
+            </a>
+            </li>
+          </ul>
+        </nav>
+        <a href="#top" class="link-up js-up">Вверх</a>
+      </div>
+    </footer>
+  </div>
+{% endblock %}
+
+{% block app %}
+<script>
+$(document).ready(function(){
+  var hash = document.location.hash;
+  $('[href=' + hash + ']').addClass('active');
+  $('.filter-type__link').on('click', function(e) {
+    e.preventDefault();
+    $('.filter-type__link').removeClass('active');
+    $(e.currentTarget).addClass('active');
+    var id = $(e.currentTarget).attr('href');
+    var position = $(id).position();
+    document.location.hash = id;
+    $('body').animate({
+      scrollTop: position.top,
+    }, 'fast');
+  });
+});
+
+</script>
+{% endblock %}

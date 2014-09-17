@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 
     url(r'', include('apps.main.urls')),
     url(r'^about/', direct_to_template, {'template': 'about.html'}),
+    url(r'^payments/', direct_to_template, {'template': 'payments.html'}),
     (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 )
 
