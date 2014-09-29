@@ -15,7 +15,7 @@ class Api(object):
     PAYMENT_SYSTEMS_SBERBANK = u'32863'
 
     _use_signature = False
-    _integrity_check_code = None
+    _integrity_check_code = ''
     _notification_signature = None
 
     _action_url_dev = u'https://demo.moneta.ru/assistant.htm'
@@ -180,7 +180,7 @@ class Api(object):
         )
         return url
 
-    def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None, use_signature=False,
+    def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code='', use_signature=False,
                  currency_code=u'RUB', test_mode=False, test_server=True, payment_system=None, *args, **kwargs):
         self._params = {}
         self._account_id = account_id

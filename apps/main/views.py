@@ -153,7 +153,9 @@ def order(request):
                 account_id=MONETA_ACCOUNT_ID,
                 transaction_id=order.id,
                 amount='%.2f' % float(info['total_price']),
-                #use_signature=True,
+                use_signature=True,
+                integrity_check_code='tripper',
+                test_mode=1,
                 #description=order.
             )
             trip = get_object_or_None(Trips, id=order.cont_id)
