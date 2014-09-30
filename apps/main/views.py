@@ -175,6 +175,22 @@ def order(request):
             return HttpResponse(json.dumps(data), mimetype="application/json")
     raise Http404
 
+def payment_pay(request):
+    print request.POST
+    return render(request, 'main/main.html', {})
+
+
+def payment_success(request):
+    return render(request, 'main/main.html', {})
+
+
+def payment_fail(request):
+    return render(request, 'main/main.html', {})
+
+
+def payment_progress(request):
+    return render(request, 'main/main.html', {})
+
 
 def googlewm(request):
     return HttpResponse('google-site-verification: google351823d6b3cb8bda.html')

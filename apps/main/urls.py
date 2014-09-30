@@ -49,6 +49,13 @@ urlpatterns = patterns('apps.main.views',
 
 )
 
+urlpatterns += patterns('apps.main.views',
+    url(r'^payment/pay/$', 'payment_pay'),
+    url(r'^payment/success/$', 'payment_success'),
+    url(r'^payment/fail/$', 'payment_fail'),
+    url(r'^payment/progress/$', 'payment_progress'),
+)
+
 urlpatterns += patterns('',
     (r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
 )

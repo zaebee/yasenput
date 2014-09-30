@@ -340,6 +340,7 @@ class Order(models.Model):
     cont_type = models.CharField(u'тип контента', max_length=80, blank=True, null=True)
     summary_info = models.TextField(u'Дополнительная информация', blank=True, null=True)
     payed = models.BooleanField(u'Оплачено', default=False)
+    created = models.DateTimeField(u'Дата создания', auto_now_add=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.email, self.fullname)

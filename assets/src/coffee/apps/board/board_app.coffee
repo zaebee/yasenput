@@ -28,6 +28,9 @@
     'register/': 'register'
     'login/': 'login'
 
+    'payment/success/': 'success'
+    'payment/fail/': 'fail'
+
   
   API =
     index: ->
@@ -109,6 +112,12 @@
     login: ->
       view = new Yapp.HeaderApp.Show.PopupLogin
       App.loginPopupRegion.show view
+
+    success: ->
+      App.vent.trigger 'show:info:popup', 'Ваш заказ успешно оплачен!'
+
+    fail: ->
+      App.vent.trigger 'show:info:popup', 'К сожалению, ваш заказ не оплачен.'
 
 
   App.vent.on 'show:detail:popup', (model) ->
