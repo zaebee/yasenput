@@ -149,16 +149,15 @@ def order(request):
         if form.is_valid():
             order = form.save()
             info = json.loads(order.summary_info)
+            trip = get_object_or_None(Trips, id=order.cont_id)
             moneta_form = MonetaForm(
                 account_id=MONETA_ACCOUNT_ID,
                 transaction_id=order.id,
                 amount='%.2f' % float(info['total_price']),
                 use_signature=True,
                 integrity_check_code='tripper',
-                test_mode=1,
-                #description=order.
+                description=u'Оплата экскурсии: %s' % trip.name
             )
-            trip = get_object_or_None(Trips, id=order.cont_id)
             send_templated_mail(
                 template_name='order',
                 from_email=DEFAULT_FROM_EMAIL,
