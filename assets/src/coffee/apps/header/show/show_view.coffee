@@ -24,10 +24,11 @@
       'click .item .link.nonav': 'link'
       'click .link-user': 'link'
       'click .logo': 'link'
+      'click .js-add-trip': 'addTrip'
 
     initialize: ->
-      user = App.request 'get:my:profile'
-      @listenTo user, 'change', @changeUser
+      @user = App.request 'get:my:profile'
+      @listenTo @user, 'change', @changeUser
 
     changeUser: (user) ->
       @$('.first-name').text user.get 'first_name'
@@ -37,6 +38,14 @@
       event.preventDefault()
       url = $(event.currentTarget).prop 'hash'
       App.navigate url, true
+
+    addTrip: (event) ->
+      event.preventDefault()
+      if not @user.get 'authorized'
+        App.vent.trigger 'show:login:popup'
+      else
+        Yapp.vent.trigger 'show:add:trip:popup'
+      console.log event
 
     showAddPopup: (e) ->
       e.preventDefault()
@@ -170,7 +179,7 @@
             name: App.settings.city or ''
             address: ''
       fixedDestForm = _.debounce @fixedDestForm, 200
-      $(window).on 'scroll.Header', @fixedDestForm
+      #$(window).on 'scroll.Header', @fixedDestForm
 
     fixedDestForm: ->
       if $(window).scrollTop() > 120

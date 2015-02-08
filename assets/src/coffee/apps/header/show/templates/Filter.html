@@ -1,9 +1,8 @@
+<!--
 <ul class="categories">
-  <!--
   <li class="categories__item categories__item_btn">
     <a href="/map" class="btn btn_color_grey" title="Показать карту">Мое новое путешествие</a>
   </li>
-  -->
   <li class="categories__item categories__item_btn">
     <a href="/point" class="categories__link btn btn_color_grey {{#ifEquals settings.models 'points'}}btn_color_green active{{/ifEquals}}" data-model="points" title="Показать только места">Места</a>
   </li>
@@ -18,11 +17,7 @@
   </li>
 </ul>
 
-<div class="header__search">
-  <form id="header-search-form">
-    <input type="text" placeholder="Поиск по местам ...">
-  </form>
-</div>
+-->
 
 <!--
 <ul class="categories">
@@ -33,6 +28,7 @@
   {{/each}}
   <li class="categories__item"><a href="#?" class="categories__link categories__link_type_all sprite-filter-all"></a></li>
 </ul>
+
 <div class="filter-type">
   <a href="#?" class="btn btn_color_grey js-open">Выберите тип</a>
   <ul class="filter-type__list">
@@ -53,6 +49,14 @@
     </li>
   </ul>
 </div>
+-->
+
+<div class="header__search">
+  <form id="header-search-form">
+    <input type="text" placeholder="Поиск по местам ...">
+  </form>
+</div>
+
 
 <div class="filter-sort">
   <a href="#?" class="sprite-filter-down" data-toggle="tooltip" data-placement="bottom" title="Новое"></a>
@@ -82,4 +86,3 @@
     </div>
   </div>
 </div>
--->

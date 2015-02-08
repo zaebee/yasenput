@@ -20,5 +20,11 @@
 </div><!-- class="trip-list" -->
 
 <div class="trip-ctrls">
-  <a href="#" class="btn btn_color_blue btn_finish js-finish-preview">Предпросмотр</a>
+  <button class="btn btn_color_yel js-add-block">Добавить еще один блок</button>
+  <button href="#" class="btn btn_color_blue btn_finish js-finish-preview">Предпросмотр</button>
+  {{#if user.dealer}}
+  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue js-next">Следующий шаг</button>
+  {{else}}
+  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue js-finish">Готово</button>
+  {{/if}}
 </div>

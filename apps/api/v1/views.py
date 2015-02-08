@@ -61,9 +61,9 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(points,
                                 fields=['main_img', 'dt_start', 'dt_end', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'review_count', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price'],
+                                        'description', 'reviews', 'review_count', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price', 'summary_info'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking',
-                                        'review_count', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price'],
+                                        'review_count', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price', 'summary_info'],
                                 relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
                                                     'limit': LIMITS.POINTS_LIST.TAGS_COUNT},
                                            'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
@@ -93,7 +93,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count'],
+                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count', 'summary_info'],
                                 extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                          'extras': ['avatar', 'icon'],

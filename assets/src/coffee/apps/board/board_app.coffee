@@ -41,7 +41,7 @@
       App.ymaps.ready =>
         App.updateSettings
           user: null
-          models: App.settings.models or 'trips'
+          models: App.settings.models or 'tours'
           coord_left: null
           coord_right: null
 

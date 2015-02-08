@@ -37,14 +37,7 @@
         collection: @blocks
       @show @asideView,
         region: @layout.asideRegion
-
-    showActions: (view) ->
-      @actionView = new Trip.Action
-        model: @model
-        collection: @blocks
-      @show @actionView,
-        region: view.actionRegion
-      @listenTo @actionView, 'show:step:commerce', ->
+      @listenTo @asideView, 'show:step:commerce', ->
         @layout.contentRegion.$el.hide()
         @layout.asideRegion.$el.hide()
         @layout.commerceRegion.$el.show()
@@ -60,7 +53,6 @@
       @contentView = new Trip.Content
         model: @model
       @listenTo @contentView, 'show', =>
-        @showActions @contentView
         @showBlocks @contentView
       @show @contentView,
         region: @layout.contentRegion

@@ -229,10 +229,14 @@
 
     templateHelpers: ->
       items: @collection.toJSON()
+      user: @user.toJSON()
 
     events:
       'click .js-delete': 'deleteBlock'
       'click .js-finish-preview': 'tripPreview'
+      'click .js-add-block': 'addBlock'
+      'click .js-finish': 'saveTrip'
+      'click .js-next': 'showCommerce'
 
     collectionEvents: ->
       'add': 'setBlockPosition render'
@@ -254,6 +258,44 @@
         json = JSON.stringify @model.toJSON()
         localStorage.setItem uniqueId, json
         App.navigate "preview/#{uniqueId}"
+
+    addBlock: (event) ->
+      event.preventDefault()
+      block = new App.Entities.TripBlock
+      @options.collection.add block
+
+    showCommerce: (event) ->
+      event.preventDefault()
+      if @model.get 'name'
+        $('.form__field_name').removeClass 'error'
+        @trigger 'show:step:commerce'
+      else
+        $('.form__field_name').addClass 'error'
+        $('.js-finish, .js-next').tooltip 'show'
+
+    saveTrip: (event) ->
+      event.preventDefault()
+      if @model.get 'name'
+        $('.form__field_name').removeClass 'error'
+      else
+        $('.form__field_name').addClass 'error'
+        $('.js-finish, .js-next').tooltip 'show'
+        return
+      @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
+      @spinner.start()
+      @model.set author: @user.toJSON()
+      @model.set blocks: @collection.toJSON()
+      @model.save null,
+        success: =>
+          localStorage.removeItem "trip/#{@model.cid}"
+          @spinner.stop()
+          App.addTripPopup.empty()
+          App.navigate "trip/#{@model.get('id')}"
+          App.vent.trigger 'show:detail:popup', @model
+          App.BoardApp.board.yapens.add @model, at:0
+          yapensView = App.BoardApp.board.yapensView.render()
+          if yapensView.wall
+            yapensView.wall.reloadItems() & yapensView.wall.layout()
 
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
@@ -294,57 +336,6 @@
 
     onDestroy: ->
       @stopListening()
-
-
-  class Trip.Action extends App.Views.ItemView
-    template: 'AddTripAction'
-    className: 'popupwin__content popupwin__content_actions clearfix'
-    events:
-      'click .js-add-block': 'addBlock'
-      'click .js-finish': 'saveTrip'
-      'click .js-next': 'showCommerce'
-
-    initialize: ->
-      @user = App.request 'get:my:profile'
-      @collection = @options.collection
-
-    addBlock: (event) ->
-      event.preventDefault()
-      block = new App.Entities.TripBlock
-      @options.collection.add block
-
-    showCommerce: (event) ->
-      event.preventDefault()
-      if @model.get 'name'
-        $('.form__field_name').removeClass 'error'
-        @trigger 'show:step:commerce'
-      else
-        $('.form__field_name').addClass 'error'
-        $('.js-finish, .js-next').tooltip 'show'
-
-    saveTrip: (event) ->
-      event.preventDefault()
-      if @model.get 'name'
-        $('.form__field_name').removeClass 'error'
-      else
-        $('.form__field_name').addClass 'error'
-        $('.js-finish, .js-next').tooltip 'show'
-        return
-      @spinner = new App.buttonSpinner @$('.js-finish'), 'Сохраняем', @$('.js-finish')
-      @spinner.start()
-      @model.set author: @user.toJSON()
-      @model.set blocks: @collection.toJSON()
-      @model.save null,
-        success: =>
-          localStorage.removeItem "trip/#{@model.cid}"
-          @spinner.stop()
-          App.addTripPopup.empty()
-          App.navigate "trip/#{@model.get('id')}"
-          App.vent.trigger 'show:detail:popup', @model
-          App.BoardApp.board.yapens.add @model, at:0
-          yapensView = App.BoardApp.board.yapensView.render()
-          if yapensView.wall
-            yapensView.wall.reloadItems() & yapensView.wall.layout()
 
 
   class Trip.BlockItem extends App.Views.Layout

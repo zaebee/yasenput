@@ -1,8 +1,11 @@
-<div class="btn-wrap clearfix">
-  <a href="#" class="btn btn_color_yel left js-add-block">Добавить еще один блок</a>
+<div class="">
+  <button class="btn btn_color_yel js-add-block">Добавить еще один блок</button>
+  <br>
+  <button href="#" class="btn btn_color_blue btn_finish js-finish-preview">Предпросмотр</button>
+  <br>
   {{#if user.dealer}}
-  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue right js-next">Следующий шаг</button>
+  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue js-next">Следующий шаг</button>
   {{else}}
-  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue right js-finish">Готово</button>
+  <button data-placement="bottom" data-title="Напишите название путешествия" class="btn btn_color_blue js-finish">Готово</button>
   {{/if}}
 </div>

@@ -10,6 +10,7 @@
     'dashboard/': 'dashboard'
     'dashboard/likes/': 'dashboardLikes'
     'dashboard/settings/': 'dashboardSettings'
+    'dashboard/user/:id/': 'dashboardUser'
 
   API =
     dashboard: ->
@@ -25,6 +26,9 @@
       console.log 'ProfileApp settings url'
       new ProfileApp.List.Controller
         section: 'settings'
+
+    dashboardUser: (id) ->
+      console.log 'ProfileApp user', id
 
   App.vent.on 'show:commercial:popup', () ->
     popup = new ProfileApp.List.CommercialView

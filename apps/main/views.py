@@ -65,7 +65,7 @@ def index(request, **kwargs):
             logger.info('index view queries complete (%.2f sec.)' % (time.time()-t0))
         if kwargs:
             request.GET = request.GET.copy()
-            request.GET['city'] = kwargs['city']
+            request.GET['city'] = kwargs.get('city')
         return render(request, template_name, {})
 
 
