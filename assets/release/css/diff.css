@@ -416,6 +416,7 @@
 }
 .trip-ctrls button.btn {
     width: 100%;
+    margin-bottom: 10px;
 }
 .baloon {
     position: inherit;
