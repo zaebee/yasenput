@@ -46,7 +46,7 @@ urlpatterns = patterns('apps.main.views',
     url(r'^dashboard/settings/?$', 'index'),
     url(r'^dashboard/likes/?$', 'index'),
 
-    url(r'^guide/(?P<id>\d+)$', 'index'),
+    url(r'^guide/(?P<id>\d+)/?$', 'index'),
     url(r'^add_collection', 'index'),
 
     url(r'^order', 'order'),

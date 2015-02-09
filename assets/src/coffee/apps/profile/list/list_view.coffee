@@ -7,12 +7,13 @@
     className: 'constrain clearfix'
 
     modelEvents:
-      'change': 'calculateTotalAdded render'
+      'change': 'calculateTotalAdded calculateTotalLikes render'
 
     events:
       'click .item .link.nonav': 'link'
 
     initialize: (options) ->
+      @user = App.request('get:my:profile')
       @section = options.section
       App.execute 'when:fetched', @model, =>
         total_added = @model.get('added_events') + @model.get('added_points')
@@ -20,10 +21,15 @@
 
     templateHelpers: ->
       section: @section
+      user: @user.toJSON()
 
     calculateTotalAdded: ->
         total_added = @model.get('added_events') + @model.get('added_points') + @model.get('added_routes') + @model.get('added_trips')
         @model.set 'total_added', total_added
+
+    calculateTotalLikes: ->
+        total_liked = @model.get('liked_events') + @model.get('liked_points') + @model.get('liked_routes') + @model.get('liked_trips')
+        @model.set 'total_liked', total_liked
 
     onRender: ->
       @tips = @$('.box__img .icon').tooltip

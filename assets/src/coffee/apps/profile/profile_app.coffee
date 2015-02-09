@@ -10,7 +10,7 @@
     'dashboard/': 'dashboard'
     'dashboard/likes/': 'dashboardLikes'
     'dashboard/settings/': 'dashboardSettings'
-    'guide/:user_id': 'guideUser'
+    'guide/:user_id/': 'guideUser'
 
   API =
     dashboard: ->

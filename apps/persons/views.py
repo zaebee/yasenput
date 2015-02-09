@@ -154,9 +154,11 @@ class PersonAccount(PersonsBaseView):
 
     def get(self, request, *args, **kwargs):
         person = MainModels.Person.objects.filter(username=request.user).extra(
-                select={"liked_points": "select count(*) from main_points_likeusers where user_id=main_person.user_id",
-                        "liked_events": "select count(*) from main_events_likeusers where user_id=main_person.user_id",
+                select={"liked_points": "select count(*) from main_points_likeusers where person_id=main_person.user_id",
+                        "liked_events": "select count(*) from main_events_likeusers where person_id=main_person.user_id",
                         "liked_photos": "select count(*) from photos_photos_likeusers where user_id=main_person.user_id",
+                        "liked_routes": "select count(*) from main_routes_likeusers where user_id=main_person.user_id",
+                        "liked_trips": "select count(*) from trips_trips_likeusers where person_id=main_person.user_id",
 
                         "added_points": "select count(*) from main_points where author_id=main_person.user_id",
                         "added_events": "select count(*) from main_events where author_id=main_person.user_id",
@@ -173,7 +175,7 @@ class PersonAccount(PersonsBaseView):
 
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize(person,
-                                             extras=["liked_points", "liked_events", "liked_photod",
+                                             extras=["liked_points", "liked_events", "liked_photod", "liked_routes", "liked_trips",
                                                      "added_points", "added_events", "added_routes", "added_trips",
                                                      "want_visit_points", "want_visit_events",
                                                      "person_followers", "icon", "icon_small"
@@ -187,10 +189,13 @@ class UserAccount(View):
     http_method_names = ('get',)
 
     def get(self, request, id, *args, **kwargs):
-        person = MainModels.Person.objects.filter(id=id).extra(
-                select={"liked_points": "select count(*) from main_points_likeusers where user_id=main_person.user_id",
-                        "liked_events": "select count(*) from main_events_likeusers where user_id=main_person.user_id",
+        user_id = id
+        person = MainModels.Person.objects.filter(id=user_id).extra(
+                select={"liked_points": "select count(*) from main_points_likeusers where person_id=main_person.user_id",
+                        "liked_events": "select count(*) from main_events_likeusers where person_id=main_person.user_id",
                         "liked_photos": "select count(*) from photos_photos_likeusers where user_id=main_person.user_id",
+                        "liked_routes": "select count(*) from main_routes_likeusers where user_id=main_person.user_id",
+                        "liked_trips": "select count(*) from trips_trips_likeusers where person_id=main_person.user_id",
 
                         "added_points": "select count(*) from main_points where author_id=main_person.user_id",
                         "added_events": "select count(*) from main_events where author_id=main_person.user_id",
@@ -207,7 +212,7 @@ class UserAccount(View):
 
         YpJson = YpSerialiser()
         return HttpResponse(YpJson.serialize(person,
-                                             extras=["liked_points", "liked_events", "liked_photod",
+                                             extras=["liked_points", "liked_events", "liked_photod", "liked_routes", "liked_trips",
                                                      "added_points", "added_events", "added_routes", "added_trips",
                                                      "want_visit_points", "want_visit_events",
                                                      "person_followers", "icon", "icon_small"

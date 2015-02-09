@@ -6,17 +6,26 @@
     <span class="mail">{{#if email}}{{email}}{{else}}Не указано{{/if}}</span>
   </div>
 </div>
+{{#if user.authorized}}
 <div class="user-ctrls">
   <ul class="list">
+    {{#ifEquals user.id id}}
     <li class="item">
-    <a href="/#dashboard/" class="link link_make {{#unless section}}active{{/unless}} nonav">Я создал<span class="number">{{total_added}}</span></a>
+      <a href="/#dashboard/" class="link link_make {{#unless section}}active{{/unless}} nonav">Создал<span class="number">{{total_added}}</span></a>
     </li>
-    <!--
     <li class="item">
-    <a href="/#dashboard/likes/" class="link link_like {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Мне нравится<span class="number">{{count_liked_objects}}</span></a>
-    -->
+      <a href="/#dashboard/likes/" class="link link_favorites {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
     </li>
     <li class="item"><a href="/#dashboard/settings/" class="link link_settings {{#ifEquals section 'settings'}}active{{/ifEquals}} nonav">Настройки</a></li>
     <li class="item"><a href="/logout/" class="link link_exit">Выход</a></li>
+    {{else}}
+    <li class="item">
+      <a href="/#guide/{{id}}/" class="link link_make {{#unless section}}active{{/unless}} nonav">Создал<span class="number">{{total_added}}</span></a>
+    </li>
+    <li class="item">
+      <a href="/#guide/{{id}}/likes/" class="link link_favorites {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
+    </li>
+    {{/ifEquals}}
   </ul>
 </div>
+{{/if}}
