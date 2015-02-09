@@ -41,7 +41,7 @@
   <span class="info info_comment">{{#if review_count}}{{review_count}}{{else}}0{{/if}}</span>
 </div>
 <div class="box__person">
-  <a href="/dashboard/user/{{author.id}}">
+  <a class="link" href="/guide/{{author.id}}">
     <img src="{{author.icon}}" alt="{{author.first_name}} {{author.last_name}}" class="img">
     <div class="text">
       {{#if price}}Автор экскурсии{{else}}Автор путешествия{{/if}}<br>

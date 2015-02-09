@@ -181,3 +181,37 @@ class PersonAccount(PersonsBaseView):
                                              fields=("username", "first_name", "last_name", "email", "dealer",
                                                      "avatar", "phone", "city", "website", "about")),
                             mimetype="application/json")
+
+
+class UserAccount(View):
+    http_method_names = ('get',)
+
+    def get(self, request, id, *args, **kwargs):
+        person = MainModels.Person.objects.filter(id=id).extra(
+                select={"liked_points": "select count(*) from main_points_likeusers where user_id=main_person.user_id",
+                        "liked_events": "select count(*) from main_events_likeusers where user_id=main_person.user_id",
+                        "liked_photos": "select count(*) from photos_photos_likeusers where user_id=main_person.user_id",
+
+                        "added_points": "select count(*) from main_points where author_id=main_person.user_id",
+                        "added_events": "select count(*) from main_events where author_id=main_person.user_id",
+                        "added_routes": "select count(*) from main_routes where author_id=main_person.user_id",
+                        "added_trips": "select count(*) from trips_trips where author_id=main_person.user_id",
+                        "added_photos": "select count(*) from photos_photos where author_id=main_person.user_id",
+
+                        "want_visit_points": "select count(*) from main_points_visitusers where user_id=main_person.user_id",
+                        "want_visit_events": "select count(*) from main_events_visitusers where user_id=main_person.user_id",
+
+                        "person_followers": "select count(*) from main_person_followers where user_id=main_person.user_id",
+                        }
+            )
+
+        YpJson = YpSerialiser()
+        return HttpResponse(YpJson.serialize(person,
+                                             extras=["liked_points", "liked_events", "liked_photod",
+                                                     "added_points", "added_events", "added_routes", "added_trips",
+                                                     "want_visit_points", "want_visit_events",
+                                                     "person_followers", "icon", "icon_small"
+                                                     ],
+                                             fields=("username", "first_name", "last_name", "email", "dealer",
+                                                     "avatar", "phone", "city", "website", "about")),
+                            mimetype="application/json")

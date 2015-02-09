@@ -10,7 +10,7 @@
     'dashboard/': 'dashboard'
     'dashboard/likes/': 'dashboardLikes'
     'dashboard/settings/': 'dashboardSettings'
-    'dashboard/user/:id/': 'dashboardUser'
+    'guide/:user_id': 'guideUser'
 
   API =
     dashboard: ->
@@ -27,8 +27,11 @@
       new ProfileApp.List.Controller
         section: 'settings'
 
-    dashboardUser: (id) ->
-      console.log 'ProfileApp user', id
+    guideUser: (user_id) ->
+      console.log 'ProfileApp user', user_id
+      new ProfileApp.List.Controller
+        section: 'guide'
+        user_id: user_id
 
   App.vent.on 'show:commercial:popup', () ->
     popup = new ProfileApp.List.CommercialView

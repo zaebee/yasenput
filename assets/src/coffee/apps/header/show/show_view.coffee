@@ -224,11 +224,10 @@
 
     filterCategory: (event) ->
       event.preventDefault()
-      @ui.filterAllCategory.removeClass 'active'
       $target = $(event.currentTarget)
-      $target.addClass 'active'
-      url = $target.attr 'href'
-      App.navigate url, true
+      models = $target.data 'model'
+      console.log models
+      App.updateSettings models: models
 
     submitSearch: (event) ->
       if event.type is 'submit'

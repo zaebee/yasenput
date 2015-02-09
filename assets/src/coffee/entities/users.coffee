@@ -10,7 +10,7 @@
 
   class Entities.User extends Entities.Model
     idAttribute: 'id'
-    url:
+    urlRoot:
       App.API_BASE_URL + "/users/account/"
 
     defaults:
@@ -25,7 +25,13 @@
   API =
     me: (params = {}) ->
       _.defaults params
-      @user = @user or new Entities.User App.USER
-      
+      new Entities.User App.USER
+
+    user: (user_id) ->
+      new Entities.User id: user_id
+
   App.reqres.setHandler 'get:my:profile', ->
     API.me()
+
+  App.reqres.setHandler 'get:user:profile', (user_id) ->
+    API.user user_id

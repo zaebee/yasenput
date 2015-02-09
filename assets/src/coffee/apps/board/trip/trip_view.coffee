@@ -34,6 +34,7 @@
       'click .btn-like': 'tripLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
+      'click .user_in_popup': 'link'
 
     initialize: ->
       @listenTo @model, 'trip:like:response', @tripLikeResponse
@@ -54,6 +55,11 @@
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
 
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
 
   class Trip.Aside extends App.Views.ItemView
     template: 'TripAside'
@@ -64,6 +70,11 @@
     events:
       'click .js-popup-order-route': 'showOrderPopup'
       'click .item': 'scrollBlock'
+      'click .link': 'link'
+
+    initialize: ->
+      @user = App.request 'get:my:profile'
+      @saveUrl = true
 
     showOrderPopup: (event) ->
       event.preventDefault()
@@ -83,9 +94,10 @@
       $target.closest('.modal').animate
         scrollTop: scrollY
 
-    initialize: ->
-      @user = App.request 'get:my:profile'
-      @saveUrl = true
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
     onShow: ->
       @popupwin = @$el.closest '.popupwin'

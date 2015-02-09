@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^search/*$', views.SearchPerson.as_view()),
     url(r'^follow/*$', views.FollowPerson.as_view()),
     url(r'^account/*$', views.PersonAccount.as_view()),
-    
+    url(r'^account/(?P<id>\d+)/?$', views.UserAccount.as_view()),
+
 )

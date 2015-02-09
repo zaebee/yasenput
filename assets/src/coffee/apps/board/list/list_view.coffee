@@ -42,6 +42,7 @@
       'touchstart.touch .sprite-place': 'mark'
       'touchstart.touch .btn_edit': 'showEditPopup'
       'touchstart.touch .btn_remove': 'showRemovePopup'
+      'touchstart.touch .link': 'link'
      else
       'click .js-popupwin-add-trip': 'showAddTripPopup'
       'click .js-popupwin-place': 'showDetailPopup'
@@ -54,6 +55,7 @@
       'click .sprite-place': 'mark'
       'click .btn_edit': 'showEditPopup'
       'click .btn_remove': 'showRemovePopup'
+      'click .link': 'link'
 
     modelEvents:
       'change:likes_count': 'renderLikes'
@@ -122,6 +124,11 @@
     mark: (event) ->
       event.preventDefault()
       console.log event
+
+    link: (event) ->
+      event.preventDefault()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
     destroyModel: ->
       @user.fetch()

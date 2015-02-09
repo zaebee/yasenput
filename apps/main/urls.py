@@ -43,6 +43,10 @@ urlpatterns = patterns('apps.main.views',
     url(r'^map', 'index'),
     url(r'^new', 'index'),
     url(r'^dashboard/?$', 'index'),
+    url(r'^dashboard/settings/?$', 'index'),
+    url(r'^dashboard/likes/?$', 'index'),
+
+    url(r'^guide/(?P<id>\d+)$', 'index'),
     url(r'^add_collection', 'index'),
 
     url(r'^order', 'order'),

@@ -4,16 +4,20 @@
 
     initialize: ->
       console.log 'initialize ProfileApp.List.Controller'
-      @user = App.request 'get:my:profile'
-      if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
-        return
+      if @options.user_id
+        @user = App.request 'get:user:profile', @options.user_id
+      else
+        @user = App.request 'get:my:profile'
+        if not @user.get 'authorized'
+          App.vent.trigger 'show:login:popup'
+          return
 
       @user.fetch()
       @showDashboard()
       switch @options.section
         when 'likes' then @showMyLikes()
         when 'settings' then @showSettings()
+        when 'guide' then @showGuide()
         else @showMyYapens()
 
     onDestroy: ->
@@ -30,14 +34,6 @@
       App.vent.trigger 'hide:sidebar:region'
       App.vent.trigger 'show:dashboard:region'
 
-    showMyYapens: ->
-      App.vent.trigger 'filter:all:yapens',
-        user: @user.get 'id'
-        s: null
-        city: null
-        coord_left: null
-        coord_right: null
-
     showMyLikes: ->
       App.vent.trigger 'filter:all:yapens',
         user: @user.get 'id'
@@ -51,3 +47,23 @@
       @show settingsView,
         region: App.boardRegion
         loading: true
+
+    showGuide: ->
+      App.vent.trigger 'filter:all:yapens',
+        user: @options.user_id
+        s: null
+        city: null
+        coord_left: null
+        coord_right: null
+        models: null
+
+
+    showMyYapens: ->
+      App.vent.trigger 'filter:all:yapens',
+        user: @user.get 'id'
+        s: null
+        city: null
+        coord_left: null
+        coord_right: null
+        models: null
+

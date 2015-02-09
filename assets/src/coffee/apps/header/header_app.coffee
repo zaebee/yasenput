@@ -26,10 +26,12 @@
   App.vent.on 'show:destination:region', () ->
     App.headerRegion.$el.removeClass 'header_small'
     App.headerRegion.currentView.destinationRegion.$el.removeClass 'hide'
+    App.headerRegion.currentView.filterRegion.$el.find('.filter-categories').addClass 'hide'
 
   App.vent.on 'hide:destination:region', () ->
     App.headerRegion.$el.addClass 'header_small'
     App.headerRegion.currentView.destinationRegion.$el.addClass 'hide'
+    App.headerRegion.currentView.filterRegion.$el.find('.filter-categories').removeClass 'hide'
 
   HeaderApp.on 'start', ->
     console.log 'HeaderApp onStart event'
