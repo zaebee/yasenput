@@ -392,7 +392,7 @@
       , 0
       price = parseInt(info.group.group_price_tour * users, 10) + prices
       @$('#orderGroupTour [name=total_price]').val price
-      @$('#orderGroupTour .finish-price .price').html price + ' <span class="rouble">o</span>'
+      @$('#orderGroupTour .finish-price .trip-price').html price + ' <span class="rouble">o</span>'
 
     changePersonalService: (event) ->
       info = @model.get 'summary_info'
@@ -404,7 +404,7 @@
       users = $('#orderPersonalTour .js-personal-users').select2('data').text
       price = parseInt(info.personal.personal_price_tour, 10) + prices
       @$('#orderPersonalTour [name=total_price]').val price
-      @$('#orderPersonalTour .finish-price .price').html price + ' <span class="rouble">o</span>'
+      @$('#orderPersonalTour .finish-price .trip-price').html price + ' <span class="rouble">o</span>'
 
     changeGroupService: (event) ->
       info = @model.get 'summary_info'
@@ -416,7 +416,7 @@
       users = $('#orderGroupTour .js-group-users').select2('data').text
       price = parseInt(info.group.group_price_tour * users, 10) + prices
       @$('#orderGroupTour [name=total_price]').val price
-      @$('#orderGroupTour .finish-price .price').html price + ' <span class="rouble">o</span>'
+      @$('#orderGroupTour .finish-price .trip-price').html price + ' <span class="rouble">o</span>'
 
     showSecondStep: (event) ->
       event.preventDefault()

@@ -2,22 +2,22 @@
   <div class="popupwin__aside" style="margin-right: -150px;">
 
     <div class="route-aside-commercial popupwin__content" style="width: 230px;">
-      <div class="title">Условия отмены бронирования</div>
+      <div class="title">Условия бронирования и отмены</div>
       <ul class="list moneyback clearfix">
 
-        <li class="item clearfix" data-step="1">
+        <li class="item clearfix" data-step="2">
           <span class="percent green">100%</span>
           <div class="text">
             Полный возврат при отмене за 2 дня до начала экскурсии
           </div>
         </li>
-        <li class="item clearfix" data-step="1">
+        <li class="item clearfix" data-step="3">
           <span class="percent yellow">50%</span>
           <div class="text">
             Возврат 50%, при отмене за 2 дня
           </div>
         </li>
-        <li class="item clearfix" data-step="1">
+        <li class="item clearfix" data-step="4">
           <span class="percent red">0%</span>
           <div class="text">
             При отмене бронирования менее чем за 2 дня, средства не возвращаются
@@ -31,7 +31,7 @@
 
 <div class="popupwin__content clearfix first">
   <div class="popupwin__title clearfix">
-    Сделать заказ
+    Бронирование экскурсии
   </div>
   <div class="form">
     <div class="field">
@@ -122,7 +122,14 @@
         </div>
         {{/if}}
         <input type="hidden" name="total_price" value="{{summary_info.personal.personal_price_tour}}">
-        <div class="field finish-price">Итого: <span class="price">{{summary_info.personal.personal_price_tour}} <span class="rouble">o</span></span></div>
+        <div class="field finish-price">
+          <small><span class="left">Стоимость экскурсии: </span><span class="price trip-price">{{summary_info.personal.personal_price_tour}} <span class="rouble">o</span></span></small>
+        </div>
+        <br>
+        <div class="field finish-price">
+          <span class="left">Бронирование: </span><span class="price">100 <span class="rouble">o</span></span>
+        </div>
+        <div class="field finish-price"><span class="left">Итого к оплате: </span><span class="price">100 <span class="rouble">o</span></span></div>
       </div><!-- /personal-tour -->
     </form>
     {{/if}}
@@ -182,13 +189,19 @@
         </div>
         {{/if}}
         <input type="hidden" name="total_price" value="{{summary_info.personal.personal_price_tour}}">
-        <div class="field finish-price">Итого: <span class="price">{{summary_info.group.group_price_tour}} <span class="rouble">o</span></span></div>
+        <div class="field finish-price">
+          <small><span class="left">Стоимость экскурсии: </span><span class="price trip-price">{{summary_info.group.group_price_tour}} <span class="rouble">o</span></span></small>
+        </div>
+        <br>
+        <div class="field finish-price"><span class="left">Бронирование: </span><span class="price">100 <span class="rouble">o</span></span></div>
+        <div class="field finish-price"><span class="left">Итого к оплате: </span><span class="price">100 <span class="rouble">o</span></span></div>
       </div><!-- /group-tour -->
     </form>
     {{/if}}
 
   </div>
   <div class="note"><span class="star">*</span> - поля обязательны для заполнения</div>
+  <div class="note">Вы оплачиваете только стоимость услуги бронирования экскурсии, в которую входит бронирование времени проведения экскурсии для Вас и гарантия возврата денег за бронь при недобросовестном поведении экскурсовода. Оплата самой экскурсии производится непосредственно экскурсоводу</div>
   <div class="popupwin__footer clearfix">
     <button class="btn btn_color_blue right js-next-second">Далее</button>
   </div>
@@ -197,7 +210,7 @@
 
 <div class="popupwin__content clearfix hide second">
   <div class="popupwin__title clearfix">
-    Заказ экскурсии
+    Оплата бронирования
   </div>
   <div class="form">
     <div class="field">
@@ -236,7 +249,14 @@
     </div>
     -->
     <div class="field finish-price">
-      Итого: <span class="price" data-price></span><span class="rouble"> o</span>
+      <small><span class="left">Стоимость экскурсии: </span><span class="price" data-price></span><span class="rouble"> o</span></small>
+    </div>
+    <br>
+    <div class="field finish-price">
+      <span class="left">Бронирование: </span><span class="price">100</span><span class="rouble"> o</span>
+    </div>
+    <div class="field finish-price">
+      <span class="left">Итого к оплате: </span><span class="price">100</span><span class="rouble"> o</span>
     </div>
 
   </div>
