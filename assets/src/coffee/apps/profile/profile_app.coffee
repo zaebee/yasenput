@@ -33,8 +33,8 @@
         section: 'guide'
         user_id: user_id
 
-  App.vent.on 'show:commercial:popup', () ->
-    popup = new ProfileApp.List.CommercialView
+  App.vent.on 'show:commercial:popup', (options = {}) ->
+    popup = new ProfileApp.List.CommercialView options
     App.commercialPopupRegion.show popup
 
   App.vent.on 'show:dashboard:region', () ->

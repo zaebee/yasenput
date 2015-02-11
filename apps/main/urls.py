@@ -16,29 +16,24 @@ urlpatterns = patterns('apps.main.views',
     url(r'city/(?P<city>[_\w|-]+)/$','index', name='city_view'),
     url(r'^routes', 'index'),
     url(r'^points', 'index'),
-    url(r'^want', 'index'),
-    url(r'^myroutes', 'index'),
-    url(r'^mypoints', 'index'),
-    url(r'^tag', 'index'),
-    url(r'^set', 'index'),
 
-    url(r'^point/(?P<id>\d+)$', 'point', name='point_detail'),
-    url(r'^event/(?P<id>\d+)$', 'event', name='event_detail'),
-    url(r'^trip/(?P<id>\d+)$', 'trip', name='trip_detail'),
+    url(r'^point/(?P<id>\d+)/?$', 'point', name='point_detail'),
+    url(r'^event/(?P<id>\d+)/?$', 'event', name='event_detail'),
+    url(r'^trip/(?P<id>\d+)/?$', 'trip', name='trip_detail'),
 
     url(r'^preview/[_/\w\d]+$', 'index'),
 
-    url(r'^point$', 'index'),
-    url(r'^route$', 'index'),
-    url(r'^event$', 'index'),
-    url(r'^trip$', 'index'),
-    url(r'^tour$', 'index'),
+    url(r'^point/?$', 'index'),
+    url(r'^route/?$', 'index'),
+    url(r'^event/?$', 'index'),
+    url(r'^trip/?$', 'index'),
+    url(r'^tour/?$', 'index'),
 
     url(r'^register/$', 'register_view'),
 
-    url(r'^add/point$', 'index'),
-    url(r'^add/event$', 'index'),
-    url(r'^add/trip$', 'index'),
+    url(r'^add/point/?$', 'index'),
+    url(r'^add/event/?$', 'index'),
+    url(r'^add/trip/?$', 'index'),
 
     url(r'^map', 'index'),
     url(r'^new', 'index'),
@@ -47,7 +42,6 @@ urlpatterns = patterns('apps.main.views',
     url(r'^dashboard/likes/?$', 'index'),
 
     url(r'^guide/(?P<id>\d+)/?$', 'index'),
-    url(r'^add_collection', 'index'),
 
     url(r'^order', 'order'),
 

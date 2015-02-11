@@ -42,7 +42,7 @@
     addTrip: (event) ->
       event.preventDefault()
       if not @user.get 'authorized'
-        App.vent.trigger 'show:login:popup'
+        App.vent.trigger 'show:commercial:popup', add_trip: true
       else
         Yapp.vent.trigger 'show:add:trip:popup'
       console.log event
@@ -197,6 +197,8 @@
 
     events:
       'click .categories__link': 'filterCategory'
+      'click .filter-sort a': 'filterSort'
+      'click .filter-dropdown .link': 'filterDropdown'
       'submit #header-search-form': 'submitSearch'
       'select2-selecting .header__search input':'submitSearch'
       'select2-clearing .header__search input':'clearSearch'
@@ -228,6 +230,26 @@
       models = $target.data 'model'
       console.log models
       App.updateSettings models: models
+
+    filterSort: (event) ->
+      event.preventDefault()
+      @$('.filter-sort a').removeClass 'active'
+      $target = $(event.currentTarget)
+      $target.addClass 'active'
+      sort = $target.data 'sort'
+      App.updateSettings content: "-#{sort}"
+
+    filterDropdown: (event) ->
+      event.preventDefault()
+      @$('.dropdown').removeClass 'open'
+      $target = $(event.currentTarget)
+      $target.parent().addClass 'open'
+      $firstInput = $target.siblings('.dropdown-block').find('input[type="text"]')[0]
+      setTimeout ->
+        $firstInput.focus()
+      , 10
+      #sort = $target.data 'sort'
+      #App.updateSettings content: "-#{sort}"
 
     submitSearch: (event) ->
       if event.type is 'submit'

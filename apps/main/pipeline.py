@@ -10,6 +10,37 @@ def make_upload_path_avatar(subtype):
     return uuid.uuid4().hex+'.'+subtype
 
 
+@partial
+def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
+    import ipdb;ipdb.set_trace()
+    if user and user.email and user.person.phone:
+        return
+    if is_new:
+        if strategy.session_get('saved_email'):
+            details['email'] = strategy.session_pop('saved_email')
+        else:
+            return redirect('require_email')
+
+        if strategy.session_get('password'):
+            details['password'] = strategy.session_pop('password')
+        else:
+            return redirect('require_email')
+
+        if strategy.session_get('first_name'):
+            details['first_name'] = strategy.session_pop('first_name')
+        else:
+            return redirect('require_email')
+
+        if strategy.session_get('last_name'):
+            details['last_name'] = strategy.session_pop('last_name')
+        else:
+            return redirect('require_email')
+
+        if strategy.session_get('third_name'):
+            details['third_name'] = strategy.session_pop('third_name')
+        else:
+            return redirect('require_email')
+
 
 @partial
 def update_profile(strategy, details, response, uid=None, user=None, is_new=False, *args, **kwargs):

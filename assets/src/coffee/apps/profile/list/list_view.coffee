@@ -99,6 +99,9 @@
     events:
       'click .js-finish': 'saveInfo'
 
+    initialize: (options) ->
+      @options = options
+
     saveInfo: (event) ->
       event.preventDefault()
       spinner = App.buttonSpinner $('.js-finish'), 'Подождите', $('.js-finish')
@@ -138,14 +141,17 @@
             full_name: fullname
             password: password
             phone: phone
-          successCallback: (response) ->
+          successCallback: (response) =>
             spinner.stop()
             if response.created
               App.commercialPopupRegion.empty()
               App.vent.trigger 'show:info:popup', 'Спасибо, ваш аккаунт зарегистрирован. Теперь вы можете добавлять экскурсии на нашем сайте'
-              setTimeout ->
-                document.location.reload()
-              , 2000
+              setTimeout =>
+                if @options.add_trip
+                  document.location.pathname = '/add/trip'
+                else
+                  document.location.reload()
+              , 1000
             if response.errors
               _.each response.errors, (el, name) ->
                 $("[name=#{name}]").siblings('.errorlist').html el.join('\n')

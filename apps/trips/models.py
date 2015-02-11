@@ -44,13 +44,14 @@ class Trips(models.Model):
     likeusers = models.ManyToManyField(Person, null=True, blank=True, related_name='trips_like_users', serialize=True)
     blocks = models.ManyToManyField(Blocks, blank=True, serialize=True)
     summary_info = models.TextField(null=True, blank=True, default='')
-    ypi = 100
+    ypi = models.IntegerField(default=0, blank=True)
     type_of_item = 'trip'
     price = models.DecimalField('Цена', max_digits=25, decimal_places=2, blank=True, null=True)
     search = SphinxSearch(weights={'name': 100, 'description': 80})
     searchdelta = SphinxQuerySet(index="trips_trips",
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
+    created = models.DateTimeField(u'Дата создания', auto_now_add=True)
 
     def __unicode__(self):
         return self.name

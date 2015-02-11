@@ -57,7 +57,7 @@
                 </div>
                 <label class="label-start">Время начала</label>
                 <div class="form__item form__item_start">
-                  <label>от</label>
+                  <label>с</label>
                   <input type="text" class="input-start js-parse-time" placeholder="00:00">
                 </div>
                 <div class="form__item form__item_start">
@@ -68,14 +68,6 @@
               <button class="btn btn_color_green js-add-tour-item">Добавить</button>
             </div>
 
-            <div class="form__field">
-              <div class="form__item-wrap">
-                <div class="form__item form__item_start_place" style="width:100%">
-                  <label>Место сбора:</label>
-                  <textarea name="meet_point" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами"></textarea>
-                </div>
-              </div>
-            </div>
             {{#each summary_info.personal.personal_date}}
             <div class="form__field form__field_tour">
               <span class="date">{{orderDate 'date' this}}</span>
@@ -84,6 +76,16 @@
               <a href="#" class="close js-delete-field"></a>
             </div>
             {{/each}}
+
+            <div class="form__field">
+              <div class="form__item-wrap">
+                <div class="form__item form__item_start_place" style="width:100%">
+                  <label>Место сбора:</label>
+                  <textarea name="meet_point" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами" value="{{summary_info.personal.meet_point}}">{{summary_info.personal.meet_point}}</textarea>
+                </div>
+              </div>
+            </div>
+
             <div class="form__field">
               <div class="subtitle">
                 Добавьте дополнительные услуги
@@ -184,23 +186,24 @@
               <a href="#" class="btn btn_color_green js-add-tour-item">Добавить</a>
             </div>
 
-            <div class="form__field">
-              <div class="form__item-wrap">
-                <div class="form__item form__item_start_place" style="width:100%">
-                  <label>Место сбора:</label>
-                  <textarea name="start_place" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами"></textarea>
-                </div>
-              </div>
-            </div>
-
             {{#each summary_info.group.group_date}}
             <div class="form__field form__field_tour">
               <span class="date">{{orderDate 'date' this}}</span>
               <span class="time"> c {{orderDate 'start' this}}</span>
-              <input name="personal_date" type="hidden" value="{{this}}">
+              <input name="group_date" type="hidden" value="{{this}}">
               <a href="#" class="close js-delete-field"></a>
             </div>
             {{/each}}
+
+            <div class="form__field">
+              <div class="form__item-wrap">
+                <div class="form__item form__item_start_place" style="width:100%">
+                  <label>Место сбора:</label>
+                  <textarea name="meet_point" style="height: 70px;" placeholder="Напишите, где произодет встреча с туристами" value="{{summary_info.group.meet_point}}">{{summary_info.group.meet_point}}</textarea>
+                </div>
+              </div>
+            </div>
+
             <div class="form__field">
               <div class="subtitle">
                 Добавьте дополнительные услуги

@@ -186,7 +186,26 @@ class PersonAccount(PersonsBaseView):
 
 
 class UserAccount(View):
-    http_method_names = ('get',)
+    http_method_names = ('get', 'post')
+
+    def post(self, request, id, *args, **kwargs):
+        data = request.POST.get('model', None)
+        user_dict = json.loads(data)
+        author = MainModels.Person.objects.filter(user=request.user)
+        if 'fullname' in user_dict:
+            fullname = user_dict.pop('fullname', '').strip().split(' ', 1)
+            if len(fullname) == 2:
+                user_dict['first_name'], user_dict['last_name'] = fullname
+            elif fullname[0]:
+                user_dict['first_name'] = fullname[0]
+                user_dict['last_name'] = ''
+
+        try:
+            author.update(**user_dict)
+        except Exception, e:
+            return JsonHTTPResponse({"status": 1, "txt": str(e)})
+
+        return self.get(request, id)
 
     def get(self, request, id, *args, **kwargs):
         user_id = id

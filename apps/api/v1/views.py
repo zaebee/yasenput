@@ -93,7 +93,7 @@ class PointsBaseView(View):
     def getSerializeCollections(self, collections):
         YpJson = YpSerialiser()
         return YpJson.serialize(collections,
-                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count', 'summary_info'],
+                                fields=['id','p','days', 'dt_start', 'dt_end', 'blocks','price', 'sets','tags', 'unid', 'name', 'isliked', 'description', 'author', 'points', 'points_by_user', 'likeusers', 'updated', 'likes_count', 'imgs', 'longitude', 'latitude', 'address', 'review_count', 'ypi', 'sets_count', 'summary_info', 'created'],
                                 extras=['likes_count', 'p', 'sets','isliked', 'type_of_item', 'unid', 'review_count', 'sets_count'],
                                 relations={'likeusers': {'fields': ['id', 'first_name', 'last_name', 'avatar', 'icon'],
                                                          'extras': ['avatar', 'icon'],
@@ -146,55 +146,6 @@ class PointsBaseView(View):
 
 
                                            })
-
-    def getPointsSelect(self, request):
-        if request.user.is_authenticated():
-            user = MainModels.User.objects.get(username = request.user)
-            point_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_points_likeusers WHERE main_points_likeusers.points_id = main_points.id and main_points_likeusers.person_id = '+str(user.id)
-        else:
-            point_isliked = "select 0"
-        args = {"select": {'id_point': 'select 0',
-                 'isliked': point_isliked,
-                 'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_points.id',
-                 'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_points.id',
-                 }}
-        return args
-
-    def getEventSelect(self, request):
-        if request.user.is_authenticated():
-            user = MainModels.User.objects.get(username = request.user)
-            isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_events_likeusers WHERE main_events_likeusers.events_id = main_events.id and main_events_likeusers.person_id = '+str(user.id)
-        else:
-            isliked = "select 0"
-        args = {"select": {'id_event': 'select 0',
-                 'isliked': isliked,
-                 }}
-        return args
-
-    def getPointsByUserSelect(self, request):
-        if request.user.is_authenticated():
-            user = MainModels.User.objects.get(username = request.user)
-            copypoint_isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_pointsbyuser_likeusers WHERE main_pointsbyuser_likeusers.pointsbyuser_id = main_pointsbyuser.id and main_pointsbyuser_likeusers.user_id = '+str(user.id)
-        else:
-            copypoint_isliked = "select 0"
-        args = {
-            "tables": ["main_points"],
-            "where": ["main_points.id=main_pointsbyuser.point_id"],
-            "select": {'id_point': 'main_pointsbyuser.point_id',
-                 'name': 'main_points.name',
-                 'address': 'main_points.address',
-                 'wifi': 'main_points.wifi',
-                 'wc': 'main_points.wc',
-                 'invalid': 'main_points.invalid',
-                 'parking': 'main_points.parking',
-                 'longitude': 'main_points.longitude',
-                 'latitude': 'main_points.latitude',
-                 'isliked': copypoint_isliked,
-                 'beens_count': 'SELECT count(*) from main_points_been where main_points_been.points_id=main_pointsbyuser.point_id',
-                 'collections_count': 'SELECT count(*) from collections_collections_points where collections_collections_points.points_id=main_pointsbyuser.point_id',
-                 }
-            }
-        return args
 
 
     def pointsList(self, points):
@@ -265,13 +216,14 @@ class ItemsList(PointsBaseView):
     log = logger
     def get(self, request, *args, **kwargs):
         params = request.GET.copy()
+        sort = params.get('content', 'ypi')
         #self.log.info('city = ' + params.get('city'))
         models = ['points', 'events','trips', 'tours']
 
-        search_res_points = MainModels.Points.objects.all()
-        search_res_events = MainModels.Events.objects.filter(dt_end__gte=datetime.now())
-        search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True))
-        search_res_tours = TripModels.Trips.objects.filter(price__gt=0)
+        search_res_points = MainModels.Points.objects.all().order_by(sort)
+        search_res_events = MainModels.Events.objects.filter(dt_end__gte=datetime.now()).order_by(sort)
+        search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True)).order_by(sort)
+        search_res_tours = TripModels.Trips.objects.filter(price__gt=0).order_by(sort)
         if params.get('models'):
             models = params.get('models').split(',')
 
@@ -284,7 +236,6 @@ class ItemsList(PointsBaseView):
             search_res_trips = search_res_trips.filter(author_id=params.get('user'))
             search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
-        sort = 'ypi'
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS
@@ -404,7 +355,7 @@ class ItemsList(PointsBaseView):
             items.append(search_res_points)
         if 'events' in models:
             items.append(search_res_events)
-        all_items = QuerySetJoin(*items).order_by('-' + sort)[offset:limit]
+        all_items = QuerySetJoin(*items).order_by(sort)[offset:limit]
 
         self.log.info('Build points, events, trips, tours complete (%.2f sec.)' % (time.time()-t0))
 
