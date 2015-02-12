@@ -199,6 +199,13 @@
       'click .categories__link': 'filterCategory'
       'click .filter-sort a': 'filterSort'
       'click .filter-dropdown .link': 'filterDropdown'
+
+      'click .filter-dropdown .yp_price_sub': 'filterPrice'
+      'submit #priceFilterForm': 'filterPrice'
+
+      'click .filter-dropdown .yp_delay_sub': 'filterDelay'
+      'submit #delayFilterForm': 'filterDelay'
+
       'submit #header-search-form': 'submitSearch'
       'select2-selecting .header__search input':'submitSearch'
       'select2-clearing .header__search input':'clearSearch'
@@ -243,13 +250,31 @@
       event.preventDefault()
       @$('.dropdown').removeClass 'open'
       $target = $(event.currentTarget)
-      $target.parent().addClass 'open'
+      $target.parent().toggleClass 'open'
       $firstInput = $target.siblings('.dropdown-block').find('input[type="text"]')[0]
       setTimeout ->
         $firstInput.focus()
       , 10
-      #sort = $target.data 'sort'
-      #App.updateSettings content: "-#{sort}"
+
+    filterPrice: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      price_start = @$('.price_start').val() or null
+      price_end = @$('.price_end').val() or null
+      $target.parents('.dropdown').removeClass 'open'
+      App.updateSettings
+        price_start: price_start
+        price_end: price_end
+
+    filterDelay: (event) ->
+      event.preventDefault()
+      $target = $(event.currentTarget)
+      delay_start = @$('.delay_start').val() or null
+      delay_end = @$('.delay_end').val() or null
+      $target.parents('.dropdown').removeClass 'open'
+      App.updateSettings
+        delay_start: delay_start
+        delay_end: delay_end
 
     submitSearch: (event) ->
       if event.type is 'submit'

@@ -64,25 +64,29 @@
 </div>
 <div class="filter-dropdown">
   <div class="dropdown">
-    <a href="" class="link sprite-filter2-time" title="Продолжительность" data-toggle="dropdown"></a>
+    <a href="#" class="link sprite-filter2-time" data-toggle="tooltip" data-placement="bottom" title="Продолжительность"></a>
     <div class="dropdown-block dropdown-block_time">
-      от&nbsp;
-      <input type="text" class="delay_start">&nbsp;&nbsp;
-      до&nbsp;
-      <input type="text" class="delay_end">&nbsp;&nbsp;
-      дней
-      <button class="btn btn_color_green-dark yp_delay_sub">Ок</button>
+      <form id="delayFilterForm">
+        от&nbsp;
+        <input type="text" class="delay_start">&nbsp;&nbsp;
+        до&nbsp;
+        <input type="text" class="delay_end">&nbsp;&nbsp;
+        дней
+        <button class="btn btn_color_green-dark yp_delay_sub">Ок</button>
+      </form>
     </div>
   </div>
   <div class="dropdown">
-    <a href="" class="link sprite-filter2-money" title="Диапазон цен" data-toggle="dropdown"></a>
+    <a href="#" class="link sprite-filter2-money" data-toggle="tooltip" data-placement="bottom" title="Диапазон цен"></a>
     <div class="dropdown-block dropdown-block_money">
-      от&nbsp;
-      <input type="text" class="price_start">&nbsp;&nbsp;
-      до&nbsp;
-      <input type="text" class="price_end">&nbsp;
-      <span class="sprite-ruble-dark"></span>
-      <button class="btn btn_color_green-dark yp_price_sub">Ок</button>
+      <form id="priceFilterForm">
+        от&nbsp;
+        <input type="text" class="price_start">&nbsp;&nbsp;
+        до&nbsp;
+        <input type="text" class="price_end">&nbsp;
+        <span class="sprite-ruble-dark"></span>
+        <button type="submit" class="btn btn_color_green-dark yp_price_sub">Ок</button>
+      </form>
     </div>
   </div>
 </div>

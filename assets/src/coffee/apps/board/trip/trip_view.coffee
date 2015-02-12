@@ -57,6 +57,7 @@
 
     link: (event) ->
       event.preventDefault()
+      App.tripPopup.empty()
       url = $(event.currentTarget).attr 'href'
       App.navigate url, true
 
@@ -96,6 +97,7 @@
 
     link: (event) ->
       event.preventDefault()
+      App.tripPopup.empty()
       url = $(event.currentTarget).attr 'href'
       App.navigate url, true
 
@@ -449,6 +451,11 @@
         result[el.name] = el.value
         result
       , {}
+      additional = _.clone data
+      delete additional.date
+      delete additional.user_count
+      delete additional.total_price
+      additional = _.keys(additional).join('<br>')
       @order =
         fullname: fullname
         phone: phone
@@ -464,6 +471,7 @@
         @$('[data-date]').text data.date
         @$('[data-time]').text @order.fullname
         @$('[data-price]').text data.total_price
+        @$('[data-additional]').html additional
         spinner = new App.buttonSpinner @$('.js-next-second'), 'Далее', @$('.js-next-second')
         spinner.start()
         App.apiRequest

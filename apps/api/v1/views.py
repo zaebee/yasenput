@@ -236,6 +236,10 @@ class ItemsList(PointsBaseView):
             search_res_trips = search_res_trips.filter(author_id=params.get('user'))
             search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
+        if params.get('price_start'):
+            search_res_tours = search_res_tours.filter(price__gte=params.get('price_start'))
+        if params.get('price_end'):
+            search_res_tours = search_res_tours.filter(price__lte=params.get('price_end'))
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS

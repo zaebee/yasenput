@@ -110,10 +110,10 @@
           <ul class="list clearfix">
             {{#each summary_info.personal.additional}}
             <li class="item clearfix">
-            <div class="name">{{orderService 'name' this}}</div>
               <label class="check-wrap">
                 <input class="js-personal-service" name="{{orderService 'name' this}}" value="{{orderService 'price' this}}" type="checkbox">
                 <span class="icon"></span>
+                <div class="name">{{orderService 'name' this}}</div>
               </label>
               <div class="price">{{orderService 'price' this}} <span class="rouble">o</span></div>
             </li>
@@ -177,10 +177,10 @@
           <ul class="list clearfix">
             {{#each summary_info.group.additional}}
             <li class="item clearfix">
-            <div class="name">{{orderService 'name' this}}</div>
               <label class="check-wrap">
                 <input class="js-group-service" name="{{orderService 'name' this}}" value="{{orderService 'price' this}}" type="checkbox">
                 <span class="icon"></span>
+                <div class="name">{{orderService 'name' this}}</div>
               </label>
               <div class="price">{{orderService 'price' this}} <span class="rouble">o</span></div>
             </li>
@@ -243,11 +243,11 @@
       <label>Время</label>
       <div class="title" data-time></div>
     </div>
+    -->
     <div class="field">
       <label>Дополнительные услуги</label>
-      <div class="title"></div>
+      <div class="title" data-additional></div>
     </div>
-    -->
     <div class="field finish-price">
       <small><span class="left">Стоимость экскурсии: </span><span class="price" data-price></span><span class="rouble"> o</span></small>
     </div>
@@ -263,6 +263,7 @@
   <form id="assistant-form" action="https://www.payanyway.ru/assistant.htm" method="post">
     <div class="assistant-fields">
     </div>
+    <div class="note">Вы оплачиваете только стоимость услуги бронирования экскурсии, в которую входит бронирование времени проведения экскурсии для Вас и гарантия возврата денег за бронь при недобросовестном поведении экскурсовода. Оплата самой экскурсии производится непосредственно экскурсоводу</div>
     <div class="popupwin__footer clearfix">
       <button type="submit" class="btn btn_color_blue right">Оплатить</button>
     </div>

@@ -41,6 +41,8 @@
         city: null
         coord_left: null
         coord_right: null
+        price_start: null
+        price_end: null
 
     showSettings: ->
       settingsView = new List.ProfileSettings model: @user
@@ -56,6 +58,8 @@
         coord_left: null
         coord_right: null
         models: null
+        price_start: null
+        price_end: null
 
 
     showMyYapens: ->
@@ -66,4 +70,6 @@
         coord_left: null
         coord_right: null
         models: null
+        price_start: null
+        price_end: null
 
