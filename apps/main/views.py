@@ -153,7 +153,7 @@ def order(request):
             moneta_form = MonetaForm(
                 account_id=MONETA_ACCOUNT_ID,
                 transaction_id=order.id,
-                amount='%.2f' % float(info['total_price']),
+                amount='100.00',
                 use_signature=True,
                 integrity_check_code='tripper',
                 description=u'Оплата экскурсии: %s' % trip.name

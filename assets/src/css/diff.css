@@ -751,6 +751,9 @@ input[type="password"],
 }
 .popupwin_order-route .finish-price {
     margin: 0;
+    text-align: right;
+}
+.popupwin_order-route .finish-price .price {
 }
 .place-info .user {
     letter-spacing: 0;

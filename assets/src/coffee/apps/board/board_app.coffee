@@ -38,12 +38,14 @@
       #App.vent.trigger 'show:sidebar:region'
       App.vent.trigger 'show:destination:region'
       App.vent.trigger 'hide:dashboard:region'
-      App.ymaps.ready =>
-        App.updateSettings
-          user: null
-          models: 'tours'
-          coord_left: null
-          coord_right: null
+      #App.ymaps.ready =>
+      App.updateSettings
+        user: null
+        models: 'tours'
+        coord_left: null
+        coord_right: null
+        price_start: null
+        price_end: null
 
     getModel: (entity, id) ->
       item = new entity unid: id
@@ -114,7 +116,7 @@
       App.loginPopupRegion.show view
 
     success: ->
-      App.vent.trigger 'show:info:popup', 'Ваш заказ успешно оплачен!'
+      App.vent.trigger 'show:info:popup', 'Бронирование экскурсии завершено. Экскурсовод пришлет Вам подтверждение о проведения экскурсии на указанную Вами электронную почту'
 
     fail: ->
       App.vent.trigger 'show:info:popup', 'К сожалению, ваш заказ не оплачен.'
