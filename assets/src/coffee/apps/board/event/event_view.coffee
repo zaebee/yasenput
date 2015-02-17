@@ -23,7 +23,7 @@
       'click .btn-like': 'eventLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
-      'click .js-map-close': 'mapClose'
+      'click .link': 'link'
 
     initialize: ->
       @listenTo @model, 'event:like:response', @eventLikeResponse
@@ -42,6 +42,13 @@
     upload: (e) ->
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
+
+    link: (event) ->
+      event.preventDefault()
+      App.eventPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
 
   class Event.Description extends App.Views.ItemView
     template: 'EventDescription'
@@ -153,6 +160,7 @@
     events:
       'submit .comment-form': 'addComment'
       'click .login__link': 'showLoginPopup'
+      'click .link': 'link'
     modelEvents:
       'change:reviews': 'render'
 
@@ -188,6 +196,12 @@
       e.preventDefault()
       App.vent.trigger 'show:login:popup'
 
+    link: (event) ->
+      event.preventDefault()
+      App.eventPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
 
   class Event.Tags extends App.Views.ItemView
     template: 'EventTags'
@@ -199,6 +213,14 @@
     template: 'EventLikes'
     modelEvents:
       'change:likeusers': 'render'
+    events:
+      'click .link': 'link'
+
+    link: (event) ->
+      event.preventDefault()
+      App.eventPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
 
   class Event.AddPhoto extends App.Views.ItemView
