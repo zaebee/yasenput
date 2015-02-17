@@ -219,7 +219,8 @@ class Search(PointsBaseView):
             "points": points,
             'events': events,
             'trips': trips,
-            "users": users,
+            'tours': trips,
+            #"users": users,
         })
 
 
