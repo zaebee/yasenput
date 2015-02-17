@@ -53,7 +53,7 @@
               <div class="form__item-wrap">
                 <div class="form__item form__item_date">
                   <label>Дата проведения:</label>
-                  <input type="text" class="js-datapicker-period input-date" placeholder="дд.мм.гггг">
+                  <input type="text" class="js-datapicker-period input-date input-date-personal" placeholder="дд.мм.гггг - дд.мм.гггг">
                 </div>
                 <label class="label-start">Время начала</label>
                 <div class="form__item form__item_start">
@@ -65,7 +65,8 @@
                   <input type="text" class="input-end js-parse-time" placeholder="00:00">
                 </div>
               </div>
-              <button class="btn btn_color_green js-add-tour-item">Добавить</button>
+              <label for="personalFullYear" style="text-align: right;"><input id="personalFullYear" type="checkbox">&nbsp;Весь год</label>
+              <button style="margin-top:0;" class="btn btn_color_green js-add-tour-item">Добавить</button>
             </div>
 
             {{#each summary_info.personal.personal_date}}
@@ -176,14 +177,15 @@
               <div class="form__item-wrap">
                 <div class="form__item form__item_date">
                   <label>Дата проведения:</label>
-                  <input type="text" class="js-datapicker-period input-date" placeholder="дд.мм.гггг">
+                  <input type="text" class="js-datapicker-period input-date input-date-group" placeholder="дд.мм.гггг - дд.мм.гггг">
                 </div>
                 <div class="form__item form__item_begin">
                   <label>Время начала</label>
                   <input type="text" class="input-start js-parse-time" placeholder="00:00">
                 </div>
               </div>
-              <a href="#" class="btn btn_color_green js-add-tour-item">Добавить</a>
+              <label for="groupFullYear" style="text-align: right;"><input id="groupFullYear" type="checkbox">&nbsp;Весь год</label>
+              <a href="#" style="margin-top:0;" class="btn btn_color_green js-add-tour-item">Добавить</a>
             </div>
 
             {{#each summary_info.group.group_date}}
