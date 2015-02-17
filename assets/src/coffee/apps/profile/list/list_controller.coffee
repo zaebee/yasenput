@@ -18,6 +18,7 @@
         when 'likes' then @showMyLikes()
         when 'settings' then @showSettings()
         when 'guide' then @showGuide()
+        when 'guideLikes' then @showGuideLikes()
         else @showMyYapens()
 
     onDestroy: ->
@@ -43,6 +44,7 @@
         coord_right: null
         price_start: null
         price_end: null
+        section: 'likes'
 
     showSettings: ->
       settingsView = new List.ProfileSettings model: @user
@@ -60,6 +62,19 @@
         models: null
         price_start: null
         price_end: null
+        section: null
+
+    showGuideLikes: ->
+      App.vent.trigger 'filter:all:yapens',
+        user: @options.user_id
+        s: null
+        city: null
+        coord_left: null
+        coord_right: null
+        models: null
+        price_start: null
+        price_end: null
+        section: 'likes'
 
 
     showMyYapens: ->
@@ -72,4 +87,5 @@
         models: null
         price_start: null
         price_end: null
+        section: null
 

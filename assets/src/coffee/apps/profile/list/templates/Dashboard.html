@@ -14,16 +14,16 @@
       <a href="/#dashboard/" class="link link_make {{#unless section}}active{{/unless}} nonav">Создал<span class="number">{{total_added}}</span></a>
     </li>
     <li class="item">
-      <a href="/#dashboard/likes/" class="link link_favorites {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
+      <a href="/#dashboard/likes/" class="link link_favorites {{#ifEquals section 'guideLikes'}}active{{/ifEquals}} {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
     </li>
     <li class="item"><a href="/#dashboard/settings/" class="link link_settings {{#ifEquals section 'settings'}}active{{/ifEquals}} nonav">Настройки</a></li>
     <li class="item"><a href="/logout/" class="link link_exit">Выход</a></li>
     {{else}}
     <li class="item">
-      <a href="/#guide/{{id}}/" class="link link_make {{#unless section}}active{{/unless}} nonav">Создал<span class="number">{{total_added}}</span></a>
+      <a href="/#guide/{{id}}/" class="link link_make {{#ifEquals section 'guide'}}active{{/ifEquals}} nonav">Создал<span class="number">{{total_added}}</span></a>
     </li>
     <li class="item">
-      <a href="/#guide/{{id}}/likes/" class="link link_favorites {{#ifEquals section 'likes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
+      <a href="/#guide/{{id}}/likes/" class="link link_favorites {{#ifEquals section 'guideLikes'}}active{{/ifEquals}} nonav">Нравится<span class="number">{{total_liked}}</span></a>
     </li>
     {{/ifEquals}}
   </ul>

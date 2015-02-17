@@ -98,6 +98,7 @@
         user: null
         coord_left: null
         coord_right: null
+        section: null
 
     searchExample: (event) ->
       event.preventDefault()
@@ -288,6 +289,7 @@
       App.updateSettings
         s: null
         user: null
+        section: null
 
     format: (state) ->
       originalOption = state.element

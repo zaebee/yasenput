@@ -228,10 +228,11 @@ class ItemsList(PointsBaseView):
     log = logger
     def get(self, request, *args, **kwargs):
         params = request.GET.copy()
-        sort = params.get('content', 'ypi')
+        sort = params.get('content', '-ypi')
         #self.log.info('city = ' + params.get('city'))
         models = ['points', 'events','trips', 'tours']
 
+        section = params.get('section', None)
         search_res_points = MainModels.Points.objects.all().order_by(sort)
         search_res_events = MainModels.Events.objects.all().order_by(sort)
         search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True)).order_by(sort)
@@ -243,10 +244,16 @@ class ItemsList(PointsBaseView):
         errors = []
         if params.get('user'):
             t0 = time.time()
-            search_res_points = search_res_points.filter(author_id=params.get('user'))
-            search_res_events = search_res_events.filter(author_id=params.get('user'))
-            search_res_trips = search_res_trips.filter(author_id=params.get('user'))
-            search_res_tours = search_res_tours.filter(author_id=params.get('user'))
+            if section == 'likes':
+                search_res_points = search_res_points.filter(likeusers__id=params.get('user'))
+                search_res_events = search_res_events.filter(likeusers__id=params.get('user'))
+                search_res_trips = search_res_trips.filter(likeusers__id=params.get('user'))
+                search_res_tours = search_res_tours.filter(likeusers__id=params.get('user'))
+            else:
+                search_res_points = search_res_points.filter(author_id=params.get('user'))
+                search_res_events = search_res_events.filter(author_id=params.get('user'))
+                search_res_trips = search_res_trips.filter(author_id=params.get('user'))
+                search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
         else:
             search_res_events = search_res_events.filter(dt_end__gte=datetime.now()).order_by(sort)

@@ -11,6 +11,7 @@
     'dashboard/likes/': 'dashboardLikes'
     'dashboard/settings/': 'dashboardSettings'
     'guide/:user_id/': 'guideUser'
+    'guide/:user_id/likes/': 'guideUserLikes'
 
   API =
     dashboard: ->
@@ -31,6 +32,12 @@
       console.log 'ProfileApp user', user_id
       new ProfileApp.List.Controller
         section: 'guide'
+        user_id: user_id
+
+    guideUserLikes: (user_id) ->
+      console.log 'ProfileApp user', user_id
+      new ProfileApp.List.Controller
+        section: 'guideLikes'
         user_id: user_id
 
   App.vent.on 'show:commercial:popup', (options = {}) ->

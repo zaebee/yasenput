@@ -46,6 +46,7 @@
         coord_right: null
         price_start: null
         price_end: null
+        section: null
 
     getModel: (entity, id) ->
       item = new entity unid: id
