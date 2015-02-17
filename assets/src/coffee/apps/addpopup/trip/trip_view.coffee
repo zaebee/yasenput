@@ -24,6 +24,8 @@
       'click .js-back': 'backStep'
       'click .js-finish': 'saveTrip'
       'submit form': 'formSubmit'
+      'change #personalFullYear': 'changePersonalFullYear'
+      'change #groupFullYear': 'changeGroupFullYear'
 
     initialize: ->
       @user = App.request 'get:my:profile'
@@ -216,6 +218,22 @@
 
     formSubmit: (event) ->
       event.preventDefault()
+
+    changePersonalFullYear: (event) ->
+      event.preventDefault()
+      checked = $('#personalFullYear').is ':checked'
+      if checked
+        $('.input-date-personal').val '01.01.2015 - 31.12.2025'
+      else
+        $('.input-date-personal').val ''
+
+    changeGroupFullYear: (event) ->
+      event.preventDefault()
+      checked = $('#groupFullYear').is ':checked'
+      if checked
+        $('.input-date-group').val '01.01.2015 - 31.12.2025'
+      else
+        $('.input-date-group').val ''
 
 
   class Trip.Aside extends App.Views.ItemView
