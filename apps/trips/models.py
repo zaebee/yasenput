@@ -52,6 +52,7 @@ class Trips(models.Model):
                                 mode = 'SPH_MATCH_EXTENDED2',
                                 rankmode = 'SPH_RANK_NONE')
     created = models.DateTimeField(u'Дата создания', auto_now_add=True)
+    duration_hours = models.FloatField(u'Длительность в часах', blank=True, null=True)
 
     def __unicode__(self):
         return self.name

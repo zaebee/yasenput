@@ -262,6 +262,10 @@ class ItemsList(PointsBaseView):
             search_res_tours = search_res_tours.filter(price__gte=params.get('price_start'))
         if params.get('price_end'):
             search_res_tours = search_res_tours.filter(price__lte=params.get('price_end'))
+        if params.get('delay_start'):
+            search_res_tours = search_res_tours.filter(duration_hours__gte=params.get('delay_start'))
+        if params.get('delay_end'):
+            search_res_tours = search_res_tours.filter(duration_hours__lte=params.get('delay_end'))
         page = params.get('p', 1) or 1
         limit = COUNT_ELEMENTS * int(page)
         offset = (int(page) - 1) * COUNT_ELEMENTS

@@ -183,7 +183,11 @@
         personal: personal_data
         group: group_data
       price = group_data.group_price_tour or personal_data.personal_price_tour
+      personal_duration_hours = data.personal.personal_dur_days/1 * 24 + data.personal.personal_dur_hours/1 + data.personal.personal_dur_minutes/60
+      group_duration_hours = data.group.group_dur_days/1 * 24 + data.group.group_dur_hours/1 + data.group.group_dur_minutes/60
+      duration_hours = group_duration_hours or personal_duration_hours or 0
       @model.set price: price, {silent:true}
+      @model.set duration_hours: duration_hours, {silent:true}
       @model.set summary_info: JSON.stringify(data), {silent:true}
 
     backStep: (event) ->
