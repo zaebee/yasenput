@@ -24,6 +24,7 @@
       'click .btn-like': 'pointLike'
       'click .btn-place': -> @trigger 'add:path:popup', @model
       'click .btn-upload': 'upload'
+      'click .link': 'link'
 
     initialize: ->
       @listenTo @model, 'point:like:response', @pointLikeResponse
@@ -43,6 +44,12 @@
     upload: (e) ->
       e.preventDefault()
       $(e.currentTarget).toggleClass 'active'
+
+    link: (event) ->
+      event.preventDefault()
+      App.pointPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
 
   class Point.Photo extends App.Views.ItemView
@@ -169,6 +176,7 @@
     events:
       'submit .comment-form': 'addComment'
       'click .login__link': 'showLoginPopup'
+      'click .link': 'link'
     modelEvents:
       'change:reviews': 'render'
 
@@ -204,6 +212,12 @@
       e.preventDefault()
       App.vent.trigger 'show:login:popup'
 
+    link: (event) ->
+      event.preventDefault()
+      App.pointPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
+
 
   class Point.Tags extends App.Views.ItemView
     template: 'PointTags'
@@ -215,6 +229,14 @@
     template: 'PointLikes'
     modelEvents:
       'change:likeusers': 'render'
+    events:
+      'click .link': 'link'
+
+    link: (event) ->
+      event.preventDefault()
+      App.pointPopup.empty()
+      url = $(event.currentTarget).attr 'href'
+      App.navigate url, true
 
 
   class Point.AddPhoto extends App.Views.ItemView

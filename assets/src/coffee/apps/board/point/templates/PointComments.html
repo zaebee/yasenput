@@ -1,6 +1,6 @@
 {{#reviews}}
   <li class="comments__item">
-    <a href="#" class="photo">
+    <a href="/guide/{{author.id}}/" class="photo link">
       <img src="{{author.icon}}" alt="{{author.first_name}}  {{author.last_name}}" class="photo__img">
     </a>
     <div class="text">
@@ -14,7 +14,7 @@
 {{/reviews}}
 <li class="comments__item">
   <form class="comment-form" action="/">
-    <a href="#" class="photo">
+    <a href="/guide/{{user.id}}/" class="photo link">
       <img src="{{#if user.authorized}}{{user.icon}}{{else}}/static/images/user-unknown-small.png{{/if}}" alt="{{user.first_name}} {{user.last_name}}" class="photo__img">
     </a>
     <div class="text">

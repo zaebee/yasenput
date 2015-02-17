@@ -148,6 +148,18 @@ class PointsBaseView(View):
                                            })
 
 
+    def getEventSelect(self, request):
+        if request.user.is_authenticated():
+            user = MainModels.User.objects.get(username = request.user)
+            isliked = 'SELECT case when COUNT(*) > 0 then 1 else 0 end FROM main_events_likeusers WHERE main_events_likeusers.events_id = main_events.id and main_events_likeusers.person_id = '+str(user.id)
+        else:
+            isliked = "select 0"
+        args = {"select": {'id_event': 'select 0',
+                 'isliked': isliked,
+                 }}
+        return args
+
+
     def pointsList(self, points):
         return HttpResponse(self.getSerializeCollections(points), mimetype="application/json")
 
@@ -221,7 +233,7 @@ class ItemsList(PointsBaseView):
         models = ['points', 'events','trips', 'tours']
 
         search_res_points = MainModels.Points.objects.all().order_by(sort)
-        search_res_events = MainModels.Events.objects.filter(dt_end__gte=datetime.now()).order_by(sort)
+        search_res_events = MainModels.Events.objects.all().order_by(sort)
         search_res_trips = TripModels.Trips.objects.filter(Q(price__lte=0)|Q(price__isnull=True)).order_by(sort)
         search_res_tours = TripModels.Trips.objects.filter(price__gt=0).order_by(sort)
         if params.get('models'):
@@ -236,6 +248,8 @@ class ItemsList(PointsBaseView):
             search_res_trips = search_res_trips.filter(author_id=params.get('user'))
             search_res_tours = search_res_tours.filter(author_id=params.get('user'))
             self.log.info('Users search complete (%.2f sec.) user_id: %s' % (time.time()-t0, params.get('user', '')))
+        else:
+            search_res_events = search_res_events.filter(dt_end__gte=datetime.now()).order_by(sort)
         if params.get('price_start'):
             search_res_tours = search_res_tours.filter(price__gte=params.get('price_start'))
         if params.get('price_end'):
