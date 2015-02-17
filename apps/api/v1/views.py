@@ -61,7 +61,7 @@ class PointsBaseView(View):
         YpJson = YpSerialiser()
         return YpJson.serialize(points,
                                 fields=['main_img', 'dt_start', 'dt_end', 'tags', 'type_id', 'id', 'name', 'description', 'address', 'author', 'imgs', 'longitude', 'latitude', 'tags',
-                                        'description', 'reviews', 'review_count', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price', 'summary_info'],
+                                        'description', 'reviews', 'review_count', 'wifi', 'wc', 'invalid', 'parking', 'likeusers', 'created', 'updated', 'likes_count', 'isliked', 'days', 'price', 'summary_info', 'ypi'],
                                 extras=['popular', 'type_of_item', 'name', 'address', 'longitude', 'latitude', 'wifi', 'wc', 'invalid', 'parking',
                                         'review_count', 'id_point', 'isliked', 'collections_count', 'likes_count', 'beens_count', 'days', 'price', 'summary_info'],
                                 relations={'tags': {'fields': ['name', 'id', 'level', 'icons'],
@@ -707,8 +707,11 @@ class LikePoint(PointsBaseView):
                 point = get_object_or_404(MainModels.Points, pk=pk)
                 if person in point.likeusers.all():
                     point.likeusers.remove(person)
+                    point.ypi -= 1
                 else:
                     point.likeusers.add(person)
+                    point.ypi += 1
+                point.save()
             except:
                 return JsonHTTPResponse({"id": pk, "status": 1, "txt": "ошибка процедуры добавления лайка месту"})
             else:
@@ -912,8 +915,11 @@ class EventLike(PointsBaseView):
         person = request.user.person
         if person in event.likeusers.all():
             event.likeusers.remove(person)
+            event.ypi -= 1
         else:
             event.likeusers.add(person)
+            event.ypi += 1
+        event.save()
         event = MainModels.Events.objects.filter(id=id).extra(**self.getEventSelect(request))
         return HttpResponse(self.getSerializeCollections(event),
                             mimetype="application/json")
@@ -957,6 +963,8 @@ class AddReviewToEvent(View):
         else:
             review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
+        event.ypi += 1
+        event.save()
         event.reviews.add(review)
         return JsonHTTPResponse({"id": id,
                                  "status": 0,
@@ -988,6 +996,8 @@ class AddReviewToPoint(View):
             review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
         point.reviews.add(review)
+        point.ypi += 1
+        point.save()
         return JsonHTTPResponse({"id": id,
                                  "status": 0,
                                  "txt": "Комментарий добавлен"})
@@ -1163,6 +1173,7 @@ class Event(View):
          'likeusers': json.loads(likeusers)[0]['likeusers'],
          'isliked': int(isliked),
          'likes_count': event[0].likes_count,
+         'ypi': event[0].ypi,
         })
 
 

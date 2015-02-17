@@ -111,8 +111,11 @@ class LikeTrip(View):
 
         if request.user.person in trip.likeusers.all():
             trip.likeusers.remove(request.user.person)
+            trip.ypi -= 1
         else:
             trip.likeusers.add(request.user.person)
+            trip.ypi += 1
+        trip.save()
         YpJson = YpSerialiser()
         trip = YpJson.serialize([trip], extras=TripOption.getExtras(),
                                 relations=TripOption.relations.getTripRelation())
@@ -143,6 +146,8 @@ class AddReviewToTrip(View):
         else:
             review = ReviewsModels.Reviews.objects.create(review=review_text, author=author)
         review.save()
+        trip.ypi += 1
+        trip.save()
         trip.reviews.add(review)
         return JsonHTTPResponse({"id": id,
                                  "status": 0,
