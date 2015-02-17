@@ -307,6 +307,7 @@
       @spinner.start()
       @model.set author: @user.toJSON()
       @model.set blocks: @collection.toJSON()
+      @setAdditionalData()
       @model.save null,
         success: =>
           localStorage.removeItem "trip/#{@model.cid}"
@@ -318,6 +319,11 @@
           yapensView = App.BoardApp.board.yapensView.render()
           if yapensView.wall
             yapensView.wall.reloadItems() & yapensView.wall.layout()
+
+    setAdditionalData: ->
+      @model.set price: 0, {silent:true}
+      @model.set duration_hours: 0, {silent:true}
+      @model.set summary_info: JSON.stringify(''), {silent:true}
 
     setBlockPosition: (model, collection, options) ->
       @collection.each (item) =>
