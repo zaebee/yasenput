@@ -158,3 +158,57 @@
 
       else
         return
+
+
+  class List.SettingsSimple extends App.Views.ItemView
+    template: 'SettingsSimple'
+    className: 'popupwin__scrollbox'
+    ui:
+      email: '[name=email]'
+      phone: '[name=phone]'
+    events:
+      'click .js-finish': 'saveInfo'
+
+    initialize: (options) ->
+      @options = options
+      @model = App.request 'get:my:profile'
+      @saveUrl = true
+
+    saveInfo: (event) ->
+      event.preventDefault()
+      spinner = App.buttonSpinner $('.js-finish'), 'Подождите', $('.js-finish')
+
+      if @ui.email.val()
+        email = @ui.email.val()
+        @ui.email.parent().removeClass 'error'
+      else
+        @ui.email.parent().addClass 'error'
+
+      if @ui.phone.val()
+        phone = @ui.phone.val()
+        @ui.phone.parent().removeClass 'error'
+      else
+        @ui.phone.parent().addClass 'error'
+
+      if email and phone
+        console.log email, phone
+        spinner.start()
+        @$('.errorlist').text ''
+        data =
+          email: email
+          phone: phone
+        @model.save data,
+          patch: true
+          success: (response) =>
+            if response.status
+              App.vent.trigger 'show:info:popup', response.txt
+            else
+              @destroy()
+              App.vent.trigger 'show:info:popup', 'Данные успешно сохранены'
+              setTimeout ->
+                App.infoPopupRegion.empty()
+                App.vent.trigger 'show:add:trip:popup'
+              , 1000
+
+      else
+        return

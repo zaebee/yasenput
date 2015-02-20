@@ -44,6 +44,10 @@
     popup = new ProfileApp.List.CommercialView options
     App.commercialPopupRegion.show popup
 
+  App.vent.on 'show:settings:popup', (options = {}) ->
+    popup = new ProfileApp.List.SettingsSimple options
+    App.commercialPopupRegion.show popup
+
   App.vent.on 'show:dashboard:region', () ->
     if App.headerRegion.currentView.dashboardRegion.$el
       App.headerRegion.$el.addClass 'header_small'

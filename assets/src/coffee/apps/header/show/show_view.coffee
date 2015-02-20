@@ -44,7 +44,10 @@
       if not @user.get 'authorized'
         App.vent.trigger 'show:commercial:popup', add_trip: true
       else
-        Yapp.vent.trigger 'show:add:trip:popup'
+        if not @user.get('email') or not @user.get('phone')
+          Yapp.vent.trigger 'show:settings:popup'
+        else
+          Yapp.vent.trigger 'show:add:trip:popup'
       console.log event
 
     showAddPopup: (e) ->

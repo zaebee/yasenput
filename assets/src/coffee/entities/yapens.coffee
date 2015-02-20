@@ -47,5 +47,5 @@
   App.reqres.setHandler 'get:all:yapens', (params = {}) ->
     API.getEntities params
 
-  App.reqres.setHandler 'search:all:yapens', (params = {}, callback) ->
+  App.reqres.setHandler 'search:all:yapens', (params = {}, callback = ->) ->
     API.search params, callback

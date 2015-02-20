@@ -25,7 +25,7 @@
   API =
     me: (params = {}) ->
       _.defaults params
-      new Entities.User App.USER
+      @profile = @profile or new Entities.User App.USER
 
     user: (user_id) ->
       new Entities.User id: user_id
